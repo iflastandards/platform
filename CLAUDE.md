@@ -719,3 +719,32 @@ Automatically runs on `git push` with different strategies based on branch:
 **CI Testing (Paid)**: Focused on environment-specific validation, avoiding redundant testing of locally-validated functionality
 
 This approach provides high deployment confidence while minimizing CI compute costs through intelligent local validation.
+
+## Dual CI Architecture (Critical)
+The project uses a **dual CI system** with different purposes:
+
+### Development Fork (jonphipps/standards-dev)
+- **Remote**: `fork` → `git@github.com:jonphipps/standards-dev.git`
+- **Workflow**: `.github/workflows/nx-optimized-ci.yml` (Development CI)
+- **Purpose**: Comprehensive testing with Nx Cloud integration
+- **Nx Cloud Workspace**: `6857fccbb755d4191ce6fbe4`
+- **Daily workflow**: `git push-dev` (alias for `git push fork dev`)
+
+### Preview Repo (iflastandards/standards-dev)  
+- **Remote**: `origin` → `git@github.com:iflastandards/standards-dev.git`
+- **Workflow**: `.github/workflows/preview-ci.yml` (Preview CI)
+- **Purpose**: Lightweight deployment validation + GitHub Pages deployment
+- **Client previews**: `git push-preview` (alias for `git push origin dev`)
+
+### Key Rules
+- **NEVER push directly to origin/main** (production will be managed separately)
+- **Development testing**: Always happens on fork with Nx Cloud
+- **Client previews**: Push to origin/dev after development CI passes
+- **Documentation**: See `docs/architecture/dual-ci-architecture.md` for complete details
+
+### Git Configuration
+```bash
+# Aliases configured in local git config:
+git push-dev        # Development: git push fork dev  
+git push-preview    # Client preview: git push origin dev
+```

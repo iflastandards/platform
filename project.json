@@ -89,7 +89,6 @@
           "nx run-many --target=build --all --parallel=1"
         ]
       },
-      "dependsOn": ["^build"],
       "outputs": [
         "{projectRoot}/portal/build",
         "{projectRoot}/standards/*/build"
@@ -99,8 +98,7 @@
       "executor": "nx:run-commands",
       "options": {
         "command": "nx affected --target=build --parallel=1"
-      },
-      "dependsOn": ["^build"]
+      }
     },
     "start-all": {
       "executor": "nx:run-commands",
