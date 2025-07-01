@@ -1,0 +1,41 @@
+{
+  "mcpServers": {
+
+    "Context7": {
+      "command": "npx",
+      "args": [
+        "-y",
+        "@upstash/context7-mcp@latest"
+      ]
+    },
+    "puppeteer-real-browser": {
+      "command": "npx",
+      "args": [
+        "puppeteer-real-browser-mcp-server@latest"
+      ]
+    },
+    "nx-mcp": {
+      "command": "npx",
+      "args": [
+        "nx-mcp@latest",
+        "/Users/jonphipps/Code/IFLA/standards-dev"
+      ]
+    },
+    "perplexity-ask": {
+      "command": "npx",
+      "args": [
+        "-y",
+        "server-perplexity-ask"
+      ],
+      "env": {
+        "PERPLEXITY_API_KEY": "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"
+      }
+    },
+    "playwright": {
+      "command": "npx",
+      "args": [
+        "@playwright/mcp@latest"
+      ]
+    }
+  }
+}
