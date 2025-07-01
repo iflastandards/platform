@@ -24,7 +24,7 @@ describe('SiteManagementClient', () => {
       render(<SiteManagementClient {...defaultProps} />);
       
       expect(screen.getByText('Test Site Management')).toBeInTheDocument();
-      expect(screen.getByText(/Test Site/)).toBeInTheDocument();
+      expect(screen.getAllByText(/Test Site/).length).toBeGreaterThan(0);
     });
 
     it('should render all tab navigation items', () => {

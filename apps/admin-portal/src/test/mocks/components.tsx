@@ -108,8 +108,7 @@ export const MockTabPanel = vi.fn(({ children }) => (
 ));
 
 // Mock data display components
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-export const MockTable = vi.fn(({ headers, rows, className = '' }) => (
+export const MockTable = vi.fn(({ headers, rows, className = '' }: any) => ( // eslint-disable-line @typescript-eslint/no-explicit-any
   <table data-testid="table" className={className}>
     <thead>
       <tr>

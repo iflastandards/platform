@@ -1,6 +1,5 @@
 {
   "mcpServers": {
-
     "Context7": {
       "command": "npx",
       "args": [
@@ -18,7 +17,7 @@
       "command": "npx",
       "args": [
         "nx-mcp@latest",
-        "/Users/jonphipps/Code/IFLA/standards-dev"
+        "/path/to/your/workspace"
       ]
     },
     "perplexity-ask": {
@@ -28,7 +27,7 @@
         "server-perplexity-ask"
       ],
       "env": {
-        "PERPLEXITY_API_KEY": "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"
+        "PERPLEXITY_API_KEY": "your-api-key-here"
       }
     },
     "playwright": {

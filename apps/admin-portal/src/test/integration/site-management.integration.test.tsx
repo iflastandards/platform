@@ -9,15 +9,13 @@ vi.mock('@/app/api/auth/auth', () => ({
 }));
 
 // Import after mocking
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
 import { auth } from '@/app/api/auth/auth';
 import SiteManagementClient from '@/app/dashboard/[siteKey]/SiteManagementClient';
 
 describe('Site Management Integration Tests', () => {
   beforeEach(() => {
     setupFetchMock();
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    (auth as any).mockResolvedValue(mockSession);
+    (auth as any).mockResolvedValue(mockSession); // eslint-disable-line @typescript-eslint/no-explicit-any
   });
 
   afterEach(() => {
@@ -260,8 +258,7 @@ describe('Site Management Integration Tests', () => {
 
   describe('Authentication Integration', () => {
     it('should work with authenticated user session', async () => {
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    (auth as any).mockResolvedValue(mockSession);
+      (auth as any).mockResolvedValue(mockSession); // eslint-disable-line @typescript-eslint/no-explicit-any
       
       render(
         <SiteManagementClient
