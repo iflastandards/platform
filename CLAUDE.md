@@ -6,8 +6,9 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ### Essential Commands
 - **Package manager**: Always use `pnpm` (never npm or yarn)
-- **Build single site**: `nx build {name}` (e.g., `nx build portal`, `nx build isbdm`)
+- **Build single site**: `nx build {name}` (e.g., `nx build portal`, `nx build isbdm`, `nx build admin-portal`)
 - **Start dev server**: `nx start {site}` or `nx run {site}:start:robust` (with port cleanup)
+- **Start Next.js dev**: `nx dev admin-portal` (for admin-portal development)
 - **Serve built site**: `nx serve {site}` or `nx run {site}:serve:robust` (with port cleanup)
 - **Test execution**: `pnpm test` (nx affected with parallel execution)
 - **Type checking**: `pnpm typecheck` (nx affected with parallel execution)
@@ -39,7 +40,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 #### NX Testing Commands
 - **All unit tests**: `nx test` or `nx run-many --target=test --all`
-- **Specific project tests**: `nx test @ifla/theme` or `nx test portal`
+- **Specific project tests**: `nx test @ifla/theme` or `nx test portal` or `nx test admin-portal`
 - **Affected tests only**: `nx affected --target=test`
 - **Test with UI**: `nx test --ui` (opens Vitest UI)
 - **Watch mode**: `nx test --watch`
@@ -67,7 +68,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 The project uses a 5-group testing strategy optimized for efficiency and cost management:
 
 #### Group 1: Selective Tests (On-Demand Development)
-- **Individual unit tests**: `nx test portal`, `nx test @ifla/theme`, `nx test isbdm`
+- **Individual unit tests**: `nx test portal`, `nx test @ifla/theme`, `nx test isbdm`, `nx test admin-portal`
 - **Affected tests**: `pnpm test` (now Nx-optimized: `nx affected --target=test --parallel=3`)
 - **All unit tests**: `pnpm test:all` (parallel across all projects)
 - **E2E by browser**: `pnpm test:e2e:chromium`, `pnpm test:e2e:firefox`, `pnpm test:e2e:mobile`
@@ -166,6 +167,7 @@ This prevents cross-site contamination during builds where sites inherit each ot
 ### Monorepo Structure
 ```
 standards-dev/
+├── apps/admin-portal/         # Next.js admin application with GitHub OAuth
 ├── portal/                    # Main IFLA portal site
 ├── standards/{site}/          # Individual standard documentation sites
 ├── packages/theme/            # Custom Docusaurus theme with shared components
@@ -176,7 +178,8 @@ standards-dev/
 ### Site Types and Patterns
 1. **Portal** (`portal/`): Main landing site with management interface
 2. **Standards** (`standards/{name}/`): Individual standard documentation (ISBDM, LRM, FRBR, isbd, muldicat, unimarc)
-3. **All sites** use the same theme package but have unique configurations
+3. **Admin Portal** (`apps/admin-portal/`): Next.js application for administrative tasks with GitHub OAuth authentication
+4. **All Docusaurus sites** use the same theme package but have unique configurations
 
 ### Key Configuration Patterns
 
@@ -393,6 +396,7 @@ The project includes robust port conflict resolution integrated with Nx targets 
 #### Port Mappings
 - **Portal**: 3000, **ISBDM**: 3001, **LRM**: 3002, **FRBR**: 3003
 - **ISBD**: 3004, **MulDiCat**: 3005, **UniMARC**: 3006, **NewTest**: 3008
+- **Admin Portal**: 4200 (Next.js development server)
 
 #### Essential Port Commands
 - **Kill all ports**: `pnpm ports:kill` (silent) or `pnpm ports:kill:verbose`
@@ -446,6 +450,63 @@ Previously, tests would fail with "port already in use" errors when dev servers 
 - **GitHub integration**: Direct links to projects, issues, PRs
 - **Team management**: Organization-level tools
 
+### Admin Portal (Next.js Application)
+- **Technology stack**: Next.js 15.2.5 with App Router, NextAuth.js v4.24.11, TypeScript
+- **Authentication**: GitHub OAuth with organization team role detection
+- **Development server**: `nx dev admin-portal` or `pnpm dev:admin-portal`
+- **Build command**: `nx build admin-portal` or `pnpm build:admin-portal`
+- **Serve built app**: `nx serve admin-portal` or `pnpm serve:admin-portal`
+- **Port**: 4200 (development server)
+- **Environment variables**: Requires `GITHUB_ID`, `GITHUB_SECRET`, `NEXTAUTH_URL`, `NEXTAUTH_SECRET`
+- **Testing infrastructure**: Complete Vitest + Playwright setup with central mocks and fixtures
+- **Unit tests**: `nx test admin-portal` or `nx run admin-portal:test:unit` (components, utilities)
+- **Integration tests**: `nx run admin-portal:test:integration` (API interactions, authentication flows)
+- **E2E tests**: `playwright test --project=admin-portal` (uses newtest site as testing target)
+- **Test utilities**: Central mocks in `src/test/mocks/`, fixtures in `src/test/fixtures/`
+- **Testing examples**: Run `apps/admin-portal/scripts/test-examples.sh` for guided testing workflow
+- **Key features**: Administrative interface for IFLA standards management
+- **Testing environment**: Uses 'newtest' site (port 3008) as fully featured testing target for E2E workflows
+
+### Admin Portal Testing Strategy
+The admin-portal uses a comprehensive testing approach that leverages the existing Nx infrastructure:
+
+#### Testing Architecture
+- **Unit Tests**: Component rendering, utility functions, authentication logic
+- **Integration Tests**: API interactions, GitHub OAuth flows, site management workflows  
+- **E2E Tests**: Full browser automation testing admin-portal ↔ newtest site interactions
+- **Test Target**: 'newtest' site provides realistic Docusaurus environment for testing
+
+#### Key Testing Files
+```
+apps/admin-portal/src/test/
+├── fixtures/mockData.ts           # Mock sessions, sites, GitHub data
+├── mocks/api.ts                   # API response mocks with fetch simulation
+├── mocks/components.tsx           # React component mocks for isolation
+├── components/                    # Unit tests for React components
+├── integration/                   # Integration tests for workflows
+└── setup.ts                      # Vitest configuration with Next.js mocks
+
+e2e/admin-portal/
+├── auth.e2e.test.ts              # Authentication and authorization flows
+├── site-management-workflow.e2e.test.ts  # Complete site management workflows
+└── (uses newtest site at localhost:3008 as testing target)
+```
+
+#### Testing Commands
+```bash
+# Run all admin-portal tests
+nx test admin-portal
+
+# Specific test types  
+nx run admin-portal:test:unit        # Fast unit tests only
+nx run admin-portal:test:integration # API and authentication tests
+nx run admin-portal:e2e              # Full browser workflow tests
+
+# Development workflow
+nx run admin-portal:test:watch       # Watch mode for TDD
+nx run admin-portal:test:coverage    # Generate coverage reports
+```
+
 ## Static State Contamination (Critical Issue)
 
 ### Problem
@@ -481,6 +542,7 @@ nx run-many --target=test --all
 nx test @ifla/theme              # Theme package tests
 nx test portal                   # Portal site tests  
 nx test isbdm                    # ISBDM standard tests
+nx test admin-portal             # Admin portal tests (Vitest + RTL)
 
 # Development workflow
 nx test --watch                  # Watch mode
@@ -709,7 +771,7 @@ Automatically runs on `git push` with different strategies based on branch:
 - **Target time**: ~2-3 minutes for efficient development
 
 ### GitHub Actions Integration
-- **Matrix builds**: All 7 sites built in parallel across multiple runners
+- **Matrix builds**: All 7 Docusaurus sites + admin-portal built in parallel across multiple runners
 - **Environment testing**: Validates deployment configurations
 - **URL validation**: Comprehensive link checking
 - **Smart caching**: Nx cache optimization reduces CI time by ~70%

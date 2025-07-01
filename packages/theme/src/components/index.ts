@@ -11,6 +11,12 @@ export {
 
 // Management components
 export { default as SiteManagement } from './SiteManagement';
+export { 
+  default as SiteManagementLink,
+  SiteManagementButton,
+  SiteManagementNavbarLink,
+  SiteManagementTextLink
+} from './SiteManagementLink';
 
 // Link components
 export { default as InLink } from './InLink';

@@ -21,6 +21,7 @@ This directory contains detailed documentation for developers working on the IFL
 
 ### Testing and Validation
 - **`build-regression-testing.md`** - Comprehensive build regression testing strategy
+- **`admin-portal-testing.md`** - **NEW** Complete testing guide for Next.js admin portal
 - **`testing-vocabulary-pages.md`** - Testing vocabulary page functionality
 - **`vocabulary-comparison-testing.md`** - Testing vocabulary server responses
 - **`url-validation-guide.md`** - URL validation and link checking

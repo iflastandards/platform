@@ -4,6 +4,7 @@ packages:
   - portal
   - tools/*
   - libs/*
+  - apps/*
 
 onlyBuiltDependencies:
   - '@parcel/watcher'

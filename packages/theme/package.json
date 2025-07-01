@@ -32,6 +32,11 @@
       "import": "./dist/components/ElementReference.mjs",
       "require": "./dist/components/ElementReference.js"
     },
+    "./components/SiteManagementLink": {
+      "types": "./dist/components/SiteManagementLink.d.ts",
+      "import": "./dist/components/SiteManagementLink.mjs",
+      "require": "./dist/components/SiteManagementLink.js"
+    },
     "./hooks/usePrevious": {
       "types": "./dist/hooks/usePrevious.d.ts",
       "import": "./dist/hooks/usePrevious.mjs",

@@ -57,6 +57,57 @@
           "dev": false
         }
       }
+    },
+    "test": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "vitest run",
+        "cwd": "apps/admin-portal"
+      }
+    },
+    "test:unit": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "vitest run --testNamePattern=\"(?!.*integration)\"",
+        "cwd": "apps/admin-portal"
+      }
+    },
+    "test:integration": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "vitest run --testNamePattern=\".*integration.*\"",
+        "cwd": "apps/admin-portal"
+      }
+    },
+    "test:watch": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "vitest",
+        "cwd": "apps/admin-portal"
+      }
+    },
+    "test:coverage": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "vitest run --coverage",
+        "cwd": "apps/admin-portal"
+      }
+    },
+    "e2e": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "playwright test --project=admin-portal",
+        "cwd": "."
+      },
+      "inputs": [
+        "default",
+        "{workspaceRoot}/e2e/admin-portal/**/*.spec.ts",
+        "{workspaceRoot}/playwright.config.ts"
+      ],
+      "outputs": [
+        "{workspaceRoot}/test-results",
+        "{workspaceRoot}/playwright-report"
+      ]
     }
   }
 }

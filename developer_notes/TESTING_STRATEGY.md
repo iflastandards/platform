@@ -16,6 +16,7 @@ This document outlines the five distinct test groups that organize all testing a
 nx test @ifla/theme                    # Theme package only
 nx test portal                         # Portal site only
 nx test isbdm                          # ISBDM standard only
+nx test admin-portal                   # Admin portal (Next.js) only
 
 # Affected unit tests (recommended for development)
 nx affected --target=test              # Only test changed projects
@@ -35,6 +36,11 @@ npx playwright test --project="Mobile Chrome"
 # Specific test files
 npx playwright test e2e/portal-smoke.spec.ts
 npx playwright test e2e/vocabulary-functionality.spec.ts
+
+# Admin Portal E2E tests
+npx playwright test --project=admin-portal    # All admin portal E2E tests
+npx playwright test e2e/admin-portal/auth.e2e.test.ts
+npx playwright test e2e/admin-portal/site-management-workflow.e2e.test.ts
 
 # Debug mode
 npx playwright test --debug

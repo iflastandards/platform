@@ -28,6 +28,12 @@ node scripts/test-site-builds.js --site all --env production
 
 # Portal end-to-end tests  
 ./scripts/test-portal-builds.sh
+
+# Admin Portal testing
+nx test admin-portal                    # All admin portal tests
+nx run admin-portal:test:unit          # Unit tests only
+nx run admin-portal:test:integration   # Integration tests only
+nx run admin-portal:e2e                # E2E tests (uses newtest site)
 ```
 
 See `TESTING.md` for automated testing overview and `developer_notes/build-regression-testing.md` for comprehensive testing documentation.
@@ -45,6 +51,8 @@ Manual testing available: `pnpm test:full`, `pnpm test:regression`
 
 ```
 standards-dev/
+├── apps/                      # Next.js applications
+│   └── admin-portal/         # Administrative interface (Next.js + GitHub OAuth)
 ├── portal/                    # Main portal site
 ├── standards/                 # Individual standard sites
 │   ├── ISBDM/                # ISBD Manifestation
@@ -73,6 +81,9 @@ pnpm build:all
 
 # Build portal
 pnpm build:portal
+
+# Build admin portal (Next.js app)
+pnpm build:admin-portal
 ```
 
 ### Development Servers
@@ -86,6 +97,9 @@ pnpm start:lrm
 
 # Start all sites simultaneously
 pnpm start:all
+
+# Start admin portal (Next.js dev server)
+pnpm dev:admin-portal
 ```
 
 ### Serving Built Sites
@@ -98,6 +112,9 @@ pnpm serve:isbdm
 
 # Serve all sites
 pnpm serve:all
+
+# Serve admin portal
+pnpm serve:admin-portal
 ```
 
 ## 📝 Content Management

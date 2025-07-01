@@ -17,12 +17,19 @@ nx build isbd                    # ISBD (port 3004)
 nx build muldicat                # Muldicat (port 3005)
 nx build unimarc                 # Unimarc (port 3006)
 nx build newtest                 # NewTest (port 3008)
+nx build admin-portal            # Admin Portal (Next.js app, port 4200)
 
 # Start development server with robust port cleanup (RECOMMENDED)
 nx run portal:start:robust       # http://localhost:3000 (with port cleanup)
 nx run isbdm:start:robust        # http://localhost:3001 (with port cleanup)
 nx run lrm:start:robust          # http://localhost:3002 (with port cleanup)
 nx run frbr:start:robust         # http://localhost:3003 (with port cleanup)
+
+# Admin Portal (Next.js) development
+nx dev admin-portal              # http://localhost:4200 (Next.js dev server)
+nx serve admin-portal            # Serve built admin portal
+pnpm dev:admin-portal            # Package.json shortcut for dev server
+pnpm serve:admin-portal          # Package.json shortcut to serve built app
 
 # Build/start all sites (Nx optimized)
 nx run-many --target=build --all           # Build all sites in parallel
@@ -43,11 +50,20 @@ pnpm clear:webpack               # Clear webpack cache only
 # Testing and validation (Nx optimized)
 pnpm test                        # Run affected tests (Nx optimized)
 nx test @ifla/theme              # Run theme tests only
+nx test admin-portal             # Run admin portal tests (unit + integration)
 nx affected --target=test:unit   # Run unit tests for affected projects
 nx affected --target=test:integration # Run integration tests for affected projects
 pnpm test:ui                     # Run vitest with UI
 pnpm test:watch                  # Run tests in watch mode
 pnpm typecheck                   # TypeScript checking (affected only)
+
+# Admin Portal (Next.js) Testing
+nx run admin-portal:test:unit        # Unit tests only (fast feedback)
+nx run admin-portal:test:integration # Integration tests only (API interactions)
+nx run admin-portal:test:watch       # Watch mode for TDD
+nx run admin-portal:test:coverage    # With coverage reporting
+nx run admin-portal:e2e              # E2E tests (uses newtest site)
+pnpm test:admin-portal               # Package.json shortcut for all tests
 
 # Deployment
 pnpm deploy                      # Trigger GitHub Actions deployment

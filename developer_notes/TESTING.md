@@ -59,6 +59,12 @@ pnpm test:portal:e2e        # Portal end-to-end testing
 # Individual components
 pnpm typecheck              # TypeScript validation
 pnpm lint --quiet           # Code quality check
+
+# Admin Portal testing
+nx test admin-portal                    # All admin portal tests
+nx run admin-portal:test:unit          # Unit tests only
+nx run admin-portal:test:integration   # Integration tests only
+nx run admin-portal:e2e                # E2E tests (uses newtest site)
 ```
 
 ## 📊 Test Coverage

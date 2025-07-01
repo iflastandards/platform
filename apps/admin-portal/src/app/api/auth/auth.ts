@@ -37,7 +37,7 @@ export const authOptions: NextAuthOptions = {
             } else {
               token.roles = [];
             }
-          } catch (_error) {
+          } catch {
             token.roles = [];
           }
         }

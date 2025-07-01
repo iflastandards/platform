@@ -64,6 +64,27 @@ export default defineConfig({
       use: { ...devices['iPhone 12'] },
     },
 
+    /* Admin Portal specific tests */
+    {
+      name: 'admin-portal',
+      use: { ...devices['Desktop Chrome'] },
+      testMatch: '**/e2e/admin-portal/**/*.e2e.test.ts',
+      webServer: [
+        {
+          command: 'nx start newtest',
+          url: 'http://localhost:3008',
+          reuseExistingServer: !process.env.CI,
+          timeout: 60000,
+        },
+        {
+          command: 'nx serve admin-portal',
+          url: 'http://localhost:3007',
+          reuseExistingServer: !process.env.CI,
+          timeout: 60000,
+        },
+      ],
+    },
+
     /* Test against branded browsers. */
     // {
     //   name: 'Microsoft Edge',

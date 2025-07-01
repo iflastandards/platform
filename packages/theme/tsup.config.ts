@@ -7,6 +7,7 @@ export default defineConfig({
     index: 'src/index.ts',
     'components/SiteLink': 'src/components/SiteLink.tsx',
     'components/ElementReference': 'src/components/ElementReference/index.tsx',
+    'components/SiteManagementLink': 'src/components/SiteManagementLink/index.tsx',
     'hooks/usePrevious': 'src/hooks/usePrevious.ts',
     'utils/index': 'src/utils/index.ts',
     'config/index': 'src/config/index.ts',
