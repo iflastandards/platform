@@ -1,0 +1,62 @@
+{
+  "name": "admin-portal",
+  "$schema": "../../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "apps/admin-portal",
+  "projectType": "application",
+  "tags": [],
+  "// targets": "to see all targets run: nx show project admin-portal --web",
+  "targets": {
+    "typecheck": {
+      "executor": "@nx/js:tsc",
+      "options": {
+        "main": "apps/admin-portal/src/app/page.tsx",
+        "tsConfig": "apps/admin-portal/tsconfig.json",
+        "outputPath": "dist/apps/admin-portal",
+        "compiler": "tsc",
+        "assets": []
+      }
+    },
+    "lint": {
+      "executor": "@nx/eslint:lint",
+      "outputs": ["{options.outputFile}"],
+      "options": {
+        "lintFilePatterns": [
+          "apps/admin-portal/src/**/*.{ts,tsx,js,jsx}",
+          "apps/admin-portal/*.{ts,tsx,js,jsx}"
+        ]
+      }
+    },
+    "build": {
+      "executor": "@nx/next:build",
+      "outputs": ["{options.outputPath}"],
+      "defaultConfiguration": "production",
+      "options": {
+        "outputPath": "dist/apps/admin-portal"
+      },
+      "configurations": {
+        "development": {
+          "outputPath": "apps/admin-portal"
+        },
+        "production": {}
+      }
+    },
+    "serve": {
+      "executor": "@nx/next:server",
+      "defaultConfiguration": "development",
+      "options": {
+        "buildTarget": "admin-portal:build",
+        "dev": true
+      },
+      "configurations": {
+        "development": {
+          "buildTarget": "admin-portal:build:development",
+          "dev": true
+        },
+        "production": {
+          "buildTarget": "admin-portal:build:production",
+          "dev": false
+        }
+      }
+    }
+  }
+}

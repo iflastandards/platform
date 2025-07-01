@@ -48,7 +48,6 @@
       "{workspaceRoot}/playwright.config.ts",
       "{workspaceRoot}/.github/workflows/**/*"
     ]
-    // keep the rest
   },
   "targetDefaults": {
     "build": {
@@ -59,7 +58,13 @@
     },
     "test": {
       "dependsOn": ["^build"],
-      "inputs": ["default", "^default", { "runtime": "node -v" }],
+      "inputs": [
+        "default",
+        "^default",
+        {
+          "runtime": "node -v"
+        }
+      ],
       "outputs": [],
       "cache": true
     },
@@ -154,6 +159,17 @@
         "buildDepsTargetName": "build-deps",
         "watchDepsTargetName": "watch-deps"
       }
+    },
+    {
+      "plugin": "@nx/next/plugin",
+      "options": {
+        "startTargetName": "start",
+        "buildTargetName": "build",
+        "devTargetName": "dev",
+        "serveStaticTargetName": "serve-static",
+        "buildDepsTargetName": "build-deps",
+        "watchDepsTargetName": "watch-deps"
+      }
     }
   ],
   "nxCloudId": "6857fccbb755d4191ce6fbe4",
@@ -171,5 +187,13 @@
     "pnpm --version",
     "echo $NODE_ENV",
     "echo $DOCUSAURUS_SWIZZLE"
-  ]
+  ],
+  "generators": {
+    "@nx/next": {
+      "application": {
+        "style": "tailwind",
+        "linter": "none"
+      }
+    }
+  }
 }

@@ -58,6 +58,7 @@
     "build",
     "coverage",
     "tools",
+    "apps",
     "**/*.test.ts",
     "**/*.test.tsx",
     "**/*.spec.ts",

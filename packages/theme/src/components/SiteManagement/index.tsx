@@ -95,9 +95,9 @@ const managementTabs: TabData[] = [
         type: 'github-cli'
       },
       {
-        id: 'update-context',
-        title: 'Update JSON-LD Context',
-        description: 'Maintain context files for this standard',
+        id: 'update-dctap',
+        title: 'Manage DC-TAP',
+        description: 'Maintain DC-TAP and JSON-LD context files for this standard',
         type: 'codespaces'
       },
       {
