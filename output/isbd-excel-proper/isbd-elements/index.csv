@@ -1,0 +1,3 @@
+Vocabulary Name,Title,Description,File Path,Row Count
+isbd-elements,ISBD Elements,ISBD Elements and Classes,isbd-elements.csv,192
+unconstrained-elements,Unconstrained Elements,ISBD Unconstrained Elements,unconstrained-elements.csv,165

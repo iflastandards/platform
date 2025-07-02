@@ -1,0 +1,8 @@
+Vocabulary Name,Title,Description,File Path,Row Count
+content-form,Content Form,ISBD Content Form vocabulary terms,content-form.csv,13
+content-form-base,Content Form Base,ISBD Content Form Base vocabulary terms,content-form-base.csv,15
+dimensionality,Dimensionality,ISBD Dimensionality vocabulary terms,dimensionality.csv,4
+motion,Motion,ISBD Motion vocabulary terms,motion.csv,4
+sensory-specification,Sensory Specification,ISBD Sensory Specification vocabulary terms,sensory-specification.csv,7
+content-type,Content Type,ISBD Content Type vocabulary for content qualification,content-type.csv,5
+media-type,Media Type,ISBD Media Type vocabulary terms,media-type.csv,12

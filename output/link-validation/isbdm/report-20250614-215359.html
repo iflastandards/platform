@@ -1,0 +1,2359 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Link Validation Report - ISBDM</title>
+    <style>
+        body { 
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; 
+            max-width: 1200px; 
+            margin: 0 auto; 
+            padding: 20px; 
+            line-height: 1.6; 
+        }
+        .header { 
+            background: #f8f9fa; 
+            padding: 20px; 
+            border-radius: 8px; 
+            margin-bottom: 30px; 
+        }
+        .stats { 
+            display: grid; 
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); 
+            gap: 15px; 
+            margin: 20px 0; 
+        }
+        .stat-card { 
+            background: white; 
+            border: 1px solid #e1e5e9; 
+            border-radius: 6px; 
+            padding: 15px; 
+            text-align: center; 
+        }
+        .stat-value { 
+            font-size: 2em; 
+            font-weight: bold; 
+            margin-bottom: 5px; 
+        }
+        .stat-label { 
+            color: #6c757d; 
+            font-size: 0.9em; 
+        }
+        .success { color: #28a745; }
+        .warning { color: #ffc107; }
+        .danger { color: #dc3545; }
+        .page-section { 
+            margin: 30px 0; 
+            border: 1px solid #e1e5e9; 
+            border-radius: 8px; 
+        }
+        .page-header { 
+            background: #f8f9fa; 
+            padding: 15px; 
+            border-bottom: 1px solid #e1e5e9; 
+        }
+        .page-title { 
+            margin: 0 0 5px 0; 
+            font-size: 1.2em; 
+        }
+        .page-url { 
+            color: #6c757d; 
+            font-size: 0.9em; 
+            word-break: break-all; 
+        }
+        .page-url a { 
+            color: #007bff; 
+            text-decoration: none; 
+        }
+        .page-url a:hover { 
+            text-decoration: underline; 
+        }
+        table { 
+            width: 100%; 
+            border-collapse: collapse; 
+            margin: 0; 
+        }
+        th, td { 
+            padding: 12px; 
+            text-align: left; 
+            border-bottom: 1px solid #e1e5e9; 
+        }
+        th { 
+            background: #f8f9fa; 
+            font-weight: 600; 
+        }
+        .broken-link { 
+            color: #dc3545; 
+            font-family: 'Monaco', 'Menlo', monospace; 
+            font-size: 0.9em; 
+            word-break: break-all; 
+        }
+        .link-text { 
+            color: #495057; 
+            font-style: italic; 
+        }
+        .no-issues { 
+            text-align: center; 
+            padding: 40px; 
+            color: #28a745; 
+            font-size: 1.1em; 
+        }
+        .timestamp { 
+            color: #6c757d; 
+            font-size: 0.9em; 
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>Link Validation Report</h1>
+        <p><strong>Site:</strong> ISBDM (<code>http://localhost:3001/ISBDM/</code>)</p>
+        <p><strong>Environment:</strong> localhost</p>
+        <p class="timestamp"><strong>Generated:</strong> 2025-06-15T01:53:59.486Z</p>
+    </div>
+
+    <div class="stats">
+        <div class="stat-card">
+            <div class="stat-value success">1262</div>
+            <div class="stat-label">Valid Links</div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-value danger">138</div>
+            <div class="stat-label">Broken Links</div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-value">1400</div>
+            <div class="stat-label">Total Links</div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-value">342</div>
+            <div class="stat-label">Pages Checked</div>
+        </div>
+        
+        <div class="stat-card">
+            <div class="stat-value warning">0</div>
+            <div class="stat-label">Cached Pages</div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-value">1</div>
+            <div class="stat-label">Changed Pages</div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-value">341</div>
+            <div class="stat-label">New Pages</div>
+        </div>
+        
+    </div>
+
+    
+    <h2>Pages with Broken Links (53)</h2>
+    
+    
+    <div class="page-section">
+        <div class="page-header">
+            <h3 class="page-title">ISBD for Manifestation</h3>
+            <div class="page-url"><a href="http://localhost:3001/ISBDM/docs" target="_blank">http://localhost:3001/ISBDM/docs</a></div>
+        </div>
+        <table>
+            <thead>
+                <tr>
+                    <th>Broken Link</th>
+                    <th>Link Text</th>
+                    <th>Issue Type</th>
+                </tr>
+            </thead>
+            <tbody>
+                
+                <tr>
+                    <td class="broken-link">http://localhost:3001/ISBDM/intro</td>
+                    <td class="link-text">📖 Introduction</td>
+                    <td><span class="danger">Missing Page</span></td>
+                </tr>
+                
+                <tr>
+                    <td class="broken-link">http://localhost:3001/ISBDM/attributes</td>
+                    <td class="link-text">🔧 Elements</td>
+                    <td><span class="danger">Missing Page</span></td>
+                </tr>
+                
+                <tr>
+                    <td class="broken-link">http://localhost:3001/ISBDM/fullex</td>
+                    <td class="link-text">💡 Examples</td>
+                    <td><span class="danger">Missing Page</span></td>
+                </tr>
+                
+                <tr>
+                    <td class="broken-link">http://localhost:3001/ISBDM/rdf/ttl/isbdm.ttl</td>
+                    <td class="link-text">TTL (Turtle)</td>
+                    <td><span class="danger">Missing Page</span></td>
+                </tr>
+                
+                <tr>
+                    <td class="broken-link">http://localhost:3001/ISBDM/rdf/jsonld/isbdm.jsonld</td>
+                    <td class="link-text">JSON-LD</td>
+                    <td><span class="danger">Missing Page</span></td>
+                </tr>
+                
+                <tr>
+                    <td class="broken-link">http://localhost:3001/ISBDM/rdf/xml/isbdm.xml</td>
+                    <td class="link-text">RDF/XML</td>
+                    <td><span class="danger">Missing Page</span></td>
+                </tr>
+                
+            </tbody>
+        </table>
+    </div>
+    
+    <div class="page-section">
+        <div class="page-header">
+            <h3 class="page-title">About | ISBD for Manifestation</h3>
+            <div class="page-url"><a href="http://localhost:3001/ISBDM/docs/about" target="_blank">http://localhost:3001/ISBDM/docs/about</a></div>
+        </div>
+        <table>
+            <thead>
+                <tr>
+                    <th>Broken Link</th>
+                    <th>Link Text</th>
+                    <th>Issue Type</th>
+                </tr>
+            </thead>
+            <tbody>
+                
+                <tr>
+                    <td class="broken-link">http://localhost:3001/ISBDM/docs/ves/1022.html</td>
+                    <td class="link-text">ISBDM Category of Carrier
+value vocabulary</td>
+                    <td><span class="danger">Missing Page</span></td>
+                </tr>
+                
+                <tr>
+                    <td class="broken-link">http://localhost:3001/ISBDM/docs/ves/1264.html</td>
+                    <td class="link-text">ISBDM Category of Content value vocabulary</td>
+                    <td><span class="danger">Missing Page</span></td>
+                </tr>
+                
+            </tbody>
+        </table>
+    </div>
+    
+    <div class="page-section">
+        <div class="page-header">
+            <h3 class="page-title">Preliminary assessment | ISBD for Manifestation</h3>
+            <div class="page-url"><a href="http://localhost:3001/ISBDM/docs/assess/index" target="_blank">http://localhost:3001/ISBDM/docs/assess/index</a></div>
+        </div>
+        <table>
+            <thead>
+                <tr>
+                    <th>Broken Link</th>
+                    <th>Link Text</th>
+                    <th>Issue Type</th>
+                </tr>
+            </thead>
+            <tbody>
+                
+                <tr>
+                    <td class="broken-link">http://localhost:3001/ISBDM/docs/fullimages/x011.html</td>
+                    <td class="link-text">[Expand image]</td>
+                    <td><span class="danger">Missing Page</span></td>
+                </tr>
+                
+                <tr>
+                    <td class="broken-link">http://localhost:3001/ISBDM/docs/fullimages/x010.html</td>
+                    <td class="link-text">[Expand image]</td>
+                    <td><span class="danger">Missing Page</span></td>
+                </tr>
+                
+                <tr>
+                    <td class="broken-link">http://localhost:3001/ISBDM/docs/fullimages/x006.html</td>
+                    <td class="link-text">[Expand image]</td>
+                    <td><span class="danger">Missing Page</span></td>
+                </tr>
+                
+                <tr>
+                    <td class="broken-link">http://localhost:3001/ISBDM/docs/fullimages/x013.html</td>
+                    <td class="link-text">[Expand image]</td>
+                    <td><span class="danger">Missing Page</span></td>
+                </tr>
+                
+                <tr>
+                    <td class="broken-link">http://localhost:3001/ISBDM/docs/fullimages/x007.html</td>
+                    <td class="link-text">[Expand image]</td>
+                    <td><span class="danger">Missing Page</span></td>
+                </tr>
+                
+                <tr>
+                    <td class="broken-link">http://localhost:3001/ISBDM/docs/fullimages/x008.html</td>
+                    <td class="link-text">[Expand image]</td>
+                    <td><span class="danger">Missing Page</span></td>
+                </tr>
+                
+                <tr>
+                    <td class="broken-link">http://localhost:3001/ISBDM/docs/fullimages/x004.html</td>
+                    <td class="link-text">[Expand image]</td>
+                    <td><span class="danger">Missing Page</span></td>
+                </tr>
+                
+                <tr>
+                    <td class="broken-link">http://localhost:3001/ISBDM/docs/fullimages/x009.html</td>
+                    <td class="link-text">[Expand image]</td>
+                    <td><span class="danger">Missing Page</span></td>
+                </tr>
+                
+                <tr>
+                    <td class="broken-link">http://localhost:3001/ISBDM/docs/fullimages/x005.html</td>
+                    <td class="link-text">[Expand image]</td>
+                    <td><span class="danger">Missing Page</span></td>
+                </tr>
+                
+                <tr>
+                    <td class="broken-link">http://localhost:3001/ISBDM/docs/fullimages/x003.html</td>
+                    <td class="link-text">[Expand image]</td>
+                    <td><span class="danger">Missing Page</span></td>
+                </tr>
+                
+                <tr>
+                    <td class="broken-link">http://localhost:3001/ISBDM/docs/fullimages/x002.html</td>
+                    <td class="link-text">[Expand image]</td>
+                    <td><span class="danger">Missing Page</span></td>
+                </tr>
+                
+                <tr>
+                    <td class="broken-link">http://localhost:3001/ISBDM/docs/fullimages/x001.html</td>
+                    <td class="link-text">[Expand image]</td>
+                    <td><span class="danger">Missing Page</span></td>
+                </tr>
+                
+                <tr>
+                    <td class="broken-link">http://localhost:3001/ISBDM/docs/intro#i022</td>
+                    <td class="link-text">✽</td>
+                    <td><span class="danger">Missing Page</span></td>
+                </tr>
+                
+                <tr>
+                    <td class="broken-link">http://localhost:3001/ISBDM/docs/intro#i022</td>
+                    <td class="link-text">✽</td>
+                    <td><span class="danger">Missing Page</span></td>
+                </tr>
+                
+                <tr>
+                    <td class="broken-link">http://localhost:3001/ISBDM/docs/intro#i022</td>
+                    <td class="link-text">✽</td>
+                    <td><span class="danger">Missing Page</span></td>
+                </tr>
+                
+                <tr>
+                    <td class="broken-link">http://localhost:3001/ISBDM/docs/intro#i022</td>
+                    <td class="link-text">✽</td>
+                    <td><span class="danger">Missing Page</span></td>
+                </tr>
+                
+                <tr>
+                    <td class="broken-link">http://localhost:3001/ISBDM/docs/intro#i022</td>
+                    <td class="link-text">✽</td>
+                    <td><span class="danger">Missing Page</span></td>
+                </tr>
+                
+                <tr>
+                    <td class="broken-link">http://localhost:3001/ISBDM/docs/intro#i022</td>
+                    <td class="link-text">✽</td>
+                    <td><span class="danger">Missing Page</span></td>
+                </tr>
+                
+                <tr>
+                    <td class="broken-link">http://localhost:3001/ISBDM/docs/intro#i022</td>
+                    <td class="link-text">✽</td>
+                    <td><span class="danger">Missing Page</span></td>
+                </tr>
+                
+                <tr>
+                    <td class="broken-link">http://localhost:3001/ISBDM/docs/intro#i022</td>
+                    <td class="link-text">✽</td>
+                    <td><span class="danger">Missing Page</span></td>
+                </tr>
+                
+                <tr>
+                    <td class="broken-link">http://localhost:3001/ISBDM/docs/intro#i022</td>
+                    <td class="link-text">✽</td>
+                    <td><span class="danger">Missing Page</span></td>
+                </tr>
+                
+                <tr>
+                    <td class="broken-link">http://localhost:3001/ISBDM/docs/intro#i022</td>
+                    <td class="link-text">✽</td>
+                    <td><span class="danger">Missing Page</span></td>
+                </tr>
+                
+                <tr>
+                    <td class="broken-link">http://localhost:3001/ISBDM/docs/relationships</td>
+                    <td class="link-text">relationship elements</td>
+                    <td><span class="danger">Missing Page</span></td>
+                </tr>
+                
+                <tr>
+                    <td class="broken-link">http://localhost:3001/ISBDM/docs/intro#i022</td>
+                    <td class="link-text">✽</td>
+                    <td><span class="danger">Missing Page</span></td>
+                </tr>
+                
+                <tr>
+                    <td class="broken-link">http://localhost:3001/ISBDM/docs/intro#i022</td>
+                    <td class="link-text">✽</td>
+                    <td><span class="danger">Missing Page</span></td>
+                </tr>
+                
+                <tr>
+                    <td class="broken-link">http://localhost:3001/ISBDM/docs/intro#i022</td>
+                    <td class="link-text">✽</td>
+                    <td><span class="danger">Missing Page</span></td>
+                </tr>
+                
+                <tr>
+                    <td class="broken-link">http://localhost:3001/ISBDM/docs/intro#i022</td>
+                    <td class="link-text">✽</td>
+                    <td><span class="danger">Missing Page</span></td>
+                </tr>
+                
+                <tr>
+                    <td class="broken-link">http://localhost:3001/ISBDM/docs/intro#i022</td>
+                    <td class="link-text">✽</td>
+                    <td><span class="danger">Missing Page</span></td>
+                </tr>
+                
+                <tr>
+                    <td class="broken-link">http://localhost:3001/ISBDM/docs/intro#i022</td>
+                    <td class="link-text">✽</td>
+                    <td><span class="danger">Missing Page</span></td>
+                </tr>
+                
+                <tr>
+                    <td class="broken-link">http://localhost:3001/ISBDM/docs/intro#i022</td>
+                    <td class="link-text">✽</td>
+                    <td><span class="danger">Missing Page</span></td>
+                </tr>
+                
+                <tr>
+                    <td class="broken-link">http://localhost:3001/ISBDM/docs/intro#i022</td>
+                    <td class="link-text">✽</td>
+                    <td><span class="danger">Missing Page</span></td>
+                </tr>
+                
+            </tbody>
+        </table>
+    </div>
+    
+    <div class="page-section">
+        <div class="page-header">
+            <h3 class="page-title">has unitary structure | ISBD for Manifestation</h3>
+            <div class="page-url"><a href="http://localhost:3001/ISBDM/docs/attributes/1262" target="_blank">http://localhost:3001/ISBDM/docs/attributes/1262</a></div>
+        </div>
+        <table>
+            <thead>
+                <tr>
+                    <th>Broken Link</th>
+                    <th>Link Text</th>
+                    <th>Issue Type</th>
+                </tr>
+            </thead>
+            <tbody>
+                
+                <tr>
+                    <td class="broken-link">http://localhost:3001/ISBDM/docs/intro#i022</td>
+                    <td class="link-text">✽</td>
+                    <td><span class="danger">Missing Page</span></td>
+                </tr>
+                
+            </tbody>
+        </table>
+    </div>
+    
+    <div class="page-section">
+        <div class="page-header">
+            <h3 class="page-title">has designation of number of sound channels | ISBD for Manifestation</h3>
+            <div class="page-url"><a href="http://localhost:3001/ISBDM/docs/attributes/1285" target="_blank">http://localhost:3001/ISBDM/docs/attributes/1285</a></div>
+        </div>
+        <table>
+            <thead>
+                <tr>
+                    <th>Broken Link</th>
+                    <th>Link Text</th>
+                    <th>Issue Type</th>
+                </tr>
+            </thead>
+            <tbody>
+                
+                <tr>
+                    <td class="broken-link">http://localhost:3001/ISBDM/docs/ves/1285</td>
+                    <td class="link-text">ISBDM Designation of Sound Channels value vocabulary</td>
+                    <td><span class="danger">Missing Page</span></td>
+                </tr>
+                
+            </tbody>
+        </table>
+    </div>
+    
+    <div class="page-section">
+        <div class="page-header">
+            <h3 class="page-title">Dark Mode Test Page | ISBD for Manifestation</h3>
+            <div class="page-url"><a href="http://localhost:3001/ISBDM/docs/examples/dark-mode-test" target="_blank">http://localhost:3001/ISBDM/docs/examples/dark-mode-test</a></div>
+        </div>
+        <table>
+            <thead>
+                <tr>
+                    <th>Broken Link</th>
+                    <th>Link Text</th>
+                    <th>Issue Type</th>
+                </tr>
+            </thead>
+            <tbody>
+                
+                <tr>
+                    <td class="broken-link">http://localhost:3001/ISBDM/docs/test/sub1</td>
+                    <td class="link-text">Test Sub-type 1</td>
+                    <td><span class="danger">Missing Page</span></td>
+                </tr>
+                
+                <tr>
+                    <td class="broken-link">http://localhost:3001/ISBDM/docs/test/sub2</td>
+                    <td class="link-text">Test Sub-type 2</td>
+                    <td><span class="danger">Missing Page</span></td>
+                </tr>
+                
+                <tr>
+                    <td class="broken-link">http://localhost:3001/ISBDM/docs/test</td>
+                    <td class="link-text">Test InLink in Guide</td>
+                    <td><span class="danger">Missing Page</span></td>
+                </tr>
+                
+                <tr>
+                    <td class="broken-link">http://localhost:3001/ISBDM/docs/test</td>
+                    <td class="link-text">InLink in table</td>
+                    <td><span class="danger">Missing Page</span></td>
+                </tr>
+                
+                <tr>
+                    <td class="broken-link">http://localhost:3001/ISBDM/docs/test</td>
+                    <td class="link-text">InLink in regular content</td>
+                    <td><span class="danger">Missing Page</span></td>
+                </tr>
+                
+                <tr>
+                    <td class="broken-link">http://localhost:3001/ISBDM/docs/test</td>
+                    <td class="link-text">InLink inside guide block</td>
+                    <td><span class="danger">Missing Page</span></td>
+                </tr>
+                
+                <tr>
+                    <td class="broken-link">http://localhost:3001/ISBDM/docs/test</td>
+                    <td class="link-text">InLink inside stip block</td>
+                    <td><span class="danger">Missing Page</span></td>
+                </tr>
+                
+                <tr>
+                    <td class="broken-link">http://localhost:3001/ISBDM/docs/test</td>
+                    <td class="link-text">InLink in table</td>
+                    <td><span class="danger">Missing Page</span></td>
+                </tr>
+                
+                <tr>
+                    <td class="broken-link">http://localhost:3001/ISBDM/docs/test</td>
+                    <td class="link-text">an InLink</td>
+                    <td><span class="danger">Missing Page</span></td>
+                </tr>
+                
+                <tr>
+                    <td class="broken-link">http://localhost:3001/ISBDM/docs/test1</td>
+                    <td class="link-text">Link 1</td>
+                    <td><span class="danger">Missing Page</span></td>
+                </tr>
+                
+                <tr>
+                    <td class="broken-link">http://localhost:3001/ISBDM/docs/test2</td>
+                    <td class="link-text">Link 2</td>
+                    <td><span class="danger">Missing Page</span></td>
+                </tr>
+                
+            </tbody>
+        </table>
+    </div>
+    
+    <div class="page-section">
+        <div class="page-header">
+            <h3 class="page-title">Figure Component | ISBD for Manifestation</h3>
+            <div class="page-url"><a href="http://localhost:3001/ISBDM/docs/examples/figure-component" target="_blank">http://localhost:3001/ISBDM/docs/examples/figure-component</a></div>
+        </div>
+        <table>
+            <thead>
+                <tr>
+                    <th>Broken Link</th>
+                    <th>Link Text</th>
+                    <th>Issue Type</th>
+                </tr>
+            </thead>
+            <tbody>
+                
+                <tr>
+                    <td class="broken-link">http://localhost:3001/ISBDM/img/large-diagram.png</td>
+                    <td class="link-text">[Expand image]</td>
+                    <td><span class="danger">Missing Page</span></td>
+                </tr>
+                
+                <tr>
+                    <td class="broken-link">http://localhost:3001/ISBDM/img/detailed-diagram.png</td>
+                    <td class="link-text">[View detailed version]</td>
+                    <td><span class="danger">Missing Page</span></td>
+                </tr>
+                
+            </tbody>
+        </table>
+    </div>
+    
+    <div class="page-section">
+        <div class="page-header">
+            <h3 class="page-title">InLink Component | ISBD for Manifestation</h3>
+            <div class="page-url"><a href="http://localhost:3001/ISBDM/docs/examples/inlink-component" target="_blank">http://localhost:3001/ISBDM/docs/examples/inlink-component</a></div>
+        </div>
+        <table>
+            <thead>
+                <tr>
+                    <th>Broken Link</th>
+                    <th>Link Text</th>
+                    <th>Issue Type</th>
+                </tr>
+            </thead>
+            <tbody>
+                
+                <tr>
+                    <td class="broken-link">http://localhost:3001/ISBDM/docs/example</td>
+                    <td class="link-text">Catalogue of shipwrecked books ​(2018; William Collins; volume; case binding)</td>
+                    <td><span class="danger">Missing Page</span></td>
+                </tr>
+                
+            </tbody>
+        </table>
+    </div>
+    
+    <div class="page-section">
+        <div class="page-header">
+            <h3 class="page-title">InLink Wrapping Demo | ISBD for Manifestation</h3>
+            <div class="page-url"><a href="http://localhost:3001/ISBDM/docs/examples/inlink-wrapping-demo" target="_blank">http://localhost:3001/ISBDM/docs/examples/inlink-wrapping-demo</a></div>
+        </div>
+        <table>
+            <thead>
+                <tr>
+                    <th>Broken Link</th>
+                    <th>Link Text</th>
+                    <th>Issue Type</th>
+                </tr>
+            </thead>
+            <tbody>
+                
+                <tr>
+                    <td class="broken-link">http://localhost:3001/ISBDM/example</td>
+                    <td class="link-text">Catalogue of shipwrecked books ​(2018; William Collins; volume; case binding)</td>
+                    <td><span class="danger">Missing Page</span></td>
+                </tr>
+                
+                <tr>
+                    <td class="broken-link">http://localhost:3001/ISBDM/example</td>
+                    <td class="link-text">A very long title that contains ​(some parenthetical information) and continues afterwards</td>
+                    <td><span class="danger">Missing Page</span></td>
+                </tr>
+                
+                <tr>
+                    <td class="broken-link">http://localhost:3001/ISBDM/example</td>
+                    <td class="link-text">Book title ​(author) published by ​(publisher) in year ​(2024)</td>
+                    <td><span class="danger">Missing Page</span></td>
+                </tr>
+                
+                <tr>
+                    <td class="broken-link">http://localhost:3001/ISBDM/example</td>
+                    <td class="link-text">Verylongwordwithoutspaces ​(parenthetical) anotherlongword</td>
+                    <td><span class="danger">Missing Page</span></td>
+                </tr>
+                
+                <tr>
+                    <td class="broken-link">http://localhost:3001/ISBDM/example</td>
+                    <td class="link-text">Catalogue of shipwrecked books (2018; William Collins; volume; case binding)</td>
+                    <td><span class="danger">Missing Page</span></td>
+                </tr>
+                
+            </tbody>
+        </table>
+    </div>
+    
+    <div class="page-section">
+        <div class="page-header">
+            <h3 class="page-title">Mandatory Component | ISBD for Manifestation</h3>
+            <div class="page-url"><a href="http://localhost:3001/ISBDM/docs/examples/mandatory-component" target="_blank">http://localhost:3001/ISBDM/docs/examples/mandatory-component</a></div>
+        </div>
+        <table>
+            <thead>
+                <tr>
+                    <th>Broken Link</th>
+                    <th>Link Text</th>
+                    <th>Issue Type</th>
+                </tr>
+            </thead>
+            <tbody>
+                
+                <tr>
+                    <td class="broken-link">http://localhost:3001/ISBDM/docs/intro#i022</td>
+                    <td class="link-text">✽</td>
+                    <td><span class="danger">Missing Page</span></td>
+                </tr>
+                
+                <tr>
+                    <td class="broken-link">http://localhost:3001/ISBDM/docs/intro#i022</td>
+                    <td class="link-text">!</td>
+                    <td><span class="danger">Missing Page</span></td>
+                </tr>
+                
+                <tr>
+                    <td class="broken-link">http://localhost:3001/ISBDM/docs/intro#i022</td>
+                    <td class="link-text">✽</td>
+                    <td><span class="danger">Missing Page</span></td>
+                </tr>
+                
+                <tr>
+                    <td class="broken-link">http://localhost:3001/ISBDM/docs/custom-path</td>
+                    <td class="link-text">✽</td>
+                    <td><span class="danger">Missing Page</span></td>
+                </tr>
+                
+            </tbody>
+        </table>
+    </div>
+    
+    <div class="page-section">
+        <div class="page-header">
+            <h3 class="page-title">OutLink Component | ISBD for Manifestation</h3>
+            <div class="page-url"><a href="http://localhost:3001/ISBDM/docs/examples/outlink-component" target="_blank">http://localhost:3001/ISBDM/docs/examples/outlink-component</a></div>
+        </div>
+        <table>
+            <thead>
+                <tr>
+                    <th>Broken Link</th>
+                    <th>Link Text</th>
+                    <th>Issue Type</th>
+                </tr>
+            </thead>
+            <tbody>
+                
+                <tr>
+                    <td class="broken-link">http://localhost:3001/ISBDM/docs/intro</td>
+                    <td class="link-text">Introduction</td>
+                    <td><span class="danger">Missing Page</span></td>
+                </tr>
+                
+            </tbody>
+        </table>
+    </div>
+    
+    <div class="page-section">
+        <div class="page-header">
+            <h3 class="page-title">ISBDM Application Profiles | ISBD for Manifestation</h3>
+            <div class="page-url"><a href="http://localhost:3001/ISBDM/docs/examples/profiles/examples" target="_blank">http://localhost:3001/ISBDM/docs/examples/profiles/examples</a></div>
+        </div>
+        <table>
+            <thead>
+                <tr>
+                    <th>Broken Link</th>
+                    <th>Link Text</th>
+                    <th>Issue Type</th>
+                </tr>
+            </thead>
+            <tbody>
+                
+                <tr>
+                    <td class="broken-link">http://localhost:3001/ISBDM/assets/files/isbdm-elements-profile-b6d6749f2982184438e4eca66bd2fc46.csv</td>
+                    <td class="link-text">isbdm-elements-profile.csv</td>
+                    <td><span class="danger">Missing Page</span></td>
+                </tr>
+                
+                <tr>
+                    <td class="broken-link">http://localhost:3001/ISBDM/assets/files/isbdm-values-profile-c81a290600154f7d6027b75aa56e608f.csv</td>
+                    <td class="link-text">isbdm-values-profile.csv</td>
+                    <td><span class="danger">Missing Page</span></td>
+                </tr>
+                
+                <tr>
+                    <td class="broken-link">http://localhost:3001/ISBDM/data/contexts</td>
+                    <td class="link-text">/data/contexts/</td>
+                    <td><span class="danger">Missing Page</span></td>
+                </tr>
+                
+            </tbody>
+        </table>
+    </div>
+    
+    <div class="page-section">
+        <div class="page-header">
+            <h3 class="page-title">Full Images | ISBD for Manifestation</h3>
+            <div class="page-url"><a href="http://localhost:3001/ISBDM/docs/fullimages" target="_blank">http://localhost:3001/ISBDM/docs/fullimages</a></div>
+        </div>
+        <table>
+            <thead>
+                <tr>
+                    <th>Broken Link</th>
+                    <th>Link Text</th>
+                    <th>Issue Type</th>
+                </tr>
+            </thead>
+            <tbody>
+                
+                <tr>
+                    <td class="broken-link">http://localhost:3001/ISBDM/docs/x001</td>
+                    <td class="link-text">Image 1</td>
+                    <td><span class="danger">Missing Page</span></td>
+                </tr>
+                
+                <tr>
+                    <td class="broken-link">http://localhost:3001/ISBDM/docs/x002</td>
+                    <td class="link-text">Image 2</td>
+                    <td><span class="danger">Missing Page</span></td>
+                </tr>
+                
+                <tr>
+                    <td class="broken-link">http://localhost:3001/ISBDM/docs/x003</td>
+                    <td class="link-text">Image 3</td>
+                    <td><span class="danger">Missing Page</span></td>
+                </tr>
+                
+                <tr>
+                    <td class="broken-link">http://localhost:3001/ISBDM/docs/x004</td>
+                    <td class="link-text">Image 4</td>
+                    <td><span class="danger">Missing Page</span></td>
+                </tr>
+                
+                <tr>
+                    <td class="broken-link">http://localhost:3001/ISBDM/docs/x005</td>
+                    <td class="link-text">Image 5</td>
+                    <td><span class="danger">Missing Page</span></td>
+                </tr>
+                
+                <tr>
+                    <td class="broken-link">http://localhost:3001/ISBDM/docs/x006</td>
+                    <td class="link-text">Image 6</td>
+                    <td><span class="danger">Missing Page</span></td>
+                </tr>
+                
+                <tr>
+                    <td class="broken-link">http://localhost:3001/ISBDM/docs/x007</td>
+                    <td class="link-text">Image 7</td>
+                    <td><span class="danger">Missing Page</span></td>
+                </tr>
+                
+                <tr>
+                    <td class="broken-link">http://localhost:3001/ISBDM/docs/x008</td>
+                    <td class="link-text">Image 8</td>
+                    <td><span class="danger">Missing Page</span></td>
+                </tr>
+                
+                <tr>
+                    <td class="broken-link">http://localhost:3001/ISBDM/docs/x009</td>
+                    <td class="link-text">Image 9</td>
+                    <td><span class="danger">Missing Page</span></td>
+                </tr>
+                
+                <tr>
+                    <td class="broken-link">http://localhost:3001/ISBDM/docs/x010</td>
+                    <td class="link-text">Image 10</td>
+                    <td><span class="danger">Missing Page</span></td>
+                </tr>
+                
+                <tr>
+                    <td class="broken-link">http://localhost:3001/ISBDM/docs/x011</td>
+                    <td class="link-text">Image 11</td>
+                    <td><span class="danger">Missing Page</span></td>
+                </tr>
+                
+                <tr>
+                    <td class="broken-link">http://localhost:3001/ISBDM/docs/x012</td>
+                    <td class="link-text">Image 12</td>
+                    <td><span class="danger">Missing Page</span></td>
+                </tr>
+                
+                <tr>
+                    <td class="broken-link">http://localhost:3001/ISBDM/docs/x013</td>
+                    <td class="link-text">Image 13</td>
+                    <td><span class="danger">Missing Page</span></td>
+                </tr>
+                
+            </tbody>
+        </table>
+    </div>
+    
+    <div class="page-section">
+        <div class="page-header">
+            <h3 class="page-title">Introduction | ISBD for Manifestation</h3>
+            <div class="page-url"><a href="http://localhost:3001/ISBDM/docs/intro/index" target="_blank">http://localhost:3001/ISBDM/docs/intro/index</a></div>
+        </div>
+        <table>
+            <thead>
+                <tr>
+                    <th>Broken Link</th>
+                    <th>Link Text</th>
+                    <th>Issue Type</th>
+                </tr>
+            </thead>
+            <tbody>
+                
+                <tr>
+                    <td class="broken-link">http://localhost:3001/ISBDM/docs/relationships</td>
+                    <td class="link-text">Relationship elements</td>
+                    <td><span class="danger">Missing Page</span></td>
+                </tr>
+                
+                <tr>
+                    <td class="broken-link">http://localhost:3001/ISBDM/docs/relationships/1005.html</td>
+                    <td class="link-text">has agent associated with manifestation</td>
+                    <td><span class="danger">Missing Page</span></td>
+                </tr>
+                
+                <tr>
+                    <td class="broken-link">http://localhost:3001/ISBDM/docs/relationships/1009.html</td>
+                    <td class="link-text">has place associated with manifestation</td>
+                    <td><span class="danger">Missing Page</span></td>
+                </tr>
+                
+                <tr>
+                    <td class="broken-link">http://localhost:3001/ISBDM/docs/relationships/1220.html</td>
+                    <td class="link-text">has work embodied in manifestation</td>
+                    <td><span class="danger">Missing Page</span></td>
+                </tr>
+                
+                <tr>
+                    <td class="broken-link">http://localhost:3001/ISBDM/docs/attributes/1264.html</td>
+                    <td class="link-text">has category of embodied content</td>
+                    <td><span class="danger">Missing Page</span></td>
+                </tr>
+                
+                <tr>
+                    <td class="broken-link">http://localhost:3001/ISBDM/docs/notes/1265.html</td>
+                    <td class="link-text">has note on entity associated with manifestation</td>
+                    <td><span class="danger">Missing Page</span></td>
+                </tr>
+                
+                <tr>
+                    <td class="broken-link">http://localhost:3001/ISBDM/docs/relationships</td>
+                    <td class="link-text">relationship elements</td>
+                    <td><span class="danger">Missing Page</span></td>
+                </tr>
+                
+            </tbody>
+        </table>
+    </div>
+    
+    <div class="page-section">
+        <div class="page-header">
+            <h3 class="page-title">has agent associated with manifestation | ISBD for Manifestation</h3>
+            <div class="page-url"><a href="http://localhost:3001/ISBDM/docs/relationships/1005" target="_blank">http://localhost:3001/ISBDM/docs/relationships/1005</a></div>
+        </div>
+        <table>
+            <thead>
+                <tr>
+                    <th>Broken Link</th>
+                    <th>Link Text</th>
+                    <th>Issue Type</th>
+                </tr>
+            </thead>
+            <tbody>
+                
+                <tr>
+                    <td class="broken-link">http://localhost:3001/ISBDM/docs/intro#i022</td>
+                    <td class="link-text">✽</td>
+                    <td><span class="danger">Missing Page</span></td>
+                </tr>
+                
+            </tbody>
+        </table>
+    </div>
+    
+    <div class="page-section">
+        <div class="page-header">
+            <h3 class="page-title">has place associated with manifestation | ISBD for Manifestation</h3>
+            <div class="page-url"><a href="http://localhost:3001/ISBDM/docs/relationships/1009" target="_blank">http://localhost:3001/ISBDM/docs/relationships/1009</a></div>
+        </div>
+        <table>
+            <thead>
+                <tr>
+                    <th>Broken Link</th>
+                    <th>Link Text</th>
+                    <th>Issue Type</th>
+                </tr>
+            </thead>
+            <tbody>
+                
+                <tr>
+                    <td class="broken-link">http://localhost:3001/ISBDM/docs/intro#i022</td>
+                    <td class="link-text">✽</td>
+                    <td><span class="danger">Missing Page</span></td>
+                </tr>
+                
+            </tbody>
+        </table>
+    </div>
+    
+    <div class="page-section">
+        <div class="page-header">
+            <h3 class="page-title">has time-span associated with manifestation | ISBD for Manifestation</h3>
+            <div class="page-url"><a href="http://localhost:3001/ISBDM/docs/relationships/1010" target="_blank">http://localhost:3001/ISBDM/docs/relationships/1010</a></div>
+        </div>
+        <table>
+            <thead>
+                <tr>
+                    <th>Broken Link</th>
+                    <th>Link Text</th>
+                    <th>Issue Type</th>
+                </tr>
+            </thead>
+            <tbody>
+                
+                <tr>
+                    <td class="broken-link">http://localhost:3001/ISBDM/docs/intro#i022</td>
+                    <td class="link-text">✽</td>
+                    <td><span class="danger">Missing Page</span></td>
+                </tr>
+                
+            </tbody>
+        </table>
+    </div>
+    
+    <div class="page-section">
+        <div class="page-header">
+            <h3 class="page-title">has expression embodied in manifestation | ISBD for Manifestation</h3>
+            <div class="page-url"><a href="http://localhost:3001/ISBDM/docs/relationships/1012" target="_blank">http://localhost:3001/ISBDM/docs/relationships/1012</a></div>
+        </div>
+        <table>
+            <thead>
+                <tr>
+                    <th>Broken Link</th>
+                    <th>Link Text</th>
+                    <th>Issue Type</th>
+                </tr>
+            </thead>
+            <tbody>
+                
+                <tr>
+                    <td class="broken-link">http://localhost:3001/ISBDM/docs/intro#i022</td>
+                    <td class="link-text">✽</td>
+                    <td><span class="danger">Missing Page</span></td>
+                </tr>
+                
+            </tbody>
+        </table>
+    </div>
+    
+    <div class="page-section">
+        <div class="page-header">
+            <h3 class="page-title">has creator agent of manifestation | ISBD for Manifestation</h3>
+            <div class="page-url"><a href="http://localhost:3001/ISBDM/docs/relationships/1019" target="_blank">http://localhost:3001/ISBDM/docs/relationships/1019</a></div>
+        </div>
+        <table>
+            <thead>
+                <tr>
+                    <th>Broken Link</th>
+                    <th>Link Text</th>
+                    <th>Issue Type</th>
+                </tr>
+            </thead>
+            <tbody>
+                
+                <tr>
+                    <td class="broken-link">http://localhost:3001/ISBDM/docs/intro#i022</td>
+                    <td class="link-text">✽</td>
+                    <td><span class="danger">Missing Page</span></td>
+                </tr>
+                
+            </tbody>
+        </table>
+    </div>
+    
+    <div class="page-section">
+        <div class="page-header">
+            <h3 class="page-title">has work embodied in manifestation | ISBD for Manifestation</h3>
+            <div class="page-url"><a href="http://localhost:3001/ISBDM/docs/relationships/1220" target="_blank">http://localhost:3001/ISBDM/docs/relationships/1220</a></div>
+        </div>
+        <table>
+            <thead>
+                <tr>
+                    <th>Broken Link</th>
+                    <th>Link Text</th>
+                    <th>Issue Type</th>
+                </tr>
+            </thead>
+            <tbody>
+                
+                <tr>
+                    <td class="broken-link">http://localhost:3001/ISBDM/docs/intro#i022</td>
+                    <td class="link-text">✽</td>
+                    <td><span class="danger">Missing Page</span></td>
+                </tr>
+                
+            </tbody>
+        </table>
+    </div>
+    
+    <div class="page-section">
+        <div class="page-header">
+            <h3 class="page-title">has date of creation of manifestation | ISBD for Manifestation</h3>
+            <div class="page-url"><a href="http://localhost:3001/ISBDM/docs/relationships/1235" target="_blank">http://localhost:3001/ISBDM/docs/relationships/1235</a></div>
+        </div>
+        <table>
+            <thead>
+                <tr>
+                    <th>Broken Link</th>
+                    <th>Link Text</th>
+                    <th>Issue Type</th>
+                </tr>
+            </thead>
+            <tbody>
+                
+                <tr>
+                    <td class="broken-link">http://localhost:3001/ISBDM/docs/intro#i022</td>
+                    <td class="link-text">✽</td>
+                    <td><span class="danger">Missing Page</span></td>
+                </tr>
+                
+                <tr>
+                    <td class="broken-link">http://localhost:3001/ISBDM/docs/fullex/fx941</td>
+                    <td class="link-text">Who I am ​(2012; HarperCollinsPublishers; volume; case binding)</td>
+                    <td><span class="danger">Missing Page</span></td>
+                </tr>
+                
+            </tbody>
+        </table>
+    </div>
+    
+    <div class="page-section">
+        <div class="page-header">
+            <h3 class="page-title">has place of creation of manifestation | ISBD for Manifestation</h3>
+            <div class="page-url"><a href="http://localhost:3001/ISBDM/docs/relationships/1236" target="_blank">http://localhost:3001/ISBDM/docs/relationships/1236</a></div>
+        </div>
+        <table>
+            <thead>
+                <tr>
+                    <th>Broken Link</th>
+                    <th>Link Text</th>
+                    <th>Issue Type</th>
+                </tr>
+            </thead>
+            <tbody>
+                
+                <tr>
+                    <td class="broken-link">http://localhost:3001/ISBDM/docs/intro#i022</td>
+                    <td class="link-text">✽</td>
+                    <td><span class="danger">Missing Page</span></td>
+                </tr>
+                
+                <tr>
+                    <td class="broken-link">http://localhost:3001/ISBDM/docs/fullex/fx941</td>
+                    <td class="link-text">Who I am ​(2012; HarperCollinsPublishers; volume; case binding)</td>
+                    <td><span class="danger">Missing Page</span></td>
+                </tr>
+                
+            </tbody>
+        </table>
+    </div>
+    
+    <div class="page-section">
+        <div class="page-header">
+            <h3 class="page-title">has creator person of manifestation | ISBD for Manifestation</h3>
+            <div class="page-url"><a href="http://localhost:3001/ISBDM/docs/relationships/1246" target="_blank">http://localhost:3001/ISBDM/docs/relationships/1246</a></div>
+        </div>
+        <table>
+            <thead>
+                <tr>
+                    <th>Broken Link</th>
+                    <th>Link Text</th>
+                    <th>Issue Type</th>
+                </tr>
+            </thead>
+            <tbody>
+                
+                <tr>
+                    <td class="broken-link">http://localhost:3001/ISBDM/docs/intro#i022</td>
+                    <td class="link-text">✽</td>
+                    <td><span class="danger">Missing Page</span></td>
+                </tr>
+                
+            </tbody>
+        </table>
+    </div>
+    
+    <div class="page-section">
+        <div class="page-header">
+            <h3 class="page-title">has creator collective agent of manifestation | ISBD for Manifestation</h3>
+            <div class="page-url"><a href="http://localhost:3001/ISBDM/docs/relationships/1251" target="_blank">http://localhost:3001/ISBDM/docs/relationships/1251</a></div>
+        </div>
+        <table>
+            <thead>
+                <tr>
+                    <th>Broken Link</th>
+                    <th>Link Text</th>
+                    <th>Issue Type</th>
+                </tr>
+            </thead>
+            <tbody>
+                
+                <tr>
+                    <td class="broken-link">http://localhost:3001/ISBDM/docs/intro#i022</td>
+                    <td class="link-text">✽</td>
+                    <td><span class="danger">Missing Page</span></td>
+                </tr>
+                
+            </tbody>
+        </table>
+    </div>
+    
+    <div class="page-section">
+        <div class="page-header">
+            <h3 class="page-title">has authorized access point of manifestation | ISBD for Manifestation</h3>
+            <div class="page-url"><a href="http://localhost:3001/ISBDM/docs/relationships/1257" target="_blank">http://localhost:3001/ISBDM/docs/relationships/1257</a></div>
+        </div>
+        <table>
+            <thead>
+                <tr>
+                    <th>Broken Link</th>
+                    <th>Link Text</th>
+                    <th>Issue Type</th>
+                </tr>
+            </thead>
+            <tbody>
+                
+                <tr>
+                    <td class="broken-link">http://localhost:3001/ISBDM/docs/intro#i022</td>
+                    <td class="link-text">✽</td>
+                    <td><span class="danger">Missing Page</span></td>
+                </tr>
+                
+            </tbody>
+        </table>
+    </div>
+    
+    <div class="page-section">
+        <div class="page-header">
+            <h3 class="page-title">has appellation of manifestation | ISBD for Manifestation</h3>
+            <div class="page-url"><a href="http://localhost:3001/ISBDM/docs/relationships/1274" target="_blank">http://localhost:3001/ISBDM/docs/relationships/1274</a></div>
+        </div>
+        <table>
+            <thead>
+                <tr>
+                    <th>Broken Link</th>
+                    <th>Link Text</th>
+                    <th>Issue Type</th>
+                </tr>
+            </thead>
+            <tbody>
+                
+                <tr>
+                    <td class="broken-link">http://localhost:3001/ISBDM/docs/fullex/fx941</td>
+                    <td class="link-text">Who I am ​(2012; HarperCollinsPublishers; volume; case binding)</td>
+                    <td><span class="danger">Missing Page</span></td>
+                </tr>
+                
+            </tbody>
+        </table>
+    </div>
+    
+    <div class="page-section">
+        <div class="page-header">
+            <h3 class="page-title">has manifestation statement | ISBD for Manifestation</h3>
+            <div class="page-url"><a href="http://localhost:3001/ISBDM/docs/statements/1025" target="_blank">http://localhost:3001/ISBDM/docs/statements/1025</a></div>
+        </div>
+        <table>
+            <thead>
+                <tr>
+                    <th>Broken Link</th>
+                    <th>Link Text</th>
+                    <th>Issue Type</th>
+                </tr>
+            </thead>
+            <tbody>
+                
+                <tr>
+                    <td class="broken-link">http://localhost:3001/ISBDM/docs/intro#i022</td>
+                    <td class="link-text">✽</td>
+                    <td><span class="danger">Missing Page</span></td>
+                </tr>
+                
+                <tr>
+                    <td class="broken-link">http://localhost:3001/ISBDM/docs/fullex/fx041.html</td>
+                    <td class="link-text">Who I am (2012; HarperCollinsPublishers; volume; case binding)</td>
+                    <td><span class="danger">Missing Page</span></td>
+                </tr>
+                
+            </tbody>
+        </table>
+    </div>
+    
+    <div class="page-section">
+        <div class="page-header">
+            <h3 class="page-title">has manifestation statement of title and responsibility | ISBD for Manifestation</h3>
+            <div class="page-url"><a href="http://localhost:3001/ISBDM/docs/statements/1028" target="_blank">http://localhost:3001/ISBDM/docs/statements/1028</a></div>
+        </div>
+        <table>
+            <thead>
+                <tr>
+                    <th>Broken Link</th>
+                    <th>Link Text</th>
+                    <th>Issue Type</th>
+                </tr>
+            </thead>
+            <tbody>
+                
+                <tr>
+                    <td class="broken-link">http://localhost:3001/ISBDM/docs/intro#i022</td>
+                    <td class="link-text">✽</td>
+                    <td><span class="danger">Missing Page</span></td>
+                </tr>
+                
+            </tbody>
+        </table>
+    </div>
+    
+    <div class="page-section">
+        <div class="page-header">
+            <h3 class="page-title">ISBDM Category of Carrier value vocabulary | ISBD for Manifestation</h3>
+            <div class="page-url"><a href="http://localhost:3001/ISBDM/docs/ves/1022" target="_blank">http://localhost:3001/ISBDM/docs/ves/1022</a></div>
+        </div>
+        <table>
+            <thead>
+                <tr>
+                    <th>Broken Link</th>
+                    <th>Link Text</th>
+                    <th>Issue Type</th>
+                </tr>
+            </thead>
+            <tbody>
+                
+                <tr>
+                    <td class="broken-link">http://localhost:3001/ISBDM/docs/attributes/1022.html</td>
+                    <td class="link-text">has category of carrier</td>
+                    <td><span class="danger">Missing Page</span></td>
+                </tr>
+                
+            </tbody>
+        </table>
+    </div>
+    
+    <div class="page-section">
+        <div class="page-header">
+            <h3 class="page-title">ISBDM Media Type value vocabulary | ISBD for Manifestation</h3>
+            <div class="page-url"><a href="http://localhost:3001/ISBDM/docs/ves/1218" target="_blank">http://localhost:3001/ISBDM/docs/ves/1218</a></div>
+        </div>
+        <table>
+            <thead>
+                <tr>
+                    <th>Broken Link</th>
+                    <th>Link Text</th>
+                    <th>Issue Type</th>
+                </tr>
+            </thead>
+            <tbody>
+                
+                <tr>
+                    <td class="broken-link">http://localhost:3001/ISBDM/docs/attributes/1218.html</td>
+                    <td class="link-text">has media type</td>
+                    <td><span class="danger">Missing Page</span></td>
+                </tr>
+                
+            </tbody>
+        </table>
+    </div>
+    
+    <div class="page-section">
+        <div class="page-header">
+            <h3 class="page-title">ISBDM Bibliographic Format value vocabulary | ISBD for Manifestation</h3>
+            <div class="page-url"><a href="http://localhost:3001/ISBDM/docs/ves/1240" target="_blank">http://localhost:3001/ISBDM/docs/ves/1240</a></div>
+        </div>
+        <table>
+            <thead>
+                <tr>
+                    <th>Broken Link</th>
+                    <th>Link Text</th>
+                    <th>Issue Type</th>
+                </tr>
+            </thead>
+            <tbody>
+                
+                <tr>
+                    <td class="broken-link">http://localhost:3001/ISBDM/docs/attributes/1240.html</td>
+                    <td class="link-text">has bibliographic format</td>
+                    <td><span class="danger">Missing Page</span></td>
+                </tr>
+                
+            </tbody>
+        </table>
+    </div>
+    
+    <div class="page-section">
+        <div class="page-header">
+            <h3 class="page-title">ISBDM Binding value vocabulary | ISBD for Manifestation</h3>
+            <div class="page-url"><a href="http://localhost:3001/ISBDM/docs/ves/1241" target="_blank">http://localhost:3001/ISBDM/docs/ves/1241</a></div>
+        </div>
+        <table>
+            <thead>
+                <tr>
+                    <th>Broken Link</th>
+                    <th>Link Text</th>
+                    <th>Issue Type</th>
+                </tr>
+            </thead>
+            <tbody>
+                
+                <tr>
+                    <td class="broken-link">http://localhost:3001/ISBDM/docs/attributes/1241.html</td>
+                    <td class="link-text">has binding</td>
+                    <td><span class="danger">Missing Page</span></td>
+                </tr>
+                
+            </tbody>
+        </table>
+    </div>
+    
+    <div class="page-section">
+        <div class="page-header">
+            <h3 class="page-title">ISBDM Manufacturing Process value vocabulary | ISBD for Manifestation</h3>
+            <div class="page-url"><a href="http://localhost:3001/ISBDM/docs/ves/1256" target="_blank">http://localhost:3001/ISBDM/docs/ves/1256</a></div>
+        </div>
+        <table>
+            <thead>
+                <tr>
+                    <th>Broken Link</th>
+                    <th>Link Text</th>
+                    <th>Issue Type</th>
+                </tr>
+            </thead>
+            <tbody>
+                
+                <tr>
+                    <td class="broken-link">http://localhost:3001/ISBDM/docs/attributes/1256.html</td>
+                    <td class="link-text">has manufacturing process</td>
+                    <td><span class="danger">Missing Page</span></td>
+                </tr>
+                
+            </tbody>
+        </table>
+    </div>
+    
+    <div class="page-section">
+        <div class="page-header">
+            <h3 class="page-title">ISBDM Unitary Structure value vocabulary | ISBD for Manifestation</h3>
+            <div class="page-url"><a href="http://localhost:3001/ISBDM/docs/ves/1262" target="_blank">http://localhost:3001/ISBDM/docs/ves/1262</a></div>
+        </div>
+        <table>
+            <thead>
+                <tr>
+                    <th>Broken Link</th>
+                    <th>Link Text</th>
+                    <th>Issue Type</th>
+                </tr>
+            </thead>
+            <tbody>
+                
+                <tr>
+                    <td class="broken-link">http://localhost:3001/ISBDM/docs/attributes/1262.html</td>
+                    <td class="link-text">has unitary structure</td>
+                    <td><span class="danger">Missing Page</span></td>
+                </tr>
+                
+            </tbody>
+        </table>
+    </div>
+    
+    <div class="page-section">
+        <div class="page-header">
+            <h3 class="page-title">ISBDM Category of Content value vocabulary | ISBD for Manifestation</h3>
+            <div class="page-url"><a href="http://localhost:3001/ISBDM/docs/ves/1264" target="_blank">http://localhost:3001/ISBDM/docs/ves/1264</a></div>
+        </div>
+        <table>
+            <thead>
+                <tr>
+                    <th>Broken Link</th>
+                    <th>Link Text</th>
+                    <th>Issue Type</th>
+                </tr>
+            </thead>
+            <tbody>
+                
+                <tr>
+                    <td class="broken-link">http://localhost:3001/ISBDM/docs/attributes/1264.html</td>
+                    <td class="link-text">has category of embodied content</td>
+                    <td><span class="danger">Missing Page</span></td>
+                </tr>
+                
+            </tbody>
+        </table>
+    </div>
+    
+    <div class="page-section">
+        <div class="page-header">
+            <h3 class="page-title">ISBDM Extent of Unitary Structure value vocabulary | ISBD for Manifestation</h3>
+            <div class="page-url"><a href="http://localhost:3001/ISBDM/docs/ves/1275" target="_blank">http://localhost:3001/ISBDM/docs/ves/1275</a></div>
+        </div>
+        <table>
+            <thead>
+                <tr>
+                    <th>Broken Link</th>
+                    <th>Link Text</th>
+                    <th>Issue Type</th>
+                </tr>
+            </thead>
+            <tbody>
+                
+                <tr>
+                    <td class="broken-link">http://localhost:3001/ISBDM/docs/attributes/1275.html</td>
+                    <td class="link-text">has extent of unitary structure</td>
+                    <td><span class="danger">Missing Page</span></td>
+                </tr>
+                
+            </tbody>
+        </table>
+    </div>
+    
+    <div class="page-section">
+        <div class="page-header">
+            <h3 class="page-title">ISBDM Extent of Aggregated Content value vocabulary | ISBD for Manifestation</h3>
+            <div class="page-url"><a href="http://localhost:3001/ISBDM/docs/ves/1278" target="_blank">http://localhost:3001/ISBDM/docs/ves/1278</a></div>
+        </div>
+        <table>
+            <thead>
+                <tr>
+                    <th>Broken Link</th>
+                    <th>Link Text</th>
+                    <th>Issue Type</th>
+                </tr>
+            </thead>
+            <tbody>
+                
+                <tr>
+                    <td class="broken-link">http://localhost:3001/ISBDM/docs/attributes/1278.html</td>
+                    <td class="link-text">has extent of aggregated content</td>
+                    <td><span class="danger">Missing Page</span></td>
+                </tr>
+                
+            </tbody>
+        </table>
+    </div>
+    
+    <div class="page-section">
+        <div class="page-header">
+            <h3 class="page-title">ISBDM Regional Encoding value vocabulary | ISBD for Manifestation</h3>
+            <div class="page-url"><a href="http://localhost:3001/ISBDM/docs/ves/1283" target="_blank">http://localhost:3001/ISBDM/docs/ves/1283</a></div>
+        </div>
+        <table>
+            <thead>
+                <tr>
+                    <th>Broken Link</th>
+                    <th>Link Text</th>
+                    <th>Issue Type</th>
+                </tr>
+            </thead>
+            <tbody>
+                
+                <tr>
+                    <td class="broken-link">http://localhost:3001/ISBDM/docs/attributes/1283.html</td>
+                    <td class="link-text">has regional encoding</td>
+                    <td><span class="danger">Missing Page</span></td>
+                </tr>
+                
+            </tbody>
+        </table>
+    </div>
+    
+    <div class="page-section">
+        <div class="page-header">
+            <h3 class="page-title">ISBDM Layout of Embodied Content value vocabulary | ISBD for Manifestation</h3>
+            <div class="page-url"><a href="http://localhost:3001/ISBDM/docs/ves/1288" target="_blank">http://localhost:3001/ISBDM/docs/ves/1288</a></div>
+        </div>
+        <table>
+            <thead>
+                <tr>
+                    <th>Broken Link</th>
+                    <th>Link Text</th>
+                    <th>Issue Type</th>
+                </tr>
+            </thead>
+            <tbody>
+                
+                <tr>
+                    <td class="broken-link">http://localhost:3001/ISBDM/docs/attributes/1288.html</td>
+                    <td class="link-text">has layout of embodied content</td>
+                    <td><span class="danger">Missing Page</span></td>
+                </tr>
+                
+            </tbody>
+        </table>
+    </div>
+    
+    <div class="page-section">
+        <div class="page-header">
+            <h3 class="page-title">ISBDM string encoding schemes | ISBD for Manifestation</h3>
+            <div class="page-url"><a href="http://localhost:3001/ISBDM/docs/ves/ISBDMSES" target="_blank">http://localhost:3001/ISBDM/docs/ves/ISBDMSES</a></div>
+        </div>
+        <table>
+            <thead>
+                <tr>
+                    <th>Broken Link</th>
+                    <th>Link Text</th>
+                    <th>Issue Type</th>
+                </tr>
+            </thead>
+            <tbody>
+                
+                <tr>
+                    <td class="broken-link">http://localhost:3001/ISBDM/ves/ISBDMSESage</td>
+                    <td class="link-text">Agent SES</td>
+                    <td><span class="danger">Missing Page</span></td>
+                </tr>
+                
+                <tr>
+                    <td class="broken-link">http://localhost:3001/ISBDM/ves/ISBDMSEScol</td>
+                    <td class="link-text">Collective Agent SES</td>
+                    <td><span class="danger">Missing Page</span></td>
+                </tr>
+                
+                <tr>
+                    <td class="broken-link">http://localhost:3001/ISBDM/ves/ISBDMSESexp</td>
+                    <td class="link-text">Expression SES</td>
+                    <td><span class="danger">Missing Page</span></td>
+                </tr>
+                
+                <tr>
+                    <td class="broken-link">http://localhost:3001/ISBDM/ves/ISBDMSESite</td>
+                    <td class="link-text">Item SES</td>
+                    <td><span class="danger">Missing Page</span></td>
+                </tr>
+                
+                <tr>
+                    <td class="broken-link">http://localhost:3001/ISBDM/ves/ISBDMSESman</td>
+                    <td class="link-text">Manifestation SES</td>
+                    <td><span class="danger">Missing Page</span></td>
+                </tr>
+                
+                <tr>
+                    <td class="broken-link">http://localhost:3001/ISBDM/ves/ISBDMSESper</td>
+                    <td class="link-text">Person SES</td>
+                    <td><span class="danger">Missing Page</span></td>
+                </tr>
+                
+                <tr>
+                    <td class="broken-link">http://localhost:3001/ISBDM/ves/ISBDMSESpla</td>
+                    <td class="link-text">Place SES</td>
+                    <td><span class="danger">Missing Page</span></td>
+                </tr>
+                
+                <tr>
+                    <td class="broken-link">http://localhost:3001/ISBDM/ves/ISBDMSEStim</td>
+                    <td class="link-text">Time-span SES</td>
+                    <td><span class="danger">Missing Page</span></td>
+                </tr>
+                
+                <tr>
+                    <td class="broken-link">http://localhost:3001/ISBDM/ves/ISBDMSESwor</td>
+                    <td class="link-text">Work SES</td>
+                    <td><span class="danger">Missing Page</span></td>
+                </tr>
+                
+                <tr>
+                    <td class="broken-link">http://localhost:3001/ISBDM/ves/ISBDMSES1116</td>
+                    <td class="link-text">Chronological designation SES</td>
+                    <td><span class="danger">Missing Page</span></td>
+                </tr>
+                
+                <tr>
+                    <td class="broken-link">http://localhost:3001/ISBDM/ves/ISBDMSES1037</td>
+                    <td class="link-text">Compound title SES</td>
+                    <td><span class="danger">Missing Page</span></td>
+                </tr>
+                
+                <tr>
+                    <td class="broken-link">http://localhost:3001/ISBDM/ves/ISBDMSES1023</td>
+                    <td class="link-text">Extent of manifestation SES</td>
+                    <td><span class="danger">Missing Page</span></td>
+                </tr>
+                
+                <tr>
+                    <td class="broken-link">http://localhost:3001/ISBDM/ves/ISBDMSES1117</td>
+                    <td class="link-text">Numeric designation SES</td>
+                    <td><span class="danger">Missing Page</span></td>
+                </tr>
+                
+            </tbody>
+        </table>
+    </div>
+    
+    <div class="page-section">
+        <div class="page-header">
+            <h3 class="page-title">Extent of manifestation SES | ISBD for Manifestation</h3>
+            <div class="page-url"><a href="http://localhost:3001/ISBDM/docs/ves/ISBDMSES1023" target="_blank">http://localhost:3001/ISBDM/docs/ves/ISBDMSES1023</a></div>
+        </div>
+        <table>
+            <thead>
+                <tr>
+                    <th>Broken Link</th>
+                    <th>Link Text</th>
+                    <th>Issue Type</th>
+                </tr>
+            </thead>
+            <tbody>
+                
+                <tr>
+                    <td class="broken-link">http://localhost:3001/ISBDM/attributes/1023</td>
+                    <td class="link-text">has extent of manifestation</td>
+                    <td><span class="danger">Missing Page</span></td>
+                </tr>
+                
+                <tr>
+                    <td class="broken-link">http://localhost:3001/ISBDM/attributes/1275</td>
+                    <td class="link-text">has extent of unitary structure</td>
+                    <td><span class="danger">Missing Page</span></td>
+                </tr>
+                
+                <tr>
+                    <td class="broken-link">http://localhost:3001/ISBDM/attributes/1276</td>
+                    <td class="link-text">has extent of unit</td>
+                    <td><span class="danger">Missing Page</span></td>
+                </tr>
+                
+                <tr>
+                    <td class="broken-link">http://localhost:3001/ISBDM/attributes/1278</td>
+                    <td class="link-text">has extent of aggregated content</td>
+                    <td><span class="danger">Missing Page</span></td>
+                </tr>
+                
+                <tr>
+                    <td class="broken-link">http://localhost:3001/ISBDM/attributes/1277</td>
+                    <td class="link-text">has extent of embodied content</td>
+                    <td><span class="danger">Missing Page</span></td>
+                </tr>
+                
+                <tr>
+                    <td class="broken-link">http://localhost:3001/ISBDM/attributes/1022</td>
+                    <td class="link-text">has category of carrier</td>
+                    <td><span class="danger">Missing Page</span></td>
+                </tr>
+                
+                <tr>
+                    <td class="broken-link">http://localhost:3001/ISBDM/attributes/1275</td>
+                    <td class="link-text">has extent of unitary structure</td>
+                    <td><span class="danger">Missing Page</span></td>
+                </tr>
+                
+                <tr>
+                    <td class="broken-link">http://localhost:3001/ISBDM/fullex/fx043</td>
+                    <td class="link-text">Zadar does Banksy ​(2023; Narodni
+muzej Zadar; list)</td>
+                    <td><span class="danger">Missing Page</span></td>
+                </tr>
+                
+                <tr>
+                    <td class="broken-link">http://localhost:3001/ISBDM/fullex/fx032</td>
+                    <td class="link-text">Mojo 357 ​(2023; H Bauer Publishing
+Ltd.; volume + audio disc)</td>
+                    <td><span class="danger">Missing Page</span></td>
+                </tr>
+                
+                <tr>
+                    <td class="broken-link">http://localhost:3001/ISBDM/attributes/1264</td>
+                    <td class="link-text">has category of embodied content</td>
+                    <td><span class="danger">Missing Page</span></td>
+                </tr>
+                
+                <tr>
+                    <td class="broken-link">http://localhost:3001/ISBDM/attributes/1278</td>
+                    <td class="link-text">has extent of aggregated content</td>
+                    <td><span class="danger">Missing Page</span></td>
+                </tr>
+                
+                <tr>
+                    <td class="broken-link">http://localhost:3001/ISBDM/fullex/fx053</td>
+                    <td class="link-text">Emma ​(1815; John Murray; volume)</td>
+                    <td><span class="danger">Missing Page</span></td>
+                </tr>
+                
+                <tr>
+                    <td class="broken-link">http://localhost:3001/ISBDM/fullex/fx073</td>
+                    <td class="link-text">Corso delli fiumi Drino, e Boiana
+nella Dalmatia ​(2011; Biblioteka Kombëtare e Shqipërisë; burim
+online)</td>
+                    <td><span class="danger">Missing Page</span></td>
+                </tr>
+                
+            </tbody>
+        </table>
+    </div>
+    
+    <div class="page-section">
+        <div class="page-header">
+            <h3 class="page-title">Compound title SES | ISBD for Manifestation</h3>
+            <div class="page-url"><a href="http://localhost:3001/ISBDM/docs/ves/ISBDMSES1037" target="_blank">http://localhost:3001/ISBDM/docs/ves/ISBDMSES1037</a></div>
+        </div>
+        <table>
+            <thead>
+                <tr>
+                    <th>Broken Link</th>
+                    <th>Link Text</th>
+                    <th>Issue Type</th>
+                </tr>
+            </thead>
+            <tbody>
+                
+                <tr>
+                    <td class="broken-link">http://localhost:3001/ISBDM/relationships/1037</td>
+                    <td class="link-text">has title of manifestation</td>
+                    <td><span class="danger">Missing Page</span></td>
+                </tr>
+                
+                <tr>
+                    <td class="broken-link">http://localhost:3001/ISBDM/fullex/fx082</td>
+                    <td class="link-text">Homazh për De Radën: DVD 1 ​(2004;
+Università della Calabria; videodisk)</td>
+                    <td><span class="danger">Missing Page</span></td>
+                </tr>
+                
+                <tr>
+                    <td class="broken-link">http://localhost:3001/ISBDM/fullex/fx055</td>
+                    <td class="link-text">Quantum world ​(2016; Reed Business
+Information Ltd; volume)</td>
+                    <td><span class="danger">Missing Page</span></td>
+                </tr>
+                
+                <tr>
+                    <td class="broken-link">http://localhost:3001/ISBDM/fullex/fx086</td>
+                    <td class="link-text">Voyage extraordinaire au coeur de
+l'atome + Voyage extraordinaire aux limites de l'univers ​(1996; Editions
+Casterman; volume)</td>
+                    <td><span class="danger">Missing Page</span></td>
+                </tr>
+                
+            </tbody>
+        </table>
+    </div>
+    
+    <div class="page-section">
+        <div class="page-header">
+            <h3 class="page-title">Chronological designation SES | ISBD for Manifestation</h3>
+            <div class="page-url"><a href="http://localhost:3001/ISBDM/docs/ves/ISBDMSES1116" target="_blank">http://localhost:3001/ISBDM/docs/ves/ISBDMSES1116</a></div>
+        </div>
+        <table>
+            <thead>
+                <tr>
+                    <th>Broken Link</th>
+                    <th>Link Text</th>
+                    <th>Issue Type</th>
+                </tr>
+            </thead>
+            <tbody>
+                
+                <tr>
+                    <td class="broken-link">http://localhost:3001/ISBDM/relationships/1116</td>
+                    <td class="link-text">has chronological designation</td>
+                    <td><span class="danger">Missing Page</span></td>
+                </tr>
+                
+                <tr>
+                    <td class="broken-link">http://localhost:3001/ISBDM/fullex/fx052</td>
+                    <td class="link-text">Journal für Facility Management
+​(2009-; Technische Universität Wien‏; online resource)</td>
+                    <td><span class="danger">Missing Page</span></td>
+                </tr>
+                
+            </tbody>
+        </table>
+    </div>
+    
+    <div class="page-section">
+        <div class="page-header">
+            <h3 class="page-title">Numeric designation SES | ISBD for Manifestation</h3>
+            <div class="page-url"><a href="http://localhost:3001/ISBDM/docs/ves/ISBDMSES1117" target="_blank">http://localhost:3001/ISBDM/docs/ves/ISBDMSES1117</a></div>
+        </div>
+        <table>
+            <thead>
+                <tr>
+                    <th>Broken Link</th>
+                    <th>Link Text</th>
+                    <th>Issue Type</th>
+                </tr>
+            </thead>
+            <tbody>
+                
+                <tr>
+                    <td class="broken-link">http://localhost:3001/ISBDM/relationships/1117</td>
+                    <td class="link-text">has numeric designation</td>
+                    <td><span class="danger">Missing Page</span></td>
+                </tr>
+                
+                <tr>
+                    <td class="broken-link">http://localhost:3001/ISBDM/fullex/fx052</td>
+                    <td class="link-text">Journal für Facility Management
+​(2009-; Technische Universität Wien‏; online resource)</td>
+                    <td><span class="danger">Missing Page</span></td>
+                </tr>
+                
+                <tr>
+                    <td class="broken-link">http://localhost:3001/ISBDM/fullex/fx069</td>
+                    <td class="link-text">Synthesis lectures on data,
+semantics, and knowledge ​(2021-; Morgan & Claypool Publishers;
+volume)</td>
+                    <td><span class="danger">Missing Page</span></td>
+                </tr>
+                
+            </tbody>
+        </table>
+    </div>
+    
+    <div class="page-section">
+        <div class="page-header">
+            <h3 class="page-title">Agent SES | ISBD for Manifestation</h3>
+            <div class="page-url"><a href="http://localhost:3001/ISBDM/docs/ves/ISBDMSESAge" target="_blank">http://localhost:3001/ISBDM/docs/ves/ISBDMSESAge</a></div>
+        </div>
+        <table>
+            <thead>
+                <tr>
+                    <th>Broken Link</th>
+                    <th>Link Text</th>
+                    <th>Issue Type</th>
+                </tr>
+            </thead>
+            <tbody>
+                
+                <tr>
+                    <td class="broken-link">http://localhost:3001/ISBDM/relationships/1005</td>
+                    <td class="link-text">has agent associated with manifestation</td>
+                    <td><span class="danger">Missing Page</span></td>
+                </tr>
+                
+                <tr>
+                    <td class="broken-link">http://localhost:3001/ISBDM/ses/col</td>
+                    <td class="link-text">Collective Agent SES</td>
+                    <td><span class="danger">Missing Page</span></td>
+                </tr>
+                
+                <tr>
+                    <td class="broken-link">http://localhost:3001/ISBDM/ses/per</td>
+                    <td class="link-text">Person SES</td>
+                    <td><span class="danger">Missing Page</span></td>
+                </tr>
+                
+            </tbody>
+        </table>
+    </div>
+    
+    <div class="page-section">
+        <div class="page-header">
+            <h3 class="page-title">Collective Agent SES | ISBD for Manifestation</h3>
+            <div class="page-url"><a href="http://localhost:3001/ISBDM/docs/ves/ISBDMSESCol" target="_blank">http://localhost:3001/ISBDM/docs/ves/ISBDMSESCol</a></div>
+        </div>
+        <table>
+            <thead>
+                <tr>
+                    <th>Broken Link</th>
+                    <th>Link Text</th>
+                    <th>Issue Type</th>
+                </tr>
+            </thead>
+            <tbody>
+                
+                <tr>
+                    <td class="broken-link">http://localhost:3001/ISBDM/relationships/1007</td>
+                    <td class="link-text">has collective agent associated with manifestation</td>
+                    <td><span class="danger">Missing Page</span></td>
+                </tr>
+                
+                <tr>
+                    <td class="broken-link">http://localhost:3001/ISBDM/fullex/fx072</td>
+                    <td class="link-text">Charles Rennie Mackintosh ​(2002;
+Thames & Hudson; volume; perfect binding)</td>
+                    <td><span class="danger">Missing Page</span></td>
+                </tr>
+                
+                <tr>
+                    <td class="broken-link">http://localhost:3001/ISBDM/fullex/fx069</td>
+                    <td class="link-text">Synthesis lectures on data,
+semantics, and knowledge ​(2021-; Morgan & Claypool Publishers;
+volume)</td>
+                    <td><span class="danger">Missing Page</span></td>
+                </tr>
+                
+            </tbody>
+        </table>
+    </div>
+    
+    <div class="page-section">
+        <div class="page-header">
+            <h3 class="page-title">Expression SES | ISBD for Manifestation</h3>
+            <div class="page-url"><a href="http://localhost:3001/ISBDM/docs/ves/ISBDMSESExp" target="_blank">http://localhost:3001/ISBDM/docs/ves/ISBDMSESExp</a></div>
+        </div>
+        <table>
+            <thead>
+                <tr>
+                    <th>Broken Link</th>
+                    <th>Link Text</th>
+                    <th>Issue Type</th>
+                </tr>
+            </thead>
+            <tbody>
+                
+                <tr>
+                    <td class="broken-link">http://localhost:3001/ISBDM/relationships/1002</td>
+                    <td class="link-text">has expression associated with manifestation</td>
+                    <td><span class="danger">Missing Page</span></td>
+                </tr>
+                
+                <tr>
+                    <td class="broken-link">http://localhost:3001/ISBDM/fullex/fx066</td>
+                    <td class="link-text">Coffee ​(2003; Tate; card)</td>
+                    <td><span class="danger">Missing Page</span></td>
+                </tr>
+                
+                <tr>
+                    <td class="broken-link">http://localhost:3001/ISBDM/fullex/fx025</td>
+                    <td class="link-text">Emma ​(1971; Penguin Books; volume)</td>
+                    <td><span class="danger">Missing Page</span></td>
+                </tr>
+                
+                <tr>
+                    <td class="broken-link">http://localhost:3001/ISBDM/fullex/fx049</td>
+                    <td class="link-text">Revolver ​(2022; Apple Corps Limited; audio disc; 2 CD edition)</td>
+                    <td><span class="danger">Missing Page</span></td>
+                </tr>
+                
+                <tr>
+                    <td class="broken-link">http://localhost:3001/ISBDM/fullex/fx016</td>
+                    <td class="link-text">Emma ​(2014 ; Borough Press; volume; case binding)</td>
+                    <td><span class="danger">Missing Page</span></td>
+                </tr>
+                
+                <tr>
+                    <td class="broken-link">http://localhost:3001/ISBDM/fullex/fx028</td>
+                    <td class="link-text">Incendie ​(1954; Éditions du Seuil; volume; livre broché)</td>
+                    <td><span class="danger">Missing Page</span></td>
+                </tr>
+                
+                <tr>
+                    <td class="broken-link">http://localhost:3001/ISBDM/fullex/fx018</td>
+                    <td class="link-text">Harry Potter and the goblet of fire ​(2000; Listening Library; audiocassette)</td>
+                    <td><span class="danger">Missing Page</span></td>
+                </tr>
+                
+                <tr>
+                    <td class="broken-link">http://localhost:3001/ISBDM/fullex/fx064</td>
+                    <td class="link-text">René Magritte ​(2007; Taschen; volume)</td>
+                    <td><span class="danger">Missing Page</span></td>
+                </tr>
+                
+                <tr>
+                    <td class="broken-link">http://localhost:3001/ISBDM/fullex/fx004</td>
+                    <td class="link-text">Medo Winnie zvani Pooh ​(1986; Mladost; svezak)</td>
+                    <td><span class="danger">Missing Page</span></td>
+                </tr>
+                
+            </tbody>
+        </table>
+    </div>
+    
+    <div class="page-section">
+        <div class="page-header">
+            <h3 class="page-title">Item SES | ISBD for Manifestation</h3>
+            <div class="page-url"><a href="http://localhost:3001/ISBDM/docs/ves/ISBDMSESIte" target="_blank">http://localhost:3001/ISBDM/docs/ves/ISBDMSESIte</a></div>
+        </div>
+        <table>
+            <thead>
+                <tr>
+                    <th>Broken Link</th>
+                    <th>Link Text</th>
+                    <th>Issue Type</th>
+                </tr>
+            </thead>
+            <tbody>
+                
+                <tr>
+                    <td class="broken-link">http://localhost:3001/ISBDM/relationships/1004</td>
+                    <td class="link-text">has item associated with manifestation</td>
+                    <td><span class="danger">Missing Page</span></td>
+                </tr>
+                
+                <tr>
+                    <td class="broken-link">http://localhost:3001/ISBDM/relationships/1257</td>
+                    <td class="link-text">has authorized access point of manifestation</td>
+                    <td><span class="danger">Missing Page</span></td>
+                </tr>
+                
+                <tr>
+                    <td class="broken-link">http://localhost:3001/ISBDM/fullex/fx008</td>
+                    <td class="link-text">Evangelistarium Marci Maruli Spalatensis ​(201-; Nacionalna i sveučilišna knjižnica u Zagrebu; online jedinica građe)</td>
+                    <td><span class="danger">Missing Page</span></td>
+                </tr>
+                
+                <tr>
+                    <td class="broken-link">http://localhost:3001/ISBDM/fullex/fx027</td>
+                    <td class="link-text">Libar Marca Marula Splichianina Uchomse vsdarsi Istoria Sfete vdouice Judit u versih haruacchi slosena ​(1522; Mirković, Jerolim ; svezak)</td>
+                    <td><span class="danger">Missing Page</span></td>
+                </tr>
+                
+                <tr>
+                    <td class="broken-link">http://localhost:3001/ISBDM/fullex/fx029</td>
+                    <td class="link-text">Burleska pro klarinet a klavír ​(1945-03-26; Vostřák, Zbyněk; sheet)</td>
+                    <td><span class="danger">Missing Page</span></td>
+                </tr>
+                
+            </tbody>
+        </table>
+    </div>
+    
+    <div class="page-section">
+        <div class="page-header">
+            <h3 class="page-title">Manifestation SES | ISBD for Manifestation</h3>
+            <div class="page-url"><a href="http://localhost:3001/ISBDM/docs/ves/ISBDMSESMan" target="_blank">http://localhost:3001/ISBDM/docs/ves/ISBDMSESMan</a></div>
+        </div>
+        <table>
+            <thead>
+                <tr>
+                    <th>Broken Link</th>
+                    <th>Link Text</th>
+                    <th>Issue Type</th>
+                </tr>
+            </thead>
+            <tbody>
+                
+                <tr>
+                    <td class="broken-link">http://localhost:3001/ISBDM/relationships/1234</td>
+                    <td class="link-text">has access point of manifestation</td>
+                    <td><span class="danger">Missing Page</span></td>
+                </tr>
+                
+                <tr>
+                    <td class="broken-link">http://localhost:3001/ISBDM/relationships/1003</td>
+                    <td class="link-text">has manifestation associated with manifestation</td>
+                    <td><span class="danger">Missing Page</span></td>
+                </tr>
+                
+                <tr>
+                    <td class="broken-link">http://localhost:3001/ISBDM/relationships/1038</td>
+                    <td class="link-text">has title proper</td>
+                    <td><span class="danger">Missing Page</span></td>
+                </tr>
+                
+                <tr>
+                    <td class="broken-link">http://localhost:3001/ISBDM/fullex/fx044</td>
+                    <td class="link-text">Desserte rouge 1908 ​(1993; Editions du Centre Pompidou; sheet)</td>
+                    <td><span class="danger">Missing Page</span></td>
+                </tr>
+                
+                <tr>
+                    <td class="broken-link">http://localhost:3001/ISBDM/fullex/fx074</td>
+                    <td class="link-text">Corso delli fiumi Drino, e Boiana nella Dalmatia ​(1688; fletë)</td>
+                    <td><span class="danger">Missing Page</span></td>
+                </tr>
+                
+                <tr>
+                    <td class="broken-link">http://localhost:3001/ISBDM/fullex/fx075</td>
+                    <td class="link-text">Съкровищница ​(2018; Народна библиотека "Св. св. Кирил и Методий"; том + компютърен диск)</td>
+                    <td><span class="danger">Missing Page</span></td>
+                </tr>
+                
+                <tr>
+                    <td class="broken-link">http://localhost:3001/ISBDM/attributes/1022</td>
+                    <td class="link-text">has category of carrier</td>
+                    <td><span class="danger">Missing Page</span></td>
+                </tr>
+                
+                <tr>
+                    <td class="broken-link">http://localhost:3001/ISBDM/attributes/1241</td>
+                    <td class="link-text">has binding</td>
+                    <td><span class="danger">Missing Page</span></td>
+                </tr>
+                
+                <tr>
+                    <td class="broken-link">http://localhost:3001/ISBDM/fullex/fx001</td>
+                    <td class="link-text">Paris apartment ​(2022; HarperCollinsPublishers; volume; case binding)</td>
+                    <td><span class="danger">Missing Page</span></td>
+                </tr>
+                
+                <tr>
+                    <td class="broken-link">http://localhost:3001/ISBDM/fullex/fx085</td>
+                    <td class="link-text">Biographical dictionary of Scottish women ​(2007; Edinburgh University Press; volume; perfect binding)</td>
+                    <td><span class="danger">Missing Page</span></td>
+                </tr>
+                
+                <tr>
+                    <td class="broken-link">http://localhost:3001/ISBDM/attributes/1022</td>
+                    <td class="link-text">has category of carrier</td>
+                    <td><span class="danger">Missing Page</span></td>
+                </tr>
+                
+                <tr>
+                    <td class="broken-link">http://localhost:3001/ISBDM/attributes/1289</td>
+                    <td class="link-text">has encoding format</td>
+                    <td><span class="danger">Missing Page</span></td>
+                </tr>
+                
+                <tr>
+                    <td class="broken-link">http://localhost:3001/ISBDM/fullex/fx046</td>
+                    <td class="link-text">Emma ​(1994; Project Gutenberg; online resource; plain text format)</td>
+                    <td><span class="danger">Missing Page</span></td>
+                </tr>
+                
+                <tr>
+                    <td class="broken-link">http://localhost:3001/ISBDM/attributes/1022</td>
+                    <td class="link-text">has category of carrier</td>
+                    <td><span class="danger">Missing Page</span></td>
+                </tr>
+                
+                <tr>
+                    <td class="broken-link">http://localhost:3001/ISBDM/fullex/fx010</td>
+                    <td class="link-text">Einstein on the beach ​(2016; Opus Arte; videodisc; DVD)</td>
+                    <td><span class="danger">Missing Page</span></td>
+                </tr>
+                
+                <tr>
+                    <td class="broken-link">http://localhost:3001/ISBDM/relationships/1038</td>
+                    <td class="link-text">has title proper</td>
+                    <td><span class="danger">Missing Page</span></td>
+                </tr>
+                
+            </tbody>
+        </table>
+    </div>
+    
+    <div class="page-section">
+        <div class="page-header">
+            <h3 class="page-title">Person SES | ISBD for Manifestation</h3>
+            <div class="page-url"><a href="http://localhost:3001/ISBDM/docs/ves/ISBDMSESPer" target="_blank">http://localhost:3001/ISBDM/docs/ves/ISBDMSESPer</a></div>
+        </div>
+        <table>
+            <thead>
+                <tr>
+                    <th>Broken Link</th>
+                    <th>Link Text</th>
+                    <th>Issue Type</th>
+                </tr>
+            </thead>
+            <tbody>
+                
+                <tr>
+                    <td class="broken-link">http://localhost:3001/ISBDM/relationships/1006</td>
+                    <td class="link-text">has person associated with manifestation</td>
+                    <td><span class="danger">Missing Page</span></td>
+                </tr>
+                
+                <tr>
+                    <td class="broken-link">http://localhost:3001/ISBDM/fullex/fx045</td>
+                    <td class="link-text">Treachery of images ​(ceci n'est pas
+une pipe) ​(1929; Magritte, René, 1898-1967; sheet)</td>
+                    <td><span class="danger">Missing Page</span></td>
+                </tr>
+                
+            </tbody>
+        </table>
+    </div>
+    
+    <div class="page-section">
+        <div class="page-header">
+            <h3 class="page-title">Place SES | ISBD for Manifestation</h3>
+            <div class="page-url"><a href="http://localhost:3001/ISBDM/docs/ves/ISBDMSESPla" target="_blank">http://localhost:3001/ISBDM/docs/ves/ISBDMSESPla</a></div>
+        </div>
+        <table>
+            <thead>
+                <tr>
+                    <th>Broken Link</th>
+                    <th>Link Text</th>
+                    <th>Issue Type</th>
+                </tr>
+            </thead>
+            <tbody>
+                
+                <tr>
+                    <td class="broken-link">http://localhost:3001/ISBDM/relationships/1009</td>
+                    <td class="link-text">has place associated with manifestation</td>
+                    <td><span class="danger">Missing Page</span></td>
+                </tr>
+                
+                <tr>
+                    <td class="broken-link">http://localhost:3001/ISBDM/fullex/fx059</td>
+                    <td class="link-text">Asterix and the gowden heuk ​(2014; Itchy Coo; volume)</td>
+                    <td><span class="danger">Missing Page</span></td>
+                </tr>
+                
+                <tr>
+                    <td class="broken-link">http://localhost:3001/ISBDM/fullex/fx040</td>
+                    <td class="link-text">Algerie a travers les ages ​(2000; Cerist; disque informatique; version française)</td>
+                    <td><span class="danger">Missing Page</span></td>
+                </tr>
+                
+            </tbody>
+        </table>
+    </div>
+    
+    <div class="page-section">
+        <div class="page-header">
+            <h3 class="page-title">Time-span SES | ISBD for Manifestation</h3>
+            <div class="page-url"><a href="http://localhost:3001/ISBDM/docs/ves/ISBDMSESTim" target="_blank">http://localhost:3001/ISBDM/docs/ves/ISBDMSESTim</a></div>
+        </div>
+        <table>
+            <thead>
+                <tr>
+                    <th>Broken Link</th>
+                    <th>Link Text</th>
+                    <th>Issue Type</th>
+                </tr>
+            </thead>
+            <tbody>
+                
+                <tr>
+                    <td class="broken-link">http://localhost:3001/ISBDM/relationships/1010</td>
+                    <td class="link-text">has time-span associated with manifestation</td>
+                    <td><span class="danger">Missing Page</span></td>
+                </tr>
+                
+            </tbody>
+        </table>
+    </div>
+    
+    <div class="page-section">
+        <div class="page-header">
+            <h3 class="page-title">Work SES | ISBD for Manifestation</h3>
+            <div class="page-url"><a href="http://localhost:3001/ISBDM/docs/ves/ISBDMSESWor" target="_blank">http://localhost:3001/ISBDM/docs/ves/ISBDMSESWor</a></div>
+        </div>
+        <table>
+            <thead>
+                <tr>
+                    <th>Broken Link</th>
+                    <th>Link Text</th>
+                    <th>Issue Type</th>
+                </tr>
+            </thead>
+            <tbody>
+                
+                <tr>
+                    <td class="broken-link">http://localhost:3001/ISBDM/relationships/1001</td>
+                    <td class="link-text">has work associated with manifestation</td>
+                    <td><span class="danger">Missing Page</span></td>
+                </tr>
+                
+                <tr>
+                    <td class="broken-link">http://localhost:3001/ISBDM/fullex/fx066</td>
+                    <td class="link-text">Coffee ​(2003; Tate; card)</td>
+                    <td><span class="danger">Missing Page</span></td>
+                </tr>
+                
+                <tr>
+                    <td class="broken-link">http://localhost:3001/ISBDM/fullex/fx063</td>
+                    <td class="link-text">Spring cannot be cancelled ​(2022; Thames & Hudson; volume)</td>
+                    <td><span class="danger">Missing Page</span></td>
+                </tr>
+                
+            </tbody>
+        </table>
+    </div>
+    
+    
+
+    <div class="footer" style="margin-top: 40px; padding-top: 20px; border-top: 1px solid #e1e5e9;">
+        <p class="timestamp">Report generated by IFLA Standards Link Validator on 2025-06-15T01:53:59.486Z</p>
+    </div>
+</body>
+</html>

@@ -1,0 +1,282 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Link Validation Reports - IFLA Standards</title>
+    <style>
+        body { 
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; 
+            max-width: 1400px; 
+            margin: 0 auto; 
+            padding: 20px; 
+            line-height: 1.6; 
+            background: #f8f9fa;
+        }
+        .header { 
+            background: white; 
+            padding: 30px; 
+            border-radius: 12px; 
+            margin-bottom: 30px; 
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        .site-section { 
+            background: white; 
+            margin: 20px 0; 
+            border-radius: 12px; 
+            overflow: hidden;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        .site-header { 
+            background: #e9ecef; 
+            padding: 20px; 
+            border-bottom: 1px solid #dee2e6; 
+        }
+        .site-title { 
+            margin: 0; 
+            font-size: 1.5em; 
+            text-transform: uppercase;
+            color: #495057;
+        }
+        .reports-table { 
+            width: 100%; 
+            border-collapse: collapse; 
+        }
+        .reports-table th, .reports-table td { 
+            padding: 12px 20px; 
+            text-align: left; 
+            border-bottom: 1px solid #e9ecef; 
+        }
+        .reports-table th { 
+            background: #f8f9fa; 
+            font-weight: 600; 
+            color: #495057;
+        }
+        .reports-table tr:hover { 
+            background: #f8f9fa; 
+        }
+        .status-badge { 
+            display: inline-block; 
+            padding: 4px 8px; 
+            border-radius: 4px; 
+            font-size: 0.8em; 
+            font-weight: 600; 
+            text-transform: uppercase;
+        }
+        .status-success { 
+            background: #d4edda; 
+            color: #155724; 
+        }
+        .status-warning { 
+            background: #fff3cd; 
+            color: #856404; 
+        }
+        .status-danger { 
+            background: #f8d7da; 
+            color: #721c24; 
+        }
+        .report-link { 
+            color: #007bff; 
+            text-decoration: none; 
+            font-weight: 500;
+        }
+        .report-link:hover { 
+            text-decoration: underline; 
+        }
+        .no-reports { 
+            padding: 40px; 
+            text-align: center; 
+            color: #6c757d; 
+            font-style: italic;
+        }
+        .timestamp { 
+            color: #6c757d; 
+            font-size: 0.9em; 
+            font-family: 'Monaco', 'Menlo', monospace;
+        }
+        .stats { 
+            font-size: 0.9em; 
+            color: #6c757d; 
+        }
+        .environment { 
+            display: inline-block; 
+            padding: 2px 6px; 
+            border-radius: 3px; 
+            font-size: 0.8em; 
+            background: #e9ecef; 
+            color: #495057;
+        }
+        .updated { 
+            color: #6c757d; 
+            font-size: 0.9em; 
+            text-align: center; 
+            margin-top: 30px;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>🔗 Link Validation Reports</h1>
+        <p>Comprehensive link validation reports for all IFLA Standards sites. Latest runs are shown first.</p>
+    </div>
+
+    
+    <div class="site-section">
+        <div class="site-header">
+            <h2 class="site-title">Portal</h2>
+        </div>
+        
+        <div class="no-reports">
+            No validation reports available yet. Run a validation to see reports here.
+        </div>
+        
+    </div>
+    <div class="site-section">
+        <div class="site-header">
+            <h2 class="site-title">ISBDM</h2>
+        </div>
+        
+        <div class="no-reports">
+            No validation reports available yet. Run a validation to see reports here.
+        </div>
+        
+    </div>
+    <div class="site-section">
+        <div class="site-header">
+            <h2 class="site-title">LRM</h2>
+        </div>
+        
+        <div class="no-reports">
+            No validation reports available yet. Run a validation to see reports here.
+        </div>
+        
+    </div>
+    <div class="site-section">
+        <div class="site-header">
+            <h2 class="site-title">FRBR</h2>
+        </div>
+        
+        <div class="no-reports">
+            No validation reports available yet. Run a validation to see reports here.
+        </div>
+        
+    </div>
+    <div class="site-section">
+        <div class="site-header">
+            <h2 class="site-title">ISBD</h2>
+        </div>
+        
+        <div class="no-reports">
+            No validation reports available yet. Run a validation to see reports here.
+        </div>
+        
+    </div>
+    <div class="site-section">
+        <div class="site-header">
+            <h2 class="site-title">MULDICAT</h2>
+        </div>
+        
+        <div class="no-reports">
+            No validation reports available yet. Run a validation to see reports here.
+        </div>
+        
+    </div>
+    <div class="site-section">
+        <div class="site-header">
+            <h2 class="site-title">UNIMARC</h2>
+        </div>
+        
+        <div class="no-reports">
+            No validation reports available yet. Run a validation to see reports here.
+        </div>
+        
+    </div>
+
+    <div class="updated">
+        Last updated: <span id="last-updated">Loading...</span>
+    </div>
+
+    <script src="./index-data.js"></script>
+    <script>
+        function loadReports() {
+            const indexData = window.validationReports || {};
+            
+            // Add data-site attributes to existing sections
+            const sections = document.querySelectorAll('.site-section');
+            const siteKeys = ['portal', 'ISBDM', 'lrm', 'FRBR', 'isbd', 'muldicat', 'unimarc'];
+            sections.forEach((section, index) => {
+                if (index < siteKeys.length) {
+                    section.setAttribute('data-site', siteKeys[index]);
+                }
+            });
+
+            // Update each site section
+            document.querySelectorAll('.site-section').forEach(section => {
+                const siteKey = section.dataset.site;
+                const reports = indexData[siteKey] || [];
+                const noReportsDiv = section.querySelector('.no-reports');
+                
+                if (reports.length === 0) {
+                    noReportsDiv.innerHTML = 'No validation reports available yet. Run a validation to see reports here.';
+                    return;
+                }
+                
+                // Create table
+                const tableHTML = `
+                    <table class="reports-table">
+                        <thead>
+                            <tr>
+                                <th>Report</th>
+                                <th>Status</th>
+                                <th>Links</th>
+                                <th>Pages</th>
+                                <th>Environment</th>
+                                <th>Date</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            ${reports.map(report => `
+                                <tr>
+                                    <td>
+                                        <a href="./${siteKey}/${report.filename}" class="report-link">
+                                            ${report.filename}
+                                        </a>
+                                    </td>
+                                    <td>
+                                        <span class="status-badge status-${report.status}">
+                                            ${report.status === 'danger' ? 'ERRORS' : report.status === 'warning' ? 'WARNINGS' : 'GOOD'}
+                                        </span>
+                                    </td>
+                                    <td class="stats">
+                                        <div>✓ ${report.passed}</div>
+                                        <div style="color: #dc3545;">✗ ${report.failed}</div>
+                                        <div><small>Total: ${report.tested}</small></div>
+                                    </td>
+                                    <td class="stats">
+                                        <div style="color: #28a745;">✓ ${report.skippedPages}</div>
+                                        <div style="color: #ffc107;">⚠ ${report.changedPages}</div>
+                                        <div style="color: #007bff;">+ ${report.newPages}</div>
+                                    </td>
+                                    <td>
+                                        <span class="environment">${report.environment}</span>
+                                    </td>
+                                    <td class="timestamp">
+                                        ${new Date(report.timestamp).toLocaleString()}
+                                    </td>
+                                </tr>
+                            `).join('')}
+                        </tbody>
+                    </table>
+                `;
+                
+                noReportsDiv.innerHTML = tableHTML;
+            });
+            
+            document.getElementById('last-updated').textContent = new Date().toLocaleString();
+        }
+
+        // Load reports on page load
+        document.addEventListener('DOMContentLoaded', loadReports);
+    </script>
+</body>
+</html>
