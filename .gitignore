@@ -40,3 +40,4 @@ out
 # Claude Code settings (contains API keys)
 settings.json
 .docusaurus
+/standards/newtest/.docusaurus/
