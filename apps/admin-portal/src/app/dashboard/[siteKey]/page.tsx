@@ -1,6 +1,7 @@
-import { auth } from "@/app/api/auth/auth";
+import { auth } from "@/app/lib/auth";
 import { redirect } from "next/navigation";
 import SiteManagementClient from "./SiteManagementClient";
+import { SignOut } from "@/app/components/sign-out";
 
 // Force dynamic rendering to avoid static generation issues with auth
 export const dynamic = 'force-dynamic';
@@ -53,7 +54,7 @@ export default async function SiteManagementPage({ params }: PageProps) {
 
   // Redirect to sign in if not authenticated
   if (!session?.user) {
-    redirect('/');
+    redirect('/auth/signin');
   }
 
   // Await the params in Next.js 15
@@ -103,6 +104,9 @@ export default async function SiteManagementPage({ params }: PageProps) {
               >
                 Request Access
               </a>
+              <div className="pt-2">
+                <SignOut />
+              </div>
             </div>
           </div>
         </div>

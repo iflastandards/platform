@@ -4,12 +4,12 @@ import { mockSession, mockSiteData } from '../fixtures/mockData';
 import { setupFetchMock, cleanupFetchMock, mockApiCall, mockApiError } from '../mocks/api';
 
 // Mock the auth module
-vi.mock('@/app/api/auth/auth', () => ({
+vi.mock('@/app/lib/auth', () => ({
   auth: vi.fn(),
 }));
 
 // Import after mocking
-import { auth } from '@/app/api/auth/auth';
+import { auth } from '@/app/lib/auth';
 import SiteManagementClient from '@/app/dashboard/[siteKey]/SiteManagementClient';
 
 describe('Site Management Integration Tests', () => {

@@ -208,6 +208,7 @@
   },
   "dependencies": {
     "@anthropic-ai/sdk": "^0.52.0",
+    "@auth/core": "^0.40.0",
     "@docusaurus/core": "3.8.1",
     "@docusaurus/plugin-client-redirects": "^3.8.1",
     "@docusaurus/plugin-content-docs": "^3.8.1",
@@ -255,7 +256,7 @@
     "mermaid": "^11.6.0",
     "n3": "^1.26.0",
     "next": "~15.2.4",
-    "next-auth": "^4.24.11",
+    "next-auth": "5.0.0-beta.29",
     "node-fetch": "^3.3.2",
     "openai": "^4.104.0",
     "ora": "^8.2.0",

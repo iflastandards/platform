@@ -38,7 +38,7 @@ vi.mock('next/navigation', () => ({
 }));
 
 // Mock next-auth
-vi.mock('@/app/api/auth/auth', () => ({
+vi.mock('@/app/lib/auth', () => ({
   auth: vi.fn(),
   signIn: vi.fn(),
   signOut: vi.fn(),

@@ -1,4 +1,4 @@
-import { auth } from "@/app/api/auth/auth";
+import { auth } from "@/app/lib/auth";
 import { redirect } from "next/navigation";
 
 // Force dynamic rendering to avoid static generation issues with auth
