@@ -37,6 +37,7 @@
       "@ifla/theme/styles": ["./packages/theme/src/styles/index.css"],
       "@ifla/theme/utils": ["./packages/theme/src/utils/index.ts"],
       "@ifla/theme/utils/*": ["./packages/theme/src/utils/*"],
+      "@ifla/theme/theme/*": ["./packages/theme/src/theme/*"],
       "@site/*": ["./*"],
       "@site/plugins/*": ["./plugins/*"],
       "@theme/*": ["./src/theme/*", "./.docusaurus/theme-fallback/*"]

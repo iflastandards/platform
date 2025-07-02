@@ -16,6 +16,7 @@ export default defineConfig({
             '@docusaurus/Link': resolve(__dirname, 'packages/theme/src/tests/__mocks__/DocusaurusLinkMock.tsx'),
             '@docusaurus/useBaseUrl': resolve(__dirname, 'packages/theme/src/tests/__mocks__/useBaseUrl.ts'),
             '@docusaurus/useDocusaurusContext': path.resolve(__dirname, 'packages/theme/src/tests/__mocks__/useDocusaurusContext.ts'),
+            '@docusaurus/router': path.resolve(__dirname, 'packages/theme/src/tests/__mocks__/router.ts'),
             '@docusaurus/theme-common': path.resolve(__dirname, 'packages/theme/src/tests/__mocks__/theme-common.ts'),
             '@theme/Tabs': path.resolve(__dirname, 'packages/theme/src/tests/__mocks__/tabs.tsx'),
             '@theme/TabItem': path.resolve(__dirname, 'packages/theme/src/tests/__mocks__/TabItem.tsx'),

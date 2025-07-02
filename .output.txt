@@ -1,0 +1,1435 @@
+🔍 Running Group 3: Pre-commit tests...
+> standards-dev@1.0.0 test:pre-commit /Users/jonphipps/Code/IFLA/standards-dev
+> nx affected --targets=typecheck,lint,test:unit --parallel=3 && node scripts/test-site-builds-affected.js --env local --skip-build
+ NX   Affected criteria defaulted to --base=dev --head=HEAD
+> nx run admin-portal:test:unit
+> vitest run --testNamePattern="(?!.*integration)"
+(node:9843) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+ RUN  v3.2.4 /Users/jonphipps/Code/IFLA/standards-dev/apps/admin-portal
+(node:9846) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:9847) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:9849) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:9854) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:9850) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:9851) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:9848) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:9852) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:9853) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯ Failed Suites 2 ⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯
+ FAIL  src/test/components/SiteManagementClient.test.tsx [ src/test/components/SiteManagementClient.test.tsx ]
+ FAIL  src/test/integration/site-management.integration.test.tsx [ src/test/integration/site-management.integration.test.tsx ]
+Error: Transform failed with 4 errors:
+/Users/jonphipps/Code/IFLA/standards-dev/apps/admin-portal/src/app/components/docusaurus-navbar.tsx:211:26: ERROR: Unexpected closing "a" tag does not match opening "Link" tag
+/Users/jonphipps/Code/IFLA/standards-dev/apps/admin-portal/src/app/components/docusaurus-navbar.tsx:212:24: ERROR: Unexpected closing "Link" tag does not match opening "div" tag
+/Users/jonphipps/Code/IFLA/standards-dev/apps/admin-portal/src/app/components/docusaurus-navbar.tsx:250:20: ERROR: Unexpected closing "div" tag does not match opening fragment tag
+/Users/jonphipps/Code/IFLA/standards-dev/apps/admin-portal/src/app/components/docusaurus-navbar.tsx:251:19: ERROR: Unterminated regular expression
+  Plugin: vite:esbuild
+  File: /Users/jonphipps/Code/IFLA/standards-dev/apps/admin-portal/src/app/components/docusaurus-navbar.tsx:211:26
+
+  Unexpected closing "a" tag does not match opening "Link" tag
+  209|                            </svg>
+  210|                            Dashboard Home
+  211|                          </a>
+     |                            ^
+  212|                        </Link>
+  213|                      </div>
+
+  Unexpected closing "Link" tag does not match opening "div" tag
+  210|                            Dashboard Home
+  211|                          </a>
+  212|                        </Link>
+     |                          ^
+  213|                      </div>
+  214|
+
+  Unexpected closing "div" tag does not match opening fragment tag
+  248|                        </button>
+  249|                      </div>
+  250|                    </div>
+     |                      ^
+  251|                  </>
+  252|                )}
+
+  Unterminated regular expression
+  249|                      </div>
+  250|                    </div>
+  251|                  </>
+     |                     ^
+  252|                )}
+  253|              </div>
+
+ ❯ failureErrorWithLog ../../node_modules/esbuild/lib/main.js:1463:15
+ ❯ ../../node_modules/esbuild/lib/main.js:734:50
+ ❯ responseCallbacks.<computed> ../../node_modules/esbuild/lib/main.js:601:9
+ ❯ handleIncomingPacket ../../node_modules/esbuild/lib/main.js:656:12
+ ❯ Socket.readFromStdout ../../node_modules/esbuild/lib/main.js:579:7
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/2]⎯
+ Test Files  2 failed (2)
+      Tests  no tests
+   Start at  16:07:28
+   Duration  1.33s (transform 119ms, setup 438ms, collect 0ms, tests 0ms, environment 771ms, prepare 464ms)
+(node:9870) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:9871) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+> nx run standards-dev:lint
+(node:9888) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+Linting "standards-dev"...
+/Users/jonphipps/Code/IFLA/standards-dev/apps/admin-portal/.next/server/vendor-chunks/next.js
+    50:34  warning  'exports' is defined but never used. Allowed unused args must match /^_/u  unused-imports/no-unused-vars
+    61:34  warning  'exports' is defined but never used. Allowed unused args must match /^_/u  unused-imports/no-unused-vars
+    72:34  warning  'exports' is defined but never used. Allowed unused args must match /^_/u  unused-imports/no-unused-vars
+    96:9   warning  'module' is defined but never used. Allowed unused args must match /^_/u   unused-imports/no-unused-vars
+    96:17  warning  'exports' is defined but never used. Allowed unused args must match /^_/u  unused-imports/no-unused-vars
+   146:9   warning  'module' is defined but never used. Allowed unused args must match /^_/u   unused-imports/no-unused-vars
+   146:17  warning  'exports' is defined but never used. Allowed unused args must match /^_/u  unused-imports/no-unused-vars
+   157:9   warning  'module' is defined but never used. Allowed unused args must match /^_/u   unused-imports/no-unused-vars
+   157:17  warning  'exports' is defined but never used. Allowed unused args must match /^_/u  unused-imports/no-unused-vars
+   168:9   warning  'module' is defined but never used. Allowed unused args must match /^_/u   unused-imports/no-unused-vars
+   168:17  warning  'exports' is defined but never used. Allowed unused args must match /^_/u  unused-imports/no-unused-vars
+   192:9   warning  'module' is defined but never used. Allowed unused args must match /^_/u   unused-imports/no-unused-vars
+   192:17  warning  'exports' is defined but never used. Allowed unused args must match /^_/u  unused-imports/no-unused-vars
+   203:9   warning  'module' is defined but never used. Allowed unused args must match /^_/u   unused-imports/no-unused-vars
+   203:17  warning  'exports' is defined but never used. Allowed unused args must match /^_/u  unused-imports/no-unused-vars
+   214:9   warning  'module' is defined but never used. Allowed unused args must match /^_/u   unused-imports/no-unused-vars
+   214:17  warning  'exports' is defined but never used. Allowed unused args must match /^_/u  unused-imports/no-unused-vars
+   264:9   warning  'module' is defined but never used. Allowed unused args must match /^_/u   unused-imports/no-unused-vars
+   264:17  warning  'exports' is defined but never used. Allowed unused args must match /^_/u  unused-imports/no-unused-vars
+   275:9   warning  'module' is defined but never used. Allowed unused args must match /^_/u   unused-imports/no-unused-vars
+   275:17  warning  'exports' is defined but never used. Allowed unused args must match /^_/u  unused-imports/no-unused-vars
+   286:9   warning  'module' is defined but never used. Allowed unused args must match /^_/u   unused-imports/no-unused-vars
+   286:17  warning  'exports' is defined but never used. Allowed unused args must match /^_/u  unused-imports/no-unused-vars
+   297:9   warning  'module' is defined but never used. Allowed unused args must match /^_/u   unused-imports/no-unused-vars
+   297:17  warning  'exports' is defined but never used. Allowed unused args must match /^_/u  unused-imports/no-unused-vars
+   308:9   warning  'module' is defined but never used. Allowed unused args must match /^_/u   unused-imports/no-unused-vars
+   308:17  warning  'exports' is defined but never used. Allowed unused args must match /^_/u  unused-imports/no-unused-vars
+   319:9   warning  'module' is defined but never used. Allowed unused args must match /^_/u   unused-imports/no-unused-vars
+   319:17  warning  'exports' is defined but never used. Allowed unused args must match /^_/u  unused-imports/no-unused-vars
+   343:9   warning  'module' is defined but never used. Allowed unused args must match /^_/u   unused-imports/no-unused-vars
+   343:17  warning  'exports' is defined but never used. Allowed unused args must match /^_/u  unused-imports/no-unused-vars
+   354:9   warning  'module' is defined but never used. Allowed unused args must match /^_/u   unused-imports/no-unused-vars
+   354:17  warning  'exports' is defined but never used. Allowed unused args must match /^_/u  unused-imports/no-unused-vars
+   365:9   warning  'module' is defined but never used. Allowed unused args must match /^_/u   unused-imports/no-unused-vars
+   365:17  warning  'exports' is defined but never used. Allowed unused args must match /^_/u  unused-imports/no-unused-vars
+   376:9   warning  'module' is defined but never used. Allowed unused args must match /^_/u   unused-imports/no-unused-vars
+   376:17  warning  'exports' is defined but never used. Allowed unused args must match /^_/u  unused-imports/no-unused-vars
+   387:9   warning  'module' is defined but never used. Allowed unused args must match /^_/u   unused-imports/no-unused-vars
+   387:17  warning  'exports' is defined but never used. Allowed unused args must match /^_/u  unused-imports/no-unused-vars
+   398:9   warning  'module' is defined but never used. Allowed unused args must match /^_/u   unused-imports/no-unused-vars
+   409:9   warning  'module' is defined but never used. Allowed unused args must match /^_/u   unused-imports/no-unused-vars
+   419:34  warning  'exports' is defined but never used. Allowed unused args must match /^_/u  unused-imports/no-unused-vars
+   430:9   warning  'module' is defined but never used. Allowed unused args must match /^_/u   unused-imports/no-unused-vars
+   451:9   warning  'module' is defined but never used. Allowed unused args must match /^_/u   unused-imports/no-unused-vars
+   461:9   warning  'module' is defined but never used. Allowed unused args must match /^_/u   unused-imports/no-unused-vars
+   461:17  warning  'exports' is defined but never used. Allowed unused args must match /^_/u  unused-imports/no-unused-vars
+   471:34  warning  'exports' is defined but never used. Allowed unused args must match /^_/u  unused-imports/no-unused-vars
+   482:34  warning  'exports' is defined but never used. Allowed unused args must match /^_/u  unused-imports/no-unused-vars
+   493:34  warning  'exports' is defined but never used. Allowed unused args must match /^_/u  unused-imports/no-unused-vars
+   504:34  warning  'exports' is defined but never used. Allowed unused args must match /^_/u  unused-imports/no-unused-vars
+   515:34  warning  'exports' is defined but never used. Allowed unused args must match /^_/u  unused-imports/no-unused-vars
+   526:34  warning  'exports' is defined but never used. Allowed unused args must match /^_/u  unused-imports/no-unused-vars
+   537:34  warning  'exports' is defined but never used. Allowed unused args must match /^_/u  unused-imports/no-unused-vars
+   548:34  warning  'exports' is defined but never used. Allowed unused args must match /^_/u  unused-imports/no-unused-vars
+   559:34  warning  'exports' is defined but never used. Allowed unused args must match /^_/u  unused-imports/no-unused-vars
+   570:34  warning  'exports' is defined but never used. Allowed unused args must match /^_/u  unused-imports/no-unused-vars
+   581:34  warning  'exports' is defined but never used. Allowed unused args must match /^_/u  unused-imports/no-unused-vars
+   592:34  warning  'exports' is defined but never used. Allowed unused args must match /^_/u  unused-imports/no-unused-vars
+   603:34  warning  'exports' is defined but never used. Allowed unused args must match /^_/u  unused-imports/no-unused-vars
+   614:34  warning  'exports' is defined but never used. Allowed unused args must match /^_/u  unused-imports/no-unused-vars
+   625:34  warning  'exports' is defined but never used. Allowed unused args must match /^_/u  unused-imports/no-unused-vars
+   636:34  warning  'exports' is defined but never used. Allowed unused args must match /^_/u  unused-imports/no-unused-vars
+   647:34  warning  'exports' is defined but never used. Allowed unused args must match /^_/u  unused-imports/no-unused-vars
+   658:34  warning  'exports' is defined but never used. Allowed unused args must match /^_/u  unused-imports/no-unused-vars
+   669:34  warning  'exports' is defined but never used. Allowed unused args must match /^_/u  unused-imports/no-unused-vars
+   680:34  warning  'exports' is defined but never used. Allowed unused args must match /^_/u  unused-imports/no-unused-vars
+   691:34  warning  'exports' is defined but never used. Allowed unused args must match /^_/u  unused-imports/no-unused-vars
+   702:34  warning  'exports' is defined but never used. Allowed unused args must match /^_/u  unused-imports/no-unused-vars
+   713:34  warning  'exports' is defined but never used. Allowed unused args must match /^_/u  unused-imports/no-unused-vars
+   724:34  warning  'exports' is defined but never used. Allowed unused args must match /^_/u  unused-imports/no-unused-vars
+   735:34  warning  'exports' is defined but never used. Allowed unused args must match /^_/u  unused-imports/no-unused-vars
+   746:34  warning  'exports' is defined but never used. Allowed unused args must match /^_/u  unused-imports/no-unused-vars
+   757:34  warning  'exports' is defined but never used. Allowed unused args must match /^_/u  unused-imports/no-unused-vars
+   768:34  warning  'exports' is defined but never used. Allowed unused args must match /^_/u  unused-imports/no-unused-vars
+   779:34  warning  'exports' is defined but never used. Allowed unused args must match /^_/u  unused-imports/no-unused-vars
+   790:34  warning  'exports' is defined but never used. Allowed unused args must match /^_/u  unused-imports/no-unused-vars
+   801:34  warning  'exports' is defined but never used. Allowed unused args must match /^_/u  unused-imports/no-unused-vars
+   812:34  warning  'exports' is defined but never used. Allowed unused args must match /^_/u  unused-imports/no-unused-vars
+   823:34  warning  'exports' is defined but never used. Allowed unused args must match /^_/u  unused-imports/no-unused-vars
+   834:34  warning  'exports' is defined but never used. Allowed unused args must match /^_/u  unused-imports/no-unused-vars
+   845:34  warning  'exports' is defined but never used. Allowed unused args must match /^_/u  unused-imports/no-unused-vars
+   856:34  warning  'exports' is defined but never used. Allowed unused args must match /^_/u  unused-imports/no-unused-vars
+   867:34  warning  'exports' is defined but never used. Allowed unused args must match /^_/u  unused-imports/no-unused-vars
+   878:34  warning  'exports' is defined but never used. Allowed unused args must match /^_/u  unused-imports/no-unused-vars
+   889:34  warning  'exports' is defined but never used. Allowed unused args must match /^_/u  unused-imports/no-unused-vars
+   900:34  warning  'exports' is defined but never used. Allowed unused args must match /^_/u  unused-imports/no-unused-vars
+   911:34  warning  'exports' is defined but never used. Allowed unused args must match /^_/u  unused-imports/no-unused-vars
+   922:34  warning  'exports' is defined but never used. Allowed unused args must match /^_/u  unused-imports/no-unused-vars
+   933:34  warning  'exports' is defined but never used. Allowed unused args must match /^_/u  unused-imports/no-unused-vars
+   944:34  warning  'exports' is defined but never used. Allowed unused args must match /^_/u  unused-imports/no-unused-vars
+   955:34  warning  'exports' is defined but never used. Allowed unused args must match /^_/u  unused-imports/no-unused-vars
+   966:34  warning  'exports' is defined but never used. Allowed unused args must match /^_/u  unused-imports/no-unused-vars
+   977:34  warning  'exports' is defined but never used. Allowed unused args must match /^_/u  unused-imports/no-unused-vars
+   988:34  warning  'exports' is defined but never used. Allowed unused args must match /^_/u  unused-imports/no-unused-vars
+   999:34  warning  'exports' is defined but never used. Allowed unused args must match /^_/u  unused-imports/no-unused-vars
+  1010:34  warning  'exports' is defined but never used. Allowed unused args must match /^_/u  unused-imports/no-unused-vars
+  1021:34  warning  'exports' is defined but never used. Allowed unused args must match /^_/u  unused-imports/no-unused-vars
+  1032:34  warning  'exports' is defined but never used. Allowed unused args must match /^_/u  unused-imports/no-unused-vars
+  1043:34  warning  'exports' is defined but never used. Allowed unused args must match /^_/u  unused-imports/no-unused-vars
+  1054:34  warning  'exports' is defined but never used. Allowed unused args must match /^_/u  unused-imports/no-unused-vars
+  1065:34  warning  'exports' is defined but never used. Allowed unused args must match /^_/u  unused-imports/no-unused-vars
+  1076:34  warning  'exports' is defined but never used. Allowed unused args must match /^_/u  unused-imports/no-unused-vars
+  1087:34  warning  'exports' is defined but never used. Allowed unused args must match /^_/u  unused-imports/no-unused-vars
+  1098:34  warning  'exports' is defined but never used. Allowed unused args must match /^_/u  unused-imports/no-unused-vars
+  1109:34  warning  'exports' is defined but never used. Allowed unused args must match /^_/u  unused-imports/no-unused-vars
+  1120:34  warning  'exports' is defined but never used. Allowed unused args must match /^_/u  unused-imports/no-unused-vars
+  1131:34  warning  'exports' is defined but never used. Allowed unused args must match /^_/u  unused-imports/no-unused-vars
+  1142:34  warning  'exports' is defined but never used. Allowed unused args must match /^_/u  unused-imports/no-unused-vars
+  1153:34  warning  'exports' is defined but never used. Allowed unused args must match /^_/u  unused-imports/no-unused-vars
+  1164:34  warning  'exports' is defined but never used. Allowed unused args must match /^_/u  unused-imports/no-unused-vars
+  1175:34  warning  'exports' is defined but never used. Allowed unused args must match /^_/u  unused-imports/no-unused-vars
+  1186:34  warning  'exports' is defined but never used. Allowed unused args must match /^_/u  unused-imports/no-unused-vars
+  1197:9   warning  'module' is defined but never used. Allowed unused args must match /^_/u   unused-imports/no-unused-vars
+  1208:9   warning  'module' is defined but never used. Allowed unused args must match /^_/u   unused-imports/no-unused-vars
+  1219:9   warning  'module' is defined but never used. Allowed unused args must match /^_/u   unused-imports/no-unused-vars
+  1230:9   warning  'module' is defined but never used. Allowed unused args must match /^_/u   unused-imports/no-unused-vars
+  1241:9   warning  'module' is defined but never used. Allowed unused args must match /^_/u   unused-imports/no-unused-vars
+  1252:9   warning  'module' is defined but never used. Allowed unused args must match /^_/u   unused-imports/no-unused-vars
+  1263:34  warning  'exports' is defined but never used. Allowed unused args must match /^_/u  unused-imports/no-unused-vars
+  1274:34  warning  'exports' is defined but never used. Allowed unused args must match /^_/u  unused-imports/no-unused-vars
+  1285:34  warning  'exports' is defined but never used. Allowed unused args must match /^_/u  unused-imports/no-unused-vars
+  1296:34  warning  'exports' is defined but never used. Allowed unused args must match /^_/u  unused-imports/no-unused-vars
+  1307:34  warning  'exports' is defined but never used. Allowed unused args must match /^_/u  unused-imports/no-unused-vars
+  1318:34  warning  'exports' is defined but never used. Allowed unused args must match /^_/u  unused-imports/no-unused-vars
+  1329:34  warning  'exports' is defined but never used. Allowed unused args must match /^_/u  unused-imports/no-unused-vars
+  1340:34  warning  'exports' is defined but never used. Allowed unused args must match /^_/u  unused-imports/no-unused-vars
+  1351:34  warning  'exports' is defined but never used. Allowed unused args must match /^_/u  unused-imports/no-unused-vars
+  1362:34  warning  'exports' is defined but never used. Allowed unused args must match /^_/u  unused-imports/no-unused-vars
+  1373:34  warning  'exports' is defined but never used. Allowed unused args must match /^_/u  unused-imports/no-unused-vars
+  1384:34  warning  'exports' is defined but never used. Allowed unused args must match /^_/u  unused-imports/no-unused-vars
+  1395:34  warning  'exports' is defined but never used. Allowed unused args must match /^_/u  unused-imports/no-unused-vars
+  1406:34  warning  'exports' is defined but never used. Allowed unused args must match /^_/u  unused-imports/no-unused-vars
+  1417:34  warning  'exports' is defined but never used. Allowed unused args must match /^_/u  unused-imports/no-unused-vars
+  1428:34  warning  'exports' is defined but never used. Allowed unused args must match /^_/u  unused-imports/no-unused-vars
+  1439:34  warning  'exports' is defined but never used. Allowed unused args must match /^_/u  unused-imports/no-unused-vars
+  1450:34  warning  'exports' is defined but never used. Allowed unused args must match /^_/u  unused-imports/no-unused-vars
+  1461:34  warning  'exports' is defined but never used. Allowed unused args must match /^_/u  unused-imports/no-unused-vars
+  1472:34  warning  'exports' is defined but never used. Allowed unused args must match /^_/u  unused-imports/no-unused-vars
+  1483:34  warning  'exports' is defined but never used. Allowed unused args must match /^_/u  unused-imports/no-unused-vars
+  1494:34  warning  'exports' is defined but never used. Allowed unused args must match /^_/u  unused-imports/no-unused-vars
+  1505:34  warning  'exports' is defined but never used. Allowed unused args must match /^_/u  unused-imports/no-unused-vars
+  1516:9   warning  'module' is defined but never used. Allowed unused args must match /^_/u   unused-imports/no-unused-vars
+  1527:34  warning  'exports' is defined but never used. Allowed unused args must match /^_/u  unused-imports/no-unused-vars
+  1538:34  warning  'exports' is defined but never used. Allowed unused args must match /^_/u  unused-imports/no-unused-vars
+  1549:34  warning  'exports' is defined but never used. Allowed unused args must match /^_/u  unused-imports/no-unused-vars
+  1560:34  warning  'exports' is defined but never used. Allowed unused args must match /^_/u  unused-imports/no-unused-vars
+  1571:34  warning  'exports' is defined but never used. Allowed unused args must match /^_/u  unused-imports/no-unused-vars
+  1582:34  warning  'exports' is defined but never used. Allowed unused args must match /^_/u  unused-imports/no-unused-vars
+  1593:34  warning  'exports' is defined but never used. Allowed unused args must match /^_/u  unused-imports/no-unused-vars
+  1604:34  warning  'exports' is defined but never used. Allowed unused args must match /^_/u  unused-imports/no-unused-vars
+  1615:34  warning  'exports' is defined but never used. Allowed unused args must match /^_/u  unused-imports/no-unused-vars
+  1626:34  warning  'exports' is defined but never used. Allowed unused args must match /^_/u  unused-imports/no-unused-vars
+  1637:34  warning  'exports' is defined but never used. Allowed unused args must match /^_/u  unused-imports/no-unused-vars
+  1648:34  warning  'exports' is defined but never used. Allowed unused args must match /^_/u  unused-imports/no-unused-vars
+  1659:34  warning  'exports' is defined but never used. Allowed unused args must match /^_/u  unused-imports/no-unused-vars
+  1670:34  warning  'exports' is defined but never used. Allowed unused args must match /^_/u  unused-imports/no-unused-vars
+  1681:34  warning  'exports' is defined but never used. Allowed unused args must match /^_/u  unused-imports/no-unused-vars
+  1703:9   warning  'module' is defined but never used. Allowed unused args must match /^_/u   unused-imports/no-unused-vars
+  1703:17  warning  'exports' is defined but never used. Allowed unused args must match /^_/u  unused-imports/no-unused-vars
+  1714:9   warning  'module' is defined but never used. Allowed unused args must match /^_/u   unused-imports/no-unused-vars
+  1714:17  warning  'exports' is defined but never used. Allowed unused args must match /^_/u  unused-imports/no-unused-vars
+  1725:9   warning  'module' is defined but never used. Allowed unused args must match /^_/u   unused-imports/no-unused-vars
+  1725:17  warning  'exports' is defined but never used. Allowed unused args must match /^_/u  unused-imports/no-unused-vars
+  1736:9   warning  'module' is defined but never used. Allowed unused args must match /^_/u   unused-imports/no-unused-vars
+  1736:17  warning  'exports' is defined but never used. Allowed unused args must match /^_/u  unused-imports/no-unused-vars
+  1747:9   warning  'module' is defined but never used. Allowed unused args must match /^_/u   unused-imports/no-unused-vars
+  1747:17  warning  'exports' is defined but never used. Allowed unused args must match /^_/u  unused-imports/no-unused-vars
+  1758:9   warning  'module' is defined but never used. Allowed unused args must match /^_/u   unused-imports/no-unused-vars
+  1758:17  warning  'exports' is defined but never used. Allowed unused args must match /^_/u  unused-imports/no-unused-vars
+  1769:9   warning  'module' is defined but never used. Allowed unused args must match /^_/u   unused-imports/no-unused-vars
+  1769:17  warning  'exports' is defined but never used. Allowed unused args must match /^_/u  unused-imports/no-unused-vars
+  1780:9   warning  'module' is defined but never used. Allowed unused args must match /^_/u   unused-imports/no-unused-vars
+  1780:17  warning  'exports' is defined but never used. Allowed unused args must match /^_/u  unused-imports/no-unused-vars
+  1791:9   warning  'module' is defined but never used. Allowed unused args must match /^_/u   unused-imports/no-unused-vars
+  1791:17  warning  'exports' is defined but never used. Allowed unused args must match /^_/u  unused-imports/no-unused-vars
+  1802:9   warning  'module' is defined but never used. Allowed unused args must match /^_/u   unused-imports/no-unused-vars
+  1802:17  warning  'exports' is defined but never used. Allowed unused args must match /^_/u  unused-imports/no-unused-vars
+  1813:9   warning  'module' is defined but never used. Allowed unused args must match /^_/u   unused-imports/no-unused-vars
+  1813:17  warning  'exports' is defined but never used. Allowed unused args must match /^_/u  unused-imports/no-unused-vars
+  1824:9   warning  'module' is defined but never used. Allowed unused args must match /^_/u   unused-imports/no-unused-vars
+  1824:17  warning  'exports' is defined but never used. Allowed unused args must match /^_/u  unused-imports/no-unused-vars
+  1835:9   warning  'module' is defined but never used. Allowed unused args must match /^_/u   unused-imports/no-unused-vars
+  1835:17  warning  'exports' is defined but never used. Allowed unused args must match /^_/u  unused-imports/no-unused-vars
+  1846:9   warning  'module' is defined but never used. Allowed unused args must match /^_/u   unused-imports/no-unused-vars
+  1846:17  warning  'exports' is defined but never used. Allowed unused args must match /^_/u  unused-imports/no-unused-vars
+  1857:9   warning  'module' is defined but never used. Allowed unused args must match /^_/u   unused-imports/no-unused-vars
+  1857:17  warning  'exports' is defined but never used. Allowed unused args must match /^_/u  unused-imports/no-unused-vars
+  1868:9   warning  'module' is defined but never used. Allowed unused args must match /^_/u   unused-imports/no-unused-vars
+  1868:17  warning  'exports' is defined but never used. Allowed unused args must match /^_/u  unused-imports/no-unused-vars
+  1879:9   warning  'module' is defined but never used. Allowed unused args must match /^_/u   unused-imports/no-unused-vars
+  1879:17  warning  'exports' is defined but never used. Allowed unused args must match /^_/u  unused-imports/no-unused-vars
+  1890:9   warning  'module' is defined but never used. Allowed unused args must match /^_/u   unused-imports/no-unused-vars
+  1890:17  warning  'exports' is defined but never used. Allowed unused args must match /^_/u  unused-imports/no-unused-vars
+  1901:9   warning  'module' is defined but never used. Allowed unused args must match /^_/u   unused-imports/no-unused-vars
+  1901:17  warning  'exports' is defined but never used. Allowed unused args must match /^_/u  unused-imports/no-unused-vars
+  1912:9   warning  'module' is defined but never used. Allowed unused args must match /^_/u   unused-imports/no-unused-vars
+  1912:17  warning  'exports' is defined but never used. Allowed unused args must match /^_/u  unused-imports/no-unused-vars
+  1923:9   warning  'module' is defined but never used. Allowed unused args must match /^_/u   unused-imports/no-unused-vars
+  1923:17  warning  'exports' is defined but never used. Allowed unused args must match /^_/u  unused-imports/no-unused-vars
+  1934:9   warning  'module' is defined but never used. Allowed unused args must match /^_/u   unused-imports/no-unused-vars
+  1934:17  warning  'exports' is defined but never used. Allowed unused args must match /^_/u  unused-imports/no-unused-vars
+  1945:9   warning  'module' is defined but never used. Allowed unused args must match /^_/u   unused-imports/no-unused-vars
+  1945:17  warning  'exports' is defined but never used. Allowed unused args must match /^_/u  unused-imports/no-unused-vars
+  1956:9   warning  'module' is defined but never used. Allowed unused args must match /^_/u   unused-imports/no-unused-vars
+  1956:17  warning  'exports' is defined but never used. Allowed unused args must match /^_/u  unused-imports/no-unused-vars
+  1967:9   warning  'module' is defined but never used. Allowed unused args must match /^_/u   unused-imports/no-unused-vars
+  1967:17  warning  'exports' is defined but never used. Allowed unused args must match /^_/u  unused-imports/no-unused-vars
+  1978:9   warning  'module' is defined but never used. Allowed unused args must match /^_/u   unused-imports/no-unused-vars
+  1978:17  warning  'exports' is defined but never used. Allowed unused args must match /^_/u  unused-imports/no-unused-vars
+  1989:9   warning  'module' is defined but never used. Allowed unused args must match /^_/u   unused-imports/no-unused-vars
+  1989:17  warning  'exports' is defined but never used. Allowed unused args must match /^_/u  unused-imports/no-unused-vars
+  2000:9   warning  'module' is defined but never used. Allowed unused args must match /^_/u   unused-imports/no-unused-vars
+  2000:17  warning  'exports' is defined but never used. Allowed unused args must match /^_/u  unused-imports/no-unused-vars
+  2011:9   warning  'module' is defined but never used. Allowed unused args must match /^_/u   unused-imports/no-unused-vars
+  2011:17  warning  'exports' is defined but never used. Allowed unused args must match /^_/u  unused-imports/no-unused-vars
+  2022:9   warning  'module' is defined but never used. Allowed unused args must match /^_/u   unused-imports/no-unused-vars
+  2022:17  warning  'exports' is defined but never used. Allowed unused args must match /^_/u  unused-imports/no-unused-vars
+  2033:9   warning  'module' is defined but never used. Allowed unused args must match /^_/u   unused-imports/no-unused-vars
+  2033:17  warning  'exports' is defined but never used. Allowed unused args must match /^_/u  unused-imports/no-unused-vars
+  2044:9   warning  'module' is defined but never used. Allowed unused args must match /^_/u   unused-imports/no-unused-vars
+  2044:17  warning  'exports' is defined but never used. Allowed unused args must match /^_/u  unused-imports/no-unused-vars
+  2055:9   warning  'module' is defined but never used. Allowed unused args must match /^_/u   unused-imports/no-unused-vars
+  2055:17  warning  'exports' is defined but never used. Allowed unused args must match /^_/u  unused-imports/no-unused-vars
+  2066:9   warning  'module' is defined but never used. Allowed unused args must match /^_/u   unused-imports/no-unused-vars
+  2066:17  warning  'exports' is defined but never used. Allowed unused args must match /^_/u  unused-imports/no-unused-vars
+  2077:9   warning  'module' is defined but never used. Allowed unused args must match /^_/u   unused-imports/no-unused-vars
+  2077:17  warning  'exports' is defined but never used. Allowed unused args must match /^_/u  unused-imports/no-unused-vars
+  2088:9   warning  'module' is defined but never used. Allowed unused args must match /^_/u   unused-imports/no-unused-vars
+  2088:17  warning  'exports' is defined but never used. Allowed unused args must match /^_/u  unused-imports/no-unused-vars
+  2099:9   warning  'module' is defined but never used. Allowed unused args must match /^_/u   unused-imports/no-unused-vars
+  2099:17  warning  'exports' is defined but never used. Allowed unused args must match /^_/u  unused-imports/no-unused-vars
+  2110:9   warning  'module' is defined but never used. Allowed unused args must match /^_/u   unused-imports/no-unused-vars
+  2110:17  warning  'exports' is defined but never used. Allowed unused args must match /^_/u  unused-imports/no-unused-vars
+  2121:9   warning  'module' is defined but never used. Allowed unused args must match /^_/u   unused-imports/no-unused-vars
+  2121:17  warning  'exports' is defined but never used. Allowed unused args must match /^_/u  unused-imports/no-unused-vars
+  2132:9   warning  'module' is defined but never used. Allowed unused args must match /^_/u   unused-imports/no-unused-vars
+  2132:17  warning  'exports' is defined but never used. Allowed unused args must match /^_/u  unused-imports/no-unused-vars
+  2143:9   warning  'module' is defined but never used. Allowed unused args must match /^_/u   unused-imports/no-unused-vars
+  2143:17  warning  'exports' is defined but never used. Allowed unused args must match /^_/u  unused-imports/no-unused-vars
+  2154:9   warning  'module' is defined but never used. Allowed unused args must match /^_/u   unused-imports/no-unused-vars
+  2154:17  warning  'exports' is defined but never used. Allowed unused args must match /^_/u  unused-imports/no-unused-vars
+  2165:9   warning  'module' is defined but never used. Allowed unused args must match /^_/u   unused-imports/no-unused-vars
+  2165:17  warning  'exports' is defined but never used. Allowed unused args must match /^_/u  unused-imports/no-unused-vars
+  2176:9   warning  'module' is defined but never used. Allowed unused args must match /^_/u   unused-imports/no-unused-vars
+  2176:17  warning  'exports' is defined but never used. Allowed unused args must match /^_/u  unused-imports/no-unused-vars
+  2187:9   warning  'module' is defined but never used. Allowed unused args must match /^_/u   unused-imports/no-unused-vars
+  2187:17  warning  'exports' is defined but never used. Allowed unused args must match /^_/u  unused-imports/no-unused-vars
+  2198:9   warning  'module' is defined but never used. Allowed unused args must match /^_/u   unused-imports/no-unused-vars
+  2198:17  warning  'exports' is defined but never used. Allowed unused args must match /^_/u  unused-imports/no-unused-vars
+  2209:9   warning  'module' is defined but never used. Allowed unused args must match /^_/u   unused-imports/no-unused-vars
+  2209:17  warning  'exports' is defined but never used. Allowed unused args must match /^_/u  unused-imports/no-unused-vars
+  2220:9   warning  'module' is defined but never used. Allowed unused args must match /^_/u   unused-imports/no-unused-vars
+  2220:17  warning  'exports' is defined but never used. Allowed unused args must match /^_/u  unused-imports/no-unused-vars
+  2231:9   warning  'module' is defined but never used. Allowed unused args must match /^_/u   unused-imports/no-unused-vars
+  2231:17  warning  'exports' is defined but never used. Allowed unused args must match /^_/u  unused-imports/no-unused-vars
+  2242:9   warning  'module' is defined but never used. Allowed unused args must match /^_/u   unused-imports/no-unused-vars
+  2242:17  warning  'exports' is defined but never used. Allowed unused args must match /^_/u  unused-imports/no-unused-vars
+  2253:9   warning  'module' is defined but never used. Allowed unused args must match /^_/u   unused-imports/no-unused-vars
+  2253:17  warning  'exports' is defined but never used. Allowed unused args must match /^_/u  unused-imports/no-unused-vars
+  2264:9   warning  'module' is defined but never used. Allowed unused args must match /^_/u   unused-imports/no-unused-vars
+  2264:17  warning  'exports' is defined but never used. Allowed unused args must match /^_/u  unused-imports/no-unused-vars
+  2275:9   warning  'module' is defined but never used. Allowed unused args must match /^_/u   unused-imports/no-unused-vars
+  2275:17  warning  'exports' is defined but never used. Allowed unused args must match /^_/u  unused-imports/no-unused-vars
+  2286:9   warning  'module' is defined but never used. Allowed unused args must match /^_/u   unused-imports/no-unused-vars
+  2286:17  warning  'exports' is defined but never used. Allowed unused args must match /^_/u  unused-imports/no-unused-vars
+  2297:9   warning  'module' is defined but never used. Allowed unused args must match /^_/u   unused-imports/no-unused-vars
+  2297:17  warning  'exports' is defined but never used. Allowed unused args must match /^_/u  unused-imports/no-unused-vars
+  2308:9   warning  'module' is defined but never used. Allowed unused args must match /^_/u   unused-imports/no-unused-vars
+  2308:17  warning  'exports' is defined but never used. Allowed unused args must match /^_/u  unused-imports/no-unused-vars
+  2319:9   warning  'module' is defined but never used. Allowed unused args must match /^_/u   unused-imports/no-unused-vars
+  2319:17  warning  'exports' is defined but never used. Allowed unused args must match /^_/u  unused-imports/no-unused-vars
+  2330:9   warning  'module' is defined but never used. Allowed unused args must match /^_/u   unused-imports/no-unused-vars
+  2330:17  warning  'exports' is defined but never used. Allowed unused args must match /^_/u  unused-imports/no-unused-vars
+  2341:9   warning  'module' is defined but never used. Allowed unused args must match /^_/u   unused-imports/no-unused-vars
+  2341:17  warning  'exports' is defined but never used. Allowed unused args must match /^_/u  unused-imports/no-unused-vars
+  2352:9   warning  'module' is defined but never used. Allowed unused args must match /^_/u   unused-imports/no-unused-vars
+  2352:17  warning  'exports' is defined but never used. Allowed unused args must match /^_/u  unused-imports/no-unused-vars
+  2363:9   warning  'module' is defined but never used. Allowed unused args must match /^_/u   unused-imports/no-unused-vars
+  2363:17  warning  'exports' is defined but never used. Allowed unused args must match /^_/u  unused-imports/no-unused-vars
+  2374:9   warning  'module' is defined but never used. Allowed unused args must match /^_/u   unused-imports/no-unused-vars
+  2374:17  warning  'exports' is defined but never used. Allowed unused args must match /^_/u  unused-imports/no-unused-vars
+  2385:9   warning  'module' is defined but never used. Allowed unused args must match /^_/u   unused-imports/no-unused-vars
+  2385:17  warning  'exports' is defined but never used. Allowed unused args must match /^_/u  unused-imports/no-unused-vars
+  2396:9   warning  'module' is defined but never used. Allowed unused args must match /^_/u   unused-imports/no-unused-vars
+  2396:17  warning  'exports' is defined but never used. Allowed unused args must match /^_/u  unused-imports/no-unused-vars
+  2407:9   warning  'module' is defined but never used. Allowed unused args must match /^_/u   unused-imports/no-unused-vars
+  2407:17  warning  'exports' is defined but never used. Allowed unused args must match /^_/u  unused-imports/no-unused-vars
+  2418:9   warning  'module' is defined but never used. Allowed unused args must match /^_/u   unused-imports/no-unused-vars
+  2418:17  warning  'exports' is defined but never used. Allowed unused args must match /^_/u  unused-imports/no-unused-vars
+  2429:9   warning  'module' is defined but never used. Allowed unused args must match /^_/u   unused-imports/no-unused-vars
+  2429:17  warning  'exports' is defined but never used. Allowed unused args must match /^_/u  unused-imports/no-unused-vars
+  2440:9   warning  'module' is defined but never used. Allowed unused args must match /^_/u   unused-imports/no-unused-vars
+  2440:17  warning  'exports' is defined but never used. Allowed unused args must match /^_/u  unused-imports/no-unused-vars
+  2451:9   warning  'module' is defined but never used. Allowed unused args must match /^_/u   unused-imports/no-unused-vars
+  2451:17  warning  'exports' is defined but never used. Allowed unused args must match /^_/u  unused-imports/no-unused-vars
+  2462:9   warning  'module' is defined but never used. Allowed unused args must match /^_/u   unused-imports/no-unused-vars
+  2462:17  warning  'exports' is defined but never used. Allowed unused args must match /^_/u  unused-imports/no-unused-vars
+  2473:9   warning  'module' is defined but never used. Allowed unused args must match /^_/u   unused-imports/no-unused-vars
+  2473:17  warning  'exports' is defined but never used. Allowed unused args must match /^_/u  unused-imports/no-unused-vars
+  2484:9   warning  'module' is defined but never used. Allowed unused args must match /^_/u   unused-imports/no-unused-vars
+  2484:17  warning  'exports' is defined but never used. Allowed unused args must match /^_/u  unused-imports/no-unused-vars
+  2495:9   warning  'module' is defined but never used. Allowed unused args must match /^_/u   unused-imports/no-unused-vars
+  2495:17  warning  'exports' is defined but never used. Allowed unused args must match /^_/u  unused-imports/no-unused-vars
+  2506:9   warning  'module' is defined but never used. Allowed unused args must match /^_/u   unused-imports/no-unused-vars
+  2506:17  warning  'exports' is defined but never used. Allowed unused args must match /^_/u  unused-imports/no-unused-vars
+  2517:9   warning  'module' is defined but never used. Allowed unused args must match /^_/u   unused-imports/no-unused-vars
+  2517:17  warning  'exports' is defined but never used. Allowed unused args must match /^_/u  unused-imports/no-unused-vars
+  2528:9   warning  'module' is defined but never used. Allowed unused args must match /^_/u   unused-imports/no-unused-vars
+  2528:17  warning  'exports' is defined but never used. Allowed unused args must match /^_/u  unused-imports/no-unused-vars
+  2539:9   warning  'module' is defined but never used. Allowed unused args must match /^_/u   unused-imports/no-unused-vars
+  2539:17  warning  'exports' is defined but never used. Allowed unused args must match /^_/u  unused-imports/no-unused-vars
+  2550:9   warning  'module' is defined but never used. Allowed unused args must match /^_/u   unused-imports/no-unused-vars
+  2550:17  warning  'exports' is defined but never used. Allowed unused args must match /^_/u  unused-imports/no-unused-vars
+  2561:9   warning  'module' is defined but never used. Allowed unused args must match /^_/u   unused-imports/no-unused-vars
+  2561:17  warning  'exports' is defined but never used. Allowed unused args must match /^_/u  unused-imports/no-unused-vars
+  2572:9   warning  'module' is defined but never used. Allowed unused args must match /^_/u   unused-imports/no-unused-vars
+  2572:17  warning  'exports' is defined but never used. Allowed unused args must match /^_/u  unused-imports/no-unused-vars
+  2583:9   warning  'module' is defined but never used. Allowed unused args must match /^_/u   unused-imports/no-unused-vars
+  2583:17  warning  'exports' is defined but never used. Allowed unused args must match /^_/u  unused-imports/no-unused-vars
+  2594:9   warning  'module' is defined but never used. Allowed unused args must match /^_/u   unused-imports/no-unused-vars
+  2594:17  warning  'exports' is defined but never used. Allowed unused args must match /^_/u  unused-imports/no-unused-vars
+  2605:9   warning  'module' is defined but never used. Allowed unused args must match /^_/u   unused-imports/no-unused-vars
+  2605:17  warning  'exports' is defined but never used. Allowed unused args must match /^_/u  unused-imports/no-unused-vars
+  2616:9   warning  'module' is defined but never used. Allowed unused args must match /^_/u   unused-imports/no-unused-vars
+  2616:17  warning  'exports' is defined but never used. Allowed unused args must match /^_/u  unused-imports/no-unused-vars
+  2627:9   warning  'module' is defined but never used. Allowed unused args must match /^_/u   unused-imports/no-unused-vars
+  2627:17  warning  'exports' is defined but never used. Allowed unused args must match /^_/u  unused-imports/no-unused-vars
+  2638:9   warning  'module' is defined but never used. Allowed unused args must match /^_/u   unused-imports/no-unused-vars
+  2638:17  warning  'exports' is defined but never used. Allowed unused args must match /^_/u  unused-imports/no-unused-vars
+  2649:9   warning  'module' is defined but never used. Allowed unused args must match /^_/u   unused-imports/no-unused-vars
+  2649:17  warning  'exports' is defined but never used. Allowed unused args must match /^_/u  unused-imports/no-unused-vars
+  2660:9   warning  'module' is defined but never used. Allowed unused args must match /^_/u   unused-imports/no-unused-vars
+  2660:17  warning  'exports' is defined but never used. Allowed unused args must match /^_/u  unused-imports/no-unused-vars
+  2671:9   warning  'module' is defined but never used. Allowed unused args must match /^_/u   unused-imports/no-unused-vars
+  2671:17  warning  'exports' is defined but never used. Allowed unused args must match /^_/u  unused-imports/no-unused-vars
+  2682:9   warning  'module' is defined but never used. Allowed unused args must match /^_/u   unused-imports/no-unused-vars
+  2682:17  warning  'exports' is defined but never used. Allowed unused args must match /^_/u  unused-imports/no-unused-vars
+  2693:9   warning  'module' is defined but never used. Allowed unused args must match /^_/u   unused-imports/no-unused-vars
+  2693:17  warning  'exports' is defined but never used. Allowed unused args must match /^_/u  unused-imports/no-unused-vars
+  2704:9   warning  'module' is defined but never used. Allowed unused args must match /^_/u   unused-imports/no-unused-vars
+  2704:17  warning  'exports' is defined but never used. Allowed unused args must match /^_/u  unused-imports/no-unused-vars
+  2715:9   warning  'module' is defined but never used. Allowed unused args must match /^_/u   unused-imports/no-unused-vars
+  2715:17  warning  'exports' is defined but never used. Allowed unused args must match /^_/u  unused-imports/no-unused-vars
+  2726:9   warning  'module' is defined but never used. Allowed unused args must match /^_/u   unused-imports/no-unused-vars
+  2726:17  warning  'exports' is defined but never used. Allowed unused args must match /^_/u  unused-imports/no-unused-vars
+  2737:9   warning  'module' is defined but never used. Allowed unused args must match /^_/u   unused-imports/no-unused-vars
+  2737:17  warning  'exports' is defined but never used. Allowed unused args must match /^_/u  unused-imports/no-unused-vars
+  2748:9   warning  'module' is defined but never used. Allowed unused args must match /^_/u   unused-imports/no-unused-vars
+  2748:17  warning  'exports' is defined but never used. Allowed unused args must match /^_/u  unused-imports/no-unused-vars
+  2759:9   warning  'module' is defined but never used. Allowed unused args must match /^_/u   unused-imports/no-unused-vars
+  2759:17  warning  'exports' is defined but never used. Allowed unused args must match /^_/u  unused-imports/no-unused-vars
+  2770:9   warning  'module' is defined but never used. Allowed unused args must match /^_/u   unused-imports/no-unused-vars
+  2770:17  warning  'exports' is defined but never used. Allowed unused args must match /^_/u  unused-imports/no-unused-vars
+  2781:9   warning  'module' is defined but never used. Allowed unused args must match /^_/u   unused-imports/no-unused-vars
+  2781:17  warning  'exports' is defined but never used. Allowed unused args must match /^_/u  unused-imports/no-unused-vars
+  2792:9   warning  'module' is defined but never used. Allowed unused args must match /^_/u   unused-imports/no-unused-vars
+  2792:17  warning  'exports' is defined but never used. Allowed unused args must match /^_/u  unused-imports/no-unused-vars
+  2803:9   warning  'module' is defined but never used. Allowed unused args must match /^_/u   unused-imports/no-unused-vars
+  2803:17  warning  'exports' is defined but never used. Allowed unused args must match /^_/u  unused-imports/no-unused-vars
+  2814:9   warning  'module' is defined but never used. Allowed unused args must match /^_/u   unused-imports/no-unused-vars
+  2814:17  warning  'exports' is defined but never used. Allowed unused args must match /^_/u  unused-imports/no-unused-vars
+  2825:9   warning  'module' is defined but never used. Allowed unused args must match /^_/u   unused-imports/no-unused-vars
+  2825:17  warning  'exports' is defined but never used. Allowed unused args must match /^_/u  unused-imports/no-unused-vars
+  2836:9   warning  'module' is defined but never used. Allowed unused args must match /^_/u   unused-imports/no-unused-vars
+  2836:17  warning  'exports' is defined but never used. Allowed unused args must match /^_/u  unused-imports/no-unused-vars
+  2847:9   warning  'module' is defined but never used. Allowed unused args must match /^_/u   unused-imports/no-unused-vars
+  2847:17  warning  'exports' is defined but never used. Allowed unused args must match /^_/u  unused-imports/no-unused-vars
+  2858:9   warning  'module' is defined but never used. Allowed unused args must match /^_/u   unused-imports/no-unused-vars
+  2858:17  warning  'exports' is defined but never used. Allowed unused args must match /^_/u  unused-imports/no-unused-vars
+  2869:9   warning  'module' is defined but never used. Allowed unused args must match /^_/u   unused-imports/no-unused-vars
+  2869:17  warning  'exports' is defined but never used. Allowed unused args must match /^_/u  unused-imports/no-unused-vars
+  2880:9   warning  'module' is defined but never used. Allowed unused args must match /^_/u   unused-imports/no-unused-vars
+  2880:17  warning  'exports' is defined but never used. Allowed unused args must match /^_/u  unused-imports/no-unused-vars
+  2891:9   warning  'module' is defined but never used. Allowed unused args must match /^_/u   unused-imports/no-unused-vars
+  2891:17  warning  'exports' is defined but never used. Allowed unused args must match /^_/u  unused-imports/no-unused-vars
+  2902:9   warning  'module' is defined but never used. Allowed unused args must match /^_/u   unused-imports/no-unused-vars
+  2902:17  warning  'exports' is defined but never used. Allowed unused args must match /^_/u  unused-imports/no-unused-vars
+  2913:9   warning  'module' is defined but never used. Allowed unused args must match /^_/u   unused-imports/no-unused-vars
+  2913:17  warning  'exports' is defined but never used. Allowed unused args must match /^_/u  unused-imports/no-unused-vars
+  2924:9   warning  'module' is defined but never used. Allowed unused args must match /^_/u   unused-imports/no-unused-vars
+  2924:17  warning  'exports' is defined but never used. Allowed unused args must match /^_/u  unused-imports/no-unused-vars
+  2935:9   warning  'module' is defined but never used. Allowed unused args must match /^_/u   unused-imports/no-unused-vars
+  2935:17  warning  'exports' is defined but never used. Allowed unused args must match /^_/u  unused-imports/no-unused-vars
+  2946:9   warning  'module' is defined but never used. Allowed unused args must match /^_/u   unused-imports/no-unused-vars
+  2946:17  warning  'exports' is defined but never used. Allowed unused args must match /^_/u  unused-imports/no-unused-vars
+  2957:9   warning  'module' is defined but never used. Allowed unused args must match /^_/u   unused-imports/no-unused-vars
+  2957:17  warning  'exports' is defined but never used. Allowed unused args must match /^_/u  unused-imports/no-unused-vars
+  2968:9   warning  'module' is defined but never used. Allowed unused args must match /^_/u   unused-imports/no-unused-vars
+  2968:17  warning  'exports' is defined but never used. Allowed unused args must match /^_/u  unused-imports/no-unused-vars
+  2979:9   warning  'module' is defined but never used. Allowed unused args must match /^_/u   unused-imports/no-unused-vars
+  2979:17  warning  'exports' is defined but never used. Allowed unused args must match /^_/u  unused-imports/no-unused-vars
+  2990:9   warning  'module' is defined but never used. Allowed unused args must match /^_/u   unused-imports/no-unused-vars
+  2990:17  warning  'exports' is defined but never used. Allowed unused args must match /^_/u  unused-imports/no-unused-vars
+  3001:9   warning  'module' is defined but never used. Allowed unused args must match /^_/u   unused-imports/no-unused-vars
+  3001:17  warning  'exports' is defined but never used. Allowed unused args must match /^_/u  unused-imports/no-unused-vars
+  3012:9   warning  'module' is defined but never used. Allowed unused args must match /^_/u   unused-imports/no-unused-vars
+  3012:17  warning  'exports' is defined but never used. Allowed unused args must match /^_/u  unused-imports/no-unused-vars
+  3023:9   warning  'module' is defined but never used. Allowed unused args must match /^_/u   unused-imports/no-unused-vars
+  3023:17  warning  'exports' is defined but never used. Allowed unused args must match /^_/u  unused-imports/no-unused-vars
+  3034:9   warning  'module' is defined but never used. Allowed unused args must match /^_/u   unused-imports/no-unused-vars
+  3034:17  warning  'exports' is defined but never used. Allowed unused args must match /^_/u  unused-imports/no-unused-vars
+  3045:9   warning  'module' is defined but never used. Allowed unused args must match /^_/u   unused-imports/no-unused-vars
+  3045:17  warning  'exports' is defined but never used. Allowed unused args must match /^_/u  unused-imports/no-unused-vars
+  3056:9   warning  'module' is defined but never used. Allowed unused args must match /^_/u   unused-imports/no-unused-vars
+  3056:17  warning  'exports' is defined but never used. Allowed unused args must match /^_/u  unused-imports/no-unused-vars
+  3067:9   warning  'module' is defined but never used. Allowed unused args must match /^_/u   unused-imports/no-unused-vars
+  3067:17  warning  'exports' is defined but never used. Allowed unused args must match /^_/u  unused-imports/no-unused-vars
+  3078:9   warning  'module' is defined but never used. Allowed unused args must match /^_/u   unused-imports/no-unused-vars
+  3078:17  warning  'exports' is defined but never used. Allowed unused args must match /^_/u  unused-imports/no-unused-vars
+  3089:9   warning  'module' is defined but never used. Allowed unused args must match /^_/u   unused-imports/no-unused-vars
+  3089:17  warning  'exports' is defined but never used. Allowed unused args must match /^_/u  unused-imports/no-unused-vars
+  3100:9   warning  'module' is defined but never used. Allowed unused args must match /^_/u   unused-imports/no-unused-vars
+  3100:17  warning  'exports' is defined but never used. Allowed unused args must match /^_/u  unused-imports/no-unused-vars
+  3111:9   warning  'module' is defined but never used. Allowed unused args must match /^_/u   unused-imports/no-unused-vars
+  3111:17  warning  'exports' is defined but never used. Allowed unused args must match /^_/u  unused-imports/no-unused-vars
+  3122:9   warning  'module' is defined but never used. Allowed unused args must match /^_/u   unused-imports/no-unused-vars
+  3122:17  warning  'exports' is defined but never used. Allowed unused args must match /^_/u  unused-imports/no-unused-vars
+  3133:9   warning  'module' is defined but never used. Allowed unused args must match /^_/u   unused-imports/no-unused-vars
+  3133:17  warning  'exports' is defined but never used. Allowed unused args must match /^_/u  unused-imports/no-unused-vars
+  3144:9   warning  'module' is defined but never used. Allowed unused args must match /^_/u   unused-imports/no-unused-vars
+  3144:17  warning  'exports' is defined but never used. Allowed unused args must match /^_/u  unused-imports/no-unused-vars
+  3155:9   warning  'module' is defined but never used. Allowed unused args must match /^_/u   unused-imports/no-unused-vars
+  3155:17  warning  'exports' is defined but never used. Allowed unused args must match /^_/u  unused-imports/no-unused-vars
+  3166:9   warning  'module' is defined but never used. Allowed unused args must match /^_/u   unused-imports/no-unused-vars
+  3166:17  warning  'exports' is defined but never used. Allowed unused args must match /^_/u  unused-imports/no-unused-vars
+  3177:9   warning  'module' is defined but never used. Allowed unused args must match /^_/u   unused-imports/no-unused-vars
+  3177:17  warning  'exports' is defined but never used. Allowed unused args must match /^_/u  unused-imports/no-unused-vars
+  3188:9   warning  'module' is defined but never used. Allowed unused args must match /^_/u   unused-imports/no-unused-vars
+  3188:17  warning  'exports' is defined but never used. Allowed unused args must match /^_/u  unused-imports/no-unused-vars
+  3199:9   warning  'module' is defined but never used. Allowed unused args must match /^_/u   unused-imports/no-unused-vars
+  3199:17  warning  'exports' is defined but never used. Allowed unused args must match /^_/u  unused-imports/no-unused-vars
+  3210:9   warning  'module' is defined but never used. Allowed unused args must match /^_/u   unused-imports/no-unused-vars
+  3210:17  warning  'exports' is defined but never used. Allowed unused args must match /^_/u  unused-imports/no-unused-vars
+  3221:9   warning  'module' is defined but never used. Allowed unused args must match /^_/u   unused-imports/no-unused-vars
+  3221:17  warning  'exports' is defined but never used. Allowed unused args must match /^_/u  unused-imports/no-unused-vars
+  3232:9   warning  'module' is defined but never used. Allowed unused args must match /^_/u   unused-imports/no-unused-vars
+  3232:17  warning  'exports' is defined but never used. Allowed unused args must match /^_/u  unused-imports/no-unused-vars
+  3243:9   warning  'module' is defined but never used. Allowed unused args must match /^_/u   unused-imports/no-unused-vars
+  3243:17  warning  'exports' is defined but never used. Allowed unused args must match /^_/u  unused-imports/no-unused-vars
+  3254:9   warning  'module' is defined but never used. Allowed unused args must match /^_/u   unused-imports/no-unused-vars
+  3254:17  warning  'exports' is defined but never used. Allowed unused args must match /^_/u  unused-imports/no-unused-vars
+  3265:9   warning  'module' is defined but never used. Allowed unused args must match /^_/u   unused-imports/no-unused-vars
+  3265:17  warning  'exports' is defined but never used. Allowed unused args must match /^_/u  unused-imports/no-unused-vars
+  3276:9   warning  'module' is defined but never used. Allowed unused args must match /^_/u   unused-imports/no-unused-vars
+  3276:17  warning  'exports' is defined but never used. Allowed unused args must match /^_/u  unused-imports/no-unused-vars
+  3287:9   warning  'module' is defined but never used. Allowed unused args must match /^_/u   unused-imports/no-unused-vars
+  3287:17  warning  'exports' is defined but never used. Allowed unused args must match /^_/u  unused-imports/no-unused-vars
+  3298:9   warning  'module' is defined but never used. Allowed unused args must match /^_/u   unused-imports/no-unused-vars
+  3298:17  warning  'exports' is defined but never used. Allowed unused args must match /^_/u  unused-imports/no-unused-vars
+  3309:9   warning  'module' is defined but never used. Allowed unused args must match /^_/u   unused-imports/no-unused-vars
+  3309:17  warning  'exports' is defined but never used. Allowed unused args must match /^_/u  unused-imports/no-unused-vars
+  3320:9   warning  'module' is defined but never used. Allowed unused args must match /^_/u   unused-imports/no-unused-vars
+  3320:17  warning  'exports' is defined but never used. Allowed unused args must match /^_/u  unused-imports/no-unused-vars
+  3331:9   warning  'module' is defined but never used. Allowed unused args must match /^_/u   unused-imports/no-unused-vars
+  3331:17  warning  'exports' is defined but never used. Allowed unused args must match /^_/u  unused-imports/no-unused-vars
+  3342:9   warning  'module' is defined but never used. Allowed unused args must match /^_/u   unused-imports/no-unused-vars
+  3342:17  warning  'exports' is defined but never used. Allowed unused args must match /^_/u  unused-imports/no-unused-vars
+  3353:9   warning  'module' is defined but never used. Allowed unused args must match /^_/u   unused-imports/no-unused-vars
+  3353:17  warning  'exports' is defined but never used. Allowed unused args must match /^_/u  unused-imports/no-unused-vars
+  3364:9   warning  'module' is defined but never used. Allowed unused args must match /^_/u   unused-imports/no-unused-vars
+  3364:17  warning  'exports' is defined but never used. Allowed unused args must match /^_/u  unused-imports/no-unused-vars
+  3375:9   warning  'module' is defined but never used. Allowed unused args must match /^_/u   unused-imports/no-unused-vars
+  3375:17  warning  'exports' is defined but never used. Allowed unused args must match /^_/u  unused-imports/no-unused-vars
+  3386:9   warning  'module' is defined but never used. Allowed unused args must match /^_/u   unused-imports/no-unused-vars
+  3386:17  warning  'exports' is defined but never used. Allowed unused args must match /^_/u  unused-imports/no-unused-vars
+  3397:9   warning  'module' is defined but never used. Allowed unused args must match /^_/u   unused-imports/no-unused-vars
+  3397:17  warning  'exports' is defined but never used. Allowed unused args must match /^_/u  unused-imports/no-unused-vars
+  3408:9   warning  'module' is defined but never used. Allowed unused args must match /^_/u   unused-imports/no-unused-vars
+  3408:17  warning  'exports' is defined but never used. Allowed unused args must match /^_/u  unused-imports/no-unused-vars
+  3419:9   warning  'module' is defined but never used. Allowed unused args must match /^_/u   unused-imports/no-unused-vars
+  3419:17  warning  'exports' is defined but never used. Allowed unused args must match /^_/u  unused-imports/no-unused-vars
+  3430:9   warning  'module' is defined but never used. Allowed unused args must match /^_/u   unused-imports/no-unused-vars
+  3430:17  warning  'exports' is defined but never used. Allowed unused args must match /^_/u  unused-imports/no-unused-vars
+  3441:9   warning  'module' is defined but never used. Allowed unused args must match /^_/u   unused-imports/no-unused-vars
+  3441:17  warning  'exports' is defined but never used. Allowed unused args must match /^_/u  unused-imports/no-unused-vars
+  3452:9   warning  'module' is defined but never used. Allowed unused args must match /^_/u   unused-imports/no-unused-vars
+  3452:17  warning  'exports' is defined but never used. Allowed unused args must match /^_/u  unused-imports/no-unused-vars
+  3463:9   warning  'module' is defined but never used. Allowed unused args must match /^_/u   unused-imports/no-unused-vars
+  3463:17  warning  'exports' is defined but never used. Allowed unused args must match /^_/u  unused-imports/no-unused-vars
+  3474:9   warning  'module' is defined but never used. Allowed unused args must match /^_/u   unused-imports/no-unused-vars
+  3474:17  warning  'exports' is defined but never used. Allowed unused args must match /^_/u  unused-imports/no-unused-vars
+  3485:9   warning  'module' is defined but never used. Allowed unused args must match /^_/u   unused-imports/no-unused-vars
+  3485:17  warning  'exports' is defined but never used. Allowed unused args must match /^_/u  unused-imports/no-unused-vars
+  3496:9   warning  'module' is defined but never used. Allowed unused args must match /^_/u   unused-imports/no-unused-vars
+  3496:17  warning  'exports' is defined but never used. Allowed unused args must match /^_/u  unused-imports/no-unused-vars
+  3507:9   warning  'module' is defined but never used. Allowed unused args must match /^_/u   unused-imports/no-unused-vars
+  3507:17  warning  'exports' is defined but never used. Allowed unused args must match /^_/u  unused-imports/no-unused-vars
+  3518:9   warning  'module' is defined but never used. Allowed unused args must match /^_/u   unused-imports/no-unused-vars
+  3518:17  warning  'exports' is defined but never used. Allowed unused args must match /^_/u  unused-imports/no-unused-vars
+  3529:9   warning  'module' is defined but never used. Allowed unused args must match /^_/u   unused-imports/no-unused-vars
+  3529:17  warning  'exports' is defined but never used. Allowed unused args must match /^_/u  unused-imports/no-unused-vars
+  3540:9   warning  'module' is defined but never used. Allowed unused args must match /^_/u   unused-imports/no-unused-vars
+  3540:17  warning  'exports' is defined but never used. Allowed unused args must match /^_/u  unused-imports/no-unused-vars
+  3551:9   warning  'module' is defined but never used. Allowed unused args must match /^_/u   unused-imports/no-unused-vars
+  3551:17  warning  'exports' is defined but never used. Allowed unused args must match /^_/u  unused-imports/no-unused-vars
+  3562:9   warning  'module' is defined but never used. Allowed unused args must match /^_/u   unused-imports/no-unused-vars
+  3562:17  warning  'exports' is defined but never used. Allowed unused args must match /^_/u  unused-imports/no-unused-vars
+  3573:9   warning  'module' is defined but never used. Allowed unused args must match /^_/u   unused-imports/no-unused-vars
+  3573:17  warning  'exports' is defined but never used. Allowed unused args must match /^_/u  unused-imports/no-unused-vars
+  3584:9   warning  'module' is defined but never used. Allowed unused args must match /^_/u   unused-imports/no-unused-vars
+  3584:17  warning  'exports' is defined but never used. Allowed unused args must match /^_/u  unused-imports/no-unused-vars
+  3595:9   warning  'module' is defined but never used. Allowed unused args must match /^_/u   unused-imports/no-unused-vars
+  3595:17  warning  'exports' is defined but never used. Allowed unused args must match /^_/u  unused-imports/no-unused-vars
+  3606:9   warning  'module' is defined but never used. Allowed unused args must match /^_/u   unused-imports/no-unused-vars
+  3606:17  warning  'exports' is defined but never used. Allowed unused args must match /^_/u  unused-imports/no-unused-vars
+  3617:9   warning  'module' is defined but never used. Allowed unused args must match /^_/u   unused-imports/no-unused-vars
+  3617:17  warning  'exports' is defined but never used. Allowed unused args must match /^_/u  unused-imports/no-unused-vars
+  3628:9   warning  'module' is defined but never used. Allowed unused args must match /^_/u   unused-imports/no-unused-vars
+  3628:17  warning  'exports' is defined but never used. Allowed unused args must match /^_/u  unused-imports/no-unused-vars
+  3639:9   warning  'module' is defined but never used. Allowed unused args must match /^_/u   unused-imports/no-unused-vars
+  3639:17  warning  'exports' is defined but never used. Allowed unused args must match /^_/u  unused-imports/no-unused-vars
+  3650:9   warning  'module' is defined but never used. Allowed unused args must match /^_/u   unused-imports/no-unused-vars
+  3650:17  warning  'exports' is defined but never used. Allowed unused args must match /^_/u  unused-imports/no-unused-vars
+  3661:9   warning  'module' is defined but never used. Allowed unused args must match /^_/u   unused-imports/no-unused-vars
+  3661:17  warning  'exports' is defined but never used. Allowed unused args must match /^_/u  unused-imports/no-unused-vars
+  3672:9   warning  'module' is defined but never used. Allowed unused args must match /^_/u   unused-imports/no-unused-vars
+  3672:17  warning  'exports' is defined but never used. Allowed unused args must match /^_/u  unused-imports/no-unused-vars
+  3683:9   warning  'module' is defined but never used. Allowed unused args must match /^_/u   unused-imports/no-unused-vars
+  3683:17  warning  'exports' is defined but never used. Allowed unused args must match /^_/u  unused-imports/no-unused-vars
+  3694:9   warning  'module' is defined but never used. Allowed unused args must match /^_/u   unused-imports/no-unused-vars
+  3694:17  warning  'exports' is defined but never used. Allowed unused args must match /^_/u  unused-imports/no-unused-vars
+  3705:9   warning  'module' is defined but never used. Allowed unused args must match /^_/u   unused-imports/no-unused-vars
+  3705:17  warning  'exports' is defined but never used. Allowed unused args must match /^_/u  unused-imports/no-unused-vars
+  3716:9   warning  'module' is defined but never used. Allowed unused args must match /^_/u   unused-imports/no-unused-vars
+  3716:17  warning  'exports' is defined but never used. Allowed unused args must match /^_/u  unused-imports/no-unused-vars
+  3727:9   warning  'module' is defined but never used. Allowed unused args must match /^_/u   unused-imports/no-unused-vars
+  3727:17  warning  'exports' is defined but never used. Allowed unused args must match /^_/u  unused-imports/no-unused-vars
+  3738:9   warning  'module' is defined but never used. Allowed unused args must match /^_/u   unused-imports/no-unused-vars
+  3738:17  warning  'exports' is defined but never used. Allowed unused args must match /^_/u  unused-imports/no-unused-vars
+  3749:9   warning  'module' is defined but never used. Allowed unused args must match /^_/u   unused-imports/no-unused-vars
+  3749:17  warning  'exports' is defined but never used. Allowed unused args must match /^_/u  unused-imports/no-unused-vars
+  3760:9   warning  'module' is defined but never used. Allowed unused args must match /^_/u   unused-imports/no-unused-vars
+  3760:17  warning  'exports' is defined but never used. Allowed unused args must match /^_/u  unused-imports/no-unused-vars
+  3771:9   warning  'module' is defined but never used. Allowed unused args must match /^_/u   unused-imports/no-unused-vars
+  3771:17  warning  'exports' is defined but never used. Allowed unused args must match /^_/u  unused-imports/no-unused-vars
+  3782:9   warning  'module' is defined but never used. Allowed unused args must match /^_/u   unused-imports/no-unused-vars
+  3782:17  warning  'exports' is defined but never used. Allowed unused args must match /^_/u  unused-imports/no-unused-vars
+  3793:9   warning  'module' is defined but never used. Allowed unused args must match /^_/u   unused-imports/no-unused-vars
+  3793:17  warning  'exports' is defined but never used. Allowed unused args must match /^_/u  unused-imports/no-unused-vars
+  3804:9   warning  'module' is defined but never used. Allowed unused args must match /^_/u   unused-imports/no-unused-vars
+  3814:9   warning  'module' is defined but never used. Allowed unused args must match /^_/u   unused-imports/no-unused-vars
+  3824:9   warning  'module' is defined but never used. Allowed unused args must match /^_/u   unused-imports/no-unused-vars
+  3835:34  warning  'exports' is defined but never used. Allowed unused args must match /^_/u  unused-imports/no-unused-vars
+  3846:34  warning  'exports' is defined but never used. Allowed unused args must match /^_/u  unused-imports/no-unused-vars
+  3857:34  warning  'exports' is defined but never used. Allowed unused args must match /^_/u  unused-imports/no-unused-vars
+  3868:34  warning  'exports' is defined but never used. Allowed unused args must match /^_/u  unused-imports/no-unused-vars
+  3879:34  warning  'exports' is defined but never used. Allowed unused args must match /^_/u  unused-imports/no-unused-vars
+  3890:34  warning  'exports' is defined but never used. Allowed unused args must match /^_/u  unused-imports/no-unused-vars
+  3901:34  warning  'exports' is defined but never used. Allowed unused args must match /^_/u  unused-imports/no-unused-vars
+  3912:34  warning  'exports' is defined but never used. Allowed unused args must match /^_/u  unused-imports/no-unused-vars
+  3923:34  warning  'exports' is defined but never used. Allowed unused args must match /^_/u  unused-imports/no-unused-vars
+  3934:34  warning  'exports' is defined but never used. Allowed unused args must match /^_/u  unused-imports/no-unused-vars
+  3945:34  warning  'exports' is defined but never used. Allowed unused args must match /^_/u  unused-imports/no-unused-vars
+  3956:34  warning  'exports' is defined but never used. Allowed unused args must match /^_/u  unused-imports/no-unused-vars
+  3967:34  warning  'exports' is defined but never used. Allowed unused args must match /^_/u  unused-imports/no-unused-vars
+  3978:9   warning  'module' is defined but never used. Allowed unused args must match /^_/u   unused-imports/no-unused-vars
+  3989:9   warning  'module' is defined but never used. Allowed unused args must match /^_/u   unused-imports/no-unused-vars
+  4000:9   warning  'module' is defined but never used. Allowed unused args must match /^_/u   unused-imports/no-unused-vars
+  4011:9   warning  'module' is defined but never used. Allowed unused args must match /^_/u   unused-imports/no-unused-vars
+  4022:9   warning  'module' is defined but never used. Allowed unused args must match /^_/u   unused-imports/no-unused-vars
+  4033:9   warning  'module' is defined but never used. Allowed unused args must match /^_/u   unused-imports/no-unused-vars
+  4044:9   warning  'module' is defined but never used. Allowed unused args must match /^_/u   unused-imports/no-unused-vars
+  4055:9   warning  'module' is defined but never used. Allowed unused args must match /^_/u   unused-imports/no-unused-vars
+  4066:9   warning  'module' is defined but never used. Allowed unused args must match /^_/u   unused-imports/no-unused-vars
+  4077:9   warning  'module' is defined but never used. Allowed unused args must match /^_/u   unused-imports/no-unused-vars
+  4088:34  warning  'exports' is defined but never used. Allowed unused args must match /^_/u  unused-imports/no-unused-vars
+  4099:34  warning  'exports' is defined but never used. Allowed unused args must match /^_/u  unused-imports/no-unused-vars
+  4110:34  warning  'exports' is defined but never used. Allowed unused args must match /^_/u  unused-imports/no-unused-vars
+  4121:34  warning  'exports' is defined but never used. Allowed unused args must match /^_/u  unused-imports/no-unused-vars
+  4132:34  warning  'exports' is defined but never used. Allowed unused args must match /^_/u  unused-imports/no-unused-vars
+  4143:34  warning  'exports' is defined but never used. Allowed unused args must match /^_/u  unused-imports/no-unused-vars
+  4154:34  warning  'exports' is defined but never used. Allowed unused args must match /^_/u  unused-imports/no-unused-vars
+  4165:34  warning  'exports' is defined but never used. Allowed unused args must match /^_/u  unused-imports/no-unused-vars
+  4176:34  warning  'exports' is defined but never used. Allowed unused args must match /^_/u  unused-imports/no-unused-vars
+  4187:34  warning  'exports' is defined but never used. Allowed unused args must match /^_/u  unused-imports/no-unused-vars
+  4198:34  warning  'exports' is defined but never used. Allowed unused args must match /^_/u  unused-imports/no-unused-vars
+  4209:34  warning  'exports' is defined but never used. Allowed unused args must match /^_/u  unused-imports/no-unused-vars
+  4220:34  warning  'exports' is defined but never used. Allowed unused args must match /^_/u  unused-imports/no-unused-vars
+  4231:34  warning  'exports' is defined but never used. Allowed unused args must match /^_/u  unused-imports/no-unused-vars
+  4242:34  warning  'exports' is defined but never used. Allowed unused args must match /^_/u  unused-imports/no-unused-vars
+  4253:34  warning  'exports' is defined but never used. Allowed unused args must match /^_/u  unused-imports/no-unused-vars
+  4264:34  warning  'exports' is defined but never used. Allowed unused args must match /^_/u  unused-imports/no-unused-vars
+  4275:34  warning  'exports' is defined but never used. Allowed unused args must match /^_/u  unused-imports/no-unused-vars
+  4286:34  warning  'exports' is defined but never used. Allowed unused args must match /^_/u  unused-imports/no-unused-vars
+  4297:34  warning  'exports' is defined but never used. Allowed unused args must match /^_/u  unused-imports/no-unused-vars
+  4308:34  warning  'exports' is defined but never used. Allowed unused args must match /^_/u  unused-imports/no-unused-vars
+  4319:34  warning  'exports' is defined but never used. Allowed unused args must match /^_/u  unused-imports/no-unused-vars
+  4330:34  warning  'exports' is defined but never used. Allowed unused args must match /^_/u  unused-imports/no-unused-vars
+  4341:34  warning  'exports' is defined but never used. Allowed unused args must match /^_/u  unused-imports/no-unused-vars
+  4352:34  warning  'exports' is defined but never used. Allowed unused args must match /^_/u  unused-imports/no-unused-vars
+  4363:34  warning  'exports' is defined but never used. Allowed unused args must match /^_/u  unused-imports/no-unused-vars
+  4374:34  warning  'exports' is defined but never used. Allowed unused args must match /^_/u  unused-imports/no-unused-vars
+/Users/jonphipps/Code/IFLA/standards-dev/apps/admin-portal/.next/server/webpack-runtime.js
+  199:54  warning  'promises' is defined but never used. Allowed unused args must match /^_/u  unused-imports/no-unused-vars
+/Users/jonphipps/Code/IFLA/standards-dev/apps/admin-portal/.next/static/chunks/polyfills.js
+  1:532     warning  't' is defined but never used                                        unused-imports/no-unused-vars
+  1:2443    warning  't' is defined but never used                                        unused-imports/no-unused-vars
+  1:2708    warning  'r' is defined but never used                                        unused-imports/no-unused-vars
+  1:4295    warning  't' is defined but never used                                        unused-imports/no-unused-vars
+  1:4998    warning  't' is defined but never used                                        unused-imports/no-unused-vars
+  1:6989    warning  't' is defined but never used                                        unused-imports/no-unused-vars
+  1:7338    warning  't' is defined but never used                                        unused-imports/no-unused-vars
+  1:9691    warning  't' is defined but never used                                        unused-imports/no-unused-vars
+  1:11656   warning  't' is defined but never used                                        unused-imports/no-unused-vars
+  1:11902   warning  't' is defined but never used                                        unused-imports/no-unused-vars
+  1:12081   warning  't' is defined but never used                                        unused-imports/no-unused-vars
+  1:15485   warning  't' is defined but never used                                        unused-imports/no-unused-vars
+  1:15781   warning  't' is defined but never used                                        unused-imports/no-unused-vars
+  1:18257   warning  't' is defined but never used                                        unused-imports/no-unused-vars
+  1:18312   warning  't' is defined but never used                                        unused-imports/no-unused-vars
+  1:18418   warning  't' is defined but never used                                        unused-imports/no-unused-vars
+  1:19227   warning  't' is defined but never used                                        unused-imports/no-unused-vars
+  1:20131   warning  't' is defined but never used                                        unused-imports/no-unused-vars
+  1:20355   warning  't' is defined but never used                                        unused-imports/no-unused-vars
+  1:26576   warning  'e' is defined but never used                                        unused-imports/no-unused-vars
+  1:26664   warning  'e' is defined but never used                                        unused-imports/no-unused-vars
+  1:29774   warning  't' is defined but never used. Allowed unused args must match /^_/u  unused-imports/no-unused-vars
+  1:36361   warning  't' is defined but never used                                        unused-imports/no-unused-vars
+  1:37311   warning  't' is defined but never used                                        unused-imports/no-unused-vars
+  1:37927   warning  't' is defined but never used                                        unused-imports/no-unused-vars
+  1:45570   warning  't' is defined but never used                                        unused-imports/no-unused-vars
+  1:47474   warning  'e' is defined but never used                                        unused-imports/no-unused-vars
+  1:55443   warning  't' is defined but never used                                        unused-imports/no-unused-vars
+  1:55462   warning  't' is defined but never used                                        unused-imports/no-unused-vars
+  1:60316   warning  't' is defined but never used. Allowed unused args must match /^_/u  unused-imports/no-unused-vars
+  1:60743   warning  't' is defined but never used. Allowed unused args must match /^_/u  unused-imports/no-unused-vars
+  1:64892   warning  't' is defined but never used. Allowed unused args must match /^_/u  unused-imports/no-unused-vars
+  1:64894   warning  'e' is defined but never used. Allowed unused args must match /^_/u  unused-imports/no-unused-vars
+  1:64896   warning  'r' is defined but never used. Allowed unused args must match /^_/u  unused-imports/no-unused-vars
+  1:66757   warning  't' is defined but never used                                        unused-imports/no-unused-vars
+  1:67030   warning  't' is defined but never used                                        unused-imports/no-unused-vars
+  1:67157   warning  't' is defined but never used                                        unused-imports/no-unused-vars
+  1:67812   warning  'r' is defined but never used                                        unused-imports/no-unused-vars
+  1:67853   warning  't' is defined but never used                                        unused-imports/no-unused-vars
+  1:68413   warning  't' is defined but never used. Allowed unused args must match /^_/u  unused-imports/no-unused-vars
+  1:78471   warning  'e' is defined but never used. Allowed unused args must match /^_/u  unused-imports/no-unused-vars
+  1:89035   warning  't' is defined but never used                                        unused-imports/no-unused-vars
+  1:92492   warning  't' is defined but never used                                        unused-imports/no-unused-vars
+  1:92699   warning  't' is defined but never used                                        unused-imports/no-unused-vars
+  1:99400   warning  't' is defined but never used                                        unused-imports/no-unused-vars
+  1:100325  warning  't' is defined but never used. Allowed unused args must match /^_/u  unused-imports/no-unused-vars
+  1:100994  warning  't' is defined but never used                                        unused-imports/no-unused-vars
+  1:104103  warning  't' is defined but never used                                        unused-imports/no-unused-vars
+  1:110184  warning  't' is defined but never used                                        unused-imports/no-unused-vars
+  1:112164  warning  't' is defined but never used                                        unused-imports/no-unused-vars
+  1:112205  warning  'e' is defined but never used. Allowed unused args must match /^_/u  unused-imports/no-unused-vars
+/Users/jonphipps/Code/IFLA/standards-dev/apps/admin-portal/.next/static/chunks/webpack.js
+  150:37   warning  'chunkId' is defined but never used. Allowed unused args must match /^_/u                  unused-imports/no-unused-vars
+  168:44   warning  'chunkId' is defined but never used. Allowed unused args must match /^_/u                  unused-imports/no-unused-vars
+  194:53   warning  'chunkId' is defined but never used. Allowed unused args must match /^_/u                  unused-imports/no-unused-vars
+  762:16   warning  'loadStylesheet' is assigned a value but never used. Allowed unused vars must match /^_/u  unused-imports/no-unused-vars
+  774:32   warning  'options' is defined but never used. Allowed unused args must match /^_/u                  unused-imports/no-unused-vars
+  786:114  warning  'updatedModulesList' is defined but never used. Allowed unused args must match /^_/u       unused-imports/no-unused-vars
+/Users/jonphipps/Code/IFLA/standards-dev/apps/admin-portal/.next/types/app/dashboard/page.ts
+   7:39   warning  Unexpected any. Specify a different type                             @typescript-eslint/no-explicit-any
+   7:71   warning  Unexpected any. Specify a different type                             @typescript-eslint/no-explicit-any
+  24:14   warning  Unexpected any. Specify a different type                             @typescript-eslint/no-explicit-any
+  26:14   warning  Unexpected any. Specify a different type                             @typescript-eslint/no-explicit-any
+  51:72   warning  Unexpected any. Specify a different type                             @typescript-eslint/no-explicit-any
+  51:88   warning  Unexpected any. Specify a different type                             @typescript-eslint/no-explicit-any
+  56:26   warning  Unexpected any. Specify a different type                             @typescript-eslint/no-explicit-any
+  66:51   warning  Unexpected any. Specify a different type                             @typescript-eslint/no-explicit-any
+  69:37   warning  Unexpected any. Specify a different type                             @typescript-eslint/no-explicit-any
+  72:15   warning  'T' is defined but never used. Allowed unused vars must match /^_/u  unused-imports/no-unused-vars
+  72:67   warning  Unexpected any. Specify a different type                             @typescript-eslint/no-explicit-any
+  72:76   warning  Unexpected any. Specify a different type                             @typescript-eslint/no-explicit-any
+  72:102  warning  Unexpected any. Specify a different type                             @typescript-eslint/no-explicit-any
+  73:16   warning  'T' is defined but never used. Allowed unused vars must match /^_/u  unused-imports/no-unused-vars
+  73:59   warning  Unexpected any. Specify a different type                             @typescript-eslint/no-explicit-any
+  73:77   warning  Unexpected any. Specify a different type                             @typescript-eslint/no-explicit-any
+  73:103  warning  Unexpected any. Specify a different type                             @typescript-eslint/no-explicit-any
+  78:46   warning  Unexpected any. Specify a different type                             @typescript-eslint/no-explicit-any
+/Users/jonphipps/Code/IFLA/standards-dev/apps/admin-portal/.next/types/app/layout.ts
+   7:39   warning  Unexpected any. Specify a different type                             @typescript-eslint/no-explicit-any
+   7:71   warning  Unexpected any. Specify a different type                             @typescript-eslint/no-explicit-any
+  24:14   warning  Unexpected any. Specify a different type                             @typescript-eslint/no-explicit-any
+  26:14   warning  Unexpected any. Specify a different type                             @typescript-eslint/no-explicit-any
+  51:72   warning  Unexpected any. Specify a different type                             @typescript-eslint/no-explicit-any
+  51:88   warning  Unexpected any. Specify a different type                             @typescript-eslint/no-explicit-any
+  56:26   warning  Unexpected any. Specify a different type                             @typescript-eslint/no-explicit-any
+  66:51   warning  Unexpected any. Specify a different type                             @typescript-eslint/no-explicit-any
+  69:37   warning  Unexpected any. Specify a different type                             @typescript-eslint/no-explicit-any
+  72:15   warning  'T' is defined but never used. Allowed unused vars must match /^_/u  unused-imports/no-unused-vars
+  72:67   warning  Unexpected any. Specify a different type                             @typescript-eslint/no-explicit-any
+  72:76   warning  Unexpected any. Specify a different type                             @typescript-eslint/no-explicit-any
+  72:102  warning  Unexpected any. Specify a different type                             @typescript-eslint/no-explicit-any
+  73:16   warning  'T' is defined but never used. Allowed unused vars must match /^_/u  unused-imports/no-unused-vars
+  73:59   warning  Unexpected any. Specify a different type                             @typescript-eslint/no-explicit-any
+  73:77   warning  Unexpected any. Specify a different type                             @typescript-eslint/no-explicit-any
+  73:103  warning  Unexpected any. Specify a different type                             @typescript-eslint/no-explicit-any
+  78:46   warning  Unexpected any. Specify a different type                             @typescript-eslint/no-explicit-any
+/Users/jonphipps/Code/IFLA/standards-dev/apps/admin-portal/.next/types/app/page.ts
+   7:39   warning  Unexpected any. Specify a different type                             @typescript-eslint/no-explicit-any
+   7:71   warning  Unexpected any. Specify a different type                             @typescript-eslint/no-explicit-any
+  24:14   warning  Unexpected any. Specify a different type                             @typescript-eslint/no-explicit-any
+  26:14   warning  Unexpected any. Specify a different type                             @typescript-eslint/no-explicit-any
+  51:72   warning  Unexpected any. Specify a different type                             @typescript-eslint/no-explicit-any
+  51:88   warning  Unexpected any. Specify a different type                             @typescript-eslint/no-explicit-any
+  56:26   warning  Unexpected any. Specify a different type                             @typescript-eslint/no-explicit-any
+  66:51   warning  Unexpected any. Specify a different type                             @typescript-eslint/no-explicit-any
+  69:37   warning  Unexpected any. Specify a different type                             @typescript-eslint/no-explicit-any
+  72:15   warning  'T' is defined but never used. Allowed unused vars must match /^_/u  unused-imports/no-unused-vars
+  72:67   warning  Unexpected any. Specify a different type                             @typescript-eslint/no-explicit-any
+  72:76   warning  Unexpected any. Specify a different type                             @typescript-eslint/no-explicit-any
+  72:102  warning  Unexpected any. Specify a different type                             @typescript-eslint/no-explicit-any
+  73:16   warning  'T' is defined but never used. Allowed unused vars must match /^_/u  unused-imports/no-unused-vars
+  73:59   warning  Unexpected any. Specify a different type                             @typescript-eslint/no-explicit-any
+  73:77   warning  Unexpected any. Specify a different type                             @typescript-eslint/no-explicit-any
+  73:103  warning  Unexpected any. Specify a different type                             @typescript-eslint/no-explicit-any
+  78:46   warning  Unexpected any. Specify a different type                             @typescript-eslint/no-explicit-any
+/Users/jonphipps/Code/IFLA/standards-dev/apps/admin-portal/src/app/components/docusaurus-navbar.tsx
+  211:26  error  Parsing error: Expected corresponding JSX closing tag for 'Link'
+/Users/jonphipps/Code/IFLA/standards-dev/apps/admin-portal/src/app/hooks/useInactivityLogout.ts
+  108:33  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+/Users/jonphipps/Code/IFLA/standards-dev/apps/admin-portal/src/test/integration/site-management.integration.test.tsx
+  277:16  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+/Users/jonphipps/Code/IFLA/standards-dev/apps/admin-portal/src/test/mocks/components.tsx
+  123:24  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+/Users/jonphipps/Code/IFLA/standards-dev/e2e/admin-portal/site-management-workflow.e2e.test.ts
+  4:28  warning  'page' is defined but never used. Allowed unused args must match /^_/u  unused-imports/no-unused-vars
+/Users/jonphipps/Code/IFLA/standards-dev/e2e/performance.spec.ts
+   22:25  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  147:22  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+/Users/jonphipps/Code/IFLA/standards-dev/e2e/post-build-validation.spec.ts
+  144:58  warning  'page' is defined but never used. Allowed unused args must match /^_/u  unused-imports/no-unused-vars
+/Users/jonphipps/Code/IFLA/standards-dev/e2e/utils/siteConfig.ts
+  76:69  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+/Users/jonphipps/Code/IFLA/standards-dev/packages/theme/src/components/VocabularyTable/__tests__/multilingual-vocabulary.test.tsx
+   14:26  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+   50:35  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  574:26  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  583:31  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+/Users/jonphipps/Code/IFLA/standards-dev/packages/theme/src/config/siteConfig.ts
+  33:20  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  35:18  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+/Users/jonphipps/Code/IFLA/standards-dev/packages/theme/src/hooks/index.ts
+  111:34  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  163:79  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  164:79  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  203:57  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+/Users/jonphipps/Code/IFLA/standards-dev/packages/theme/src/tests/__mocks__/CodeBlock.tsx
+  2:108  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  2:123  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  2:167  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+/Users/jonphipps/Code/IFLA/standards-dev/packages/theme/src/tests/__mocks__/DocusaurusLinkMock.tsx
+  6:18  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+/Users/jonphipps/Code/IFLA/standards-dev/packages/theme/src/tests/__mocks__/Heading.tsx
+  3:80   warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  3:95   warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  3:115  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+/Users/jonphipps/Code/IFLA/standards-dev/packages/theme/src/tests/__mocks__/TabItem.tsx
+  2:70  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  2:82  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  2:97  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+/Users/jonphipps/Code/IFLA/standards-dev/packages/theme/src/tests/__mocks__/tabs.tsx
+  2:56  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+/Users/jonphipps/Code/IFLA/standards-dev/packages/theme/src/tests/components/ElementReference-improved.test.tsx
+   84:50  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+   85:30  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+   88:85  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  117:44  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  151:72  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  210:42  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  222:48  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+/Users/jonphipps/Code/IFLA/standards-dev/packages/theme/src/tests/components/ElementReference.test.tsx
+   66:32  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+   67:27  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+   75:29  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  193:20  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+/Users/jonphipps/Code/IFLA/standards-dev/packages/theme/src/tests/components/InLink-improved.test.tsx
+  33:48  warning  Unexpected any. Specify a different type                                   @typescript-eslint/no-explicit-any
+  40:91  warning  Unexpected any. Specify a different type                                   @typescript-eslint/no-explicit-any
+  90:40  warning  'baseUrl' is defined but never used. Allowed unused args must match /^_/u  unused-imports/no-unused-vars
+/Users/jonphipps/Code/IFLA/standards-dev/packages/theme/src/tests/components/InLink.test.tsx
+  16:52  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+/Users/jonphipps/Code/IFLA/standards-dev/packages/theme/src/tests/components/VocabularyTable-improved.test.tsx
+   82:13  warning  'lightStyles' is assigned a value but never used. Allowed unused vars must match /^_/u      unused-imports/no-unused-vars
+   89:13  warning  'darkStyles' is assigned a value but never used. Allowed unused vars must match /^_/u       unused-imports/no-unused-vars
+   96:13  warning  'darkModeElement' is assigned a value but never used. Allowed unused vars must match /^_/u  unused-imports/no-unused-vars
+  189:41  warning  'element' is defined but never used. Allowed unused args must match /^_/u                   unused-imports/no-unused-vars
+  193:41  warning  'element' is defined but never used. Allowed unused args must match /^_/u                   unused-imports/no-unused-vars
+/Users/jonphipps/Code/IFLA/standards-dev/packages/theme/src/tests/fixtures/elements/html_to_mdx_Gemini.js
+  11:44  warning  '$' is defined but never used. Allowed unused args must match /^_/u  unused-imports/no-unused-vars
+/Users/jonphipps/Code/IFLA/standards-dev/packages/theme/src/tests/fixtures/userInteractions.ts
+  106:79  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+/Users/jonphipps/Code/IFLA/standards-dev/packages/theme/src/tests/fixtures/vocabularyData.ts
+  69:8   warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  73:66  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+/Users/jonphipps/Code/IFLA/standards-dev/packages/theme/src/tests/scripts/check-mediatype-languages.test.ts
+   8:7   warning  'execAsync' is assigned a value but never used. Allowed unused vars must match /^_/u         unused-imports/no-unused-vars
+  11:7   warning  'mockEnv' is assigned a value but never used. Allowed unused vars must match /^_/u           unused-imports/no-unused-vars
+  19:11  warning  'workspaceRoot' is assigned a value but never used. Allowed unused vars must match /^_/u     unused-imports/no-unused-vars
+  72:11  warning  'createMockScript' is assigned a value but never used. Allowed unused vars must match /^_/u  unused-imports/no-unused-vars
+/Users/jonphipps/Code/IFLA/standards-dev/packages/theme/src/tests/scripts/create-vocabulary-sheet-action.test.ts
+   18:19  warning  Unexpected any. Specify a different type                                                             @typescript-eslint/no-explicit-any
+   19:18  warning  Unexpected any. Specify a different type                                                             @typescript-eslint/no-explicit-any
+   20:17  warning  Unexpected any. Specify a different type                                                             @typescript-eslint/no-explicit-any
+   57:32  warning  Unexpected any. Specify a different type                                                             @typescript-eslint/no-explicit-any
+   58:23  warning  Unexpected any. Specify a different type                                                             @typescript-eslint/no-explicit-any
+   59:22  warning  Unexpected any. Specify a different type                                                             @typescript-eslint/no-explicit-any
+  104:13  warning  'module' is assigned a value but never used. Allowed unused vars must match /^_/u                    unused-imports/no-unused-vars
+  202:15  warning  'expectedErrorResult' is assigned a value but never used. Allowed unused vars must match /^_/u       unused-imports/no-unused-vars
+  216:13  warning  'mockConfig' is assigned a value but never used. Allowed unused vars must match /^_/u                unused-imports/no-unused-vars
+  235:13  warning  'expectedHyperlinkFormula' is assigned a value but never used. Allowed unused vars must match /^_/u  unused-imports/no-unused-vars
+  252:13  warning  'expectedRows' is assigned a value but never used. Allowed unused vars must match /^_/u              unused-imports/no-unused-vars
+  280:13  warning  'formatRequest' is assigned a value but never used. Allowed unused vars must match /^_/u             unused-imports/no-unused-vars
+/Users/jonphipps/Code/IFLA/standards-dev/packages/theme/src/tests/scripts/create-vocabulary-sheet-improved.test.ts
+   74:13  warning  'noLangConfig' is assigned a value but never used. Allowed unused vars must match /^_/u  unused-imports/no-unused-vars
+  201:32  warning  Unexpected any. Specify a different type                                                 @typescript-eslint/no-explicit-any
+  231:44  warning  Unexpected any. Specify a different type                                                 @typescript-eslint/no-explicit-any
+  246:42  warning  Unexpected any. Specify a different type                                                 @typescript-eslint/no-explicit-any
+/Users/jonphipps/Code/IFLA/standards-dev/packages/theme/src/tests/scripts/create-vocabulary-sheet.test.ts
+  31:19  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  32:18  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  33:17  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  68:32  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  69:23  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  70:22  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+/Users/jonphipps/Code/IFLA/standards-dev/packages/theme/src/tests/scripts/detect-language-mismatches-local.test.ts
+   38:14  warning  'error' is defined but never used         unused-imports/no-unused-vars
+   94:41  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  143:25  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  145:32  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+/Users/jonphipps/Code/IFLA/standards-dev/packages/theme/src/tests/scripts/detect-language-mismatches-skos.test.ts
+   42:14  warning  'error' is defined but never used         unused-imports/no-unused-vars
+  141:25  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  143:32  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+/Users/jonphipps/Code/IFLA/standards-dev/packages/theme/src/tests/scripts/detect-language-mismatches.test.ts
+  198:25  warning  Unexpected any. Specify a different type                                               @typescript-eslint/no-explicit-any
+  199:13  warning  'langdetect' is assigned a value but never used. Allowed unused vars must match /^_/u  unused-imports/no-unused-vars
+  259:43  warning  Unexpected any. Specify a different type                                               @typescript-eslint/no-explicit-any
+/Users/jonphipps/Code/IFLA/standards-dev/packages/theme/src/tests/scripts/google-sheets-integration.test.ts
+   33:43  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  206:39  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  228:43  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  266:35  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  289:48  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  291:22  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  338:46  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  341:23  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  383:74  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+/Users/jonphipps/Code/IFLA/standards-dev/packages/theme/src/tests/scripts/vocabulary-comparison-cli.test.ts
+  14:13  warning  'workspaceRoot' is assigned a value but never used. Allowed unused vars must match /^_/u  unused-imports/no-unused-vars
+/Users/jonphipps/Code/IFLA/standards-dev/packages/theme/src/tests/scripts/vocabulary-comparison-rdfs.test.ts
+  13:15  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+/Users/jonphipps/Code/IFLA/standards-dev/packages/theme/src/tests/scripts/vocabulary-integration.test.ts
+   26:17  warning  Unexpected any. Specify a different type                                                @typescript-eslint/no-explicit-any
+   27:19  warning  Unexpected any. Specify a different type                                                @typescript-eslint/no-explicit-any
+   28:18  warning  Unexpected any. Specify a different type                                                @typescript-eslint/no-explicit-any
+   37:32  warning  Unexpected any. Specify a different type                                                @typescript-eslint/no-explicit-any
+   38:23  warning  Unexpected any. Specify a different type                                                @typescript-eslint/no-explicit-any
+   39:22  warning  Unexpected any. Specify a different type                                                @typescript-eslint/no-explicit-any
+  151:13  warning  'errorResult' is assigned a value but never used. Allowed unused vars must match /^_/u  unused-imports/no-unused-vars
+/Users/jonphipps/Code/IFLA/standards-dev/packages/theme/src/tests/utils/workspaceUtils.ts
+  28:16  warning  'e' is defined but never used  unused-imports/no-unused-vars
+/Users/jonphipps/Code/IFLA/standards-dev/packages/theme/src/types/index.ts
+   53:20  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  109:18  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  137:18  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  182:35  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  198:16  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+/Users/jonphipps/Code/IFLA/standards-dev/packages/theme/src/utils/index.ts
+  259:65  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  300:46  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  300:56  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  321:54  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  321:74  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  323:38  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  338:12  warning  '_' is defined but never used             unused-imports/no-unused-vars
+/Users/jonphipps/Code/IFLA/standards-dev/portal/src/components/HomepageFeatures/index.tsx
+  53:10  warning  'getSiteUrl' is defined but never used. Allowed unused vars must match /^_/u  unused-imports/no-unused-vars
+/Users/jonphipps/Code/IFLA/standards-dev/scripts/build-completely-isolated.ts
+   46:12  warning  'error' is defined but never used  unused-imports/no-unused-vars
+   90:12  warning  'error' is defined but never used  unused-imports/no-unused-vars
+  114:12  warning  'error' is defined but never used  unused-imports/no-unused-vars
+  194:14  warning  'error' is defined but never used  unused-imports/no-unused-vars
+/Users/jonphipps/Code/IFLA/standards-dev/scripts/build-with-env.js
+  127:14  warning  'error' is defined but never used  unused-imports/no-unused-vars
+  158:12  warning  'error' is defined but never used  unused-imports/no-unused-vars
+/Users/jonphipps/Code/IFLA/standards-dev/scripts/capture-baseline-snapshots.ts
+  108:14  warning  'error' is defined but never used  unused-imports/no-unused-vars
+/Users/jonphipps/Code/IFLA/standards-dev/scripts/capture-snapshots-from-running.ts
+  193:49  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+/Users/jonphipps/Code/IFLA/standards-dev/scripts/check-mediatype-languages.mjs
+  203:18  warning  'parseError' is defined but never used                                                     unused-imports/no-unused-vars
+  281:11  warning  'anthropic' is assigned a value but never used. Allowed unused vars must match /^_/u       unused-imports/no-unused-vars
+  347:21  warning  'processedCount' is assigned a value but never used. Allowed unused vars must match /^_/u  unused-imports/no-unused-vars
+  450:34  warning  'e' is defined but never used                                                              unused-imports/no-unused-vars
+/Users/jonphipps/Code/IFLA/standards-dev/scripts/check-missing-languages.ts
+  63:43  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+/Users/jonphipps/Code/IFLA/standards-dev/scripts/check-portal-homepage-links.mjs
+  55:12  warning  'e' is defined but never used  unused-imports/no-unused-vars
+/Users/jonphipps/Code/IFLA/standards-dev/scripts/create-isbd-sheets.ts
+  118:12  warning  'error' is defined but never used         unused-imports/no-unused-vars
+  124:11  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  125:10  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  170:11  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  180:13  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  209:11  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  239:11  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  248:13  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+/Users/jonphipps/Code/IFLA/standards-dev/scripts/create-proper-isbd-excel.ts
+  81:96  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+/Users/jonphipps/Code/IFLA/standards-dev/scripts/demo-admin-simple.js
+  43:14  warning  'e' is defined but never used   unused-imports/no-unused-vars
+  68:12  warning  'e' is defined but never used   unused-imports/no-unused-vars
+  79:14  warning  'e2' is defined but never used  unused-imports/no-unused-vars
+  92:12  warning  'e' is defined but never used   unused-imports/no-unused-vars
+/Users/jonphipps/Code/IFLA/standards-dev/scripts/detect-language-mismatches-local.mjs
+  124:12  warning  'error' is defined but never used  unused-imports/no-unused-vars
+/Users/jonphipps/Code/IFLA/standards-dev/scripts/detect-language-mismatches-skos.mjs
+  116:12  warning  'error' is defined but never used  unused-imports/no-unused-vars
+/Users/jonphipps/Code/IFLA/standards-dev/scripts/detect-language-mismatches.mjs
+   42:7   warning  'LANGUAGE_CODES' is assigned a value but never used. Allowed unused vars must match /^_/u  unused-imports/no-unused-vars
+  235:12  warning  'error' is defined but never used                                                          unused-imports/no-unused-vars
+  416:14  warning  'error' is defined but never used                                                          unused-imports/no-unused-vars
+/Users/jonphipps/Code/IFLA/standards-dev/scripts/fix-consolidated-links.js
+  104:14  warning  'error' is defined but never used                                                       unused-imports/no-unused-vars
+  153:11  warning  'anchorAdded' is assigned a value but never used. Allowed unused vars must match /^_/u  unused-imports/no-unused-vars
+/Users/jonphipps/Code/IFLA/standards-dev/scripts/mark-tests-run.js
+  11:7  warning  'path' is assigned a value but never used. Allowed unused vars must match /^_/u  unused-imports/no-unused-vars
+/Users/jonphipps/Code/IFLA/standards-dev/scripts/nx-build-all.js
+  24:12  warning  'error' is defined but never used  unused-imports/no-unused-vars
+/Users/jonphipps/Code/IFLA/standards-dev/scripts/nx-cloud-monitor.js
+  128:16  warning  'error' is defined but never used  unused-imports/no-unused-vars
+/Users/jonphipps/Code/IFLA/standards-dev/scripts/nx-performance-check.js
+   11:7   warning  'path' is assigned a value but never used. Allowed unused vars must match /^_/u   unused-imports/no-unused-vars
+   30:12  warning  'error' is defined but never used                                                 unused-imports/no-unused-vars
+   62:11  warning  'stats' is assigned a value but never used. Allowed unused vars must match /^_/u  unused-imports/no-unused-vars
+   71:14  warning  'error' is defined but never used                                                 unused-imports/no-unused-vars
+   99:57  warning  'target' is defined but never used. Allowed unused args must match /^_/u          unused-imports/no-unused-vars
+  132:12  warning  'error' is defined but never used                                                 unused-imports/no-unused-vars
+  155:18  warning  'error' is defined but never used                                                 unused-imports/no-unused-vars
+/Users/jonphipps/Code/IFLA/standards-dev/scripts/populate-isbd-sheets.ts
+   31:40  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+   35:11  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+   44:40  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+   59:11  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  119:12  warning  'error' is defined but never used         unused-imports/no-unused-vars
+/Users/jonphipps/Code/IFLA/standards-dev/scripts/rdf-folder-to-csv.ts
+   66:11  warning  'output' is assigned a value but never used. Allowed unused vars must match /^_/u  unused-imports/no-unused-vars
+   81:19  warning  Unexpected any. Specify a different type                                           @typescript-eslint/no-explicit-any
+  181:19  warning  Unexpected any. Specify a different type                                           @typescript-eslint/no-explicit-any
+/Users/jonphipps/Code/IFLA/standards-dev/scripts/rdf-to-csv.js
+    8:20  warning  'literal' is assigned a value but never used. Allowed unused vars must match /^_/u              unused-imports/no-unused-vars
+    8:29  warning  'quad' is assigned a value but never used. Allowed unused vars must match /^_/u                 unused-imports/no-unused-vars
+  186:46  warning  'repeatableProperties' is defined but never used. Allowed unused args must match /^_/u          unused-imports/no-unused-vars
+  193:15  warning  'propertyLangIndices' is assigned a value but never used. Allowed unused vars must match /^_/u  unused-imports/no-unused-vars
+/Users/jonphipps/Code/IFLA/standards-dev/scripts/rdf-to-csv.ts
+   12:20  warning  'literal' is assigned a value but never used. Allowed unused vars must match /^_/u              unused-imports/no-unused-vars
+   12:29  warning  'quad' is assigned a value but never used. Allowed unused vars must match /^_/u                 unused-imports/no-unused-vars
+  143:78  warning  Unexpected any. Specify a different type                                                        @typescript-eslint/no-explicit-any
+  164:23  warning  Unexpected any. Specify a different type                                                        @typescript-eslint/no-explicit-any
+  284:17  warning  'prefix' is assigned a value but never used. Allowed unused vars must match /^_/u               unused-imports/no-unused-vars
+  327:54  warning  Unexpected any. Specify a different type                                                        @typescript-eslint/no-explicit-any
+  389:9   warning  'localContextPath' is assigned a value but never used. Allowed unused vars must match /^_/u     unused-imports/no-unused-vars
+  479:43  warning  Unexpected any. Specify a different type                                                        @typescript-eslint/no-explicit-any
+  538:42  warning  Unexpected any. Specify a different type                                                        @typescript-eslint/no-explicit-any
+  745:11  warning  'propertyLangIndices' is assigned a value but never used. Allowed unused vars must match /^_/u  unused-imports/no-unused-vars
+/Users/jonphipps/Code/IFLA/standards-dev/scripts/regression-performance-comparison.js
+   31:12  warning  'error' is defined but never used                                                   unused-imports/no-unused-vars
+  130:13  warning  'savings' is assigned a value but never used. Allowed unused vars must match /^_/u  unused-imports/no-unused-vars
+/Users/jonphipps/Code/IFLA/standards-dev/scripts/scaffold-site.ts
+  98:16  warning  'updateSiteConfig' is defined but never used. Allowed unused vars must match /^_/u  unused-imports/no-unused-vars
+/Users/jonphipps/Code/IFLA/standards-dev/scripts/sheets-utils.ts
+  14:68  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+/Users/jonphipps/Code/IFLA/standards-dev/scripts/site-template.ts
+  40:19  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+/Users/jonphipps/Code/IFLA/standards-dev/scripts/spreadsheet-api.ts
+  184:43  warning  'relativeDir' is defined but never used. Allowed unused args must match /^_/u  unused-imports/no-unused-vars
+  389:48  warning  Unexpected any. Specify a different type                                       @typescript-eslint/no-explicit-any
+  415:57  warning  Unexpected any. Specify a different type                                       @typescript-eslint/no-explicit-any
+  514:53  warning  Unexpected any. Specify a different type                                       @typescript-eslint/no-explicit-any
+  620:55  warning  Unexpected any. Specify a different type                                       @typescript-eslint/no-explicit-any
+  629:36  warning  Unexpected any. Specify a different type                                       @typescript-eslint/no-explicit-any
+/Users/jonphipps/Code/IFLA/standards-dev/scripts/test-port-conflict-resolution.js
+   9:9   warning  'killAllPorts' is assigned a value but never used. Allowed unused vars must match /^_/u  unused-imports/no-unused-vars
+  74:12  warning  'error' is defined but never used                                                        unused-imports/no-unused-vars
+  99:12  warning  'error' is defined but never used                                                        unused-imports/no-unused-vars
+/Users/jonphipps/Code/IFLA/standards-dev/scripts/test-site-builds-affected.js
+   15:7   warning  'path' is assigned a value but never used. Allowed unused vars must match /^_/u            unused-imports/no-unused-vars
+   18:7   warning  'originalScript' is assigned a value but never used. Allowed unused vars must match /^_/u  unused-imports/no-unused-vars
+   34:12  warning  'error' is defined but never used                                                          unused-imports/no-unused-vars
+  123:16  warning  'error' is defined but never used                                                          unused-imports/no-unused-vars
+/Users/jonphipps/Code/IFLA/standards-dev/scripts/test-site-builds-optimized.js
+   66:12  warning  'error' is defined but never used  unused-imports/no-unused-vars
+  264:14  warning  'error' is defined but never used  unused-imports/no-unused-vars
+/Users/jonphipps/Code/IFLA/standards-dev/scripts/utils/port-manager.js
+   41:14  warning  'error' is defined but never used  unused-imports/no-unused-vars
+  122:12  warning  'error' is defined but never used  unused-imports/no-unused-vars
+  167:14  warning  'error' is defined but never used  unused-imports/no-unused-vars
+/Users/jonphipps/Code/IFLA/standards-dev/scripts/validate-build-warnings.js
+  128:31  warning  'sourcePage' is assigned a value but never used. Allowed unused vars must match /^_/u  unused-imports/no-unused-vars
+/Users/jonphipps/Code/IFLA/standards-dev/scripts/validate-built-site-links.js
+  122:14  warning  '_error' is defined but never used  unused-imports/no-unused-vars
+/Users/jonphipps/Code/IFLA/standards-dev/scripts/validate-environment-urls.js
+    98:10  warning  'getSitemapUrls' is defined but never used. Allowed unused vars must match /^_/u               unused-imports/no-unused-vars
+    98:34  warning  'baseUrl' is defined but never used. Allowed unused args must match /^_/u                      unused-imports/no-unused-vars
+   202:20  warning  'error' is defined but never used                                                              unused-imports/no-unused-vars
+   249:14  warning  'error' is defined but never used                                                              unused-imports/no-unused-vars
+   301:14  warning  'error' is defined but never used                                                              unused-imports/no-unused-vars
+   372:9   warning  'hasErrors' is assigned a value but never used. Allowed unused vars must match /^_/u           unused-imports/no-unused-vars
+   373:9   warning  'hasWarnings' is assigned a value but never used. Allowed unused vars must match /^_/u         unused-imports/no-unused-vars
+   580:9   warning  'indexFile' is assigned a value but never used. Allowed unused vars must match /^_/u           unused-imports/no-unused-vars
+   594:14  warning  'error' is defined but never used                                                              unused-imports/no-unused-vars
+   645:10  warning  'generateValidationIndexHtml' is defined but never used. Allowed unused vars must match /^_/u  unused-imports/no-unused-vars
+  1182:35  warning  'baseUrl' is defined but never used. Allowed unused args must match /^_/u                      unused-imports/no-unused-vars
+  1232:12  warning  'error' is defined but never used                                                              unused-imports/no-unused-vars
+  1272:18  warning  'error' is defined but never used                                                              unused-imports/no-unused-vars
+  1284:54  warning  'timeout' is assigned a value but never used. Allowed unused vars must match /^_/u             unused-imports/no-unused-vars
+  1466:14  warning  'error' is defined but never used                                                              unused-imports/no-unused-vars
+  1831:29  warning  'i' is defined but never used. Allowed unused args must match /^_/u                            unused-imports/no-unused-vars
+/Users/jonphipps/Code/IFLA/standards-dev/scripts/validate-site-links.js
+  3:9  warning  'execSync' is assigned a value but never used. Allowed unused vars must match /^_/u  unused-imports/no-unused-vars
+/Users/jonphipps/Code/IFLA/standards-dev/scripts/vocabulary-comparison.mjs
+   448:27  warning  'vocab' is defined but never used. Allowed unused args must match /^_/u            unused-imports/no-unused-vars
+   487:19  warning  'prefix' is assigned a value but never used. Allowed unused vars must match /^_/u  unused-imports/no-unused-vars
+   706:31  warning  'vocabUri' is defined but never used. Allowed unused args must match /^_/u         unused-imports/no-unused-vars
+  1333:26  warning  'e' is defined but never used                                                      unused-imports/no-unused-vars
+  1527:15  warning  'results' is defined but never used. Allowed unused args must match /^_/u          unused-imports/no-unused-vars
+/Users/jonphipps/Code/IFLA/standards-dev/standards/ISBDM/docs/examples/__tests__/sensory-vocabulary-integration.test.tsx
+   18:6   warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  280:81  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  306:12  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+/Users/jonphipps/Code/IFLA/standards-dev/standards/ISBDM/docusaurus.config.ts
+  21:45  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+/Users/jonphipps/Code/IFLA/standards-dev/standards/ISBDM/plugins/redirect-plugin.js
+   5:40  warning  'context' is defined but never used. Allowed unused args must match /^_/u  unused-imports/no-unused-vars
+   5:49  warning  'options' is defined but never used. Allowed unused args must match /^_/u  unused-imports/no-unused-vars
+  16:27  warning  'content' is defined but never used. Allowed unused args must match /^_/u  unused-imports/no-unused-vars
+  16:36  warning  'actions' is defined but never used. Allowed unused args must match /^_/u  unused-imports/no-unused-vars
+/Users/jonphipps/Code/IFLA/standards-dev/standards/ISBDM/src/components/templates/ElementPage.jsx
+  25:6  warning  'props' is defined but never used. Allowed unused args must match /^_/u  unused-imports/no-unused-vars
+/Users/jonphipps/Code/IFLA/standards-dev/standards/ISBDM/src/components/templates/ValueVocabularyPage.jsx
+  18:6  warning  'props' is defined but never used. Allowed unused args must match /^_/u  unused-imports/no-unused-vars
+/Users/jonphipps/Code/IFLA/standards-dev/standards/ISBDM/src/pages/index.tsx
+   13:10  warning  'siteConfig' is assigned a value but never used. Allowed unused vars must match /^_/u  unused-imports/no-unused-vars
+  224:10  warning  'siteConfig' is assigned a value but never used. Allowed unused vars must match /^_/u  unused-imports/no-unused-vars
+/Users/jonphipps/Code/IFLA/standards-dev/standards/ISBDM/src/types/docusaurus__Link.d.ts
+  7:24  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+/Users/jonphipps/Code/IFLA/standards-dev/standards/ISBDM/src/utils/buffer-patch.js
+   4:7   warning  'util' is assigned a value but never used. Allowed unused vars must match /^_/u  unused-imports/no-unused-vars
+  13:14  warning  'e' is defined but never used                                                    unused-imports/no-unused-vars
+/Users/jonphipps/Code/IFLA/standards-dev/standards/ISBDM/src/utils/frontMatterAdapter.ts
+   1:11  warning  'ElementSubType' is defined but never used. Allowed unused vars must match /^_/u  unused-imports/no-unused-vars
+  13:54  warning  Unexpected any. Specify a different type                                          @typescript-eslint/no-explicit-any
+/Users/jonphipps/Code/IFLA/standards-dev/standards/ISBDM/src/utils/image-size-direct-patch.js
+  4:7  warning  'fs' is assigned a value but never used. Allowed unused vars must match /^_/u    unused-imports/no-unused-vars
+  5:7  warning  'path' is assigned a value but never used. Allowed unused vars must match /^_/u  unused-imports/no-unused-vars
+/Users/jonphipps/Code/IFLA/standards-dev/standards/ISBDM/src/utils/useDocInfo.ts
+  11:30  warning  Unexpected any. Specify a different type                                               @typescript-eslint/no-explicit-any
+  14:40  warning  Unexpected any. Specify a different type                                               @typescript-eslint/no-explicit-any
+  19:36  warning  Unexpected any. Specify a different type                                               @typescript-eslint/no-explicit-any
+  26:11  warning  'siteConfig' is assigned a value but never used. Allowed unused vars must match /^_/u  unused-imports/no-unused-vars
+/Users/jonphipps/Code/IFLA/standards-dev/static/main.js
+  1:3351     warning  't' is defined but never used                                                  unused-imports/no-unused-vars
+  1:14106    warning  'e' is defined but never used. Allowed unused args must match /^_/u            unused-imports/no-unused-vars
+  1:14313    warning  'e' is defined but never used. Allowed unused args must match /^_/u            unused-imports/no-unused-vars
+  1:295298   warning  'e' is defined but never used                                                  unused-imports/no-unused-vars
+  1:314301   warning  'e' is defined but never used. Allowed unused args must match /^_/u            unused-imports/no-unused-vars
+  1:330530   warning  'e' is defined but never used. Allowed unused args must match /^_/u            unused-imports/no-unused-vars
+  1:347800   warning  's' is defined but never used                                                  unused-imports/no-unused-vars
+  1:356884   warning  'e' is defined but never used. Allowed unused args must match /^_/u            unused-imports/no-unused-vars
+  1:390560   warning  'e' is defined but never used. Allowed unused args must match /^_/u            unused-imports/no-unused-vars
+  1:521596   warning  't' is defined but never used                                                  unused-imports/no-unused-vars
+  1:521750   warning  'n' is defined but never used                                                  unused-imports/no-unused-vars
+  1:525031   warning  't' is defined but never used                                                  unused-imports/no-unused-vars
+  1:586160   warning  'e' is defined but never used. Allowed unused args must match /^_/u            unused-imports/no-unused-vars
+  1:588230   warning  'r' is defined but never used                                                  unused-imports/no-unused-vars
+  1:588721   warning  'e' is defined but never used. Allowed unused args must match /^_/u            unused-imports/no-unused-vars
+  1:623069   warning  'e' is defined but never used                                                  unused-imports/no-unused-vars
+  1:651167   warning  'e' is defined but never used. Allowed unused args must match /^_/u            unused-imports/no-unused-vars
+  1:652705   warning  'n' is defined but never used                                                  unused-imports/no-unused-vars
+  1:675378   warning  's' is assigned a value but never used. Allowed unused vars must match /^_/u   unused-imports/no-unused-vars
+  1:681558   warning  'n' is defined but never used                                                  unused-imports/no-unused-vars
+  1:690609   warning  'v' is defined but never used                                                  unused-imports/no-unused-vars
+  1:699246   warning  'Fn' is assigned a value but never used. Allowed unused vars must match /^_/u  unused-imports/no-unused-vars
+  1:699257   warning  'Bn' is assigned a value but never used. Allowed unused vars must match /^_/u  unused-imports/no-unused-vars
+  1:701679   warning  't' is assigned a value but never used. Allowed unused vars must match /^_/u   unused-imports/no-unused-vars
+  1:701686   warning  'n' is assigned a value but never used. Allowed unused vars must match /^_/u   unused-imports/no-unused-vars
+  1:735048   warning  'e' is defined but never used. Allowed unused args must match /^_/u            unused-imports/no-unused-vars
+  1:735238   warning  'e' is defined but never used. Allowed unused args must match /^_/u            unused-imports/no-unused-vars
+  1:741734   warning  'n' is defined but never used                                                  unused-imports/no-unused-vars
+  1:766776   warning  'n' is defined but never used                                                  unused-imports/no-unused-vars
+  1:774817   warning  'f' is defined but never used                                                  unused-imports/no-unused-vars
+  1:775184   warning  'f' is defined but never used                                                  unused-imports/no-unused-vars
+  1:780157   warning  'h' is defined but never used                                                  unused-imports/no-unused-vars
+  1:794509   warning  'e' is defined but never used. Allowed unused args must match /^_/u            unused-imports/no-unused-vars
+  1:794566   warning  'e' is defined but never used. Allowed unused args must match /^_/u            unused-imports/no-unused-vars
+  1:794623   warning  'e' is defined but never used. Allowed unused args must match /^_/u            unused-imports/no-unused-vars
+  1:797082   warning  'i1' is defined but never used                                                 unused-imports/no-unused-vars
+  1:799295   warning  'i1' is defined but never used                                                 unused-imports/no-unused-vars
+  1:803273   warning  'i1' is defined but never used                                                 unused-imports/no-unused-vars
+  1:805064   warning  'e' is defined but never used                                                  unused-imports/no-unused-vars
+  1:805253   warning  'i1' is defined but never used                                                 unused-imports/no-unused-vars
+  1:805759   warning  'e' is defined but never used. Allowed unused args must match /^_/u            unused-imports/no-unused-vars
+  1:805816   warning  'e' is defined but never used. Allowed unused args must match /^_/u            unused-imports/no-unused-vars
+  1:821318   warning  's' is assigned a value but never used. Allowed unused vars must match /^_/u   unused-imports/no-unused-vars
+  1:831183   warning  'n' is defined but never used. Allowed unused args must match /^_/u            unused-imports/no-unused-vars
+  1:840942   warning  'e' is defined but never used. Allowed unused args must match /^_/u            unused-imports/no-unused-vars
+  1:841132   warning  'e' is defined but never used. Allowed unused args must match /^_/u            unused-imports/no-unused-vars
+  1:856152   warning  't' is defined but never used. Allowed unused args must match /^_/u            unused-imports/no-unused-vars
+  1:861144   warning  'e' is defined but never used. Allowed unused args must match /^_/u            unused-imports/no-unused-vars
+  1:861222   warning  'e' is defined but never used. Allowed unused args must match /^_/u            unused-imports/no-unused-vars
+  1:861394   warning  'e' is defined but never used. Allowed unused args must match /^_/u            unused-imports/no-unused-vars
+  1:862267   warning  'e' is defined but never used. Allowed unused args must match /^_/u            unused-imports/no-unused-vars
+  1:862338   warning  'e' is defined but never used. Allowed unused args must match /^_/u            unused-imports/no-unused-vars
+  1:862407   warning  'e' is defined but never used. Allowed unused args must match /^_/u            unused-imports/no-unused-vars
+  1:901969   warning  't' is assigned a value but never used. Allowed unused vars must match /^_/u   unused-imports/no-unused-vars
+  1:901976   warning  'n' is assigned a value but never used. Allowed unused vars must match /^_/u   unused-imports/no-unused-vars
+  1:906233   warning  'n' is defined but never used. Allowed unused args must match /^_/u            unused-imports/no-unused-vars
+  1:919932   warning  'n' is defined but never used. Allowed unused args must match /^_/u            unused-imports/no-unused-vars
+  1:924550   warning  't' is defined but never used. Allowed unused args must match /^_/u            unused-imports/no-unused-vars
+  1:927537   warning  'e' is defined but never used. Allowed unused args must match /^_/u            unused-imports/no-unused-vars
+  1:928723   warning  'e' is defined but never used. Allowed unused args must match /^_/u            unused-imports/no-unused-vars
+  1:929155   warning  'e' is defined but never used. Allowed unused args must match /^_/u            unused-imports/no-unused-vars
+  1:929187   warning  'e' is defined but never used. Allowed unused args must match /^_/u            unused-imports/no-unused-vars
+  1:930203   warning  'e' is defined but never used. Allowed unused args must match /^_/u            unused-imports/no-unused-vars
+  1:931257   warning  'e' is defined but never used. Allowed unused args must match /^_/u            unused-imports/no-unused-vars
+  1:942645   warning  'e' is defined but never used. Allowed unused args must match /^_/u            unused-imports/no-unused-vars
+  1:943577   warning  'e' is defined but never used. Allowed unused args must match /^_/u            unused-imports/no-unused-vars
+  1:947410   warning  'e' is defined but never used. Allowed unused args must match /^_/u            unused-imports/no-unused-vars
+  1:955272   warning  'r' is defined but never used. Allowed unused args must match /^_/u            unused-imports/no-unused-vars
+  1:966097   warning  'n' is defined but never used. Allowed unused args must match /^_/u            unused-imports/no-unused-vars
+  1:968373   warning  'n' is defined but never used. Allowed unused args must match /^_/u            unused-imports/no-unused-vars
+  1:976846   warning  'e' is defined but never used. Allowed unused args must match /^_/u            unused-imports/no-unused-vars
+  1:976870   warning  'e' is defined but never used. Allowed unused args must match /^_/u            unused-imports/no-unused-vars
+  1:976872   warning  't' is defined but never used. Allowed unused args must match /^_/u            unused-imports/no-unused-vars
+  1:976892   warning  'e' is defined but never used. Allowed unused args must match /^_/u            unused-imports/no-unused-vars
+  1:976913   warning  'e' is defined but never used. Allowed unused args must match /^_/u            unused-imports/no-unused-vars
+  1:978785   warning  'e' is defined but never used. Allowed unused args must match /^_/u            unused-imports/no-unused-vars
+  1:978787   warning  't' is defined but never used. Allowed unused args must match /^_/u            unused-imports/no-unused-vars
+  1:978869   warning  't' is defined but never used. Allowed unused args must match /^_/u            unused-imports/no-unused-vars
+  1:985028   warning  't' is defined but never used. Allowed unused args must match /^_/u            unused-imports/no-unused-vars
+  1:1052835  warning  'r' is defined but never used. Allowed unused args must match /^_/u            unused-imports/no-unused-vars
+  1:1115503  warning  'e' is defined but never used. Allowed unused args must match /^_/u            unused-imports/no-unused-vars
+  1:1115505  warning  't' is defined but never used. Allowed unused args must match /^_/u            unused-imports/no-unused-vars
+  1:1119064  warning  'e' is defined but never used. Allowed unused args must match /^_/u            unused-imports/no-unused-vars
+  1:1119066  warning  't' is defined but never used. Allowed unused args must match /^_/u            unused-imports/no-unused-vars
+  1:1120379  warning  'e' is defined but never used. Allowed unused args must match /^_/u            unused-imports/no-unused-vars
+  1:1120381  warning  't' is defined but never used. Allowed unused args must match /^_/u            unused-imports/no-unused-vars
+  1:1122130  warning  'e' is defined but never used. Allowed unused args must match /^_/u            unused-imports/no-unused-vars
+  1:1122132  warning  't' is defined but never used. Allowed unused args must match /^_/u            unused-imports/no-unused-vars
+  1:1122303  warning  'e' is defined but never used. Allowed unused args must match /^_/u            unused-imports/no-unused-vars
+  1:1122358  warning  'e' is defined but never used. Allowed unused args must match /^_/u            unused-imports/no-unused-vars
+  1:1122396  warning  'e' is defined but never used. Allowed unused args must match /^_/u            unused-imports/no-unused-vars
+  1:1126463  warning  't' is defined but never used. Allowed unused args must match /^_/u            unused-imports/no-unused-vars
+  1:1126985  warning  's' is defined but never used. Allowed unused args must match /^_/u            unused-imports/no-unused-vars
+  1:1127371  warning  'n' is defined but never used. Allowed unused args must match /^_/u            unused-imports/no-unused-vars
+  1:1128628  warning  't' is defined but never used. Allowed unused args must match /^_/u            unused-imports/no-unused-vars
+  1:1129573  warning  't' is defined but never used. Allowed unused args must match /^_/u            unused-imports/no-unused-vars
+  1:1129919  warning  't' is defined but never used. Allowed unused args must match /^_/u            unused-imports/no-unused-vars
+  1:1132035  warning  'e' is defined but never used. Allowed unused args must match /^_/u            unused-imports/no-unused-vars
+  1:1132131  warning  'e' is defined but never used. Allowed unused args must match /^_/u            unused-imports/no-unused-vars
+  1:1132133  warning  't' is defined but never used. Allowed unused args must match /^_/u            unused-imports/no-unused-vars
+  1:1132505  warning  'e' is defined but never used. Allowed unused args must match /^_/u            unused-imports/no-unused-vars
+  1:1133735  warning  't' is defined but never used. Allowed unused args must match /^_/u            unused-imports/no-unused-vars
+  1:1134484  warning  'e' is defined but never used. Allowed unused args must match /^_/u            unused-imports/no-unused-vars
+  1:1134486  warning  't' is defined but never used. Allowed unused args must match /^_/u            unused-imports/no-unused-vars
+  1:1134725  warning  'r' is defined but never used. Allowed unused args must match /^_/u            unused-imports/no-unused-vars
+  1:1135040  warning  'e' is defined but never used. Allowed unused args must match /^_/u            unused-imports/no-unused-vars
+  1:1135042  warning  't' is defined but never used. Allowed unused args must match /^_/u            unused-imports/no-unused-vars
+  1:1135339  warning  'e' is defined but never used. Allowed unused args must match /^_/u            unused-imports/no-unused-vars
+  1:1135341  warning  't' is defined but never used. Allowed unused args must match /^_/u            unused-imports/no-unused-vars
+  1:1136799  warning  'e' is defined but never used. Allowed unused args must match /^_/u            unused-imports/no-unused-vars
+  1:1137064  warning  'c' is defined but never used. Allowed unused args must match /^_/u            unused-imports/no-unused-vars
+  1:1137452  warning  'l' is defined but never used. Allowed unused args must match /^_/u            unused-imports/no-unused-vars
+  1:1137806  warning  'l' is defined but never used. Allowed unused args must match /^_/u            unused-imports/no-unused-vars
+  1:1138722  warning  's' is defined but never used. Allowed unused args must match /^_/u            unused-imports/no-unused-vars
+  1:1138959  warning  'e' is defined but never used. Allowed unused args must match /^_/u            unused-imports/no-unused-vars
+  1:1138985  warning  'e' is defined but never used. Allowed unused args must match /^_/u            unused-imports/no-unused-vars
+  1:1175741  warning  't' is defined but never used. Allowed unused args must match /^_/u            unused-imports/no-unused-vars
+  1:1175743  warning  'n' is defined but never used. Allowed unused args must match /^_/u            unused-imports/no-unused-vars
+  1:1175745  warning  'r' is defined but never used. Allowed unused args must match /^_/u            unused-imports/no-unused-vars
+  1:1178986  warning  't' is defined but never used. Allowed unused args must match /^_/u            unused-imports/no-unused-vars
+  1:1188578  warning  't' is defined but never used. Allowed unused args must match /^_/u            unused-imports/no-unused-vars
+  1:1197628  warning  't' is defined but never used. Allowed unused args must match /^_/u            unused-imports/no-unused-vars
+  1:1202062  warning  's' is defined but never used. Allowed unused args must match /^_/u            unused-imports/no-unused-vars
+  1:1202164  warning  'c' is defined but never used. Allowed unused args must match /^_/u            unused-imports/no-unused-vars
+  1:1202243  warning  'c' is defined but never used. Allowed unused args must match /^_/u            unused-imports/no-unused-vars
+  1:1202409  warning  's' is defined but never used. Allowed unused args must match /^_/u            unused-imports/no-unused-vars
+  1:1202499  warning  'c' is defined but never used. Allowed unused args must match /^_/u            unused-imports/no-unused-vars
+  1:1202699  warning  'c' is defined but never used. Allowed unused args must match /^_/u            unused-imports/no-unused-vars
+  1:1206260  warning  's' is defined but never used. Allowed unused args must match /^_/u            unused-imports/no-unused-vars
+  1:1206350  warning  'c' is defined but never used. Allowed unused args must match /^_/u            unused-imports/no-unused-vars
+  1:1207149  warning  'c' is defined but never used. Allowed unused args must match /^_/u            unused-imports/no-unused-vars
+  1:1213546  warning  't' is defined but never used. Allowed unused args must match /^_/u            unused-imports/no-unused-vars
+  1:1225277  warning  't' is defined but never used. Allowed unused args must match /^_/u            unused-imports/no-unused-vars
+  1:1226598  warning  'n' is defined but never used. Allowed unused args must match /^_/u            unused-imports/no-unused-vars
+  1:1226600  warning  'r' is defined but never used. Allowed unused args must match /^_/u            unused-imports/no-unused-vars
+  1:1227008  warning  'n' is defined but never used. Allowed unused args must match /^_/u            unused-imports/no-unused-vars
+  1:1227010  warning  'r' is defined but never used. Allowed unused args must match /^_/u            unused-imports/no-unused-vars
+  1:1332804  warning  'n' is defined but never used. Allowed unused args must match /^_/u            unused-imports/no-unused-vars
+  1:1332806  warning  'r' is defined but never used. Allowed unused args must match /^_/u            unused-imports/no-unused-vars
+  1:1366113  warning  't' is defined but never used. Allowed unused args must match /^_/u            unused-imports/no-unused-vars
+  1:1366243  warning  'e' is defined but never used. Allowed unused args must match /^_/u            unused-imports/no-unused-vars
+  1:1366276  warning  'e' is defined but never used. Allowed unused args must match /^_/u            unused-imports/no-unused-vars
+  1:1366393  warning  'e' is defined but never used. Allowed unused args must match /^_/u            unused-imports/no-unused-vars
+  1:1366395  warning  't' is defined but never used. Allowed unused args must match /^_/u            unused-imports/no-unused-vars
+  1:1366580  warning  't' is defined but never used. Allowed unused args must match /^_/u            unused-imports/no-unused-vars
+  1:1366838  warning  'n' is defined but never used. Allowed unused args must match /^_/u            unused-imports/no-unused-vars
+  1:1391174  warning  't' is defined but never used. Allowed unused args must match /^_/u            unused-imports/no-unused-vars
+  1:1391176  warning  'n' is defined but never used. Allowed unused args must match /^_/u            unused-imports/no-unused-vars
+  1:1392730  warning  't' is defined but never used. Allowed unused args must match /^_/u            unused-imports/no-unused-vars
+  1:1392732  warning  'n' is defined but never used. Allowed unused args must match /^_/u            unused-imports/no-unused-vars
+  1:1393002  warning  't' is defined but never used. Allowed unused args must match /^_/u            unused-imports/no-unused-vars
+  1:1393004  warning  'n' is defined but never used. Allowed unused args must match /^_/u            unused-imports/no-unused-vars
+  1:1400995  warning  's' is defined but never used. Allowed unused args must match /^_/u            unused-imports/no-unused-vars
+  1:1438685  warning  't' is defined but never used. Allowed unused args must match /^_/u            unused-imports/no-unused-vars
+  1:1439549  warning  't' is defined but never used. Allowed unused args must match /^_/u            unused-imports/no-unused-vars
+  1:1440716  warning  't' is defined but never used. Allowed unused args must match /^_/u            unused-imports/no-unused-vars
+  1:1441791  warning  't' is defined but never used. Allowed unused args must match /^_/u            unused-imports/no-unused-vars
+  1:1443561  warning  't' is defined but never used. Allowed unused args must match /^_/u            unused-imports/no-unused-vars
+  1:1444598  warning  't' is defined but never used. Allowed unused args must match /^_/u            unused-imports/no-unused-vars
+  1:1444982  warning  't' is defined but never used. Allowed unused args must match /^_/u            unused-imports/no-unused-vars
+  1:1445928  warning  't' is defined but never used. Allowed unused args must match /^_/u            unused-imports/no-unused-vars
+  1:1447180  warning  't' is defined but never used. Allowed unused args must match /^_/u            unused-imports/no-unused-vars
+  1:1447582  warning  't' is defined but never used. Allowed unused args must match /^_/u            unused-imports/no-unused-vars
+  1:1449651  warning  't' is defined but never used. Allowed unused args must match /^_/u            unused-imports/no-unused-vars
+  1:1450378  warning  'e' is defined but never used. Allowed unused args must match /^_/u            unused-imports/no-unused-vars
+  1:1450380  warning  't' is defined but never used. Allowed unused args must match /^_/u            unused-imports/no-unused-vars
+  1:1450485  warning  'e' is defined but never used. Allowed unused args must match /^_/u            unused-imports/no-unused-vars
+  1:1450487  warning  't' is defined but never used. Allowed unused args must match /^_/u            unused-imports/no-unused-vars
+  1:1450697  warning  't' is defined but never used. Allowed unused args must match /^_/u            unused-imports/no-unused-vars
+  1:1450885  warning  't' is defined but never used. Allowed unused args must match /^_/u            unused-imports/no-unused-vars
+  1:1522271  warning  'i1' is defined but never used                                                 unused-imports/no-unused-vars
+  1:1528032  warning  'VV' is assigned a value but never used. Allowed unused vars must match /^_/u  unused-imports/no-unused-vars
+  1:1789340  warning  'i' is assigned a value but never used. Allowed unused vars must match /^_/u   unused-imports/no-unused-vars
+  1:1789351  warning  's' is assigned a value but never used. Allowed unused vars must match /^_/u   unused-imports/no-unused-vars
+  1:1789542  warning  'i' is assigned a value but never used. Allowed unused vars must match /^_/u   unused-imports/no-unused-vars
+  1:1823520  warning  'WH' is assigned a value but never used. Allowed unused vars must match /^_/u  unused-imports/no-unused-vars
+  1:1823531  warning  'KH' is assigned a value but never used. Allowed unused vars must match /^_/u  unused-imports/no-unused-vars
+  1:1826042  warning  't' is assigned a value but never used. Allowed unused vars must match /^_/u   unused-imports/no-unused-vars
+  1:1826049  warning  'n' is assigned a value but never used. Allowed unused vars must match /^_/u   unused-imports/no-unused-vars
+  1:1856293  warning  'e' is defined but never used. Allowed unused args must match /^_/u            unused-imports/no-unused-vars
+  1:1856845  warning  't' is defined but never used. Allowed unused args must match /^_/u            unused-imports/no-unused-vars
+  1:1857125  warning  'e' is defined but never used. Allowed unused args must match /^_/u            unused-imports/no-unused-vars
+  1:1892907  warning  't' is assigned a value but never used. Allowed unused vars must match /^_/u   unused-imports/no-unused-vars
+  1:1892918  warning  'n' is assigned a value but never used. Allowed unused vars must match /^_/u   unused-imports/no-unused-vars
+  1:1892932  warning  'c' is assigned a value but never used. Allowed unused vars must match /^_/u   unused-imports/no-unused-vars
+  1:1892942  warning  'u' is assigned a value but never used. Allowed unused vars must match /^_/u   unused-imports/no-unused-vars
+  1:1895412  warning  't' is assigned a value but never used. Allowed unused vars must match /^_/u   unused-imports/no-unused-vars
+  1:1895425  warning  'c' is assigned a value but never used. Allowed unused vars must match /^_/u   unused-imports/no-unused-vars
+  1:1895435  warning  'u' is assigned a value but never used. Allowed unused vars must match /^_/u   unused-imports/no-unused-vars
+  1:1897578  warning  'e' is defined but never used. Allowed unused args must match /^_/u            unused-imports/no-unused-vars
+  1:1897586  warning  't' is defined but never used. Allowed unused args must match /^_/u            unused-imports/no-unused-vars
+  1:1897602  warning  'n' is defined but never used. Allowed unused args must match /^_/u            unused-imports/no-unused-vars
+  1:1897620  warning  'r' is defined but never used. Allowed unused args must match /^_/u            unused-imports/no-unused-vars
+  1:1897639  warning  'i' is defined but never used. Allowed unused args must match /^_/u            unused-imports/no-unused-vars
+  1:1897648  warning  's' is defined but never used. Allowed unused args must match /^_/u            unused-imports/no-unused-vars
+  1:1897661  warning  'l' is defined but never used. Allowed unused args must match /^_/u            unused-imports/no-unused-vars
+  1:1897675  warning  'c' is defined but never used. Allowed unused args must match /^_/u            unused-imports/no-unused-vars
+  1:1897682  warning  'u' is defined but never used. Allowed unused args must match /^_/u            unused-imports/no-unused-vars
+  1:1897692  warning  'd' is defined but never used. Allowed unused args must match /^_/u            unused-imports/no-unused-vars
+  1:1903042  warning  'i' is assigned a value but never used. Allowed unused vars must match /^_/u   unused-imports/no-unused-vars
+  1:1904892  warning  'e' is assigned a value but never used. Allowed unused vars must match /^_/u   unused-imports/no-unused-vars
+  1:1921953  warning  'XX' is assigned a value but never used. Allowed unused vars must match /^_/u  unused-imports/no-unused-vars
+  1:1957883  warning  'i1' is defined but never used                                                 unused-imports/no-unused-vars
+  1:1963935  warning  'r' is assigned a value but never used. Allowed unused vars must match /^_/u   unused-imports/no-unused-vars
+  1:1966741  warning  'i1' is defined but never used                                                 unused-imports/no-unused-vars
+  1:1968328  warning  'Lm' is defined but never used                                                 unused-imports/no-unused-vars
+  1:1969491  warning  'e' is defined but never used. Allowed unused args must match /^_/u            unused-imports/no-unused-vars
+  1:1969493  warning  't' is defined but never used. Allowed unused args must match /^_/u            unused-imports/no-unused-vars
+  1:1969495  warning  'n' is defined but never used. Allowed unused args must match /^_/u            unused-imports/no-unused-vars
+  1:1970775  warning  'd' is assigned a value but never used. Allowed unused vars must match /^_/u   unused-imports/no-unused-vars
+  1:2027338  warning  'e' is defined but never used. Allowed unused args must match /^_/u            unused-imports/no-unused-vars
+  1:2066077  warning  'e' is defined but never used. Allowed unused args must match /^_/u            unused-imports/no-unused-vars
+  1:2084059  warning  'e' is defined but never used. Allowed unused args must match /^_/u            unused-imports/no-unused-vars
+  1:2097789  warning  't' is defined but never used. Allowed unused args must match /^_/u            unused-imports/no-unused-vars
+  1:2097914  warning  't' is defined but never used. Allowed unused args must match /^_/u            unused-imports/no-unused-vars
+  1:2098052  warning  't' is defined but never used. Allowed unused args must match /^_/u            unused-imports/no-unused-vars
+  1:2098584  warning  't' is defined but never used. Allowed unused args must match /^_/u            unused-imports/no-unused-vars
+  1:2128768  warning  'e' is defined but never used. Allowed unused args must match /^_/u            unused-imports/no-unused-vars
+  1:2146024  warning  'e' is defined but never used. Allowed unused args must match /^_/u            unused-imports/no-unused-vars
+  1:2151863  warning  'e' is defined but never used. Allowed unused args must match /^_/u            unused-imports/no-unused-vars
+  1:2153583  warning  'n' is defined but never used. Allowed unused args must match /^_/u            unused-imports/no-unused-vars
+  1:2155190  warning  'e' is defined but never used. Allowed unused args must match /^_/u            unused-imports/no-unused-vars
+  1:2161527  warning  'e' is defined but never used. Allowed unused args must match /^_/u            unused-imports/no-unused-vars
+  1:2165333  warning  'e' is defined but never used. Allowed unused args must match /^_/u            unused-imports/no-unused-vars
+  1:2205682  warning  'p' is defined but never used                                                  unused-imports/no-unused-vars
+  1:2206695  warning  'p' is defined but never used                                                  unused-imports/no-unused-vars
+  1:2207086  warning  'b' is defined but never used                                                  unused-imports/no-unused-vars
+  1:2453632  warning  'e' is defined but never used                                                  unused-imports/no-unused-vars
+  1:2460450  warning  'e' is defined but never used. Allowed unused args must match /^_/u            unused-imports/no-unused-vars
+/Users/jonphipps/Code/IFLA/standards-dev/tools/sheet-sync/index.ts
+    3:15  warning  'dirname' is assigned a value but never used. Allowed unused vars must match /^_/u  unused-imports/no-unused-vars
+   75:19  warning  Unexpected any. Specify a different type                                            @typescript-eslint/no-explicit-any
+  300:17  warning  Unexpected any. Specify a different type                                            @typescript-eslint/no-explicit-any
+  357:34  warning  Unexpected any. Specify a different type                                            @typescript-eslint/no-explicit-any
+/Users/jonphipps/Code/IFLA/standards-dev/tools/sheet-sync/test.ts
+  43:19  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+✖ 1196 problems (1 error, 1195 warnings)
+✖ 1196 problems (1 error, 1195 warnings)
+> nx run admin-portal:lint
+(node:9897) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+Linting "admin-portal"...
+/Users/jonphipps/Code/IFLA/standards-dev/apps/admin-portal/src/app/components/docusaurus-navbar.tsx
+  211:26  error  Parsing error: Expected corresponding JSX closing tag for 'Link'
+/Users/jonphipps/Code/IFLA/standards-dev/apps/admin-portal/src/app/hooks/useInactivityLogout.ts
+  108:33  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+/Users/jonphipps/Code/IFLA/standards-dev/apps/admin-portal/src/test/integration/site-management.integration.test.tsx
+  277:16  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+/Users/jonphipps/Code/IFLA/standards-dev/apps/admin-portal/src/test/mocks/components.tsx
+  123:24  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+✖ 4 problems (1 error, 3 warnings)
+✖ 4 problems (1 error, 3 warnings)
+   ✔  nx run @ifla/theme:build:tsc
+   ✔  nx run @ifla/theme:lint
+   ✔  nx run @ifla/theme:typecheck
+   ✔  nx run @ifla/theme:build
+   ✔  nx run @ifla/theme:test:unit
+   ✔  nx run portal:typecheck
+   ✔  nx run isbd:typecheck
+   ✔  nx run isbdm:typecheck
+   ✔  nx run newtest:typecheck
+   ✔  nx run standards-dev:typecheck
+   ✖  nx run admin-portal:test:unit
+   ✔  nx run admin-portal:typecheck
+   ✔  nx run portal:lint
+   ✔  nx run isbd:lint
+   ✔  nx run isbdm:test:unit
+   ✔  nx run unimarc:lint
+   ✔  nx run muldicat:lint
+   ✖  nx run standards-dev:lint
+   ✔  nx run newtest:lint
+   ✔  nx run isbdm:lint
+   ✔  nx run frbr:lint
+   ✔  nx run lrm:lint
+   ✔  nx run standards-cli:lint
+   ✖  nx run admin-portal:lint
+   ✔  nx run sheet-sync:lint
+   ✔  nx run muldicat:typecheck
+   ✔  nx run unimarc:typecheck
+   ✔  nx run frbr:typecheck
+   ✔  nx run lrm:typecheck
+———————————————————————————————————————————————————————————————————————————————
+ NX   Ran targets typecheck, lint, test:unit for 13 projects and 2 tasks they depend on (22s)
+   ✔  26/29 succeeded [3 read from cache]
+   ✖  3/29 targets failed, including the following:
+      - nx run admin-portal:test:unit
+      - nx run admin-portal:lint
+      - nx run standards-dev:lint
+View structured, searchable error logs at https://nx.app/runs/PmoiKVK68R
+ ELIFECYCLE  Command failed with exit code 1.
+husky - pre-commit script failed (code 1)

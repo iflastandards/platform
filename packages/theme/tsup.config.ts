@@ -12,6 +12,8 @@ export default defineConfig({
     'utils/index': 'src/utils/index.ts',
     'config/index': 'src/config/index.ts',
     'config/siteConfig': 'src/config/siteConfig.ts',
+    'theme/NavbarItem/ComponentTypes': 'src/theme/NavbarItem/ComponentTypes.tsx',
+    'theme/NavbarItem/AuthDropdownNavbarItem': 'src/theme/NavbarItem/AuthDropdownNavbarItem.tsx',
   },
   format: ['esm', 'cjs'],
   // Disable built-in DTS generation due to TypeScript project conflicts

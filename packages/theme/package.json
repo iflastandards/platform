@@ -56,6 +56,16 @@
       "types": "./dist/config/siteConfig.d.ts",
       "import": "./dist/config/siteConfig.mjs",
       "require": "./dist/config/siteConfig.js"
+    },
+    "./theme/NavbarItem/ComponentTypes": {
+      "types": "./dist/theme/NavbarItem/ComponentTypes.d.ts",
+      "import": "./dist/theme/NavbarItem/ComponentTypes.mjs",
+      "require": "./dist/theme/NavbarItem/ComponentTypes.js"
+    },
+    "./theme/NavbarItem/AuthDropdownNavbarItem": {
+      "types": "./dist/theme/NavbarItem/AuthDropdownNavbarItem.d.ts",
+      "import": "./dist/theme/NavbarItem/AuthDropdownNavbarItem.mjs",
+      "require": "./dist/theme/NavbarItem/AuthDropdownNavbarItem.js"
     }
   },
   "gitHead": "04e45d41a75574005543a45032997cb9a32c645e",

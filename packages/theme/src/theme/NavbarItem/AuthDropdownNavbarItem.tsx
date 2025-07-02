@@ -31,7 +31,7 @@ const AuthDropdownNavbarItem: React.FC = () => {
   if (!auth.isAuthenticated) {
     return (
       <a className="navbar__item" href="https://your-next-app.com/login">
-        Login with GitHub
+        Editor Login
       </a>
     );
   }

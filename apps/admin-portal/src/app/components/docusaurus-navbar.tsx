@@ -195,7 +195,7 @@ export function DocusaurusNavbar({ siteKey }: DocusaurusNavbarProps): JSX.Elemen
                           View {getSiteDisplayName(siteKey)} Site
                         </a>
                       )}
-                      
+
                       <Link
                         href="/"
                         className="docusaurus-navbar__dropdown-item"
@@ -208,7 +208,6 @@ export function DocusaurusNavbar({ siteKey }: DocusaurusNavbarProps): JSX.Elemen
                             />
                           </svg>
                           Dashboard Home
-                        </a>
                       </Link>
                     </div>
 
