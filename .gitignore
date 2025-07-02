@@ -17,6 +17,7 @@ build-test/
 /*.html
 # generated output files
 /output/
+**/.docusaurus
 
 .nx/cache
 .nx/workspace-data
@@ -39,5 +40,4 @@ out
 
 # Claude Code settings (contains API keys)
 settings.json
-.docusaurus
-/standards/newtest/.docusaurus/
+

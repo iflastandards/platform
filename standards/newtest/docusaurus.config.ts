@@ -143,10 +143,9 @@ const config: Config = {
           position: 'right',
         },
         {
-          type: 'AuthStatus', // This is the key. Docusaurus will look for AuthStatus.tsx
+          type: 'custom-authDropdown',
           position: 'right',
-          siteKey: 'newtest',    // This matches the site key
-        },
+        }
       ],
     },
     footer: {
