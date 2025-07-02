@@ -45,6 +45,17 @@ vi.mock('@/app/lib/auth', () => ({
   authOptions: {},
 }));
 
+// Mock next-auth/react
+vi.mock('next-auth/react', () => ({
+  useSession: vi.fn(() => ({
+    data: null,
+    status: 'unauthenticated',
+  })),
+  SessionProvider: ({ children }: { children: React.ReactNode }) => children,
+  signIn: vi.fn(),
+  signOut: vi.fn(),
+}));
+
 // Global fetch mock
 global.fetch = vi.fn();
 

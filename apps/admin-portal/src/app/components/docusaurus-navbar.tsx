@@ -49,6 +49,21 @@ export function DocusaurusNavbar({ siteKey }: DocusaurusNavbarProps): JSX.Elemen
     return siteNames[key] || key.toUpperCase();
   };
 
+  // Get site URL based on port mapping
+  const getSiteUrl = (key: string) => {
+    const siteUrls: Record<string, string> = {
+      'portal': 'http://localhost:3000',
+      'isbdm': 'http://localhost:3001', 
+      'lrm': 'http://localhost:3002',
+      'frbr': 'http://localhost:3003',
+      'isbd': 'http://localhost:3004',
+      'muldicat': 'http://localhost:3005',
+      'unimarc': 'http://localhost:3006',
+      'newtest': 'http://localhost:3008'
+    };
+    return siteUrls[key.toLowerCase()] || `http://localhost:3000/${key.toLowerCase()}/`;
+  };
+
   // Get breadcrumb path
   const getBreadcrumbs = () => {
     const segments = pathname.split('/').filter(Boolean);
@@ -177,7 +192,7 @@ export function DocusaurusNavbar({ siteKey }: DocusaurusNavbarProps): JSX.Elemen
                     <div className="docusaurus-navbar__dropdown-section">
                       {siteKey && (
                         <a
-                          href={`http://localhost:3008/${siteKey.toLowerCase()}/`}
+                          href={getSiteUrl(siteKey)}
                           target="_blank"
                           rel="noopener noreferrer"
                           className="docusaurus-navbar__dropdown-item"

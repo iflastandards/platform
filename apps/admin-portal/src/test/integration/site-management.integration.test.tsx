@@ -1,5 +1,5 @@
 import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest';
-import { render, screen, fireEvent, waitFor } from '@testing-library/react';
+import { render, screen, fireEvent, waitFor } from '../utils/test-utils';
 import { mockSession, mockSiteData } from '../fixtures/mockData';
 import { setupFetchMock, cleanupFetchMock, mockApiCall, mockApiError } from '../mocks/api';
 

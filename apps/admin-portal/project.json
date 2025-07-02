@@ -121,6 +121,7 @@
       "inputs": [
         "default",
         "{workspaceRoot}/e2e/admin-portal/**/*.spec.ts",
+        "{workspaceRoot}/e2e/admin-portal/**/*.e2e.test.ts",
         "{workspaceRoot}/playwright.config.ts"
       ],
       "outputs": [

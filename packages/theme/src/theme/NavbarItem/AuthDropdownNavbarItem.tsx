@@ -1,62 +1,61 @@
-import React, { useEffect, useState } from "react";
-
-interface AuthStatus {
-  isAuthenticated: boolean;
-  username?: string;
-  teams?: string[];
-  keepMeLoggedIn?: boolean;
-}
-
-const getStoredAuth = (): AuthStatus => {
-  if (typeof window === "undefined") return { isAuthenticated: false };
-  const raw = window.localStorage.getItem("authStatus");
-  return raw ? JSON.parse(raw) : { isAuthenticated: false };
-};
-
-const setKeepMeLoggedIn = (keep: boolean) => {
-  const auth = getStoredAuth();
-  const updated = { ...auth, keepMeLoggedIn: keep };
-  window.localStorage.setItem("authStatus", JSON.stringify(updated));
-};
+import React from "react";
+import { useAdminSession } from "../../hooks/useAdminSession";
 
 const AuthDropdownNavbarItem: React.FC = () => {
-  const [auth, setAuth] = useState<AuthStatus>(getStoredAuth());
+  const { session, isAuthenticated, username, teams, loading, signOut } = useAdminSession();
 
-  useEffect(() => {
-    const onStorage = () => setAuth(getStoredAuth());
-    window.addEventListener("storage", onStorage);
-    return () => window.removeEventListener("storage", onStorage);
-  }, []);
+  const setKeepMeLoggedIn = (keep: boolean) => {
+    if (typeof window !== "undefined") {
+      window.localStorage.setItem("auth-keep-signed-in", keep.toString());
+      // Update the session state
+      const currentAuth = JSON.parse(window.localStorage.getItem("authStatus") || "{}");
+      const updated = { ...currentAuth, keepMeLoggedIn: keep };
+      window.localStorage.setItem("authStatus", JSON.stringify(updated));
 
-  if (!auth.isAuthenticated) {
+      // Dispatch storage event for cross-component communication
+      window.dispatchEvent(new StorageEvent('storage', {
+        key: 'authStatus',
+        newValue: JSON.stringify(updated)
+      }));
+    }
+  };
+
+  if (loading) {
     return (
-      <a className="navbar__item" href="https://your-next-app.com/login">
+      <div className="navbar__item">
+        Loading...
+      </div>
+    );
+  }
+
+  if (!isAuthenticated) {
+    return (
+      <a className="navbar__item" href="http://localhost:3007/signin">
         Editor Login
       </a>
     );
   }
 
-  const isEditor = auth.teams?.includes("editors");
+  const isEditor = teams?.includes("editors");
 
   return (
     <div className="navbar__item dropdown">
       <button className="dropdown__label">
-        {auth.username ?? "Account"} ▼
+        {username ?? "Account"} ▼
       </button>
       <ul className="dropdown__menu">
         {isEditor && (
           <li>
-            <a href="https://your-next-app.com/editor">Manage</a>
+            <a href="http://localhost:3007/dashboard">Manage</a>
           </li>
         )}
         <li>
           <label style={{ cursor: "pointer" }}>
             <input
               type="checkbox"
-              checked={!!auth.keepMeLoggedIn}
+              checked={!!session.keepMeLoggedIn}
               onChange={e => {
                 setKeepMeLoggedIn(e.target.checked);
-                setAuth({ ...auth, keepMeLoggedIn: e.target.checked });
               }}
               style={{ marginRight: 8 }}
             />
@@ -64,7 +63,7 @@ const AuthDropdownNavbarItem: React.FC = () => {
           </label>
         </li>
         <li>
-          <a href="https://your-next-app.com/logout">Logout</a>
+          <a href="http://localhost:3007/api/auth/signout">Logout</a>
         </li>
       </ul>
       <style>{`

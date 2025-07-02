@@ -1,5 +1,5 @@
-import { describe, it, expect, beforeEach } from 'vitest';
-import { render, screen, fireEvent, waitFor } from '@testing-library/react';
+import { describe, it, expect, beforeEach, afterEach } from 'vitest';
+import { render, screen, fireEvent, waitFor } from '../utils/test-utils';
 import SiteManagementClient from '../../app/dashboard/[siteKey]/SiteManagementClient';
 import { setupFetchMock, cleanupFetchMock } from '../mocks/api';
 
