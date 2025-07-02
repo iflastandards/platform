@@ -1,0 +1,10 @@
+{
+  "type": "mdx",
+  "permalink": "/newtest/",
+  "source": "@site/src/pages/index.mdx",
+  "description": "<div style={{",
+  "frontMatter": {
+    "hide_table_of_contents": true
+  },
+  "unlisted": false
+}

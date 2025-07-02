@@ -15,6 +15,7 @@ const VALID_SITES = {
   'isbd': { title: 'International Standard Bibliographic Description', code: 'ISBD' },
   'muldicat': { title: 'Multilingual Dictionary of Cataloguing Terms', code: 'MULDICAT' },
   'unimarc': { title: 'UNIMARC Format', code: 'UNIMARC' },
+  'newtest': { title: 'New Test Site', code: 'NEWTEST' },
 } as const;
 
 type SiteKey = keyof typeof VALID_SITES;

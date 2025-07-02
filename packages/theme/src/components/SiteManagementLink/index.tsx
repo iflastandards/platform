@@ -76,9 +76,9 @@ export default function SiteManagementLink({
 
   // Determine admin portal URL (could be configurable via environment)
   const getAdminPortalUrl = (): string => {
-    // In development, use localhost:4200
+    // In development, use localhost:3007
     if (process.env.NODE_ENV === 'development') {
-      return 'http://localhost:4200';
+      return 'http://localhost:3007';
     }
     
     // In production, this would be your deployed admin portal URL
@@ -98,7 +98,7 @@ export default function SiteManagementLink({
         return `button button--primary ${buttonSize} ${baseClasses}`.trim();
         
       case 'navbar':
-        return `navbar__item navbar__link ${baseClasses}`.trim();
+        return `navbar__item navbar__link site-management-link ${baseClasses}`.trim();
         
       case 'link':
       default:

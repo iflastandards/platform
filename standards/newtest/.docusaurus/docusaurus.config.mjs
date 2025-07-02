@@ -34,6 +34,51 @@ export default {
   "projectName": "newtest",
   "onBrokenLinks": "warn",
   "onBrokenMarkdownLinks": "warn",
+  "customFields": {
+    "siteKey": "newtest",
+    "siteConfigMap": {
+      "portal": {
+        "url": "http://localhost:3000",
+        "baseUrl": "/",
+        "port": 3000
+      },
+      "ISBDM": {
+        "url": "http://localhost:3001",
+        "baseUrl": "/ISBDM/",
+        "port": 3001
+      },
+      "LRM": {
+        "url": "http://localhost:3002",
+        "baseUrl": "/LRM/",
+        "port": 3002
+      },
+      "FRBR": {
+        "url": "http://localhost:3003",
+        "baseUrl": "/FRBR/",
+        "port": 3003
+      },
+      "isbd": {
+        "url": "http://localhost:3004",
+        "baseUrl": "/isbd/",
+        "port": 3004
+      },
+      "muldicat": {
+        "url": "http://localhost:3005",
+        "baseUrl": "/muldicat/",
+        "port": 3005
+      },
+      "unimarc": {
+        "url": "http://localhost:3006",
+        "baseUrl": "/unimarc/",
+        "port": 3006
+      },
+      "newtest": {
+        "url": "http://localhost:3008",
+        "baseUrl": "/newtest/",
+        "port": 3008
+      }
+    }
+  },
   "staticDirectories": [
     "static",
     "../../packages/theme/static"
@@ -146,6 +191,11 @@ export default {
         {
           "type": "search",
           "position": "right"
+        },
+        {
+          "type": "html",
+          "position": "right",
+          "value": "<a href=\"http://localhost:3007/dashboard/newtest\" class=\"navbar__link\" target=\"_blank\" rel=\"noopener noreferrer\" style=\"background: var(--ifm-color-primary); color: white !important; padding: 0.375rem 0.75rem; border-radius: 0.375rem; font-weight: 500; margin-left: 0.5rem; text-decoration: none;\">Manage Site</a>"
         }
       ],
       "hideOnScroll": false
@@ -406,7 +456,6 @@ export default {
   "baseUrlIssueBanner": true,
   "onBrokenAnchors": "warn",
   "onDuplicateRoutes": "warn",
-  "customFields": {},
   "themes": [],
   "scripts": [],
   "headTags": [],

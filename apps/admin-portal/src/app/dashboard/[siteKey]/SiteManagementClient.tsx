@@ -1,6 +1,8 @@
 "use client";
 
 import React, { useState } from 'react';
+import { DocusaurusNavbar } from '@/app/components/docusaurus-navbar';
+import { useInactivityLogout } from '@/app/hooks/useInactivityLogout';
 
 interface ManagementAction {
   id: string;
@@ -383,15 +385,31 @@ function ActionGrid({ actions }: { actions: ManagementAction[] }) {
 export default function SiteManagementClient({ 
   siteTitle, 
   siteCode, 
-  siteKey: _siteKey,
+  siteKey,
   githubRepo = 'iflastandards/standards-dev' 
 }: SiteManagementClientProps) {
   const [activeTab, setActiveTab] = useState('overview');
   
+  // Set up inactivity logout with warning
+  useInactivityLogout({
+    timeoutMinutes: 30,
+    warningMinutes: 5,
+    checkKeepSignedIn: true,
+    onWarning: () => {
+      // Could show a toast notification here
+      console.log('Session will expire in 5 minutes due to inactivity');
+    },
+    onLogout: () => {
+      console.log('Logging out due to inactivity');
+    }
+  });
+  
   const currentTab = managementTabs.find(tab => tab.id === activeTab);
   
   return (
-    <div className="py-8 pb-16 min-h-screen bg-gray-50 dark:bg-gray-900">
+    <div className="min-h-screen bg-gray-50 dark:bg-gray-900">
+      <DocusaurusNavbar siteKey={siteKey} />
+      <div className="py-8 pb-16">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="text-center mb-12">
           <h1 className="text-4xl font-bold text-gray-900 dark:text-gray-100 mb-4">{siteTitle} Management</h1>
@@ -476,6 +494,7 @@ export default function SiteManagementClient({
             </div>
           </div>
         </div>
+      </div>
       </div>
     </div>
   );

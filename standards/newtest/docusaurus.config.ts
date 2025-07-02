@@ -35,6 +35,12 @@ const config: Config = {
   onBrokenLinks: 'warn',
   onBrokenMarkdownLinks: 'warn',
 
+  // Custom fields for theme components
+  customFields: {
+    siteKey: 'newtest',
+    siteConfigMap,
+  },
+
   // Shared static directories
   staticDirectories: ['static', '../../packages/theme/static'],
 
@@ -135,6 +141,11 @@ const config: Config = {
         {
           type: 'search',
           position: 'right',
+        },
+        {
+          type: 'AuthStatus', // This is the key. Docusaurus will look for AuthStatus.tsx
+          position: 'right',
+          siteKey: 'newtest',    // This matches the site key
         },
       ],
     },
