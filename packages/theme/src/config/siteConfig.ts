@@ -13,6 +13,15 @@ export interface SiteConfigEntry {
   port?: number; // Only for local environment
 }
 
+export interface AdminPortalConfig {
+  url: string;
+  signinUrl: string;
+  dashboardUrl: string;
+  signoutUrl: string;
+  sessionApiUrl: string;
+  port?: number; // Only for local environment
+}
+
 // Type for Docusaurus site configuration objects (used in tests and components)
 export interface SiteConfig {
   title?: string;
@@ -88,6 +97,39 @@ export const SITE_CONFIG: Record<SiteKey, Record<Environment, SiteConfigEntry>> 
   },
 };
 
+// Admin Portal configuration matrix
+export const ADMIN_PORTAL_CONFIG: Record<Environment, AdminPortalConfig> = {
+  local: {
+    url: 'http://localhost:3007',
+    signinUrl: 'http://localhost:3007/signin',
+    dashboardUrl: 'http://localhost:3007/dashboard',
+    signoutUrl: 'http://localhost:3007/api/auth/signout',
+    sessionApiUrl: 'http://localhost:3007/api/auth/session',
+    port: 3007,
+  },
+  preview: {
+    url: 'https://iflastandards.github.io/standards-dev/admin',
+    signinUrl: 'https://iflastandards.github.io/standards-dev/admin/signin',
+    dashboardUrl: 'https://iflastandards.github.io/standards-dev/admin/dashboard',
+    signoutUrl: 'https://iflastandards.github.io/standards-dev/admin/api/auth/signout',
+    sessionApiUrl: 'https://iflastandards.github.io/standards-dev/admin/api/auth/session',
+  },
+  development: {
+    url: 'https://jonphipps.github.io/standards-dev/admin',
+    signinUrl: 'https://jonphipps.github.io/standards-dev/admin/signin',
+    dashboardUrl: 'https://jonphipps.github.io/standards-dev/admin/dashboard',
+    signoutUrl: 'https://jonphipps.github.io/standards-dev/admin/api/auth/signout',
+    sessionApiUrl: 'https://jonphipps.github.io/standards-dev/admin/api/auth/session',
+  },
+  production: {
+    url: 'https://www.iflastandards.info/admin',
+    signinUrl: 'https://www.iflastandards.info/admin/signin',
+    dashboardUrl: 'https://www.iflastandards.info/admin/dashboard',
+    signoutUrl: 'https://www.iflastandards.info/admin/api/auth/signout',
+    sessionApiUrl: 'https://www.iflastandards.info/admin/api/auth/session',
+  },
+};
+
 /**
  * Get the configuration for a specific site and environment.
  * This function creates a new object to avoid shared references when
@@ -128,4 +170,80 @@ export function getSiteConfigMap(env: Environment): Record<SiteKey, SiteConfigEn
   });
 
   return result;
+}
+
+/**
+ * Get the admin portal configuration for a specific environment.
+ * 
+ * @param env - The environment
+ * @returns The admin portal configuration
+ * @throws Error if configuration is missing
+ */
+export function getAdminPortalConfig(env: Environment): AdminPortalConfig {
+  const config = ADMIN_PORTAL_CONFIG[env];
+  if (!config) {
+    throw new Error(`Admin portal configuration missing for ${env}`);
+  }
+  // Return a new object to avoid shared references
+  return { ...config };
+}
+
+/**
+ * Auto-detect environment and get admin portal configuration.
+ * This is useful for client-side code that needs to determine the environment dynamically.
+ * 
+ * @returns The admin portal configuration for the detected environment
+ */
+export function getAdminPortalConfigAuto(): AdminPortalConfig {
+  // Server-side default (local development)
+  if (typeof window === 'undefined') {
+    return getAdminPortalConfig('local');
+  }
+
+  // Client-side: determine environment from window.location
+  const { hostname } = window.location;
+  
+  // Production environment
+  if (hostname === 'standards.ifla.org' || hostname.includes('ifla.org')) {
+    return getAdminPortalConfig('production');
+  }
+
+  // Preview environment (GitHub Pages - iflastandards org)
+  if (hostname === 'iflastandards.github.io') {
+    return getAdminPortalConfig('preview');
+  }
+
+  // Development environment (GitHub Pages - personal)
+  if (hostname.includes('github.io') || hostname.includes('netlify') || hostname.includes('vercel')) {
+    return getAdminPortalConfig('development');
+  }
+
+  // Local development (default)
+  return getAdminPortalConfig('local');
+}
+
+/**
+ * Get the current site's environment based on URL
+ * Useful for determining what admin portal URLs to use
+ */
+export function getCurrentEnvironment(): Environment {
+  if (typeof window === 'undefined') {
+    return 'local';
+  }
+
+  const { hostname } = window.location;
+  
+  if (hostname === 'standards.ifla.org' || hostname.includes('ifla.org')) {
+    return 'production';
+  }
+  
+  if (hostname === 'iflastandards.github.io') {
+    return 'preview';
+  }
+  
+  if (hostname.includes('github.io') || hostname.includes('netlify') || hostname.includes('vercel')) {
+    return 'development';
+  }
+  
+  return 'local';
 }

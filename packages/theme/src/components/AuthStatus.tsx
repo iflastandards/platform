@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import { getAdminPortalConfigAuto } from '../config/siteConfig';
 
 interface AuthSession {
   user?: {
@@ -17,7 +18,7 @@ interface AuthStatusState {
   loading: boolean;
 }
 
-const ADMIN_PORTAL_URL = 'http://localhost:3007';
+// Dynamic admin portal configuration based on environment
 
 /**
  * AuthStatus component that tracks authentication state from the admin-portal
@@ -32,7 +33,8 @@ export const AuthStatus: React.FC = () => {
   // Check session from admin-portal
   const checkSession = async () => {
     try {
-      const response = await fetch(`${ADMIN_PORTAL_URL}/api/auth/session`, {
+      const adminConfig = getAdminPortalConfigAuto();
+      const response = await fetch(adminConfig.sessionApiUrl, {
         credentials: 'include',
         headers: {
           'Accept': 'application/json',

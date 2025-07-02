@@ -63,6 +63,36 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 - **Build validation**: `nx run standards-dev:validate:builds`
 
 #### Comprehensive Test Suites
+
+### Enhanced E2E Testing with NX Integration
+
+#### Fail-Fast E2E Testing
+The project now supports fail-fast E2E testing that stops immediately on the first error for rapid feedback:
+
+```bash
+# Fail-fast e2e testing (stops on first failure)
+nx run standards-dev:e2e:fail-fast
+
+# Admin portal specific e2e tests with fail-fast
+nx run standards-dev:e2e:admin-portal:fail-fast
+
+# Regular E2E tests
+nx run standards-dev:e2e
+nx run standards-dev:e2e:admin-portal
+```
+
+#### Environment-Aware E2E Configuration
+- **Dynamic URLs**: E2E tests automatically adapt to different environments (local/preview/development/production)
+- **Cross-domain Authentication**: Tests validate authentication flows between admin portal and Docusaurus sites
+- **CORS Integration**: Tests verify cross-origin session sharing and cookie handling
+- **Configuration**: Uses `packages/theme/src/config/siteConfig.ts` for environment-specific URLs
+
+#### NX E2E Integration Benefits
+- **Affected Testing**: Only runs E2E tests for changed components
+- **Proper Dependencies**: E2E tests depend on correct build targets (admin-portal:build)
+- **Input Tracking**: Optimal caching based on test file changes and configuration updates
+- **Parallel vs Sequential**: Automatic switching based on fail-fast mode
+
 ### Testing Commands (5 Organized Groups)
 
 The project uses a 5-group testing strategy optimized for efficiency and cost management:
@@ -452,20 +482,24 @@ Previously, tests would fail with "port already in use" errors when dev servers 
 
 ### Admin Portal (Next.js Application)
 - **Technology stack**: Next.js 15.2.5 with App Router, NextAuth.js v4.24.11, TypeScript
-- **Authentication**: GitHub OAuth with organization team role detection
+- **Authentication**: GitHub OAuth with organization team role detection + cross-site session tracking
 - **Development server**: `nx dev admin-portal` or `pnpm dev:admin-portal`
 - **Build command**: `nx build admin-portal` or `pnpm build:admin-portal`
 - **Serve built app**: `nx serve admin-portal` or `pnpm serve:admin-portal`
-- **Port**: 4200 (development server)
+- **Port**: 3007 (development server)
 - **Environment variables**: Requires `GITHUB_ID`, `GITHUB_SECRET`, `NEXTAUTH_URL`, `NEXTAUTH_SECRET`
 - **Testing infrastructure**: Complete Vitest + Playwright setup with central mocks and fixtures
 - **Unit tests**: `nx test admin-portal` or `nx run admin-portal:test:unit` (components, utilities)
 - **Integration tests**: `nx run admin-portal:test:integration` (API interactions, authentication flows)
-- **E2E tests**: `playwright test --project=admin-portal` (uses newtest site as testing target)
+- **E2E tests**: `nx run standards-dev:e2e:admin-portal` (cross-site authentication testing)
+- **E2E fail-fast**: `nx run standards-dev:e2e:admin-portal:fail-fast` (stops on first failure)
 - **Test utilities**: Central mocks in `src/test/mocks/`, fixtures in `src/test/fixtures/`
 - **Testing examples**: Run `apps/admin-portal/scripts/test-examples.sh` for guided testing workflow
 - **Key features**: Administrative interface for IFLA standards management
 - **Testing environment**: Uses 'newtest' site (port 3008) as fully featured testing target for E2E workflows
+- **Cross-domain authentication**: CORS-enabled session sharing between admin portal and Docusaurus sites
+- **Environment-aware URLs**: Automatic URL configuration for local/preview/development/production
+- **Architecture documentation**: See `developer_notes/admin-portal-authentication-architecture.md`
 
 ### Admin Portal Testing Strategy
 The admin-portal uses a comprehensive testing approach that leverages the existing Nx infrastructure:

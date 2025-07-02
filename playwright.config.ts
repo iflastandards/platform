@@ -6,13 +6,15 @@ import { defineConfig, devices } from '@playwright/test';
 export default defineConfig({
   testDir: './e2e',
   /* Run tests in files in parallel */
-  fullyParallel: true,
+  fullyParallel: !process.env.FAIL_FAST, // Disable parallel when fail-fast is enabled
   /* Fail the build on CI if you accidentally left test.only in the source code. */
   forbidOnly: !!process.env.CI,
   /* Retry on CI only */
   retries: process.env.CI ? 2 : 0,
   /* Opt out of parallel tests on CI. */
   workers: process.env.CI ? 1 : undefined,
+  /* Global timeout - fail fast if things take too long */
+  globalTimeout: process.env.FAIL_FAST ? 5 * 60 * 1000 : undefined, // 5 minutes for fail-fast
   /* Enhanced test sharding configuration */
   shard: process.env.SHARD ? { current: parseInt(process.env.SHARD_CURRENT || '1'), total: parseInt(process.env.SHARD_TOTAL || '1') } : undefined,
   /* Enhanced reporting with multiple formats */

@@ -1,8 +1,10 @@
 import React from "react";
 import { useAdminSession } from "../../hooks/useAdminSession";
+import { getAdminPortalConfigAuto } from "../../config/siteConfig";
 
 const AuthDropdownNavbarItem: React.FC = () => {
   const { session, isAuthenticated, username, teams, loading, signOut } = useAdminSession();
+  const adminConfig = getAdminPortalConfigAuto();
 
   const setKeepMeLoggedIn = (keep: boolean) => {
     if (typeof window !== "undefined") {
@@ -30,7 +32,7 @@ const AuthDropdownNavbarItem: React.FC = () => {
 
   if (!isAuthenticated) {
     return (
-      <a className="navbar__item" href="http://localhost:3007/signin">
+      <a className="navbar__item" href={adminConfig.signinUrl}>
         Editor Login
       </a>
     );
@@ -46,7 +48,7 @@ const AuthDropdownNavbarItem: React.FC = () => {
       <ul className="dropdown__menu">
         {isEditor && (
           <li>
-            <a href="http://localhost:3007/dashboard">Manage</a>
+            <a href={adminConfig.dashboardUrl}>Manage</a>
           </li>
         )}
         <li>
@@ -63,7 +65,7 @@ const AuthDropdownNavbarItem: React.FC = () => {
           </label>
         </li>
         <li>
-          <a href="http://localhost:3007/api/auth/signout">Logout</a>
+          <a href={adminConfig.signoutUrl}>Logout</a>
         </li>
       </ul>
       <style>{`

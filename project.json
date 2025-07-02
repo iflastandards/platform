@@ -41,12 +41,60 @@
         "{projectRoot}/playwright.config.ts"
       ]
     },
+    "e2e:fail-fast": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "FAIL_FAST=true playwright test --max-failures=1"
+      },
+      "dependsOn": ["build-all"],
+      "inputs": [
+        "default",
+        "{projectRoot}/e2e/**/*",
+        "{projectRoot}/playwright.config.ts"
+      ]
+    },
+    "e2e:affected": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "playwright test --grep \"affected\"",
+        "cwd": "{projectRoot}"
+      },
+      "inputs": [
+        "default",
+        "{projectRoot}/e2e/**/*",
+        "{projectRoot}/playwright.config.ts"
+      ]
+    },
     "e2e:ui": {
       "executor": "nx:run-commands",
       "options": {
         "command": "playwright test --ui"
       },
       "dependsOn": ["build-all"]
+    },
+    "e2e:admin-portal": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "playwright test --project=admin-portal"
+      },
+      "dependsOn": ["admin-portal:build"],
+      "inputs": [
+        "default",
+        "{projectRoot}/e2e/admin-portal/**/*",
+        "{projectRoot}/playwright.config.ts"
+      ]
+    },
+    "e2e:admin-portal:fail-fast": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "FAIL_FAST=true playwright test --project=admin-portal --max-failures=1"
+      },
+      "dependsOn": ["admin-portal:build"],
+      "inputs": [
+        "default",
+        "{projectRoot}/e2e/admin-portal/**/*",
+        "{projectRoot}/playwright.config.ts"
+      ]
     },
     "e2e:site-validation": {
       "executor": "nx:run-commands",

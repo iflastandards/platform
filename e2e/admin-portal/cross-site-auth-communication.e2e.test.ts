@@ -1,6 +1,14 @@
 import { test, expect } from '@playwright/test';
+import { getAdminPortalConfig, getCurrentEnvironment } from '../../packages/theme/src/config/siteConfig';
 
 test.describe('Cross-Site Authentication Communication', () => {
+  let adminConfig: any;
+  
+  test.beforeAll(async () => {
+    // Get admin portal configuration for local environment
+    adminConfig = getAdminPortalConfig('local');
+  });
+
   test.beforeEach(async ({ page, context }) => {
     // Clear any existing sessions and localStorage
     await page.context().clearCookies();
@@ -20,10 +28,10 @@ test.describe('Cross-Site Authentication Communication', () => {
     // Check that the navbar shows "Editor Login" (not authenticated)
     const loginLink = page.getByRole('link', { name: /editor login/i });
     await expect(loginLink).toBeVisible();
-    await expect(loginLink).toHaveAttribute('href', 'http://localhost:3007/signin');
+    await expect(loginLink).toHaveAttribute('href', adminConfig.signinUrl);
 
     // Step 2: Navigate to admin portal and mock authentication
-    await page.goto('http://localhost:3007/signin');
+    await page.goto(adminConfig.signinUrl);
     
     // Mock successful authentication by setting session cookie
     await context.addCookies([
@@ -38,7 +46,7 @@ test.describe('Cross-Site Authentication Communication', () => {
     ]);
 
     // Navigate to admin portal dashboard to establish session
-    await page.goto('http://localhost:3007/dashboard');
+    await page.goto(adminConfig.dashboardUrl);
     
     // Verify we're authenticated in admin portal
     await expect(page).not.toHaveURL(/.*signin/);
@@ -93,7 +101,7 @@ test.describe('Cross-Site Authentication Communication', () => {
     await page.waitForTimeout(1000);
 
     // Step 2: Navigate to admin portal and sign out
-    await page.goto('http://localhost:3007/dashboard');
+    await page.goto(adminConfig.dashboardUrl);
     
     // Look for sign out button and click it
     const signOutButton = page.getByRole('button', { name: /sign out/i });
@@ -101,7 +109,7 @@ test.describe('Cross-Site Authentication Communication', () => {
       await signOutButton.click();
     } else {
       // Alternative: navigate to signout endpoint directly
-      await page.goto('http://localhost:3007/api/auth/signout');
+      await page.goto(adminConfig.signoutUrl);
     }
     
     // Verify we're signed out (redirected to signin page)
@@ -116,7 +124,7 @@ test.describe('Cross-Site Authentication Communication', () => {
     // Check that the navbar shows "Editor Login" again (not authenticated)
     const loginLink = page.getByRole('link', { name: /editor login/i });
     await expect(loginLink).toBeVisible();
-    await expect(loginLink).toHaveAttribute('href', 'http://localhost:3007/signin');
+    await expect(loginLink).toHaveAttribute('href', adminConfig.signinUrl);
   });
 
   test('should handle cross-tab authentication synchronization', async ({ page, context }) => {
@@ -130,7 +138,7 @@ test.describe('Cross-Site Authentication Communication', () => {
 
     // Step 2: Open admin portal in new tab and authenticate
     const adminPage = await context.newPage();
-    await adminPage.goto('http://localhost:3007/signin');
+    await adminPage.goto(adminConfig.signinUrl);
     
     // Mock authentication
     await context.addCookies([
@@ -144,7 +152,7 @@ test.describe('Cross-Site Authentication Communication', () => {
       },
     ]);
 
-    await adminPage.goto('http://localhost:3007/dashboard');
+    await adminPage.goto('adminConfig.dashboardUrl');
     await expect(adminPage).not.toHaveURL(/.*signin/);
 
     // Step 3: Trigger storage event to simulate cross-tab communication
@@ -199,7 +207,7 @@ test.describe('Cross-Site Authentication Communication', () => {
       },
     ]);
 
-    await page.goto('http://localhost:3007/dashboard');
+    await page.goto(adminConfig.dashboardUrl);
     await expect(page).not.toHaveURL(/.*signin/);
 
     // Step 2: Navigate to newtest and wait for auth state to be established
@@ -242,7 +250,7 @@ test.describe('Cross-Site Authentication Communication', () => {
     // Step 3: Verify fallback to unauthenticated state
     const loginLink = page.getByRole('link', { name: /editor login/i });
     await expect(loginLink).toBeVisible();
-    await expect(loginLink).toHaveAttribute('href', 'http://localhost:3007/signin');
+    await expect(loginLink).toHaveAttribute('href', 'adminConfig.signinUrl');
 
     // Step 4: Verify no error messages are shown to user
     const errorMessage = page.getByText(/error|failed|unauthorized/i);
