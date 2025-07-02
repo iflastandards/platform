@@ -242,6 +242,7 @@
     "express": "^5.1.0",
     "fastmcp": "^2.2.4",
     "figlet": "^1.8.1",
+    "find-root": "^1.1.0",
     "fuse.js": "^7.1.0",
     "glob": "^11.0.2",
     "googleapis": "^149.0.0",
