@@ -89,6 +89,7 @@ The system manages the following ports:
 - **ISBD**: 3004 (the port mentioned in the original issue)
 - **MulDiCat**: 3005
 - **UniMARC**: 3006
+- **Admin Portal**: 3007
 - **NewTest**: 3008
 
 ## Usage Examples

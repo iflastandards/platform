@@ -10,13 +10,11 @@ build-clean/
 build-test/
 /.env
 /.env.local
+# temporary files (auto-cleaned nightly)
 /tmp/
 .DS_Store
-/output
 /*.png
 /*.html
-# generated output files
-/output/
 **/.docusaurus
 
 .nx/cache
@@ -40,4 +38,3 @@ out
 
 # Claude Code settings (contains API keys)
 settings.json
-

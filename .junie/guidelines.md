@@ -5,15 +5,50 @@ This document provides essential information for developers working on the IFLA 
 ## Build/Configuration Instructions
 
 ### Project Structure
-The IFLA Standards project is a monorepo containing multiple packages and standards sites:
+The IFLA Standards project is a monorepo containing multiple packages, applications, and standards sites:
 
 - **packages/theme**: Contains the shared theme components and utilities
 - **packages/preset-ifla**: Contains the Docusaurus preset for IFLA standards
 - **standards/**: Contains individual standard sites (FRBR, ISBD, ISBDM, LRM, MulDiCat, UniMARC)
 - **portal/**: The main portal site
+- **apps/admin-portal**: Next.js administrative portal application
 
 ### Nx Integration
 The project has been restructured to integrate Nx for optimized builds, testing, and caching. Nx commands are now the **recommended approach** for development.
+
+### Next.js Integration
+The project now includes Next.js support through the addition of a Next.js administrative portal application:
+
+- **Application**: `apps/admin-portal` - Next.js administrative portal
+- **Framework**: Next.js 15.2.4 with TypeScript support
+- **Authentication**: NextAuth.js 5.0.0-beta.29 for authentication
+- **Styling**: Tailwind CSS for styling
+- **Testing**: Vitest for unit/integration testing, Playwright for E2E testing
+- **Port**: 3007 (configured in Nx project.json)
+- **Nx Plugin**: `@nx/next` plugin provides Next.js-specific executors and generators
+
+#### Next.js Nx Configuration
+The project includes comprehensive Nx configuration for Next.js:
+- **Build Executor**: `@nx/next:build` for production builds
+- **Dev Server**: `@nx/next:server` for development and production serving
+- **Generator Defaults**: Tailwind CSS styling, TypeScript support
+- **Workspace Integration**: Included in pnpm workspace (`apps/*`)
+
+#### Next.js Commands
+```bash
+# Development
+nx dev admin-portal              # Start development server
+nx serve admin-portal            # Start development server (alternative)
+
+# Production
+nx build admin-portal            # Build for production
+nx start admin-portal            # Start production server
+
+# Testing
+nx test admin-portal             # Run all tests
+nx run admin-portal:test:unit    # Unit tests only
+nx run admin-portal:test:e2e     # E2E tests only
+```
 
 ### Build Commands (Nx Optimized)
 
@@ -26,6 +61,7 @@ nx build frbr                    # FRBR (port 3003)
 nx build isbd                    # ISBD (port 3004)
 nx build muldicat                # Muldicat (port 3005)
 nx build unimarc                 # Unimarc (port 3006)
+nx build admin-portal            # Admin Portal (port 3007)
 nx build @ifla/theme             # Build theme package
 
 # Build all sites (Nx optimized)
@@ -41,6 +77,7 @@ pnpm build:frbr       # Build the FRBR standard
 pnpm build:isbd       # Build the ISBD standard
 pnpm build:muldicat   # Build the MulDiCat standard
 pnpm build:unimarc    # Build the UniMARC standard
+pnpm build:admin-portal # Build the Admin Portal
 pnpm build:all        # Build all sites in parallel
 pnpm build:all:safe   # Clear all builds first, then build all sites
 ```
@@ -56,6 +93,7 @@ nx run frbr:start:robust         # http://localhost:3003 (with port cleanup)
 nx run isbd:start:robust         # http://localhost:3004 (with port cleanup)
 nx run muldicat:start:robust     # http://localhost:3005 (with port cleanup)
 nx run unimarc:start:robust      # http://localhost:3006 (with port cleanup)
+nx run admin-portal:start:robust # http://localhost:3007 (with port cleanup)
 
 # Start all sites with port cleanup
 nx run standards-dev:start-all:robust      # Start all sites with port cleanup
@@ -74,6 +112,7 @@ pnpm start:frbr       # Start the FRBR standard (port 3003)
 pnpm start:isbd       # Start the ISBD standard (port 3004)
 pnpm start:muldicat   # Start the MulDiCat standard (port 3005)
 pnpm start:unimarc    # Start the UniMARC standard (port 3006)
+pnpm start:admin-portal # Start the Admin Portal (port 3007)
 pnpm start:all        # Start all sites in parallel
 
 # Serve built sites
@@ -260,6 +299,18 @@ Tests are organized in the following structure:
 
 ### Adding New Tests
 
+**Important Guidelines:**
+- **Always add tests to the test suite rather than remove them** - Tests provide valuable validation and should be preserved
+- **Intelligently categorize tests into the correct testing phases (1-5)** based on their purpose and execution requirements
+
+**Test Phase Classification:**
+1. **Selective Tests**: Individual/focused testing during development
+2. **Comprehensive Tests**: Full validation before major releases
+3. **Pre-Commit Tests**: Fast feedback, configuration validation (< 60s)
+4. **Pre-Push Tests**: Deployment-focused validation (< 180s)
+5. **CI Tests**: Environment/infrastructure validation (< 180s)
+
+**Steps to Add New Tests:**
 1. Create a new test file with the `.test.ts` or `.test.tsx` extension
 2. Import the necessary testing utilities:
    ```typescript
@@ -267,7 +318,10 @@ Tests are organized in the following structure:
    import { render, screen } from '@testing-library/react'; // For component tests
    ```
 3. Write your tests using the describe/it structure
-4. Run the tests to verify they work
+4. **Determine the appropriate test phase** based on the test's purpose and execution time
+5. **Place the test in the correct location** according to the test structure
+6. Run the tests to verify they work
+7. **Document your testing approach** in the developer_notes folder if significant
 
 ### Example Test
 
@@ -313,6 +367,7 @@ The project implements a robust port management system that automatically kills 
 - **ISBD**: 3004
 - **MulDiCat**: 3005
 - **UniMARC**: 3006
+- **Admin Portal**: 3007
 - **NewTest**: 3008
 
 ### Port Management Commands
@@ -546,6 +601,7 @@ The project implements comprehensive Nx optimizations with proper `dependsOn` ru
 
 #### Context7 MCP Integration
 
+- **Context7 is an MCP server**: Context7 provides Model Context Protocol (MCP) server functionality for development assistance
 - **Real-time Examples**: use `docuserve-context7` mcp for live code examples from Docusaurus community plugins
 - **Type Definitions**: Prefer Context7 over static docs for up-to-date TypeScript types
 - **Plugin Discovery**: Use Context7 to find and evaluate community plugins
@@ -637,3 +693,56 @@ pnpm test:pre-push          # Equivalent to pre-push hook
 ✅ **Cost Optimization** - Minimal CI usage through comprehensive local testing
 
 **The testing strategy ensures high code quality and prevents regressions without requiring manual intervention!** 🚀
+
+## How to Request Additions to Guidelines
+
+### Adding New Guidelines
+
+When you want to add something to these guidelines, use the following format:
+
+**"Remember: [your guideline or instruction]"**
+
+This signals that the information should be added to this guidelines document for future reference by all project contributors.
+
+### Examples
+
+- "Remember: Always run tests before committing code"
+- "Remember: Use semantic commit messages following conventional commits"
+- "Remember: Document any new environment variables in the README"
+- "Remember: When we have output of any kind that we wish to keep, we place in the output folder, organized according to purpose for easy retrieval"
+
+### Guidelines for Guidelines
+
+When requesting additions, ensure they are:
+
+- **Clear and actionable**: Specific instructions that can be followed
+- **Project-relevant**: Directly related to IFLA Standards development
+- **Consensus-based**: Agreed upon by the development team
+- **Maintainable**: Can be updated as the project evolves
+
+### Documentation Strategy
+
+**Developer Notes → `developer_notes/` folder**
+- **Purpose**: Organized documentation of development work, solutions, and processes
+- **Organization**: Structured by topic/component for easy retrieval
+- **Examples**: Implementation guides, testing strategies, configuration documentation
+- **Best Practice**: Always document significant work in an organized fashion
+- **Structure**: Use subdirectories to categorize by area (theme/, tools/, testing/, etc.)
+
+### File Organization Strategy
+
+**Output Files We Wish to Keep → `output/` folder**
+- **Purpose**: Files that should be preserved and tracked by git
+- **Organization**: Organized by purpose for easy retrieval
+- **Examples**: Generated spreadsheets, processed vocabularies, validation reports
+- **Git Status**: Tracked and committed to repository
+
+**Output Files We Don't Wish to Keep → `tmp/` folder**
+- **Purpose**: Temporary files that don't need preservation
+- **Cleanup**: Auto-cleaned nightly by automated processes
+- **Git Status**: Not tracked by git (excluded in .gitignore)
+- **Manual Cleanup**: Not required - automatic cleanup handles this
+
+---
+
+*This document is maintained as part of the IFLA Standards project documentation.*

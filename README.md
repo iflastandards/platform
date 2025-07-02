@@ -68,6 +68,43 @@ standards-dev/
 └── scripts/                  # Build and utility scripts
 ```
 
+## 📁 File Organization Strategy
+
+The project follows a clear file organization strategy for managing output files:
+
+### Output Files We Wish to Keep → `output/` folder
+- **Purpose**: Files that should be preserved and tracked by git
+- **Organization**: Organized by purpose for easy retrieval
+- **Examples**: Generated spreadsheets, processed vocabularies, validation reports
+- **Git Status**: Tracked and committed to repository
+
+```bash
+output/
+├── ISBDM-spreadsheets/          # ISBDM Excel workbooks
+├── isbd-excel-proper/           # Properly formatted ISBD files
+├── isbd-sheets/                 # ISBD vocabulary CSV files
+└── link-validation/             # Link validation results
+```
+
+### Output Files We Don't Wish to Keep → `tmp/` folder
+- **Purpose**: Temporary files that don't need preservation
+- **Cleanup**: Auto-cleaned nightly by automated processes
+- **Git Status**: Not tracked by git (excluded in .gitignore)
+- **Manual Cleanup**: Not required - automatic cleanup handles this
+
+```bash
+tmp/
+├── apps/                        # Temporary application files
+├── packages/                    # Temporary package files
+└── *.js                        # Temporary scripts and mock data
+```
+
+### Usage Guidelines
+- **Scripts generating permanent artifacts** → Use `output/` directory
+- **Scripts generating temporary data** → Use `tmp/` directory
+- **Organize by purpose** → Create subdirectories that clearly indicate file purpose
+- **No manual cleanup needed** → The `tmp/` folder is automatically maintained
+
 ## 🚀 Site Development
 
 ### Building Individual Sites
