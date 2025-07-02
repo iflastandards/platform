@@ -155,7 +155,7 @@ const config: Config = {
       'classic',
       {
         docs: {
-          sidebarPath: './sidebars.ts',
+          sidebarPath: require.resolve('./sidebars.ts'),
           editUrl: 'https://github.com/iflastandards/standards-dev/tree/main/standards/ISBDM/',
           showLastUpdateAuthor: true,
           showLastUpdateTime: true,
