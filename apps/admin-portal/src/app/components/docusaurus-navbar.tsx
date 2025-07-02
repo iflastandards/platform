@@ -10,7 +10,7 @@ interface DocusaurusNavbarProps {
   siteKey?: string;
 }
 
-export function DocusaurusNavbar({ siteKey }: DocusaurusNavbarProps): JSX.Element {
+export function DocusaurusNavbar({ siteKey }: DocusaurusNavbarProps): React.JSX.Element {
   const { data: session, status } = useSession();
   const pathname = usePathname();
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);

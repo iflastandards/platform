@@ -18,8 +18,8 @@ export function useInactivityLogout({
   onWarning,
   onLogout,
 }: UseInactivityLogoutOptions = {}) {
-  const timeoutRef = useRef<NodeJS.Timeout>();
-  const warningTimeoutRef = useRef<NodeJS.Timeout>();
+  const timeoutRef = useRef<NodeJS.Timeout | null>(null);
+  const warningTimeoutRef = useRef<NodeJS.Timeout | null>(null);
   const lastActivityRef = useRef<number>(Date.now());
 
   const logout = useCallback(async () => {

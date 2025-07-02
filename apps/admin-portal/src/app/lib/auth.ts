@@ -1,7 +1,7 @@
-import NextAuth from "next-auth";
-import GitHub from "next-auth/providers/github";
+import NextAuth from "next-auth"
+import GitHub from "next-auth/providers/github"
 
-export const { handlers, auth, signIn, signOut } = NextAuth({
+const config = {
   debug: process.env.NODE_ENV === "development",
   providers: [
     GitHub({
@@ -18,7 +18,7 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
     signIn: '/auth/signin',
   },
   callbacks: {
-    async jwt({ token, account, user }) {
+    async jwt({ token, account, user }: any) {
       if (account) {
         token.accessToken = account.access_token;
         
@@ -104,13 +104,13 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
       }
       return token;
     },
-    async session({ session, token }) {
+    async session({ session, token }: any) {
       if (token.roles && session.user) {
         session.user.roles = token.roles as string[];
       }
       return session;
     },
-    async redirect({ url, baseUrl }) {
+    async redirect({ url, baseUrl }: any) {
       // Redirect to dashboard after successful sign-in
       if (url.startsWith(baseUrl)) {
         return url;
@@ -119,4 +119,6 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
       return `${baseUrl}/dashboard`;
     },
   },
-});
+};
+
+export const { handlers, auth, signIn, signOut } = NextAuth(config);
