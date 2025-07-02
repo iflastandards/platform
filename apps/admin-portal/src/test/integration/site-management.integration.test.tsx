@@ -125,16 +125,12 @@ describe('Site Management Integration Tests', () => {
       );
       
       // Navigate to Content tab
-      fireEvent.click(screen.getByText('Content'));
+      fireEvent.click(screen.getByRole('button', { name: 'Content Management' }));
       
       await waitFor(() => {
-        expect(screen.getByText('Content Management')).toBeInTheDocument();
-      });
-      
-      // Check for content editing options
-      await waitFor(() => {
-        expect(screen.getByText('Documentation')).toBeInTheDocument();
-        expect(screen.getByText('Blog Posts')).toBeInTheDocument();
+        // Check for content editing actions instead of redundant heading
+        expect(screen.getByText('Create New Page')).toBeInTheDocument();
+        expect(screen.getByText('Scaffold Element Pages')).toBeInTheDocument();
       });
     });
 
@@ -156,10 +152,10 @@ describe('Site Management Integration Tests', () => {
         />
       );
       
-      fireEvent.click(screen.getByText('Content'));
+      fireEvent.click(screen.getByRole('button', { name: 'Content Management' }));
       
       await waitFor(() => {
-        expect(screen.getByText('Content Management')).toBeInTheDocument();
+        expect(screen.getByText('Create New Page')).toBeInTheDocument();
       });
     });
   });
@@ -176,11 +172,11 @@ describe('Site Management Integration Tests', () => {
         />
       );
       
-      fireEvent.click(screen.getByText('Build & Deploy'));
+      fireEvent.click(screen.getByText('Releases & Publishing'));
       
       await waitFor(() => {
-        expect(screen.getByText('Build & Deployment')).toBeInTheDocument();
-        expect(screen.getByText('Build Status')).toBeInTheDocument();
+        expect(screen.getByText('Create Release Candidate')).toBeInTheDocument();
+        expect(screen.getByText('Deploy to Production')).toBeInTheDocument();
       });
     });
 
@@ -202,11 +198,11 @@ describe('Site Management Integration Tests', () => {
         />
       );
       
-      fireEvent.click(screen.getByText('Build & Deploy'));
+      fireEvent.click(screen.getByText('Releases & Publishing'));
       
       await waitFor(() => {
-        const triggerButton = screen.getByText('Trigger Build');
-        expect(triggerButton).toBeInTheDocument();
+        const releaseButton = screen.getByText('Create Release Candidate');
+        expect(releaseButton).toBeInTheDocument();
       });
     });
   });

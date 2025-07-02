@@ -68,7 +68,8 @@ describe('SiteManagementClient', () => {
       // Switch to content tab
       fireEvent.click(screen.getByRole('button', { name: 'Content Management' }));
       await waitFor(() => {
-        expect(screen.getByRole('heading', { name: 'Content Management' })).toBeInTheDocument();
+        // Content tab should show action cards instead of redundant heading
+        expect(screen.getByText('Create New Page')).toBeInTheDocument();
       });
     });
   });
@@ -86,10 +87,11 @@ describe('SiteManagementClient', () => {
     it('should display content management tab', async () => {
       render(<SiteManagementClient {...defaultProps} />);
       
-      fireEvent.click(screen.getByText('Content Management'));
+      fireEvent.click(screen.getByRole('button', { name: 'Content Management' }));
       
       await waitFor(() => {
-        expect(screen.getByText('Content Management')).toBeInTheDocument();
+        const activeTab = screen.getByRole('button', { name: 'Content Management' });
+        expect(activeTab).toHaveClass('text-blue-600');
       });
     });
   });

@@ -246,6 +246,78 @@ const managementTabs: TabData[] = [
         type: 'github-cli'
       }
     ]
+  },
+  {
+    id: 'github',
+    label: 'GitHub',
+    actions: [
+      {
+        id: 'browse-repository',
+        title: 'Browse Code',
+        description: 'Explore repository files and history',
+        type: 'external'
+      },
+      {
+        id: 'view-issues',
+        title: 'Open Issues',
+        description: 'View and manage GitHub issues',
+        type: 'external'
+      },
+      {
+        id: 'manage-prs',
+        title: 'Manage PRs',
+        description: 'Review and manage pull requests',
+        type: 'external'
+      },
+      {
+        id: 'create-issue',
+        title: 'Create Issue',
+        description: 'Report bugs or request features',
+        type: 'external'
+      },
+      {
+        id: 'repository-stats',
+        title: 'Repository Stats',
+        description: 'View detailed repository analytics and metrics',
+        type: 'internal'
+      }
+    ]
+  },
+  {
+    id: 'settings',
+    label: 'Settings',
+    actions: [
+      {
+        id: 'site-config',
+        title: 'Site Configuration',
+        description: 'Modify site settings and metadata',
+        type: 'codespaces'
+      },
+      {
+        id: 'navigation-config',
+        title: 'Navigation Settings',
+        description: 'Configure site navigation and menus',
+        type: 'codespaces'
+      },
+      {
+        id: 'theme-settings',
+        title: 'Theme Configuration',
+        description: 'Customize site appearance and branding',
+        type: 'codespaces'
+      },
+      {
+        id: 'deployment-config',
+        title: 'Deployment Settings',
+        description: 'Configure deployment and hosting options',
+        type: 'internal'
+      },
+      {
+        id: 'backup-restore',
+        title: 'Backup & Restore',
+        description: 'Manage site backups and restoration',
+        type: 'github-cli'
+      }
+    ]
   }
 ];
 
@@ -441,16 +513,77 @@ export default function SiteManagementClient({
         <div className="min-h-[500px]">
           {activeTab === 'overview' ? (
             <StatusDashboard siteTitle={siteTitle} siteCode={siteCode} />
-          ) : (
-            currentTab && (
-              <>
-                <div className="text-center mb-8">
-                  <h2 className="text-3xl font-bold text-blue-600 dark:text-blue-400 mb-2">{currentTab.label}</h2>
-                  <p className="text-gray-600 dark:text-gray-400">Manage {currentTab.label.toLowerCase()} for {siteTitle}</p>
+          ) : activeTab === 'github' ? (
+            <>
+              <div className="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg p-6 shadow-sm mb-6">
+                <h3 className="text-lg font-semibold text-blue-600 dark:text-blue-400 mb-4">Repository Information</h3>
+                <div className="space-y-3">
+                  <div className="flex justify-between items-center">
+                    <span className="text-gray-600 dark:text-gray-400">Repository:</span>
+                    <span className="text-gray-900 dark:text-gray-100 font-medium">{githubRepo}</span>
+                  </div>
+                  <div className="flex justify-between items-center">
+                    <span className="text-gray-600 dark:text-gray-400">Quick Actions:</span>
+                    <div className="flex gap-2">
+                      <a 
+                        href={`https://github.com/${githubRepo}`}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="bg-blue-600 text-white px-3 py-1 rounded text-sm hover:bg-blue-700 transition-colors"
+                      >
+                        View Repository
+                      </a>
+                      <a 
+                        href={`https://github.com/${githubRepo}/issues`}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="bg-green-600 text-white px-3 py-1 rounded text-sm hover:bg-green-700 transition-colors"
+                      >
+                        Open Issues
+                      </a>
+                      <a 
+                        href={`https://github.com/${githubRepo}/pulls`}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="bg-purple-600 text-white px-3 py-1 rounded text-sm hover:bg-purple-700 transition-colors"
+                      >
+                        PRs
+                      </a>
+                    </div>
+                  </div>
                 </div>
-                <ActionGrid actions={currentTab.actions} />
-              </>
-            )
+              </div>
+              {currentTab && <ActionGrid actions={currentTab.actions} />}
+            </>
+          ) : activeTab === 'settings' ? (
+            <>
+              <div className="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg p-6 shadow-sm mb-6">
+                <h3 className="text-lg font-semibold text-blue-600 dark:text-blue-400 mb-4">Site Settings</h3>
+                <div className="space-y-4">
+                  <div>
+                    <h4 className="text-md font-medium text-gray-900 dark:text-gray-100 mb-2">Configuration</h4>
+                    <p className="text-gray-600 dark:text-gray-400 text-sm">
+                      Manage site configuration, navigation, and deployment settings for {siteTitle}.
+                    </p>
+                  </div>
+                  <div className="border-t border-gray-200 dark:border-gray-700 pt-4">
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                      <div>
+                        <span className="text-gray-600 dark:text-gray-400 text-sm">Site Key:</span>
+                        <span className="ml-2 text-gray-900 dark:text-gray-100 font-medium">{siteKey}</span>
+                      </div>
+                      <div>
+                        <span className="text-gray-600 dark:text-gray-400 text-sm">Site Code:</span>
+                        <span className="ml-2 text-gray-900 dark:text-gray-100 font-medium">{siteCode}</span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              {currentTab && <ActionGrid actions={currentTab.actions} />}
+            </>
+          ) : (
+            currentTab && <ActionGrid actions={currentTab.actions} />
           )}
         </div>
         
