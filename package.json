@@ -104,6 +104,7 @@
     "ports:kill": "node scripts/utils/port-manager.js all",
     "ports:kill:verbose": "node scripts/utils/port-manager.js all --verbose",
     "ports:kill:site": "node scripts/utils/port-manager.js site",
+    "output:move": "node scripts/move-output-files.js",
     "start:robust": "node scripts/start-with-port-cleanup.js start",
     "start:robust:site": "node scripts/start-with-port-cleanup.js start",
     "serve:robust": "node scripts/start-with-port-cleanup.js serve",

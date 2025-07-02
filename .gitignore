@@ -12,6 +12,8 @@ build-test/
 /.env.local
 # temporary files (auto-cleaned nightly)
 /tmp/
+# output files from command overflow
+.output.txt
 .DS_Store
 /*.png
 /*.html
