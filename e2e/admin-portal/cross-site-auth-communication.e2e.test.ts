@@ -1,7 +1,8 @@
 import { test, expect } from '@playwright/test';
-import { getAdminPortalConfig, getCurrentEnvironment } from '../../packages/theme/src/config/siteConfig';
+import { getAdminPortalConfig } from '../../packages/theme/src/config/siteConfig';
 
 test.describe('Cross-Site Authentication Communication', () => {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   let adminConfig: any;
   
   test.beforeAll(async () => {
@@ -9,7 +10,7 @@ test.describe('Cross-Site Authentication Communication', () => {
     adminConfig = getAdminPortalConfig('local');
   });
 
-  test.beforeEach(async ({ page, context }) => {
+  test.beforeEach(async ({ page }) => {
     // Clear any existing sessions and localStorage
     await page.context().clearCookies();
     await page.evaluate(() => {
@@ -152,7 +153,7 @@ test.describe('Cross-Site Authentication Communication', () => {
       },
     ]);
 
-    await adminPage.goto('adminConfig.dashboardUrl');
+    await adminPage.goto(adminConfig.dashboardUrl);
     await expect(adminPage).not.toHaveURL(/.*signin/);
 
     // Step 3: Trigger storage event to simulate cross-tab communication
@@ -250,7 +251,7 @@ test.describe('Cross-Site Authentication Communication', () => {
     // Step 3: Verify fallback to unauthenticated state
     const loginLink = page.getByRole('link', { name: /editor login/i });
     await expect(loginLink).toBeVisible();
-    await expect(loginLink).toHaveAttribute('href', 'adminConfig.signinUrl');
+    await expect(loginLink).toHaveAttribute('href', adminConfig.signinUrl);
 
     // Step 4: Verify no error messages are shown to user
     const errorMessage = page.getByText(/error|failed|unauthorized/i);

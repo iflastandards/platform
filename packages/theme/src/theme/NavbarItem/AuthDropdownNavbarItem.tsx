@@ -3,7 +3,7 @@ import { useAdminSession } from "../../hooks/useAdminSession";
 import { getAdminPortalConfigAuto } from "../../config/siteConfig";
 
 const AuthDropdownNavbarItem: React.FC = () => {
-  const { session, isAuthenticated, username, teams, loading, signOut } = useAdminSession();
+  const { session, isAuthenticated, username, teams, loading } = useAdminSession();
   const adminConfig = getAdminPortalConfigAuto();
 
   const setKeepMeLoggedIn = (keep: boolean) => {
