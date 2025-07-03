@@ -43,3 +43,4 @@ settings.json
 playwright-report
 .env.local
 /conf.yaml
+fixtures/
