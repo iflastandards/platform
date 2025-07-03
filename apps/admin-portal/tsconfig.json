@@ -35,6 +35,7 @@
     "../../apps/admin-portal/.next/types/**/*.ts",
     "../../dist/apps/admin-portal/.next/types/**/*.ts",
     "next-env.d.ts",
+    "next-auth-types.d.ts",
     ".next/types/**/*.ts"
   ],
   "exclude": [

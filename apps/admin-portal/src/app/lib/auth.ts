@@ -1,5 +1,5 @@
-import NextAuth from "next-auth"
-import GitHub from "next-auth/providers/github"
+import NextAuth from "next-auth";
+import GitHub from "next-auth/providers/github";
 
 export const { handlers, auth, signIn, signOut } = NextAuth({
   debug: process.env.NODE_ENV === "development",
@@ -105,7 +105,8 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
       return token;
     },
     async session({ session, token }: any) {
-      if (token.roles && session.user) {
+      if (session.user) {
+        session.user.id = token.sub;
         session.user.roles = token.roles as string[];
       }
       return session;

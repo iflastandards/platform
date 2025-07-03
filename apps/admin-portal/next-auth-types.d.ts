@@ -1,4 +1,7 @@
-declare module 'next-auth' {
+// types/next-auth.d.ts
+import { DefaultSession } from "next-auth";
+
+declare module "next-auth" {
   interface Session {
     user: {
       roles?: string[];
@@ -6,15 +9,13 @@ declare module 'next-auth' {
       name?: string | null;
       email?: string | null;
       image?: string | null;
-    };
+    } & DefaultSession["user"];
   }
-  
   interface User {
-    login?: string;
+    roles?: string[];
   }
 }
-
-declare module '@auth/core/jwt' {
+declare module "next-auth/jwt" {
   interface JWT {
     roles?: string[];
     accessToken?: string;

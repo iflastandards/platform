@@ -179,9 +179,9 @@ export function DocusaurusNavbar({ siteKey }: DocusaurusNavbarProps): React.JSX.
                         <div className="docusaurus-navbar__user-email">
                           {session.user.email}
                         </div>
-                        {session.user.roles && session.user.roles.length > 0 && (
+                                                {session.user.roles && session.user.roles.length > 0 && (
                           <div className="docusaurus-navbar__user-roles">
-                            {session.user.roles.join(', ')}
+                                                        {session.user.roles.join(', ')}
                           </div>
                         )}
                       </div>
