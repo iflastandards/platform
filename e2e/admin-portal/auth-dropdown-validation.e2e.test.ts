@@ -126,8 +126,8 @@ test.describe('Authentication Dropdown URL Validation', () => {
     
     // Ensure it's NOT using hardcoded placeholder URLs
     await expect(logoutLink).not.toHaveAttribute('href', 'https://your-next-app.com/logout');
-    await expect(logoutLink).not.toHaveAttribute('href', 'http://localhost:3007/api/auth/signout'); // Wrong path - should be /auth/signout
-    await expect(logoutLink).not.toHaveAttribute('href', 'http://localhost:3001/auth/signout'); // Wrong port
+    await expect(logoutLink).not.toHaveAttribute('href', 'http://localhost:3007/auth/signout'); // Missing /api prefix
+    await expect(logoutLink).not.toHaveAttribute('href', 'http://localhost:3001/api/auth/signout'); // Wrong port
   });
 
   test('should test "Keep me logged in" checkbox functionality', async ({ page, context }) => {
