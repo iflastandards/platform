@@ -1,24 +1,10 @@
-import NextAuth, { DefaultSession, User } from "next-auth";
+import NextAuth, { User, Session } from "next-auth";
 import { JWT } from "next-auth/jwt";
 import GitHub from "next-auth/providers/github";
 import Credentials from "next-auth/providers/credentials";
 import { createUser } from './mock-auth';
+import { getRoleBasedLandingPage } from './role-based-routing';
 
-declare module "next-auth" {
-  interface Session {
-    user: {
-      id: string;
-      roles: string[];
-    } & DefaultSession["user"];
-  }
-}
-
-declare module "next-auth/jwt" {
-  interface JWT {
-    roles: string[];
-    login: string;
-  }
-}
 
 export const { handlers, auth, signIn, signOut } = NextAuth({
   debug: process.env.NODE_ENV === "development",
@@ -61,6 +47,11 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
   },
   callbacks: {
     async jwt({ token, account, user }) {
+      // Initialize roles if not present
+      if (!token.roles) {
+        token.roles = [];
+      }
+      
       if (account && user) {
         token.accessToken = account.access_token;
         
@@ -153,18 +144,20 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
     async session({ session, token }: { session: Session; token: JWT }) {
       if (session.user) {
         session.user.id = token.sub as string;
-        session.user.roles = token.roles;
+        session.user.roles = token.roles || [];
         session.user.name = token.name;
         session.user.email = token.email;
       }
       return session;
     },
     async redirect({ url, baseUrl }: { url: string; baseUrl: string }) {
-      // Redirect to dashboard after successful sign-in
+      // If URL is already within our app, respect it
       if (url.startsWith(baseUrl)) {
         return url;
       }
-      // Default redirect to dashboard
+      
+      // For sign-in redirects, we need to get the user's session to determine the right landing page
+      // Since we don't have access to session here, we'll use a default and handle smart routing in middleware
       return `${baseUrl}/dashboard`;
     },
   },

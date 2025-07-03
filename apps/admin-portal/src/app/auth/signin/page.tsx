@@ -1,6 +1,6 @@
 import { auth } from "@/app/lib/auth";
 import { redirect } from "next/navigation";
-import { SignIn } from "@/app/components/sign-in";
+import { SignInWithMock } from "@/app/components/sign-in-with-mock";
 
 export default async function SignInPage() {
   const session = await auth();
@@ -23,7 +23,7 @@ export default async function SignInPage() {
             </p>
           </div>
           
-          <SignIn />
+          <SignInWithMock />
           
           <div className="mt-6 text-center">
             <p className="text-xs text-gray-500 dark:text-gray-400">

@@ -20,8 +20,8 @@ export default async function RootLayout({
     <html lang="en">
       <body suppressHydrationWarning={true}>
         <SessionProvider>
-          {process.env.NODE_ENV === 'development' && isMockUser && (
-            <MockUserIndicator user={session.user} />
+          {process.env.NODE_ENV === 'development' && isMockUser && session?.user && (
+            <MockUserIndicator user={session.user!} />
           )}
           {children}
         </SessionProvider>

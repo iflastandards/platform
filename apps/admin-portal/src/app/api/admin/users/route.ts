@@ -12,7 +12,7 @@ export async function GET() {
 
   const principal = {
     id: session.user.id,
-    roles: session.user.roles,
+    roles: session.user.roles || [],
     attributes: {
       // Add any other attributes needed for policy evaluation
     },

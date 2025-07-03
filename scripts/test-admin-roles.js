@@ -541,8 +541,137 @@ async function displayConfiguration(role, namespace, site, user) {
   console.log(`\\n${colors.bold}=== STARTING TEST ENVIRONMENT ===${colors.reset}`);
 }
 
-// Start the demo with mock authentication
-async function startDemo(user) {
+// Helper functions for demo setup
+function getSitePort(siteKey) {
+  const portMap = {
+    portal: 3000,
+    isbdm: 3001,
+    lrm: 3002,
+    frbr: 3003,
+    isbd: 3004,
+    muldicat: 3005,
+    unimarc: 3006,
+    newtest: 3008
+  };
+  return portMap[siteKey] || 3008;
+}
+
+function generateAuthenticationUrl(user, role, targetSite) {
+  // For site-specific roles, create URL that pre-authenticates and redirects to site management
+  if (role.includes('site-')) {
+    const sitePort = getSitePort(targetSite);
+    const siteUrl = `http://localhost:${sitePort}/${targetSite}/`;
+    
+    // Create admin portal URL that will authenticate and redirect to site management
+    const mockUserParam = encodeURIComponent(JSON.stringify(user));
+    const managementUrl = `http://localhost:3007/dashboard/${targetSite}`;
+    return `http://localhost:3007/auth/signin?mockUser=${mockUserParam}&callbackUrl=${encodeURIComponent(managementUrl)}`;
+  }
+  
+  // For namespace or system roles, go to general dashboard
+  const mockUserParam = encodeURIComponent(JSON.stringify(user));
+  const dashboardUrl = 'http://localhost:3007/dashboard';
+  return `http://localhost:3007/auth/signin?mockUser=${mockUserParam}&callbackUrl=${encodeURIComponent(dashboardUrl)}`;
+}
+
+function displayTestingInstructions(user, role, targetSite) {
+  success('🎯 ROLE-BASED TESTING ENVIRONMENT READY!');
+  console.log();
+  
+  log('📋 TESTING SCENARIO:');
+  console.log(`  ${colors.green}•${colors.reset} User is pre-authenticated as: ${colors.cyan}${user.attributes.name}${colors.reset}`);
+  console.log(`  ${colors.green}•${colors.reset} Role: ${colors.yellow}${role}${colors.reset}`);
+  console.log(`  ${colors.green}•${colors.reset} Expected behavior: ${getExpectedBehavior(role, targetSite)}`);
+  console.log();
+  
+  if (role.includes('site-')) {
+    log('🎯 SITE-ADMIN WORKFLOW:');
+    console.log(`  ${colors.green}1.${colors.reset} Browser should open directly to: ${colors.blue}${targetSite} management interface${colors.reset}`);
+    console.log(`  ${colors.green}2.${colors.reset} User should ${colors.yellow}skip the portal${colors.reset} and land on site-specific admin`);
+    console.log(`  ${colors.green}3.${colors.reset} Verify the "Manage Site" functionality works correctly`);
+  } else if (role.includes('namespace-')) {
+    log('🎯 NAMESPACE-ADMIN WORKFLOW:');
+    console.log(`  ${colors.green}1.${colors.reset} Browser should open to: ${colors.blue}admin dashboard${colors.reset}`);
+    console.log(`  ${colors.green}2.${colors.reset} User should see sites within their namespace scope`);
+    console.log(`  ${colors.green}3.${colors.reset} Verify access to multiple sites in the namespace`);
+  } else {
+    log('🎯 SYSTEM-ADMIN WORKFLOW:');
+    console.log(`  ${colors.green}1.${colors.reset} Browser should open to: ${colors.blue}full admin dashboard${colors.reset}`);
+    console.log(`  ${colors.green}2.${colors.reset} User should see all sites and namespaces`);
+    console.log(`  ${colors.green}3.${colors.reset} Verify full system management capabilities`);
+  }
+  
+  console.log();
+  log('🔧 WHAT TO TEST:');
+  console.log(`  ${colors.green}•${colors.reset} Authentication flow (should be seamless)`);
+  console.log(`  ${colors.green}•${colors.reset} Landing page accuracy (correct destination)`);
+  console.log(`  ${colors.green}•${colors.reset} Permission boundaries (what user can/cannot access)`);
+  console.log(`  ${colors.green}•${colors.reset} Navigation between admin portal and sites`);
+  console.log();
+  
+  warning('Press Ctrl+C to stop the testing environment');
+}
+
+function getExpectedBehavior(role, targetSite) {
+  if (role.includes('site-admin')) {
+    return `Direct redirect to ${targetSite} management interface (skip portal)`;
+  } else if (role.includes('site-')) {
+    return `Direct access to ${targetSite} with limited permissions`;
+  } else if (role.includes('namespace-')) {
+    return 'Dashboard with namespace-scoped site access';
+  } else {
+    return 'Full dashboard with access to all sites and namespaces';
+  }
+}
+
+// Helper function for URL checking
+async function checkUrl(url, maxRetries = 30) {
+  for (let i = 0; i < maxRetries; i++) {
+    try {
+      const response = await fetch(url);
+      if (response.ok) return true;
+    } catch (e) {
+      // URL not ready yet
+    }
+    await new Promise(resolve => setTimeout(resolve, 1000));
+    process.stdout.write('.');
+  }
+  return false;
+}
+
+// Open URL in browser
+async function openBrowser(url) {
+  const platform = process.platform;
+  let command;
+
+  if (platform === 'darwin') {
+    command = `open -a "Google Chrome" "${url}"`;
+  } else if (platform === 'win32') {
+    command = `start chrome "${url}"`;
+  } else {
+    command = `google-chrome "${url}" || chromium-browser "${url}" || chromium "${url}"`;
+  }
+
+  try {
+    await execAsync(command);
+  } catch (e) {
+    warning(`Could not open Chrome automatically. Please visit: ${url}`);
+    try {
+      if (platform === 'darwin') {
+        await execAsync(`open "${url}"`);
+      } else if (platform === 'win32') {
+        await execAsync(`start "${url}"`);
+      } else {
+        await execAsync(`xdg-open "${url}"`);
+      }
+    } catch (e2) {
+      warning(`Could not open any browser. Please manually visit: ${url}`);
+    }
+  }
+}
+
+// Start the demo with mock authentication and intelligent routing
+async function startDemo(user, role, namespace, site) {
   log('Setting up mock authentication...');
   
   // Set environment variables for mock auth
@@ -550,32 +679,124 @@ async function startDemo(user) {
   process.env.NODE_ENV = 'development';
   process.env.USE_MOCK_AUTH = 'true';
   
-  log('Starting admin portal and test site...');
+  // Determine which site to start based on user role
+  let targetSite = 'newtest'; // Default for testing
+  let shouldStartMultipleSites = false;
+  
+  if (role.includes('site-') && site) {
+    targetSite = site;
+    log(`Starting ${targetSite} site for site-specific role testing...`);
+  } else if (role.includes('namespace-') && namespace) {
+    // For namespace roles, might start multiple sites or show portal
+    const namespaceSites = NAMESPACES[namespace]?.sites || [];
+    if (namespaceSites.length === 1) {
+      targetSite = namespaceSites[0];
+      log(`Starting ${targetSite} site for ${namespace} namespace...`);
+    } else {
+      shouldStartMultipleSites = true;
+      log(`Starting portal for ${namespace} namespace with multiple sites...`);
+    }
+  } else if (role.includes('system-') || role === 'ifla-admin') {
+    shouldStartMultipleSites = true;
+    log('Starting portal for system-level role...');
+  }
   
   try {
     // Clean up any existing processes
     await execAsync('pnpm ports:kill').catch(() => {});
     
-    // Start the demo script with mock auth
-    const demoProcess = spawn('node', ['scripts/demo-admin-simple.js'], {
-      stdio: 'inherit',
+    // Start admin portal
+    log('Starting admin portal...');
+    const adminProcess = spawn('nx', ['serve', 'admin-portal'], {
+      stdio: ['ignore', 'pipe', 'pipe'],
       env: { ...process.env }
     });
-    
-    // Handle cleanup
+
+    let siteProcess;
+    let portalProcess;
+
+    if (shouldStartMultipleSites) {
+      // Start portal for multi-site management
+      log('Starting portal for multi-site management...');
+      portalProcess = spawn('nx', ['start', 'portal'], {
+        stdio: ['ignore', 'pipe', 'pipe'],
+        env: { ...process.env, DOCS_ENV: 'local' }
+      });
+    } else {
+      // Start specific site
+      log(`Starting ${targetSite} site...`);
+      siteProcess = spawn('nx', ['start', targetSite], {
+        stdio: ['ignore', 'pipe', 'pipe'],
+        env: { ...process.env, DOCS_ENV: 'local' }
+      });
+    }
+
+    // Handle cleanup on exit
     const cleanup = () => {
       log('Cleaning up demo environment...');
-      demoProcess.kill();
+      adminProcess.kill();
+      if (siteProcess) siteProcess.kill();
+      if (portalProcess) portalProcess.kill();
       delete process.env.MOCK_AUTH_USER;
       delete process.env.USE_MOCK_AUTH;
       process.exit(0);
     };
-    
+
     process.on('SIGINT', cleanup);
     process.on('SIGTERM', cleanup);
+
+    // Wait for admin portal to be ready
+    log('Waiting for admin portal to start...');
+    const adminReady = await checkUrl('http://localhost:3007');
+    console.log(); // New line after dots
+
+    if (!adminReady) {
+      error('Admin portal failed to start after 30 seconds');
+      cleanup();
+      return;
+    }
+    success('Admin portal is ready at http://localhost:3007');
+
+    // Wait for site/portal to be ready
+    if (shouldStartMultipleSites) {
+      log('Waiting for portal to start...');
+      const portalReady = await checkUrl('http://localhost:3000');
+      console.log();
+      
+      if (!portalReady) {
+        error('Portal failed to start after 30 seconds');
+        cleanup();
+        return;
+      }
+      success('Portal is ready at http://localhost:3000');
+    } else {
+      const sitePort = getSitePort(targetSite);
+      const siteUrl = `http://localhost:${sitePort}/${targetSite}/`;
+      
+      log(`Waiting for ${targetSite} site to start...`);
+      const siteReady = await checkUrl(siteUrl);
+      console.log();
+
+      if (!siteReady) {
+        error(`${targetSite} site failed to start after 30 seconds`);
+        cleanup();
+        return;
+      }
+      success(`${targetSite} site is ready at ${siteUrl}`);
+    }
+
+    // Generate the appropriate authentication URL
+    const authUrl = generateAuthenticationUrl(user, role, shouldStartMultipleSites ? 'portal' : targetSite);
     
-    // Wait for demo to finish
-    demoProcess.on('exit', cleanup);
+    // Open browser with pre-authentication
+    log('Opening browser with pre-authenticated session...');
+    await openBrowser(authUrl);
+
+    // Display instructions
+    displayTestingInstructions(user, role, shouldStartMultipleSites ? 'portal' : targetSite);
+
+    // Keep processes running
+    await new Promise(() => {}); // Run forever until interrupted
     
   } catch (err) {
     error(`Failed to start demo: ${err.message}`);
@@ -642,10 +863,10 @@ async function main() {
   });
   
   // Display configuration
-  displayConfiguration(role, namespace, site, mockUser);
+  await displayConfiguration(role, namespace, site, mockUser);
   
-  // Start demo
-  await startDemo(mockUser);
+  // Start demo with role-based routing
+  await startDemo(mockUser, role, namespace, site);
 }
 
 // Run the script
