@@ -41,18 +41,21 @@ const AuthDropdownNavbarItem: React.FC = () => {
   const isEditor = teams?.includes("editors");
 
   return (
-    <div className="navbar__item dropdown">
-      <button className="dropdown__label">
-        {username ?? "Account"} ▼
-      </button>
+    <div className="navbar__item navbar__item--show-mobile dropdown dropdown--hoverable dropdown--right">
+      <a className="navbar__link" role="button" tabIndex={0}>
+        {username ?? "Account"}
+        <svg width="8" height="8" className="dropdown__caret" viewBox="0 0 16 16">
+          <path fillRule="evenodd" d="M1.646 4.646a.5.5 0 0 1 .708 0L8 10.293l5.646-5.647a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708z"/>
+        </svg>
+      </a>
       <ul className="dropdown__menu">
         {isEditor && (
           <li>
-            <a href={adminConfig.dashboardUrl}>Manage</a>
+            <a className="dropdown__link" href={adminConfig.dashboardUrl}>Manage</a>
           </li>
         )}
         <li>
-          <label style={{ cursor: "pointer" }}>
+          <label className="dropdown__link" style={{ cursor: "pointer", display: "flex", alignItems: "center" }}>
             <input
               type="checkbox"
               checked={!!session.keepMeLoggedIn}
@@ -65,51 +68,9 @@ const AuthDropdownNavbarItem: React.FC = () => {
           </label>
         </li>
         <li>
-          <a href={adminConfig.signoutUrl}>Logout</a>
+          <a className="dropdown__link" href={adminConfig.signoutUrl}>Logout</a>
         </li>
       </ul>
-      <style>{`
-        .dropdown {
-          position: relative;
-          display: inline-block;
-        }
-        .dropdown__label {
-          background: none;
-          border: none;
-          cursor: pointer;
-          font: inherit;
-        }
-        .dropdown__menu {
-          display: none;
-          position: absolute;
-          right: 0;
-          background: var(--ifm-navbar-background-color, #fff);
-          box-shadow: 0 2px 8px rgba(0,0,0,0.15);
-          min-width: 180px;
-          z-index: 100;
-          margin: 0;
-          padding: 0.5rem 0;
-          list-style: none;
-        }
-        .dropdown:hover .dropdown__menu,
-        .dropdown:focus-within .dropdown__menu {
-          display: block;
-        }
-        .dropdown__menu li {
-          padding: 0.5rem 1rem;
-        }
-        .dropdown__menu li a,
-        .dropdown__menu li label {
-          color: var(--ifm-navbar-link-color, #222);
-          text-decoration: none;
-          display: block;
-          width: 100%;
-        }
-        .dropdown__menu li a:hover,
-        .dropdown__menu li label:hover {
-          background: var(--ifm-navbar-link-hover-background, #f5f5f5);
-        }
-      `}</style>
     </div>
   );
 };
