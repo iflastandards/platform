@@ -3,9 +3,9 @@
 ---
 apiVersion: api.cerbos.cloud/v1
 labels:
-  latest:         # 'latest' label pointing to the HEAD of the main branch
-    branch: main
   development:    # 'development' label pointing to the HEAD of the dev branch
     branch: dev
-  stable:         # 'stable' label pointing to latest stable release
+  preview:        # 'preview' label pointing to the HEAD of the dev branch (for preview environments)
+    branch: dev
+  production:     # 'production' label pointing to the HEAD of the main branch
     branch: main

@@ -132,6 +132,62 @@ const checkSession = async () => {
 };
 ```
 
+## Cerbos Authorization Integration
+
+This section details the integration of Cerbos for fine-grained authorization within the Admin Portal, including how Policy Decision Points (PDPs) are configured across different environments using Cerbos Hub deployment labels.
+
+### 1. Policy Decision Point (PDP) Configuration
+
+The Cerbos PDP URL and the Cerbos Hub secret are managed via environment variables, allowing for flexible deployment across various environments.
+
+*   **`local` (localhost)**:
+    *   **PDP Configuration**: For local development, the Cerbos PDP typically runs locally and loads policies directly from the `cerbos/policies` directory. It does not fetch policies from Cerbos Hub using a label.
+    *   **Environment Variables**:
+        *   `NEXT_PUBLIC_CERBOS_PDP_URL`: `http://localhost:3593` (or your local PDP address)
+        *   `CERBOS_HUB_SECRET`: (Not strictly required for local PDP, but can be set for consistency)
+        *   `CERBOS_HUB_LABEL`: (Not applicable)
+
+*   **`development` (jonphipps.github.io/standards-dev) & `preview` (iflastandards.github.io/standards-dev)**:
+    *   **PDP Configuration**: Cerbos PDP instances for these environments are configured to connect to Cerbos Hub and fetch policies using the `development` label.
+    *   **Environment Variables (set on hosting platform)**:
+        *   `NEXT_PUBLIC_CERBOS_PDP_URL`: URL of the development/preview Cerbos PDP instance (e.g., `https://your-dev-pdp.cerbos.cloud`).
+        *   `CERBOS_HUB_SECRET`: Your Cerbos Hub secret key (securely stored).
+        *   `CERBOS_HUB_LABEL`: `development`
+
+*   **`production` (iflastandards.info)**:
+    *   **PDP Configuration**: The production Cerbos PDP instance is configured to connect to Cerbos Hub and fetch policies using the `stable` label.
+    *   **Environment Variables (set on hosting platform)**:
+        *   `NEXT_PUBLIC_CERBOS_PDP_URL`: URL of the production Cerbos PDP instance (e.g., `https://your-prod-pdp.cerbos.cloud`).
+        *   `CERBOS_HUB_SECRET`: Your Cerbos Hub secret key (securely stored).
+        *   `CERBOS_HUB_LABEL`: `stable`
+
+### 2. Cerbos Hub Deployment Labels
+
+The `.cerbos-hub.yaml` file at the root of the repository defines the mapping between deployment labels and Git references:
+
+```yaml
+---
+apiVersion: api.cerbos.cloud/v1
+labels:
+  latest:         # 'latest' label pointing to the HEAD of the main branch
+    branch: main
+  development:    # 'development' label pointing to the HEAD of the dev branch
+    branch: dev
+  stable:         # 'stable' label pointing to latest stable release
+    branch: main
+```
+
+*   The `development` label ensures that policies from the `dev` branch are deployed to the development and preview environments.
+*   The `stable` label ensures that policies from the `main` branch are deployed to the production environment.
+
+### 3. `cerbos.ts` Configuration
+
+The `apps/admin-portal/src/lib/cerbos.ts` file is configured to use `process.env.NEXT_PUBLIC_CERBOS_PDP_URL` for the Cerbos PDP URL, ensuring environment-specific connectivity.
+
+### 4. Usage in Application
+
+Authorization checks are performed using the `checkPermissions` function (and its helpers like `checkNamespacePermission`, `checkSitePermission`, etc.) within the Admin Portal's components and API routes. The `principalFromSession` function is used to construct the `Principal` object from the authenticated user's NextAuth session data.
+
 ## E2E Testing Architecture
 
 ### 1. Enhanced NX Integration
