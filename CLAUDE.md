@@ -775,8 +775,33 @@ packages/theme/src/tests/config/
 e2e/
 ├── site-validation.spec.ts
 ├── portal-smoke.spec.ts
+├── admin-portal/
+│   ├── auth.e2e.test.ts
+│   ├── cross-site-auth-communication.e2e.test.ts
+│   ├── auth-dropdown-validation.e2e.test.ts
+│   └── site-management-workflow.e2e.test.ts
 └── vocabulary-functionality.spec.ts
 ```
+
+#### E2E Authentication Testing Guidelines
+**Critical**: All authentication E2E tests must validate URL attributes to prevent hardcoded URL regressions:
+
+```typescript
+// ✅ Correct: Validate href attributes against environment config
+const loginLink = page.getByRole('link', { name: /editor login/i });
+await expect(loginLink).toHaveAttribute('href', adminConfig.signinUrl);
+
+// ✅ Regression tests: Ensure NOT using hardcoded URLs
+await expect(loginLink).not.toHaveAttribute('href', 'https://your-next-app.com/login');
+await expect(loginLink).not.toHaveAttribute('href', 'http://localhost:3001/signin');
+```
+
+**E2E Test Coverage Requirements for Authentication:**
+- **URL Validation**: All authentication dropdown links (Login, Manage, Logout)
+- **Role-based Access**: Verify "Manage" link visibility based on user roles
+- **Checkbox Functionality**: "Keep me logged in" persistence and cross-tab sync
+- **Error Handling**: Graceful degradation when admin portal is unreachable
+- **Environment Awareness**: URL generation works across all environments
 
 ## Branch-Aware Testing and Git Hooks
 
