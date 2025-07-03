@@ -1,12 +1,21 @@
 import { test, expect } from '@playwright/test';
+import { 
+  setupMockAuth, 
+  clearAuth, 
+  setupUnauthenticatedState, 
+  setupExpiredSession 
+} from '../utils/auth-helpers';
 
 test.describe('Admin Portal Authentication', () => {
   test.beforeEach(async ({ page }) => {
-    // Clear any existing sessions
-    await page.context().clearCookies();
+    // Clear any existing sessions and stop route mocking
+    await clearAuth(page.context());
   });
 
   test('should redirect unauthenticated users to sign-in', async ({ page }) => {
+    // Setup unauthenticated state
+    await setupUnauthenticatedState(page.context());
+    
     // Try to access admin portal dashboard directly
     await page.goto('http://localhost:3007/dashboard/newtest');
     
@@ -19,6 +28,9 @@ test.describe('Admin Portal Authentication', () => {
   });
 
   test('should handle OAuth callback flow', async ({ page }) => {
+    // Setup unauthenticated state for signin page
+    await setupUnauthenticatedState(page.context());
+    
     // Start OAuth flow
     await page.goto('http://localhost:3007/auth/signin');
     
@@ -31,8 +43,8 @@ test.describe('Admin Portal Authentication', () => {
   });
 
   test('should redirect to requested site after authentication', async ({ page }) => {
-    // This test would require authentication to be set up
-    // In a real scenario, we'd mock the OAuth flow or use test credentials
+    // Setup unauthenticated state first
+    await setupUnauthenticatedState(page.context());
     
     // For demo, check that the redirect parameter is preserved
     await page.goto('http://localhost:3007/site/newtest?from=external');
@@ -42,37 +54,21 @@ test.describe('Admin Portal Authentication', () => {
   });
 
   test('should display user info when authenticated', async ({ page, context }) => {
-    // Mock authentication by setting session cookie
-    await context.addCookies([
-      {
-        name: 'next-auth.session-token',
-        value: 'mock-session-token',
-        domain: 'localhost',
-        path: '/',
-        httpOnly: true,
-        secure: false,
-      },
-    ]);
+    // Setup authenticated state with admin user
+    await setupMockAuth(context, 'admin');
 
     await page.goto('http://localhost:3007/dashboard/newtest');
     
-    // Should see user interface (this would require proper session mocking)
-    // For demo, check that we're not redirected to sign-in
+    // Should see user interface (not redirected to sign-in)
     await expect(page).not.toHaveURL(/.*signin/);
+    
+    // Should be able to access the dashboard
+    await expect(page).toHaveURL('http://localhost:3007/dashboard/newtest');
   });
 
   test('should sign out successfully', async ({ page, context }) => {
-    // Set up authenticated state
-    await context.addCookies([
-      {
-        name: 'next-auth.session-token',
-        value: 'mock-session-token',
-        domain: 'localhost',
-        path: '/',
-        httpOnly: true,
-        secure: false,
-      },
-    ]);
+    // Setup authenticated state with admin user
+    await setupMockAuth(context, 'admin');
 
     await page.goto('http://localhost:3007/dashboard/newtest');
     
@@ -87,17 +83,8 @@ test.describe('Admin Portal Authentication', () => {
   });
 
   test('should handle session expiration gracefully', async ({ page, context }) => {
-    // Set up expired session
-    await context.addCookies([
-      {
-        name: 'next-auth.session-token',
-        value: 'expired-session-token',
-        domain: 'localhost',
-        path: '/',
-        httpOnly: true,
-        secure: false,
-      },
-    ]);
+    // Setup expired session state
+    await setupExpiredSession(context);
 
     await page.goto('http://localhost:3007/dashboard/newtest');
     
@@ -106,6 +93,9 @@ test.describe('Admin Portal Authentication', () => {
   });
 
   test('should prevent unauthorized site access', async ({ page }) => {
+    // Setup unauthenticated state
+    await setupUnauthenticatedState(page.context());
+    
     // Try to access a restricted site
     await page.goto('http://localhost:3007/dashboard/restricted-site');
     
