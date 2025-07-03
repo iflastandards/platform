@@ -2,9 +2,9 @@
 # This connects the repository to Cerbos Hub for GitOps policy management
 ---
 apiVersion: api.cerbos.cloud/v1
-git:
+source:
   git:
-  workDir: cerbos
+    workDir: cerbos
 labels:
   latest:         # 'latest' label pointing to the HEAD of the main branch
     branch: main
