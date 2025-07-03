@@ -42,3 +42,4 @@ out
 settings.json
 playwright-report
 .env.local
+/conf.yaml
