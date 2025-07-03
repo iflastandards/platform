@@ -13,6 +13,8 @@ test.describe('Cross-Site Authentication Communication', () => {
   test.beforeEach(async ({ page }) => {
     // Clear any existing sessions and localStorage
     await page.context().clearCookies();
+    // Navigate to a page first, then clear localStorage
+    await page.goto('http://localhost:3008/newtest/');
     await page.evaluate(() => {
       localStorage.clear();
       sessionStorage.clear();

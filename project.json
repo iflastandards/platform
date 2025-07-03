@@ -20,7 +20,9 @@
           "!dist/**/*",
           "!build/**/*",
           "!.nx/**/*",
-          "!**/.next/**/*"
+          "!**/.next/**/*",
+          "!playwright-report/**/*",
+          "!test-results/**/*"
         ]
       }
     },

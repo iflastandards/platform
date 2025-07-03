@@ -42,9 +42,9 @@ export const AuthStatus: React.FC = () => {
       });
 
       if (response.ok) {
-        const session: AuthSession = await response.json();
+        const session: AuthSession | null = await response.json();
         
-        if (session.user) {
+        if (session && session.user) {
           const authStatus = {
             isAuthenticated: true,
             username: session.user.name || session.user.email,
