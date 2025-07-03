@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react';
+import { getAdminPortalConfigAuto } from '../config/siteConfig';
 
 interface AuthSession {
   isAuthenticated: boolean;
@@ -7,8 +8,6 @@ interface AuthSession {
   keepMeLoggedIn?: boolean;
   loading: boolean;
 }
-
-const ADMIN_PORTAL_URL = 'http://localhost:3007';
 
 /**
  * Custom hook to manage authentication state from the admin-portal
@@ -42,7 +41,8 @@ export const useAdminSession = () => {
   // Check session from admin-portal
   const checkSession = async (): Promise<AuthSession> => {
     try {
-      const response = await fetch(`${ADMIN_PORTAL_URL}/api/auth/session`, {
+      const adminConfig = getAdminPortalConfigAuto();
+      const response = await fetch(adminConfig.sessionApiUrl, {
         credentials: 'include',
         headers: {
           'Accept': 'application/json',
@@ -98,7 +98,8 @@ export const useAdminSession = () => {
   const signOut = async () => {
     try {
       // Call admin-portal signout
-      await fetch(`${ADMIN_PORTAL_URL}/api/auth/signout`, {
+      const adminConfig = getAdminPortalConfigAuto();
+      await fetch(adminConfig.signoutUrl, {
         method: 'POST',
         credentials: 'include'
       });
