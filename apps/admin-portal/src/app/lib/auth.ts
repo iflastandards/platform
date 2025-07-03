@@ -1,8 +1,7 @@
 import NextAuth from "next-auth"
 import GitHub from "next-auth/providers/github"
-import type { NextAuthConfig } from "next-auth"
 
-const authOptions: NextAuthConfig = {
+export const { handlers, auth, signIn, signOut } = NextAuth({
   debug: process.env.NODE_ENV === "development",
   providers: [
     GitHub({
@@ -120,6 +119,4 @@ const authOptions: NextAuthConfig = {
       return `${baseUrl}/dashboard`;
     },
   },
-};
-
-export const { handlers, auth, signIn, signOut } = NextAuth(authOptions);
+});
