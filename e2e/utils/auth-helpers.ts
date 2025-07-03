@@ -1,4 +1,4 @@
-import { BrowserContext, Page } from '@playwright/test';
+import { BrowserContext } from '@playwright/test';
 
 // Test session data for different user types
 export const TEST_SESSIONS = {
