@@ -1,0 +1,15 @@
+# System Administrator Test User
+# Full access to all namespaces and sites
+---
+apiVersion: api.cerbos.dev/v1
+description: "System administrator with full access"
+principals:
+  system_admin:
+    id: "system-admin"
+    roles: ["user", "system-admin"]
+    attributes:
+      name: "System Administrator"
+      email: "admin@ifla.org"
+      github_username: "ifla-admin"
+      # System admin doesn't need specific namespace/site assignments
+      # Global roles provide access to everything

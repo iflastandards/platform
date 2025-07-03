@@ -1,7 +1,7 @@
 import type { Session } from 'next-auth';
 
 // Mock session data for testing
-export const mockSession: Session = {
+export const mockSession = {
   user: {
     id: 'test-user-id',
     name: 'Test User',
@@ -9,7 +9,7 @@ export const mockSession: Session = {
     image: 'https://avatars.githubusercontent.com/u/12345',
   },
   expires: new Date(Date.now() + 24 * 60 * 60 * 1000).toISOString(), // 24 hours from now
-};
+} as Session;
 
 export const mockUnauthorizedSession = null;
 

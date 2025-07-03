@@ -1,0 +1,200 @@
+# Test Scenarios for RBAC System
+# Comprehensive test cases covering different role combinations and permissions
+---
+apiVersion: api.cerbos.dev/v1
+description: "Test scenarios for IFLA Standards RBAC system"
+
+tests:
+  # System Admin Tests
+  - name: "System admin can manage any namespace"
+    input:
+      principal: "system_admin"
+      resource: "namespace_isbd"
+      actions: ["view", "edit", "manage", "delete", "create_site", "manage_users"]
+    expected: EFFECT_ALLOW
+    
+  - name: "System admin can manage any site"
+    input:
+      principal: "system_admin"
+      resource: "site_isbdm"
+      actions: ["view", "edit", "manage", "configure", "manage_users"]
+    expected: EFFECT_ALLOW
+    
+  # Namespace Admin Tests  
+  - name: "ISBD admin can manage ISBD namespace"
+    input:
+      principal: "isbd_admin"
+      resource: "namespace_isbd"
+      actions: ["view", "edit", "manage", "create_site", "manage_users"]
+    expected: EFFECT_ALLOW
+    
+  - name: "ISBD admin can manage sites in ISBD namespace"
+    input:
+      principal: "isbd_admin"
+      resource: "site_isbdm"
+      actions: ["view", "edit", "manage", "configure"]
+    expected: EFFECT_ALLOW
+    
+  - name: "ISBD admin cannot manage LRM namespace"
+    input:
+      principal: "isbd_admin"
+      resource: "namespace_lrm"
+      actions: ["manage", "delete"]
+    expected: EFFECT_DENY
+    
+  # Site Admin Tests
+  - name: "ISBDM admin can manage ISBDM site"
+    input:
+      principal: "isbdm_admin"
+      resource: "site_isbdm"
+      actions: ["view", "edit", "manage", "configure"]
+    expected: EFFECT_ALLOW
+    
+  - name: "ISBDM admin cannot manage other sites"
+    input:
+      principal: "isbdm_admin"
+      resource: "site_lrm"
+      actions: ["manage", "configure"]
+    expected: EFFECT_DENY
+    
+  # Editor Tests
+  - name: "ISBD editor can edit content in ISBD namespace"
+    input:
+      principal: "isbd_editor"
+      resource: "site_isbdm"
+      actions: ["view", "edit", "create", "update"]
+    expected: EFFECT_ALLOW
+    
+  - name: "ISBDM editor can edit ISBDM site content"
+    input:
+      principal: "isbdm_editor"
+      resource: "site_isbdm"
+      actions: ["view", "edit", "create", "update"]
+    expected: EFFECT_ALLOW
+    
+  - name: "ISBDM editor cannot manage site configuration"
+    input:
+      principal: "isbdm_editor"
+      resource: "site_isbdm"
+      actions: ["manage", "configure", "manage_users"]
+    expected: EFFECT_DENY
+    
+  # Reviewer Tests
+  - name: "LRM reviewer can review LRM content"
+    input:
+      principal: "lrm_reviewer"
+      resource: "site_lrm"
+      actions: ["view", "review", "approve", "reject", "comment"]
+    expected: EFFECT_ALLOW
+    
+  - name: "Cross-namespace reviewer can review multiple namespaces"
+    input:
+      principal: "cross_reviewer"
+      resource: "site_isbdm"
+      actions: ["view", "review", "approve"]
+    expected: EFFECT_ALLOW
+    
+  # Translator Tests
+  - name: "Spanish translator can translate ISBD content"
+    input:
+      principal: "spanish_translator"
+      resource:
+        kind: "translation"
+        id: "isbd_spanish_translation"
+        attributes:
+          namespace: "ISBD"
+          siteKey: "isbdm"
+          sourceLanguage: "en"
+          targetLanguage: "es"
+      actions: ["view", "edit", "create", "update"]
+    expected: EFFECT_ALLOW
+    
+  - name: "Spanish translator cannot translate to unsupported language"
+    input:
+      principal: "spanish_translator"
+      resource:
+        kind: "translation"
+        id: "isbd_german_translation"
+        attributes:
+          namespace: "ISBD"
+          siteKey: "isbdm"
+          sourceLanguage: "en"
+          targetLanguage: "de"
+      actions: ["edit", "create"]
+    expected: EFFECT_DENY
+    
+  - name: "Site-specific translator limited to their site"
+    input:
+      principal: "isbdm_translator"
+      resource:
+        kind: "translation"
+        id: "isbd_japanese_translation"
+        attributes:
+          namespace: "ISBD"
+          siteKey: "isbd"  # Different site in same namespace
+          sourceLanguage: "en"
+          targetLanguage: "ja"
+      actions: ["edit", "create"]
+    expected: EFFECT_DENY
+    
+  # User Admin Tests
+  - name: "Namespace admin can manage users in their namespace"
+    input:
+      principal: "isbd_admin"
+      resource:
+        kind: "user_admin"
+        id: "assign_isbd_roles"
+        attributes:
+          scope: "namespace"
+          namespace: "ISBD"
+          targetRole: "editor"
+      actions: ["assign_namespace_roles"]
+    expected: EFFECT_ALLOW
+    
+  - name: "Site admin can manage users for their site"
+    input:
+      principal: "isbdm_admin"
+      resource:
+        kind: "user_admin"
+        id: "assign_isbdm_roles"
+        attributes:
+          scope: "site"
+          siteKey: "isbdm"
+          targetRole: "editor"
+      actions: ["assign_site_roles"]
+    expected: EFFECT_ALLOW
+    
+  - name: "Cannot escalate privileges beyond own level"
+    input:
+      principal: "isbdm_admin"
+      resource:
+        kind: "user_admin"
+        id: "escalate_privileges"
+        attributes:
+          scope: "site"
+          siteKey: "isbdm"
+          targetRole: "system-admin"
+      actions: ["assign_site_roles"]
+    expected: EFFECT_DENY
+    
+  # Mixed Role Tests
+  - name: "Mixed roles user has appropriate access"
+    input:
+      principal: "mixed_roles"
+      resource: "site_portal"
+      actions: ["view", "edit", "manage", "configure"]
+    expected: EFFECT_ALLOW  # Admin of portal site
+    
+  - name: "Mixed roles user can edit in ISBD namespace"
+    input:
+      principal: "mixed_roles"
+      resource: "site_isbdm"
+      actions: ["view", "edit", "create", "update"]
+    expected: EFFECT_ALLOW  # Editor in ISBD namespace
+    
+  - name: "Mixed roles user can review in LRM namespace"
+    input:
+      principal: "mixed_roles"
+      resource: "site_lrm"
+      actions: ["view", "review", "approve", "comment"]
+    expected: EFFECT_ALLOW  # Reviewer in LRM namespace

@@ -1,0 +1,47 @@
+# Namespace Administrator Test Users
+# Administrators for specific namespaces/review groups
+---
+apiVersion: api.cerbos.dev/v1
+description: "Namespace administrators for different review groups"
+principals:
+  isbd_admin:
+    id: "isbd-admin"
+    roles: ["user"]
+    attributes:
+      name: "ISBD Namespace Admin"
+      email: "isbd-admin@ifla.org"
+      github_username: "isbd-admin"
+      namespaces:
+        ISBD: "admin"
+      # Namespace admin automatically gets access to all sites in namespace
+      
+  lrm_admin:
+    id: "lrm-admin"
+    roles: ["user"]
+    attributes:
+      name: "LRM Namespace Admin"
+      email: "lrm-admin@ifla.org"
+      github_username: "lrm-admin"
+      namespaces:
+        LRM: "admin"
+        
+  fr_admin:
+    id: "fr-admin"
+    roles: ["user"]
+    attributes:
+      name: "FR Namespace Admin"
+      email: "fr-admin@ifla.org"
+      github_username: "fr-admin"
+      namespaces:
+        FR: "admin"
+        
+  multi_namespace_admin:
+    id: "multi-admin"
+    roles: ["user"]
+    attributes:
+      name: "Multi-Namespace Admin"
+      email: "multi-admin@ifla.org"
+      github_username: "multi-admin"
+      namespaces:
+        ISBD: "admin"
+        LRM: "admin"

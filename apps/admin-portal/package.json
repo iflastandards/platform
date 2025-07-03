@@ -1,0 +1,5 @@
+{
+	"dependencies": {
+		"@cerbos/http": "^0.22.1"
+	}
+}

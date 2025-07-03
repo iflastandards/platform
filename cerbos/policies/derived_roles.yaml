@@ -1,0 +1,116 @@
+# Derived Roles Policy
+# Defines how roles are derived from principal attributes
+---
+apiVersion: api.cerbos.dev/v1
+derivedRoles:
+  name: ifla_standards_roles
+  definitions:
+    # Namespace-level derived roles
+    - name: namespace_admin
+      parentRoles: ["user"]
+      condition:
+        match:
+          any:
+            of:
+              # Global admins have namespace admin rights everywhere
+              - expr: '"system-admin" in P.roles'
+              - expr: '"ifla-admin" in P.roles'
+              # User has admin role for this specific namespace
+              - expr: 'P.attr.namespaces.exists(n, n == R.attr.namespace && P.attr.namespaces[n] == "admin")'
+              
+    - name: namespace_editor
+      parentRoles: ["user"]
+      condition:
+        match:
+          any:
+            of:
+              # Namespace admins also have editor rights
+              - expr: 'P.attr.namespaces.exists(n, n == R.attr.namespace && P.attr.namespaces[n] == "admin")'
+              # User has editor role for this namespace
+              - expr: 'P.attr.namespaces.exists(n, n == R.attr.namespace && P.attr.namespaces[n] == "editor")'
+              
+    - name: namespace_reviewer
+      parentRoles: ["user"]
+      condition:
+        match:
+          any:
+            of:
+              # Higher roles include reviewer privileges
+              - expr: 'P.attr.namespaces.exists(n, n == R.attr.namespace && P.attr.namespaces[n] in ["admin", "editor"])'
+              # User has reviewer role for this namespace
+              - expr: 'P.attr.namespaces.exists(n, n == R.attr.namespace && P.attr.namespaces[n] == "reviewer")'
+              
+    - name: namespace_translator
+      parentRoles: ["user"]
+      condition:
+        match:
+          any:
+            of:
+              # Higher roles include translator privileges
+              - expr: 'P.attr.namespaces.exists(n, n == R.attr.namespace && P.attr.namespaces[n] in ["admin", "editor"])'
+              # User has translator role for this namespace
+              - expr: 'P.attr.namespaces.exists(n, n == R.attr.namespace && P.attr.namespaces[n] == "translator")'
+              
+    - name: namespace_contributor
+      parentRoles: ["user"]
+      condition:
+        match:
+          any:
+            of:
+              # Higher roles include contributor privileges
+              - expr: 'P.attr.namespaces.exists(n, n == R.attr.namespace && P.attr.namespaces[n] in ["admin", "editor", "reviewer", "translator"])'
+              # User has contributor role for this namespace
+              - expr: 'P.attr.namespaces.exists(n, n == R.attr.namespace && P.attr.namespaces[n] == "contributor")'
+              
+    # Site-level derived roles
+    - name: site_admin
+      parentRoles: ["user"]
+      condition:
+        match:
+          any:
+            of:
+              # Global admins have site admin rights everywhere
+              - expr: '"system-admin" in P.roles'
+              - expr: '"ifla-admin" in P.roles'
+              # Namespace admins have site admin rights in their namespace
+              - expr: 'P.attr.namespaces.exists(n, n == R.attr.namespace && P.attr.namespaces[n] == "admin")'
+              # User has admin role for this specific site
+              - expr: 'P.attr.sites.exists(s, s == R.attr.siteKey && P.attr.sites[s] == "admin")'
+              
+    - name: site_editor
+      parentRoles: ["user"]
+      condition:
+        match:
+          any:
+            of:
+              # Higher roles include editor privileges
+              - expr: 'P.attr.namespaces.exists(n, n == R.attr.namespace && P.attr.namespaces[n] in ["admin", "editor"])'
+              - expr: 'P.attr.sites.exists(s, s == R.attr.siteKey && P.attr.sites[s] == "admin")'
+              # User has editor role for this site
+              - expr: 'P.attr.sites.exists(s, s == R.attr.siteKey && P.attr.sites[s] == "editor")'
+              
+    - name: site_translator
+      parentRoles: ["user"]
+      condition:
+        match:
+          any:
+            of:
+              # Namespace translator role applies to all sites in namespace
+              - expr: 'P.attr.namespaces.exists(n, n == R.attr.namespace && P.attr.namespaces[n] in ["admin", "editor", "translator"])'
+              # Higher site roles include translator privileges
+              - expr: 'P.attr.sites.exists(s, s == R.attr.siteKey && P.attr.sites[s] in ["admin", "editor"])'
+              # User has translator role for this site
+              - expr: 'P.attr.sites.exists(s, s == R.attr.siteKey && P.attr.sites[s] == "translator")'
+              
+    - name: site_contributor
+      parentRoles: ["user"]
+      condition:
+        match:
+          any:
+            of:
+              # Namespace contributor role applies to all sites in namespace
+              - expr: 'P.attr.namespaces.exists(n, n == R.attr.namespace && P.attr.namespaces[n] in ["admin", "editor", "reviewer", "translator", "contributor"])'
+              # Higher site roles include contributor privileges
+              - expr: 'P.attr.sites.exists(s, s == R.attr.siteKey && P.attr.sites[s] in ["admin", "editor", "translator"])'
+              # User has contributor role for this site
+              - expr: 'P.attr.sites.exists(s, s == R.attr.siteKey && P.attr.sites[s] == "contributor")'

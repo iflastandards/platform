@@ -141,6 +141,7 @@
     "demo:hooks": "./scripts/demo-hooks.sh",
     "demo:admin": "./scripts/demo-admin-integration.sh",
     "demo:admin:simple": "node scripts/demo-admin-simple.js",
+    "test:admin:roles": "node scripts/test-admin-roles.js",
     "typecheck": "nx affected --target=typecheck --parallel=3",
     "typecheck:all": "nx run-many --target=typecheck --all --parallel=3",
     "lint:all": "nx run-many --target=lint --all --parallel=3",

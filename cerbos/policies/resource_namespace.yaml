@@ -1,0 +1,53 @@
+# Namespace Resource Policy
+# Defines permissions for namespace-level operations (review groups)
+---
+apiVersion: api.cerbos.dev/v1
+resourcePolicy:
+  version: "default"
+  resource: "namespace"
+  importDerivedRoles:
+    - ifla_standards_roles
+  rules:
+    # System administrators can do everything
+    - actions: ["*"]
+      effect: EFFECT_ALLOW
+      roles: ["system-admin", "ifla-admin"]
+      
+    # Namespace administrators can manage their namespace
+    - actions: ["view", "edit", "manage", "delete", "create_site", "manage_users"]
+      effect: EFFECT_ALLOW
+      derivedRoles: ["namespace_admin"]
+      
+    # Namespace editors can edit content across the namespace
+    - actions: ["view", "edit", "create", "update"]
+      effect: EFFECT_ALLOW
+      derivedRoles: ["namespace_editor"]
+      
+    # Namespace reviewers can review and approve content
+    - actions: ["view", "review", "approve", "reject", "comment"]
+      effect: EFFECT_ALLOW
+      derivedRoles: ["namespace_reviewer"]
+      
+    # Namespace translators can translate content
+    - actions: ["view", "translate", "edit_translation"]
+      effect: EFFECT_ALLOW
+      derivedRoles: ["namespace_translator"]
+      
+    # Namespace contributors can propose changes
+    - actions: ["view", "contribute", "propose", "comment"]
+      effect: EFFECT_ALLOW
+      derivedRoles: ["namespace_contributor"]
+      
+    # Anyone can view public namespaces
+    - actions: ["view"]
+      effect: EFFECT_ALLOW
+      roles: ["*"]
+      condition:
+        match:
+          expr: R.attr.visibility == "public"
+          
+  schemas:
+    principalSchema:
+      ref: cerbos://schemas/principal.json
+    resourceSchema:
+      ref: cerbos://schemas/namespace.json

@@ -1,0 +1,78 @@
+# Translation Resource Policy
+# Defines permissions for translation workflow and management
+---
+apiVersion: api.cerbos.dev/v1
+resourcePolicy:
+  version: "default"
+  resource: "translation"
+  importDerivedRoles:
+    - ifla_standards_roles
+  rules:
+    # System administrators can manage all translations
+    - actions: ["*"]
+      effect: EFFECT_ALLOW
+      roles: ["system-admin", "ifla-admin"]
+      
+    # Namespace administrators can manage translations in their namespace
+    - actions: ["view", "edit", "create", "delete", "approve", "assign_translators"]
+      effect: EFFECT_ALLOW
+      derivedRoles: ["namespace_admin"]
+      
+    # Site administrators can manage translations for their site
+    - actions: ["view", "edit", "create", "delete", "approve", "assign_translators"]
+      effect: EFFECT_ALLOW
+      derivedRoles: ["site_admin"]
+      
+    # Namespace translators can translate content in their namespace
+    - actions: ["view", "edit", "create", "update", "submit_for_review"]
+      effect: EFFECT_ALLOW
+      derivedRoles: ["namespace_translator"]
+      condition:
+        match:
+          expr: |
+            R.attr.targetLanguage in P.attr.languages ||
+            R.attr.sourceLanguage in P.attr.languages
+            
+    # Site translators can translate content for their site
+    - actions: ["view", "edit", "create", "update", "submit_for_review"]
+      effect: EFFECT_ALLOW
+      derivedRoles: ["site_translator"]
+      condition:
+        match:
+          expr: |
+            R.attr.targetLanguage in P.attr.languages ||
+            R.attr.sourceLanguage in P.attr.languages
+            
+    # Translators can only edit translations in languages they're qualified for
+    - actions: ["edit", "create", "update"]
+      effect: EFFECT_DENY
+      derivedRoles: ["namespace_translator", "site_translator"]
+      condition:
+        match:
+          expr: |
+            !(R.attr.targetLanguage in P.attr.languages) &&
+            !(R.attr.sourceLanguage in P.attr.languages)
+            
+    # Reviewers can approve/reject translations
+    - actions: ["view", "review", "approve", "reject", "comment"]
+      effect: EFFECT_ALLOW
+      derivedRoles: ["namespace_reviewer"]
+      
+    # Anyone can view approved translations
+    - actions: ["view"]
+      effect: EFFECT_ALLOW
+      roles: ["*"]
+      condition:
+        match:
+          expr: R.attr.status == "approved"
+          
+    # Integration with Crowdin - translators can sync with external platform
+    - actions: ["crowdin_sync", "crowdin_push", "crowdin_pull"]
+      effect: EFFECT_ALLOW
+      derivedRoles: ["namespace_translator", "site_translator"]
+      
+  schemas:
+    principalSchema:
+      ref: cerbos://schemas/principal.json
+    resourceSchema:
+      ref: cerbos://schemas/translation.json

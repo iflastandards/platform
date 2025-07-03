@@ -1,0 +1,69 @@
+# Translator Test Users
+# Users with translation responsibilities and language qualifications
+---
+apiVersion: api.cerbos.dev/v1
+description: "Translators with different language qualifications and scope"
+principals:
+  spanish_translator:
+    id: "spanish-translator"
+    roles: ["user"]
+    attributes:
+      name: "Spanish Translator"
+      email: "spanish-translator@ifla.org"
+      github_username: "spanish-translator"
+      namespaces:
+        ISBD: "translator"
+        LRM: "translator"
+      languages: ["en", "es"]
+      # Can translate ISBD and LRM content to/from Spanish
+      
+  french_translator:
+    id: "french-translator"
+    roles: ["user"]
+    attributes:
+      name: "French Translator"
+      email: "french-translator@ifla.org"
+      github_username: "french-translator"
+      namespaces:
+        FR: "translator"
+      languages: ["en", "fr"]
+      # Specializes in FR namespace content
+      
+  multilingual_translator:
+    id: "multilingual-translator"
+    roles: ["user"]
+    attributes:
+      name: "Multilingual Translator"
+      email: "multilingual-translator@ifla.org"
+      github_username: "multilingual-translator"
+      namespaces:
+        ISBD: "translator"
+        LRM: "translator"
+        MulDiCat: "translator"
+      languages: ["en", "es", "fr", "de", "it"]
+      # Can work across multiple namespaces and languages
+      
+  site_specific_translator:
+    id: "isbdm-translator"
+    roles: ["user"]
+    attributes:
+      name: "ISBDM Translator"
+      email: "isbdm-translator@ifla.org"
+      github_username: "isbdm-translator"
+      sites:
+        isbdm: "translator"
+      languages: ["en", "ja", "zh"]
+      # Site-specific translator for Asian languages
+      
+  translator_with_review:
+    id: "translator-reviewer"
+    roles: ["user"]
+    attributes:
+      name: "Translator with Review Rights"
+      email: "translator-reviewer@ifla.org"
+      github_username: "translator-reviewer"
+      namespaces:
+        ISBD: "translator"
+        LRM: "reviewer"
+      languages: ["en", "pt", "es"]
+      # Can translate ISBD content and review LRM content

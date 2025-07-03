@@ -1,0 +1,96 @@
+# Site Resource Fixtures
+# Test resources representing individual standards sites
+---
+apiVersion: api.cerbos.dev/v1
+description: "IFLA Standards sites for testing"
+resources:
+  site_portal:
+    kind: "site"
+    id: "portal"
+    attributes:
+      siteKey: "portal"
+      namespace: "PORTAL"  # Special case - portal doesn't belong to a review group namespace
+      name: "IFLA Portal"
+      url: "http://localhost:3000"
+      port: 3000
+      visibility: "public"
+      
+  site_isbdm:
+    kind: "site"
+    id: "isbdm"
+    attributes:
+      siteKey: "isbdm"
+      namespace: "ISBD"
+      name: "ISBD Manifestation"
+      url: "http://localhost:3001"
+      port: 3001
+      visibility: "public"
+      
+  site_isbd:
+    kind: "site"
+    id: "isbd"
+    attributes:
+      siteKey: "isbd"
+      namespace: "ISBD"
+      name: "International Standard Bibliographic Description"
+      url: "http://localhost:3004"
+      port: 3004
+      visibility: "public"
+      development_status: "active"
+      
+  site_lrm:
+    kind: "site"
+    id: "lrm"
+    attributes:
+      siteKey: "lrm"
+      namespace: "LRM"
+      name: "Library Reference Model"
+      url: "http://localhost:3002"
+      port: 3002
+      visibility: "public"
+      
+  site_frbr:
+    kind: "site"
+    id: "frbr"
+    attributes:
+      siteKey: "frbr"
+      namespace: "FR"
+      name: "Functional Requirements for Bibliographic Records"
+      url: "http://localhost:3003"
+      port: 3003
+      visibility: "public"
+      note: "Will be part of FR namespace"
+      
+  site_muldicat:
+    kind: "site"
+    id: "muldicat"
+    attributes:
+      siteKey: "muldicat"
+      namespace: "MulDiCat"
+      name: "Multilingual Dictionary of Cataloguing Terms"
+      url: "http://localhost:3005"
+      port: 3005
+      visibility: "public"
+      
+  site_unimarc:
+    kind: "site"
+    id: "unimarc"
+    attributes:
+      siteKey: "unimarc"
+      namespace: "UNIMARC"
+      name: "UNIMARC Format"
+      url: "http://localhost:3006"
+      port: 3006
+      visibility: "public"
+      
+  site_newtest:
+    kind: "site"
+    id: "newtest"
+    attributes:
+      siteKey: "newtest"
+      namespace: "TEST"  # Special test namespace
+      name: "New Test Site"
+      url: "http://localhost:3008"
+      port: 3008
+      visibility: "public"
+      purpose: "E2E testing and development"

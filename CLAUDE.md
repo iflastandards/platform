@@ -869,3 +869,75 @@ The project uses a **dual CI system** with different purposes:
 git push-dev        # Development: git push fork dev  
 git push-preview    # Client preview: git push origin dev
 ```
+
+## Role-Based Access Control (RBAC) with Cerbos
+
+### Overview
+The project implements a comprehensive RBAC system using Cerbos for policy-as-code authorization. The system supports namespace-based review groups, site-specific permissions, and interactive role testing.
+
+### Key Concepts
+
+#### Namespace = Review Group
+- Each namespace corresponds to a standards review group:
+  - **LRM**: Library Reference Model
+  - **ISBD**: International Standard Bibliographic Description (contains isbd, isbdm + 7 planned sites)
+  - **MulDiCat**: Multilingual Dictionary of Cataloguing Terms
+  - **FR**: Functional Requirements (currently FRBR, needs renaming)
+  - **UNIMARC**: Universal MARC Format
+- Review groups manage their namespace's standards and sites
+
+#### Three-Tier Permission Model
+1. **System Level**: Global administrators (system-admin, ifla-admin)
+2. **Namespace Level**: Review group administrators and roles ({namespace}-admin, {namespace}-editor, {namespace}-reviewer, {namespace}-translator)
+3. **Site Level**: Site-specific administrators and roles ({site}-admin, {site}-editor, {site}-translator)
+
+### Cerbos Integration
+
+#### Policy Structure
+```
+cerbos/
+├── policies/
+│   ├── resource_namespace.yaml    # Namespace permissions
+│   ├── resource_site.yaml         # Site permissions
+│   ├── resource_user_admin.yaml   # User management permissions
+│   ├── resource_translation.yaml  # Translation permissions
+│   └── derived_roles.yaml         # Role derivations
+├── fixtures/                      # Test users and resources
+└── .cerbos-hub.yaml              # Cerbos Hub configuration
+```
+
+#### Testing with Roles
+- **Interactive testing**: `pnpm test:admin:roles` (coming soon)
+- **Command-line options**: `pnpm test:admin:roles --role namespace-admin --namespace ISBD`
+- **E2E role testing**: Use mock authentication in development mode
+
+### Development Workflow
+
+#### Mock Authentication (Development Only)
+- Credentials provider added to NextAuth for development
+- Visual indicators show when using mock auth
+- Production continues to use GitHub OAuth exclusively
+
+#### Role Testing Commands
+```bash
+# Interactive role selection
+pnpm test:admin:roles
+
+# Test specific role/namespace combination
+pnpm test:admin:roles --role editor --namespace ISBD
+
+# Test site-specific role
+pnpm test:admin:roles --role admin --site isbdm
+
+# Test translator role across namespaces
+pnpm test:admin:roles --role translator --namespaces ISBD,FR
+```
+
+### Implementation Status
+See `developer_notes/rbac-implementation-plan.md` for detailed implementation plan and task tracking.
+
+### Security Considerations
+- All authorization policies version-controlled in Git
+- Server-side permission checks only
+- Mock authentication restricted to development environment
+- Audit trail for all permission decisions via Cerbos

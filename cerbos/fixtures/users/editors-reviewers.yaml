@@ -1,0 +1,65 @@
+# Editors and Reviewers Test Users
+# Users with editorial and review responsibilities
+---
+apiVersion: api.cerbos.dev/v1
+description: "Editors and reviewers for different scopes"
+principals:
+  isbd_editor:
+    id: "isbd-editor"
+    roles: ["user"]
+    attributes:
+      name: "ISBD Namespace Editor"
+      email: "isbd-editor@ifla.org"
+      github_username: "isbd-editor"
+      namespaces:
+        ISBD: "editor"
+      # Can edit all sites in ISBD namespace (isbd, isbdm, future sites)
+      
+  isbdm_editor:
+    id: "isbdm-editor"
+    roles: ["user"]
+    attributes:
+      name: "ISBDM Site Editor"
+      email: "isbdm-editor@ifla.org"
+      github_username: "isbdm-editor"
+      sites:
+        isbdm: "editor"
+      # Can only edit isbdm site specifically
+      
+  lrm_reviewer:
+    id: "lrm-reviewer"
+    roles: ["user"]
+    attributes:
+      name: "LRM Namespace Reviewer"
+      email: "lrm-reviewer@ifla.org"
+      github_username: "lrm-reviewer"
+      namespaces:
+        LRM: "reviewer"
+        
+  cross_namespace_reviewer:
+    id: "cross-reviewer"
+    roles: ["user"]
+    attributes:
+      name: "Cross-Namespace Reviewer"
+      email: "cross-reviewer@ifla.org"
+      github_username: "cross-reviewer"
+      namespaces:
+        ISBD: "reviewer"
+        LRM: "reviewer"
+        FR: "reviewer"
+      # Reviews across multiple namespaces
+      
+  mixed_roles_user:
+    id: "mixed-roles"
+    roles: ["user"]
+    attributes:
+      name: "Mixed Roles User"
+      email: "mixed-roles@ifla.org"
+      github_username: "mixed-roles"
+      namespaces:
+        ISBD: "editor"
+        LRM: "reviewer"
+      sites:
+        portal: "admin"
+        newtest: "editor"
+      # Complex role combination across namespace and site levels

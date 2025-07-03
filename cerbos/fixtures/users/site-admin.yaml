@@ -1,0 +1,48 @@
+# Site Administrator Test Users
+# Administrators for specific sites
+---
+apiVersion: api.cerbos.dev/v1
+description: "Site administrators for specific standards sites"
+principals:
+  isbdm_admin:
+    id: "isbdm-admin"
+    roles: ["user"]
+    attributes:
+      name: "ISBDM Site Admin"
+      email: "isbdm-admin@ifla.org"
+      github_username: "isbdm-admin"
+      sites:
+        isbdm: "admin"
+      # Note: Site admin for isbdm but not entire ISBD namespace
+      
+  portal_admin:
+    id: "portal-admin"
+    roles: ["user"]
+    attributes:
+      name: "Portal Site Admin"
+      email: "portal-admin@ifla.org"
+      github_username: "portal-admin"
+      sites:
+        portal: "admin"
+        
+  newtest_admin:
+    id: "newtest-admin"
+    roles: ["user"]
+    attributes:
+      name: "NewTest Site Admin"
+      email: "newtest-admin@ifla.org"
+      github_username: "newtest-admin"
+      sites:
+        newtest: "admin"
+        
+  multi_site_admin:
+    id: "multi-site-admin"
+    roles: ["user"]
+    attributes:
+      name: "Multi-Site Admin"
+      email: "multi-site-admin@ifla.org"
+      github_username: "multi-site-admin"
+      sites:
+        isbdm: "admin"
+        lrm: "admin"
+        newtest: "admin"

@@ -1,0 +1,73 @@
+# Site Resource Policy
+# Defines permissions for site-level operations (individual standards sites)
+---
+apiVersion: api.cerbos.dev/v1
+resourcePolicy:
+  version: "default"
+  resource: "site"
+  importDerivedRoles:
+    - ifla_standards_roles
+  rules:
+    # System administrators can do everything
+    - actions: ["*"]
+      effect: EFFECT_ALLOW
+      roles: ["system-admin", "ifla-admin"]
+      
+    # Namespace administrators can manage sites in their namespace
+    - actions: ["view", "edit", "manage", "delete", "configure", "manage_users"]
+      effect: EFFECT_ALLOW
+      derivedRoles: ["namespace_admin"]
+      
+    # Site administrators can manage their specific site
+    - actions: ["view", "edit", "manage", "configure", "manage_users"]
+      effect: EFFECT_ALLOW
+      derivedRoles: ["site_admin"]
+      
+    # Namespace editors can edit any site in their namespace
+    - actions: ["view", "edit", "create", "update"]
+      effect: EFFECT_ALLOW
+      derivedRoles: ["namespace_editor"]
+      
+    # Site editors can edit their specific site
+    - actions: ["view", "edit", "create", "update"]
+      effect: EFFECT_ALLOW
+      derivedRoles: ["site_editor"]
+      
+    # Namespace reviewers can review sites in their namespace
+    - actions: ["view", "review", "approve", "reject", "comment"]
+      effect: EFFECT_ALLOW
+      derivedRoles: ["namespace_reviewer"]
+      
+    # Namespace translators can translate any site in their namespace
+    - actions: ["view", "translate", "edit_translation"]
+      effect: EFFECT_ALLOW
+      derivedRoles: ["namespace_translator"]
+      
+    # Site translators can translate their specific site
+    - actions: ["view", "translate", "edit_translation"]
+      effect: EFFECT_ALLOW
+      derivedRoles: ["site_translator"]
+      
+    # Namespace contributors can contribute to any site in their namespace
+    - actions: ["view", "contribute", "propose", "comment"]
+      effect: EFFECT_ALLOW
+      derivedRoles: ["namespace_contributor"]
+      
+    # Site contributors can contribute to their specific site
+    - actions: ["view", "contribute", "propose", "comment"]
+      effect: EFFECT_ALLOW
+      derivedRoles: ["site_contributor"]
+      
+    # Anyone can view public sites
+    - actions: ["view"]
+      effect: EFFECT_ALLOW
+      roles: ["*"]
+      condition:
+        match:
+          expr: R.attr.visibility == "public"
+          
+  schemas:
+    principalSchema:
+      ref: cerbos://schemas/principal.json
+    resourceSchema:
+      ref: cerbos://schemas/site.json

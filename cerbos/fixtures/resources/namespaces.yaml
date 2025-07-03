@@ -1,0 +1,57 @@
+# Namespace Resource Fixtures
+# Test resources representing the different namespaces/review groups
+---
+apiVersion: api.cerbos.dev/v1
+description: "IFLA Standards namespaces for testing"
+resources:
+  namespace_isbd:
+    kind: "namespace"
+    id: "ISBD"
+    attributes:
+      namespace: "ISBD"
+      name: "International Standard Bibliographic Description"
+      review_group: "ISBD Review Group"
+      visibility: "public"
+      sites: ["isbd", "isbdm"]
+      planned_sites: 7
+      
+  namespace_lrm:
+    kind: "namespace" 
+    id: "LRM"
+    attributes:
+      namespace: "LRM"
+      name: "Library Reference Model"
+      review_group: "LRM Review Group"
+      visibility: "public"
+      sites: ["lrm"]
+      
+  namespace_fr:
+    kind: "namespace"
+    id: "FR"
+    attributes:
+      namespace: "FR"
+      name: "Functional Requirements"
+      review_group: "FR Review Group"
+      visibility: "public"
+      sites: ["frbr"]
+      note: "Currently named FRBR but will be renamed to FR"
+      
+  namespace_muldicat:
+    kind: "namespace"
+    id: "MulDiCat"
+    attributes:
+      namespace: "MulDiCat"
+      name: "Multilingual Dictionary of Cataloguing Terms"
+      review_group: "MulDiCat Review Group"
+      visibility: "public"
+      sites: ["muldicat"]
+      
+  namespace_unimarc:
+    kind: "namespace"
+    id: "UNIMARC"
+    attributes:
+      namespace: "UNIMARC"
+      name: "Universal MARC Format"
+      review_group: "UNIMARC Review Group"
+      visibility: "public"
+      sites: ["unimarc"]

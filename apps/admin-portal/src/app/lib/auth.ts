@@ -1,7 +1,7 @@
-import NextAuth from "next-auth"
+import NextAuth, { NextAuthConfig } from "next-auth"
 import GitHub from "next-auth/providers/github"
 
-const authOptions = {
+const authOptions: NextAuthConfig = {
   debug: process.env.NODE_ENV === "development",
   providers: [
     GitHub({
@@ -121,4 +121,6 @@ const authOptions = {
   },
 };
 
-export const { handlers, auth, signIn, signOut } = NextAuth(authOptions);
+const nextAuth = NextAuth(authOptions);
+
+export const { handlers, auth, signIn, signOut } = nextAuth;
