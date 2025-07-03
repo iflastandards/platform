@@ -73,6 +73,6 @@ resourcePolicy:
       
   schemas:
     principalSchema:
-      ref: cerbos://schemas/principal.json
+      ref: cerbos:///principal.json
     resourceSchema:
-      ref: cerbos://schemas/translation.json
+      ref: cerbos:///translation.json

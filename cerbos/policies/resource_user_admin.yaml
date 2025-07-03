@@ -49,6 +49,6 @@ resourcePolicy:
             
   schemas:
     principalSchema:
-      ref: cerbos://schemas/principal.json
+      ref: cerbos:///principal.json
     resourceSchema:
-      ref: cerbos://schemas/user_admin.json
+      ref: cerbos:///user_admin.json

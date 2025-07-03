@@ -48,6 +48,6 @@ resourcePolicy:
           
   schemas:
     principalSchema:
-      ref: cerbos://schemas/principal.json
+      ref: cerbos:///principal.json
     resourceSchema:
-      ref: cerbos://schemas/namespace.json
+      ref: cerbos:///namespace.json
