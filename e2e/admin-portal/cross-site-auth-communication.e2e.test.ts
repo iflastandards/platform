@@ -35,7 +35,8 @@ test.describe('Cross-Site Authentication Communication', () => {
     
     // Ensure it's NOT using hardcoded placeholder URLs (regression test)
     await expect(loginLink).not.toHaveAttribute('href', 'https://your-next-app.com/login');
-    await expect(loginLink).not.toHaveAttribute('href', 'http://localhost:3001/signin'); // Wrong port
+    await expect(loginLink).not.toHaveAttribute('href', 'http://localhost:3007/signin'); // Missing /auth prefix
+    await expect(loginLink).not.toHaveAttribute('href', 'http://localhost:3001/auth/signin'); // Wrong port
 
     // Step 2: Navigate to admin portal and mock authentication
     await page.goto(adminConfig.signinUrl);
@@ -135,7 +136,8 @@ test.describe('Cross-Site Authentication Communication', () => {
     
     // Ensure it's NOT using hardcoded placeholder URLs (regression test)
     await expect(loginLink).not.toHaveAttribute('href', 'https://your-next-app.com/logout');
-    await expect(loginLink).not.toHaveAttribute('href', 'http://localhost:3001/auth/signout'); // Wrong port
+    await expect(loginLink).not.toHaveAttribute('href', 'http://localhost:3007/signin'); // Missing /auth prefix
+    await expect(loginLink).not.toHaveAttribute('href', 'http://localhost:3001/auth/signin'); // Wrong port
   });
 
   test('should handle cross-tab authentication synchronization', async ({ page, context }) => {
@@ -265,6 +267,7 @@ test.describe('Cross-Site Authentication Communication', () => {
     
     // Ensure it's NOT using hardcoded placeholder URLs (regression test)
     await expect(loginLink).not.toHaveAttribute('href', 'https://your-next-app.com/login');
+    await expect(loginLink).not.toHaveAttribute('href', 'http://localhost:3007/signin'); // Missing /auth prefix
 
     // Step 4: Verify no error messages are shown to user
     const errorMessage = page.getByText(/error|failed|unauthorized/i);

@@ -33,7 +33,8 @@ test.describe('Authentication Dropdown URL Validation', () => {
     
     // Ensure it's NOT using hardcoded placeholder URLs
     await expect(loginLink).not.toHaveAttribute('href', 'https://your-next-app.com/login');
-    await expect(loginLink).not.toHaveAttribute('href', 'http://localhost:3001/signin'); // Wrong port
+    await expect(loginLink).not.toHaveAttribute('href', 'http://localhost:3007/signin'); // Missing /auth prefix
+    await expect(loginLink).not.toHaveAttribute('href', 'http://localhost:3001/auth/signin'); // Wrong port
   });
 
   test('should have correct "Manage" URL when authenticated as admin', async ({ page, context }) => {
@@ -125,6 +126,7 @@ test.describe('Authentication Dropdown URL Validation', () => {
     
     // Ensure it's NOT using hardcoded placeholder URLs
     await expect(logoutLink).not.toHaveAttribute('href', 'https://your-next-app.com/logout');
+    await expect(logoutLink).not.toHaveAttribute('href', 'http://localhost:3007/api/auth/signout'); // Wrong path - should be /auth/signout
     await expect(logoutLink).not.toHaveAttribute('href', 'http://localhost:3001/auth/signout'); // Wrong port
   });
 
