@@ -38,7 +38,7 @@ const AuthDropdownNavbarItem: React.FC = () => {
     );
   }
 
-  const isEditor = teams?.includes("editors");
+  const isEditor = teams?.includes("editors") || teams?.includes("ifla-admin") || teams?.includes("site-admin");
 
   return (
     <div className="navbar__item navbar__item--show-mobile dropdown dropdown--hoverable dropdown--right">
