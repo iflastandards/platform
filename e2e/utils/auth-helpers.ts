@@ -1,94 +1,92 @@
 import { BrowserContext } from '@playwright/test';
 
-// Test session data for different user types
-export const TEST_SESSIONS = {
-  admin: {
-    name: 'Test Admin',
-    email: 'admin@test.example.com',
-    image: 'https://avatars.githubusercontent.com/u/12345',
-    roles: ['site-admin', 'ifla-admin'],
-  },
-  basicUser: {
-    name: 'Test User',
+// Function to create a test user with specific roles and attributes
+export function createTestUser(userData: {
+  name: string;
+  email: string;
+  roles: string[];
+  namespaces?: Record<string, string>;
+  sites?: Record<string, string>;
+  languages?: string[];
+}) {
+  return {
+    id: `test-${userData.name.toLowerCase().replace(/\s/g, '-')}-${Date.now()}`,
+    name: userData.name,
+    email: userData.email,
+    image: `https://avatars.githubusercontent.com/u/${Math.floor(Math.random() * 100000)}`,
+    roles: userData.roles,
+    attributes: {
+      namespaces: userData.namespaces || {},
+      sites: userData.sites || {},
+      languages: userData.languages || ['en'],
+    },
+  };
+}
+
+// Pre-defined test users for common scenarios
+export const TEST_USERS = {
+  systemAdmin: createTestUser({
+    name: 'System Admin',
+    email: 'system-admin@test.example.com',
+    roles: ['system-admin'],
+  }),
+  namespaceAdmin: createTestUser({
+    name: 'ISBD Namespace Admin',
+    email: 'isbd-admin@test.example.com',
+    roles: ['user'],
+    namespaces: { ISBD: 'admin' },
+  }),
+  siteEditor: createTestUser({
+    name: 'ISBDM Site Editor',
+    email: 'isbdm-editor@test.example.com',
+    roles: ['user'],
+    sites: { isbdm: 'editor' },
+  }),
+  multiNamespaceTranslator: createTestUser({
+    name: 'Multi-Namespace Translator',
+    email: 'translator@test.example.com',
+    roles: ['user'],
+    namespaces: {
+      ISBD: 'translator',
+      FR: 'translator',
+    },
+    languages: ['en', 'fr', 'es'],
+  }),
+  basicUser: createTestUser({
+    name: 'Basic User',
     email: 'user@test.example.com',
-    image: 'https://avatars.githubusercontent.com/u/67890',
-    roles: [],
-  },
-  siteEditor: {
-    name: 'Site Editor',
-    email: 'editor@test.example.com',
-    image: 'https://avatars.githubusercontent.com/u/54321',
-    roles: ['portal-editor', 'newtest-admin'],
-  },
+    roles: ['user'],
+  }),
 };
 
 /**
  * Mock NextAuth session by setting up session cookies and intercepting API calls
- * This approach works with NextAuth by mocking the session API endpoint
  */
 export async function setupMockAuth(
   context: BrowserContext,
-  sessionType: keyof typeof TEST_SESSIONS
+  user: ReturnType<typeof createTestUser>
 ) {
-  const sessionData = TEST_SESSIONS[sessionType];
-  
-  // Create a mock session with proper NextAuth structure
   const mockSession = {
-    user: {
-      id: `test-${sessionType}-id`,
-      ...sessionData,
-    },
+    user,
     expires: new Date(Date.now() + 24 * 60 * 60 * 1000).toISOString(), // 24 hours from now
   };
 
-  // Mock the NextAuth session API endpoint - this is critical for the auth() function to work
+  // Mock the NextAuth session API endpoint
   await context.route('**/api/auth/session', async (route) => {
     await route.fulfill({
       status: 200,
       contentType: 'application/json',
       body: JSON.stringify(mockSession),
-      headers: {
-        'Cache-Control': 'no-cache',
-        'Content-Type': 'application/json',
-      },
     });
   });
 
-  // Mock the NextAuth providers endpoint for signin page
-  await context.route('**/api/auth/providers', async (route) => {
-    await route.fulfill({
-      status: 200,
-      contentType: 'application/json',
-      body: JSON.stringify({
-        github: {
-          id: 'github',
-          name: 'GitHub',
-          type: 'oauth',
-          signinUrl: 'http://localhost:3007/api/auth/signin/github',
-          callbackUrl: 'http://localhost:3007/api/auth/callback/github',
-        },
-      }),
-    });
-  });
-
-  // Mock the CSRF token endpoint that NextAuth needs
-  await context.route('**/api/auth/csrf', async (route) => {
-    await route.fulfill({
-      status: 200,
-      contentType: 'application/json',
-      body: JSON.stringify({
-        csrfToken: 'mock-csrf-token'
-      }),
-    });
-  });
-
-  // Set session cookie for NextAuth to recognize
-  // Use a more realistic token that looks like a NextAuth JWT
+  // Set session cookie
   const sessionToken = `eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.${Buffer.from(JSON.stringify({
-    sub: `test-${sessionType}-id`,
-    email: sessionData.email,
-    name: sessionData.name,
-    roles: sessionData.roles,
+    sub: user.id,
+    email: user.email,
+    name: user.name,
+    roles: user.roles,
+    attributes: user.attributes,
     iat: Math.floor(Date.now() / 1000),
     exp: Math.floor(Date.now() / 1000) + 24 * 60 * 60,
   })).toString('base64')}.mock-signature`;
@@ -102,7 +100,7 @@ export async function setupMockAuth(
       httpOnly: true,
       secure: false,
       sameSite: 'Lax',
-      expires: Math.floor(Date.now() / 1000) + 24 * 60 * 60, // 24 hours
+      expires: Math.floor(Date.now() / 1000) + 24 * 60 * 60,
     },
   ]);
 

@@ -15,7 +15,7 @@ import SiteManagementClient from '@/app/dashboard/[siteKey]/SiteManagementClient
 describe('Site Management Integration Tests', () => {
   beforeEach(() => {
     setupFetchMock();
-    (auth as any).mockResolvedValue(mockSession); // eslint-disable-line @typescript-eslint/no-explicit-any
+    (auth as vi.Mock).mockResolvedValue(mockSession);
   });
 
   afterEach(() => {
@@ -254,7 +254,7 @@ describe('Site Management Integration Tests', () => {
 
   describe('Authentication Integration', () => {
     it('should work with authenticated user session', async () => {
-      (auth as any).mockResolvedValue(mockSession); // eslint-disable-line @typescript-eslint/no-explicit-any
+      (auth as vi.Mock).mockResolvedValue(mockSession);
       
       render(
         <SiteManagementClient
@@ -270,7 +270,7 @@ describe('Site Management Integration Tests', () => {
     });
 
     it('should handle unauthenticated state', async () => {
-      (auth as any).mockResolvedValue(null);
+      (auth as vi.Mock).mockResolvedValue(null);
       
       render(
         <SiteManagementClient

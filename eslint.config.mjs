@@ -23,7 +23,8 @@ export default [
         "**/vitest.config.*.timestamp*",
         "**/.nx/",
         "**/static/runtime.js",
-        "**/.nx/**/*"
+        "**/.nx/**/*",
+        "static/"
       ]
   },
   {

@@ -107,8 +107,13 @@ export const MockTabPanel = vi.fn(({ children }) => (
   <div data-testid="tab-panel">{children}</div>
 ));
 
-// Mock data display components
-export const MockTable = vi.fn(({ headers, rows, className = '' }: any) => ( // eslint-disable-line @typescript-eslint/no-explicit-any
+interface MockTableProps {
+  headers: string[];
+  rows: React.ReactNode[][];
+  className?: string;
+}
+
+export const MockTable = vi.fn(({ headers, rows, className = '' }: MockTableProps) => (
   <table data-testid="table" className={className}>
     <thead>
       <tr>
@@ -120,7 +125,7 @@ export const MockTable = vi.fn(({ headers, rows, className = '' }: any) => ( // 
       </tr>
     </thead>
     <tbody>
-      {rows?.map((row: any[], rowIndex: number) => (
+      {rows?.map((row: React.ReactNode[], rowIndex: number) => (
         <tr key={rowIndex}>
           {row.map((cell, cellIndex) => (
             <td key={cellIndex} data-testid={`cell-${rowIndex}-${cellIndex}`}>

@@ -38,7 +38,13 @@
           "outputPath": "apps/admin-portal"
         },
         "production": {}
-      }
+      },
+      "dependsOn": [
+        {
+          "target": "build",
+          "projects": ["@ifla/theme"]
+        }
+      ]
     },
     "serve": {
       "executor": "@nx/next:server",

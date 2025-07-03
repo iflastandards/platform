@@ -11,7 +11,7 @@
       "options": {
         "command": "docusaurus build portal"
       },
-      "inputs": ["production", "^production", "docusaurus-no-theme"]
+      "inputs": ["production", "^production", "docusaurus"]
     },
     "start": {
       "executor": "nx:run-commands",

@@ -1,0 +1,29 @@
+feat(admin): implement comprehensive RBAC testing and mock auth
+
+This commit introduces a robust testing framework for Role-Based Access Control (RBAC) and a mock authentication system for the admin portal, implementing Epics 2, 3, 4, and 5 of the RBAC plan.
+
+Key changes include:
+
+- **Mock Authentication (Epic 3):**
+  - Added a NextAuth `Credentials` provider for development, enabling role-based testing without real GitHub accounts.
+  - Created a mock user generation system in `apps/admin-portal/src/lib/mock-auth.ts`.
+  - Implemented a visual indicator in the UI to clearly show when a mock user session is active.
+
+- **Interactive Role Testing (Epic 2):**
+  - Integrated the `test-admin-roles.js` script with the Cerbos client for real-time permission validation.
+  - The script now uses the `cerbos.checkResource` method to provide accurate feedback on role permissions.
+
+- **User Administration Foundation (Epic 4):**
+  - Defined TypeScript types for role management in `apps/admin-portal/src/lib/roles.ts`.
+  - Created foundational API routes for user and role management under `apps/admin-portal/src/app/api/admin/`.
+
+- **E2E Testing Framework (Epic 5):**
+  - Enhanced `e2e/utils/auth-helpers.ts` to support granular, role-based test users with namespace and site-specific attributes.
+  - Added a new E2E test suite, `rbac-scenarios.e2e.test.ts`, to validate access control for different user roles.
+
+- **Dependency and Configuration Updates:**
+  - Updated tRPC and React Query dependencies in the admin portal to resolve peer dependency conflicts.
+  - Optimized Nx configuration to prevent unnecessary rebuilds for non-coding changes.
+  - Removed obsolete Cerbos schema files.
+
+These changes provide a comprehensive solution for developing, testing, and validating the RBAC system, ensuring a secure and flexible administrative experience.

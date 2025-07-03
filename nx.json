@@ -18,6 +18,14 @@
       "!{projectRoot}/**/*.stories.@(js|jsx|ts|tsx|mdx)",
       "!{projectRoot}/src/test-setup.[jt]s"
     ],
+    "non-coding": [
+      "!{projectRoot}/**/*.md",
+      "!{projectRoot}/**/*.mdx",
+      "!{projectRoot}/docs/**/*",
+      "!{projectRoot}/**/*.txt",
+      "!{projectRoot}/LICENSE",
+      "!{projectRoot}/.github/**/*"
+    ],
     "docusaurus": [
       "{projectRoot}/**/*.{md,mdx}",
       "{projectRoot}/docusaurus.config.js",
@@ -52,7 +60,7 @@
   "targetDefaults": {
     "build": {
       "dependsOn": ["^build"],
-      "inputs": ["production", "^production"],
+      "inputs": ["production", "^production", "non-coding"],
       "outputs": ["{projectRoot}/build", "{projectRoot}/dist"],
       "cache": true
     },

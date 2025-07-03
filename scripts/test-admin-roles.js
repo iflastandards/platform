@@ -430,16 +430,11 @@ function generateMockUser(role, namespace, site, options = {}) {
 
 // Test permissions with Cerbos
 async function testPermissions(user, namespace, site) {
-  if (!process.env.CERBOS_HUB_SECRET) {
-    warning('CERBOS_HUB_SECRET not found - skipping permission tests');
-    return;
-  }
-
   log('Testing permissions with Cerbos...');
   
   try {
     // Import Cerbos client dynamically to avoid issues if not available
-    const { checkPermissions, createMockPrincipal } = await import('../apps/admin-portal/src/lib/cerbos.ts');
+    const cerbos = (await import('../apps/admin-portal/src/lib/cerbos.ts')).default;
     
     const principal = {
       id: user.id,
@@ -493,23 +488,24 @@ async function testPermissions(user, namespace, site) {
       actions: ['view_users', 'assign_roles']
     });
 
-    console.log(`\\n${colors.cyan}=== PERMISSION TEST RESULTS ===${colors.reset}`);
+    console.log(`\n${colors.cyan}=== PERMISSION TEST RESULTS ===${colors.reset}`);
     
     for (const scenario of testScenarios) {
       try {
-        const result = await checkPermissions({
+        const result = await cerbos.checkResource({
           principal,
           resource: scenario.resource,
           actions: scenario.actions
         });
         
-        console.log(`\\n${colors.bold}${scenario.name}:${colors.reset}`);
-        for (const [action, allowed] of Object.entries(result.results)) {
-          const status = allowed ? `${colors.green}✓ ALLOWED${colors.reset}` : `${colors.red}✗ DENIED${colors.reset}`;
+        console.log(`\n${colors.bold}${scenario.name}:${colors.reset}`);
+        for (const action of scenario.actions) {
+          const isAllowed = result.isAllowed(action);
+          const status = isAllowed ? `${colors.green}✓ ALLOWED${colors.reset}` : `${colors.red}✗ DENIED${colors.reset}`;
           console.log(`  ${action}: ${status}`);
         }
       } catch (err) {
-        console.log(`\\n${colors.bold}${scenario.name}:${colors.reset}`);
+        console.log(`\n${colors.bold}${scenario.name}:${colors.reset}`);
         console.log(`  ${colors.red}ERROR: ${err.message}${colors.reset}`);
       }
     }

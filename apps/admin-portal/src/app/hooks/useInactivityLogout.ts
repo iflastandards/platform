@@ -105,7 +105,7 @@ export function useInactivityLogout({
       
       throttleTimer = setTimeout(() => {
         handleActivity();
-        throttleTimer = null as any;
+        clearTimeout(throttleTimer);
       }, 1000); // Throttle to once per second
     };
 

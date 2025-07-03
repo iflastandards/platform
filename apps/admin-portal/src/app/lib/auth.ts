@@ -1,5 +1,24 @@
-import NextAuth from "next-auth";
+import NextAuth, { DefaultSession, User } from "next-auth";
+import { JWT } from "next-auth/jwt";
 import GitHub from "next-auth/providers/github";
+import Credentials from "next-auth/providers/credentials";
+import { createUser } from './mock-auth';
+
+declare module "next-auth" {
+  interface Session {
+    user: {
+      id: string;
+      roles: string[];
+    } & DefaultSession["user"];
+  }
+}
+
+declare module "next-auth/jwt" {
+  interface JWT {
+    roles: string[];
+    login: string;
+  }
+}
 
 export const { handlers, auth, signIn, signOut } = NextAuth({
   debug: process.env.NODE_ENV === "development",
@@ -13,21 +32,44 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
         },
       },
     }),
+    ...(process.env.NODE_ENV === "development"
+      ? [
+          Credentials({
+            name: "Mock User",
+            credentials: {
+              username: { label: "Username", type: "text" },
+              roles: { label: "Roles (comma-separated)", type: "text" },
+            },
+            async authorize(credentials) {
+              if (typeof credentials.username !== "string" || typeof credentials.roles !== "string") {
+                return null;
+              }
+
+              const user = createUser({
+                name: credentials.username,
+                roles: credentials.roles.split(',').map(role => role.trim()),
+              });
+              
+              return user as User;
+            },
+          }),
+        ]
+      : []),
   ],
   pages: {
     signIn: '/auth/signin',
   },
   callbacks: {
-    async jwt({ token, account, user }: any) {
-      if (account) {
+    async jwt({ token, account, user }) {
+      if (account && user) {
         token.accessToken = account.access_token;
         
         // Store GitHub login for role checking
-        if (user?.login) {
-          token.login = user.login;
+        if ('login' in user) {
+          token.login = user.login as string;
         }
         
-        console.log(`[AUTH] GitHub user login: ${user?.login}, email: ${user?.email}`);
+        console.log(`[AUTH] GitHub user login: ${token.login}, email: ${user?.email}`);
         if (token.accessToken) {
           try {
             // Fetch organization memberships for iflastandards org
@@ -101,17 +143,23 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
             token.roles = [];
           }
         }
+      } else if (user) { // For mock user
+        token.roles = (user as { roles: string[] }).roles;
+        token.name = user.name;
+        token.email = user.email;
       }
       return token;
     },
-    async session({ session, token }: any) {
+    async session({ session, token }: { session: Session; token: JWT }) {
       if (session.user) {
-        session.user.id = token.sub;
-        session.user.roles = token.roles as string[];
+        session.user.id = token.sub as string;
+        session.user.roles = token.roles;
+        session.user.name = token.name;
+        session.user.email = token.email;
       }
       return session;
     },
-    async redirect({ url, baseUrl }: any) {
+    async redirect({ url, baseUrl }: { url: string; baseUrl: string }) {
       // Redirect to dashboard after successful sign-in
       if (url.startsWith(baseUrl)) {
         return url;
