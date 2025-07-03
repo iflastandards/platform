@@ -1,0 +1,28 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "User Admin Resource Schema",
+  "type": "object",
+  "properties": {
+    "id": {
+      "type": "string"
+    },
+    "attributes": {
+      "type": "object",
+      "properties": {
+        "scope": {
+          "type": "string",
+          "enum": ["system", "namespace", "site"]
+        },
+        "namespace": {
+          "type": "string"
+        },
+        "siteKey": {
+          "type": "string"
+        }
+      },
+      "required": ["scope"],
+      "additionalProperties": true
+    }
+  },
+  "required": ["id", "attributes"]
+}

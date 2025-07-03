@@ -1,0 +1,27 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "Site Resource Schema",
+  "type": "object",
+  "properties": {
+    "id": {
+      "type": "string"
+    },
+    "attributes": {
+      "type": "object",
+      "properties": {
+        "siteKey": {
+          "type": "string"
+        },
+        "namespace": {
+          "type": "string"
+        },
+        "visibility": {
+          "type": "string"
+        }
+      },
+      "required": ["siteKey", "namespace", "visibility"],
+      "additionalProperties": true
+    }
+  },
+  "required": ["id", "attributes"]
+}
