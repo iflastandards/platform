@@ -3,6 +3,7 @@
 ---
 apiVersion: api.cerbos.cloud/v1
 git:
+  git:
   workDir: cerbos
 labels:
   latest:         # 'latest' label pointing to the HEAD of the main branch
