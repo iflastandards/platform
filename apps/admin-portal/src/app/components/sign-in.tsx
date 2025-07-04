@@ -1,14 +1,9 @@
 
-import { signIn } from "@/app/lib/auth";
+import { signInWithGitHub } from "@/app/lib/actions";
 
 export function SignIn() {
   return (
-    <form
-      action={async () => {
-        "use server";
-        await signIn("github");
-      }}
-    >
+    <form action={signInWithGitHub}>
       <button 
         type="submit"
         className="w-full bg-gray-900 hover:bg-gray-800 text-white font-medium py-3 px-4 rounded-lg flex items-center justify-center space-x-3 transition-colors duration-200"

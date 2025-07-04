@@ -3,13 +3,15 @@
  * Determines the correct landing page based on user roles and permissions
  */
 
-import { getSiteConfig } from '@ifla/theme/config/siteConfig';
-import type { Environment } from '@ifla/theme/config/siteConfig';
+// import { getSiteConfig } from '@ifla/theme/config/siteConfig';
+// import type { Environment } from '@ifla/theme/config/siteConfig';
+
+type Environment = 'local' | 'preview' | 'development' | 'production';
 
 interface UserAttributes {
   namespaces?: Record<string, string>;
   sites?: Record<string, string>;
-  [key: string]: any;
+  [key: string]: any; // eslint-disable-line @typescript-eslint/no-explicit-any
 }
 
 interface SessionUser {
@@ -77,6 +79,20 @@ export function getRoleBasedLandingPage(user: SessionUser, baseUrl: string): str
 }
 
 /**
+ * Get admin portal URL for the given environment
+ */
+function getAdminPortalUrl(env: Environment): string {
+  const urls = {
+    local: 'http://localhost:3007',
+    preview: 'https://iflastandards.github.io/standards-dev/admin',
+    development: 'https://jonphipps.github.io/standards-dev/admin',
+    production: 'https://www.iflastandards.info/admin'
+  };
+  
+  return urls[env];
+}
+
+/**
  * Get the environment from current URL or environment variable
  */
 export function getCurrentEnvironment(): Environment {
@@ -108,8 +124,7 @@ export function getCurrentEnvironment(): Environment {
  */
 export function generateTestingURL(user: SessionUser): string {
   const env = getCurrentEnvironment();
-  const adminConfig = getSiteConfig('admin-portal' as any, env) as any;
-  const baseUrl = adminConfig?.url || 'http://localhost:3007';
+  const baseUrl = getAdminPortalUrl(env);
   
   // Determine where the user should land
   const landingPage = getRoleBasedLandingPage(user, baseUrl);
@@ -130,25 +145,32 @@ export function generateTestingURL(user: SessionUser): string {
 export function getSiteManagementURL(siteKey: string): string {
   const env = getCurrentEnvironment();
   
-  try {
-    const siteConfig = getSiteConfig(siteKey as any, env);
-    return siteConfig.url + siteConfig.baseUrl;
-  } catch (error) {
-    // Fallback to localhost for unknown sites
-    const portMap: Record<string, number> = {
-      portal: 3000,
-      isbdm: 3001,
-      lrm: 3002,
-      frbr: 3003,
-      isbd: 3004,
-      muldicat: 3005,
-      unimarc: 3006,
-      newtest: 3008
-    };
-    
+  // Use hardcoded config to avoid build-time dependency issues
+  const portMap: Record<string, number> = {
+    portal: 3000,
+    isbdm: 3001,
+    lrm: 3002,
+    frbr: 3003,
+    isbd: 3004,
+    muldicat: 3005,
+    unimarc: 3006,
+    newtest: 3008
+  };
+  
+  if (env === 'local') {
     const port = portMap[siteKey] || 3000;
     return `http://localhost:${port}/${siteKey}/`;
   }
+  
+  // For other environments, construct URLs based on patterns
+  const baseUrls = {
+    preview: 'https://iflastandards.github.io/standards-dev',
+    development: 'https://jonphipps.github.io/standards-dev',
+    production: 'https://www.iflastandards.info'
+  };
+  
+  const baseUrl = baseUrls[env] || 'http://localhost:3000';
+  return siteKey === 'portal' ? `${baseUrl}/` : `${baseUrl}/${siteKey}/`;
 }
 
 /**

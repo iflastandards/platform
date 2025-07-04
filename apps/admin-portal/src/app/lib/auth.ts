@@ -3,7 +3,6 @@ import { JWT } from "next-auth/jwt";
 import GitHub from "next-auth/providers/github";
 import Credentials from "next-auth/providers/credentials";
 import { createUser } from './mock-auth';
-import { getRoleBasedLandingPage } from './role-based-routing';
 
 
 export const { handlers, auth, signIn, signOut } = NextAuth({

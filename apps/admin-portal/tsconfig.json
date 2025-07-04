@@ -24,7 +24,11 @@
     "paths": {
       "@/*": [
         "./src/*"
-      ]
+      ],
+      "@ifla/theme": ["../../packages/theme/src/index.ts"],
+      "@ifla/theme/*": ["../../packages/theme/src/*"],
+      "@ifla/theme/config": ["../../packages/theme/src/config/index.ts"],
+      "@ifla/theme/config/*": ["../../packages/theme/src/config/*"]
     }
   },
   "include": [

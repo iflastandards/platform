@@ -10,7 +10,7 @@ export function SignInWithMock() {
   const router = useRouter()
   const [isLoading, setIsLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
-  const [mockUser, setMockUser] = useState<any | null>(null)
+  const [mockUser, setMockUser] = useState<{ attributes: { name: string }; roles: string[] } | null>(null)
 
   useEffect(() => {
     // Handle mock authentication for development
@@ -40,12 +40,12 @@ export function SignInWithMock() {
               setError('Mock authentication failed')
               setIsLoading(false)
             }
-          }).catch((err) => {
-            setError(`Authentication error: ${err.message}`)
+          }).catch(() => {
+            setError('Authentication failed')
             setIsLoading(false)
           })
           
-        } catch (err) {
+        } catch (_err) {
           setError('Invalid mock user data')
           setIsLoading(false)
         }

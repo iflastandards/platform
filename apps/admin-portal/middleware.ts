@@ -11,7 +11,11 @@ export async function middleware(request: NextRequest) {
     const session = await auth()
     
     if (session?.user) {
-      const user = session.user as any
+      const user = session.user as { 
+        id: string; 
+        roles: string[]; 
+        attributes?: Record<string, any>; // eslint-disable-line @typescript-eslint/no-explicit-any
+      }
       
       // Get the optimal landing page for this user
       const landingPage = getRoleBasedLandingPage(user, request.nextUrl.origin)
