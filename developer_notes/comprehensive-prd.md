@@ -166,12 +166,14 @@ ifla-standards-platform/
 - React 19.1.0 with TypeScript
 - Tailwind CSS for styling
 - SWR for data fetching
+- TinaCMS for direct page editing and content management
 
 **Backend:**
 - Vercel Edge Functions for serverless API
 - NextAuth.js 5.0 for authentication
 - Cerbos for authorization policies
 - Google Sheets API for vocabulary management
+- Crowdin for translation management and localization workflows
 
 **Development:**
 - Nx 21.2.2 for monorepo management
@@ -394,53 +396,73 @@ ifla-standards-platform/
 
 ## Transition Tasks
 
-### Phase 1: Infrastructure Preparation (Week 1)
+### Phase 1: Development Environment Setup (Week 1)
 
 **Critical Path Tasks:**
-1. **Repository Setup**
+1. **Nx Workspace Foundation**
    - Create new repository: `ifla-standards-platform`
-   - Configure Nx workspace with multi-type support
+   - Configure Nx workspace with multi-type support (apps/, namespaces/, api/, tools/, packages/)
    - Set up package.json with workspace dependencies
-   - Configure TypeScript and build tools
+   - Configure TypeScript paths and build tools
+   - **PRIORITY: Maintain existing integrations, testing, and CI patterns**
 
-2. **Package Structure**
+2. **ISBDM Migration and Setup**
+   - **FIRST PRIORITY: Migrate ISBDM to new workspace structure**
+   - Configure ISBDM as proof-of-concept namespace in new environment
+   - Ensure ISBDM builds and deploys correctly with preview capability
+   - Validate existing functionality in new architecture
+   - Test spreadsheet → CSV → MDX → RDF pipeline
+
+3. **Core Infrastructure**
    - Create packages/ui with shared components
    - Create packages/auth with authentication utilities
    - Create packages/rdf with processing libraries
    - Create packages/config with configuration schemas
+   - Set up TinaCMS integration for content editing
 
-3. **Development Environment**
-   - Configure ESLint, Prettier, TypeScript rules
-   - Set up Vitest testing framework
+4. **Development Environment**
+   - Configure ESLint, Prettier, TypeScript rules (preserve existing patterns)
+   - Set up Vitest testing framework with current test patterns
    - Configure Playwright for E2E testing
    - Create development scripts and port management
+   - **Ensure CI/CD continuity from current setup**
 
 **Dependencies:** None
-**Deliverables:** Functional multi-type monorepo with shared packages
+**Deliverables:** Functional Nx workspace with ISBDM working and previewable
 
-### Phase 2: Core Applications (Week 2)
+### Phase 2: Admin Portal and Pipeline Implementation (Week 2)
 
 **Critical Path Tasks:**
-1. **Admin Portal Foundation**
+1. **Admin Portal Foundation with Vercel Routing**
    - Create Next.js app with App Router
+   - **SECOND PRIORITY: Configure Vercel routing for admin portal**
    - Configure NextAuth.js with GitHub OAuth
    - Build basic dashboard and navigation
    - Implement user session management
 
-2. **Public Portal Foundation**
-   - Create Next.js app for public portal
-   - Build standards discovery interface
-   - Implement basic navigation and search
-   - Configure responsive design
+2. **Spreadsheet → CSV → MDX → RDF Pipeline (Final Form)**
+   - **CRITICAL: Implement complete pipeline in production-ready form**
+   - Build Vercel Edge Functions for Google Sheets integration
+   - Create CSV processing and validation
+   - Implement MDX generation for documentation
+   - Build RDF output generation (multiple formats)
+   - Integrate with TinaCMS for content editing
+   - Test complete pipeline end-to-end
 
-3. **Authentication Integration**
+3. **Content Management Integration**
+   - Set up TinaCMS for direct page editing
+   - Configure Crowdin integration for translation workflows
+   - Build content preview and validation systems
+   - Create workflow triggers and automation
+
+4. **Authentication and Authorization**
    - Set up Cerbos authorization policies
    - Configure cross-site session management
    - Implement role detection from GitHub teams
    - Create authorization middleware
 
-**Dependencies:** Phase 1 completion
-**Deliverables:** Working admin and public portals with authentication
+**Dependencies:** Phase 1 completion (ISBDM working)
+**Deliverables:** Admin portal with Vercel routing and complete pipeline functional
 
 ### Phase 3: Content Migration Strategy (Week 3)
 

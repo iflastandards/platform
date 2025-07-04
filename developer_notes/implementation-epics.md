@@ -4,98 +4,106 @@
 
 This document provides detailed epic breakdowns for the IFLA Standards Platform migration and enhancement project. Each epic includes user stories, detailed tasks, acceptance criteria, and dependencies.
 
-## Epic 1: Foundation Setup
-**Duration:** Weeks 1-2  
+## Epic 1: Development Environment and ISBDM Setup
+**Duration:** Week 1  
 **Priority:** Critical  
 **Dependencies:** None  
 **Team:** Platform Engineering  
 
 ### Epic Goal
-Establish the basic multi-type monorepo structure and core infrastructure to support Docusaurus namespaces, Next.js applications, and utility tools.
+Establish Nx workspace with existing integrations preserved and get ISBDM working as proof-of-concept, maintaining all current testing and CI capabilities.
 
 ### User Stories
 
-**US-1.1: Multi-Type Workspace Configuration**
+**US-1.1: Nx Workspace with Existing Integration Preservation**
 ```
 As a platform developer
-I want a properly configured Nx workspace supporting multiple project types
-So that I can develop Docusaurus sites, Next.js apps, and utility tools in a unified environment
+I want an Nx workspace that maintains our current integrations, testing, and CI patterns
+So that we don't lose functionality during the transition to the new architecture
 ```
 
-**US-1.2: Shared Package Architecture**
+**US-1.2: ISBDM Proof-of-Concept Migration**
 ```
-As a developer working across multiple projects
-I want shared packages for common functionality
-So that I can maintain consistency and reduce code duplication
+As a developer
+I want ISBDM working correctly in the new environment with preview capability
+So that we have a validated example of the target architecture
 ```
 
-**US-1.3: Development Environment Standardization**
+**US-1.3: Content Management Foundation**
 ```
-As a team member
-I want consistent development tooling across all projects
-So that I can work efficiently regardless of which project I'm contributing to
+As a content editor
+I want TinaCMS integration for direct page editing
+So that I can manage content efficiently in the new system
 ```
 
 ### Detailed Tasks
 
-#### Task 1.1: Initialize New Monorepo Structure
-**Estimated Hours:** 16  
+#### Task 1.1: Initialize Nx Workspace with Integration Preservation
+**Estimated Hours:** 20  
 **Assignee:** Lead Developer  
 **Dependencies:** None  
 
 **Subtasks:**
 - [ ] Create new repository: `ifla-standards-platform`
 - [ ] Initialize Nx workspace with latest version (21.2.2+)
+- [ ] **CRITICAL: Preserve existing integration patterns from current workspace**
 - [ ] Configure workspace generators for apps/, namespaces/, api/, tools/, packages/
 - [ ] Set up root package.json with workspace dependencies
 - [ ] Configure TypeScript paths and shared tsconfig files
+- [ ] **Maintain current testing framework configuration (Vitest patterns)**
+- [ ] **Preserve CI/CD pipeline structure and patterns**
 - [ ] Create initial .gitignore and repository documentation
 
 **Acceptance Criteria:**
 - [ ] `nx build` works for all project types
 - [ ] TypeScript compilation succeeds across workspace
-- [ ] Package resolution works correctly
+- [ ] **All existing test patterns work in new environment**
+- [ ] **CI/CD pipeline functions correctly**
 - [ ] Repository structure matches approved architecture
 
-#### Task 1.2: Create Shared Packages
-**Estimated Hours:** 24  
-**Assignee:** Frontend Developer + Backend Developer  
+#### Task 1.2: ISBDM Migration and Validation (FIRST PRIORITY)
+**Estimated Hours:** 32  
+**Assignee:** Lead Developer + Frontend Developer  
 **Dependencies:** Task 1.1  
+
+**Subtasks:**
+- [ ] **PRIORITY 1: Migrate ISBDM to new workspace structure**
+- [ ] Configure ISBDM as namespace in namespaces/ directory
+- [ ] Ensure ISBDM builds correctly in new environment
+- [ ] **Set up preview capability for ISBDM**
+- [ ] Test existing spreadsheet → CSV → MDX → RDF pipeline
+- [ ] Validate all ISBDM functionality in new architecture
+- [ ] Create ISBDM-specific Nx project configuration
+- [ ] Test deployment and preview workflows
+
+**Acceptance Criteria:**
+- [ ] **ISBDM builds and deploys successfully**
+- [ ] **Preview functionality works correctly**
+- [ ] All existing ISBDM features functional
+- [ ] Pipeline works end-to-end
+- [ ] No regression in ISBDM capabilities
+
+#### Task 1.3: Shared Packages and TinaCMS Integration
+**Estimated Hours:** 28  
+**Assignee:** Frontend Developer + Backend Developer  
+**Dependencies:** Task 1.2  
 
 **Subtasks:**
 - [ ] packages/ui: React components, design system, Tailwind configuration
 - [ ] packages/auth: NextAuth utilities, role management, type definitions
 - [ ] packages/rdf: RDF processing, validation, format conversion utilities
 - [ ] packages/config: Site configuration schemas, environment utilities
+- [ ] **Set up TinaCMS integration for content editing**
+- [ ] **Configure Crowdin integration for translation workflows**
 - [ ] Configure package build processes and exports
 - [ ] Set up inter-package dependencies and version management
 
 **Acceptance Criteria:**
 - [ ] All packages build successfully
 - [ ] Packages are importable across projects
+- [ ] **TinaCMS works for direct page editing**
+- [ ] **Crowdin integration functional**
 - [ ] Type definitions work correctly
-- [ ] Package versioning and dependencies are properly configured
-
-#### Task 1.3: Development Environment Setup
-**Estimated Hours:** 12  
-**Assignee:** DevOps Engineer  
-**Dependencies:** Task 1.1  
-
-**Subtasks:**
-- [ ] Configure ESLint with workspace-aware rules
-- [ ] Set up Prettier with consistent formatting
-- [ ] Configure TypeScript strict mode and path mapping
-- [ ] Set up Vitest testing framework with workspace support
-- [ ] Configure Playwright for E2E testing
-- [ ] Create development scripts for common tasks
-- [ ] Set up port management for concurrent development
-- [ ] Configure Git hooks and pre-commit validation
-
-**Acceptance Criteria:**
-- [ ] Linting works across all project types
-- [ ] Tests run successfully in all packages
-- [ ] Development scripts work reliably
-- [ ] Git hooks validate code quality
 
 ### Epic Definition of Done
 - [ ] Nx workspace builds all project types successfully
@@ -106,107 +114,111 @@ So that I can work efficiently regardless of which project I'm contributing to
 
 ---
 
-## Epic 2: Core Applications
-**Duration:** Weeks 3-4  
+## Epic 2: Admin Portal and Complete Pipeline
+**Duration:** Week 2  
 **Priority:** Critical  
 **Dependencies:** Epic 1  
 **Team:** Full Stack Development  
 
 ### Epic Goal
-Build the foundational admin portal and public portal applications with secure authentication and proper role-based access control.
+Build admin portal with Vercel routing and implement the complete spreadsheet → CSV → MDX → RDF pipeline in production-ready form.
 
 ### User Stories
 
-**US-2.1: Secure Administrative Interface**
+**US-2.1: Admin Portal with Vercel Routing**
 ```
 As an IFLA administrator
-I want a secure admin interface for managing namespaces and users
+I want a secure admin interface with proper Vercel routing
 So that I can efficiently administer the standards development platform
 ```
 
-**US-2.2: Public Standards Discovery**
+**US-2.2: Complete Content Pipeline**
 ```
-As a public user interested in IFLA standards
-I want a portal to discover and navigate available standards
-So that I can find relevant documentation and resources
+As a namespace editor
+I want the complete spreadsheet → CSV → MDX → RDF pipeline working in production form
+So that I can manage vocabulary development efficiently end-to-end
 ```
 
-**US-2.3: Integrated Authentication System**
+**US-2.3: Integrated Content Management**
 ```
-As a developer and user
-I want proper authentication and authorization flows
-So that access is secure and role-appropriate across all applications
+As a content editor
+I want TinaCMS and Crowdin integration working with the pipeline
+So that I can edit content directly and manage translations effectively
 ```
 
 ### Detailed Tasks
 
-#### Task 2.1: Admin Portal Development
-**Estimated Hours:** 32  
+#### Task 2.1: Admin Portal with Vercel Routing (SECOND PRIORITY)
+**Estimated Hours:** 36  
 **Assignee:** Senior Full Stack Developer  
 **Dependencies:** Epic 1 completion  
 
 **Subtasks:**
 - [ ] Create Next.js 15.2.5 application with App Router
+- [ ] **CRITICAL: Configure Vercel routing for admin portal**
 - [ ] Implement responsive UI with Tailwind CSS
 - [ ] Build dashboard for namespace overview and management
 - [ ] Create user management interface with role assignment
 - [ ] Implement namespace administration tools
-- [ ] Build vocabulary and RDF management interfaces
-- [ ] Create system monitoring and health dashboards
+- [ ] Set up NextAuth.js with GitHub OAuth
+- [ ] Configure Cerbos authorization policies
 
 **Acceptance Criteria:**
+- [ ] **Vercel routing works correctly for admin portal**
 - [ ] Admin portal renders correctly on all devices
 - [ ] Dashboard provides clear overview of system status
-- [ ] User management functions work properly
-- [ ] Namespace administration tools are functional
+- [ ] Authentication via GitHub OAuth functional
 - [ ] Performance meets requirements (<3s page loads)
 
-#### Task 2.2: Public Portal Development
+#### Task 2.2: Complete Pipeline Implementation (CRITICAL)
+**Estimated Hours:** 40  
+**Assignee:** Lead Developer + Backend Developer  
+**Dependencies:** Task 2.1  
+
+**Subtasks:**
+- [ ] **Build Vercel Edge Functions for Google Sheets integration**
+- [ ] **Create CSV processing and validation services**
+- [ ] **Implement MDX generation for documentation**
+- [ ] **Build RDF output generation (multiple formats: RDF/XML, Turtle, N-Triples, JSON-LD)**
+- [ ] **Create complete pipeline orchestration**
+- [ ] **Integrate with TinaCMS for content editing**
+- [ ] **Test complete end-to-end pipeline**
+- [ ] **Build error handling and validation**
+
+**Acceptance Criteria:**
+- [ ] **Google Sheets → CSV conversion works reliably**
+- [ ] **CSV → MDX generation creates proper documentation**
+- [ ] **MDX → RDF generation produces all required formats**
+- [ ] **Pipeline handles errors gracefully**
+- [ ] **TinaCMS integration allows direct content editing**
+
+#### Task 2.3: Translation and Content Management Integration
 **Estimated Hours:** 24  
-**Assignee:** Frontend Developer  
-**Dependencies:** Epic 1 completion  
+**Assignee:** Frontend Developer + Internationalization Specialist  
+**Dependencies:** Task 2.2  
 
 **Subtasks:**
-- [ ] Create Next.js application for public portal
-- [ ] Build standards discovery and navigation interface
-- [ ] Implement search functionality with filtering
-- [ ] Create responsive design for mobile and desktop
-- [ ] Build inter-namespace navigation components
-- [ ] Implement content preview and download features
+- [ ] **Configure Crowdin integration for translation workflows**
+- [ ] **Build translation management interface in admin portal**
+- [ ] **Create content preview and validation systems**
+- [ ] **Implement workflow triggers and automation**
+- [ ] **Set up cross-site session management**
+- [ ] **Build role-based content editing permissions**
+- [ ] **Test translation workflow end-to-end**
 
 **Acceptance Criteria:**
-- [ ] Public portal provides intuitive standards discovery
-- [ ] Search and filtering work effectively
-- [ ] Navigation between namespaces is seamless
-- [ ] Content is accessible and well-organized
-- [ ] Site meets accessibility standards (WCAG 2.1 AA)
-
-#### Task 2.3: Authentication Integration
-**Estimated Hours:** 20  
-**Assignee:** Backend Developer  
-**Dependencies:** Task 2.1, Task 2.2  
-
-**Subtasks:**
-- [ ] Set up NextAuth.js 5.0 with GitHub OAuth provider
-- [ ] Configure Cerbos authorization engine
-- [ ] Implement role detection from GitHub organization teams
-- [ ] Create cross-site session management
-- [ ] Build authorization middleware for protected routes
-- [ ] Implement session persistence and security measures
-
-**Acceptance Criteria:**
-- [ ] GitHub OAuth authentication works reliably
-- [ ] Role-based access control functions correctly
-- [ ] Sessions work across applications
-- [ ] Security measures meet requirements
-- [ ] Authorization policies are enforced properly
+- [ ] **Crowdin integration works for managing translations**
+- [ ] **Content preview shows changes before publishing**
+- [ ] **Workflow automation triggers correctly**
+- [ ] **Role-based permissions function properly**
+- [ ] **Translation workflow is complete and tested**
 
 ### Epic Definition of Done
-- [ ] Admin portal authenticates users via GitHub and provides full administrative functionality
-- [ ] Public portal provides effective standards discovery and navigation
-- [ ] Authentication works seamlessly across all applications
-- [ ] Role-based access control functions according to IFLA hierarchy
-- [ ] Performance and security requirements are met
+- [ ] **Admin portal works with Vercel routing and provides administrative functionality**
+- [ ] **Complete spreadsheet → CSV → MDX → RDF pipeline functional in production**
+- [ ] **TinaCMS integration allows direct page editing**
+- [ ] **Crowdin integration supports translation workflows**
+- [ ] **Pipeline tested end-to-end with ISBDM as validation**
 
 ---
 
