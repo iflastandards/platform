@@ -11,9 +11,9 @@
       "properties": {
         "scope": {
           "type": "string",
-          "enum": ["system", "namespace", "site"]
+          "enum": ["system", "rg", "site"]
         },
-        "namespace": {
+        "rg": {
           "type": "string"
         },
         "siteKey": {

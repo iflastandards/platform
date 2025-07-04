@@ -14,7 +14,7 @@
     "attributes": {
       "type": "object",
       "properties": {
-        "namespaces": {
+        "rgs": {
           "type": "object",
           "patternProperties": {
             ".*": {

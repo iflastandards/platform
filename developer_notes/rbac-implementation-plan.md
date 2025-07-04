@@ -1,30 +1,30 @@
 # RBAC (Role-Based Access Control) Implementation Plan
 
 ## Overview
-This document outlines the implementation of a comprehensive role-based access control system for IFLA Standards using Cerbos for policy management. The system supports namespace-based review groups, site-specific permissions, and interactive role testing capabilities.
+This document outlines the implementation of a comprehensive role-based access control system for IFLA Standards using Cerbos for policy management. The system supports review group-based permissions, site-specific permissions, and interactive role testing capabilities.
 
 ## Key Concepts
 
-### 1. Namespace = Review Group
-- Each namespace represents a standards review group responsible for a standards 'namespace'
-- IFLA currently has 5 namespaces:
+### 1. Review Groups (RG)
+- Each review group (rg) represents a standards committee responsible for managing related standards
+- IFLA currently has 5 review groups:
   - **LRM**: Library Reference Model
   - **ISBD**: International Standard Bibliographic Description (contains isbd, isbdm + 7 planned sites)
   - **MulDiCat**: Multilingual Dictionary of Cataloguing Terms
   - **FR**: Functional Requirements (currently named FRBR, needs renaming)
   - **UNIMARC**: Universal MARC Format
 - Review groups have members with different responsibilities
-- Namespaces can contain multiple sites (e.g., ISBD namespace contains both isbd and isbdm sites)
+- Review groups can contain multiple sites (e.g., ISBD review group contains both isbd and isbdm sites)
 
 ### 2. Three-Tier Permission Model
 ```
 System Level (Global)
-    └── Namespace Level (Review Group)
+    └── Review Group Level (RG)
             └── Site Level (Individual Site)
 ```
 
 - **System Level**: Global administrators managing entire system
-- **Namespace Level**: Review group administrators managing their namespace
+- **Review Group Level**: Review group administrators managing their review group
 - **Site Level**: Site administrators managing individual sites
 
 ### 3. Role Types
@@ -32,18 +32,18 @@ System Level (Global)
 #### Administrative Roles
 - `system-admin`: Full system administration
 - `ifla-admin`: IFLA organization admin
-- `{namespace}-admin`: Full control of namespace (e.g., `isbd-admin`)
+- `{rg}-admin`: Full control of review group (e.g., `isbd-admin`)
 - `{site}-admin`: Site administration (e.g., `isbdm-admin`)
 
 #### Editorial Roles
-- `{namespace}-editor`: Edit content across namespace
-- `{namespace}-reviewer`: Review/approve changes in namespace
-- `{namespace}-contributor`: Propose changes in namespace
+- `{rg}-editor`: Edit content across review group
+- `{rg}-reviewer`: Review/approve changes in review group
+- `{rg}-contributor`: Propose changes in review group
 - `{site}-editor`: Edit specific site content
 - `{site}-contributor`: Contribute to specific site
 
 #### Specialized Roles
-- `{namespace}-translator`: Translate content in namespace
+- `{rg}-translator`: Translate content in review group
 - `{site}-translator`: Translate specific site content
 
 ### 4. Technology Stack
@@ -56,7 +56,7 @@ System Level (Global)
 ## Implementation Epics
 
 ### Epic 1: Cerbos Policy Framework
-**Goal**: Establish authorization policies for namespace and site permissions  
+**Goal**: Establish authorization policies for review group and site permissions  
 **Value**: Declarative, version-controlled permission management
 
 ### Epic 2: Interactive Role Testing Tool
@@ -86,19 +86,19 @@ System Level (Global)
 - [x] Create `cerbos/.cerbos-hub.yaml` configuration
 
 #### Task 1.2: Define Resource Policies ✅
-- [x] Create `resource_namespace.yaml` - namespace permissions
+- [x] Create `resource_rg.yaml` - review group permissions
 - [x] Create `resource_site.yaml` - site permissions
 - [x] Create `resource_user_admin.yaml` - user management permissions
 - [x] Create `resource_translation.yaml` - translation permissions
 
 #### Task 1.3: Define Role Derivations ✅
-- [x] Create `derived_roles.yaml` with namespace/site role logic
+- [x] Create `derived_roles.yaml` with rg/site role logic
 - [x] Define role inheritance rules
 - [x] Add translator role with language attributes
 
 #### Task 1.4: Create Test Fixtures ✅
 - [x] Create user fixtures for each role type
-- [x] Create namespace/site resource fixtures
+- [x] Create rg/site resource fixtures
 - [x] Create permission test scenarios
 
 #### Task 1.5: Set up Cerbos Hub
@@ -117,8 +117,8 @@ System Level (Global)
 
 #### Task 2.2: Implement Role Selection
 - [ ] Add role hierarchy menu
-- [ ] Add namespace selection (dynamic from config)
-- [ ] Add site selection (filtered by namespace)
+- [ ] Add review group selection (dynamic from config)
+- [ ] Add site selection (filtered by review group)
 - [ ] Add custom role combination support
 
 #### Task 2.3: Integrate with Cerbos
@@ -162,19 +162,19 @@ System Level (Global)
 
 #### Task 4.3: Create UI Mockups
 - [ ] System admin dashboard design
-- [ ] Namespace admin interface design
+- [ ] Review group admin interface design
 - [ ] Site admin interface design
 
 ### Phase 5: E2E Testing (Epic 5)
 
 #### Task 5.1: Update Auth Helpers
 - [ ] Enhance `e2e/utils/auth-helpers.ts`
-- [ ] Add namespace/site role support
+- [ ] Add rg/site role support
 - [ ] Create role-based test users
 
 #### Task 5.2: Create Role Test Scenarios
 - [ ] System admin full access test
-- [ ] Namespace admin scoped access test
+- [ ] Review group admin scoped access test
 - [ ] Site admin limited access test
 - [ ] Translator workflow test
 
@@ -191,25 +191,25 @@ System Level (Global)
 pnpm test:admin:roles
 
 # Command-line mode - direct role specification
-pnpm test:admin:roles --role namespace-admin --namespace ISBD
+pnpm test:admin:roles --role rg-admin --rg ISBD
 pnpm test:admin:roles --role site-admin --site isbdm
-pnpm test:admin:roles --role translator --namespaces ISBD,FR
+pnpm test:admin:roles --role translator --rgs ISBD,FR
 ```
 
 ### E2E Testing with Roles
 ```typescript
-// Test namespace admin capabilities
+// Test review group admin capabilities
 await setupMockAuth(context, {
-  username: 'test-namespace-admin',
+  username: 'test-rg-admin',
   roles: ['user'],
-  namespaces: { ISBD: 'admin' }
+  rgs: { ISBD: 'admin' }
 });
 
-// Test multi-namespace translator
+// Test multi-review group translator
 await setupMockAuth(context, {
   username: 'test-translator',
   roles: ['user'],
-  namespaces: { 
+  rgs: { 
     ISBD: 'translator',
     FR: 'translator'
   },
@@ -224,7 +224,7 @@ principal:
   id: "user123"
   roles: ["user"]
   attributes:
-    namespaces:
+    rgs:
       ISBD: "editor"
     sites:
       isbdm: "admin"
@@ -233,7 +233,7 @@ resource:
   kind: "site"
   id: "isbdm"
   attributes:
-    namespace: "ISBD"
+    rg: "ISBD"
     siteKey: "isbdm"
 
 actions: ["edit", "manage", "delete"]
@@ -244,7 +244,7 @@ actions: ["edit", "manage", "delete"]
 standards-dev/
 ├── cerbos/
 │   ├── policies/
-│   │   ├── resource_namespace.yaml    # Namespace permissions
+│   │   ├── resource_rg.yaml           # Review group permissions
 │   │   ├── resource_site.yaml         # Site permissions
 │   │   ├── resource_user_admin.yaml   # User management permissions
 │   │   ├── resource_translation.yaml  # Translation permissions
@@ -295,7 +295,7 @@ standards-dev/
 ## Success Criteria
 
 - [ ] Developers can test any role combination interactively
-- [ ] Cerbos policies correctly enforce namespace/site boundaries
+- [ ] Cerbos policies correctly enforce rg/site boundaries
 - [ ] Mock authentication works seamlessly in development
 - [ ] E2E tests cover all major role scenarios
 - [ ] Admins can manage users at their permission level

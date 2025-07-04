@@ -160,17 +160,17 @@ npx playwright test --ui              # Interactive UI
 
 ## RBAC with Cerbos
 
-### Namespace = Review Group
+### Review Groups (RG)
 - LRM, ISBD (contains isbd, isbdm + 7 planned), MulDiCat, FR, UNIMARC
 
 ### Three-Tier Permissions
 1. System: Global admins
-2. Namespace: Review group roles
+2. Review group (rg): Review group roles
 3. Site: Site-specific roles
 
 ### Testing Roles
 ```bash
-pnpm test:admin:roles --role editor --namespace ISBD
+pnpm test:admin:roles --role editor --rg ISBD
 pnpm test:admin:roles --role admin --site isbdm
 ```
 

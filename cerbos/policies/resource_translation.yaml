@@ -13,20 +13,20 @@ resourcePolicy:
       effect: EFFECT_ALLOW
       roles: ["system-admin", "ifla-admin"]
       
-    # Namespace administrators can manage translations in their namespace
+    # Review group administrators can manage translations in their review group
     - actions: ["view", "edit", "create", "delete", "approve", "assign_translators"]
       effect: EFFECT_ALLOW
-      derivedRoles: ["namespace_admin"]
+      derivedRoles: ["rg_admin"]
       
     # Site administrators can manage translations for their site
     - actions: ["view", "edit", "create", "delete", "approve", "assign_translators"]
       effect: EFFECT_ALLOW
       derivedRoles: ["site_admin"]
       
-    # Namespace translators can translate content in their namespace
+    # Review group translators can translate content in their review group
     - actions: ["view", "edit", "create", "update", "submit_for_review"]
       effect: EFFECT_ALLOW
-      derivedRoles: ["namespace_translator"]
+      derivedRoles: ["rg_translator"]
       condition:
         match:
           expr: |
@@ -46,7 +46,7 @@ resourcePolicy:
     # Translators can only edit translations in languages they're qualified for
     - actions: ["edit", "create", "update"]
       effect: EFFECT_DENY
-      derivedRoles: ["namespace_translator", "site_translator"]
+      derivedRoles: ["rg_translator", "site_translator"]
       condition:
         match:
           expr: |
@@ -56,7 +56,7 @@ resourcePolicy:
     # Reviewers can approve/reject translations
     - actions: ["view", "review", "approve", "reject", "comment"]
       effect: EFFECT_ALLOW
-      derivedRoles: ["namespace_reviewer"]
+      derivedRoles: ["rg_reviewer"]
       
     # Anyone can view approved translations
     - actions: ["view"]
@@ -69,7 +69,7 @@ resourcePolicy:
     # Integration with Crowdin - translators can sync with external platform
     - actions: ["crowdin_sync", "crowdin_push", "crowdin_pull"]
       effect: EFFECT_ALLOW
-      derivedRoles: ["namespace_translator", "site_translator"]
+      derivedRoles: ["rg_translator", "site_translator"]
       
   schemas:
     principalSchema:

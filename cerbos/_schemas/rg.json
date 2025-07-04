@@ -9,14 +9,14 @@
     "attributes": {
       "type": "object",
       "properties": {
-        "namespace": {
+        "rg": {
           "type": "string"
         },
         "visibility": {
           "type": "string"
         }
       },
-      "required": ["namespace", "visibility"],
+      "required": ["rg", "visibility"],
       "additionalProperties": true
     }
   },

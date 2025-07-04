@@ -9,7 +9,7 @@
 type Environment = 'local' | 'preview' | 'development' | 'production';
 
 interface UserAttributes {
-  namespaces?: Record<string, string>;
+  rgs?: Record<string, string>;
   sites?: Record<string, string>;
   [key: string]: any; // eslint-disable-line @typescript-eslint/no-explicit-any
 }
@@ -51,23 +51,23 @@ export function getRoleBasedLandingPage(user: SessionUser, baseUrl: string): str
     }
   }
   
-  // Namespace admins get the general dashboard to choose sites
-  if (attributes?.namespaces) {
-    const namespaceEntries = Object.entries(attributes.namespaces);
+  // Review group admins get the general dashboard to choose sites
+  if (attributes?.rgs) {
+    const rgEntries = Object.entries(attributes.rgs);
     
-    // If user is admin of exactly one namespace with limited sites, might redirect directly
-    const adminNamespaces = namespaceEntries.filter(([_, role]) => role === 'admin');
-    if (adminNamespaces.length === 1) {
-      const [namespace] = adminNamespaces[0];
+    // If user is admin of exactly one review group with limited sites, might redirect directly
+    const adminRgs = rgEntries.filter(([_, role]) => role === 'admin');
+    if (adminRgs.length === 1) {
+      const [rg] = adminRgs[0];
       
-      // For single-site namespaces, redirect directly to site management
-      if (namespace === 'LRM') {
+      // For single-site review groups, redirect directly to site management
+      if (rg === 'LRM') {
         return `${baseUrl}/dashboard/lrm`;
-      } else if (namespace === 'MulDiCat') {
+      } else if (rg === 'MulDiCat') {
         return `${baseUrl}/dashboard/muldicat`;
-      } else if (namespace === 'UNIMARC') {
+      } else if (rg === 'UNIMARC') {
         return `${baseUrl}/dashboard/unimarc`;
-      } else if (namespace === 'FR') {
+      } else if (rg === 'FR') {
         return `${baseUrl}/dashboard/frbr`;
       }
       // ISBD has multiple sites, so show dashboard to choose
@@ -189,8 +189,8 @@ export function userHasSiteAccess(user: SessionUser, siteKey: string): boolean {
     return true;
   }
   
-  // Namespace access (check which namespace the site belongs to)
-  const siteToNamespace: Record<string, string> = {
+  // Review group access (check which review group the site belongs to)
+  const siteToRg: Record<string, string> = {
     lrm: 'LRM',
     isbd: 'ISBD',
     isbdm: 'ISBD',
@@ -200,8 +200,8 @@ export function userHasSiteAccess(user: SessionUser, siteKey: string): boolean {
     newtest: 'ISBD' // For testing
   };
   
-  const namespace = siteToNamespace[siteKey];
-  if (namespace && attributes?.namespaces?.[namespace]) {
+  const rg = siteToRg[siteKey];
+  if (rg && attributes?.rgs?.[rg]) {
     return true;
   }
   

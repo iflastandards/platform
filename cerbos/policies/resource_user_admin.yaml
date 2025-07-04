@@ -13,13 +13,13 @@ resourcePolicy:
       effect: EFFECT_ALLOW
       roles: ["system-admin", "ifla-admin"]
       
-    # Namespace administrators can manage users within their namespace
-    - actions: ["view_users", "assign_namespace_roles", "assign_site_roles", "remove_roles"]
+    # Review group administrators can manage users within their review group
+    - actions: ["view_users", "assign_rg_roles", "assign_site_roles", "remove_roles"]
       effect: EFFECT_ALLOW
-      derivedRoles: ["namespace_admin"]
+      derivedRoles: ["rg_admin"]
       condition:
         match:
-          expr: R.attr.scope == "namespace" && P.attr.namespaces.exists(n, n == R.attr.namespace && P.attr.namespaces[n] in ["admin"])
+          expr: R.attr.scope == "rg" && P.attr.rgs.exists(r, r == R.attr.rg && P.attr.rgs[r] in ["admin"])
           
     # Site administrators can manage users for their specific site
     - actions: ["view_users", "assign_site_roles", "remove_site_roles"]
@@ -38,7 +38,7 @@ resourcePolicy:
           expr: P.id == R.attr.userId
           
     # Prevent privilege escalation - cannot assign higher roles than you have
-    - actions: ["assign_namespace_roles", "assign_site_roles"]
+    - actions: ["assign_rg_roles", "assign_site_roles"]
       effect: EFFECT_DENY
       roles: ["*"]
       condition:

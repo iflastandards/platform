@@ -3,7 +3,7 @@
 export interface RoleAssignment {
   userId: string;
   role: string;
-  namespace?: string;
+  rg?: string;
   site?: string;
 }
 

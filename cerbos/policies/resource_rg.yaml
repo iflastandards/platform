@@ -1,10 +1,10 @@
-# Namespace Resource Policy
-# Defines permissions for namespace-level operations (review groups)
+# Review Group (RG) Resource Policy
+# Defines permissions for review group-level operations
 ---
 apiVersion: api.cerbos.dev/v1
 resourcePolicy:
   version: "default"
-  resource: "namespace"
+  resource: "rg"
   importDerivedRoles:
     - ifla_standards_roles
   rules:
@@ -13,32 +13,32 @@ resourcePolicy:
       effect: EFFECT_ALLOW
       roles: ["system-admin", "ifla-admin"]
       
-    # Namespace administrators can manage their namespace
+    # Review group administrators can manage their review group
     - actions: ["view", "edit", "manage", "delete", "create_site", "manage_users"]
       effect: EFFECT_ALLOW
-      derivedRoles: ["namespace_admin"]
+      derivedRoles: ["rg_admin"]
       
-    # Namespace editors can edit content across the namespace
+    # Review group editors can edit content across the review group
     - actions: ["view", "edit", "create", "update"]
       effect: EFFECT_ALLOW
-      derivedRoles: ["namespace_editor"]
+      derivedRoles: ["rg_editor"]
       
-    # Namespace reviewers can review and approve content
+    # Review group reviewers can review and approve content
     - actions: ["view", "review", "approve", "reject", "comment"]
       effect: EFFECT_ALLOW
-      derivedRoles: ["namespace_reviewer"]
+      derivedRoles: ["rg_reviewer"]
       
-    # Namespace translators can translate content
+    # Review group translators can translate content
     - actions: ["view", "translate", "edit_translation"]
       effect: EFFECT_ALLOW
-      derivedRoles: ["namespace_translator"]
+      derivedRoles: ["rg_translator"]
       
-    # Namespace contributors can propose changes
+    # Review group contributors can propose changes
     - actions: ["view", "contribute", "propose", "comment"]
       effect: EFFECT_ALLOW
-      derivedRoles: ["namespace_contributor"]
+      derivedRoles: ["rg_contributor"]
       
-    # Anyone can view public namespaces
+    # Anyone can view public review groups
     - actions: ["view"]
       effect: EFFECT_ALLOW
       roles: ["*"]
@@ -50,4 +50,4 @@ resourcePolicy:
     principalSchema:
       ref: cerbos:///principal.json
     resourceSchema:
-      ref: cerbos:///namespace.json
+      ref: cerbos:///rg.json

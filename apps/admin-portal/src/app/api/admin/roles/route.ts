@@ -22,7 +22,7 @@ export async function POST(request: Request) {
     return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
   }
 
-  const { userId, role, namespace, site } = await request.json();
+  const { userId, role, rg, site } = await request.json();
 
   const principal = {
     id: session.user.id,
@@ -36,8 +36,8 @@ export async function POST(request: Request) {
     kind: 'user_admin',
     id: 'role_assignment',
     attributes: {
-      scope: namespace ? 'namespace' : site ? 'site' : 'system',
-      namespace,
+      scope: rg ? 'rg' : site ? 'site' : 'system',
+      rg,
       site,
     },
   };
@@ -53,7 +53,7 @@ export async function POST(request: Request) {
   }
 
   // In a real application, you would save the role assignment to a database.
-  console.log(`Assigning role "${role}" to user "${userId}" for ${namespace || site || 'system'}`);
+  console.log(`Assigning role "${role}" to user "${userId}" for ${rg || site || 'system'}`);
 
   return NextResponse.json({ success: true });
 }

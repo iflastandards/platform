@@ -12,14 +12,14 @@
         "siteKey": {
           "type": "string"
         },
-        "namespace": {
+        "rg": {
           "type": "string"
         },
         "visibility": {
           "type": "string"
         }
       },
-      "required": ["siteKey", "namespace", "visibility"],
+      "required": ["siteKey", "rg", "visibility"],
       "additionalProperties": true
     }
   },
