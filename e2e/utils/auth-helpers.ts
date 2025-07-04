@@ -5,7 +5,7 @@ export function createTestUser(userData: {
   name: string;
   email: string;
   roles: string[];
-  namespaces?: Record<string, string>;
+  rgs?: Record<string, string>;
   sites?: Record<string, string>;
   languages?: string[];
 }) {
@@ -16,7 +16,7 @@ export function createTestUser(userData: {
     image: `https://avatars.githubusercontent.com/u/${Math.floor(Math.random() * 100000)}`,
     roles: userData.roles,
     attributes: {
-      namespaces: userData.namespaces || {},
+      rgs: userData.rgs || {},
       sites: userData.sites || {},
       languages: userData.languages || ['en'],
     },
@@ -30,11 +30,11 @@ export const TEST_USERS = {
     email: 'system-admin@test.example.com',
     roles: ['system-admin'],
   }),
-  namespaceAdmin: createTestUser({
-    name: 'ISBD Namespace Admin',
+  rgAdmin: createTestUser({
+    name: 'ISBD Review Group Admin',
     email: 'isbd-admin@test.example.com',
     roles: ['user'],
-    namespaces: { ISBD: 'admin' },
+    rgs: { ISBD: 'admin' },
   }),
   siteEditor: createTestUser({
     name: 'ISBDM Site Editor',
@@ -42,13 +42,13 @@ export const TEST_USERS = {
     roles: ['user'],
     sites: { isbdm: 'editor' },
   }),
-  multiNamespaceTranslator: createTestUser({
-    name: 'Multi-Namespace Translator',
+  multiRgTranslator: createTestUser({
+    name: 'Multi-Review Group Translator',
     email: 'translator@test.example.com',
     roles: ['user'],
-    namespaces: {
+    rgs: {
       ISBD: 'translator',
-      FR: 'translator',
+      BCM: 'translator',
     },
     languages: ['en', 'fr', 'es'],
   }),

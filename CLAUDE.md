@@ -161,7 +161,10 @@ npx playwright test --ui              # Interactive UI
 ## RBAC with Cerbos
 
 ### Review Groups (RG)
-- LRM, ISBD (contains isbd, isbdm + 7 planned), MulDiCat, FR, UNIMARC
+- **ICP** (International Cataloguing Principles): MulDiCat
+- **BCM** (Bibliographic Conceptual Models): LRM, FRBR, FRAD, FRBRer, FRBRoo, FRSAD
+- **ISBD** (International Standard Bibliographic Description): ISBD, ISBDM, ISBDW, ISBDE, ISBDI, ISBDAP, ISBDAC, ISBDN, ISBDP, ISBDT
+- **PUC** (Permanent UNIMARC Committee): UNIMARC elements (OXX, 1XX-8XX)
 
 ### Three-Tier Permissions
 1. System: Global admins

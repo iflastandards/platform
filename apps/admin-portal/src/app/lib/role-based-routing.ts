@@ -61,16 +61,10 @@ export function getRoleBasedLandingPage(user: SessionUser, baseUrl: string): str
       const [rg] = adminRgs[0];
       
       // For single-site review groups, redirect directly to site management
-      if (rg === 'LRM') {
-        return `${baseUrl}/dashboard/lrm`;
-      } else if (rg === 'MulDiCat') {
+      if (rg === 'ICP') {
         return `${baseUrl}/dashboard/muldicat`;
-      } else if (rg === 'UNIMARC') {
-        return `${baseUrl}/dashboard/unimarc`;
-      } else if (rg === 'FR') {
-        return `${baseUrl}/dashboard/frbr`;
       }
-      // ISBD has multiple sites, so show dashboard to choose
+      // BCM, ISBD, and PUC have multiple sites, so show dashboard to choose
     }
   }
   
@@ -191,12 +185,33 @@ export function userHasSiteAccess(user: SessionUser, siteKey: string): boolean {
   
   // Review group access (check which review group the site belongs to)
   const siteToRg: Record<string, string> = {
-    lrm: 'LRM',
+    // ICP (International Cataloguing Principles)
+    muldicat: 'ICP',
+    
+    // BCM (Bibliographic Conceptual Models)
+    lrm: 'BCM',
+    frbr: 'BCM',
+    frad: 'BCM',
+    frbrer: 'BCM',
+    frbroo: 'BCM',
+    frsad: 'BCM',
+    
+    // ISBD (International Standard Bibliographic Description)
     isbd: 'ISBD',
     isbdm: 'ISBD',
-    muldicat: 'MulDiCat',
-    frbr: 'FR',
-    unimarc: 'UNIMARC',
+    isbdw: 'ISBD',
+    isbde: 'ISBD',
+    isbdi: 'ISBD',
+    isbdap: 'ISBD',
+    isbdac: 'ISBD',
+    isbdn: 'ISBD',
+    isbdp: 'ISBD',
+    isbdt: 'ISBD',
+    
+    // PUC (Permanent UNIMARC Committee) - all UNIMARC elements
+    unimarc: 'PUC',
+    
+    // Testing
     newtest: 'ISBD' // For testing
   };
   

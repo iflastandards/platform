@@ -7,12 +7,11 @@ This document outlines the implementation of a comprehensive role-based access c
 
 ### 1. Review Groups (RG)
 - Each review group (rg) represents a standards committee responsible for managing related standards
-- IFLA currently has 5 review groups:
-  - **LRM**: Library Reference Model
-  - **ISBD**: International Standard Bibliographic Description (contains isbd, isbdm + 7 planned sites)
-  - **MulDiCat**: Multilingual Dictionary of Cataloguing Terms
-  - **FR**: Functional Requirements (currently named FRBR, needs renaming)
-  - **UNIMARC**: Universal MARC Format
+- IFLA currently has 4 review groups:
+  - **ICP** (International Cataloguing Principles): MulDiCat
+  - **BCM** (Bibliographic Conceptual Models): LRM, FRBR, FRAD, FRBRer, FRBRoo, FRSAD
+  - **ISBD** (International Standard Bibliographic Description): ISBD, ISBDM, ISBDW, ISBDE, ISBDI, ISBDAP, ISBDAC, ISBDN, ISBDP, ISBDT
+  - **PUC** (Permanent UNIMARC Committee): UNIMARC elements (OXX, 1XX-8XX)
 - Review groups have members with different responsibilities
 - Review groups can contain multiple sites (e.g., ISBD review group contains both isbd and isbdm sites)
 
@@ -193,7 +192,7 @@ pnpm test:admin:roles
 # Command-line mode - direct role specification
 pnpm test:admin:roles --role rg-admin --rg ISBD
 pnpm test:admin:roles --role site-admin --site isbdm
-pnpm test:admin:roles --role translator --rgs ISBD,FR
+pnpm test:admin:roles --role translator --rgs ISBD,BCM
 ```
 
 ### E2E Testing with Roles
@@ -211,7 +210,7 @@ await setupMockAuth(context, {
   roles: ['user'],
   rgs: { 
     ISBD: 'translator',
-    FR: 'translator'
+    BCM: 'translator'
   },
   languages: ['en', 'es', 'fr']
 });
