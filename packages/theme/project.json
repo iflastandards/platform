@@ -15,10 +15,7 @@
     "build": {
       "executor": "nx:run-commands",
       "options": {
-        "commands": [
-          "pnpm exec tsup",
-          "nx run @ifla/theme:build:tsc"
-        ],
+        "commands": ["pnpm exec tsup", "nx run @ifla/theme:build:tsc"],
         "cwd": "packages/theme",
         "parallel": false
       },
@@ -27,36 +24,32 @@
         "production",
         "{projectRoot}/src/**/*",
         "{projectRoot}/tsup.config.ts",
-        "{projectRoot}/tsconfig.build.json",
+        "{projectRoot}/tsconfig.declarations.json",
         "{projectRoot}/package.json"
-      ],
-      "dependsOn": ["build:tsc"]
+      ]
     },
     "test": {
       "executor": "@nx/vite:test",
       "options": {
         "config": "{workspaceRoot}/vite.config.ts",
-        "testPathPattern": ["packages/theme/src/tests", "packages/theme/src/components/**/__tests__"]
+        "testPathPattern": [
+          "packages/theme/src/tests",
+          "packages/theme/src/components/**/__tests__"
+        ]
       }
     },
     "test:unit": {
       "executor": "@nx/vite:test",
       "options": {
         "config": "{workspaceRoot}/vite.config.ts",
-        "exclude": [
-          "**/scripts/**",
-          "**/deployment/**"
-        ]
+        "exclude": ["**/scripts/**", "**/deployment/**"]
       }
     },
     "test:integration": {
-      "executor": "@nx/vite:test", 
+      "executor": "@nx/vite:test",
       "options": {
         "config": "{workspaceRoot}/vite.config.ts",
-        "include": [
-          "**/scripts/**",
-          "**/deployment/**"
-        ]
+        "include": ["**/scripts/**", "**/deployment/**"]
       }
     },
     "typecheck": {
