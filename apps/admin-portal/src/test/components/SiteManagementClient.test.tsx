@@ -1,7 +1,11 @@
-import { describe, it, expect, beforeEach, afterEach } from 'vitest';
+import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest';
 import { render, screen, fireEvent, waitFor } from '../utils/test-utils';
 import SiteManagementClient from '../../app/dashboard/[siteKey]/SiteManagementClient';
 import { setupFetchMock, cleanupFetchMock } from '../mocks/api';
+
+vi.mock('next/navigation', () => ({
+  usePathname: () => '/dashboard/newtest',
+}));
 
 describe('SiteManagementClient', () => {
   const defaultProps = {
@@ -37,13 +41,16 @@ describe('SiteManagementClient', () => {
       expect(screen.getByRole('button', { name: 'Team Management' })).toBeInTheDocument();
       expect(screen.getByRole('button', { name: 'Releases & Publishing' })).toBeInTheDocument();
       expect(screen.getByRole('button', { name: 'Quality Assurance' })).toBeInTheDocument();
+      expect(screen.getByRole('button', { name: 'GitHub' })).toBeInTheDocument();
+      expect(screen.getByRole('button', { name: 'Settings' })).toBeInTheDocument();
     });
 
     it('should have overview tab active by default', () => {
       render(<SiteManagementClient {...defaultProps} />);
       
       const overviewTab = screen.getByRole('button', { name: 'Overview' });
-      expect(overviewTab).toHaveClass('text-blue-600');
+      // Check for the active tab classes used in the component
+      expect(overviewTab.className).toMatch(/text-blue-600|border-blue-600/);
     });
   });
 
@@ -55,7 +62,7 @@ describe('SiteManagementClient', () => {
       fireEvent.click(contentTab);
       
       await waitFor(() => {
-        expect(contentTab).toHaveClass('text-blue-600');
+        expect(contentTab.className).toMatch(/text-blue-600|border-blue-600/);
       });
     });
 
@@ -63,7 +70,7 @@ describe('SiteManagementClient', () => {
       render(<SiteManagementClient {...defaultProps} />);
       
       // Check overview content
-      expect(screen.getByText(/Test Site Status/)).toBeInTheDocument();
+      expect(screen.getByText('Test Site Status')).toBeInTheDocument();
       
       // Switch to content tab
       fireEvent.click(screen.getByRole('button', { name: 'Content Management' }));
@@ -78,7 +85,7 @@ describe('SiteManagementClient', () => {
     it('should display site information', () => {
       render(<SiteManagementClient {...defaultProps} />);
       
-      expect(screen.getByText(/Test Site Status/)).toBeInTheDocument();
+      expect(screen.getByText('Test Site Status')).toBeInTheDocument();
       expect(screen.getByText('Last Updated:')).toBeInTheDocument();
     });
   });
@@ -91,7 +98,7 @@ describe('SiteManagementClient', () => {
       
       await waitFor(() => {
         const activeTab = screen.getByRole('button', { name: 'Content Management' });
-        expect(activeTab).toHaveClass('text-blue-600');
+        expect(activeTab.className).toMatch(/text-blue-600|border-blue-600/);
       });
     });
   });

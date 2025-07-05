@@ -3,6 +3,10 @@ import { render, screen, fireEvent, waitFor } from '../utils/test-utils';
 import { mockSession, mockSiteData } from '../fixtures/mockData';
 import { setupFetchMock, cleanupFetchMock, mockApiCall, mockApiError } from '../mocks/api';
 
+vi.mock('next/navigation', () => ({
+  usePathname: () => '/dashboard/newtest',
+}));
+
 // Mock the auth module
 vi.mock('@/app/lib/auth', () => ({
   auth: vi.fn(),
@@ -75,7 +79,7 @@ describe('Site Management Integration Tests', () => {
       );
       
       // Navigate to GitHub tab
-      fireEvent.click(screen.getByText('GitHub'));
+      fireEvent.click(screen.getByRole('button', { name: 'GitHub' }));
       
       await waitFor(() => {
         expect(screen.getByText('Repository Information')).toBeInTheDocument();
@@ -103,11 +107,14 @@ describe('Site Management Integration Tests', () => {
         />
       );
       
-      fireEvent.click(screen.getByText('GitHub'));
+      fireEvent.click(screen.getByRole('button', { name: 'GitHub' }));
       
       await waitFor(() => {
-        expect(screen.getByText('Issues')).toBeInTheDocument();
-        expect(screen.getByText('Pull Requests')).toBeInTheDocument();
+        // Check for the action card titles, not the link text
+        expect(screen.getByRole('heading', { name: 'Open Issues' })).toBeInTheDocument();
+        // Check for the PRs link instead
+        const prsLink = screen.getByRole('link', { name: 'PRs' });
+        expect(prsLink).toBeInTheDocument();
       });
     });
   });
@@ -172,7 +179,7 @@ describe('Site Management Integration Tests', () => {
         />
       );
       
-      fireEvent.click(screen.getByText('Releases & Publishing'));
+      fireEvent.click(screen.getByRole('button', { name: 'Releases & Publishing' }));
       
       await waitFor(() => {
         expect(screen.getByText('Create Release Candidate')).toBeInTheDocument();
@@ -198,7 +205,7 @@ describe('Site Management Integration Tests', () => {
         />
       );
       
-      fireEvent.click(screen.getByText('Releases & Publishing'));
+      fireEvent.click(screen.getByRole('button', { name: 'Releases & Publishing' }));
       
       await waitFor(() => {
         const releaseButton = screen.getByText('Create Release Candidate');
@@ -219,7 +226,7 @@ describe('Site Management Integration Tests', () => {
         />
       );
       
-      fireEvent.click(screen.getByText('Settings'));
+      fireEvent.click(screen.getByRole('button', { name: 'Settings' }));
       
       await waitFor(() => {
         expect(screen.getByText('Site Settings')).toBeInTheDocument();
@@ -244,7 +251,7 @@ describe('Site Management Integration Tests', () => {
         />
       );
       
-      fireEvent.click(screen.getByText('Settings'));
+      fireEvent.click(screen.getByRole('button', { name: 'Settings' }));
       
       await waitFor(() => {
         expect(screen.getByText('Site Settings')).toBeInTheDocument();
