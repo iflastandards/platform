@@ -7,13 +7,10 @@
   "// targets": "to see all targets run: nx show project admin-portal --web",
   "targets": {
     "typecheck": {
-      "executor": "@nx/js:tsc",
+      "executor": "nx:run-commands",
       "options": {
-        "main": "apps/admin-portal/src/app/page.tsx",
-        "tsConfig": "apps/admin-portal/tsconfig.json",
-        "outputPath": "dist/apps/admin-portal",
-        "compiler": "tsc",
-        "assets": []
+        "command": "tsc --noEmit",
+        "cwd": "apps/admin-portal"
       }
     },
     "lint": {

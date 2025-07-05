@@ -2,8 +2,6 @@
   "extends": "../tsconfig.json",
   "compilerOptions": {
     "baseUrl": ".",
-    "composite": true,
-    "tsBuildInfoFile": "./build/.tsbuildinfo",
     "paths": {
       "@ifla/theme": ["../packages/theme/src/index.ts"],
       "@ifla/theme/*": ["../packages/theme/src/*"],
@@ -16,13 +14,5 @@
       "@ifla/theme/utils/*": ["../packages/theme/src/utils/*"]
     }
   },
-  "include": [
-    "src/**/*",
-    "docusaurus.config.ts",
-    "sidebars.ts",
-    "navbar.ts"
-  ],
-  "references": [
-    { "path": "../packages/theme" }
-  ]
+  "include": ["src/**/*", "docusaurus.config.ts", "sidebars.ts", "navbar.ts"]
 }
