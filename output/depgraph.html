@@ -1,0 +1,62 @@
+Usage: dependency-cruiser [options] [files-or-directories...]
+
+Validate and visualize dependencies.
+Details: https://github.com/sverweij/dependency-cruiser
+
+Options:
+  --init [oneshot]               set up dependency-cruiser for use in your
+                                 environment (<<< recommended!)
+                                 
+                                 
+  -c, --config [file]            read rules and options from [file] (e.g.
+                                 .dependency-cruiser.js) (default: true)
+  -T, --output-type <type>       output type; e.g. err, err-html, dot, ddot,
+                                 archi, flat, d2, mermaid, text or json
+                                 (default: "err")
+  -m, --metrics                  calculate stability metrics (default: false)
+  -f, --output-to <file>         file to write output to; - for stdout (default:
+                                 "-")
+  -I, --include-only <regex>     only include modules matching the regex
+  -F, --focus <regex>            only include modules matching the regex + their
+                                 direct neighbours
+  --focus-depth <number>         the depth to focus on - only applied when
+                                 --focus is passed too. 1= direct neighbors,
+                                 2=neighbours of neighbours etc. (default: 1)
+  -R, --reaches <regex>          only include modules matching the regex + all
+                                 modules that can reach them
+  -A, --affected [revision]      only include modules changed since the revision
+                                 + all modules that can reach them (when not
+                                 specified revision defaults to 'main')
+  -H, --highlight <regex>        mark modules matching the regex as
+                                 'highlighted'
+  -x, --exclude <regex>          exclude all modules matching the regex
+  -X, --do-not-follow <regex>    include modules matching the regex, but don't
+                                 follow their dependencies
+  --ignore-known [file]          ignore known violations as saved in [file]
+                                 (default:
+                                 .dependency-cruiser-known-violations.json)
+  -S, --collapse <regex>         collapse a to a folder depth by passing a
+                                 single digit (e.g. 2). When passed a regex
+                                 collapses to that pattern. E.g.
+                                 "^packages/[^/]+/" would collapse to modules/
+                                 folders directly under your packages folder.
+  -p, --progress [type]          show progress while dependency-cruiser is busy
+                                 (choices: "cli-feedback", "performance-log",
+                                 "ndjson", "none")
+  -P, --prefix <prefix>          prefix to use for links in the dot and err-html
+                                 reporters
+                                 
+                                 
+  -C, --cache [cache-directory]  use a cache to speed up execution. The
+                                 directory defaults to
+                                 node_modules/.cache/dependency-cruiser
+  --cache-strategy <strategy>    strategy to use for detecting changed files in
+                                 the cache. (choices: "metadata", "content")
+  -i, --info                     shows what languages and extensions
+                                 dependency-cruiser supports
+  -V, --version                  output the version number
+  -h, --help                     display help for command
+
+Other options:
+  see https://github.com/sverweij/dependency-cruiser/blob/main/doc/cli.md
+

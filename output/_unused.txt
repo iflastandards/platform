@@ -1,0 +1,131 @@
+130 modules with unused exports
+/Users/jonphipps/Code/IFLA/standards-dev/packages/standards-cli/dist/commands/addSection.d.ts: addSection
+/Users/jonphipps/Code/IFLA/standards-dev/packages/standards-cli/dist/commands/createSite.d.ts: createSite
+/Users/jonphipps/Code/IFLA/standards-dev/packages/standards-cli/dist/commands/syncSheet.d.ts: syncSheet
+/Users/jonphipps/Code/IFLA/standards-dev/packages/theme/tsup.config.ts: default
+/Users/jonphipps/Code/IFLA/standards-dev/packages/theme/src/index.ts: default, VERSION, THEME_NAME, initializeIFLATheme, ElementReference, VocabularyTable, CSVVocabulary, VocabularyTableFromCSV, SiteManagement, SiteManagementLink, SiteManagementButton, SiteManagementNavbarLink, SiteManagementTextLink, InLink, OutLink, SeeAlso, Mandatory, Unique, Figure, ExampleTable, DownloadPanel, QuickStart, ElementReferenceProps, InLinkProps, OutLinkProps, SeeAlsoProps, MandatoryProps, UniqueProps, FigureProps, ExampleTableProps, RDFData, IFLAThemeConfig, VocabularyDefaults, DownloadPanelProps, QuickStartProps, SiteManagementProps, VocabularyTableProps, ConceptProps, MultilingualText, LanguageConfig, CSVConceptRow, TOCItem, UriCaseStyle, RDFMetadata, getSiteConfig, getSiteConfigMap, SITE_CONFIG, SiteKey, Environment, SiteConfigEntry, getLocalizedText, getAllLocalizedText, createSlug, generateConceptUri, parseCSVToConcepts, extractAvailableLanguages, exportToCSV, generateTOCFromProps, validateConcept, formatFileSize, debounce, deepMerge, isValidUrl, sanitizeHtml, generateId, useCsvLoader, useMultilingualText, useVocabularyTable, useLocalStorage, useAsync, useWindowSize, useClickOutside, useToggle, * -> /packages/theme/src/hooks/usePrevious
+/Users/jonphipps/Code/IFLA/standards-dev/packages/theme/src/components/AuthStatus.tsx: AuthStatus, default
+/Users/jonphipps/Code/IFLA/standards-dev/packages/theme/src/components/SiteLink.tsx: default
+/Users/jonphipps/Code/IFLA/standards-dev/packages/theme/src/components/DownloadPanel/index.tsx: DownloadPanel
+/Users/jonphipps/Code/IFLA/standards-dev/packages/theme/src/components/ExampleTable/index-enhanced.tsx: ExampleEntry, ExampleTable
+/Users/jonphipps/Code/IFLA/standards-dev/packages/theme/src/components/ExampleTable/index.tsx: ExampleEntry
+/Users/jonphipps/Code/IFLA/standards-dev/packages/theme/src/components/Figure/index.tsx: FigureProps, Figure
+/Users/jonphipps/Code/IFLA/standards-dev/packages/theme/src/components/InLink/index.tsx: InLinkProps, InLink
+/Users/jonphipps/Code/IFLA/standards-dev/packages/theme/src/components/Mandatory/index.tsx: MandatoryProps, Mandatory
+/Users/jonphipps/Code/IFLA/standards-dev/packages/theme/src/components/OutLink/index.tsx: OutLinkProps, OutLink
+/Users/jonphipps/Code/IFLA/standards-dev/packages/theme/src/components/QuickStart/index.tsx: QuickStart
+/Users/jonphipps/Code/IFLA/standards-dev/packages/theme/src/components/SeeAlso/index.tsx: SeeAlsoProps, SeeAlso
+/Users/jonphipps/Code/IFLA/standards-dev/packages/theme/src/components/Sitemap/index.tsx: default
+/Users/jonphipps/Code/IFLA/standards-dev/packages/theme/src/components/StandardHomePage.bak/index.tsx: StandardHomePageProps, default
+/Users/jonphipps/Code/IFLA/standards-dev/packages/theme/src/components/Unique/index.tsx: UniqueProps, Unique
+/Users/jonphipps/Code/IFLA/standards-dev/packages/theme/src/components/VocabularyTable/CSVVocabulary.tsx: CSVVocabularyProps, default
+/Users/jonphipps/Code/IFLA/standards-dev/packages/theme/src/components/VocabularyTable/VocabularyTable.tsx: default
+/Users/jonphipps/Code/IFLA/standards-dev/packages/theme/src/components/VocabularyTable/csvValidation.ts: ValidationIssue, validateCSVHeaders, validateCSVData
+/Users/jonphipps/Code/IFLA/standards-dev/packages/theme/src/components/VocabularyTable/index.tsx: default, DEFAULT_LANGUAGE_CONFIG, getLocalizedText, getAllLocalizedText, parseCSVToConcepts, createSlug, extractAvailableLanguages, generateTOCFromProps, exportToCSV, useCsvLoader, useMultilingualText
+/Users/jonphipps/Code/IFLA/standards-dev/packages/theme/src/components/VocabularyTable/profileValidation.ts: ProfileProperty, CONCEPT_PROFILE, isMandatoryProperty
+/Users/jonphipps/Code/IFLA/standards-dev/packages/theme/src/config/siteConfig.ts: AdminPortalConfig, SiteConfig, ADMIN_PORTAL_CONFIG, getAdminPortalConfig, getCurrentEnvironment
+/Users/jonphipps/Code/IFLA/standards-dev/packages/theme/src/hooks/useAdminSession.ts: default
+/Users/jonphipps/Code/IFLA/standards-dev/packages/theme/src/pages/sitemap.tsx: default
+/Users/jonphipps/Code/IFLA/standards-dev/portal/src/pages/index.tsx: default
+/Users/jonphipps/Code/IFLA/standards-dev/portal/src/pages/manage/index.tsx: default
+/Users/jonphipps/Code/IFLA/standards-dev/standards/FRBR/src/components/HomepageFeatures/index.tsx: default
+/Users/jonphipps/Code/IFLA/standards-dev/standards/FRBR/src/pages/index.tsx: default
+/Users/jonphipps/Code/IFLA/standards-dev/standards/FRBR/src/pages/rdf.tsx: default
+/Users/jonphipps/Code/IFLA/standards-dev/standards/FRBR/src/pages/sitemap.tsx: default
+/Users/jonphipps/Code/IFLA/standards-dev/standards/ISBDM/src/components/Hero.tsx: default
+/Users/jonphipps/Code/IFLA/standards-dev/standards/ISBDM/src/components/demo/Button/index.tsx: ButtonProps, Button, default
+/Users/jonphipps/Code/IFLA/standards-dev/standards/ISBDM/src/pages/index.tsx: default
+/Users/jonphipps/Code/IFLA/standards-dev/standards/ISBDM/src/pages/rdf.tsx: default
+/Users/jonphipps/Code/IFLA/standards-dev/standards/ISBDM/src/pages/sitemap.tsx: default
+/Users/jonphipps/Code/IFLA/standards-dev/standards/ISBDM/src/pages/editor/index.tsx: default
+/Users/jonphipps/Code/IFLA/standards-dev/standards/ISBDM/src/theme/MDXComponents.tsx: default
+/Users/jonphipps/Code/IFLA/standards-dev/standards/ISBDM/src/theme/Root.tsx: default
+/Users/jonphipps/Code/IFLA/standards-dev/standards/ISBDM/src/utils/frontMatterAdapter.ts: adaptElementFrontMatter
+/Users/jonphipps/Code/IFLA/standards-dev/standards/ISBDM/src/utils/sidebarPrefixes.ts: SIDEBAR_PREFIXES
+/Users/jonphipps/Code/IFLA/standards-dev/standards/ISBDM/src/utils/useDocInfo.ts: default
+/Users/jonphipps/Code/IFLA/standards-dev/standards/LRM/src/components/HomepageFeatures/index.tsx: default
+/Users/jonphipps/Code/IFLA/standards-dev/standards/LRM/src/pages/index.tsx: default
+/Users/jonphipps/Code/IFLA/standards-dev/standards/LRM/src/pages/rdf.tsx: default
+/Users/jonphipps/Code/IFLA/standards-dev/standards/LRM/src/pages/sitemap.tsx: default
+/Users/jonphipps/Code/IFLA/standards-dev/standards/isbd/src/components/CompactButton.tsx: default
+/Users/jonphipps/Code/IFLA/standards-dev/standards/isbd/src/components/HomepageFeatures/index.tsx: default
+/Users/jonphipps/Code/IFLA/standards-dev/standards/isbd/src/pages/rdf.tsx: default
+/Users/jonphipps/Code/IFLA/standards-dev/standards/isbd/src/pages/sitemap.tsx: default
+/Users/jonphipps/Code/IFLA/standards-dev/standards/muldicat/src/components/HomepageFeatures/index.tsx: default
+/Users/jonphipps/Code/IFLA/standards-dev/standards/muldicat/src/pages/index.tsx: default
+/Users/jonphipps/Code/IFLA/standards-dev/standards/muldicat/src/pages/rdf.tsx: default
+/Users/jonphipps/Code/IFLA/standards-dev/standards/muldicat/src/pages/sitemap.tsx: default
+/Users/jonphipps/Code/IFLA/standards-dev/standards/newtest/src/theme/NavbarItem/ComponentTypes.tsx: default
+/Users/jonphipps/Code/IFLA/standards-dev/standards/unimarc/src/components/HomepageFeatures/index.tsx: default
+/Users/jonphipps/Code/IFLA/standards-dev/standards/unimarc/src/pages/index.tsx: default
+/Users/jonphipps/Code/IFLA/standards-dev/standards/unimarc/src/pages/rdf.tsx: default
+/Users/jonphipps/Code/IFLA/standards-dev/standards/unimarc/src/pages/sitemap.tsx: default
+/Users/jonphipps/Code/IFLA/standards-dev/playwright-snapshots.config.ts: default
+/Users/jonphipps/Code/IFLA/standards-dev/playwright.config.pre-push.ts: default
+/Users/jonphipps/Code/IFLA/standards-dev/playwright.config.ts: default
+/Users/jonphipps/Code/IFLA/standards-dev/vitest.config.ci.ts: default
+/Users/jonphipps/Code/IFLA/standards-dev/dist/packages/theme/src/index.d.ts: default, VERSION, THEME_NAME, initializeIFLATheme
+/Users/jonphipps/Code/IFLA/standards-dev/dist/packages/theme/src/components/SiteLink.d.ts: default
+/Users/jonphipps/Code/IFLA/standards-dev/dist/packages/theme/src/components/index.d.ts: ElementReference, default, VocabularyTable, CSVVocabulary, VocabularyTableFromCSV, SiteManagement, InLink, OutLink, SeeAlso, Mandatory, Unique, Figure, ExampleTable, DownloadPanel, QuickStart, ElementReferenceProps, InLinkProps, OutLinkProps, SeeAlsoProps, MandatoryProps, UniqueProps, FigureProps, ExampleTableProps, RDFData, IFLAThemeConfig, VocabularyDefaults, DownloadPanelProps, QuickStartProps, SiteManagementProps, VocabularyTableProps, ConceptProps, MultilingualText, LanguageConfig, CSVConceptRow, TOCItem, UriCaseStyle, RDFMetadata
+/Users/jonphipps/Code/IFLA/standards-dev/dist/packages/theme/src/components/DownloadPanel/index.d.ts: DownloadPanelProps, DownloadPanel, default
+/Users/jonphipps/Code/IFLA/standards-dev/dist/packages/theme/src/components/ElementReference/index.d.ts: default
+/Users/jonphipps/Code/IFLA/standards-dev/dist/packages/theme/src/components/ExampleTable/index-enhanced.d.ts: ExampleEntry, ExampleTable
+/Users/jonphipps/Code/IFLA/standards-dev/dist/packages/theme/src/components/ExampleTable/index.d.ts: ExampleEntry, ExampleTable
+/Users/jonphipps/Code/IFLA/standards-dev/dist/packages/theme/src/components/Figure/index.d.ts: FigureProps, Figure, default
+/Users/jonphipps/Code/IFLA/standards-dev/dist/packages/theme/src/components/InLink/index.d.ts: InLinkProps, InLink, default
+/Users/jonphipps/Code/IFLA/standards-dev/dist/packages/theme/src/components/Mandatory/index.d.ts: MandatoryProps, Mandatory, default
+/Users/jonphipps/Code/IFLA/standards-dev/dist/packages/theme/src/components/OutLink/index.d.ts: OutLinkProps, OutLink, default
+/Users/jonphipps/Code/IFLA/standards-dev/dist/packages/theme/src/components/QuickStart/index.d.ts: QuickStartProps, QuickStart, default
+/Users/jonphipps/Code/IFLA/standards-dev/dist/packages/theme/src/components/SeeAlso/index.d.ts: SeeAlsoProps, SeeAlso, default
+/Users/jonphipps/Code/IFLA/standards-dev/dist/packages/theme/src/components/SiteManagement/index.d.ts: SiteManagementProps, default
+/Users/jonphipps/Code/IFLA/standards-dev/dist/packages/theme/src/components/Sitemap/index.d.ts: Sitemap, default
+/Users/jonphipps/Code/IFLA/standards-dev/dist/packages/theme/src/components/StandardHomePage.bak/index.d.ts: StandardHomePageProps, default
+/Users/jonphipps/Code/IFLA/standards-dev/dist/packages/theme/src/components/Unique/index.d.ts: UniqueProps, Unique, default
+/Users/jonphipps/Code/IFLA/standards-dev/dist/packages/theme/src/components/VocabularyTable/CSVVocabulary.d.ts: CSVVocabularyProps, default
+/Users/jonphipps/Code/IFLA/standards-dev/dist/packages/theme/src/components/VocabularyTable/VocabularyTable.d.ts: default
+/Users/jonphipps/Code/IFLA/standards-dev/dist/packages/theme/src/components/VocabularyTable/csvValidation.d.ts: ValidationIssue, ValidationResult, validateCSVHeaders, validateCSVData, validateCSV
+/Users/jonphipps/Code/IFLA/standards-dev/dist/packages/theme/src/components/VocabularyTable/index.d.ts: default, VocabularyTable, CSVVocabulary, VocabularyTableFromCSV, VocabularyTableProps, ConceptProps, MultilingualText, LanguageConfig, CSVConceptRow, TOCItem, UriCaseStyle, RDFMetadata, DEFAULT_LANGUAGE_CONFIG, getLocalizedText, getAllLocalizedText, parseCSVToConcepts, createSlug, extractAvailableLanguages, generateTOCFromProps, exportToCSV, useCsvLoader, useMultilingualText
+/Users/jonphipps/Code/IFLA/standards-dev/dist/packages/theme/src/components/VocabularyTable/profileValidation.d.ts: ProfileProperty, CONCEPT_PROFILE, isRepeatableProperty, isMandatoryProperty, getBasePropertyName, isValidPropertyColumn, getLanguageFromColumn, requiresLanguageTag
+/Users/jonphipps/Code/IFLA/standards-dev/dist/packages/theme/src/components/VocabularyTable/types.d.ts: VocabularyDefaults
+/Users/jonphipps/Code/IFLA/standards-dev/dist/packages/theme/src/config/index.d.ts: getSiteConfig, getSiteConfigMap, SITE_CONFIG, SiteKey, Environment, SiteConfigEntry
+/Users/jonphipps/Code/IFLA/standards-dev/dist/packages/theme/src/config/siteConfig.d.ts: SiteConfig
+/Users/jonphipps/Code/IFLA/standards-dev/dist/packages/theme/src/hooks/index.d.ts: useCsvLoader, useMultilingualText, useVocabularyTable, useLocalStorage, useAsync, useWindowSize, useClickOutside, useToggle, usePrevious
+/Users/jonphipps/Code/IFLA/standards-dev/dist/packages/theme/src/pages/sitemap.d.ts: default
+/Users/jonphipps/Code/IFLA/standards-dev/dist/packages/theme/src/types/index.d.ts: ElementSubType, ElementSuperType, RDFData, VocabularyDefaults, IFLAThemeConfig, MultilingualText, LanguageConfig, CSVConceptRow, TOCItem, UriCaseStyle, RDFMetadata, ConceptProps, VocabularyTableProps, DEFAULT_LANGUAGE_CONFIG, ElementReferenceProps, InLinkProps, OutLinkProps, SeeAlsoProps, MandatoryProps, UniqueProps, FigureProps, ExampleTableProps
+/Users/jonphipps/Code/IFLA/standards-dev/dist/packages/theme/src/utils/index.d.ts: getLocalizedText, getAllLocalizedText, createSlug, generateConceptUri, parseCSVToConcepts, extractAvailableLanguages, exportToCSV, generateTOCFromProps, validateConcept, formatFileSize, debounce, deepMerge, isValidUrl, sanitizeHtml, generateId
+/Users/jonphipps/Code/IFLA/standards-dev/portal/docusaurus.config.ts: default
+/Users/jonphipps/Code/IFLA/standards-dev/portal/navbar.ts: default
+/Users/jonphipps/Code/IFLA/standards-dev/portal/sidebars.ts: default
+/Users/jonphipps/Code/IFLA/standards-dev/scripts/capture-baseline-snapshots.ts: BaselineCapture
+/Users/jonphipps/Code/IFLA/standards-dev/scripts/capture-snapshots-from-running.ts: SnapshotCapture
+/Users/jonphipps/Code/IFLA/standards-dev/scripts/check-missing-languages.ts: analyzeCSVFile, generateReport
+/Users/jonphipps/Code/IFLA/standards-dev/scripts/create-vocabulary-sheet-action.ts: VocabularyConfig, initializeGoogle, findOrCreateWorkbook, createVocabularySheet
+/Users/jonphipps/Code/IFLA/standards-dev/scripts/populate-isbd-sheets.ts: populateSheetWithCSVData
+/Users/jonphipps/Code/IFLA/standards-dev/scripts/sheets-utils.ts: getSheet, putSheet
+/Users/jonphipps/Code/IFLA/standards-dev/scripts/site-template.ts: default
+/Users/jonphipps/Code/IFLA/standards-dev/scripts/spreadsheet-api.ts: VocabularyInfo, WorkbookGroup, SpreadsheetConfig, SpreadsheetAPI, default
+/Users/jonphipps/Code/IFLA/standards-dev/scripts/scaffold-template/sidebars.ts: default
+/Users/jonphipps/Code/IFLA/standards-dev/standards/FRBR/docusaurus.config.ts: default
+/Users/jonphipps/Code/IFLA/standards-dev/standards/FRBR/navbar.ts: default
+/Users/jonphipps/Code/IFLA/standards-dev/standards/FRBR/sidebars.ts: default
+/Users/jonphipps/Code/IFLA/standards-dev/standards/ISBDM/docusaurus.config.ts: default
+/Users/jonphipps/Code/IFLA/standards-dev/standards/ISBDM/navbar.ts: default
+/Users/jonphipps/Code/IFLA/standards-dev/standards/ISBDM/sidebars.ts: default
+/Users/jonphipps/Code/IFLA/standards-dev/standards/ISBDM/scripts/relationshipsSidebarLeaves.ts: agents, resources, placetimes, nomens
+/Users/jonphipps/Code/IFLA/standards-dev/standards/LRM/docusaurus.config.ts: default
+/Users/jonphipps/Code/IFLA/standards-dev/standards/LRM/navbar.ts: default
+/Users/jonphipps/Code/IFLA/standards-dev/standards/LRM/sidebars.ts: default
+/Users/jonphipps/Code/IFLA/standards-dev/standards/isbd/docusaurus.config.ts: default
+/Users/jonphipps/Code/IFLA/standards-dev/standards/isbd/navbar.ts: default
+/Users/jonphipps/Code/IFLA/standards-dev/standards/isbd/sidebars.ts: default
+/Users/jonphipps/Code/IFLA/standards-dev/standards/muldicat/docusaurus.config.ts: default
+/Users/jonphipps/Code/IFLA/standards-dev/standards/muldicat/navbar.ts: default
+/Users/jonphipps/Code/IFLA/standards-dev/standards/muldicat/sidebars.ts: default
+/Users/jonphipps/Code/IFLA/standards-dev/standards/newtest/docusaurus.config.ts: default
+/Users/jonphipps/Code/IFLA/standards-dev/standards/newtest/sidebars.ts: default
+/Users/jonphipps/Code/IFLA/standards-dev/standards/unimarc/docusaurus.config.ts: default
+/Users/jonphipps/Code/IFLA/standards-dev/standards/unimarc/navbar.ts: default
+/Users/jonphipps/Code/IFLA/standards-dev/standards/unimarc/sidebars.ts: default
+/Users/jonphipps/Code/IFLA/standards-dev/scripts/scaffold-template/src/components/CompactButton.tsx: default
+/Users/jonphipps/Code/IFLA/standards-dev/scripts/scaffold-template/src/pages/rdf.tsx: default
+/Users/jonphipps/Code/IFLA/standards-dev/scripts/scaffold-template/src/pages/sitemap.tsx: default

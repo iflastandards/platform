@@ -1,0 +1,691 @@
+Unused files (487)
+apps/admin-portal/src/lib/roles.ts                                               
+apps/admin-portal/src/test/mocks/components.tsx                                  
+e2e/utils/simple-auth-helpers.ts                                                 
+output/link-validation/index-data.js                                             
+packages/theme/src/components/AuthStatus.tsx                                     
+packages/theme/src/components/ExampleTable/index-enhanced.tsx                    
+packages/theme/src/components/StandardHomePage.bak/index.tsx                     
+packages/theme/tsup.config.bundled_cxylllc3s26.mjs                               
+playwright.config.pre-push.ts                                                    
+portal/docs/index.mdx                                                            
+portal/docs/tutorial-basics/markdown-features.mdx                                
+portal/docusaurus.config.ts                                                      
+portal/navbar.ts                                                                 
+portal/sidebars.ts                                                               
+portal/src/components/Hero.tsx                                                   
+portal/src/components/HomepageFeatures/index.tsx                                 
+portal/src/pages/index.tsx                                                       
+portal/src/pages/manage/index.tsx                                                
+scripts/build-all-for-baseline.ts                                                
+scripts/build-completely-isolated.ts                                             
+scripts/capture-baseline-snapshots.ts                                            
+scripts/capture-snapshots-from-running.ts                                        
+scripts/check-portal-homepage-links.mjs                                          
+scripts/create-isbd-excel.ts                                                     
+scripts/create-proper-isbd-excel.ts                                              
+scripts/element-redirects.js                                                     
+scripts/fix-consolidated-links.js                                                
+scripts/fix-sheet-permissions.ts                                                 
+scripts/generate-element-redirects.js                                            
+scripts/generate-individual-config.ts                                            
+scripts/nx-build-all.js                                                          
+scripts/rdf-to-csv.js                                                            
+scripts/regression-performance-comparison.js                                     
+scripts/scaffold-site.ts                                                         
+scripts/scaffold-template/docs/about.mdx                                         
+scripts/scaffold-template/docs/assessment.mdx                                    
+scripts/scaffold-template/docs/elements/index.mdx                                
+scripts/scaffold-template/docs/examples.mdx                                      
+scripts/scaffold-template/docs/glossary.mdx                                      
+scripts/scaffold-template/docs/index.mdx                                         
+scripts/scaffold-template/docs/introduction.mdx                                  
+scripts/scaffold-template/docs/terms/index.mdx                                   
+scripts/scaffold-template/sidebars.ts                                            
+scripts/scaffold-template/src/components/CompactButton.tsx                       
+scripts/scaffold-template/src/pages/index.mdx                                    
+scripts/scaffold-template/src/pages/manage.mdx                                   
+scripts/scaffold-template/src/pages/rdf.tsx                                      
+scripts/scaffold-template/src/pages/sitemap.tsx                                  
+scripts/share-final-sheets.ts                                                    
+scripts/share-formatted-sheets.ts                                                
+scripts/share-isbd-sheets.ts                                                     
+scripts/sheets-utils.ts                                                          
+scripts/site-template.ts                                                         
+scripts/spreadsheet-api.ts                                                       
+scripts/vocabulary-comparison.d.mts                                              
+standards/FRBR/.config/docusaurus.config.ts                                      
+standards/FRBR/docs/index.mdx                                                    
+standards/FRBR/docs/manage.mdx                                                   
+standards/FRBR/docusaurus.config.ts                                              
+standards/FRBR/navbar.ts                                                         
+standards/FRBR/sidebars.ts                                                       
+standards/FRBR/src/components/HomepageFeatures/index.tsx                         
+standards/FRBR/src/pages/index.tsx                                               
+standards/FRBR/src/pages/rdf.tsx                                                 
+standards/FRBR/src/pages/sitemap.tsx                                             
+standards/isbd/.config/docusaurus.config.ts                                      
+standards/isbd/docs/about.mdx                                                    
+standards/isbd/docs/assessment.mdx                                               
+standards/isbd/docs/elements/index.mdx                                           
+standards/isbd/docs/elements/unconstrained.mdx                                   
+standards/isbd/docs/examples.mdx                                                 
+standards/isbd/docs/glossary.mdx                                                 
+standards/isbd/docs/index.mdx                                                    
+standards/isbd/docs/introduction.mdx                                             
+standards/isbd/docs/terms/contentform.mdx                                        
+standards/isbd/docs/terms/contentformbase.mdx                                    
+standards/isbd/docs/terms/contentqualification/dimensionality.mdx                
+standards/isbd/docs/terms/contentqualification/motion.mdx                        
+standards/isbd/docs/terms/contentqualification/sensoryspecification.mdx          
+standards/isbd/docs/terms/contentqualification/type.mdx                          
+standards/isbd/docs/terms/index.mdx                                              
+standards/isbd/docs/terms/mediatype.mdx                                          
+standards/isbd/docusaurus.config.ts                                              
+standards/isbd/navbar.ts                                                         
+standards/isbd/sidebars.ts                                                       
+standards/isbd/src/components/CompactButton.tsx                                  
+standards/isbd/src/components/HomepageFeatures/index.tsx                         
+standards/isbd/src/pages/index.mdx                                               
+standards/isbd/src/pages/manage.mdx                                              
+standards/isbd/src/pages/rdf.tsx                                                 
+standards/isbd/src/pages/sitemap.tsx                                             
+standards/ISBDM/.config/docusaurus.config.ts                                     
+standards/ISBDM/docs/about/docusaurus-for-ifla.mdx                               
+standards/ISBDM/docs/about/index.mdx                                             
+standards/ISBDM/docs/assess/_p010.mdx                                            
+standards/ISBDM/docs/assess/_p011.mdx                                            
+standards/ISBDM/docs/assess/_p012.mdx                                            
+standards/ISBDM/docs/assess/_p015.mdx                                            
+standards/ISBDM/docs/assess/_p016.mdx                                            
+standards/ISBDM/docs/assess/_p017.mdx                                            
+standards/ISBDM/docs/assess/_p018.mdx                                            
+standards/ISBDM/docs/assess/_p019.mdx                                            
+standards/ISBDM/docs/assess/_p020.mdx                                            
+standards/ISBDM/docs/assess/_p022.mdx                                            
+standards/ISBDM/docs/assess/_p023.mdx                                            
+standards/ISBDM/docs/assess/_p024.mdx                                            
+standards/ISBDM/docs/assess/_p025.mdx                                            
+standards/ISBDM/docs/assess/_p026.mdx                                            
+standards/ISBDM/docs/assess/_p027.mdx                                            
+standards/ISBDM/docs/assess/index.mdx                                            
+standards/ISBDM/docs/attributes/1022.mdx                                         
+standards/ISBDM/docs/attributes/1023.mdx                                         
+standards/ISBDM/docs/attributes/1024.mdx                                         
+standards/ISBDM/docs/attributes/1027.mdx                                         
+standards/ISBDM/docs/attributes/1218.mdx                                         
+standards/ISBDM/docs/attributes/1221.mdx                                         
+standards/ISBDM/docs/attributes/1222.mdx                                         
+standards/ISBDM/docs/attributes/1223.mdx                                         
+standards/ISBDM/docs/attributes/1224.mdx                                         
+standards/ISBDM/docs/attributes/1225.mdx                                         
+standards/ISBDM/docs/attributes/1228.mdx                                         
+standards/ISBDM/docs/attributes/1229.mdx                                         
+standards/ISBDM/docs/attributes/1230.mdx                                         
+standards/ISBDM/docs/attributes/1231.mdx                                         
+standards/ISBDM/docs/attributes/1232.mdx                                         
+standards/ISBDM/docs/attributes/1237.mdx                                         
+standards/ISBDM/docs/attributes/1238.mdx                                         
+standards/ISBDM/docs/attributes/1239.mdx                                         
+standards/ISBDM/docs/attributes/1240.mdx                                         
+standards/ISBDM/docs/attributes/1241.mdx                                         
+standards/ISBDM/docs/attributes/1242.mdx                                         
+standards/ISBDM/docs/attributes/1243.mdx                                         
+standards/ISBDM/docs/attributes/1256.mdx                                         
+standards/ISBDM/docs/attributes/1262.mdx                                         
+standards/ISBDM/docs/attributes/1263.mdx                                         
+standards/ISBDM/docs/attributes/1264.mdx                                         
+standards/ISBDM/docs/attributes/1275.mdx                                         
+standards/ISBDM/docs/attributes/1276.mdx                                         
+standards/ISBDM/docs/attributes/1277.mdx                                         
+standards/ISBDM/docs/attributes/1278.mdx                                         
+standards/ISBDM/docs/attributes/1281.mdx                                         
+standards/ISBDM/docs/attributes/1283.mdx                                         
+standards/ISBDM/docs/attributes/1285.mdx                                         
+standards/ISBDM/docs/attributes/1287.mdx                                         
+standards/ISBDM/docs/attributes/1288.mdx                                         
+standards/ISBDM/docs/attributes/1289.mdx                                         
+standards/ISBDM/docs/attributes/general.mdx                                      
+standards/ISBDM/docs/attributes/index.mdx                                        
+standards/ISBDM/docs/examples/dark-mode-fixes.mdx                                
+standards/ISBDM/docs/examples/dark-mode-test.mdx                                 
+standards/ISBDM/docs/examples/ElementReference.mdx                               
+standards/ISBDM/docs/examples/ExampleTable-Usage.mdx                             
+standards/ISBDM/docs/examples/figure-component.mdx                               
+standards/ISBDM/docs/examples/footer-update.mdx                                  
+standards/ISBDM/docs/examples/inlink-component.mdx                               
+standards/ISBDM/docs/examples/inlink-wrapping-demo.mdx                           
+standards/ISBDM/docs/examples/mandatory-component.mdx                            
+standards/ISBDM/docs/examples/MinimalVocabulary.mdx                              
+standards/ISBDM/docs/examples/outlink-component.mdx                              
+standards/ISBDM/docs/examples/profiles/examples/element-frontmatter-example.mdx  
+standards/ISBDM/docs/examples/profiles/examples/value-frontmatter-example.mdx    
+standards/ISBDM/docs/examples/seealso-component.mdx                              
+standards/ISBDM/docs/examples/sensory-specification-vocabulary.mdx               
+standards/ISBDM/docs/examples/sensory-test-vocabulary.mdx                        
+standards/ISBDM/docs/examples/SkosVocabularyExample.mdx                          
+standards/ISBDM/docs/examples/unique-component.mdx                               
+standards/ISBDM/docs/examples/vocabulary-error-badge-demo.mdx                    
+standards/ISBDM/docs/examples/vocabulary-sme-guide.mdx                           
+standards/ISBDM/docs/examples/vocabulary-table-csv-simple.mdx                    
+standards/ISBDM/docs/examples/VocabularyTable.mdx                                
+standards/ISBDM/docs/fullex/fx001.mdx                                            
+standards/ISBDM/docs/fullex/fx002.mdx                                            
+standards/ISBDM/docs/fullex/fx003.mdx                                            
+standards/ISBDM/docs/fullex/fx004.mdx                                            
+standards/ISBDM/docs/fullex/fx005.mdx                                            
+standards/ISBDM/docs/fullex/fx006.mdx                                            
+standards/ISBDM/docs/fullex/fx007.mdx                                            
+standards/ISBDM/docs/fullex/fx008.mdx                                            
+standards/ISBDM/docs/fullex/fx009.mdx                                            
+standards/ISBDM/docs/fullex/fx010.mdx                                            
+standards/ISBDM/docs/fullex/fx011.mdx                                            
+standards/ISBDM/docs/fullex/fx012.mdx                                            
+standards/ISBDM/docs/fullex/fx013.mdx                                            
+standards/ISBDM/docs/fullex/fx014.mdx                                            
+standards/ISBDM/docs/fullex/fx015.mdx                                            
+standards/ISBDM/docs/fullex/fx016.mdx                                            
+standards/ISBDM/docs/fullex/fx017.mdx                                            
+standards/ISBDM/docs/fullex/fx018.mdx                                            
+standards/ISBDM/docs/fullex/fx019.mdx                                            
+standards/ISBDM/docs/fullex/fx020.mdx                                            
+standards/ISBDM/docs/fullex/fx021.mdx                                            
+standards/ISBDM/docs/fullex/fx022.mdx                                            
+standards/ISBDM/docs/fullex/fx023.mdx                                            
+standards/ISBDM/docs/fullex/fx024.mdx                                            
+standards/ISBDM/docs/fullex/fx025.mdx                                            
+standards/ISBDM/docs/fullex/fx026.mdx                                            
+standards/ISBDM/docs/fullex/fx027.mdx                                            
+standards/ISBDM/docs/fullex/fx028.mdx                                            
+standards/ISBDM/docs/fullex/fx029.mdx                                            
+standards/ISBDM/docs/fullex/fx030.mdx                                            
+standards/ISBDM/docs/fullex/fx031.mdx                                            
+standards/ISBDM/docs/fullex/fx032.mdx                                            
+standards/ISBDM/docs/fullex/fx033.mdx                                            
+standards/ISBDM/docs/fullex/fx034.mdx                                            
+standards/ISBDM/docs/fullex/fx035.mdx                                            
+standards/ISBDM/docs/fullex/fx036.mdx                                            
+standards/ISBDM/docs/fullex/fx037.mdx                                            
+standards/ISBDM/docs/fullex/fx038.mdx                                            
+standards/ISBDM/docs/fullex/fx039.mdx                                            
+standards/ISBDM/docs/fullex/fx040.mdx                                            
+standards/ISBDM/docs/fullex/fx041.mdx                                            
+standards/ISBDM/docs/fullex/fx042.mdx                                            
+standards/ISBDM/docs/fullex/fx043.mdx                                            
+standards/ISBDM/docs/fullex/fx044.mdx                                            
+standards/ISBDM/docs/fullex/fx045.mdx                                            
+standards/ISBDM/docs/fullex/fx046.mdx                                            
+standards/ISBDM/docs/fullex/fx047.mdx                                            
+standards/ISBDM/docs/fullex/fx048.mdx                                            
+standards/ISBDM/docs/fullex/fx049.mdx                                            
+standards/ISBDM/docs/fullex/fx050.mdx                                            
+standards/ISBDM/docs/fullex/fx051.mdx                                            
+standards/ISBDM/docs/fullex/fx052.mdx                                            
+standards/ISBDM/docs/fullex/fx053.mdx                                            
+standards/ISBDM/docs/fullex/fx054.mdx                                            
+standards/ISBDM/docs/fullex/fx055.mdx                                            
+standards/ISBDM/docs/fullex/fx056.mdx                                            
+standards/ISBDM/docs/fullex/fx057.mdx                                            
+standards/ISBDM/docs/fullex/fx058.mdx                                            
+standards/ISBDM/docs/fullex/fx059.mdx                                            
+standards/ISBDM/docs/fullex/fx060.mdx                                            
+standards/ISBDM/docs/fullex/fx061.mdx                                            
+standards/ISBDM/docs/fullex/fx062.mdx                                            
+standards/ISBDM/docs/fullex/fx063.mdx                                            
+standards/ISBDM/docs/fullex/fx064.mdx                                            
+standards/ISBDM/docs/fullex/fx065.mdx                                            
+standards/ISBDM/docs/fullex/fx066.mdx                                            
+standards/ISBDM/docs/fullex/fx067.mdx                                            
+standards/ISBDM/docs/fullex/fx068.mdx                                            
+standards/ISBDM/docs/fullex/fx069.mdx                                            
+standards/ISBDM/docs/fullex/fx070.mdx                                            
+standards/ISBDM/docs/fullex/fx071.mdx                                            
+standards/ISBDM/docs/fullex/fx072.mdx                                            
+standards/ISBDM/docs/fullex/fx073.mdx                                            
+standards/ISBDM/docs/fullex/fx074.mdx                                            
+standards/ISBDM/docs/fullex/fx075.mdx                                            
+standards/ISBDM/docs/fullex/fx076.mdx                                            
+standards/ISBDM/docs/fullex/fx077.mdx                                            
+standards/ISBDM/docs/fullex/fx078.mdx                                            
+standards/ISBDM/docs/fullex/fx079.mdx                                            
+standards/ISBDM/docs/fullex/fx080.mdx                                            
+standards/ISBDM/docs/fullex/fx081.mdx                                            
+standards/ISBDM/docs/fullex/fx082.mdx                                            
+standards/ISBDM/docs/fullex/fx083.mdx                                            
+standards/ISBDM/docs/fullex/fx084.mdx                                            
+standards/ISBDM/docs/fullex/fx085.mdx                                            
+standards/ISBDM/docs/fullex/fx086.mdx                                            
+standards/ISBDM/docs/fullex/fx087.mdx                                            
+standards/ISBDM/docs/fullex/fx088.mdx                                            
+standards/ISBDM/docs/fullex/index.mdx                                            
+standards/ISBDM/docs/fullimages/index.mdx                                        
+standards/ISBDM/docs/fullimages/x001.mdx                                         
+standards/ISBDM/docs/fullimages/x002.mdx                                         
+standards/ISBDM/docs/fullimages/x003.mdx                                         
+standards/ISBDM/docs/fullimages/x004.mdx                                         
+standards/ISBDM/docs/fullimages/x005.mdx                                         
+standards/ISBDM/docs/fullimages/x006.mdx                                         
+standards/ISBDM/docs/fullimages/x007.mdx                                         
+standards/ISBDM/docs/fullimages/x008.mdx                                         
+standards/ISBDM/docs/fullimages/x009.mdx                                         
+standards/ISBDM/docs/fullimages/x010.mdx                                         
+standards/ISBDM/docs/fullimages/x011.mdx                                         
+standards/ISBDM/docs/fullimages/x012.mdx                                         
+standards/ISBDM/docs/fullimages/x013.mdx                                         
+standards/ISBDM/docs/glossary/index.mdx                                          
+standards/ISBDM/docs/index.mdx                                                   
+standards/ISBDM/docs/intro/_i001.mdx                                             
+standards/ISBDM/docs/intro/_i002.mdx                                             
+standards/ISBDM/docs/intro/_i003.mdx                                             
+standards/ISBDM/docs/intro/_i004.mdx                                             
+standards/ISBDM/docs/intro/_i005.mdx                                             
+standards/ISBDM/docs/intro/_i006.mdx                                             
+standards/ISBDM/docs/intro/_i007.mdx                                             
+standards/ISBDM/docs/intro/_i008.mdx                                             
+standards/ISBDM/docs/intro/_i014.mdx                                             
+standards/ISBDM/docs/intro/_i021.mdx                                             
+standards/ISBDM/docs/intro/_i022.mdx                                             
+standards/ISBDM/docs/intro/_i023.mdx                                             
+standards/ISBDM/docs/intro/_i024.mdx                                             
+standards/ISBDM/docs/intro/_i025.mdx                                             
+standards/ISBDM/docs/intro/_i026.mdx                                             
+standards/ISBDM/docs/intro/index.mdx                                             
+standards/ISBDM/docs/manage.mdx                                                  
+standards/ISBDM/docs/notes/1200.mdx                                              
+standards/ISBDM/docs/notes/1201.mdx                                              
+standards/ISBDM/docs/notes/1202.mdx                                              
+standards/ISBDM/docs/notes/1203.mdx                                              
+standards/ISBDM/docs/notes/1204.mdx                                              
+standards/ISBDM/docs/notes/1205.mdx                                              
+standards/ISBDM/docs/notes/1206.mdx                                              
+standards/ISBDM/docs/notes/1207.mdx                                              
+standards/ISBDM/docs/notes/1219.mdx                                              
+standards/ISBDM/docs/notes/1265.mdx                                              
+standards/ISBDM/docs/notes/1266.mdx                                              
+standards/ISBDM/docs/notes/1267.mdx                                              
+standards/ISBDM/docs/notes/1268.mdx                                              
+standards/ISBDM/docs/notes/1269.mdx                                              
+standards/ISBDM/docs/notes/1270.mdx                                              
+standards/ISBDM/docs/notes/1271.mdx                                              
+standards/ISBDM/docs/notes/1272.mdx                                              
+standards/ISBDM/docs/notes/1273.mdx                                              
+standards/ISBDM/docs/notes/1282.mdx                                              
+standards/ISBDM/docs/notes/1284.mdx                                              
+standards/ISBDM/docs/notes/general.mdx                                           
+standards/ISBDM/docs/notes/index.mdx                                             
+standards/ISBDM/docs/relationships/1291.mdx                                      
+standards/ISBDM/docs/relationships/agents/1005.mdx                               
+standards/ISBDM/docs/relationships/agents/1006.mdx                               
+standards/ISBDM/docs/relationships/agents/1007.mdx                               
+standards/ISBDM/docs/relationships/agents/1019.mdx                               
+standards/ISBDM/docs/relationships/agents/1020.mdx                               
+standards/ISBDM/docs/relationships/agents/1021.mdx                               
+standards/ISBDM/docs/relationships/agents/1216.mdx                               
+standards/ISBDM/docs/relationships/agents/1217.mdx                               
+standards/ISBDM/docs/relationships/agents/1246.mdx                               
+standards/ISBDM/docs/relationships/agents/1247.mdx                               
+standards/ISBDM/docs/relationships/agents/1248.mdx                               
+standards/ISBDM/docs/relationships/agents/1249.mdx                               
+standards/ISBDM/docs/relationships/agents/1250.mdx                               
+standards/ISBDM/docs/relationships/agents/1251.mdx                               
+standards/ISBDM/docs/relationships/agents/1252.mdx                               
+standards/ISBDM/docs/relationships/agents/1253.mdx                               
+standards/ISBDM/docs/relationships/agents/1254.mdx                               
+standards/ISBDM/docs/relationships/agents/1255.mdx                               
+standards/ISBDM/docs/relationships/agents/index.mdx                              
+standards/ISBDM/docs/relationships/general.mdx                                   
+standards/ISBDM/docs/relationships/index.mdx                                     
+standards/ISBDM/docs/relationships/nomens/1008.mdx                               
+standards/ISBDM/docs/relationships/nomens/1037.mdx                               
+standards/ISBDM/docs/relationships/nomens/1038.mdx                               
+standards/ISBDM/docs/relationships/nomens/1111.mdx                               
+standards/ISBDM/docs/relationships/nomens/1116.mdx                               
+standards/ISBDM/docs/relationships/nomens/1117.mdx                               
+standards/ISBDM/docs/relationships/nomens/1215.mdx                               
+standards/ISBDM/docs/relationships/nomens/1234.mdx                               
+standards/ISBDM/docs/relationships/nomens/1245.mdx                               
+standards/ISBDM/docs/relationships/nomens/1257.mdx                               
+standards/ISBDM/docs/relationships/nomens/1258.mdx                               
+standards/ISBDM/docs/relationships/nomens/1259.mdx                               
+standards/ISBDM/docs/relationships/nomens/1260.mdx                               
+standards/ISBDM/docs/relationships/nomens/1261.mdx                               
+standards/ISBDM/docs/relationships/nomens/1274.mdx                               
+standards/ISBDM/docs/relationships/nomens/1286.mdx                               
+standards/ISBDM/docs/relationships/nomens/1293.mdx                               
+standards/ISBDM/docs/relationships/nomens/index.mdx                              
+standards/ISBDM/docs/relationships/placetimes/1009.mdx                           
+standards/ISBDM/docs/relationships/placetimes/1010.mdx                           
+standards/ISBDM/docs/relationships/placetimes/1114.mdx                           
+standards/ISBDM/docs/relationships/placetimes/1208.mdx                           
+standards/ISBDM/docs/relationships/placetimes/1209.mdx                           
+standards/ISBDM/docs/relationships/placetimes/1210.mdx                           
+standards/ISBDM/docs/relationships/placetimes/1211.mdx                           
+standards/ISBDM/docs/relationships/placetimes/1212.mdx                           
+standards/ISBDM/docs/relationships/placetimes/1213.mdx                           
+standards/ISBDM/docs/relationships/placetimes/1214.mdx                           
+standards/ISBDM/docs/relationships/placetimes/1235.mdx                           
+standards/ISBDM/docs/relationships/placetimes/1236.mdx                           
+standards/ISBDM/docs/relationships/placetimes/1244.mdx                           
+standards/ISBDM/docs/relationships/placetimes/1290.mdx                           
+standards/ISBDM/docs/relationships/placetimes/index.mdx                          
+standards/ISBDM/docs/relationships/resources/1001.mdx                            
+standards/ISBDM/docs/relationships/resources/1002.mdx                            
+standards/ISBDM/docs/relationships/resources/1003.mdx                            
+standards/ISBDM/docs/relationships/resources/1004.mdx                            
+standards/ISBDM/docs/relationships/resources/1011.mdx                            
+standards/ISBDM/docs/relationships/resources/1012.mdx                            
+standards/ISBDM/docs/relationships/resources/1013.mdx                            
+standards/ISBDM/docs/relationships/resources/1014.mdx                            
+standards/ISBDM/docs/relationships/resources/1015.mdx                            
+standards/ISBDM/docs/relationships/resources/1016.mdx                            
+standards/ISBDM/docs/relationships/resources/1017.mdx                            
+standards/ISBDM/docs/relationships/resources/1018.mdx                            
+standards/ISBDM/docs/relationships/resources/1220.mdx                            
+standards/ISBDM/docs/relationships/resources/1279.mdx                            
+standards/ISBDM/docs/relationships/resources/1292.mdx                            
+standards/ISBDM/docs/relationships/resources/index.mdx                           
+standards/ISBDM/docs/ses/Display/index.mdx                                       
+standards/ISBDM/docs/ses/Display/ISBDMOrder.mdx                                  
+standards/ISBDM/docs/ses/Entities/ISBDMSES1023.mdx                               
+standards/ISBDM/docs/ses/Entities/ISBDMSESAge.mdx                                
+standards/ISBDM/docs/ses/Entities/ISBDMSESCol.mdx                                
+standards/ISBDM/docs/ses/Entities/ISBDMSESExp.mdx                                
+standards/ISBDM/docs/ses/Entities/ISBDMSESIte.mdx                                
+standards/ISBDM/docs/ses/Entities/ISBDMSESMan.mdx                                
+standards/ISBDM/docs/ses/Entities/ISBDMSESPer.mdx                                
+standards/ISBDM/docs/ses/Entities/ISBDMSESPla.mdx                                
+standards/ISBDM/docs/ses/Entities/ISBDMSESTim.mdx                                
+standards/ISBDM/docs/ses/Entities/ISBDMSESWor.mdx                                
+standards/ISBDM/docs/ses/index.mdx                                               
+standards/ISBDM/docs/ses/Nomen/ISBDMSES1037.mdx                                  
+standards/ISBDM/docs/ses/Nomen/ISBDMSES1116.mdx                                  
+standards/ISBDM/docs/ses/Nomen/ISBDMSES1117.mdx                                  
+standards/ISBDM/docs/statements/1025.mdx                                         
+standards/ISBDM/docs/statements/1028.mdx                                         
+standards/ISBDM/docs/statements/1029.mdx                                         
+standards/ISBDM/docs/statements/1030.mdx                                         
+standards/ISBDM/docs/statements/1031.mdx                                         
+standards/ISBDM/docs/statements/1032.mdx                                         
+standards/ISBDM/docs/statements/1034.mdx                                         
+standards/ISBDM/docs/statements/1280.mdx                                         
+standards/ISBDM/docs/statements/general.mdx                                      
+standards/ISBDM/docs/statements/index.mdx                                        
+standards/ISBDM/docs/statements/transcriptex.mdx                                 
+standards/ISBDM/docs/statements/transcription.mdx                                
+standards/ISBDM/docs/ves/1022.mdx                                                
+standards/ISBDM/docs/ves/1218.mdx                                                
+standards/ISBDM/docs/ves/1240.mdx                                                
+standards/ISBDM/docs/ves/1241.mdx                                                
+standards/ISBDM/docs/ves/1256.mdx                                                
+standards/ISBDM/docs/ves/1262.mdx                                                
+standards/ISBDM/docs/ves/1264.mdx                                                
+standards/ISBDM/docs/ves/1275.mdx                                                
+standards/ISBDM/docs/ves/1278.mdx                                                
+standards/ISBDM/docs/ves/1283.mdx                                                
+standards/ISBDM/docs/ves/1285.mdx                                                
+standards/ISBDM/docs/ves/1288.mdx                                                
+standards/ISBDM/docs/ves/index.mdx                                               
+standards/ISBDM/docusaurus.config.ts                                             
+standards/ISBDM/navbar.ts                                                        
+standards/ISBDM/plugins/redirect-plugin.js                                       
+standards/ISBDM/scripts/relationshipsSidebarLeaves.ts                            
+standards/ISBDM/sidebars.ts                                                      
+standards/ISBDM/src/components/demo/Button/index.tsx                             
+standards/ISBDM/src/components/Hero.tsx                                          
+standards/ISBDM/src/components/HomepageFeatures/index.tsx                        
+standards/ISBDM/src/components/templates/ConceptPage.jsx                         
+standards/ISBDM/src/components/templates/ElementPage.jsx                         
+standards/ISBDM/src/components/templates/ValueVocabularyPage.jsx                 
+standards/ISBDM/src/pages/editor/index.tsx                                       
+standards/ISBDM/src/pages/index.tsx                                              
+standards/ISBDM/src/pages/rdf.tsx                                                
+standards/ISBDM/src/pages/sitemap.tsx                                            
+standards/ISBDM/src/theme/MDXComponents.tsx                                      
+standards/ISBDM/src/theme/Root.tsx                                               
+standards/ISBDM/src/utils/buffer-patch.js                                        
+standards/ISBDM/src/utils/filehandle-patch.js                                    
+standards/ISBDM/src/utils/frontMatterAdapter.ts                                  
+standards/ISBDM/src/utils/image-size-direct-patch.js                             
+standards/ISBDM/src/utils/image-size-patch.js                                    
+standards/ISBDM/src/utils/sidebarPrefixes.ts                                     
+standards/ISBDM/src/utils/useDocInfo.ts                                          
+standards/LRM/.config/docusaurus.config.ts                                       
+standards/LRM/docs/index.mdx                                                     
+standards/LRM/docs/intro/index.mdx                                               
+standards/LRM/docs/manage.mdx                                                    
+standards/LRM/docusaurus.config.ts                                               
+standards/LRM/navbar.ts                                                          
+standards/LRM/sidebars.ts                                                        
+standards/LRM/src/components/HomepageFeatures/index.tsx                          
+standards/LRM/src/pages/index.tsx                                                
+standards/LRM/src/pages/rdf.tsx                                                  
+standards/LRM/src/pages/sitemap.tsx                                              
+standards/muldicat/.config/docusaurus.config.ts                                  
+standards/muldicat/docs/index.mdx                                                
+standards/muldicat/docs/manage.mdx                                               
+standards/muldicat/docusaurus.config.ts                                          
+standards/muldicat/navbar.ts                                                     
+standards/muldicat/sidebars.ts                                                   
+standards/muldicat/src/components/HomepageFeatures/index.tsx                     
+standards/muldicat/src/pages/index.tsx                                           
+standards/muldicat/src/pages/rdf.tsx                                             
+standards/muldicat/src/pages/sitemap.tsx                                         
+standards/newtest/docusaurus.config.ts                                           
+standards/newtest/sidebars.ts                                                    
+standards/newtest/src/pages/index.mdx                                            
+standards/newtest/src/theme/NavbarItem/ComponentTypes.tsx                        
+standards/unimarc/.config/docusaurus.config.ts                                   
+standards/unimarc/docs/index.mdx                                                 
+standards/unimarc/docs/manage.mdx                                                
+standards/unimarc/docusaurus.config.ts                                           
+standards/unimarc/navbar.ts                                                      
+standards/unimarc/sidebars.ts                                                    
+standards/unimarc/src/components/HomepageFeatures/index.tsx                      
+standards/unimarc/src/pages/index.tsx                                            
+standards/unimarc/src/pages/rdf.tsx                                              
+standards/unimarc/src/pages/sitemap.tsx                                          
+tools/sheet-sync/test.ts                                                         
+vitest.config.ci.ts                                                              
+Unused dependencies (47)
+@cerbos/http                         apps/admin-portal/package.json:4:4      
+@octokit/rest                        apps/admin-portal/package.json:5:4      
+@tanstack/react-query                apps/admin-portal/package.json:6:4      
+@trpc/client                         apps/admin-portal/package.json:7:4      
+@trpc/next                           apps/admin-portal/package.json:8:4      
+@trpc/react-query                    apps/admin-portal/package.json:9:4      
+@trpc/server                         apps/admin-portal/package.json:10:4     
+superjson                            apps/admin-portal/package.json:12:4     
+zod                                  apps/admin-portal/package.json:13:4     
+@auth/core                           package.json:215:6                      
+@docusaurus/plugin-client-redirects  package.json:217:6                      
+@docusaurus/preset-classic           package.json:219:6                      
+@docusaurus/theme-mermaid            package.json:221:6                      
+@easyops-cn/docusaurus-search-local  package.json:222:6                      
+@types/glob                          package.json:225:6                      
+algoliasearch                        package.json:230:6                      
+boxen                                package.json:231:6                      
+cli-table3                           package.json:233:6                      
+cors                                 package.json:236:6                      
+crypto-browserify                    package.json:237:6                      
+csv-parser                           package.json:239:6                      
+deepmerge-ts                         package.json:241:6                      
+dompurify                            package.json:243:6                      
+express                              package.json:244:6                      
+fastmcp                              package.json:245:6                      
+figlet                               package.json:246:6                      
+find-root                            package.json:247:6                      
+fuse.js                              package.json:248:6                      
+gradient-string                      package.json:251:6                      
+helmet                               package.json:252:6                      
+image-size                           package.json:253:6                      
+js-yaml                              package.json:255:6                      
+jsonwebtoken                         package.json:258:6                      
+lru-cache                            package.json:260:6                      
+mermaid                              package.json:261:6                      
+next-auth                            package.json:264:6                      
+openai                               package.json:266:6                      
+os-browserify                        package.json:268:6                      
+path-browserify                      package.json:270:6                      
+react-helmet-async                   package.json:275:6                      
+react-transition-group               package.json:276:6                      
+stream-browserify                    package.json:278:6                      
+swr                                  package.json:279:6                      
+util                                 package.json:281:6                      
+xlsx                                 package.json:284:6                      
+fast-glob                            packages/standards-cli/package.json:20:6
+inquirer                             packages/standards-cli/package.json:21:6
+Unused devDependencies (40)
+@docusaurus/eslint-plugin            package.json:290:6
+@docusaurus/faster                   package.json:291:6
+@docusaurus/module-type-aliases      package.json:292:6
+@docusaurus/plugin-client-redirects  package.json:293:6
+@docusaurus/plugin-ideal-image       package.json:295:6
+@docusaurus/preset-classic           package.json:296:6
+@docusaurus/remark-plugin-npm2yarn   package.json:297:6
+@docusaurus/theme-live-codeblock     package.json:300:6
+@docusaurus/theme-mermaid            package.json:301:6
+@docusaurus/theme-search-algolia     package.json:302:6
+@docusaurus/tsconfig                 package.json:303:6
+@docusaurus/utils-common             package.json:305:6
+@modelcontextprotocol/inspector      package.json:306:6
+@nx/react                            package.json:310:6
+@nx/rollup                           package.json:311:6
+@nx/web                              package.json:313:6
+@playwright/mcp                      package.json:314:6
+@swc/cli                             package.json:317:6
+@swc/helpers                         package.json:319:6
+@types/js-yaml                       package.json:324:6
+@types/node-fetch                    package.json:328:6
+@types/react-transition-group        package.json:332:6
+@typescript-eslint/parser            package.json:334:6
+acorn                                package.json:339:6
+axe-core                             package.json:341:6
+cheerio                              package.json:343:6
+eslint-plugin-mdx                    package.json:351:6
+find-up                              package.json:355:6
+gray-matter                          package.json:356:6
+http-server                          package.json:357:6
+jsonc-eslint-parser                  package.json:361:6
+lint-staged                          package.json:363:6
+npm-run-all                          package.json:364:6
+postcss-modules                      package.json:369:6
+prism-react-renderer                 package.json:370:6
+prop-types                           package.json:371:6
+reg-suit                             package.json:375:6
+remark                               package.json:376:6
+ts-unused-exports                    package.json:384:6
+tslib                                package.json:385:6
+Unlisted dependencies (30)
+globals                              eslint.config.mjs                                                  
+@docusaurus/Link                     packages/theme/src/components/DownloadPanel/index.tsx              
+@docusaurus/Link                     packages/theme/src/components/ElementReference/index.tsx           
+@docusaurus/useDocusaurusContext     packages/theme/src/components/ElementReference/index.tsx           
+@theme/Tabs                          packages/theme/src/components/ElementReference/index.tsx           
+@theme/TabItem                       packages/theme/src/components/ElementReference/index.tsx           
+@theme/CodeBlock                     packages/theme/src/components/ElementReference/index.tsx           
+@docusaurus/useBaseUrl               packages/theme/src/components/ExampleTable/index.tsx               
+@docusaurus/useBaseUrl               packages/theme/src/components/Figure/index.tsx                     
+@docusaurus/Link                     packages/theme/src/components/InLink/index.tsx                     
+@docusaurus/useBaseUrl               packages/theme/src/components/InLink/index.tsx                     
+@docusaurus/useBaseUrl               packages/theme/src/components/Mandatory/index.tsx                  
+@docusaurus/useBaseUrl               packages/theme/src/components/OutLink/index.tsx                    
+@docusaurus/Link                     packages/theme/src/components/QuickStart/index.tsx                 
+@docusaurus/useDocusaurusContext     packages/theme/src/components/SiteLink.tsx                         
+@theme/Heading                       packages/theme/src/components/SiteManagement/index.tsx             
+@docusaurus/Link                     packages/theme/src/components/SiteManagement/index.tsx             
+@docusaurus/Link                     packages/theme/src/components/SiteManagementLink/index.tsx         
+@docusaurus/router                   packages/theme/src/components/SiteManagementLink/index.tsx         
+@docusaurus/useDocusaurusContext     packages/theme/src/components/SiteManagementLink/index.tsx         
+@theme/Layout                        packages/theme/src/components/Sitemap/index.tsx                    
+@docusaurus/Link                     packages/theme/src/components/Sitemap/index.tsx                    
+@docusaurus/useBaseUrl               packages/theme/src/components/Sitemap/index.tsx                    
+@docusaurus/useDocusaurusContext     packages/theme/src/components/Sitemap/index.tsx                    
+@docusaurus/useBaseUrl               packages/theme/src/components/VocabularyTable/hooks/useCsvLoader.ts
+@docusaurus/useDocusaurusContext     packages/theme/src/components/VocabularyTable/VocabularyTable.tsx  
+google-auth-library                  packages/theme/src/tests/scripts/detect-language-mismatches.test.ts
+@theme/NavbarItem/DefaultNavbarItem  packages/theme/src/theme/NavbarItem/ComponentTypes.tsx             
+langdetect-ts                        scripts/detect-language-mismatches-local.mjs                       
+google-auth-library                  scripts/detect-language-mismatches.mjs                             
+Unlisted binaries (3)
+gh     package.json
+lsof   package.json
+pkill  package.json
+Unresolved imports (4)
+remark-lint-no-duplicate-headings  .remarkrc.js                   
+remark-lint-maximum-line-length    .remarkrc.js                   
+remark-lint-no-literal-urls        .remarkrc.js                   
+jest                               apps/admin-portal/tsconfig.json
+Unused exports (40)
+getUser                           function  apps/admin-portal/src/app/lib/mock-auth.ts:24:17                         
+getCurrentEnvironment             function  apps/admin-portal/src/app/lib/role-based-routing.ts:92:17                
+generateTestingURL                function  apps/admin-portal/src/app/lib/role-based-routing.ts:119:17               
+getSiteManagementURL              function  apps/admin-portal/src/app/lib/role-based-routing.ts:139:17               
+userHasSiteAccess                 function  apps/admin-portal/src/app/lib/role-based-routing.ts:173:17               
+mockApiResponses                            apps/admin-portal/src/test/mocks/api.ts:5:14                             
+waitForNextTick                             apps/admin-portal/src/test/mocks/api.ts:142:14                           
+mockTimers                                  apps/admin-portal/src/test/mocks/api.ts:145:14                           
+DownloadPanel                               packages/theme/src/components/DownloadPanel/index.tsx:23:14              
+Figure                                      packages/theme/src/components/Figure/index.tsx:34:14                     
+InLink                                      packages/theme/src/components/InLink/index.tsx:64:14                     
+Mandatory                                   packages/theme/src/components/Mandatory/index.tsx:17:14                  
+OutLink                                     packages/theme/src/components/OutLink/index.tsx:31:14                    
+QuickStart                                  packages/theme/src/components/QuickStart/index.tsx:21:14                 
+SeeAlso                                     packages/theme/src/components/SeeAlso/index.tsx:23:14                    
+default                                     packages/theme/src/components/Sitemap/index.tsx:166:8                    
+Unique                                      packages/theme/src/components/Unique/index.tsx:25:14                     
+validateCSVHeaders                function  packages/theme/src/components/VocabularyTable/csvValidation.ts:21:17     
+validateCSVData                   function  packages/theme/src/components/VocabularyTable/csvValidation.ts:148:17    
+default                                     packages/theme/src/components/VocabularyTable/CSVVocabulary.tsx:33:8     
+default                                     packages/theme/src/components/VocabularyTable/index.tsx:2:28             
+DEFAULT_LANGUAGE_CONFIG                     packages/theme/src/components/VocabularyTable/index.tsx:18:9             
+getLocalizedText                            packages/theme/src/components/VocabularyTable/index.tsx:21:9             
+getAllLocalizedText                         packages/theme/src/components/VocabularyTable/index.tsx:22:20            
+parseCSVToConcepts                          packages/theme/src/components/VocabularyTable/index.tsx:23:23            
+createSlug                                  packages/theme/src/components/VocabularyTable/index.tsx:24:22            
+extractAvailableLanguages                   packages/theme/src/components/VocabularyTable/index.tsx:25:14            
+generateTOCFromProps                        packages/theme/src/components/VocabularyTable/index.tsx:26:29            
+exportToCSV                                 packages/theme/src/components/VocabularyTable/index.tsx:27:24            
+useCsvLoader                                packages/theme/src/components/VocabularyTable/index.tsx:32:9             
+useMultilingualText                         packages/theme/src/components/VocabularyTable/index.tsx:33:9             
+CONCEPT_PROFILE                             packages/theme/src/components/VocabularyTable/profileValidation.ts:15:14 
+isMandatoryProperty               function  packages/theme/src/components/VocabularyTable/profileValidation.ts:119:17
+default                                     packages/theme/src/components/VocabularyTable/VocabularyTable.tsx:440:8  
+default                                     packages/theme/src/hooks/useAdminSession.ts:175:8                        
+DEFAULT_LANGUAGE_CONFIG    Types            packages/theme/src/types/index.ts:190:14                                 
+populateSheetWithCSVData                    scripts/populate-isbd-sheets.ts:270:22                                   
+DocsEnv                                     scripts/utils/site-config-utils.js:38:3                                  
+siteKeys                                    scripts/utils/site-config-utils.js:39:3                                  
+loadSiteConfig                              scripts/utils/site-config-utils.js:40:3                                  
+Unused exported types (18)
+SiteManagementClientProps         interface  …ps/admin-portal/src/app/dashboard/[siteKey]/SiteManagementClient.tsx:21:18
+SiteKey                           type       e2e/utils/siteConfig.ts:11:13                                              
+SiteConfig                        interface  e2e/utils/siteConfig.ts:13:18                                              
+ExampleEntry                      type       packages/theme/src/components/ExampleTable/index.tsx:5:13                  
+FigureProps                       interface  packages/theme/src/components/Figure/index.tsx:6:18                        
+InLinkProps                       interface  packages/theme/src/components/InLink/index.tsx:7:18                        
+MandatoryProps                    interface  packages/theme/src/components/Mandatory/index.tsx:6:18                     
+OutLinkProps                      interface  packages/theme/src/components/OutLink/index.tsx:6:18                       
+SeeAlsoProps                      interface  packages/theme/src/components/SeeAlso/index.tsx:5:18                       
+UniqueProps                       interface  packages/theme/src/components/Unique/index.tsx:5:18                        
+ValidationIssue                   interface  packages/theme/src/components/VocabularyTable/csvValidation.ts:10:18       
+CSVVocabularyProps                interface  packages/theme/src/components/VocabularyTable/CSVVocabulary.tsx:6:18       
+ProfileProperty                   interface  packages/theme/src/components/VocabularyTable/profileValidation.ts:3:18    
+ElementSubType              Typ…  interface  packages/theme/src/types/index.ts:6:18                                     
+ElementSuperType            Typ…  interface  packages/theme/src/types/index.ts:12:18                                    
+TOCItem                     Typ…  interface  packages/theme/src/types/index.ts:99:18                                    
+RDFMetadata                 Typ…  interface  packages/theme/src/types/index.ts:108:18                                   
+VocabularyTableProps        Typ…  interface  packages/theme/src/types/index.ts:140:18                                   
+Duplicate exports (12)
+DownloadPanel|default    packages/theme/src/components/DownloadPanel/index.tsx            
+Figure|default           packages/theme/src/components/Figure/index.tsx                   
+InLink|default           packages/theme/src/components/InLink/index.tsx                   
+Mandatory|default        packages/theme/src/components/Mandatory/index.tsx                
+OutLink|default          packages/theme/src/components/OutLink/index.tsx                  
+QuickStart|default       packages/theme/src/components/QuickStart/index.tsx               
+SeeAlso|default          packages/theme/src/components/SeeAlso/index.tsx                  
+Sitemap|default          packages/theme/src/components/Sitemap/index.tsx                  
+Unique|default           packages/theme/src/components/Unique/index.tsx                   
+CSVVocabulary|default    packages/theme/src/components/VocabularyTable/CSVVocabulary.tsx  
+VocabularyTable|default  packages/theme/src/components/VocabularyTable/VocabularyTable.tsx
+useAdminSession|default  packages/theme/src/hooks/useAdminSession.ts                      
+Configuration hints (3)

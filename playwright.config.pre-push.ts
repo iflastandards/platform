@@ -10,9 +10,10 @@ export default defineConfig({
   forbidOnly: true,
   retries: 1, // One retry for flaky tests
   workers: 1, // Single worker for stability
+  outputDir: './tmp/playwright-results-pre-push',
   reporter: [
     ['list'],
-    ['json', { outputFile: 'test-results/e2e-pre-push-results.json' }]
+    ['json', { outputFile: './tmp/playwright-results-pre-push/e2e-pre-push-results.json' }]
   ],
   use: {
     baseURL: 'http://localhost:3000',

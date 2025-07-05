@@ -17,15 +17,17 @@ export default defineConfig({
   globalTimeout: process.env.FAIL_FAST ? 5 * 60 * 1000 : undefined, // 5 minutes for fail-fast
   /* Enhanced test sharding configuration */
   shard: process.env.SHARD ? { current: parseInt(process.env.SHARD_CURRENT || '1'), total: parseInt(process.env.SHARD_TOTAL || '1') } : undefined,
+  /* Redirect test results and reports to tmp and output directories */
+  outputDir: './tmp/playwright-results',
   /* Enhanced reporting with multiple formats */
   reporter: process.env.CI ? [
-    ['html', { outputFolder: 'playwright-report' }],
-    ['json', { outputFile: 'test-results/e2e-results.json' }],
-    ['junit', { outputFile: 'test-results/e2e-junit.xml' }],
+    ['html', { outputFolder: './output/playwright-report' }],
+    ['json', { outputFile: './tmp/playwright-results/e2e-results.json' }],
+    ['junit', { outputFile: './tmp/playwright-results/e2e-junit.xml' }],
     ['github']
   ] : [
-    ['html'],
-    ['json', { outputFile: 'test-results/e2e-results.json' }]
+    ['html', { outputFolder: './output/playwright-report' }],
+    ['json', { outputFile: './tmp/playwright-results/e2e-results.json' }]
   ],
   /* Shared settings for all the projects below. See https://playwright.dev/docs/api/class-testoptions. */
   use: {
