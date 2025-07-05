@@ -4,10 +4,12 @@
     "declaration": true,
     "declarationMap": true,
     "emitDeclarationOnly": true,
-    "outDir": "../../dist",
-    "rootDir": "../../",
+    "outDir": "dist",
+    "rootDir": "src",
     "composite": true,
-    "noEmit": false
+    "noEmit": false,
+    "baseUrl": ".",
+    "paths": {}
   },
   "include": [
     "src/**/*"

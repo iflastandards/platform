@@ -6,19 +6,18 @@
   "tags": ["library", "theme"],
   "targets": {
     "build:tsc": {
-      "executor": "@nx/js:tsc",
+      "executor": "nx:run-commands",
       "options": {
-        "outputPath": "../../dist",
-        "tsConfig": "packages/theme/tsconfig.build.json",
-        "main": "packages/theme/src/index.ts"
+        "command": "npx tsc --project tsconfig.declarations.json",
+        "cwd": "packages/theme"
       }
     },
     "build": {
       "executor": "nx:run-commands",
       "options": {
         "commands": [
-          "nx run @ifla/theme:build:tsc",
-          "pnpm exec tsup"
+          "pnpm exec tsup",
+          "nx run @ifla/theme:build:tsc"
         ],
         "cwd": "packages/theme",
         "parallel": false
