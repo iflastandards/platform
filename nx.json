@@ -1,14 +1,8 @@
 {
   "$schema": "./node_modules/nx/schemas/nx-schema.json",
-  "workspaceLayout": {
-    "appsDir": "apps",
-    "libsDir": "packages"
-  },
+  "workspaceLayout": { "appsDir": "apps", "libsDir": "packages" },
   "npmScope": "ifla",
-  "installation": {
-    "version": 1,
-    "ensurePackageJsonConsistency": true
-  },
+  "installation": { "version": "21.2.2", "ensurePackageJsonConsistency": true },
   "namedInputs": {
     "default": [
       "{projectRoot}/**/*",
@@ -26,7 +20,11 @@
       "!{projectRoot}/.eslintrc.json",
       "!{projectRoot}/**/*.stories.@(js|jsx|ts|tsx|mdx)",
       "!{projectRoot}/src/test-setup.[jt]s",
-      "!{projectRoot}/test-setup.[jt]s"
+      "!{projectRoot}/test-setup.[jt]s",
+      "!{projectRoot}/**/*.md",
+      "!{projectRoot}/**/*.mdx",
+      "!{projectRoot}/README.md",
+      "!{projectRoot}/docs/**/*"
     ],
     "non-coding": [
       "!{projectRoot}/**/*.md",
@@ -65,32 +63,49 @@
       "{workspaceRoot}/vite.config.ts",
       "{workspaceRoot}/playwright.config.ts",
       "{workspaceRoot}/.github/workflows/**/*"
+    ],
+    "buildInputs": [
+      "{projectRoot}/src/**/*",
+      "{projectRoot}/package.json",
+      "{projectRoot}/tsconfig.json",
+      "{projectRoot}/docusaurus.config.ts",
+      "{projectRoot}/sidebars.ts",
+      "!{projectRoot}/**/*.test.*",
+      "!{projectRoot}/**/*.spec.*",
+      "!{projectRoot}/e2e/**/*"
+    ],
+    "testInputs": [
+      "{projectRoot}/src/**/*",
+      "{projectRoot}/test/**/*",
+      "{projectRoot}/**/*.test.*",
+      "{projectRoot}/**/*.spec.*",
+      "{projectRoot}/package.json",
+      "{projectRoot}/tsconfig.json",
+      "{workspaceRoot}/vite.config.ts",
+      "{workspaceRoot}/vitest.config.*"
+    ],
+    "e2eInputs": [
+      "{projectRoot}/e2e/**/*",
+      "{projectRoot}/**/*.e2e.*",
+      "{projectRoot}/build/**/*",
+      "{projectRoot}/dist/**/*",
+      "{workspaceRoot}/playwright.config.*"
     ]
   },
   "targetDefaults": {
     "build": {
       "dependsOn": ["^build"],
-      "inputs": ["production", "^production", "non-coding"],
+      "inputs": ["buildInputs", "^buildInputs", "sharedGlobals"],
       "outputs": ["{projectRoot}/build", "{projectRoot}/dist"],
       "cache": true
     },
     "test": {
       "dependsOn": ["^build"],
-      "inputs": [
-        "default",
-        "^default",
-        {
-          "runtime": "node -v"
-        }
-      ],
-      "outputs": [],
+      "inputs": ["testInputs", "^testInputs", { "runtime": "node -v" }],
+      "outputs": ["{projectRoot}/coverage", "{projectRoot}/test-results"],
       "cache": true
     },
-    "lint": {
-      "inputs": ["default", "^default"],
-      "outputs": [],
-      "cache": true
-    },
+    "lint": { "inputs": ["default", "^default"], "outputs": [], "cache": true },
     "typecheck": {
       "dependsOn": ["^build"],
       "cache": true,
@@ -100,12 +115,8 @@
         "{workspaceRoot}/tsconfig.json"
       ]
     },
-    "serve": {
-      "cache": false
-    },
-    "start": {
-      "cache": false
-    },
+    "serve": { "cache": false },
+    "start": { "cache": false },
     "@nx/js:tsc": {
       "cache": true,
       "dependsOn": ["^build"],
@@ -119,51 +130,32 @@
     "e2e": {
       "cache": true,
       "dependsOn": ["build"],
-      "inputs": [
-        "default",
-        "{projectRoot}/e2e/**/*",
-        "{projectRoot}/**/*.e2e.{js,ts,jsx,tsx}"
-      ]
+      "inputs": ["e2eInputs", "^buildInputs"],
+      "outputs": [
+        "{projectRoot}/test-results",
+        "{projectRoot}/playwright-report",
+        "{workspaceRoot}/test-results",
+        "{workspaceRoot}/playwright-report"
+      ],
+      "options": {
+        "cacheableOperations": ["e2e"]
+      }
     },
     "test:unit": {
       "cache": true,
       "outputs": ["{projectRoot}/coverage", "{projectRoot}/test-results"],
-      "inputs": [
-        "default",
-        "{projectRoot}/test/**/*",
-        "{projectRoot}/**/*.test.{js,ts,jsx,tsx}",
-        "{projectRoot}/**/*.spec.{js,ts,jsx,tsx}",
-        "{workspaceRoot}/vite.config.ts",
-        "{workspaceRoot}/vitest.config.*"
-      ]
+      "inputs": ["testInputs", "sharedGlobals"]
     },
     "test:integration": {
       "cache": true,
       "outputs": ["{projectRoot}/coverage", "{projectRoot}/test-results"],
-      "inputs": [
-        "default",
-        "{projectRoot}/test/**/*",
-        "{projectRoot}/**/*.test.{js,ts,jsx,tsx}",
-        "{projectRoot}/**/*.spec.{js,ts,jsx,tsx}",
-        "{workspaceRoot}/vite.config.ts",
-        "{workspaceRoot}/vitest.config.*"
-      ]
+      "inputs": ["testInputs", "sharedGlobals"]
     },
-    "clean": {
-      "cache": false
-    },
-    "prepare": {
-      "cache": true,
-      "dependsOn": ["^build"]
-    }
+    "clean": { "cache": false },
+    "prepare": { "cache": true, "dependsOn": ["^build"] }
   },
   "plugins": [
-    {
-      "plugin": "@nx/eslint/plugin",
-      "options": {
-        "targetName": "lint"
-      }
-    },
+    { "plugin": "@nx/eslint/plugin", "options": { "targetName": "lint" } },
     {
       "plugin": "@nx/vite/plugin",
       "options": {
@@ -189,22 +181,13 @@
         "watchDepsTargetName": "watch-deps"
       }
     },
-    {
-      "plugin": "@nx/jest/plugin",
-      "options": {
-        "targetName": "test"
-      }
-    }
+    { "plugin": "@nx/jest/plugin", "options": { "targetName": "test" } }
   ],
   "nxCloudId": "6857fccbb755d4191ce6fbe4",
   "defaultBase": "dev",
-  "affected": {
-    "defaultBase": "dev"
-  },
-  "cli": {
-    "analytics": false
-  },
-  "parallel": 8,
+  "affected": { "defaultBase": "dev" },
+  "cli": { "analytics": false },
+  "parallel": 12,
   "cacheDirectory": ".nx/cache",
   "runtimeCacheInputs": [
     "node -v",
@@ -213,25 +196,19 @@
     "echo $DOCUSAURUS_SWIZZLE"
   ],
   "generators": {
-    "@nx/next": {
-      "application": {
-        "style": "tailwind",
-        "linter": "none"
-      }
-    },
-    "@nx/node": {
-      "library": {
-        "unitTestRunner": "vitest"
-      }
-    },
-    "@nx/js": {
-      "library": {
-        "unitTestRunner": "vitest"
-      }
-    },
-    "@nx/react": {
-      "library": {
-        "unitTestRunner": "vitest"
+    "@nx/next": { "application": { "style": "tailwind", "linter": "none" } },
+    "@nx/node": { "library": { "unitTestRunner": "vitest" } },
+    "@nx/js": { "library": { "unitTestRunner": "vitest" } },
+    "@nx/react": { "library": { "unitTestRunner": "vitest" } }
+  },
+  "tasksRunnerOptions": {
+    "default": {
+      "runner": "nx-cloud",
+      "options": {
+        "cacheableOperations": ["build", "test", "lint", "typecheck", "e2e"],
+        "canTrackAnalytics": false,
+        "showUsageWarnings": true,
+        "useDaemonProcess": true
       }
     }
   }
