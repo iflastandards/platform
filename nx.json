@@ -16,7 +16,8 @@
       "!{projectRoot}/jest.config.[jt]s",
       "!{projectRoot}/.eslintrc.json",
       "!{projectRoot}/**/*.stories.@(js|jsx|ts|tsx|mdx)",
-      "!{projectRoot}/src/test-setup.[jt]s"
+      "!{projectRoot}/src/test-setup.[jt]s",
+      "!{projectRoot}/test-setup.[jt]s"
     ],
     "non-coding": [
       "!{projectRoot}/**/*.md",
@@ -178,6 +179,12 @@
         "buildDepsTargetName": "build-deps",
         "watchDepsTargetName": "watch-deps"
       }
+    },
+    {
+      "plugin": "@nx/jest/plugin",
+      "options": {
+        "targetName": "test"
+      }
     }
   ],
   "nxCloudId": "6857fccbb755d4191ce6fbe4",
@@ -201,6 +208,21 @@
       "application": {
         "style": "tailwind",
         "linter": "none"
+      }
+    },
+    "@nx/node": {
+      "library": {
+        "unitTestRunner": "vitest"
+      }
+    },
+    "@nx/js": {
+      "library": {
+        "unitTestRunner": "vitest"
+      }
+    },
+    "@nx/react": {
+      "library": {
+        "unitTestRunner": "vitest"
       }
     }
   }

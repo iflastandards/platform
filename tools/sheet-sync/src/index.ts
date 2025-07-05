@@ -3,7 +3,7 @@
 const { join, dirname } = require('path');
 
 // Load environment variables from project root
-require('dotenv').config({ path: join(__dirname, '../../.env') });
+require('dotenv').config({ path: join(__dirname, '../../../.env') });
 
 const { Command } = require('commander');
 const { readFileSync, writeFileSync, existsSync } = require('fs');
@@ -27,8 +27,8 @@ interface StandardConfig {
   configPath: string;
 }
 
-// Get project root directory (two levels up from tools/sheet-sync)
-const PROJECT_ROOT = join(__dirname, '../../');
+// Get project root directory (three levels up from tools/sheet-sync/src)
+const PROJECT_ROOT = join(__dirname, '../../../');
 
 // Standard configurations
 const STANDARDS: Record<string, StandardConfig> = {
@@ -71,7 +71,7 @@ class SheetSyncError extends Error {
   }
 }
 
-class SheetSync {
+export class SheetSync {
   private sheets: any;
   private globalConfig: GlobalConfig;
 
@@ -410,7 +410,6 @@ program
         process.exit(1);
       } else {
         console.error(`❌ Unexpected error: ${error}`);
-        process.exit(1);
       }
     }
   });

@@ -28,6 +28,7 @@
     ],
     "baseUrl": ".",
     "paths": {
+      "@ifla/sheet-sync": ["tools/sheet-sync/src/index.ts"],
       "@ifla/theme": ["./packages/theme/src/index.ts"],
       "@ifla/theme/*": ["./packages/theme/src/*"],
       "@ifla/theme/components": ["./packages/theme/src/components/index.ts"],
@@ -35,9 +36,9 @@
       "@ifla/theme/config": ["./packages/theme/src/config/index.ts"],
       "@ifla/theme/config/*": ["./packages/theme/src/config/*"],
       "@ifla/theme/styles": ["./packages/theme/src/styles/index.css"],
+      "@ifla/theme/theme/*": ["./packages/theme/src/theme/*"],
       "@ifla/theme/utils": ["./packages/theme/src/utils/index.ts"],
       "@ifla/theme/utils/*": ["./packages/theme/src/utils/*"],
-      "@ifla/theme/theme/*": ["./packages/theme/src/theme/*"],
       "@site/*": ["./*"],
       "@site/plugins/*": ["./plugins/*"],
       "@theme/*": ["./src/theme/*", "./.docusaurus/theme-fallback/*"]
