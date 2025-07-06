@@ -16,19 +16,26 @@ export default defineConfig({
   /* Global timeout - fail fast if things take too long */
   globalTimeout: process.env.FAIL_FAST ? 5 * 60 * 1000 : undefined, // 5 minutes for fail-fast
   /* Enhanced test sharding configuration */
-  shard: process.env.SHARD ? { current: parseInt(process.env.SHARD_CURRENT || '1'), total: parseInt(process.env.SHARD_TOTAL || '1') } : undefined,
+  shard: process.env.SHARD
+    ? {
+        current: parseInt(process.env.SHARD_CURRENT || '1'),
+        total: parseInt(process.env.SHARD_TOTAL || '1'),
+      }
+    : undefined,
   /* Redirect test results and reports to tmp and output directories */
   outputDir: './tmp/playwright-results',
   /* Enhanced reporting with multiple formats */
-  reporter: process.env.CI ? [
-    ['html', { outputFolder: './output/playwright-report' }],
-    ['json', { outputFile: './tmp/playwright-results/e2e-results.json' }],
-    ['junit', { outputFile: './tmp/playwright-results/e2e-junit.xml' }],
-    ['github']
-  ] : [
-    ['html', { outputFolder: './output/playwright-report' }],
-    ['json', { outputFile: './tmp/playwright-results/e2e-results.json' }]
-  ],
+  reporter: process.env.CI
+    ? [
+        ['html', { outputFolder: './output/playwright-report' }],
+        ['json', { outputFile: './tmp/playwright-results/e2e-results.json' }],
+        ['junit', { outputFile: './tmp/playwright-results/e2e-junit.xml' }],
+        ['github'],
+      ]
+    : [
+        ['html', { outputFolder: './output/playwright-report' }],
+        ['json', { outputFile: './tmp/playwright-results/e2e-results.json' }],
+      ],
   /* Shared settings for all the projects below. See https://playwright.dev/docs/api/class-testoptions. */
   use: {
     /* Base URL to use in actions like `await page.goto('/')`. */
@@ -70,9 +77,9 @@ export default defineConfig({
 
     /* Admin Portal specific tests */
     {
-      name: 'admin-portal',
+      name: 'admin',
       use: { ...devices['Desktop Chrome'] },
-      testMatch: '**/e2e/admin-portal/**/*.e2e.test.ts',
+      testMatch: '**/e2e/admin/**/*.e2e.test.ts',
     },
 
     /* Test against branded browsers. */
@@ -88,8 +95,8 @@ export default defineConfig({
 
   /* Run your local dev server before starting the tests */
   webServer: {
-    command: process.env.CI 
-      ? 'node scripts/start-with-port-cleanup.js serve' 
+    command: process.env.CI
+      ? 'node scripts/start-with-port-cleanup.js serve'
       : 'node scripts/start-with-port-cleanup.js start',
     url: 'http://localhost:3000',
     reuseExistingServer: !process.env.CI,
