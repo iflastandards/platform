@@ -4,7 +4,7 @@
  * Moved from shared-config.old to theme to eliminate cross-package dependencies.
  */
 
-export type Environment = 'local' | 'preview' | 'development' | 'production';
+export type Environment = 'local' | 'preview' | 'production';
 export type SiteKey =
   | 'portal'
   | 'ISBDM'
@@ -62,72 +62,48 @@ export const SITE_CONFIG: Record<
   portal: {
     local: { url: 'http://localhost:3000', baseUrl: '/', port: 3000 },
     preview: {
-      url: 'https://iflastandards.github.io',
-      baseUrl: '/standards-dev/',
-    },
-    development: {
-      url: 'https://jonphipps.github.io',
-      baseUrl: '/standards-dev/',
+      url: 'https://platform-preview.vercel.app',
+      baseUrl: '/',
     },
     production: { url: 'https://www.iflastandards.info', baseUrl: '/' },
   },
   ISBDM: {
     local: { url: 'http://localhost:3001', baseUrl: '/ISBDM/', port: 3001 },
     preview: {
-      url: 'https://iflastandards.github.io',
-      baseUrl: '/standards-dev/ISBDM/',
-    },
-    development: {
-      url: 'https://jonphipps.github.io',
-      baseUrl: '/standards-dev/ISBDM/',
+      url: 'https://platform-preview.vercel.app',
+      baseUrl: '/ISBDM/',
     },
     production: { url: 'https://www.iflastandards.info', baseUrl: '/ISBDM/' },
   },
   LRM: {
     local: { url: 'http://localhost:3002', baseUrl: '/LRM/', port: 3002 },
     preview: {
-      url: 'https://iflastandards.github.io',
-      baseUrl: '/standards-dev/LRM/',
-    },
-    development: {
-      url: 'https://jonphipps.github.io',
-      baseUrl: '/standards-dev/LRM/',
+      url: 'https://platform-preview.vercel.app',
+      baseUrl: '/LRM/',
     },
     production: { url: 'https://www.iflastandards.info', baseUrl: '/LRM/' },
   },
   FRBR: {
     local: { url: 'http://localhost:3003', baseUrl: '/FRBR/', port: 3003 },
     preview: {
-      url: 'https://iflastandards.github.io',
-      baseUrl: '/standards-dev/FRBR/',
-    },
-    development: {
-      url: 'https://jonphipps.github.io',
-      baseUrl: '/standards-dev/FRBR/',
+      url: 'https://platform-preview.vercel.app',
+      baseUrl: '/FRBR/',
     },
     production: { url: 'https://www.iflastandards.info', baseUrl: '/FRBR/' },
   },
   isbd: {
     local: { url: 'http://localhost:3004', baseUrl: '/isbd/', port: 3004 },
     preview: {
-      url: 'https://iflastandards.github.io',
-      baseUrl: '/standards-dev/isbd/',
-    },
-    development: {
-      url: 'https://jonphipps.github.io',
-      baseUrl: '/standards-dev/isbd/',
+      url: 'https://platform-preview.vercel.app',
+      baseUrl: '/isbd/',
     },
     production: { url: 'https://www.iflastandards.info', baseUrl: '/isbd/' },
   },
   muldicat: {
     local: { url: 'http://localhost:3005', baseUrl: '/muldicat/', port: 3005 },
     preview: {
-      url: 'https://iflastandards.github.io',
-      baseUrl: '/standards-dev/muldicat/',
-    },
-    development: {
-      url: 'https://jonphipps.github.io',
-      baseUrl: '/standards-dev/muldicat/',
+      url: 'https://platform-preview.vercel.app',
+      baseUrl: '/muldicat/',
     },
     production: {
       url: 'https://www.iflastandards.info',
@@ -137,12 +113,8 @@ export const SITE_CONFIG: Record<
   unimarc: {
     local: { url: 'http://localhost:3006', baseUrl: '/unimarc/', port: 3006 },
     preview: {
-      url: 'https://iflastandards.github.io',
-      baseUrl: '/standards-dev/unimarc/',
-    },
-    development: {
-      url: 'https://jonphipps.github.io',
-      baseUrl: '/standards-dev/unimarc/',
+      url: 'https://platform-preview.vercel.app',
+      baseUrl: '/unimarc/',
     },
     production: { url: 'https://www.iflastandards.info', baseUrl: '/unimarc/' },
   },
@@ -150,12 +122,8 @@ export const SITE_CONFIG: Record<
   newtest: {
     local: { url: 'http://localhost:3008', baseUrl: '/newtest/', port: 3008 },
     preview: {
-      url: 'https://iflastandards.github.io',
-      baseUrl: '/standards-dev/newtest/',
-    },
-    development: {
-      url: 'https://jonphipps.github.io',
-      baseUrl: '/standards-dev/newtest/',
+      url: 'https://platform-preview.vercel.app',
+      baseUrl: '/newtest/',
     },
     production: { url: 'https://www.iflastandards.info', baseUrl: '/newtest/' },
   },
@@ -172,24 +140,11 @@ export const ADMIN_PORTAL_CONFIG: Record<Environment, AdminPortalConfig> = {
     port: 3007,
   },
   preview: {
-    url: 'https://iflastandards.github.io/standards-dev/admin',
-    signinUrl:
-      'https://iflastandards.github.io/standards-dev/admin/auth/signin',
-    dashboardUrl:
-      'https://iflastandards.github.io/standards-dev/admin/dashboard',
-    signoutUrl:
-      'https://iflastandards.github.io/standards-dev/admin/api/auth/signout',
-    sessionApiUrl:
-      'https://iflastandards.github.io/standards-dev/admin/api/auth/session',
-  },
-  development: {
-    url: 'https://jonphipps.github.io/standards-dev/admin',
-    signinUrl: 'https://jonphipps.github.io/standards-dev/admin/auth/signin',
-    dashboardUrl: 'https://jonphipps.github.io/standards-dev/admin/dashboard',
-    signoutUrl:
-      'https://jonphipps.github.io/standards-dev/admin/api/auth/signout',
-    sessionApiUrl:
-      'https://jonphipps.github.io/standards-dev/admin/api/auth/session',
+    url: 'https://platform-preview.vercel.app/admin',
+    signinUrl: 'https://platform-preview.vercel.app/admin/auth/signin',
+    dashboardUrl: 'https://platform-preview.vercel.app/admin/dashboard',
+    signoutUrl: 'https://platform-preview.vercel.app/admin/api/auth/signout',
+    sessionApiUrl: 'https://platform-preview.vercel.app/admin/api/auth/session',
   },
   production: {
     url: 'https://www.iflastandards.info/admin',
@@ -291,13 +246,13 @@ export function getAdminPortalConfigAuto(): AdminPortalConfig {
     return getAdminPortalConfig('preview');
   }
 
-  // Development environment (GitHub Pages - personal)
+  // Preview environment (Vercel or other hosting)
   if (
     hostname.includes('github.io') ||
     hostname.includes('netlify') ||
     hostname.includes('vercel')
   ) {
-    return getAdminPortalConfig('development');
+    return getAdminPortalConfig('preview');
   }
 
   // Local development (default)
@@ -328,7 +283,7 @@ export function getCurrentEnvironment(): Environment {
     hostname.includes('netlify') ||
     hostname.includes('vercel')
   ) {
-    return 'development';
+    return 'preview';
   }
 
   return 'local';
