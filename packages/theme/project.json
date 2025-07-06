@@ -36,28 +36,44 @@
           "packages/theme/src/tests",
           "packages/theme/src/components/**/__tests__"
         ]
-      }
+      },
+      "cache": true,
+      "inputs": ["testInputs", "^testInputs"],
+      "outputs": ["{projectRoot}/coverage", "{projectRoot}/test-results"]
     },
     "test:unit": {
       "executor": "@nx/vite:test",
       "options": {
         "config": "{workspaceRoot}/vite.config.ts",
         "exclude": ["**/scripts/**", "**/deployment/**"]
-      }
+      },
+      "cache": true,
+      "inputs": ["testInputs", "sharedGlobals"],
+      "outputs": ["{projectRoot}/coverage", "{projectRoot}/test-results"]
     },
     "test:integration": {
       "executor": "@nx/vite:test",
       "options": {
         "config": "{workspaceRoot}/vite.config.ts",
         "include": ["**/scripts/**", "**/deployment/**"]
-      }
+      },
+      "cache": true,
+      "inputs": ["testInputs", "sharedGlobals"],
+      "outputs": ["{projectRoot}/coverage", "{projectRoot}/test-results"]
     },
     "typecheck": {
       "executor": "nx:run-commands",
       "options": {
         "command": "tsc --noEmit",
         "cwd": "packages/theme"
-      }
+      },
+      "cache": true,
+      "dependsOn": ["^build"],
+      "inputs": [
+        "default",
+        "{projectRoot}/tsconfig.json",
+        "{workspaceRoot}/tsconfig.json"
+      ]
     }
   }
 }

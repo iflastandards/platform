@@ -28,7 +28,9 @@
           }
         }
       },
-      "inputs": ["production", "^production", "docusaurus"]
+      "inputs": ["production", "^production", "docusaurus"],
+      "outputs": ["{projectRoot}/build", "{projectRoot}/.docusaurus"],
+      "cache": true
     },
     "start": {
       "executor": "nx:run-commands",
@@ -81,7 +83,14 @@
       "options": {
         "command": "tsc --noEmit",
         "cwd": "standards/muldicat"
-      }
+      },
+      "cache": true,
+      "dependsOn": ["^build"],
+      "inputs": [
+        "default",
+        "{projectRoot}/tsconfig.json",
+        "{workspaceRoot}/tsconfig.json"
+      ]
     }
   }
 }

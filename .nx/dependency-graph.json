@@ -15,13 +15,9 @@
               },
               "inputs": [
                 "default",
-                "{workspaceRoot}/.eslintrc.json",
-                "{workspaceRoot}/eslint.config.js",
-                "{workspaceRoot}/eslint.config.mjs"
+                "^default"
               ],
-              "outputs": [
-                "{options.outputFile}"
-              ],
+              "outputs": [],
               "metadata": {
                 "technologies": [
                   "eslint"
@@ -43,8 +39,7 @@
             "build": {
               "executor": "nx:run-script",
               "options": {
-                "script": "build",
-                "parallel": 3
+                "script": "build"
               },
               "metadata": {
                 "scriptContent": "tsc -p tsconfig.json",
@@ -55,16 +50,16 @@
               "dependsOn": [
                 "^build"
               ],
+              "inputs": [
+                "buildInputs",
+                "^buildInputs",
+                "sharedGlobals"
+              ],
               "outputs": [
                 "{projectRoot}/build",
                 "{projectRoot}/dist"
               ],
-              "cache": true,
-              "inputs": [
-                "production",
-                "^production",
-                "docusaurus"
-              ]
+              "cache": true
             },
             "dev": {
               "executor": "nx:run-script",
@@ -81,8 +76,7 @@
             "test": {
               "executor": "nx:run-script",
               "options": {
-                "script": "test",
-                "parallel": 4
+                "script": "test"
               },
               "metadata": {
                 "scriptContent": "echo \"No tests implemented yet for standards-cli\" && exit 0",
@@ -91,15 +85,20 @@
               "configurations": {},
               "parallelism": true,
               "dependsOn": [
-                "^test"
+                "^build"
               ],
-              "cache": true,
               "inputs": [
-                "default",
-                "{projectRoot}/test/**/*",
-                "{projectRoot}/**/*.test.{js,ts,jsx,tsx}",
-                "{projectRoot}/**/*.spec.{js,ts,jsx,tsx}"
-              ]
+                "testInputs",
+                "^testInputs",
+                {
+                  "runtime": "node -v"
+                }
+              ],
+              "outputs": [
+                "{projectRoot}/coverage",
+                "{projectRoot}/test-results"
+              ],
+              "cache": true
             },
             "nx-release-publish": {
               "executor": "@nx/js:release-publish",
@@ -112,6 +111,7 @@
             }
           },
           "name": "standards-cli",
+          "projectType": "library",
           "tags": [
             "npm:public"
           ],
@@ -136,104 +136,6 @@
           "implicitDependencies": []
         }
       },
-      "@ifla/preset-ifla": {
-        "name": "@ifla/preset-ifla",
-        "type": "lib",
-        "data": {
-          "root": "packages/preset-ifla",
-          "targets": {
-            "lint": {
-              "cache": true,
-              "options": {
-                "cwd": "packages/preset-ifla",
-                "command": "eslint ."
-              },
-              "inputs": [
-                "default",
-                "{workspaceRoot}/.eslintrc.json",
-                "{workspaceRoot}/eslint.config.js",
-                "{workspaceRoot}/eslint.config.mjs"
-              ],
-              "outputs": [
-                "{options.outputFile}"
-              ],
-              "metadata": {
-                "technologies": [
-                  "eslint"
-                ],
-                "description": "Runs ESLint on project",
-                "help": {
-                  "command": "pnpm exec eslint --help",
-                  "example": {
-                    "options": {
-                      "max-warnings": 0
-                    }
-                  }
-                }
-              },
-              "executor": "nx:run-commands",
-              "configurations": {},
-              "parallelism": true
-            },
-            "build": {
-              "executor": "nx:run-script",
-              "options": {
-                "script": "build",
-                "parallel": 3
-              },
-              "metadata": {
-                "scriptContent": "pnpm exec tsup",
-                "runCommand": "pnpm run build"
-              },
-              "configurations": {},
-              "parallelism": true,
-              "dependsOn": [
-                "^build"
-              ],
-              "outputs": [
-                "{projectRoot}/build",
-                "{projectRoot}/dist"
-              ],
-              "cache": true,
-              "inputs": [
-                "production",
-                "^production",
-                "docusaurus"
-              ]
-            }
-          },
-          "name": "@ifla/preset-ifla",
-          "tags": [
-            "npm:private",
-            "npm:docusaurus",
-            "npm:preset",
-            "npm:ifla",
-            "npm:standards",
-            "npm:bibliographic"
-          ],
-          "metadata": {
-            "targetGroups": {
-              "NPM Scripts": [
-                "build"
-              ]
-            },
-            "description": "Official IFLA Docusaurus preset for standards sites",
-            "js": {
-              "packageName": "@ifla/preset-ifla",
-              "packageExports": {
-                ".": {
-                  "types": "./dist/index.d.ts",
-                  "import": "./dist/index.mjs",
-                  "require": "./dist/index.js"
-                }
-              },
-              "packageMain": "dist/index.js",
-              "isInPackageManagerWorkspaces": true
-            }
-          },
-          "implicitDependencies": []
-        }
-      },
       "muldicat": {
         "name": "muldicat",
         "type": "app",
@@ -248,13 +150,9 @@
               },
               "inputs": [
                 "default",
-                "{workspaceRoot}/.eslintrc.json",
-                "{workspaceRoot}/eslint.config.js",
-                "{workspaceRoot}/eslint.config.mjs"
+                "^default"
               ],
-              "outputs": [
-                "{options.outputFile}"
-              ],
+              "outputs": [],
               "metadata": {
                 "technologies": [
                   "eslint"
@@ -276,45 +174,71 @@
             "build": {
               "executor": "nx:run-commands",
               "options": {
-                "command": "docusaurus build standards/muldicat",
-                "parallel": 3
+                "command": "docusaurus build standards/muldicat"
               },
-              "outputs": [
-                "{projectRoot}/build"
-              ],
-              "cache": true,
-              "dependsOn": [
-                "^build",
-                {
-                  "target": "build",
-                  "projects": [
-                    "shared-config"
-                  ]
+              "configurations": {
+                "development": {
+                  "env": {
+                    "DOCS_ENV": "development"
+                  }
+                },
+                "production": {
+                  "env": {
+                    "DOCS_ENV": "production"
+                  }
+                },
+                "preview": {
+                  "env": {
+                    "DOCS_ENV": "preview"
+                  }
                 }
-              ],
+              },
               "inputs": [
                 "production",
                 "^production",
-                "docusaurus-no-theme"
+                "docusaurus"
               ],
-              "configurations": {},
-              "parallelism": true
+              "outputs": [
+                "{projectRoot}/build",
+                "{projectRoot}/.docusaurus"
+              ],
+              "cache": true,
+              "parallelism": true,
+              "dependsOn": [
+                "^build"
+              ]
             },
             "start": {
               "executor": "nx:run-commands",
               "options": {
-                "command": "docusaurus start standards/muldicat --port 3007"
+                "command": "docusaurus start standards/muldicat --port 3005"
               },
-              "cache": false,
               "configurations": {},
-              "parallelism": true
+              "parallelism": true,
+              "cache": false
             },
             "serve": {
               "executor": "nx:run-commands",
               "options": {
-                "command": "docusaurus serve standards/muldicat --port 3007"
+                "command": "docusaurus serve standards/muldicat --port 3005"
               },
-              "cache": false,
+              "configurations": {},
+              "parallelism": true,
+              "cache": false
+            },
+            "start:robust": {
+              "executor": "nx:run-commands",
+              "options": {
+                "command": "node scripts/utils/port-manager.js site muldicat && docusaurus start standards/muldicat --port 3005"
+              },
+              "configurations": {},
+              "parallelism": true
+            },
+            "serve:robust": {
+              "executor": "nx:run-commands",
+              "options": {
+                "command": "node scripts/utils/port-manager.js site muldicat && docusaurus serve standards/muldicat --port 3005"
+              },
               "configurations": {},
               "parallelism": true
             },
@@ -323,7 +247,6 @@
               "options": {
                 "command": "docusaurus clear standards/muldicat"
               },
-              "cache": false,
               "configurations": {},
               "parallelism": true
             },
@@ -331,12 +254,10 @@
               "executor": "nx:run-commands",
               "options": {
                 "command": "playwright test e2e/standards-smoke.spec.ts e2e/vocabulary-functionality.spec.ts",
-                "parallel": 2
+                "cacheableOperations": [
+                  "e2e"
+                ]
               },
-              "dependsOn": [
-                "build"
-              ],
-              "cache": true,
               "inputs": [
                 "default",
                 "{workspaceRoot}/e2e/standards-smoke.spec.ts",
@@ -348,50 +269,374 @@
                 "{workspaceRoot}/playwright-report"
               ],
               "configurations": {},
+              "parallelism": true,
+              "cache": true,
+              "dependsOn": [
+                "build"
+              ]
+            },
+            "typecheck": {
+              "executor": "nx:run-commands",
+              "options": {
+                "command": "tsc --noEmit",
+                "cwd": "standards/muldicat"
+              },
+              "cache": true,
+              "dependsOn": [
+                "^build"
+              ],
+              "inputs": [
+                "default",
+                "{projectRoot}/tsconfig.json",
+                "{workspaceRoot}/tsconfig.json"
+              ],
+              "configurations": {},
               "parallelism": true
             }
           },
           "name": "muldicat",
+          "sourceRoot": "standards/muldicat",
+          "projectType": "application",
           "tags": [
-            "npm:private",
             "docusaurus",
             "site",
             "standard",
             "muldicat"
           ],
-          "metadata": {
-            "targetGroups": {},
-            "js": {
-              "packageName": "@ifla/muldicat",
-              "isInPackageManagerWorkspaces": true
-            }
-          },
-          "sourceRoot": "standards/muldicat",
-          "projectType": "application",
-          "implicitDependencies": []
+          "implicitDependencies": [
+            "@ifla/theme"
+          ]
         }
       },
-      "shared-config": {
-        "name": "shared-config",
-        "type": "lib",
+      "newtest": {
+        "name": "newtest",
+        "type": "app",
         "data": {
-          "root": "libs/shared-config",
+          "root": "standards/newtest",
           "targets": {
             "lint": {
               "cache": true,
               "options": {
-                "cwd": "libs/shared-config",
+                "cwd": "standards/newtest",
                 "command": "eslint ."
               },
               "inputs": [
                 "default",
-                "{workspaceRoot}/.eslintrc.json",
-                "{workspaceRoot}/eslint.config.js",
-                "{workspaceRoot}/eslint.config.mjs"
+                "^default"
+              ],
+              "outputs": [],
+              "metadata": {
+                "technologies": [
+                  "eslint"
+                ],
+                "description": "Runs ESLint on project",
+                "help": {
+                  "command": "pnpm exec eslint --help",
+                  "example": {
+                    "options": {
+                      "max-warnings": 0
+                    }
+                  }
+                }
+              },
+              "executor": "nx:run-commands",
+              "configurations": {},
+              "parallelism": true
+            },
+            "build": {
+              "executor": "nx:run-commands",
+              "options": {
+                "command": "docusaurus build standards/newtest"
+              },
+              "inputs": [
+                "production",
+                "^production",
+                "docusaurus"
               ],
               "outputs": [
-                "{options.outputFile}"
+                "{projectRoot}/build",
+                "{projectRoot}/.docusaurus"
               ],
+              "cache": true,
+              "configurations": {},
+              "parallelism": true,
+              "dependsOn": [
+                "^build"
+              ]
+            },
+            "start": {
+              "executor": "nx:run-commands",
+              "options": {
+                "command": "docusaurus start standards/newtest --port 3008"
+              },
+              "configurations": {},
+              "parallelism": true,
+              "cache": false
+            },
+            "serve": {
+              "executor": "nx:run-commands",
+              "options": {
+                "command": "docusaurus serve standards/newtest --port 3008"
+              },
+              "configurations": {},
+              "parallelism": true,
+              "cache": false
+            },
+            "start:robust": {
+              "executor": "nx:run-commands",
+              "options": {
+                "command": "node scripts/utils/port-manager.js site newtest && docusaurus start standards/newtest --port 3008"
+              },
+              "configurations": {},
+              "parallelism": true
+            },
+            "serve:robust": {
+              "executor": "nx:run-commands",
+              "options": {
+                "command": "node scripts/utils/port-manager.js site newtest && docusaurus serve standards/newtest --port 3008"
+              },
+              "configurations": {},
+              "parallelism": true
+            },
+            "clear": {
+              "executor": "nx:run-commands",
+              "options": {
+                "command": "docusaurus clear standards/newtest"
+              },
+              "configurations": {},
+              "parallelism": true
+            },
+            "e2e": {
+              "executor": "nx:run-commands",
+              "options": {
+                "command": "playwright test e2e/standards-smoke.spec.ts e2e/vocabulary-functionality.spec.ts",
+                "cacheableOperations": [
+                  "e2e"
+                ]
+              },
+              "inputs": [
+                "default",
+                "{workspaceRoot}/e2e/standards-smoke.spec.ts",
+                "{workspaceRoot}/e2e/vocabulary-functionality.spec.ts",
+                "{workspaceRoot}/playwright.config.ts"
+              ],
+              "outputs": [
+                "{workspaceRoot}/test-results",
+                "{workspaceRoot}/playwright-report"
+              ],
+              "configurations": {},
+              "parallelism": true,
+              "cache": true,
+              "dependsOn": [
+                "build"
+              ]
+            },
+            "typecheck": {
+              "executor": "nx:run-commands",
+              "options": {
+                "command": "tsc --noEmit",
+                "cwd": "standards/newtest"
+              },
+              "cache": true,
+              "dependsOn": [
+                "^build"
+              ],
+              "inputs": [
+                "default",
+                "{projectRoot}/tsconfig.json",
+                "{workspaceRoot}/tsconfig.json"
+              ],
+              "configurations": {},
+              "parallelism": true
+            }
+          },
+          "name": "newtest",
+          "sourceRoot": "standards/newtest",
+          "projectType": "application",
+          "tags": [
+            "docusaurus",
+            "site",
+            "standard",
+            "newtest"
+          ],
+          "implicitDependencies": [
+            "@ifla/theme"
+          ]
+        }
+      },
+      "unimarc": {
+        "name": "unimarc",
+        "type": "app",
+        "data": {
+          "root": "standards/unimarc",
+          "targets": {
+            "lint": {
+              "cache": true,
+              "options": {
+                "cwd": "standards/unimarc",
+                "command": "eslint ."
+              },
+              "inputs": [
+                "default",
+                "^default"
+              ],
+              "outputs": [],
+              "metadata": {
+                "technologies": [
+                  "eslint"
+                ],
+                "description": "Runs ESLint on project",
+                "help": {
+                  "command": "pnpm exec eslint --help",
+                  "example": {
+                    "options": {
+                      "max-warnings": 0
+                    }
+                  }
+                }
+              },
+              "executor": "nx:run-commands",
+              "configurations": {},
+              "parallelism": true
+            },
+            "build": {
+              "executor": "nx:run-commands",
+              "options": {
+                "command": "docusaurus build standards/unimarc"
+              },
+              "inputs": [
+                "production",
+                "^production",
+                "docusaurus"
+              ],
+              "outputs": [
+                "{projectRoot}/build",
+                "{projectRoot}/.docusaurus"
+              ],
+              "cache": true,
+              "configurations": {},
+              "parallelism": true,
+              "dependsOn": [
+                "^build"
+              ]
+            },
+            "start": {
+              "executor": "nx:run-commands",
+              "options": {
+                "command": "docusaurus start standards/unimarc --port 3006"
+              },
+              "configurations": {},
+              "parallelism": true,
+              "cache": false
+            },
+            "serve": {
+              "executor": "nx:run-commands",
+              "options": {
+                "command": "docusaurus serve standards/unimarc --port 3006"
+              },
+              "configurations": {},
+              "parallelism": true,
+              "cache": false
+            },
+            "start:robust": {
+              "executor": "nx:run-commands",
+              "options": {
+                "command": "node scripts/utils/port-manager.js site unimarc && docusaurus start standards/unimarc --port 3006"
+              },
+              "configurations": {},
+              "parallelism": true
+            },
+            "serve:robust": {
+              "executor": "nx:run-commands",
+              "options": {
+                "command": "node scripts/utils/port-manager.js site unimarc && docusaurus serve standards/unimarc --port 3006"
+              },
+              "configurations": {},
+              "parallelism": true
+            },
+            "clear": {
+              "executor": "nx:run-commands",
+              "options": {
+                "command": "docusaurus clear standards/unimarc"
+              },
+              "configurations": {},
+              "parallelism": true
+            },
+            "e2e": {
+              "executor": "nx:run-commands",
+              "options": {
+                "command": "playwright test e2e/standards-smoke.spec.ts e2e/vocabulary-functionality.spec.ts",
+                "cacheableOperations": [
+                  "e2e"
+                ]
+              },
+              "inputs": [
+                "default",
+                "{workspaceRoot}/e2e/standards-smoke.spec.ts",
+                "{workspaceRoot}/e2e/vocabulary-functionality.spec.ts",
+                "{workspaceRoot}/playwright.config.ts"
+              ],
+              "outputs": [
+                "{workspaceRoot}/test-results",
+                "{workspaceRoot}/playwright-report"
+              ],
+              "configurations": {},
+              "parallelism": true,
+              "cache": true,
+              "dependsOn": [
+                "build"
+              ]
+            },
+            "typecheck": {
+              "executor": "nx:run-commands",
+              "options": {
+                "command": "tsc --noEmit",
+                "cwd": "standards/unimarc"
+              },
+              "cache": true,
+              "dependsOn": [
+                "^build"
+              ],
+              "inputs": [
+                "default",
+                "{projectRoot}/tsconfig.json",
+                "{workspaceRoot}/tsconfig.json"
+              ],
+              "configurations": {},
+              "parallelism": true
+            }
+          },
+          "name": "unimarc",
+          "sourceRoot": "standards/unimarc",
+          "projectType": "application",
+          "tags": [
+            "docusaurus",
+            "site",
+            "standard",
+            "unimarc"
+          ],
+          "implicitDependencies": [
+            "@ifla/theme"
+          ]
+        }
+      },
+      "sheet-sync": {
+        "name": "sheet-sync",
+        "type": "lib",
+        "data": {
+          "root": "tools/sheet-sync",
+          "targets": {
+            "lint": {
+              "cache": true,
+              "options": {
+                "cwd": "tools/sheet-sync",
+                "command": "eslint ."
+              },
+              "inputs": [
+                "default",
+                "^default"
+              ],
+              "outputs": [],
               "metadata": {
                 "technologies": [
                   "eslint"
@@ -411,42 +656,26 @@
               "parallelism": true
             },
             "test": {
-              "options": {
-                "cwd": "libs/shared-config",
-                "command": "vitest",
-                "parallel": 4
-              },
-              "cache": true,
-              "inputs": [
-                "default",
-                "{projectRoot}/test/**/*",
-                "{projectRoot}/**/*.test.{js,ts,jsx,tsx}",
-                "{projectRoot}/**/*.spec.{js,ts,jsx,tsx}"
-              ],
+              "executor": "@nx/vite:test",
               "outputs": [
-                "{workspaceRoot}/coverage/libs/shared-config"
+                "{workspaceRoot}/coverage/tools/sheet-sync"
               ],
-              "metadata": {
-                "technologies": [
-                  "vite"
-                ],
-                "description": "Run Vite tests",
-                "help": {
-                  "command": "pnpm exec vitest --help",
-                  "example": {
-                    "options": {
-                      "bail": 1,
-                      "coverage": true
-                    }
-                  }
-                }
+              "options": {
+                "config": "tools/sheet-sync/vite.config.ts"
               },
-              "executor": "nx:run-commands",
               "configurations": {},
               "parallelism": true,
               "dependsOn": [
-                "^test"
-              ]
+                "^build"
+              ],
+              "inputs": [
+                "testInputs",
+                "^testInputs",
+                {
+                  "runtime": "node -v"
+                }
+              ],
+              "cache": true
             },
             "typecheck": {
               "cache": true,
@@ -456,7 +685,7 @@
                 "{workspaceRoot}/tsconfig.json"
               ],
               "options": {
-                "cwd": "libs/shared-config",
+                "cwd": "tools/sheet-sync",
                 "command": "tsc --noEmit -p tsconfig.lib.json"
               },
               "metadata": {
@@ -475,7 +704,10 @@
               },
               "executor": "nx:run-commands",
               "configurations": {},
-              "parallelism": true
+              "parallelism": true,
+              "dependsOn": [
+                "^build"
+              ]
             },
             "build-deps": {
               "dependsOn": [
@@ -493,275 +725,10 @@
               ],
               "executor": "nx:run-commands",
               "options": {
-                "command": "pnpm exec nx watch --projects shared-config --includeDependentProjects -- pnpm exec nx build-deps shared-config"
+                "command": "pnpm exec nx watch --projects sheet-sync --includeDependentProjects -- pnpm exec nx build-deps sheet-sync"
               },
               "configurations": {},
               "parallelism": true
-            },
-            "build": {
-              "executor": "@nx/rollup:rollup",
-              "outputs": [
-                "{options.outputPath}"
-              ],
-              "options": {
-                "outputPath": "libs/shared-config/dist",
-                "main": "libs/shared-config/src/index.ts",
-                "tsConfig": "libs/shared-config/tsconfig.lib.json",
-                "project": "libs/shared-config/package.json",
-                "compiler": "tsc",
-                "format": [
-                  "cjs",
-                  "esm"
-                ],
-                "generateExportsField": false,
-                "assets": [
-                  {
-                    "input": "libs/shared-config/src/lib",
-                    "glob": "defaults.json",
-                    "output": "lib"
-                  }
-                ],
-                "parallel": 3
-              },
-              "configurations": {},
-              "parallelism": true,
-              "dependsOn": [
-                "^build"
-              ],
-              "cache": true,
-              "inputs": [
-                "production",
-                "^production",
-                "docusaurus"
-              ]
-            }
-          },
-          "metadata": {
-            "targetGroups": {},
-            "js": {
-              "packageName": "@ifla/shared-config",
-              "packageExports": {
-                ".": {
-                  "require": "./dist/index.cjs.js",
-                  "import": "./dist/index.esm.js",
-                  "types": "./dist/index.d.ts"
-                }
-              },
-              "packageMain": "./dist/index.cjs.js",
-              "isInPackageManagerWorkspaces": true
-            }
-          },
-          "name": "shared-config",
-          "tags": [
-            "npm:private"
-          ],
-          "$schema": "../../node_modules/nx/schemas/project-schema.json",
-          "sourceRoot": "libs/shared-config/src",
-          "projectType": "library",
-          "implicitDependencies": []
-        }
-      },
-      "unimarc": {
-        "name": "unimarc",
-        "type": "app",
-        "data": {
-          "root": "standards/unimarc",
-          "targets": {
-            "lint": {
-              "cache": true,
-              "options": {
-                "cwd": "standards/unimarc",
-                "command": "eslint ."
-              },
-              "inputs": [
-                "default",
-                "{workspaceRoot}/.eslintrc.json",
-                "{workspaceRoot}/eslint.config.js",
-                "{workspaceRoot}/eslint.config.mjs"
-              ],
-              "outputs": [
-                "{options.outputFile}"
-              ],
-              "metadata": {
-                "technologies": [
-                  "eslint"
-                ],
-                "description": "Runs ESLint on project",
-                "help": {
-                  "command": "pnpm exec eslint --help",
-                  "example": {
-                    "options": {
-                      "max-warnings": 0
-                    }
-                  }
-                }
-              },
-              "executor": "nx:run-commands",
-              "configurations": {},
-              "parallelism": true
-            },
-            "build": {
-              "executor": "nx:run-commands",
-              "options": {
-                "command": "docusaurus build standards/unimarc",
-                "parallel": 3
-              },
-              "outputs": [
-                "{projectRoot}/build"
-              ],
-              "cache": true,
-              "dependsOn": [
-                "^build",
-                {
-                  "target": "build",
-                  "projects": [
-                    "shared-config"
-                  ]
-                }
-              ],
-              "inputs": [
-                "production",
-                "^production",
-                "docusaurus-no-theme"
-              ],
-              "configurations": {},
-              "parallelism": true
-            },
-            "start": {
-              "executor": "nx:run-commands",
-              "options": {
-                "command": "docusaurus start standards/unimarc --port 3008"
-              },
-              "cache": false,
-              "configurations": {},
-              "parallelism": true
-            },
-            "serve": {
-              "executor": "nx:run-commands",
-              "options": {
-                "command": "docusaurus serve standards/unimarc --port 3008"
-              },
-              "cache": false,
-              "configurations": {},
-              "parallelism": true
-            },
-            "clear": {
-              "executor": "nx:run-commands",
-              "options": {
-                "command": "docusaurus clear standards/unimarc"
-              },
-              "cache": false,
-              "configurations": {},
-              "parallelism": true
-            },
-            "e2e": {
-              "executor": "nx:run-commands",
-              "options": {
-                "command": "playwright test e2e/standards-smoke.spec.ts e2e/vocabulary-functionality.spec.ts",
-                "parallel": 2
-              },
-              "dependsOn": [
-                "build"
-              ],
-              "cache": true,
-              "inputs": [
-                "default",
-                "{workspaceRoot}/e2e/standards-smoke.spec.ts",
-                "{workspaceRoot}/e2e/vocabulary-functionality.spec.ts",
-                "{workspaceRoot}/playwright.config.ts"
-              ],
-              "outputs": [
-                "{workspaceRoot}/test-results",
-                "{workspaceRoot}/playwright-report"
-              ],
-              "configurations": {},
-              "parallelism": true
-            }
-          },
-          "name": "unimarc",
-          "tags": [
-            "npm:private",
-            "docusaurus",
-            "site",
-            "standard",
-            "unimarc"
-          ],
-          "metadata": {
-            "targetGroups": {},
-            "js": {
-              "packageName": "@ifla/unimarc",
-              "isInPackageManagerWorkspaces": true
-            }
-          },
-          "sourceRoot": "standards/unimarc",
-          "projectType": "application",
-          "implicitDependencies": []
-        }
-      },
-      "sheet-sync": {
-        "name": "sheet-sync",
-        "type": "lib",
-        "data": {
-          "root": "tools/sheet-sync",
-          "targets": {
-            "lint": {
-              "cache": true,
-              "options": {
-                "cwd": "tools/sheet-sync",
-                "command": "eslint ."
-              },
-              "inputs": [
-                "default",
-                "{workspaceRoot}/.eslintrc.json",
-                "{workspaceRoot}/eslint.config.js",
-                "{workspaceRoot}/eslint.config.mjs"
-              ],
-              "outputs": [
-                "{options.outputFile}"
-              ],
-              "metadata": {
-                "technologies": [
-                  "eslint"
-                ],
-                "description": "Runs ESLint on project",
-                "help": {
-                  "command": "pnpm exec eslint --help",
-                  "example": {
-                    "options": {
-                      "max-warnings": 0
-                    }
-                  }
-                }
-              },
-              "executor": "nx:run-commands",
-              "configurations": {},
-              "parallelism": true
-            },
-            "build": {
-              "executor": "nx:run-script",
-              "options": {
-                "script": "build",
-                "parallel": 3
-              },
-              "metadata": {
-                "scriptContent": "tsc",
-                "runCommand": "pnpm run build"
-              },
-              "configurations": {},
-              "parallelism": true,
-              "dependsOn": [
-                "^build"
-              ],
-              "outputs": [
-                "{projectRoot}/build",
-                "{projectRoot}/dist"
-              ],
-              "cache": true,
-              "inputs": [
-                "production",
-                "^production",
-                "docusaurus"
-              ]
             },
             "dev": {
               "executor": "nx:run-script",
@@ -769,30 +736,58 @@
                 "script": "dev"
               },
               "metadata": {
-                "scriptContent": "ts-node index.ts",
+                "scriptContent": "ts-node src/index.ts",
                 "runCommand": "pnpm run dev"
               },
               "configurations": {},
               "parallelism": true
+            },
+            "build": {
+              "executor": "@nx/js:tsc",
+              "outputs": [
+                "{options.outputPath}"
+              ],
+              "options": {
+                "outputPath": "dist/tools/sheet-sync",
+                "tsConfig": "tools/sheet-sync/tsconfig.lib.json",
+                "packageJson": "tools/sheet-sync/package.json",
+                "main": "tools/sheet-sync/src/index.ts",
+                "assets": [
+                  "tools/sheet-sync/*.md"
+                ]
+              },
+              "configurations": {},
+              "parallelism": true,
+              "cache": true,
+              "dependsOn": [
+                "^build"
+              ],
+              "inputs": [
+                "production",
+                "^production"
+              ]
+            }
+          },
+          "metadata": {
+            "targetGroups": {
+              "NPM Scripts": [
+                "dev"
+              ]
+            },
+            "description": "CLI tool for syncing CSV files with Google Sheets",
+            "js": {
+              "packageName": "@ifla/sheet-sync",
+              "packageMain": "./src/index.js",
+              "isInPackageManagerWorkspaces": true
             }
           },
           "name": "sheet-sync",
           "tags": [
             "npm:private"
           ],
-          "metadata": {
-            "targetGroups": {
-              "NPM Scripts": [
-                "build",
-                "dev"
-              ]
-            },
-            "description": "CLI tool for syncing CSV files with Google Sheets",
-            "js": {
-              "packageName": "sheet-sync",
-              "isInPackageManagerWorkspaces": true
-            }
-          },
+          "$schema": "../../node_modules/nx/schemas/project-schema.json",
+          "sourceRoot": "tools/sheet-sync/src",
+          "projectType": "library",
           "implicitDependencies": []
         }
       },
@@ -810,13 +805,9 @@
               },
               "inputs": [
                 "default",
-                "{workspaceRoot}/.eslintrc.json",
-                "{workspaceRoot}/eslint.config.js",
-                "{workspaceRoot}/eslint.config.mjs"
+                "^default"
               ],
-              "outputs": [
-                "{options.outputFile}"
-              ],
+              "outputs": [],
               "metadata": {
                 "technologies": [
                   "eslint"
@@ -838,39 +829,55 @@
             "build": {
               "executor": "nx:run-commands",
               "options": {
-                "command": "docusaurus build standards/ISBDM",
-                "parallel": 3
+                "command": "docusaurus build standards/ISBDM"
               },
-              "outputs": [
-                "{projectRoot}/build"
-              ],
-              "cache": true,
-              "dependsOn": [
-                "^build"
-              ],
               "inputs": [
                 "production",
                 "^production",
-                "docusaurus-no-theme"
+                "docusaurus"
               ],
               "configurations": {},
-              "parallelism": true
+              "parallelism": true,
+              "dependsOn": [
+                "^build"
+              ],
+              "outputs": [
+                "{projectRoot}/build",
+                "{projectRoot}/dist"
+              ],
+              "cache": true
             },
             "start": {
               "executor": "nx:run-commands",
               "options": {
                 "command": "docusaurus start standards/ISBDM --port 3001"
               },
-              "cache": false,
               "configurations": {},
-              "parallelism": true
+              "parallelism": true,
+              "cache": false
             },
             "serve": {
               "executor": "nx:run-commands",
               "options": {
                 "command": "docusaurus serve standards/ISBDM --port 3001"
               },
-              "cache": false,
+              "configurations": {},
+              "parallelism": true,
+              "cache": false
+            },
+            "start:robust": {
+              "executor": "nx:run-commands",
+              "options": {
+                "command": "node scripts/utils/port-manager.js site isbdm && docusaurus start standards/ISBDM --port 3001"
+              },
+              "configurations": {},
+              "parallelism": true
+            },
+            "serve:robust": {
+              "executor": "nx:run-commands",
+              "options": {
+                "command": "node scripts/utils/port-manager.js site isbdm && docusaurus serve standards/ISBDM --port 3001"
+              },
               "configurations": {},
               "parallelism": true
             },
@@ -879,20 +886,103 @@
               "options": {
                 "command": "docusaurus clear standards/ISBDM"
               },
-              "cache": false,
               "configurations": {},
               "parallelism": true
+            },
+            "test": {
+              "executor": "@nx/vite:test",
+              "options": {
+                "config": "vite.config.ts",
+                "testPathPattern": [
+                  "standards/ISBDM/src/**/*.{test,spec}.{js,ts,jsx,tsx}"
+                ]
+              },
+              "configurations": {},
+              "parallelism": true,
+              "dependsOn": [
+                "^build"
+              ],
+              "inputs": [
+                "testInputs",
+                "^testInputs",
+                {
+                  "runtime": "node -v"
+                }
+              ],
+              "outputs": [
+                "{projectRoot}/coverage",
+                "{projectRoot}/test-results"
+              ],
+              "cache": true
+            },
+            "test:unit": {
+              "executor": "@nx/vite:test",
+              "options": {
+                "config": "vite.config.ts",
+                "exclude": [
+                  "**/scripts/**",
+                  "**/deployment/**"
+                ]
+              },
+              "configurations": {},
+              "parallelism": true,
+              "cache": true,
+              "outputs": [
+                "{projectRoot}/coverage",
+                "{projectRoot}/test-results"
+              ],
+              "inputs": [
+                "testInputs",
+                "sharedGlobals"
+              ]
+            },
+            "test:integration": {
+              "executor": "@nx/vite:test",
+              "options": {
+                "config": "vite.config.ts",
+                "include": [
+                  "**/scripts/**",
+                  "**/deployment/**"
+                ]
+              },
+              "configurations": {},
+              "parallelism": true,
+              "cache": true,
+              "outputs": [
+                "{projectRoot}/coverage",
+                "{projectRoot}/test-results"
+              ],
+              "inputs": [
+                "testInputs",
+                "sharedGlobals"
+              ]
+            },
+            "typecheck": {
+              "executor": "nx:run-commands",
+              "options": {
+                "command": "tsc --noEmit",
+                "cwd": "standards/ISBDM"
+              },
+              "configurations": {},
+              "parallelism": true,
+              "dependsOn": [
+                "^build"
+              ],
+              "cache": true,
+              "inputs": [
+                "default",
+                "{projectRoot}/tsconfig.json",
+                "{workspaceRoot}/tsconfig.json"
+              ]
             },
             "e2e": {
               "executor": "nx:run-commands",
               "options": {
                 "command": "playwright test e2e/standards-smoke.spec.ts e2e/vocabulary-functionality.spec.ts",
-                "parallel": 2
+                "cacheableOperations": [
+                  "e2e"
+                ]
               },
-              "dependsOn": [
-                "build"
-              ],
-              "cache": true,
               "inputs": [
                 "default",
                 "{workspaceRoot}/e2e/standards-smoke.spec.ts",
@@ -904,27 +994,25 @@
                 "{workspaceRoot}/playwright-report"
               ],
               "configurations": {},
-              "parallelism": true
+              "parallelism": true,
+              "cache": true,
+              "dependsOn": [
+                "build"
+              ]
             }
           },
           "name": "isbdm",
+          "sourceRoot": "standards/ISBDM",
+          "projectType": "application",
           "tags": [
-            "npm:private",
             "docusaurus",
             "site",
             "standard",
             "isbdm"
           ],
-          "metadata": {
-            "targetGroups": {},
-            "js": {
-              "packageName": "@ifla/isbdm",
-              "isInPackageManagerWorkspaces": true
-            }
-          },
-          "sourceRoot": "standards/ISBDM",
-          "projectType": "application",
-          "implicitDependencies": []
+          "implicitDependencies": [
+            "@ifla/theme"
+          ]
         }
       },
       "@ifla/theme": {
@@ -941,13 +1029,9 @@
               },
               "inputs": [
                 "default",
-                "{workspaceRoot}/.eslintrc.json",
-                "{workspaceRoot}/eslint.config.js",
-                "{workspaceRoot}/eslint.config.mjs"
+                "^default"
               ],
-              "outputs": [
-                "{options.outputFile}"
-              ],
+              "outputs": [],
               "metadata": {
                 "technologies": [
                   "eslint"
@@ -966,43 +1050,144 @@
               "configurations": {},
               "parallelism": true
             },
-            "build": {
-              "executor": "nx:run-script",
+            "build:tsc": {
+              "executor": "nx:run-commands",
               "options": {
-                "script": "build",
-                "parallel": 3
+                "command": "npx tsc --project tsconfig.declarations.json",
+                "cwd": "packages/theme"
               },
-              "metadata": {
-                "scriptContent": "pnpm exec tsup",
-                "runCommand": "pnpm run build"
+              "configurations": {},
+              "parallelism": true,
+              "cache": true,
+              "dependsOn": [
+                "^build"
+              ],
+              "inputs": [
+                "production",
+                "^production"
+              ]
+            },
+            "build": {
+              "executor": "nx:run-commands",
+              "options": {
+                "commands": [
+                  "pnpm exec tsup",
+                  "nx run @ifla/theme:build:tsc"
+                ],
+                "cwd": "packages/theme",
+                "parallel": false
               },
+              "outputs": [
+                "{projectRoot}/dist"
+              ],
+              "inputs": [
+                "production",
+                "{projectRoot}/src/**/*",
+                "{projectRoot}/tsup.config.ts",
+                "{projectRoot}/tsconfig.declarations.json",
+                "{projectRoot}/package.json"
+              ],
               "configurations": {},
               "parallelism": true,
               "dependsOn": [
                 "^build"
               ],
-              "outputs": [
-                "{projectRoot}/build",
-                "{projectRoot}/dist"
-              ],
+              "cache": true
+            },
+            "test": {
+              "executor": "@nx/vite:test",
+              "options": {
+                "config": "vite.config.ts",
+                "testPathPattern": [
+                  "packages/theme/src/tests",
+                  "packages/theme/src/components/**/__tests__"
+                ]
+              },
               "cache": true,
               "inputs": [
-                "production",
-                "^production",
-                "docusaurus"
+                "testInputs",
+                "^testInputs"
+              ],
+              "outputs": [
+                "{projectRoot}/coverage",
+                "{projectRoot}/test-results"
+              ],
+              "configurations": {},
+              "parallelism": true,
+              "dependsOn": [
+                "^build"
               ]
+            },
+            "test:unit": {
+              "executor": "@nx/vite:test",
+              "options": {
+                "config": "vite.config.ts",
+                "exclude": [
+                  "**/scripts/**",
+                  "**/deployment/**"
+                ]
+              },
+              "cache": true,
+              "inputs": [
+                "testInputs",
+                "sharedGlobals"
+              ],
+              "outputs": [
+                "{projectRoot}/coverage",
+                "{projectRoot}/test-results"
+              ],
+              "configurations": {},
+              "parallelism": true
+            },
+            "test:integration": {
+              "executor": "@nx/vite:test",
+              "options": {
+                "config": "vite.config.ts",
+                "include": [
+                  "**/scripts/**",
+                  "**/deployment/**"
+                ]
+              },
+              "cache": true,
+              "inputs": [
+                "testInputs",
+                "sharedGlobals"
+              ],
+              "outputs": [
+                "{projectRoot}/coverage",
+                "{projectRoot}/test-results"
+              ],
+              "configurations": {},
+              "parallelism": true
+            },
+            "typecheck": {
+              "executor": "nx:run-commands",
+              "options": {
+                "command": "tsc --noEmit",
+                "cwd": "packages/theme"
+              },
+              "cache": true,
+              "dependsOn": [
+                "^build"
+              ],
+              "inputs": [
+                "default",
+                "{projectRoot}/tsconfig.json",
+                "{workspaceRoot}/tsconfig.json"
+              ],
+              "configurations": {},
+              "parallelism": true
             }
           },
           "name": "@ifla/theme",
+          "projectType": "library",
           "tags": [
-            "npm:private"
+            "npm:private",
+            "library",
+            "theme"
           ],
           "metadata": {
-            "targetGroups": {
-              "NPM Scripts": [
-                "build"
-              ]
-            },
+            "targetGroups": {},
             "js": {
               "packageName": "@ifla/theme",
               "packageExports": {
@@ -1013,56 +1198,57 @@
                 },
                 "./styles.css": "./dist/index.css",
                 "./styles": "./dist/index.css",
-                "./config": {
-                  "types": "./dist/config.d.ts",
-                  "import": "./dist/config.mjs",
-                  "require": "./dist/config.js"
-                },
-                "./config/siteConfigCore": {
-                  "types": "./dist/config/siteConfigCore.d.ts",
-                  "import": "./dist/config/siteConfigCore.mjs",
-                  "require": "./dist/config/siteConfigCore.js"
-                },
-                "./config/siteConfig": {
-                  "types": "./dist/config/siteConfig.d.ts",
-                  "import": "./dist/config/siteConfig.mjs",
-                  "require": "./dist/config/siteConfig.js"
-                },
-                "./config/siteConfig.server": {
-                  "types": "./dist/config/siteConfig.server.d.ts",
-                  "import": "./dist/config/siteConfig.server.mjs",
-                  "require": "./dist/config/siteConfig.server.js"
-                },
-                "./config/docusaurus": {
-                  "types": "./dist/config/docusaurus.d.ts",
-                  "import": "./dist/config/docusaurus.mjs",
-                  "require": "./dist/config/docusaurus.js"
-                },
                 "./components/SiteLink": {
                   "types": "./dist/components/SiteLink.d.ts",
                   "import": "./dist/components/SiteLink.mjs",
                   "require": "./dist/components/SiteLink.js"
                 },
                 "./components/ElementReference": {
-                  "types": "./dist/components/ElementReference/index.d.ts",
-                  "import": "./dist/components/ElementReference/index.mjs",
-                  "require": "./dist/components/ElementReference/index.js"
+                  "types": "./dist/components/ElementReference.d.ts",
+                  "import": "./dist/components/ElementReference.mjs",
+                  "require": "./dist/components/ElementReference.js"
                 },
-                "./hooks/useDocsEnv": {
-                  "types": "./dist/hooks/useDocsEnv.d.ts",
-                  "import": "./dist/hooks/useDocsEnv.mjs",
-                  "require": "./dist/hooks/useDocsEnv.js"
+                "./components/SiteManagementLink": {
+                  "types": "./dist/components/SiteManagementLink.d.ts",
+                  "import": "./dist/components/SiteManagementLink.mjs",
+                  "require": "./dist/components/SiteManagementLink.js"
+                },
+                "./hooks/usePrevious": {
+                  "types": "./dist/hooks/usePrevious.d.ts",
+                  "import": "./dist/hooks/usePrevious.mjs",
+                  "require": "./dist/hooks/usePrevious.js"
                 },
                 "./utils": {
                   "types": "./dist/utils/index.d.ts",
                   "import": "./dist/utils/index.mjs",
                   "require": "./dist/utils/index.js"
+                },
+                "./config": {
+                  "types": "./dist/config/index.d.ts",
+                  "import": "./dist/config/index.mjs",
+                  "require": "./dist/config/index.js"
+                },
+                "./config/siteConfig": {
+                  "types": "./dist/config/siteConfig.d.ts",
+                  "import": "./dist/config/siteConfig.mjs",
+                  "require": "./dist/config/siteConfig.js"
+                },
+                "./theme/NavbarItem/ComponentTypes": {
+                  "types": "./dist/theme/NavbarItem/ComponentTypes.d.ts",
+                  "import": "./dist/theme/NavbarItem/ComponentTypes.mjs",
+                  "require": "./dist/theme/NavbarItem/ComponentTypes.js"
+                },
+                "./theme/NavbarItem/AuthDropdownNavbarItem": {
+                  "types": "./dist/theme/NavbarItem/AuthDropdownNavbarItem.d.ts",
+                  "import": "./dist/theme/NavbarItem/AuthDropdownNavbarItem.mjs",
+                  "require": "./dist/theme/NavbarItem/AuthDropdownNavbarItem.js"
                 }
               },
               "packageMain": "dist/index.js",
               "isInPackageManagerWorkspaces": true
             }
           },
+          "sourceRoot": "packages/theme/src",
           "implicitDependencies": []
         }
       },
@@ -1080,13 +1266,9 @@
               },
               "inputs": [
                 "default",
-                "{workspaceRoot}/.eslintrc.json",
-                "{workspaceRoot}/eslint.config.js",
-                "{workspaceRoot}/eslint.config.mjs"
+                "^default"
               ],
-              "outputs": [
-                "{options.outputFile}"
-              ],
+              "outputs": [],
               "metadata": {
                 "technologies": [
                   "eslint"
@@ -1108,40 +1290,55 @@
             "build": {
               "executor": "nx:run-commands",
               "options": {
-                "command": "docusaurus build standards/FRBR",
-                "parallel": 3
+                "command": "docusaurus build standards/FRBR"
               },
-              "outputs": [
-                "{projectRoot}/build"
-              ],
-              "cache": true,
-              "dependsOn": [
-                "^build",
-                "shared-config:build"
-              ],
               "inputs": [
                 "production",
                 "^production",
-                "docusaurus-no-theme"
+                "docusaurus"
               ],
+              "outputs": [
+                "{projectRoot}/build",
+                "{projectRoot}/.docusaurus"
+              ],
+              "cache": true,
               "configurations": {},
-              "parallelism": true
+              "parallelism": true,
+              "dependsOn": [
+                "^build"
+              ]
             },
             "start": {
               "executor": "nx:run-commands",
               "options": {
-                "command": "docusaurus start standards/FRBR --port 3005"
+                "command": "docusaurus start standards/FRBR --port 3003"
               },
-              "cache": false,
               "configurations": {},
-              "parallelism": true
+              "parallelism": true,
+              "cache": false
             },
             "serve": {
               "executor": "nx:run-commands",
               "options": {
-                "command": "docusaurus serve standards/FRBR --port 3005"
+                "command": "docusaurus serve standards/FRBR --port 3003"
               },
-              "cache": false,
+              "configurations": {},
+              "parallelism": true,
+              "cache": false
+            },
+            "start:robust": {
+              "executor": "nx:run-commands",
+              "options": {
+                "command": "node scripts/utils/port-manager.js site frbr && docusaurus start standards/FRBR --port 3003"
+              },
+              "configurations": {},
+              "parallelism": true
+            },
+            "serve:robust": {
+              "executor": "nx:run-commands",
+              "options": {
+                "command": "node scripts/utils/port-manager.js site frbr && docusaurus serve standards/FRBR --port 3003"
+              },
               "configurations": {},
               "parallelism": true
             },
@@ -1150,7 +1347,6 @@
               "options": {
                 "command": "docusaurus clear standards/FRBR"
               },
-              "cache": false,
               "configurations": {},
               "parallelism": true
             },
@@ -1158,12 +1354,10 @@
               "executor": "nx:run-commands",
               "options": {
                 "command": "playwright test e2e/standards-smoke.spec.ts e2e/vocabulary-functionality.spec.ts",
-                "parallel": 2
+                "cacheableOperations": [
+                  "e2e"
+                ]
               },
-              "dependsOn": [
-                "build"
-              ],
-              "cache": true,
               "inputs": [
                 "default",
                 "{workspaceRoot}/e2e/standards-smoke.spec.ts",
@@ -1175,27 +1369,43 @@
                 "{workspaceRoot}/playwright-report"
               ],
               "configurations": {},
+              "parallelism": true,
+              "cache": true,
+              "dependsOn": [
+                "build"
+              ]
+            },
+            "typecheck": {
+              "executor": "nx:run-commands",
+              "options": {
+                "command": "tsc --noEmit",
+                "cwd": "standards/FRBR"
+              },
+              "cache": true,
+              "dependsOn": [
+                "^build"
+              ],
+              "inputs": [
+                "default",
+                "{projectRoot}/tsconfig.json",
+                "{workspaceRoot}/tsconfig.json"
+              ],
+              "configurations": {},
               "parallelism": true
             }
           },
           "name": "frbr",
+          "sourceRoot": "standards/FRBR",
+          "projectType": "application",
           "tags": [
-            "npm:private",
             "docusaurus",
             "site",
             "standard",
             "frbr"
           ],
-          "metadata": {
-            "targetGroups": {},
-            "js": {
-              "packageName": "@ifla/frbr",
-              "isInPackageManagerWorkspaces": true
-            }
-          },
-          "sourceRoot": "standards/FRBR",
-          "projectType": "application",
-          "implicitDependencies": []
+          "implicitDependencies": [
+            "@ifla/theme"
+          ]
         }
       },
       "isbd": {
@@ -1212,13 +1422,9 @@
               },
               "inputs": [
                 "default",
-                "{workspaceRoot}/.eslintrc.json",
-                "{workspaceRoot}/eslint.config.js",
-                "{workspaceRoot}/eslint.config.mjs"
+                "^default"
               ],
-              "outputs": [
-                "{options.outputFile}"
-              ],
+              "outputs": [],
               "metadata": {
                 "technologies": [
                   "eslint"
@@ -1240,40 +1446,55 @@
             "build": {
               "executor": "nx:run-commands",
               "options": {
-                "command": "docusaurus build standards/isbd",
-                "parallel": 3
+                "command": "docusaurus build standards/isbd"
               },
-              "outputs": [
-                "{projectRoot}/build"
-              ],
-              "cache": true,
-              "dependsOn": [
-                "^build",
-                "shared-config:build"
-              ],
               "inputs": [
                 "production",
                 "^production",
-                "docusaurus-no-theme"
+                "docusaurus"
               ],
+              "outputs": [
+                "{projectRoot}/build",
+                "{projectRoot}/.docusaurus"
+              ],
+              "cache": true,
               "configurations": {},
-              "parallelism": true
+              "parallelism": true,
+              "dependsOn": [
+                "^build"
+              ]
             },
             "start": {
               "executor": "nx:run-commands",
               "options": {
-                "command": "docusaurus start standards/isbd --port 3006"
+                "command": "docusaurus start standards/isbd --port 3004"
               },
-              "cache": false,
               "configurations": {},
-              "parallelism": true
+              "parallelism": true,
+              "cache": false
             },
             "serve": {
               "executor": "nx:run-commands",
               "options": {
-                "command": "docusaurus serve standards/isbd --port 3006"
+                "command": "docusaurus serve standards/isbd --port 3004"
               },
-              "cache": false,
+              "configurations": {},
+              "parallelism": true,
+              "cache": false
+            },
+            "start:robust": {
+              "executor": "nx:run-commands",
+              "options": {
+                "command": "node scripts/utils/port-manager.js site isbd && docusaurus start standards/isbd --port 3004"
+              },
+              "configurations": {},
+              "parallelism": true
+            },
+            "serve:robust": {
+              "executor": "nx:run-commands",
+              "options": {
+                "command": "node scripts/utils/port-manager.js site isbd && docusaurus serve standards/isbd --port 3004"
+              },
               "configurations": {},
               "parallelism": true
             },
@@ -1282,7 +1503,6 @@
               "options": {
                 "command": "docusaurus clear standards/isbd"
               },
-              "cache": false,
               "configurations": {},
               "parallelism": true
             },
@@ -1290,12 +1510,10 @@
               "executor": "nx:run-commands",
               "options": {
                 "command": "playwright test e2e/standards-smoke.spec.ts e2e/vocabulary-functionality.spec.ts",
-                "parallel": 2
+                "cacheableOperations": [
+                  "e2e"
+                ]
               },
-              "dependsOn": [
-                "build"
-              ],
-              "cache": true,
               "inputs": [
                 "default",
                 "{workspaceRoot}/e2e/standards-smoke.spec.ts",
@@ -1307,27 +1525,43 @@
                 "{workspaceRoot}/playwright-report"
               ],
               "configurations": {},
+              "parallelism": true,
+              "cache": true,
+              "dependsOn": [
+                "build"
+              ]
+            },
+            "typecheck": {
+              "executor": "nx:run-commands",
+              "options": {
+                "command": "tsc --noEmit",
+                "cwd": "standards/isbd"
+              },
+              "cache": true,
+              "dependsOn": [
+                "^build"
+              ],
+              "inputs": [
+                "default",
+                "{projectRoot}/tsconfig.json",
+                "{workspaceRoot}/tsconfig.json"
+              ],
+              "configurations": {},
               "parallelism": true
             }
           },
           "name": "isbd",
+          "sourceRoot": "standards/isbd",
+          "projectType": "application",
           "tags": [
-            "npm:private",
             "docusaurus",
             "site",
             "standard",
             "isbd"
           ],
-          "metadata": {
-            "targetGroups": {},
-            "js": {
-              "packageName": "@ifla/isbd",
-              "isInPackageManagerWorkspaces": true
-            }
-          },
-          "sourceRoot": "standards/isbd",
-          "projectType": "application",
-          "implicitDependencies": []
+          "implicitDependencies": [
+            "@ifla/theme"
+          ]
         }
       },
       "lrm": {
@@ -1344,13 +1578,9 @@
               },
               "inputs": [
                 "default",
-                "{workspaceRoot}/.eslintrc.json",
-                "{workspaceRoot}/eslint.config.js",
-                "{workspaceRoot}/eslint.config.mjs"
+                "^default"
               ],
-              "outputs": [
-                "{options.outputFile}"
-              ],
+              "outputs": [],
               "metadata": {
                 "technologies": [
                   "eslint"
@@ -1372,39 +1602,55 @@
             "build": {
               "executor": "nx:run-commands",
               "options": {
-                "command": "docusaurus build standards/LRM",
-                "parallel": 3
+                "command": "docusaurus build standards/LRM"
               },
-              "outputs": [
-                "{projectRoot}/build"
-              ],
-              "cache": true,
-              "dependsOn": [
-                "^build"
-              ],
               "inputs": [
                 "production",
                 "^production",
-                "docusaurus-no-theme"
+                "docusaurus"
               ],
+              "outputs": [
+                "{projectRoot}/build",
+                "{projectRoot}/.docusaurus"
+              ],
+              "cache": true,
               "configurations": {},
-              "parallelism": true
+              "parallelism": true,
+              "dependsOn": [
+                "^build"
+              ]
             },
             "start": {
               "executor": "nx:run-commands",
               "options": {
                 "command": "docusaurus start standards/LRM --port 3002"
               },
-              "cache": false,
               "configurations": {},
-              "parallelism": true
+              "parallelism": true,
+              "cache": false
             },
             "serve": {
               "executor": "nx:run-commands",
               "options": {
                 "command": "docusaurus serve standards/LRM --port 3002"
               },
-              "cache": false,
+              "configurations": {},
+              "parallelism": true,
+              "cache": false
+            },
+            "start:robust": {
+              "executor": "nx:run-commands",
+              "options": {
+                "command": "node scripts/utils/port-manager.js site lrm && docusaurus start standards/LRM --port 3002"
+              },
+              "configurations": {},
+              "parallelism": true
+            },
+            "serve:robust": {
+              "executor": "nx:run-commands",
+              "options": {
+                "command": "node scripts/utils/port-manager.js site lrm && docusaurus serve standards/LRM --port 3002"
+              },
               "configurations": {},
               "parallelism": true
             },
@@ -1413,7 +1659,6 @@
               "options": {
                 "command": "docusaurus clear standards/LRM"
               },
-              "cache": false,
               "configurations": {},
               "parallelism": true
             },
@@ -1421,12 +1666,10 @@
               "executor": "nx:run-commands",
               "options": {
                 "command": "playwright test e2e/standards-smoke.spec.ts e2e/vocabulary-functionality.spec.ts",
-                "parallel": 2
+                "cacheableOperations": [
+                  "e2e"
+                ]
               },
-              "dependsOn": [
-                "build"
-              ],
-              "cache": true,
               "inputs": [
                 "default",
                 "{workspaceRoot}/e2e/standards-smoke.spec.ts",
@@ -1438,26 +1681,319 @@
                 "{workspaceRoot}/playwright-report"
               ],
               "configurations": {},
+              "parallelism": true,
+              "cache": true,
+              "dependsOn": [
+                "build"
+              ]
+            },
+            "typecheck": {
+              "executor": "nx:run-commands",
+              "options": {
+                "command": "tsc --noEmit",
+                "cwd": "standards/LRM"
+              },
+              "cache": true,
+              "dependsOn": [
+                "^build"
+              ],
+              "inputs": [
+                "default",
+                "{projectRoot}/tsconfig.json",
+                "{workspaceRoot}/tsconfig.json"
+              ],
+              "configurations": {},
               "parallelism": true
             }
           },
           "name": "lrm",
+          "sourceRoot": "standards/LRM",
+          "projectType": "application",
           "tags": [
-            "npm:private",
             "docusaurus",
             "site",
             "standard",
             "lrm"
           ],
+          "implicitDependencies": [
+            "@ifla/theme"
+          ]
+        }
+      },
+      "admin": {
+        "name": "admin",
+        "type": "app",
+        "data": {
+          "root": "apps/admin",
+          "targets": {
+            "lint": {
+              "executor": "@nx/eslint:lint",
+              "outputs": [
+                "{options.outputFile}"
+              ],
+              "options": {
+                "lintFilePatterns": [
+                  "apps/admin/src/**/*.{ts,tsx,js,jsx}",
+                  "apps/admin/*.{ts,tsx,js,jsx}"
+                ]
+              },
+              "configurations": {},
+              "parallelism": true,
+              "inputs": [
+                "default",
+                "^default"
+              ],
+              "cache": true
+            },
+            "test": {
+              "executor": "nx:run-commands",
+              "options": {
+                "command": "vitest run",
+                "cwd": "apps/admin"
+              },
+              "configurations": {},
+              "parallelism": true,
+              "dependsOn": [
+                "^build"
+              ],
+              "inputs": [
+                "testInputs",
+                "^testInputs",
+                {
+                  "runtime": "node -v"
+                }
+              ],
+              "outputs": [
+                "{projectRoot}/coverage",
+                "{projectRoot}/test-results"
+              ],
+              "cache": true
+            },
+            "typecheck": {
+              "executor": "nx:run-commands",
+              "options": {
+                "command": "tsc --noEmit",
+                "cwd": "apps/admin"
+              },
+              "configurations": {},
+              "parallelism": true,
+              "dependsOn": [
+                "^build"
+              ],
+              "cache": true,
+              "inputs": [
+                "default",
+                "{projectRoot}/tsconfig.json",
+                "{workspaceRoot}/tsconfig.json"
+              ]
+            },
+            "build-deps": {
+              "dependsOn": [
+                "^build"
+              ],
+              "configurations": {},
+              "options": {},
+              "parallelism": true,
+              "executor": "nx:noop"
+            },
+            "watch-deps": {
+              "continuous": true,
+              "dependsOn": [
+                "build-deps"
+              ],
+              "executor": "nx:run-commands",
+              "options": {
+                "command": "pnpm exec nx watch --projects admin --includeDependentProjects -- pnpm exec nx build-deps admin"
+              },
+              "configurations": {},
+              "parallelism": true
+            },
+            "build": {
+              "executor": "@nx/next:build",
+              "outputs": [
+                "{options.outputPath}"
+              ],
+              "defaultConfiguration": "production",
+              "options": {
+                "outputPath": "dist/apps/admin"
+              },
+              "configurations": {
+                "development": {
+                  "outputPath": "apps/admin"
+                },
+                "production": {}
+              },
+              "dependsOn": [
+                {
+                  "target": "build",
+                  "projects": [
+                    "@ifla/theme"
+                  ]
+                }
+              ],
+              "parallelism": true,
+              "inputs": [
+                "buildInputs",
+                "^buildInputs",
+                "sharedGlobals"
+              ],
+              "cache": true
+            },
+            "dev": {
+              "executor": "@nx/next:server",
+              "options": {
+                "buildTarget": "admin:build:development",
+                "dev": true,
+                "port": 3007
+              },
+              "configurations": {},
+              "parallelism": true,
+              "continuous": true
+            },
+            "start": {
+              "executor": "@nx/next:server",
+              "options": {
+                "buildTarget": "admin:build:production",
+                "dev": false,
+                "port": 3007
+              },
+              "configurations": {},
+              "parallelism": true,
+              "continuous": true,
+              "cache": false
+            },
+            "serve-static": {
+              "continuous": true,
+              "options": {
+                "cwd": "apps/admin",
+                "command": "next start"
+              },
+              "dependsOn": [
+                "build"
+              ],
+              "executor": "nx:run-commands",
+              "configurations": {},
+              "parallelism": true
+            },
+            "serve": {
+              "executor": "@nx/next:server",
+              "defaultConfiguration": "development",
+              "options": {
+                "buildTarget": "admin:build",
+                "dev": true,
+                "port": 3007
+              },
+              "configurations": {
+                "development": {
+                  "buildTarget": "admin:build:development",
+                  "dev": true,
+                  "port": 3007
+                },
+                "production": {
+                  "buildTarget": "admin:build:production",
+                  "dev": false,
+                  "port": 3007
+                }
+              },
+              "parallelism": true,
+              "continuous": true,
+              "cache": false
+            },
+            "test:unit": {
+              "executor": "nx:run-commands",
+              "options": {
+                "command": "vitest run src/test/components/",
+                "cwd": "apps/admin"
+              },
+              "configurations": {},
+              "parallelism": true,
+              "cache": true,
+              "outputs": [
+                "{projectRoot}/coverage",
+                "{projectRoot}/test-results"
+              ],
+              "inputs": [
+                "testInputs",
+                "sharedGlobals"
+              ]
+            },
+            "test:integration": {
+              "executor": "nx:run-commands",
+              "options": {
+                "command": "vitest run src/test/integration/",
+                "cwd": "apps/admin"
+              },
+              "configurations": {},
+              "parallelism": true,
+              "cache": true,
+              "outputs": [
+                "{projectRoot}/coverage",
+                "{projectRoot}/test-results"
+              ],
+              "inputs": [
+                "testInputs",
+                "sharedGlobals"
+              ]
+            },
+            "test:watch": {
+              "executor": "nx:run-commands",
+              "options": {
+                "command": "vitest",
+                "cwd": "apps/admin"
+              },
+              "configurations": {},
+              "parallelism": true
+            },
+            "test:coverage": {
+              "executor": "nx:run-commands",
+              "options": {
+                "command": "vitest run --coverage",
+                "cwd": "apps/admin"
+              },
+              "configurations": {},
+              "parallelism": true
+            },
+            "e2e": {
+              "executor": "nx:run-commands",
+              "options": {
+                "command": "playwright test --project=admin",
+                "cwd": ".",
+                "cacheableOperations": [
+                  "e2e"
+                ]
+              },
+              "inputs": [
+                "default",
+                "{workspaceRoot}/e2e/admin/**/*.spec.ts",
+                "{workspaceRoot}/e2e/admin/**/*.e2e.test.ts",
+                "{workspaceRoot}/playwright.config.ts"
+              ],
+              "outputs": [
+                "{workspaceRoot}/test-results",
+                "{workspaceRoot}/playwright-report"
+              ],
+              "configurations": {},
+              "parallelism": true,
+              "cache": true,
+              "dependsOn": [
+                "build"
+              ]
+            }
+          },
           "metadata": {
             "targetGroups": {},
             "js": {
-              "packageName": "@ifla/lrm",
+              "packageName": "@ifla/admin-portal",
               "isInPackageManagerWorkspaces": true
             }
           },
-          "sourceRoot": "standards/LRM",
+          "name": "admin",
           "projectType": "application",
+          "tags": [
+            "npm:private"
+          ],
+          "$schema": "../../node_modules/nx/schemas/project-schema.json",
+          "sourceRoot": "apps/admin",
           "implicitDependencies": []
         }
       },
@@ -1475,13 +2011,9 @@
               },
               "inputs": [
                 "default",
-                "{workspaceRoot}/.eslintrc.json",
-                "{workspaceRoot}/eslint.config.js",
-                "{workspaceRoot}/eslint.config.mjs"
+                "^default"
               ],
-              "outputs": [
-                "{options.outputFile}"
-              ],
+              "outputs": [],
               "metadata": {
                 "technologies": [
                   "eslint"
@@ -1500,75 +2032,41 @@
               "configurations": {},
               "parallelism": true
             },
-            "docusaurus": {
-              "executor": "nx:run-script",
-              "options": {
-                "script": "docusaurus"
-              },
-              "metadata": {
-                "scriptContent": "docusaurus",
-                "runCommand": "pnpm run docusaurus"
-              },
-              "configurations": {},
-              "parallelism": true
-            },
-            "swizzle": {
-              "executor": "nx:run-script",
-              "options": {
-                "script": "swizzle"
-              },
-              "metadata": {
-                "scriptContent": "docusaurus swizzle",
-                "runCommand": "pnpm run swizzle"
-              },
-              "configurations": {},
-              "parallelism": true
-            },
-            "deploy": {
-              "executor": "nx:run-script",
-              "options": {
-                "script": "deploy"
-              },
-              "metadata": {
-                "scriptContent": "docusaurus deploy",
-                "runCommand": "pnpm run deploy"
-              },
-              "configurations": {},
-              "parallelism": true
-            },
             "build": {
               "executor": "nx:run-commands",
               "options": {
-                "command": "docusaurus build portal",
-                "parallel": 3
+                "command": "docusaurus build portal"
               },
-              "outputs": [
-                "{projectRoot}/build"
-              ],
-              "cache": true,
-              "dependsOn": [
-                "^build",
-                {
-                  "target": "build",
-                  "projects": [
-                    "shared-config"
-                  ]
-                }
-              ],
               "inputs": [
                 "production",
                 "^production",
-                "docusaurus-no-theme"
+                "docusaurus"
               ],
               "configurations": {},
-              "parallelism": true
+              "parallelism": true,
+              "dependsOn": [
+                "^build"
+              ],
+              "outputs": [
+                "{projectRoot}/build",
+                "{projectRoot}/dist"
+              ],
+              "cache": true
             },
             "start": {
               "executor": "nx:run-commands",
               "options": {
                 "command": "docusaurus start portal"
               },
-              "cache": false,
+              "configurations": {},
+              "parallelism": true,
+              "cache": false
+            },
+            "start:robust": {
+              "executor": "nx:run-commands",
+              "options": {
+                "command": "node scripts/utils/port-manager.js site portal && docusaurus start portal"
+              },
               "configurations": {},
               "parallelism": true
             },
@@ -1577,7 +2075,15 @@
               "options": {
                 "command": "docusaurus serve portal"
               },
-              "cache": false,
+              "configurations": {},
+              "parallelism": true,
+              "cache": false
+            },
+            "serve:robust": {
+              "executor": "nx:run-commands",
+              "options": {
+                "command": "node scripts/utils/port-manager.js site portal && docusaurus serve portal"
+              },
               "configurations": {},
               "parallelism": true
             },
@@ -1586,20 +2092,35 @@
               "options": {
                 "command": "docusaurus clear portal"
               },
-              "cache": false,
               "configurations": {},
               "parallelism": true
+            },
+            "typecheck": {
+              "executor": "nx:run-commands",
+              "options": {
+                "command": "tsc --noEmit",
+                "cwd": "portal"
+              },
+              "configurations": {},
+              "parallelism": true,
+              "dependsOn": [
+                "^build"
+              ],
+              "cache": true,
+              "inputs": [
+                "default",
+                "{projectRoot}/tsconfig.json",
+                "{workspaceRoot}/tsconfig.json"
+              ]
             },
             "e2e": {
               "executor": "nx:run-commands",
               "options": {
                 "command": "playwright test e2e/portal-smoke.spec.ts",
-                "parallel": 2
+                "cacheableOperations": [
+                  "e2e"
+                ]
               },
-              "dependsOn": [
-                "build"
-              ],
-              "cache": true,
               "inputs": [
                 "default",
                 "{workspaceRoot}/e2e/portal-smoke.spec.ts",
@@ -1610,33 +2131,39 @@
                 "{workspaceRoot}/playwright-report"
               ],
               "configurations": {},
+              "parallelism": true,
+              "cache": true,
+              "dependsOn": [
+                "build"
+              ]
+            },
+            "build-all": {
+              "executor": "@nx/workspace:run-commands",
+              "options": {
+                "command": "nx run-many --target=build --all"
+              },
+              "configurations": {},
+              "parallelism": true
+            },
+            "start-robust": {
+              "executor": "@nx/workspace:run-commands",
+              "options": {
+                "command": "concurrently \"nx run portal:start:robust\" \"nx run isbd:start:robust\" \"nx run isbdm:start:robust\" \"nx run lrm:start:robust\" \"nx run frbr:start:robust\" \"nx run muldicat:start:robust\" \"nx run unimarc:start:robust\""
+              },
+              "configurations": {},
               "parallelism": true
             }
           },
           "name": "portal",
+          "sourceRoot": "portal",
+          "projectType": "application",
           "tags": [
-            "npm:private",
             "docusaurus",
             "site",
             "portal"
           ],
-          "metadata": {
-            "targetGroups": {
-              "NPM Scripts": [
-                "docusaurus",
-                "swizzle",
-                "deploy"
-              ]
-            },
-            "js": {
-              "packageName": "@ifla/portal",
-              "isInPackageManagerWorkspaces": true
-            }
-          },
-          "sourceRoot": "portal",
-          "projectType": "application",
           "implicitDependencies": [
-            "shared-config"
+            "@ifla/theme"
           ]
         }
       },
@@ -1648,21 +2175,28 @@
           "metadata": {
             "targetGroups": {
               "NPM Scripts": [
-                "build",
+                "// GROUP 2: COMPREHENSIVE TESTS",
+                "// GROUP 5: CI TESTS",
+                "analyze:bundles",
+                "analyze:bundles:sizes",
+                "analyze:bundles:source",
                 "build-env",
-                "build:all",
-                "build:all:nx",
+                "build:admin",
                 "build:affected",
+                "build:affected:legacy",
+                "build:all",
+                "build:all:legacy",
+                "build:all:nx",
                 "build:all:safe",
                 "build:all:sequential",
-                "build:all:legacy",
+                "build:clean",
                 "build:frbr",
                 "build:isbd",
                 "build:isbdm",
                 "build:lrm",
                 "build:muldicat",
+                "build:newtest",
                 "build:portal",
-                "build:preset",
                 "build:theme",
                 "build:unimarc",
                 "check:language-tags",
@@ -1675,10 +2209,10 @@
                 "check:languages:help",
                 "ci:build-all",
                 "ci:test",
+                "ci:test:essential",
                 "clear",
                 "clear:all",
                 "clear:packages",
-                "clear:preset",
                 "clear:sites",
                 "clear:theme",
                 "clear:webpack",
@@ -1687,46 +2221,74 @@
                 "compare:vocabulary:md",
                 "compare:vocabulary:validate",
                 "dctap:generate",
+                "demo:admin",
+                "demo:admin:simple",
+                "demo:hooks",
                 "deploy",
                 "deploy:build-all",
                 "deploy:status",
                 "detect:language-mismatches",
                 "detect:language-mismatches-local",
                 "detect:language-mismatches-skos",
+                "dev:admin",
                 "docs:build",
                 "docs:release",
                 "format:mdx",
+                "lint:affected",
+                "lint:all",
                 "lint:eslint",
+                "lint:file",
                 "lint:fix",
+                "lint:mdx",
                 "lint:quiet",
                 "lint:quiet:fix",
-                "lint:file",
-                "lint:mdx",
+                "nx:affected",
+                "nx:graph",
+                "nx:monitor",
+                "nx:monitor:cache",
+                "nx:monitor:links",
+                "nx:monitor:test",
+                "nx:performance",
+                "output:move",
+                "prepare",
+                "ports:kill",
+                "ports:kill:site",
+                "ports:kill:verbose",
                 "profile-copy",
                 "rdf:folder-to-csv",
                 "rdf:to-csv",
                 "scaffold",
                 "serve",
+                "serve:admin",
                 "serve:all",
                 "serve:frbr",
                 "serve:isbd",
                 "serve:isbdm",
                 "serve:lrm",
                 "serve:muldicat",
+                "serve:newtest",
                 "serve:portal",
+                "serve:robust",
+                "serve:robust:nx",
+                "serve:robust:site",
                 "serve:unimarc",
                 "sheet:create",
                 "sheets:export",
                 "sheets:import",
                 "sheets:ingest",
                 "start",
+                "start:admin",
                 "start:all",
                 "start:frbr",
                 "start:isbd",
                 "start:isbdm",
                 "start:lrm",
                 "start:muldicat",
+                "start:newtest",
                 "start:portal",
+                "start:robust",
+                "start:robust:nx",
+                "start:robust:site",
                 "start:unimarc",
                 "stop:all",
                 "stop:frbr",
@@ -1734,55 +2296,83 @@
                 "stop:isbdm",
                 "stop:lrm",
                 "stop:muldicat",
+                "stop:newtest",
                 "stop:portal",
                 "stop:unimarc",
                 "swizzle",
-                "test:ui",
-                "test:watch",
-                "test:all",
+                "test:admin",
+                "test:admin:coverage",
+                "test:admin:e2e",
+                "test:admin:integration",
+                "test:admin:unit",
+                "test:admin:watch",
+                "test:admin:roles",
                 "test:affected",
+                "test:all",
+                "test:builds",
+                "test:builds:all",
+                "test:builds:config",
+                "test:builds:critical",
+                "test:builds:portal",
+                "test:builds:production",
+                "test:ci",
+                "test:ci:config",
+                "test:ci:connectivity",
+                "test:comprehensive",
+                "test:comprehensive:builds",
+                "test:comprehensive:e2e",
+                "test:comprehensive:unit",
+                "test:coverage",
+                "test:e2e",
+                "test:e2e:affected",
+                "test:e2e:all",
+                "test:e2e:isbdm",
+                "test:e2e:lrm",
+                "test:e2e:portal",
+                "test:e2e:sharded",
+                "test:e2e:ui",
+                "test:full",
+                "test:mark-run",
+                "test:performance",
+                "test:portal:e2e",
+                "test:portal:optimized",
+                "test:post-build",
+                "test:post-build:development",
+                "test:post-build:local",
+                "test:post-build:preview",
+                "test:post-build:production",
+                "test:pre-commit",
+                "test:pre-push",
+                "test:pre-push:fast",
+                "test:pre-push:nx",
+                "test:pre-push:nx:smart",
+                "test:pre-push:optimized",
+                "test:pre-push:reminder",
+                "test:pre-push:smart",
+                "test:regression",
+                "test:regression:affected",
+                "test:regression:fast",
+                "test:regression:nx:fast",
+                "test:regression:optimized",
+                "test:ui",
+                "test:visual",
+                "test:visual-regression",
+                "test:visual:update",
+                "test:watch",
+                "typecheck:all",
                 "validate:builds:nx",
                 "validate:builds:production:nx",
-                "nx:performance",
-                "nx:graph",
-                "nx:affected",
-                "typecheck:all",
-                "lint:all",
-                "lint:affected",
+                "validate:built-site",
+                "validate:env-urls",
                 "validate:isbdm-links",
                 "validate:navigation",
                 "validate:navigation:show",
                 "validate:site-links",
-                "validate:built-site",
-                "validate:env-urls",
-                "test:builds",
-                "test:builds:all",
-                "test:builds:portal",
-                "test:builds:config",
-                "test:builds:production",
-                "test:builds:critical",
-                "test:full",
-                "test:regression",
-                "test:regression:fast",
-                "test:pre-commit",
-                "test:pre-push",
-                "test:pre-push:nx",
-                "test:e2e",
-                "test:e2e:ui",
-                "test:e2e:portal",
-                "test:e2e:isbdm",
-                "test:e2e:lrm",
-                "test:e2e:affected",
-                "test:e2e:all",
-                "test:pre-push:fast",
-                "test:pre-push:smart",
-                "test:portal:e2e",
                 "vocab:release",
                 "vocabulary:create",
                 "vocabulary:create-action",
                 "write-heading-ids",
-                "write-translations",
-                "prepare"
+                "write-translations"
               ]
             },
             "description": "",
@@ -1796,38 +2386,42 @@
             "test": {
               "executor": "@nx/vite:test",
               "options": {
-                "config": "./vite.config.ts",
-                "parallel": 4
+                "config": "./vite.config.ts"
               },
-              "outputs": [
-                "{projectRoot}/coverage"
-              ],
-              "cache": true,
               "configurations": {},
               "parallelism": true,
               "dependsOn": [
-                "^test"
+                "^build"
               ],
               "inputs": [
-                "default",
-                "{projectRoot}/test/**/*",
-                "{projectRoot}/**/*.test.{js,ts,jsx,tsx}",
-                "{projectRoot}/**/*.spec.{js,ts,jsx,tsx}"
-              ]
+                "testInputs",
+                "^testInputs",
+                {
+                  "runtime": "node -v"
+                }
+              ],
+              "outputs": [
+                "{projectRoot}/coverage",
+                "{projectRoot}/test-results"
+              ],
+              "cache": true
             },
             "typecheck": {
               "executor": "nx:run-commands",
               "options": {
                 "command": "tsc --noEmit"
               },
+              "configurations": {},
+              "parallelism": true,
+              "dependsOn": [
+                "^build"
+              ],
               "cache": true,
               "inputs": [
                 "default",
-                "{workspaceRoot}/tsconfig.json",
-                "{workspaceRoot}/tsconfig.*.json"
-              ],
-              "configurations": {},
-              "parallelism": true
+                "{projectRoot}/tsconfig.json",
+                "{workspaceRoot}/tsconfig.json"
+              ]
             },
             "build-deps": {
               "dependsOn": [
@@ -1850,31 +2444,65 @@
               "configurations": {},
               "parallelism": true
             },
-            "build": {
+            "// GROUP 2: COMPREHENSIVE TESTS": {
               "executor": "nx:run-script",
               "options": {
-                "script": "build",
-                "parallel": 3
+                "script": "// GROUP 2: COMPREHENSIVE TESTS"
               },
               "metadata": {
-                "scriptContent": "echo 'Please specify a site to build using: pnpm build:{site}' && exit 1",
-                "runCommand": "pnpm run build"
+                "scriptContent": "Full validation suites",
+                "runCommand": "pnpm run // GROUP 2: COMPREHENSIVE TESTS"
               },
               "configurations": {},
-              "parallelism": true,
-              "dependsOn": [
-                "^build"
-              ],
-              "outputs": [
-                "{projectRoot}/build",
-                "{projectRoot}/dist"
-              ],
-              "cache": true,
-              "inputs": [
-                "production",
-                "^production",
-                "docusaurus"
-              ]
+              "parallelism": true
+            },
+            "// GROUP 5: CI TESTS": {
+              "executor": "nx:run-script",
+              "options": {
+                "script": "// GROUP 5: CI TESTS"
+              },
+              "metadata": {
+                "scriptContent": "Environment/infrastructure focus",
+                "runCommand": "pnpm run // GROUP 5: CI TESTS"
+              },
+              "configurations": {},
+              "parallelism": true
+            },
+            "analyze:bundles": {
+              "executor": "nx:run-script",
+              "options": {
+                "script": "analyze:bundles"
+              },
+              "metadata": {
+                "scriptContent": "node scripts/analyze-bundle-sizes.js",
+                "runCommand": "pnpm run analyze:bundles"
+              },
+              "configurations": {},
+              "parallelism": true
+            },
+            "analyze:bundles:sizes": {
+              "executor": "nx:run-script",
+              "options": {
+                "script": "analyze:bundles:sizes"
+              },
+              "metadata": {
+                "scriptContent": "node scripts/analyze-bundle-sizes.js bundles",
+                "runCommand": "pnpm run analyze:bundles:sizes"
+              },
+              "configurations": {},
+              "parallelism": true
+            },
+            "analyze:bundles:source": {
+              "executor": "nx:run-script",
+              "options": {
+                "script": "analyze:bundles:source"
+              },
+              "metadata": {
+                "scriptContent": "node scripts/analyze-bundle-sizes.js source",
+                "runCommand": "pnpm run analyze:bundles:source"
+              },
+              "configurations": {},
+              "parallelism": true
             },
             "build-env": {
               "executor": "nx:run-script",
@@ -1888,14 +2516,62 @@
               "configurations": {},
               "parallelism": true
             },
+            "build:admin": {
+              "executor": "nx:run-script",
+              "options": {
+                "script": "build:admin"
+              },
+              "metadata": {
+                "scriptContent": "nx build admin",
+                "runCommand": "pnpm run build:admin"
+              },
+              "configurations": {},
+              "parallelism": true
+            },
+            "build:affected": {
+              "executor": "nx:run-script",
+              "options": {
+                "script": "build:affected"
+              },
+              "metadata": {
+                "scriptContent": "nx affected --target=build --parallel=3",
+                "runCommand": "pnpm run build:affected"
+              },
+              "configurations": {},
+              "parallelism": true
+            },
+            "build:affected:legacy": {
+              "executor": "nx:run-script",
+              "options": {
+                "script": "build:affected:legacy"
+              },
+              "metadata": {
+                "scriptContent": "nx run standards-dev:build-affected",
+                "runCommand": "pnpm run build:affected:legacy"
+              },
+              "configurations": {},
+              "parallelism": true
+            },
             "build:all": {
               "executor": "nx:run-script",
               "options": {
                 "script": "build:all"
               },
               "metadata": {
-                "scriptContent": "node scripts/nx-build-all.js",
+                "scriptContent": "nx run-many --target=build --all --parallel=3",
                 "runCommand": "pnpm run build:all"
+              },
+              "configurations": {},
+              "parallelism": true
+            },
+            "build:all:legacy": {
+              "executor": "nx:run-script",
+              "options": {
+                "script": "build:all:legacy"
+              },
+              "metadata": {
+                "scriptContent": "pnpm run build:theme && concurrently \"pnpm run build:portal\" \"pnpm run build:isbdm\" \"pnpm run build:lrm\" \"pnpm run build:frbr\" \"pnpm run build:isbd\" \"pnpm run build:muldicat\" \"pnpm run build:unimarc\"",
+                "runCommand": "pnpm run build:all:legacy"
               },
               "configurations": {},
               "parallelism": true
@@ -1908,18 +2584,6 @@
               "metadata": {
                 "scriptContent": "nx run standards-dev:build-all",
                 "runCommand": "pnpm run build:all:nx"
-              },
-              "configurations": {},
-              "parallelism": true
-            },
-            "build:affected": {
-              "executor": "nx:run-script",
-              "options": {
-                "script": "build:affected"
-              },
-              "metadata": {
-                "scriptContent": "nx run standards-dev:build-affected",
-                "runCommand": "pnpm run build:affected"
               },
               "configurations": {},
               "parallelism": true
@@ -1948,14 +2612,14 @@
               "configurations": {},
               "parallelism": true
             },
-            "build:all:legacy": {
+            "build:clean": {
               "executor": "nx:run-script",
               "options": {
-                "script": "build:all:legacy"
+                "script": "build:clean"
               },
               "metadata": {
-                "scriptContent": "pnpm run build:theme && pnpm run build:preset && concurrently \"pnpm run build:portal\" \"pnpm run build:isbdm\" \"pnpm run build:lrm\" \"pnpm run build:frbr\" \"pnpm run build:isbd\" \"pnpm run build:muldicat\" \"pnpm run build:unimarc\"",
-                "runCommand": "pnpm run build:all:legacy"
+                "scriptContent": "nx reset && pnpm build:all",
+                "runCommand": "pnpm run build:clean"
               },
               "configurations": {},
               "parallelism": true
@@ -1966,7 +2630,7 @@
                 "script": "build:frbr"
               },
               "metadata": {
-                "scriptContent": "docusaurus build standards/FRBR",
+                "scriptContent": "nx build frbr",
                 "runCommand": "pnpm run build:frbr"
               },
               "configurations": {},
@@ -1978,7 +2642,7 @@
                 "script": "build:isbd"
               },
               "metadata": {
-                "scriptContent": "docusaurus build standards/isbd",
+                "scriptContent": "nx build isbd",
                 "runCommand": "pnpm run build:isbd"
               },
               "configurations": {},
@@ -1990,7 +2654,7 @@
                 "script": "build:isbdm"
               },
               "metadata": {
-                "scriptContent": "docusaurus build standards/ISBDM",
+                "scriptContent": "nx build isbdm",
                 "runCommand": "pnpm run build:isbdm"
               },
               "configurations": {},
@@ -2002,7 +2666,7 @@
                 "script": "build:lrm"
               },
               "metadata": {
-                "scriptContent": "docusaurus build standards/LRM",
+                "scriptContent": "nx build lrm",
                 "runCommand": "pnpm run build:lrm"
               },
               "configurations": {},
@@ -2014,8 +2678,20 @@
                 "script": "build:muldicat"
               },
               "metadata": {
-                "scriptContent": "docusaurus build standards/muldicat",
+                "scriptContent": "nx build muldicat",
                 "runCommand": "pnpm run build:muldicat"
+              },
+              "configurations": {},
+              "parallelism": true
+            },
+            "build:newtest": {
+              "executor": "nx:run-script",
+              "options": {
+                "script": "build:newtest"
+              },
+              "metadata": {
+                "scriptContent": "nx build newtest",
+                "runCommand": "pnpm run build:newtest"
               },
               "configurations": {},
               "parallelism": true
@@ -2026,20 +2702,8 @@
                 "script": "build:portal"
               },
               "metadata": {
-                "scriptContent": "docusaurus build portal",
+                "scriptContent": "nx build portal",
                 "runCommand": "pnpm run build:portal"
-              },
-              "configurations": {},
-              "parallelism": true
-            },
-            "build:preset": {
-              "executor": "nx:run-script",
-              "options": {
-                "script": "build:preset"
-              },
-              "metadata": {
-                "scriptContent": "cd packages/preset-ifla && pnpm run build",
-                "runCommand": "pnpm run build:preset"
               },
               "configurations": {},
               "parallelism": true
@@ -2050,7 +2714,7 @@
                 "script": "build:theme"
               },
               "metadata": {
-                "scriptContent": "cd packages/theme && pnpm run build",
+                "scriptContent": "nx build @ifla/theme",
                 "runCommand": "pnpm run build:theme"
               },
               "configurations": {},
@@ -2062,7 +2726,7 @@
                 "script": "build:unimarc"
               },
               "metadata": {
-                "scriptContent": "docusaurus build standards/unimarc",
+                "scriptContent": "nx build unimarc",
                 "runCommand": "pnpm run build:unimarc"
               },
               "configurations": {},
@@ -2188,6 +2852,18 @@
               "configurations": {},
               "parallelism": true
             },
+            "ci:test:essential": {
+              "executor": "nx:run-script",
+              "options": {
+                "script": "ci:test:essential"
+              },
+              "metadata": {
+                "scriptContent": "pnpm typecheck && pnpm lint --quiet && pnpm test --run && node scripts/test-site-builds.js --site all --env local --skip-build",
+                "runCommand": "pnpm run ci:test:essential"
+              },
+              "configurations": {},
+              "parallelism": true
+            },
             "clear": {
               "executor": "nx:run-script",
               "options": {
@@ -2206,7 +2882,7 @@
                 "script": "clear:all"
               },
               "metadata": {
-                "scriptContent": "rimraf ./standards/*/.docusaurus ./standards/*/build ./portal/.docusaurus ./portal/build ./packages/theme/.docusaurus ./packages/theme/dist ./packages/preset-ifla/dist ./node_modules/.cache/webpack",
+                "scriptContent": "rimraf ./standards/*/.docusaurus ./standards/*/build ./portal/.docusaurus ./portal/build ./packages/theme/.docusaurus ./packages/theme/dist ./packages/standards-cli/dist ./node_modules/.cache/webpack",
                 "runCommand": "pnpm run clear:all"
               },
               "configurations": {},
@@ -2218,20 +2894,8 @@
                 "script": "clear:packages"
               },
               "metadata": {
-                "scriptContent": "pnpm run clear:theme && pnpm run clear:preset",
+                "scriptContent": "pnpm run clear:theme",
                 "runCommand": "pnpm run clear:packages"
-              },
-              "configurations": {},
-              "parallelism": true
-            },
-            "clear:preset": {
-              "executor": "nx:run-script",
-              "options": {
-                "script": "clear:preset"
-              },
-              "metadata": {
-                "scriptContent": "rimraf ./packages/preset-ifla/dist",
-                "runCommand": "pnpm run clear:preset"
               },
               "configurations": {},
               "parallelism": true
@@ -2332,6 +2996,42 @@
               "configurations": {},
               "parallelism": true
             },
+            "demo:admin": {
+              "executor": "nx:run-script",
+              "options": {
+                "script": "demo:admin"
+              },
+              "metadata": {
+                "scriptContent": "./scripts/demo-admin-integration.sh",
+                "runCommand": "pnpm run demo:admin"
+              },
+              "configurations": {},
+              "parallelism": true
+            },
+            "demo:admin:simple": {
+              "executor": "nx:run-script",
+              "options": {
+                "script": "demo:admin:simple"
+              },
+              "metadata": {
+                "scriptContent": "node scripts/demo-admin-simple.js",
+                "runCommand": "pnpm run demo:admin:simple"
+              },
+              "configurations": {},
+              "parallelism": true
+            },
+            "demo:hooks": {
+              "executor": "nx:run-script",
+              "options": {
+                "script": "demo:hooks"
+              },
+              "metadata": {
+                "scriptContent": "./scripts/demo-hooks.sh",
+                "runCommand": "pnpm run demo:hooks"
+              },
+              "configurations": {},
+              "parallelism": true
+            },
             "deploy": {
               "executor": "nx:run-script",
               "options": {
@@ -2404,6 +3104,18 @@
               "configurations": {},
               "parallelism": true
             },
+            "dev:admin": {
+              "executor": "nx:run-script",
+              "options": {
+                "script": "dev:admin"
+              },
+              "metadata": {
+                "scriptContent": "nx dev admin",
+                "runCommand": "pnpm run dev:admin"
+              },
+              "configurations": {},
+              "parallelism": true
+            },
             "docs:build": {
               "executor": "nx:run-script",
               "options": {
@@ -2440,6 +3152,30 @@
               "configurations": {},
               "parallelism": true
             },
+            "lint:affected": {
+              "executor": "nx:run-script",
+              "options": {
+                "script": "lint:affected"
+              },
+              "metadata": {
+                "scriptContent": "nx affected --target=lint --parallel=3",
+                "runCommand": "pnpm run lint:affected"
+              },
+              "configurations": {},
+              "parallelism": true
+            },
+            "lint:all": {
+              "executor": "nx:run-script",
+              "options": {
+                "script": "lint:all"
+              },
+              "metadata": {
+                "scriptContent": "nx run-many --target=lint --all --parallel=3",
+                "runCommand": "pnpm run lint:all"
+              },
+              "configurations": {},
+              "parallelism": true
+            },
             "lint:eslint": {
               "executor": "nx:run-script",
               "options": {
@@ -2452,6 +3188,18 @@
               "configurations": {},
               "parallelism": true
             },
+            "lint:file": {
+              "executor": "nx:run-script",
+              "options": {
+                "script": "lint:file"
+              },
+              "metadata": {
+                "scriptContent": "eslint",
+                "runCommand": "pnpm run lint:file"
+              },
+              "configurations": {},
+              "parallelism": true
+            },
             "lint:fix": {
               "executor": "nx:run-script",
               "options": {
@@ -2460,6 +3208,18 @@
               "metadata": {
                 "scriptContent": "eslint . --fix",
                 "runCommand": "pnpm run lint:fix"
+              },
+              "configurations": {},
+              "parallelism": true
+            },
+            "lint:mdx": {
+              "executor": "nx:run-script",
+              "options": {
+                "script": "lint:mdx"
+              },
+              "metadata": {
+                "scriptContent": "remark . --ext .mdx,.md",
+                "runCommand": "pnpm run lint:mdx"
               },
               "configurations": {},
               "parallelism": true
@@ -2488,26 +3248,150 @@
               "configurations": {},
               "parallelism": true
             },
-            "lint:file": {
+            "nx:affected": {
               "executor": "nx:run-script",
               "options": {
-                "script": "lint:file"
+                "script": "nx:affected"
               },
               "metadata": {
-                "scriptContent": "eslint",
-                "runCommand": "pnpm run lint:file"
+                "scriptContent": "nx affected --target=build --dry-run",
+                "runCommand": "pnpm run nx:affected"
               },
               "configurations": {},
               "parallelism": true
             },
-            "lint:mdx": {
+            "nx:graph": {
               "executor": "nx:run-script",
               "options": {
-                "script": "lint:mdx"
+                "script": "nx:graph"
               },
               "metadata": {
-                "scriptContent": "remark . --ext .mdx,.md",
-                "runCommand": "pnpm run lint:mdx"
+                "scriptContent": "nx graph",
+                "runCommand": "pnpm run nx:graph"
+              },
+              "configurations": {},
+              "parallelism": true
+            },
+            "nx:monitor": {
+              "executor": "nx:run-script",
+              "options": {
+                "script": "nx:monitor"
+              },
+              "metadata": {
+                "scriptContent": "node scripts/nx-cloud-monitor.js",
+                "runCommand": "pnpm run nx:monitor"
+              },
+              "configurations": {},
+              "parallelism": true
+            },
+            "nx:monitor:cache": {
+              "executor": "nx:run-script",
+              "options": {
+                "script": "nx:monitor:cache"
+              },
+              "metadata": {
+                "scriptContent": "node scripts/nx-cloud-monitor.js cache",
+                "runCommand": "pnpm run nx:monitor:cache"
+              },
+              "configurations": {},
+              "parallelism": true
+            },
+            "nx:monitor:links": {
+              "executor": "nx:run-script",
+              "options": {
+                "script": "nx:monitor:links"
+              },
+              "metadata": {
+                "scriptContent": "node scripts/nx-cloud-monitor.js links",
+                "runCommand": "pnpm run nx:monitor:links"
+              },
+              "configurations": {},
+              "parallelism": true
+            },
+            "nx:monitor:test": {
+              "executor": "nx:run-script",
+              "options": {
+                "script": "nx:monitor:test"
+              },
+              "metadata": {
+                "scriptContent": "node scripts/nx-cloud-monitor.js test",
+                "runCommand": "pnpm run nx:monitor:test"
+              },
+              "configurations": {},
+              "parallelism": true
+            },
+            "nx:performance": {
+              "executor": "nx:run-script",
+              "options": {
+                "script": "nx:performance"
+              },
+              "metadata": {
+                "scriptContent": "node scripts/nx-performance-check.js",
+                "runCommand": "pnpm run nx:performance"
+              },
+              "configurations": {},
+              "parallelism": true
+            },
+            "output:move": {
+              "executor": "nx:run-script",
+              "options": {
+                "script": "output:move"
+              },
+              "metadata": {
+                "scriptContent": "node scripts/move-output-files.js",
+                "runCommand": "pnpm run output:move"
+              },
+              "configurations": {},
+              "parallelism": true
+            },
+            "prepare": {
+              "executor": "nx:run-script",
+              "options": {
+                "script": "prepare"
+              },
+              "metadata": {
+                "scriptContent": "husky",
+                "runCommand": "pnpm run prepare"
+              },
+              "configurations": {},
+              "parallelism": true,
+              "cache": true,
+              "dependsOn": [
+                "^build"
+              ]
+            },
+            "ports:kill": {
+              "executor": "nx:run-script",
+              "options": {
+                "script": "ports:kill"
+              },
+              "metadata": {
+                "scriptContent": "node scripts/utils/port-manager.js all",
+                "runCommand": "pnpm run ports:kill"
+              },
+              "configurations": {},
+              "parallelism": true
+            },
+            "ports:kill:site": {
+              "executor": "nx:run-script",
+              "options": {
+                "script": "ports:kill:site"
+              },
+              "metadata": {
+                "scriptContent": "node scripts/utils/port-manager.js site",
+                "runCommand": "pnpm run ports:kill:site"
+              },
+              "configurations": {},
+              "parallelism": true
+            },
+            "ports:kill:verbose": {
+              "executor": "nx:run-script",
+              "options": {
+                "script": "ports:kill:verbose"
+              },
+              "metadata": {
+                "scriptContent": "node scripts/utils/port-manager.js all --verbose",
+                "runCommand": "pnpm run ports:kill:verbose"
               },
               "configurations": {},
               "parallelism": true
@@ -2572,6 +3456,18 @@
               "configurations": {},
               "parallelism": true,
               "cache": false
+            },
+            "serve:admin": {
+              "executor": "nx:run-script",
+              "options": {
+                "script": "serve:admin"
+              },
+              "metadata": {
+                "scriptContent": "nx serve admin",
+                "runCommand": "pnpm run serve:admin"
+              },
+              "configurations": {},
+              "parallelism": true
             },
             "serve:all": {
               "executor": "nx:run-script",
@@ -2645,6 +3541,18 @@
               "configurations": {},
               "parallelism": true
             },
+            "serve:newtest": {
+              "executor": "nx:run-script",
+              "options": {
+                "script": "serve:newtest"
+              },
+              "metadata": {
+                "scriptContent": "pnpm stop:newtest && docusaurus serve standards/newtest --port 3008",
+                "runCommand": "pnpm run serve:newtest"
+              },
+              "configurations": {},
+              "parallelism": true
+            },
             "serve:portal": {
               "executor": "nx:run-script",
               "options": {
@@ -2653,6 +3561,42 @@
               "metadata": {
                 "scriptContent": "pnpm stop:portal && docusaurus serve portal --port 3000",
                 "runCommand": "pnpm run serve:portal"
+              },
+              "configurations": {},
+              "parallelism": true
+            },
+            "serve:robust": {
+              "executor": "nx:run-script",
+              "options": {
+                "script": "serve:robust"
+              },
+              "metadata": {
+                "scriptContent": "node scripts/start-with-port-cleanup.js serve",
+                "runCommand": "pnpm run serve:robust"
+              },
+              "configurations": {},
+              "parallelism": true
+            },
+            "serve:robust:nx": {
+              "executor": "nx:run-script",
+              "options": {
+                "script": "serve:robust:nx"
+              },
+              "metadata": {
+                "scriptContent": "nx run standards-dev:serve-all:robust",
+                "runCommand": "pnpm run serve:robust:nx"
+              },
+              "configurations": {},
+              "parallelism": true
+            },
+            "serve:robust:site": {
+              "executor": "nx:run-script",
+              "options": {
+                "script": "serve:robust:site"
+              },
+              "metadata": {
+                "scriptContent": "node scripts/start-with-port-cleanup.js serve",
+                "runCommand": "pnpm run serve:robust:site"
               },
               "configurations": {},
               "parallelism": true
@@ -2723,12 +3667,24 @@
                 "script": "start"
               },
               "metadata": {
-                "scriptContent": "pnpm stop:portal && docusaurus start",
+                "scriptContent": "pnpm stop:portal && pnpm build:theme && DOCS_ENV=local docusaurus start",
                 "runCommand": "pnpm run start"
               },
               "configurations": {},
               "parallelism": true,
               "cache": false
+            },
+            "start:admin": {
+              "executor": "nx:run-script",
+              "options": {
+                "script": "start:admin"
+              },
+              "metadata": {
+                "scriptContent": "nx start admin",
+                "runCommand": "pnpm run start:admin"
+              },
+              "configurations": {},
+              "parallelism": true
             },
             "start:all": {
               "executor": "nx:run-script",
@@ -2736,7 +3692,7 @@
                 "script": "start:all"
               },
               "metadata": {
-                "scriptContent": "pnpm stop:all && concurrently \"docusaurus start portal --port 3000\" \"docusaurus start standards/ISBDM --port 3001\" \"docusaurus start standards/LRM --port 3002\" \"docusaurus start standards/FRBR --port 3003\" \"docusaurus start standards/isbd --port 3004\" \"docusaurus start standards/muldicat --port 3005\" \"docusaurus start standards/unimarc --port 3006\"",
+                "scriptContent": "pnpm stop:all && pnpm build:theme && concurrently \"DOCS_ENV=local docusaurus start portal --port 3000\" \"DOCS_ENV=local docusaurus start standards/ISBDM --port 3001\" \"DOCS_ENV=local docusaurus start standards/LRM --port 3002\" \"DOCS_ENV=local docusaurus start standards/FRBR --port 3003\" \"DOCS_ENV=local docusaurus start standards/isbd --port 3004\" \"DOCS_ENV=local docusaurus start standards/muldicat --port 3005\" \"DOCS_ENV=local docusaurus start standards/unimarc --port 3006\"",
                 "runCommand": "pnpm run start:all"
               },
               "configurations": {},
@@ -2748,7 +3704,7 @@
                 "script": "start:frbr"
               },
               "metadata": {
-                "scriptContent": "pnpm stop:frbr && docusaurus start standards/FRBR --port 3003",
+                "scriptContent": "pnpm stop:frbr && DOCS_ENV=local docusaurus start standards/FRBR --port 3003",
                 "runCommand": "pnpm run start:frbr"
               },
               "configurations": {},
@@ -2760,7 +3716,7 @@
                 "script": "start:isbd"
               },
               "metadata": {
-                "scriptContent": "pnpm stop:isbd && docusaurus start standards/isbd --port 3004",
+                "scriptContent": "pnpm stop:isbd && DOCS_ENV=local docusaurus start standards/isbd --port 3004",
                 "runCommand": "pnpm run start:isbd"
               },
               "configurations": {},
@@ -2772,7 +3728,7 @@
                 "script": "start:isbdm"
               },
               "metadata": {
-                "scriptContent": "pnpm stop:isbdm && docusaurus start standards/ISBDM --port 3001",
+                "scriptContent": "pnpm stop:isbdm && DOCS_ENV=local docusaurus start standards/ISBDM --port 3001",
                 "runCommand": "pnpm run start:isbdm"
               },
               "configurations": {},
@@ -2784,7 +3740,7 @@
                 "script": "start:lrm"
               },
               "metadata": {
-                "scriptContent": "pnpm stop:lrm && docusaurus start standards/LRM --port 3002",
+                "scriptContent": "pnpm stop:lrm && DOCS_ENV=local docusaurus start standards/LRM --port 3002",
                 "runCommand": "pnpm run start:lrm"
               },
               "configurations": {},
@@ -2796,8 +3752,20 @@
                 "script": "start:muldicat"
               },
               "metadata": {
-                "scriptContent": "pnpm stop:muldicat && docusaurus start standards/muldicat --port 3005",
+                "scriptContent": "pnpm stop:muldicat && DOCS_ENV=local docusaurus start standards/muldicat --port 3005",
                 "runCommand": "pnpm run start:muldicat"
+              },
+              "configurations": {},
+              "parallelism": true
+            },
+            "start:newtest": {
+              "executor": "nx:run-script",
+              "options": {
+                "script": "start:newtest"
+              },
+              "metadata": {
+                "scriptContent": "pnpm stop:newtest && DOCS_ENV=local docusaurus start standards/newtest --port 3008",
+                "runCommand": "pnpm run start:newtest"
               },
               "configurations": {},
               "parallelism": true
@@ -2808,8 +3776,44 @@
                 "script": "start:portal"
               },
               "metadata": {
-                "scriptContent": "pnpm stop:portal && docusaurus start portal --port 3000",
+                "scriptContent": "pnpm stop:portal && DOCS_ENV=local docusaurus start portal --port 3000",
                 "runCommand": "pnpm run start:portal"
+              },
+              "configurations": {},
+              "parallelism": true
+            },
+            "start:robust": {
+              "executor": "nx:run-script",
+              "options": {
+                "script": "start:robust"
+              },
+              "metadata": {
+                "scriptContent": "node scripts/start-with-port-cleanup.js start",
+                "runCommand": "pnpm run start:robust"
+              },
+              "configurations": {},
+              "parallelism": true
+            },
+            "start:robust:nx": {
+              "executor": "nx:run-script",
+              "options": {
+                "script": "start:robust:nx"
+              },
+              "metadata": {
+                "scriptContent": "nx run standards-dev:start-all:robust",
+                "runCommand": "pnpm run start:robust:nx"
+              },
+              "configurations": {},
+              "parallelism": true
+            },
+            "start:robust:site": {
+              "executor": "nx:run-script",
+              "options": {
+                "script": "start:robust:site"
+              },
+              "metadata": {
+                "scriptContent": "node scripts/start-with-port-cleanup.js start",
+                "runCommand": "pnpm run start:robust:site"
               },
               "configurations": {},
               "parallelism": true
@@ -2820,7 +3824,7 @@
                 "script": "start:unimarc"
               },
               "metadata": {
-                "scriptContent": "pnpm stop:unimarc && docusaurus start standards/unimarc --port 3006",
+                "scriptContent": "pnpm stop:unimarc && DOCS_ENV=local docusaurus start standards/unimarc --port 3006",
                 "runCommand": "pnpm run start:unimarc"
               },
               "configurations": {},
@@ -2898,6 +3902,18 @@
               "configurations": {},
               "parallelism": true
             },
+            "stop:newtest": {
+              "executor": "nx:run-script",
+              "options": {
+                "script": "stop:newtest"
+              },
+              "metadata": {
+                "scriptContent": "lsof -ti:3008 | xargs kill -9 2>/dev/null || true",
+                "runCommand": "pnpm run stop:newtest"
+              },
+              "configurations": {},
+              "parallelism": true
+            },
             "stop:portal": {
               "executor": "nx:run-script",
               "options": {
@@ -2934,6 +3950,654 @@
               "configurations": {},
               "parallelism": true
             },
+            "test:admin": {
+              "executor": "nx:run-script",
+              "options": {
+                "script": "test:admin"
+              },
+              "metadata": {
+                "scriptContent": "nx test admin",
+                "runCommand": "pnpm run test:admin"
+              },
+              "configurations": {},
+              "parallelism": true
+            },
+            "test:admin:coverage": {
+              "executor": "nx:run-script",
+              "options": {
+                "script": "test:admin:coverage"
+              },
+              "metadata": {
+                "scriptContent": "nx run admin:test:coverage",
+                "runCommand": "pnpm run test:admin:coverage"
+              },
+              "configurations": {},
+              "parallelism": true
+            },
+            "test:admin:e2e": {
+              "executor": "nx:run-script",
+              "options": {
+                "script": "test:admin:e2e"
+              },
+              "metadata": {
+                "scriptContent": "nx run admin:e2e",
+                "runCommand": "pnpm run test:admin:e2e"
+              },
+              "configurations": {},
+              "parallelism": true
+            },
+            "test:admin:integration": {
+              "executor": "nx:run-script",
+              "options": {
+                "script": "test:admin:integration"
+              },
+              "metadata": {
+                "scriptContent": "nx run admin:test:integration",
+                "runCommand": "pnpm run test:admin:integration"
+              },
+              "configurations": {},
+              "parallelism": true
+            },
+            "test:admin:unit": {
+              "executor": "nx:run-script",
+              "options": {
+                "script": "test:admin:unit"
+              },
+              "metadata": {
+                "scriptContent": "nx run admin:test:unit",
+                "runCommand": "pnpm run test:admin:unit"
+              },
+              "configurations": {},
+              "parallelism": true
+            },
+            "test:admin:watch": {
+              "executor": "nx:run-script",
+              "options": {
+                "script": "test:admin:watch"
+              },
+              "metadata": {
+                "scriptContent": "nx run admin:test:watch",
+                "runCommand": "pnpm run test:admin:watch"
+              },
+              "configurations": {},
+              "parallelism": true
+            },
+            "test:admin:roles": {
+              "executor": "nx:run-script",
+              "options": {
+                "script": "test:admin:roles"
+              },
+              "metadata": {
+                "scriptContent": "node scripts/test-admin-roles.js",
+                "runCommand": "pnpm run test:admin:roles"
+              },
+              "configurations": {},
+              "parallelism": true
+            },
+            "test:affected": {
+              "executor": "nx:run-script",
+              "options": {
+                "script": "test:affected"
+              },
+              "metadata": {
+                "scriptContent": "nx affected --target=test --parallel=3",
+                "runCommand": "pnpm run test:affected"
+              },
+              "configurations": {},
+              "parallelism": true
+            },
+            "test:all": {
+              "executor": "nx:run-script",
+              "options": {
+                "script": "test:all"
+              },
+              "metadata": {
+                "scriptContent": "nx run-many --target=test --all --parallel=3",
+                "runCommand": "pnpm run test:all"
+              },
+              "configurations": {},
+              "parallelism": true
+            },
+            "test:builds": {
+              "executor": "nx:run-script",
+              "options": {
+                "script": "test:builds"
+              },
+              "metadata": {
+                "scriptContent": "node scripts/test-site-builds.js",
+                "runCommand": "pnpm run test:builds"
+              },
+              "configurations": {},
+              "parallelism": true
+            },
+            "test:builds:all": {
+              "executor": "nx:run-script",
+              "options": {
+                "script": "test:builds:all"
+              },
+              "metadata": {
+                "scriptContent": "node scripts/test-site-builds.js --site all",
+                "runCommand": "pnpm run test:builds:all"
+              },
+              "configurations": {},
+              "parallelism": true
+            },
+            "test:builds:config": {
+              "executor": "nx:run-script",
+              "options": {
+                "script": "test:builds:config"
+              },
+              "metadata": {
+                "scriptContent": "node scripts/test-site-builds.js --skip-build",
+                "runCommand": "pnpm run test:builds:config"
+              },
+              "configurations": {},
+              "parallelism": true
+            },
+            "test:builds:critical": {
+              "executor": "nx:run-script",
+              "options": {
+                "script": "test:builds:critical"
+              },
+              "metadata": {
+                "scriptContent": "node scripts/test-site-builds.js --site portal --env production && node scripts/test-site-builds.js --site ISBDM --env production",
+                "runCommand": "pnpm run test:builds:critical"
+              },
+              "configurations": {},
+              "parallelism": true
+            },
+            "test:builds:portal": {
+              "executor": "nx:run-script",
+              "options": {
+                "script": "test:builds:portal"
+              },
+              "metadata": {
+                "scriptContent": "node scripts/test-site-builds.js --site portal",
+                "runCommand": "pnpm run test:builds:portal"
+              },
+              "configurations": {},
+              "parallelism": true
+            },
+            "test:builds:production": {
+              "executor": "nx:run-script",
+              "options": {
+                "script": "test:builds:production"
+              },
+              "metadata": {
+                "scriptContent": "node scripts/test-site-builds.js --site all --env production",
+                "runCommand": "pnpm run test:builds:production"
+              },
+              "configurations": {},
+              "parallelism": true
+            },
+            "test:ci": {
+              "executor": "nx:run-script",
+              "options": {
+                "script": "test:ci"
+              },
+              "metadata": {
+                "scriptContent": "pnpm typecheck && pnpm vitest run --config vitest.config.ci.ts && node scripts/test-site-builds.js --site all --env production --skip-build && pnpm test:post-build:local",
+                "runCommand": "pnpm run test:ci"
+              },
+              "configurations": {},
+              "parallelism": true
+            },
+            "test:ci:config": {
+              "executor": "nx:run-script",
+              "options": {
+                "script": "test:ci:config"
+              },
+              "metadata": {
+                "scriptContent": "node scripts/test-site-builds.js --site all --env production --skip-build",
+                "runCommand": "pnpm run test:ci:config"
+              },
+              "configurations": {},
+              "parallelism": true
+            },
+            "test:ci:connectivity": {
+              "executor": "nx:run-script",
+              "options": {
+                "script": "test:ci:connectivity"
+              },
+              "metadata": {
+                "scriptContent": "pnpm vitest run --config vitest.config.ci.ts packages/theme/src/tests/deployment/external-services.test.ts",
+                "runCommand": "pnpm run test:ci:connectivity"
+              },
+              "configurations": {},
+              "parallelism": true
+            },
+            "test:comprehensive": {
+              "executor": "nx:run-script",
+              "options": {
+                "script": "test:comprehensive"
+              },
+              "metadata": {
+                "scriptContent": "nx run-many --targets=typecheck,lint,test,build --all --parallel=3 && nx run standards-dev:e2e",
+                "runCommand": "pnpm run test:comprehensive"
+              },
+              "configurations": {},
+              "parallelism": true
+            },
+            "test:comprehensive:builds": {
+              "executor": "nx:run-script",
+              "options": {
+                "script": "test:comprehensive:builds"
+              },
+              "metadata": {
+                "scriptContent": "nx run-many --target=build --all --parallel=3 && node scripts/test-site-builds.js --site all --env production && pnpm test:post-build:local",
+                "runCommand": "pnpm run test:comprehensive:builds"
+              },
+              "configurations": {},
+              "parallelism": true
+            },
+            "test:comprehensive:e2e": {
+              "executor": "nx:run-script",
+              "options": {
+                "script": "test:comprehensive:e2e"
+              },
+              "metadata": {
+                "scriptContent": "nx run standards-dev:e2e && nx run-many --target=e2e --all",
+                "runCommand": "pnpm run test:comprehensive:e2e"
+              },
+              "configurations": {},
+              "parallelism": true
+            },
+            "test:comprehensive:unit": {
+              "executor": "nx:run-script",
+              "options": {
+                "script": "test:comprehensive:unit"
+              },
+              "metadata": {
+                "scriptContent": "nx run-many --target=test --all --parallel=3",
+                "runCommand": "pnpm run test:comprehensive:unit"
+              },
+              "configurations": {},
+              "parallelism": true
+            },
+            "test:coverage": {
+              "executor": "nx:run-script",
+              "options": {
+                "script": "test:coverage"
+              },
+              "metadata": {
+                "scriptContent": "pnpm test --coverage",
+                "runCommand": "pnpm run test:coverage"
+              },
+              "configurations": {},
+              "parallelism": true
+            },
+            "test:e2e": {
+              "executor": "nx:run-script",
+              "options": {
+                "script": "test:e2e"
+              },
+              "metadata": {
+                "scriptContent": "nx run standards-dev:e2e",
+                "runCommand": "pnpm run test:e2e"
+              },
+              "configurations": {},
+              "parallelism": true
+            },
+            "test:e2e:affected": {
+              "executor": "nx:run-script",
+              "options": {
+                "script": "test:e2e:affected"
+              },
+              "metadata": {
+                "scriptContent": "nx affected --target=e2e",
+                "runCommand": "pnpm run test:e2e:affected"
+              },
+              "configurations": {},
+              "parallelism": true
+            },
+            "test:e2e:all": {
+              "executor": "nx:run-script",
+              "options": {
+                "script": "test:e2e:all"
+              },
+              "metadata": {
+                "scriptContent": "nx run-many --target=e2e --all",
+                "runCommand": "pnpm run test:e2e:all"
+              },
+              "configurations": {},
+              "parallelism": true
+            },
+            "test:e2e:isbdm": {
+              "executor": "nx:run-script",
+              "options": {
+                "script": "test:e2e:isbdm"
+              },
+              "metadata": {
+                "scriptContent": "nx run isbdm:e2e",
+                "runCommand": "pnpm run test:e2e:isbdm"
+              },
+              "configurations": {},
+              "parallelism": true
+            },
+            "test:e2e:lrm": {
+              "executor": "nx:run-script",
+              "options": {
+                "script": "test:e2e:lrm"
+              },
+              "metadata": {
+                "scriptContent": "nx run lrm:e2e",
+                "runCommand": "pnpm run test:e2e:lrm"
+              },
+              "configurations": {},
+              "parallelism": true
+            },
+            "test:e2e:portal": {
+              "executor": "nx:run-script",
+              "options": {
+                "script": "test:e2e:portal"
+              },
+              "metadata": {
+                "scriptContent": "nx run portal:e2e",
+                "runCommand": "pnpm run test:e2e:portal"
+              },
+              "configurations": {},
+              "parallelism": true
+            },
+            "test:e2e:sharded": {
+              "executor": "nx:run-script",
+              "options": {
+                "script": "test:e2e:sharded"
+              },
+              "metadata": {
+                "scriptContent": "SHARD_CURRENT=1 SHARD_TOTAL=4 npx playwright test",
+                "runCommand": "pnpm run test:e2e:sharded"
+              },
+              "configurations": {},
+              "parallelism": true
+            },
+            "test:e2e:ui": {
+              "executor": "nx:run-script",
+              "options": {
+                "script": "test:e2e:ui"
+              },
+              "metadata": {
+                "scriptContent": "nx run standards-dev:e2e:ui",
+                "runCommand": "pnpm run test:e2e:ui"
+              },
+              "configurations": {},
+              "parallelism": true
+            },
+            "test:full": {
+              "executor": "nx:run-script",
+              "options": {
+                "script": "test:full"
+              },
+              "metadata": {
+                "scriptContent": "pnpm typecheck && pnpm lint --quiet && pnpm test && pnpm test:builds:config",
+                "runCommand": "pnpm run test:full"
+              },
+              "configurations": {},
+              "parallelism": true
+            },
+            "test:mark-run": {
+              "executor": "nx:run-script",
+              "options": {
+                "script": "test:mark-run"
+              },
+              "metadata": {
+                "scriptContent": "node scripts/mark-tests-run.js",
+                "runCommand": "pnpm run test:mark-run"
+              },
+              "configurations": {},
+              "parallelism": true
+            },
+            "test:performance": {
+              "executor": "nx:run-script",
+              "options": {
+                "script": "test:performance"
+              },
+              "metadata": {
+                "scriptContent": "npx playwright test e2e/performance.spec.ts",
+                "runCommand": "pnpm run test:performance"
+              },
+              "configurations": {},
+              "parallelism": true
+            },
+            "test:portal:e2e": {
+              "executor": "nx:run-script",
+              "options": {
+                "script": "test:portal:e2e"
+              },
+              "metadata": {
+                "scriptContent": "./scripts/test-portal-builds.sh",
+                "runCommand": "pnpm run test:portal:e2e"
+              },
+              "configurations": {},
+              "parallelism": true
+            },
+            "test:portal:optimized": {
+              "executor": "nx:run-script",
+              "options": {
+                "script": "test:portal:optimized"
+              },
+              "metadata": {
+                "scriptContent": "./scripts/test-portal-builds-optimized.sh",
+                "runCommand": "pnpm run test:portal:optimized"
+              },
+              "configurations": {},
+              "parallelism": true
+            },
+            "test:post-build": {
+              "executor": "nx:run-script",
+              "options": {
+                "script": "test:post-build"
+              },
+              "metadata": {
+                "scriptContent": "DOCS_ENV=${DOCS_ENV:-local} playwright test e2e/post-build-validation.spec.ts",
+                "runCommand": "pnpm run test:post-build"
+              },
+              "configurations": {},
+              "parallelism": true
+            },
+            "test:post-build:development": {
+              "executor": "nx:run-script",
+              "options": {
+                "script": "test:post-build:development"
+              },
+              "metadata": {
+                "scriptContent": "DOCS_ENV=development playwright test e2e/post-build-validation.spec.ts",
+                "runCommand": "pnpm run test:post-build:development"
+              },
+              "configurations": {},
+              "parallelism": true
+            },
+            "test:post-build:local": {
+              "executor": "nx:run-script",
+              "options": {
+                "script": "test:post-build:local"
+              },
+              "metadata": {
+                "scriptContent": "DOCS_ENV=local playwright test e2e/post-build-validation.spec.ts",
+                "runCommand": "pnpm run test:post-build:local"
+              },
+              "configurations": {},
+              "parallelism": true
+            },
+            "test:post-build:preview": {
+              "executor": "nx:run-script",
+              "options": {
+                "script": "test:post-build:preview"
+              },
+              "metadata": {
+                "scriptContent": "DOCS_ENV=preview playwright test e2e/post-build-validation.spec.ts",
+                "runCommand": "pnpm run test:post-build:preview"
+              },
+              "configurations": {},
+              "parallelism": true
+            },
+            "test:post-build:production": {
+              "executor": "nx:run-script",
+              "options": {
+                "script": "test:post-build:production"
+              },
+              "metadata": {
+                "scriptContent": "DOCS_ENV=production playwright test e2e/post-build-validation.spec.ts",
+                "runCommand": "pnpm run test:post-build:production"
+              },
+              "configurations": {},
+              "parallelism": true
+            },
+            "test:pre-commit": {
+              "executor": "nx:run-script",
+              "options": {
+                "script": "test:pre-commit"
+              },
+              "metadata": {
+                "scriptContent": "nx affected --targets=typecheck,lint,test:unit --parallel=3 && node scripts/test-site-builds-affected.js --env local --skip-build",
+                "runCommand": "pnpm run test:pre-commit"
+              },
+              "configurations": {},
+              "parallelism": true
+            },
+            "test:pre-push": {
+              "executor": "nx:run-script",
+              "options": {
+                "script": "test:pre-push"
+              },
+              "metadata": {
+                "scriptContent": "pnpm test:pre-commit && pnpm test:builds:critical",
+                "runCommand": "pnpm run test:pre-push"
+              },
+              "configurations": {},
+              "parallelism": true
+            },
+            "test:pre-push:fast": {
+              "executor": "nx:run-script",
+              "options": {
+                "script": "test:pre-push:fast"
+              },
+              "metadata": {
+                "scriptContent": "./scripts/nx-pre-push-fast.sh",
+                "runCommand": "pnpm run test:pre-push:fast"
+              },
+              "configurations": {},
+              "parallelism": true
+            },
+            "test:pre-push:nx": {
+              "executor": "nx:run-script",
+              "options": {
+                "script": "test:pre-push:nx"
+              },
+              "metadata": {
+                "scriptContent": "nx affected --target=lint && nx affected --target=typecheck && nx affected --target=test && nx affected --target=build",
+                "runCommand": "pnpm run test:pre-push:nx"
+              },
+              "configurations": {},
+              "parallelism": true
+            },
+            "test:pre-push:nx:smart": {
+              "executor": "nx:run-script",
+              "options": {
+                "script": "test:pre-push:nx:smart"
+              },
+              "metadata": {
+                "scriptContent": "./scripts/nx-pre-push.sh",
+                "runCommand": "pnpm run test:pre-push:nx:smart"
+              },
+              "configurations": {},
+              "parallelism": true
+            },
+            "test:pre-push:optimized": {
+              "executor": "nx:run-script",
+              "options": {
+                "script": "test:pre-push:optimized"
+              },
+              "metadata": {
+                "scriptContent": "./.husky/pre-push-optimized",
+                "runCommand": "pnpm run test:pre-push:optimized"
+              },
+              "configurations": {},
+              "parallelism": true
+            },
+            "test:pre-push:reminder": {
+              "executor": "nx:run-script",
+              "options": {
+                "script": "test:pre-push:reminder"
+              },
+              "metadata": {
+                "scriptContent": "./.husky/pre-push-reminder",
+                "runCommand": "pnpm run test:pre-push:reminder"
+              },
+              "configurations": {},
+              "parallelism": true
+            },
+            "test:pre-push:smart": {
+              "executor": "nx:run-script",
+              "options": {
+                "script": "test:pre-push:smart"
+              },
+              "metadata": {
+                "scriptContent": "./.husky/pre-push-smart",
+                "runCommand": "pnpm run test:pre-push:smart"
+              },
+              "configurations": {},
+              "parallelism": true
+            },
+            "test:regression": {
+              "executor": "nx:run-script",
+              "options": {
+                "script": "test:regression"
+              },
+              "metadata": {
+                "scriptContent": "nx run standards-dev:regression:full",
+                "runCommand": "pnpm run test:regression"
+              },
+              "configurations": {},
+              "parallelism": true
+            },
+            "test:regression:affected": {
+              "executor": "nx:run-script",
+              "options": {
+                "script": "test:regression:affected"
+              },
+              "metadata": {
+                "scriptContent": "node scripts/test-site-builds-optimized.js --affected-only",
+                "runCommand": "pnpm run test:regression:affected"
+              },
+              "configurations": {},
+              "parallelism": true
+            },
+            "test:regression:fast": {
+              "executor": "nx:run-script",
+              "options": {
+                "script": "test:regression:fast"
+              },
+              "metadata": {
+                "scriptContent": "node scripts/test-site-builds-optimized.js --mode fast --skip-build",
+                "runCommand": "pnpm run test:regression:fast"
+              },
+              "configurations": {},
+              "parallelism": true
+            },
+            "test:regression:nx:fast": {
+              "executor": "nx:run-script",
+              "options": {
+                "script": "test:regression:nx:fast"
+              },
+              "metadata": {
+                "scriptContent": "nx run standards-dev:regression:fast",
+                "runCommand": "pnpm run test:regression:nx:fast"
+              },
+              "configurations": {},
+              "parallelism": true
+            },
+            "test:regression:optimized": {
+              "executor": "nx:run-script",
+              "options": {
+                "script": "test:regression:optimized"
+              },
+              "metadata": {
+                "scriptContent": "node scripts/test-site-builds-optimized.js --mode smart",
+                "runCommand": "pnpm run test:regression:optimized"
+              },
+              "configurations": {},
+              "parallelism": true
+            },
             "test:ui": {
               "executor": "nx:run-script",
               "options": {
@@ -2942,6 +4606,42 @@
               "metadata": {
                 "scriptContent": "nx test --ui",
                 "runCommand": "pnpm run test:ui"
+              },
+              "configurations": {},
+              "parallelism": true
+            },
+            "test:visual": {
+              "executor": "nx:run-script",
+              "options": {
+                "script": "test:visual"
+              },
+              "metadata": {
+                "scriptContent": "npx playwright test e2e/visual-regression-enhanced.spec.ts",
+                "runCommand": "pnpm run test:visual"
+              },
+              "configurations": {},
+              "parallelism": true
+            },
+            "test:visual-regression": {
+              "executor": "nx:run-script",
+              "options": {
+                "script": "test:visual-regression"
+              },
+              "metadata": {
+                "scriptContent": "playwright test --config=playwright-snapshots.config.ts",
+                "runCommand": "pnpm run test:visual-regression"
+              },
+              "configurations": {},
+              "parallelism": true
+            },
+            "test:visual:update": {
+              "executor": "nx:run-script",
+              "options": {
+                "script": "test:visual:update"
+              },
+              "metadata": {
+                "scriptContent": "npx playwright test e2e/visual-regression-enhanced.spec.ts --update-snapshots",
+                "runCommand": "pnpm run test:visual:update"
               },
               "configurations": {},
               "parallelism": true
@@ -2958,26 +4658,14 @@
               "configurations": {},
               "parallelism": true
             },
-            "test:all": {
+            "typecheck:all": {
               "executor": "nx:run-script",
               "options": {
-                "script": "test:all"
+                "script": "typecheck:all"
               },
               "metadata": {
-                "scriptContent": "nx run-many --target=test --all",
-                "runCommand": "pnpm run test:all"
-              },
-              "configurations": {},
-              "parallelism": true
-            },
-            "test:affected": {
-              "executor": "nx:run-script",
-              "options": {
-                "script": "test:affected"
-              },
-              "metadata": {
-                "scriptContent": "nx affected --target=test",
-                "runCommand": "pnpm run test:affected"
+                "scriptContent": "nx run-many --target=typecheck --all --parallel=3",
+                "runCommand": "pnpm run typecheck:all"
               },
               "configurations": {},
               "parallelism": true
@@ -3006,74 +4694,26 @@
               "configurations": {},
               "parallelism": true
             },
-            "nx:performance": {
+            "validate:built-site": {
               "executor": "nx:run-script",
               "options": {
-                "script": "nx:performance"
+                "script": "validate:built-site"
               },
               "metadata": {
-                "scriptContent": "node scripts/nx-performance-check.js",
-                "runCommand": "pnpm run nx:performance"
+                "scriptContent": "node scripts/validate-built-site-links.js",
+                "runCommand": "pnpm run validate:built-site"
               },
               "configurations": {},
               "parallelism": true
             },
-            "nx:graph": {
+            "validate:env-urls": {
               "executor": "nx:run-script",
               "options": {
-                "script": "nx:graph"
+                "script": "validate:env-urls"
               },
               "metadata": {
-                "scriptContent": "nx graph",
-                "runCommand": "pnpm run nx:graph"
-              },
-              "configurations": {},
-              "parallelism": true
-            },
-            "nx:affected": {
-              "executor": "nx:run-script",
-              "options": {
-                "script": "nx:affected"
-              },
-              "metadata": {
-                "scriptContent": "nx affected --target=build --dry-run",
-                "runCommand": "pnpm run nx:affected"
-              },
-              "configurations": {},
-              "parallelism": true
-            },
-            "typecheck:all": {
-              "executor": "nx:run-script",
-              "options": {
-                "script": "typecheck:all"
-              },
-              "metadata": {
-                "scriptContent": "nx run-many --target=typecheck --all",
-                "runCommand": "pnpm run typecheck:all"
-              },
-              "configurations": {},
-              "parallelism": true
-            },
-            "lint:all": {
-              "executor": "nx:run-script",
-              "options": {
-                "script": "lint:all"
-              },
-              "metadata": {
-                "scriptContent": "nx run-many --target=lint --all",
-                "runCommand": "pnpm run lint:all"
-              },
-              "configurations": {},
-              "parallelism": true
-            },
-            "lint:affected": {
-              "executor": "nx:run-script",
-              "options": {
-                "script": "lint:affected"
-              },
-              "metadata": {
-                "scriptContent": "nx affected --target=lint",
-                "runCommand": "pnpm run lint:affected"
+                "scriptContent": "node scripts/validate-environment-urls.js",
+                "runCommand": "pnpm run validate:env-urls"
               },
               "configurations": {},
               "parallelism": true
@@ -3122,294 +4762,6 @@
               "metadata": {
                 "scriptContent": "node scripts/validate-site-links.js",
                 "runCommand": "pnpm run validate:site-links"
-              },
-              "configurations": {},
-              "parallelism": true
-            },
-            "validate:built-site": {
-              "executor": "nx:run-script",
-              "options": {
-                "script": "validate:built-site"
-              },
-              "metadata": {
-                "scriptContent": "node scripts/validate-built-site-links.js",
-                "runCommand": "pnpm run validate:built-site"
-              },
-              "configurations": {},
-              "parallelism": true
-            },
-            "validate:env-urls": {
-              "executor": "nx:run-script",
-              "options": {
-                "script": "validate:env-urls"
-              },
-              "metadata": {
-                "scriptContent": "node scripts/validate-environment-urls.js",
-                "runCommand": "pnpm run validate:env-urls"
-              },
-              "configurations": {},
-              "parallelism": true
-            },
-            "test:builds": {
-              "executor": "nx:run-script",
-              "options": {
-                "script": "test:builds"
-              },
-              "metadata": {
-                "scriptContent": "node scripts/test-site-builds.js",
-                "runCommand": "pnpm run test:builds"
-              },
-              "configurations": {},
-              "parallelism": true
-            },
-            "test:builds:all": {
-              "executor": "nx:run-script",
-              "options": {
-                "script": "test:builds:all"
-              },
-              "metadata": {
-                "scriptContent": "node scripts/test-site-builds.js --site all",
-                "runCommand": "pnpm run test:builds:all"
-              },
-              "configurations": {},
-              "parallelism": true
-            },
-            "test:builds:portal": {
-              "executor": "nx:run-script",
-              "options": {
-                "script": "test:builds:portal"
-              },
-              "metadata": {
-                "scriptContent": "node scripts/test-site-builds.js --site portal",
-                "runCommand": "pnpm run test:builds:portal"
-              },
-              "configurations": {},
-              "parallelism": true
-            },
-            "test:builds:config": {
-              "executor": "nx:run-script",
-              "options": {
-                "script": "test:builds:config"
-              },
-              "metadata": {
-                "scriptContent": "node scripts/test-site-builds.js --skip-build",
-                "runCommand": "pnpm run test:builds:config"
-              },
-              "configurations": {},
-              "parallelism": true
-            },
-            "test:builds:production": {
-              "executor": "nx:run-script",
-              "options": {
-                "script": "test:builds:production"
-              },
-              "metadata": {
-                "scriptContent": "node scripts/test-site-builds.js --site all --env production",
-                "runCommand": "pnpm run test:builds:production"
-              },
-              "configurations": {},
-              "parallelism": true
-            },
-            "test:builds:critical": {
-              "executor": "nx:run-script",
-              "options": {
-                "script": "test:builds:critical"
-              },
-              "metadata": {
-                "scriptContent": "node scripts/test-site-builds.js --site portal --env production && node scripts/test-site-builds.js --site ISBDM --env production",
-                "runCommand": "pnpm run test:builds:critical"
-              },
-              "configurations": {},
-              "parallelism": true
-            },
-            "test:full": {
-              "executor": "nx:run-script",
-              "options": {
-                "script": "test:full"
-              },
-              "metadata": {
-                "scriptContent": "pnpm typecheck && pnpm lint --quiet && pnpm test --run && pnpm test:builds:config",
-                "runCommand": "pnpm run test:full"
-              },
-              "configurations": {},
-              "parallelism": true
-            },
-            "test:regression": {
-              "executor": "nx:run-script",
-              "options": {
-                "script": "test:regression"
-              },
-              "metadata": {
-                "scriptContent": "nx run standards-dev:regression:full",
-                "runCommand": "pnpm run test:regression"
-              },
-              "configurations": {},
-              "parallelism": true
-            },
-            "test:regression:fast": {
-              "executor": "nx:run-script",
-              "options": {
-                "script": "test:regression:fast"
-              },
-              "metadata": {
-                "scriptContent": "nx run standards-dev:regression:fast",
-                "runCommand": "pnpm run test:regression:fast"
-              },
-              "configurations": {},
-              "parallelism": true
-            },
-            "test:pre-commit": {
-              "executor": "nx:run-script",
-              "options": {
-                "script": "test:pre-commit"
-              },
-              "metadata": {
-                "scriptContent": "pnpm typecheck && pnpm lint --quiet && pnpm test --run && pnpm test:builds:config",
-                "runCommand": "pnpm run test:pre-commit"
-              },
-              "configurations": {},
-              "parallelism": true
-            },
-            "test:pre-push": {
-              "executor": "nx:run-script",
-              "options": {
-                "script": "test:pre-push"
-              },
-              "metadata": {
-                "scriptContent": "pnpm test:pre-commit && pnpm test:builds:critical",
-                "runCommand": "pnpm run test:pre-push"
-              },
-              "configurations": {},
-              "parallelism": true
-            },
-            "test:pre-push:nx": {
-              "executor": "nx:run-script",
-              "options": {
-                "script": "test:pre-push:nx"
-              },
-              "metadata": {
-                "scriptContent": "nx affected --target=lint && nx affected --target=typecheck && nx affected --target=test && nx affected --target=build",
-                "runCommand": "pnpm run test:pre-push:nx"
-              },
-              "configurations": {},
-              "parallelism": true
-            },
-            "test:e2e": {
-              "executor": "nx:run-script",
-              "options": {
-                "script": "test:e2e"
-              },
-              "metadata": {
-                "scriptContent": "nx run standards-dev:e2e",
-                "runCommand": "pnpm run test:e2e"
-              },
-              "configurations": {},
-              "parallelism": true
-            },
-            "test:e2e:ui": {
-              "executor": "nx:run-script",
-              "options": {
-                "script": "test:e2e:ui"
-              },
-              "metadata": {
-                "scriptContent": "nx run standards-dev:e2e:ui",
-                "runCommand": "pnpm run test:e2e:ui"
-              },
-              "configurations": {},
-              "parallelism": true
-            },
-            "test:e2e:portal": {
-              "executor": "nx:run-script",
-              "options": {
-                "script": "test:e2e:portal"
-              },
-              "metadata": {
-                "scriptContent": "nx run portal:e2e",
-                "runCommand": "pnpm run test:e2e:portal"
-              },
-              "configurations": {},
-              "parallelism": true
-            },
-            "test:e2e:isbdm": {
-              "executor": "nx:run-script",
-              "options": {
-                "script": "test:e2e:isbdm"
-              },
-              "metadata": {
-                "scriptContent": "nx run isbdm:e2e",
-                "runCommand": "pnpm run test:e2e:isbdm"
-              },
-              "configurations": {},
-              "parallelism": true
-            },
-            "test:e2e:lrm": {
-              "executor": "nx:run-script",
-              "options": {
-                "script": "test:e2e:lrm"
-              },
-              "metadata": {
-                "scriptContent": "nx run lrm:e2e",
-                "runCommand": "pnpm run test:e2e:lrm"
-              },
-              "configurations": {},
-              "parallelism": true
-            },
-            "test:e2e:affected": {
-              "executor": "nx:run-script",
-              "options": {
-                "script": "test:e2e:affected"
-              },
-              "metadata": {
-                "scriptContent": "nx affected --target=e2e",
-                "runCommand": "pnpm run test:e2e:affected"
-              },
-              "configurations": {},
-              "parallelism": true
-            },
-            "test:e2e:all": {
-              "executor": "nx:run-script",
-              "options": {
-                "script": "test:e2e:all"
-              },
-              "metadata": {
-                "scriptContent": "nx run-many --target=e2e --all",
-                "runCommand": "pnpm run test:e2e:all"
-              },
-              "configurations": {},
-              "parallelism": true
-            },
-            "test:pre-push:fast": {
-              "executor": "nx:run-script",
-              "options": {
-                "script": "test:pre-push:fast"
-              },
-              "metadata": {
-                "scriptContent": "./scripts/nx-pre-push-fast.sh",
-                "runCommand": "pnpm run test:pre-push:fast"
-              },
-              "configurations": {},
-              "parallelism": true
-            },
-            "test:pre-push:smart": {
-              "executor": "nx:run-script",
-              "options": {
-                "script": "test:pre-push:smart"
-              },
-              "metadata": {
-                "scriptContent": "./scripts/nx-pre-push.sh",
-                "runCommand": "pnpm run test:pre-push:smart"
-              },
-              "configurations": {},
-              "parallelism": true
-            },
-            "test:portal:e2e": {
-              "executor": "nx:run-script",
-              "options": {
-                "script": "test:portal:e2e"
-              },
-              "metadata": {
-                "scriptContent": "./scripts/test-portal-builds.sh",
-                "runCommand": "pnpm run test:portal:e2e"
               },
               "configurations": {},
               "parallelism": true
@@ -3474,18 +4826,6 @@
               "configurations": {},
               "parallelism": true
             },
-            "prepare": {
-              "executor": "nx:run-script",
-              "options": {
-                "script": "prepare"
-              },
-              "metadata": {
-                "scriptContent": "husky",
-                "runCommand": "pnpm run prepare"
-              },
-              "configurations": {},
-              "parallelism": true
-            },
             "nx-release-publish": {
               "executor": "@nx/js:release-publish",
               "dependsOn": [
@@ -3503,37 +4843,73 @@
                   "!node_modules/**/*",
                   "!dist/**/*",
                   "!build/**/*",
-                  "!.nx/**/*"
+                  "!.nx/**/*",
+                  "!**/.next/**/*",
+                  "!playwright-report/**/*",
+                  "!test-results/**/*"
                 ]
               },
-              "cache": true,
               "configurations": {},
               "parallelism": true,
               "inputs": [
                 "default",
-                "{workspaceRoot}/.eslintrc.json",
-                "{workspaceRoot}/eslint.config.js",
-                "{workspaceRoot}/eslint.config.mjs"
-              ]
+                "^default"
+              ],
+              "outputs": [],
+              "cache": true
             },
             "e2e": {
               "executor": "nx:run-commands",
               "options": {
                 "command": "playwright test",
-                "parallel": 2
+                "cacheableOperations": [
+                  "e2e"
+                ]
               },
               "dependsOn": [
                 "build-all"
               ],
-              "cache": true,
               "inputs": [
                 "default",
                 "{projectRoot}/e2e/**/*",
                 "{projectRoot}/playwright.config.ts"
               ],
+              "configurations": {},
+              "parallelism": true,
+              "cache": true,
               "outputs": [
                 "{projectRoot}/test-results",
-                "{projectRoot}/playwright-report"
+                "{projectRoot}/playwright-report",
+                "{workspaceRoot}/test-results",
+                "{workspaceRoot}/playwright-report"
+              ]
+            },
+            "e2e:fail-fast": {
+              "executor": "nx:run-commands",
+              "options": {
+                "command": "FAIL_FAST=true playwright test --max-failures=1"
+              },
+              "dependsOn": [
+                "build-all"
+              ],
+              "inputs": [
+                "default",
+                "{projectRoot}/e2e/**/*",
+                "{projectRoot}/playwright.config.ts"
+              ],
+              "configurations": {},
+              "parallelism": true
+            },
+            "e2e:affected": {
+              "executor": "nx:run-commands",
+              "options": {
+                "command": "playwright test --grep \"affected\"",
+                "cwd": "."
+              },
+              "inputs": [
+                "default",
+                "{projectRoot}/e2e/**/*",
+                "{projectRoot}/playwright.config.ts"
               ],
               "configurations": {},
               "parallelism": true
@@ -3546,7 +4922,88 @@
               "dependsOn": [
                 "build-all"
               ],
-              "cache": false,
+              "configurations": {},
+              "parallelism": true
+            },
+            "e2e:admin-portal": {
+              "executor": "nx:run-commands",
+              "options": {
+                "command": "playwright test --project=admin-portal"
+              },
+              "dependsOn": [
+                "admin-portal:build"
+              ],
+              "inputs": [
+                "default",
+                "{projectRoot}/e2e/admin-portal/**/*",
+                "{projectRoot}/playwright.config.ts"
+              ],
+              "configurations": {},
+              "parallelism": true
+            },
+            "e2e:admin-portal:fail-fast": {
+              "executor": "nx:run-commands",
+              "options": {
+                "command": "FAIL_FAST=true playwright test --project=admin-portal --max-failures=1"
+              },
+              "dependsOn": [
+                "admin-portal:build"
+              ],
+              "inputs": [
+                "default",
+                "{projectRoot}/e2e/admin-portal/**/*",
+                "{projectRoot}/playwright.config.ts"
+              ],
+              "configurations": {},
+              "parallelism": true
+            },
+            "e2e:site-validation": {
+              "executor": "nx:run-commands",
+              "options": {
+                "command": "playwright test e2e/site-validation.spec.ts"
+              },
+              "dependsOn": [
+                "build-all"
+              ],
+              "inputs": [
+                "default",
+                "{projectRoot}/e2e/site-validation.spec.ts",
+                "{projectRoot}/playwright.config.ts",
+                "{projectRoot}/packages/theme/src/config/siteConfigCore.ts"
+              ],
+              "configurations": {},
+              "parallelism": true
+            },
+            "e2e:site-validation:dev": {
+              "executor": "nx:run-commands",
+              "options": {
+                "command": "DOCS_ENV=development playwright test e2e/site-validation.spec.ts"
+              },
+              "dependsOn": [
+                "build-all"
+              ],
+              "configurations": {},
+              "parallelism": true
+            },
+            "e2e:site-validation:preview": {
+              "executor": "nx:run-commands",
+              "options": {
+                "command": "DOCS_ENV=preview playwright test e2e/site-validation.spec.ts"
+              },
+              "dependsOn": [
+                "build-all"
+              ],
+              "configurations": {},
+              "parallelism": true
+            },
+            "e2e:site-validation:production": {
+              "executor": "nx:run-commands",
+              "options": {
+                "command": "DOCS_ENV=production playwright test e2e/site-validation.spec.ts"
+              },
+              "dependsOn": [
+                "build-all"
+              ],
               "configurations": {},
               "parallelism": true
             },
@@ -3554,12 +5011,9 @@
               "executor": "nx:run-commands",
               "options": {
                 "commands": [
-                  "nx run-many --target=build --projects=portal,isbdm,lrm,frbr,isbd,muldicat,unimarc --parallel=3"
+                  "nx run-many --target=build --all --parallel=1"
                 ]
               },
-              "dependsOn": [
-                "^build"
-              ],
               "outputs": [
                 "{projectRoot}/portal/build",
                 "{projectRoot}/standards/*/build"
@@ -3570,12 +5024,8 @@
             "build-affected": {
               "executor": "nx:run-commands",
               "options": {
-                "command": "nx affected --target=build --parallel=3"
+                "command": "nx affected --target=build --parallel=1"
               },
-              "dependsOn": [
-                "^build"
-              ],
-              "cache": true,
               "configurations": {},
               "parallelism": true
             },
@@ -3584,7 +5034,14 @@
               "options": {
                 "command": "pnpm start:all"
               },
-              "cache": false,
+              "configurations": {},
+              "parallelism": true
+            },
+            "start-all:robust": {
+              "executor": "nx:run-commands",
+              "options": {
+                "command": "node scripts/start-with-port-cleanup.js start"
+              },
               "configurations": {},
               "parallelism": true
             },
@@ -3593,7 +5050,14 @@
               "options": {
                 "command": "pnpm serve:all"
               },
-              "cache": false,
+              "configurations": {},
+              "parallelism": true
+            },
+            "serve-all:robust": {
+              "executor": "nx:run-commands",
+              "options": {
+                "command": "node scripts/start-with-port-cleanup.js serve"
+              },
               "configurations": {},
               "parallelism": true
             },
@@ -3605,7 +5069,6 @@
               "dependsOn": [
                 "build-all"
               ],
-              "cache": true,
               "configurations": {},
               "parallelism": true
             },
@@ -3617,7 +5080,17 @@
               "dependsOn": [
                 "build-all"
               ],
-              "cache": true,
+              "configurations": {},
+              "parallelism": true
+            },
+            "validate:build-warnings": {
+              "executor": "nx:run-commands",
+              "options": {
+                "command": "node scripts/validate-build-warnings.js --validate-all"
+              },
+              "dependsOn": [
+                "build-all"
+              ],
               "configurations": {},
               "parallelism": true
             },
@@ -3630,11 +5103,11 @@
                   "nx run standards-dev:test",
                   "nx run standards-dev:build-all",
                   "nx run standards-dev:validate:builds",
+                  "nx run standards-dev:validate:build-warnings",
                   "nx run standards-dev:e2e"
                 ],
                 "parallel": false
               },
-              "cache": false,
               "configurations": {},
               "parallelism": true
             },
@@ -3649,9 +5122,29 @@
                 ],
                 "parallel": false
               },
-              "cache": true,
               "configurations": {},
               "parallelism": true
+            },
+            "build": {
+              "executor": "nx:run-commands",
+              "options": {
+                "command": "echo 'Workspace root - no build needed'"
+              },
+              "configurations": {},
+              "parallelism": true,
+              "dependsOn": [
+                "^build"
+              ],
+              "inputs": [
+                "buildInputs",
+                "^buildInputs",
+                "sharedGlobals"
+              ],
+              "outputs": [
+                "{projectRoot}/build",
+                "{projectRoot}/dist"
+              ],
+              "cache": true
             }
           },
           "name": "standards-dev",
@@ -3667,39 +5160,39 @@
     },
     "dependencies": {
       "standards-cli": [],
-      "@ifla/preset-ifla": [],
       "muldicat": [
         {
           "source": "muldicat",
-          "target": "shared-config",
-          "type": "static"
+          "target": "@ifla/theme",
+          "type": "implicit"
         },
         {
           "source": "muldicat",
           "target": "@ifla/theme",
-          "type": "static"
-        },
-        {
-          "source": "muldicat",
-          "target": "@ifla/preset-ifla",
           "type": "static"
         }
       ],
-      "shared-config": [],
+      "newtest": [
+        {
+          "source": "newtest",
+          "target": "@ifla/theme",
+          "type": "implicit"
+        },
+        {
+          "source": "newtest",
+          "target": "@ifla/theme",
+          "type": "static"
+        }
+      ],
       "unimarc": [
         {
           "source": "unimarc",
-          "target": "shared-config",
-          "type": "static"
+          "target": "@ifla/theme",
+          "type": "implicit"
         },
         {
           "source": "unimarc",
           "target": "@ifla/theme",
-          "type": "static"
-        },
-        {
-          "source": "unimarc",
-          "target": "@ifla/preset-ifla",
           "type": "static"
         }
       ],
@@ -3708,105 +5201,65 @@
         {
           "source": "isbdm",
           "target": "@ifla/theme",
-          "type": "static"
+          "type": "implicit"
         },
         {
           "source": "isbdm",
-          "target": "shared-config",
-          "type": "static"
-        },
-        {
-          "source": "isbdm",
-          "target": "@ifla/preset-ifla",
+          "target": "@ifla/theme",
           "type": "static"
         }
       ],
-      "@ifla/theme": [
-        {
-          "source": "@ifla/theme",
-          "target": "shared-config",
-          "type": "static"
-        }
-      ],
+      "@ifla/theme": [],
       "frbr": [
         {
           "source": "frbr",
-          "target": "shared-config",
-          "type": "static"
+          "target": "@ifla/theme",
+          "type": "implicit"
         },
         {
           "source": "frbr",
           "target": "@ifla/theme",
-          "type": "static"
-        },
-        {
-          "source": "frbr",
-          "target": "@ifla/preset-ifla",
           "type": "static"
         }
       ],
       "isbd": [
         {
           "source": "isbd",
-          "target": "shared-config",
-          "type": "static"
+          "target": "@ifla/theme",
+          "type": "implicit"
         },
         {
           "source": "isbd",
           "target": "@ifla/theme",
-          "type": "static"
-        },
-        {
-          "source": "isbd",
-          "target": "@ifla/preset-ifla",
           "type": "static"
         }
       ],
       "lrm": [
         {
           "source": "lrm",
-          "target": "shared-config",
-          "type": "static"
+          "target": "@ifla/theme",
+          "type": "implicit"
         },
         {
           "source": "lrm",
           "target": "@ifla/theme",
           "type": "static"
-        },
-        {
-          "source": "lrm",
-          "target": "@ifla/preset-ifla",
-          "type": "static"
         }
       ],
+      "admin": [],
       "portal": [
         {
           "source": "portal",
-          "target": "shared-config",
+          "target": "@ifla/theme",
           "type": "implicit"
         },
         {
           "source": "portal",
-          "target": "shared-config",
-          "type": "static"
-        },
-        {
-          "source": "portal",
           "target": "@ifla/theme",
-          "type": "static"
-        },
-        {
-          "source": "portal",
-          "target": "@ifla/preset-ifla",
           "type": "static"
         }
       ],
       "standards-dev": [
-        {
-          "source": "standards-dev",
-          "target": "@ifla/preset-ifla",
-          "type": "static"
-        },
         {
           "source": "standards-dev",
           "target": "@ifla/theme",

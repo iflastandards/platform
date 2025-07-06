@@ -187,7 +187,7 @@
   "defaultBase": "dev",
   "affected": { "defaultBase": "dev" },
   "cli": { "analytics": false },
-  "parallel": 12,
+  "parallel": 8,
   "cacheDirectory": ".nx/cache",
   "runtimeCacheInputs": [
     "node -v",
