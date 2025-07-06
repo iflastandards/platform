@@ -22,7 +22,7 @@ vi.mock('@docusaurus/useDocusaurusContext', () => ({
 
 describe('ElementReference component', () => {
   // Base test frontmatter structure matching the template
-  const createTemplatedFrontMatter = (overrides = {}) => {
+  const createTemplatedFrontMatter = (overrides: Record<string, unknown> = {}) => {
     const baseFrontMatter = {
       // Docusaurus metadata
       id: 1025,
@@ -58,13 +58,12 @@ describe('ElementReference component', () => {
       willBeRemovedInVersion: "",
     };
 
-    // Apply overrides with deep merge for RDF
     const mergedFrontMatter = {
       ...baseFrontMatter,
       ...overrides,
       RDF: {
-        ...(baseFrontMatter as any).RDF,
-        ...((overrides as any).RDF || {}),
+        ...baseFrontMatter.RDF,
+        ...(overrides.RDF || {}),
       }
     };
 
@@ -72,7 +71,33 @@ describe('ElementReference component', () => {
   };
 
   // Test variables
-  let templatedFrontMatter: any;  
+  let templatedFrontMatter: {
+    id: number;
+    title: string;
+    sidebar_position: number;
+    sidebar_level: number;
+    RDF: {
+      definition: string;
+      domain: string;
+      type: string;
+      scopeNote: string;
+      range: string;
+      equivalentProperty: never[];
+      inverseOf: never[];
+      elementSubType: {
+        uri: string;
+        url: string;
+        label: string;
+      }[];
+      elementSuperType: never[];
+      isDefinedBy: string;
+      status: string;
+      subPropertyOf: string[];
+    };
+    deprecated: boolean;
+    deprecatedInVersion: string;
+    willBeRemovedInVersion: string;
+  };  
 
   beforeEach(() => {
     // Reset for each test

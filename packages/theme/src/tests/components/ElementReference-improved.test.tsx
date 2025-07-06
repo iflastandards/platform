@@ -81,11 +81,20 @@ describe('ElementReference - URI Generation Logic Tests', () => {
 
   describe('Element Relationship Processing', () => {
     it('should convert elementSuperType to subPropertyOf', () => {
-      const processRelationships = (frontMatter: any) => {
-        const relationships: any = {};
+      interface Relationship {
+        subPropertyOf?: string[];
+      }
+      interface FrontMatter {
+        RDF: {
+          elementSuperType: { uri: string; label: string }[];
+          subPropertyOf: string[];
+        }
+      }
+      const processRelationships = (frontMatter: FrontMatter) => {
+        const relationships: Relationship = {};
         
         if (frontMatter.RDF?.elementSuperType?.length > 0) {
-          relationships.subPropertyOf = frontMatter.RDF.elementSuperType.map((item: any) => item.uri);
+          relationships.subPropertyOf = frontMatter.RDF.elementSuperType.map((item: { uri: string; }) => item.uri);
         }
         
         if (frontMatter.RDF?.subPropertyOf?.length > 0) {
@@ -114,7 +123,10 @@ describe('ElementReference - URI Generation Logic Tests', () => {
     });
 
     it('should handle inverseOf relationships', () => {
-      const processInverseOf = (inverseOf: any[]) => {
+      interface InverseOfItem {
+        uri?: string;
+      }
+      const processInverseOf = (inverseOf: (string | InverseOfItem)[]) => {
         if (!inverseOf || inverseOf.length === 0) return [];
         
         return inverseOf.map(item => {
@@ -148,7 +160,7 @@ describe('ElementReference - URI Generation Logic Tests', () => {
 
   describe('RDF Serialization Logic', () => {
     it('should generate correct JSON-LD structure', () => {
-      const generateJsonLd = (uri: string, type: string[], properties: any) => {
+      const generateJsonLd = (uri: string, type: string[], properties: Record<string, unknown>) => {
         const jsonLd = {
           "@context": {
             "rdf": "http://www.w3.org/1999/02/22-rdf-syntax-ns#",
@@ -207,7 +219,13 @@ describe('ElementReference - URI Generation Logic Tests', () => {
 
   describe('Deprecation Handling', () => {
     it('should determine deprecation status correctly', () => {
-      const isDeprecated = (frontMatter: any) => {
+      interface DeprecationFrontMatter {
+        deprecated?: boolean;
+        RDF?: {
+          deprecated?: boolean;
+        }
+      }
+      const isDeprecated = (frontMatter: DeprecationFrontMatter) => {
         return frontMatter.deprecated === true || 
                frontMatter.RDF?.deprecated === true;
       };
@@ -219,7 +237,15 @@ describe('ElementReference - URI Generation Logic Tests', () => {
     });
 
     it('should extract deprecation version info', () => {
-      const getDeprecationInfo = (frontMatter: any) => {
+      interface DeprecationInfoFrontMatter {
+        deprecatedInVersion?: string;
+        willBeRemovedInVersion?: string;
+        RDF?: {
+          deprecatedInVersion?: string;
+          willBeRemovedInVersion?: string;
+        }
+      }
+      const getDeprecationInfo = (frontMatter: DeprecationInfoFrontMatter) => {
         return {
           deprecatedInVersion: frontMatter.deprecatedInVersion || frontMatter.RDF?.deprecatedInVersion || '',
           willBeRemovedInVersion: frontMatter.willBeRemovedInVersion || frontMatter.RDF?.willBeRemovedInVersion || ''

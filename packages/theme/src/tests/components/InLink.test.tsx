@@ -13,7 +13,7 @@ vi.mock('@docusaurus/useBaseUrl', () => ({
 
 // Mock Link component
 vi.mock('@docusaurus/Link', () => ({
-  default: ({ children, to, className, ...props }: any) => (
+  default: ({ children, to, className, ...props }: { children: React.ReactNode, to: string, className: string, [key: string]: unknown }) => (
     <a href={to} className={className} {...props}>
       {children}
     </a>

@@ -11,7 +11,7 @@ declare global {
       siteConfig: {
         customFields?: {
           vocabularyDefaults?: VocabularyDefaults;
-          [key: string]: any;
+          [key: string]: unknown;
         };
       };
     };
@@ -47,7 +47,7 @@ const mockSiteConfig = {
 // Mock the useDocusaurusContext hook
 vi.mock('@docusaurus/useDocusaurusContext', () => {
   const mockUseDocusaurusContext = vi.fn(() => ({
-    siteConfig: mockSiteConfig as any,
+    siteConfig: mockSiteConfig,
     i18n: {
       currentLocale: 'en',
       locales: ['en', 'fr', 'es'],
@@ -571,7 +571,7 @@ test:T1001,http://www.w3.org/2004/02/skos/core#Concept,simple,"Simple definition
         description: "Testing error handling",
         concepts: [
           {
-            value: "" as any, // Invalid value
+            value: {}, // Invalid value
             definition: {
               en: "Valid definition"
             }
@@ -580,7 +580,7 @@ test:T1001,http://www.w3.org/2004/02/skos/core#Concept,simple,"Simple definition
             value: {
               en: "Valid term"
             },
-            definition: "" as any // Invalid definition
+            definition: {} // Invalid definition
           }
         ]
       };

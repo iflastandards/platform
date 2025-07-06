@@ -6,7 +6,6 @@ const { SITE_CONFIG, getSiteConfig } = require('@ifla/theme/config');
 const DocsEnv = {
   Local: 'local',
   Preview: 'preview',
-  Development: 'development',
   Production: 'production',
 };
 

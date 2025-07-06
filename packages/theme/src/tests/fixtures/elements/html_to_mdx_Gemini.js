@@ -8,7 +8,7 @@ function getTextOrEmpty(element, strip = true) {
     return strip ? text.trim() : text;
 }
 
-function getDecodeContentsOrEmpty(element, $) {
+function getDecodeContentsOrEmpty(element) {
     if (!element || !element.html) return "";
     return (element.html() || "").trim();
 }

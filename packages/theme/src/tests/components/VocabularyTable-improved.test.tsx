@@ -79,21 +79,21 @@ describe('VocabularyTable - Real Functionality Tests', () => {
       const { container: lightContainer } = render(
         <VocabularyTable {...sampleTableProps} />
       );
-      const lightStyles = window.getComputedStyle(lightContainer.firstChild as Element);
+      window.getComputedStyle(lightContainer.firstChild as Element);
       
       // Switch to dark mode
       mockColorMode = 'dark';
       const { container: darkContainer } = render(
         <VocabularyTable {...sampleTableProps} />
       );
-      const darkStyles = window.getComputedStyle(darkContainer.firstChild as Element);
+      window.getComputedStyle(darkContainer.firstChild as Element);
       
       // Verify that dark mode actually changes something
       // This tests that the component responds to color mode changes
       expect(mockColorMode).toBe('dark');
       
       // Check for dark mode specific classes or attributes
-      const darkModeElement = darkContainer.querySelector('[data-theme="dark"]') || 
+      darkContainer.querySelector('[data-theme="dark"]') || 
                              darkContainer.querySelector('.dark-mode') ||
                              darkContainer.querySelector('.vocabulary-table-dark');
       

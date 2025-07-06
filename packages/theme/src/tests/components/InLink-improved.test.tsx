@@ -30,14 +30,14 @@ describe('InLink Component - Real Functionality Tests', () => {
         
         if (React.isValidElement(children)) {
           return React.cloneElement(children, {}, 
-            processChildren((children.props as any).children)
+            processChildren(children.props.children)
           );
         }
         
         if (Array.isArray(children)) {
           return children.map((child, index) => 
             React.isValidElement(child) 
-              ? React.cloneElement(child, { key: index }, processChildren((child.props as any).children))
+              ? React.cloneElement(child, { key: index }, processChildren(child.props.children))
               : processChildren(child)
           );
         }

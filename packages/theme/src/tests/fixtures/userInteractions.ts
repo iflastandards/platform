@@ -103,7 +103,7 @@ export const waitHelpers = {
 export const errorHelpers = {
   // Mock network error for component tests
   mockNetworkError: () => {
-    global.fetch = vi.fn(() => Promise.reject(new Error('Network error'))) as any;
+    global.fetch = vi.fn(() => Promise.reject(new Error('Network error'))) as (input: RequestInfo | URL, init?: RequestInit | undefined) => Promise<Response>;
   },
   
   // Check error message appears

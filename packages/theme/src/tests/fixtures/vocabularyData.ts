@@ -64,9 +64,22 @@ export const createMockFetch = (csvContent: string = mockCSVContent) => {
   return vi.fn(() =>
     Promise.resolve({
       ok: true,
-      text: () => Promise.resolve(csvContent)
-    })
-  ) as any;
+      text: () => Promise.resolve(csvContent),
+      headers: new Headers(),
+      redirected: false,
+      status: 200,
+      statusText: 'OK',
+      url: '',
+      body: null,
+      bodyUsed: false,
+      clone: () => ({} as Response),
+      arrayBuffer: () => Promise.resolve(new ArrayBuffer(0)),
+      blob: () => Promise.resolve(new Blob()),
+      formData: () => Promise.resolve(new FormData()),
+      json: () => Promise.resolve({}),
+      type: 'basic' as ResponseType
+    } as Response)
+  ) as typeof fetch;
 };
 
 export const createFailedFetch = (errorMessage: string = 'Network error') => {

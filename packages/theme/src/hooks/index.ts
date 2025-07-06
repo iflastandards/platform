@@ -108,7 +108,7 @@ export function useMultilingualText(
  */
 export function useVocabularyTable(
   concepts: ConceptProps[],
-  initialFilters: Record<string, any> = {}
+  initialFilters: Record<string, unknown> = {}
 ) {
   const [filter, setFilter] = useState('');
   const [sortField, setSortField] = useState<string>('');
@@ -160,8 +160,8 @@ export function useVocabularyTable(
     // Apply sorting
     if (sortField) {
       filtered.sort((a, b) => {
-        const aValue = getLocalizedText(a[sortField as keyof ConceptProps] as any, selectedLanguage) || '';
-        const bValue = getLocalizedText(b[sortField as keyof ConceptProps] as any, selectedLanguage) || '';
+        const aValue = getLocalizedText(a[sortField as keyof ConceptProps], selectedLanguage) || '';
+        const bValue = getLocalizedText(b[sortField as keyof ConceptProps], selectedLanguage) || '';
         
         const comparison = aValue.localeCompare(bValue);
         return sortDirection === 'asc' ? comparison : -comparison;
@@ -200,7 +200,7 @@ export function useVocabularyTable(
     setSelectedRows(new Set());
   }, []);
 
-  const updateFilter = useCallback((key: string, value: any) => {
+  const updateFilter = useCallback((key: string, value: unknown) => {
     setFilters(prev => ({
       ...prev,
       [key]: value

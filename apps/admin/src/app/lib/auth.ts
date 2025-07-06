@@ -1,10 +1,10 @@
-import NextAuth, { User, Session } from 'next-auth';
+import NextAuth, { type NextAuthConfig, User, Session } from 'next-auth';
 import { JWT } from 'next-auth/jwt';
 import GitHub from 'next-auth/providers/github';
 import Credentials from 'next-auth/providers/credentials';
 import { createUser } from './mock-auth';
 
-export const { handlers, auth, signIn, signOut } = NextAuth({
+const authConfig: NextAuthConfig = {
   debug: process.env.NODE_ENV === 'development',
   providers: [
     GitHub({
@@ -187,4 +187,6 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
       return `${baseUrl}/dashboard`;
     },
   },
-});
+};
+
+export const { handlers, auth, signIn, signOut } = NextAuth(authConfig);
