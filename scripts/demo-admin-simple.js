@@ -2,7 +2,7 @@
 
 /**
  * Simple demo script for admin portal integration
- * Starts admin-portal and newtest site, then opens them in browser
+ * Starts admin and newtest site, then opens them in browser
  */
 
 const { spawn, exec } = require('child_process');
@@ -43,7 +43,7 @@ async function checkUrl(url, maxRetries = 30) {
     } catch (e) {
       // URL not ready yet
     }
-    await new Promise(resolve => setTimeout(resolve, 1000));
+    await new Promise((resolve) => setTimeout(resolve, 1000));
     process.stdout.write('.');
   }
   return false;
@@ -84,7 +84,7 @@ async function openBrowser(url) {
 
 async function main() {
   log('Starting admin portal integration demo...');
-  
+
   // Clean up any existing processes
   log('Cleaning up existing processes...');
   try {
@@ -100,16 +100,16 @@ async function main() {
 
   // Start admin portal
   log('Starting admin portal...');
-  const adminProcess = spawn('nx', ['serve', 'admin-portal'], {
+  const adminProcess = spawn('nx', ['serve', 'admin'], {
     stdio: ['ignore', 'pipe', 'pipe'],
-    env: { ...process.env }
+    env: { ...process.env },
   });
 
   // Start newtest site
   log('Starting newtest site...');
   const newtestProcess = spawn('nx', ['start', 'newtest'], {
     stdio: ['ignore', 'pipe', 'pipe'],
-    env: { ...process.env, DOCS_ENV: 'local' }
+    env: { ...process.env, DOCS_ENV: 'local' },
   });
 
   // Handle cleanup on exit
@@ -150,21 +150,35 @@ async function main() {
   // Open browsers
   log('Opening browsers...');
   await openBrowser('http://localhost:3008/newtest/');
-  await new Promise(resolve => setTimeout(resolve, 2000)); // Wait 2 seconds
+  await new Promise((resolve) => setTimeout(resolve, 2000)); // Wait 2 seconds
   await openBrowser('http://localhost:3007');
 
   success('Demo started successfully!');
   console.log();
   log('🎯 DEMO INSTRUCTIONS:');
-  console.log(`  ${colors.green}1.${colors.reset} Visit the newtest site: ${colors.blue}http://localhost:3008/newtest/${colors.reset}`);
-  console.log(`  ${colors.green}2.${colors.reset} Look for the ${colors.yellow}'Manage Site'${colors.reset} button in the top-right navbar`);
-  console.log(`  ${colors.green}3.${colors.reset} Click it to open the admin portal for this site`);
-  console.log(`  ${colors.green}4.${colors.reset} Sign in with GitHub to access site management`);
+  console.log(
+    `  ${colors.green}1.${colors.reset} Visit the newtest site: ${colors.blue}http://localhost:3008/newtest/${colors.reset}`,
+  );
+  console.log(
+    `  ${colors.green}2.${colors.reset} Look for the ${colors.yellow}'Manage Site'${colors.reset} button in the top-right navbar`,
+  );
+  console.log(
+    `  ${colors.green}3.${colors.reset} Click it to open the admin portal for this site`,
+  );
+  console.log(
+    `  ${colors.green}4.${colors.reset} Sign in with GitHub to access site management`,
+  );
   console.log();
   log('🔧 TESTING WORKFLOW:');
-  console.log(`  ${colors.green}•${colors.reset} The navbar integration allows seamless admin access`);
-  console.log(`  ${colors.green}•${colors.reset} Authentication is handled by NextAuth v5`);
-  console.log(`  ${colors.green}•${colors.reset} Site owner gets automatic admin privileges`);
+  console.log(
+    `  ${colors.green}•${colors.reset} The navbar integration allows seamless admin access`,
+  );
+  console.log(
+    `  ${colors.green}•${colors.reset} Authentication is handled by NextAuth v5`,
+  );
+  console.log(
+    `  ${colors.green}•${colors.reset} Site owner gets automatic admin privileges`,
+  );
   console.log();
   warning('Press Ctrl+C to stop the demo and clean up processes');
 

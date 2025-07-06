@@ -1,4 +1,4 @@
-// apps/admin-portal/src/lib/mock-auth.ts
+// apps/admin/src/lib/mock-auth.ts
 
 interface MockUser {
   id: string;

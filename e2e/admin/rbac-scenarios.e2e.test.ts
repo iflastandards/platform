@@ -1,4 +1,4 @@
-// e2e/admin-portal/rbac-scenarios.e2e.test.ts
+// e2e/admin/rbac-scenarios.e2e.test.ts
 import { test, expect } from '@playwright/test';
 import { setupMockAuth, TEST_USERS } from '../utils/auth-helpers';
 
@@ -12,7 +12,10 @@ test.describe('RBAC Scenarios', () => {
     await expect(page.getByText('Manage Sites')).toBeVisible();
   });
 
-  test('Namespace admin should have scoped access', async ({ page, context }) => {
+  test('Namespace admin should have scoped access', async ({
+    page,
+    context,
+  }) => {
     await setupMockAuth(context, TEST_USERS.namespaceAdmin);
     await page.goto('/admin/dashboard');
     await expect(page.getByText('ISBD Namespace Dashboard')).toBeVisible();

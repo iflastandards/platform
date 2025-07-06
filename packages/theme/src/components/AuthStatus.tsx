@@ -21,70 +21,75 @@ interface AuthStatusState {
 // Dynamic admin portal configuration based on environment
 
 /**
- * AuthStatus component that tracks authentication state from the admin-portal
+ * AuthStatus component that tracks authentication state from the admin
  * and synchronizes it with localStorage for use across docusaurus sites
  */
 export const AuthStatus: React.FC = () => {
   const [_authState, setAuthState] = useState<AuthStatusState>({
     isAuthenticated: false,
-    loading: true
+    loading: true,
   });
 
-  // Check session from admin-portal
+  // Check session from admin
   const checkSession = async () => {
     try {
       const adminConfig = getAdminPortalConfigAuto();
       const response = await fetch(adminConfig.sessionApiUrl, {
         credentials: 'include',
         headers: {
-          'Accept': 'application/json',
-        }
+          Accept: 'application/json',
+        },
       });
 
       if (response.ok) {
         const session: AuthSession | null = await response.json();
-        
+
         if (session && session.user) {
           const authStatus = {
             isAuthenticated: true,
             username: session.user.name || session.user.email,
             teams: session.user.roles || [],
-            keepMeLoggedIn: localStorage.getItem('auth-keep-signed-in') === 'true',
-            loading: false
+            keepMeLoggedIn:
+              localStorage.getItem('auth-keep-signed-in') === 'true',
+            loading: false,
           };
 
           setAuthState(authStatus);
-          
+
           // Update localStorage for other components
           localStorage.setItem('authStatus', JSON.stringify(authStatus));
-          
+
           // Dispatch storage event for cross-tab communication
-          window.dispatchEvent(new StorageEvent('storage', {
-            key: 'authStatus',
-            newValue: JSON.stringify(authStatus)
-          }));
+          window.dispatchEvent(
+            new StorageEvent('storage', {
+              key: 'authStatus',
+              newValue: JSON.stringify(authStatus),
+            }),
+          );
         } else {
           // No session found
           const authStatus = {
             isAuthenticated: false,
-            loading: false
+            loading: false,
           };
-          
+
           setAuthState(authStatus);
           localStorage.setItem('authStatus', JSON.stringify(authStatus));
-          
-          window.dispatchEvent(new StorageEvent('storage', {
-            key: 'authStatus',
-            newValue: JSON.stringify(authStatus)
-          }));
+
+          window.dispatchEvent(
+            new StorageEvent('storage', {
+              key: 'authStatus',
+              newValue: JSON.stringify(authStatus),
+            }),
+          );
         }
       } else {
         // Session check failed
         const authStatus = {
           isAuthenticated: false,
-          loading: false
+          loading: false,
         };
-        
+
         setAuthState(authStatus);
         localStorage.setItem('authStatus', JSON.stringify(authStatus));
       }
@@ -92,9 +97,9 @@ export const AuthStatus: React.FC = () => {
       console.warn('Failed to check auth session:', error);
       const authStatus = {
         isAuthenticated: false,
-        loading: false
+        loading: false,
       };
-      
+
       setAuthState(authStatus);
       localStorage.setItem('authStatus', JSON.stringify(authStatus));
     }

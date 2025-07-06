@@ -1,4 +1,4 @@
-// apps/admin-portal/src/app/components/mock-user-indicator.tsx
+// apps/admin/src/app/components/mock-user-indicator.tsx
 'use client';
 
 import { Session } from 'next-auth';

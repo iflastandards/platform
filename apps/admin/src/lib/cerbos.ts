@@ -1,4 +1,4 @@
-// apps/admin-portal/src/lib/cerbos.ts
+// apps/admin/src/lib/cerbos.ts
 import { GRPC } from '@cerbos/grpc';
 
 // The Cerbos PDP instance

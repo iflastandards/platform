@@ -49,32 +49,32 @@ function highlight(message) {
 // IFLA Namespaces and their review groups
 const NAMESPACES = {
   LRM: {
-    name: "Library Reference Model",
-    sites: ["lrm"],
-    reviewGroup: "LRM Review Group"
+    name: 'Library Reference Model',
+    sites: ['lrm'],
+    reviewGroup: 'LRM Review Group',
   },
   ISBD: {
-    name: "International Standard Bibliographic Description", 
-    sites: ["isbd", "isbdm"],
-    reviewGroup: "ISBD Review Group",
-    plannedSites: 7
+    name: 'International Standard Bibliographic Description',
+    sites: ['isbd', 'isbdm'],
+    reviewGroup: 'ISBD Review Group',
+    plannedSites: 7,
   },
   MulDiCat: {
-    name: "Multilingual Dictionary of Cataloguing Terms",
-    sites: ["muldicat"],
-    reviewGroup: "MulDiCat Review Group"
+    name: 'Multilingual Dictionary of Cataloguing Terms',
+    sites: ['muldicat'],
+    reviewGroup: 'MulDiCat Review Group',
   },
   FR: {
-    name: "Functional Requirements",
-    sites: ["frbr"],
-    reviewGroup: "FR Review Group",
-    note: "Currently named FRBR, will be renamed to FR"
+    name: 'Functional Requirements',
+    sites: ['frbr'],
+    reviewGroup: 'FR Review Group',
+    note: 'Currently named FRBR, will be renamed to FR',
   },
   UNIMARC: {
-    name: "Universal MARC Format",
-    sites: ["unimarc"],
-    reviewGroup: "UNIMARC Review Group"
-  }
+    name: 'Universal MARC Format',
+    sites: ['unimarc'],
+    reviewGroup: 'UNIMARC Review Group',
+  },
 };
 
 // Role definitions
@@ -83,90 +83,105 @@ const ROLES = {
   'system-admin': {
     level: 'system',
     description: 'Full system administration',
-    scope: 'all namespaces and sites'
+    scope: 'all namespaces and sites',
   },
   'ifla-admin': {
-    level: 'system', 
+    level: 'system',
     description: 'IFLA organization admin',
-    scope: 'all namespaces and sites'
+    scope: 'all namespaces and sites',
   },
-  
+
   // Namespace roles
   'namespace-admin': {
     level: 'namespace',
     description: 'Full control of namespace',
-    scope: 'specific namespace'
+    scope: 'specific namespace',
   },
   'namespace-editor': {
     level: 'namespace',
     description: 'Edit content across namespace',
-    scope: 'specific namespace'
+    scope: 'specific namespace',
   },
   'namespace-reviewer': {
-    level: 'namespace', 
+    level: 'namespace',
     description: 'Review/approve changes',
-    scope: 'specific namespace'
+    scope: 'specific namespace',
   },
   'namespace-translator': {
     level: 'namespace',
     description: 'Translate content',
-    scope: 'specific namespace'
+    scope: 'specific namespace',
   },
   'namespace-contributor': {
     level: 'namespace',
     description: 'Propose changes',
-    scope: 'specific namespace'
+    scope: 'specific namespace',
   },
-  
+
   // Site roles
   'site-admin': {
     level: 'site',
     description: 'Site administration',
-    scope: 'specific site'
+    scope: 'specific site',
   },
   'site-editor': {
     level: 'site',
-    description: 'Edit site content', 
-    scope: 'specific site'
+    description: 'Edit site content',
+    scope: 'specific site',
   },
   'site-translator': {
     level: 'site',
     description: 'Translate site content',
-    scope: 'specific site'
+    scope: 'specific site',
   },
   'site-contributor': {
     level: 'site',
     description: 'Contribute to site',
-    scope: 'specific site'
-  }
+    scope: 'specific site',
+  },
 };
 
 // Get all sites from configuration
 function getAllSites() {
   try {
     // Try to read from siteConfig.ts
-    const configPath = path.join(__dirname, '../packages/theme/src/config/siteConfig.ts');
+    const configPath = path.join(
+      __dirname,
+      '../packages/theme/src/config/siteConfig.ts',
+    );
     if (fs.existsSync(configPath)) {
       const configContent = fs.readFileSync(configPath, 'utf8');
-      
+
       // Extract site keys from SITE_CONFIG
-      const siteKeyMatch = configContent.match(/export type SiteKey = ([^;]+);/);
+      const siteKeyMatch = configContent.match(
+        /export type SiteKey = ([^;]+);/,
+      );
       if (siteKeyMatch) {
         const siteKeysStr = siteKeyMatch[1];
-        const siteKeys = siteKeysStr
-          .replace(/'/g, '"')
-          .match(/"([^"]+)"/g)
-          ?.map(s => s.replace(/"/g, '')) || [];
-        
+        const siteKeys =
+          siteKeysStr
+            .replace(/'/g, '"')
+            .match(/"([^"]+)"/g)
+            ?.map((s) => s.replace(/"/g, '')) || [];
+
         return siteKeys;
       }
     }
   } catch (e) {
     warning('Could not read site configuration, using default sites');
   }
-  
+
   // Fallback to default sites
-  return ['portal', 'isbdm', 'lrm', 'frbr', 'isbd', 'muldicat', 'unimarc', 'newtest'];
+  return [
+    'portal',
+    'isbdm',
+    'lrm',
+    'frbr',
+    'isbd',
+    'muldicat',
+    'unimarc',
+    'newtest',
+  ];
 }
 
 // Command line argument parsing
@@ -179,9 +194,9 @@ function parseArgs() {
     site: null,
     sites: [],
     interactive: true,
-    help: false
+    help: false,
   };
-  
+
   for (let i = 0; i < args.length; i++) {
     switch (args[i]) {
       case '--role':
@@ -210,7 +225,7 @@ function parseArgs() {
         break;
     }
   }
-  
+
   return options;
 }
 
@@ -269,48 +284,48 @@ ${colors.green}EXAMPLES:${colors.reset}
 function createReadlineInterface() {
   return readline.createInterface({
     input: process.stdin,
-    output: process.stdout
+    output: process.stdout,
   });
 }
 
 // Interactive role selection
 async function selectRoleInteractively() {
   const rl = createReadlineInterface();
-  
+
   return new Promise((resolve) => {
     console.log(`\\n${colors.bold}Select a role to test:${colors.reset}`);
     console.log(`\\n${colors.magenta}System Level Roles:${colors.reset}`);
     console.log('1. system-admin (Full system administration)');
     console.log('2. ifla-admin (IFLA organization admin)');
-    
+
     console.log(`\\n${colors.magenta}Namespace Level Roles:${colors.reset}`);
     console.log('3. namespace-admin (Full control of namespace)');
     console.log('4. namespace-editor (Edit content across namespace)');
     console.log('5. namespace-reviewer (Review/approve changes)');
     console.log('6. namespace-translator (Translate content)');
     console.log('7. namespace-contributor (Propose changes)');
-    
+
     console.log(`\\n${colors.magenta}Site Level Roles:${colors.reset}`);
     console.log('8. site-admin (Site administration)');
     console.log('9. site-editor (Edit site content)');
     console.log('10. site-translator (Translate site content)');
     console.log('11. site-contributor (Contribute to site)');
-    
+
     rl.question('\\nEnter role number (1-11): ', (answer) => {
       const roleMap = {
-        '1': 'system-admin',
-        '2': 'ifla-admin', 
-        '3': 'namespace-admin',
-        '4': 'namespace-editor',
-        '5': 'namespace-reviewer',
-        '6': 'namespace-translator',
-        '7': 'namespace-contributor',
-        '8': 'site-admin',
-        '9': 'site-editor',
-        '10': 'site-translator',
-        '11': 'site-contributor'
+        1: 'system-admin',
+        2: 'ifla-admin',
+        3: 'namespace-admin',
+        4: 'namespace-editor',
+        5: 'namespace-reviewer',
+        6: 'namespace-translator',
+        7: 'namespace-contributor',
+        8: 'site-admin',
+        9: 'site-editor',
+        10: 'site-translator',
+        11: 'site-contributor',
       };
-      
+
       const role = roleMap[answer.trim()];
       if (role) {
         rl.close();
@@ -327,29 +342,34 @@ async function selectRoleInteractively() {
 // Interactive namespace selection
 async function selectNamespaceInteractively() {
   const rl = createReadlineInterface();
-  
+
   return new Promise((resolve) => {
     console.log(`\\n${colors.bold}Select a namespace:${colors.reset}`);
-    
+
     const namespaceEntries = Object.entries(NAMESPACES);
     namespaceEntries.forEach(([key, value], index) => {
       const sites = value.sites.join(', ');
-      const planned = value.plannedSites ? ` + ${value.plannedSites} planned` : '';
+      const planned = value.plannedSites
+        ? ` + ${value.plannedSites} planned`
+        : '';
       console.log(`${index + 1}. ${key} - ${value.name} (${sites}${planned})`);
     });
-    
-    rl.question(`\\nEnter namespace number (1-${namespaceEntries.length}): `, (answer) => {
-      const index = parseInt(answer.trim()) - 1;
-      if (index >= 0 && index < namespaceEntries.length) {
-        const namespace = namespaceEntries[index][0];
-        rl.close();
-        resolve(namespace);
-      } else {
-        console.log('Invalid selection. Please try again.');
-        rl.close();
-        resolve(selectNamespaceInteractively());
-      }
-    });
+
+    rl.question(
+      `\\nEnter namespace number (1-${namespaceEntries.length}): `,
+      (answer) => {
+        const index = parseInt(answer.trim()) - 1;
+        if (index >= 0 && index < namespaceEntries.length) {
+          const namespace = namespaceEntries[index][0];
+          rl.close();
+          resolve(namespace);
+        } else {
+          console.log('Invalid selection. Please try again.');
+          rl.close();
+          resolve(selectNamespaceInteractively());
+        }
+      },
+    );
   });
 }
 
@@ -357,19 +377,19 @@ async function selectNamespaceInteractively() {
 async function selectSiteInteractively() {
   const rl = createReadlineInterface();
   const sites = getAllSites();
-  
+
   return new Promise((resolve) => {
     console.log(`\\n${colors.bold}Select a site:${colors.reset}`);
-    
+
     sites.forEach((site, index) => {
       // Try to find which namespace this site belongs to
-      const namespace = Object.entries(NAMESPACES).find(([_, ns]) => 
-        ns.sites.includes(site)
+      const namespace = Object.entries(NAMESPACES).find(([_, ns]) =>
+        ns.sites.includes(site),
       );
       const nsInfo = namespace ? ` (${namespace[0]} namespace)` : '';
       console.log(`${index + 1}. ${site}${nsInfo}`);
     });
-    
+
     rl.question(`\\nEnter site number (1-${sites.length}): `, (answer) => {
       const index = parseInt(answer.trim()) - 1;
       if (index >= 0 && index < sites.length) {
@@ -391,15 +411,15 @@ function generateMockUser(role, namespace, site, options = {}) {
     id: `test-${role}-${Date.now()}`,
     roles: ['user'],
     attributes: {
-      name: `Test ${role.replace('-', ' ').replace(/\\b\\w/g, l => l.toUpperCase())}`,
+      name: `Test ${role.replace('-', ' ').replace(/\\b\\w/g, (l) => l.toUpperCase())}`,
       email: `test-${role}@ifla.org`,
       github_username: `test-${role}`,
       namespaces: {},
       sites: {},
-      languages: options.languages || ['en']
-    }
+      languages: options.languages || ['en'],
+    },
   };
-  
+
   // Apply role-specific configuration
   if (role.startsWith('system-') || role === 'ifla-admin') {
     user.roles.push(role);
@@ -409,7 +429,7 @@ function generateMockUser(role, namespace, site, options = {}) {
       user.attributes.namespaces[namespace] = roleType;
     }
     if (options.namespaces) {
-      options.namespaces.forEach(ns => {
+      options.namespaces.forEach((ns) => {
         user.attributes.namespaces[ns] = roleType;
       });
     }
@@ -419,89 +439,98 @@ function generateMockUser(role, namespace, site, options = {}) {
       user.attributes.sites[site] = roleType;
     }
     if (options.sites) {
-      options.sites.forEach(s => {
+      options.sites.forEach((s) => {
         user.attributes.sites[s] = roleType;
       });
     }
   }
-  
+
   return user;
 }
 
 // Test permissions with Cerbos
 async function testPermissions(user, namespace, site) {
   log('Testing permissions with Cerbos...');
-  
+
   try {
     // Import Cerbos client dynamically to avoid issues if not available
-    const cerbos = (await import('../apps/admin-portal/src/lib/cerbos.ts')).default;
-    
+    const cerbos = (await import('../apps/admin/src/lib/cerbos.ts')).default;
+
     const principal = {
       id: user.id,
       roles: user.roles,
-      attributes: user.attributes
+      attributes: user.attributes,
     };
 
     // Test scenarios based on role
     const testScenarios = [];
-    
+
     if (namespace) {
       testScenarios.push({
         name: `Namespace ${namespace} management`,
         resource: {
           kind: 'namespace',
           id: namespace,
-          attributes: { namespace, visibility: 'public' }
+          attributes: { namespace, visibility: 'public' },
         },
-        actions: ['view', 'edit', 'manage']
+        actions: ['view', 'edit', 'manage'],
       });
     }
-    
+
     if (site) {
-      const siteNamespace = Object.entries(NAMESPACES).find(([_, ns]) => 
-        ns.sites.includes(site)
-      )?.[0] || 'UNKNOWN';
-      
+      const siteNamespace =
+        Object.entries(NAMESPACES).find(([_, ns]) =>
+          ns.sites.includes(site),
+        )?.[0] || 'UNKNOWN';
+
       testScenarios.push({
         name: `Site ${site} management`,
         resource: {
           kind: 'site',
           id: site,
-          attributes: { siteKey: site, namespace: siteNamespace, visibility: 'public' }
+          attributes: {
+            siteKey: site,
+            namespace: siteNamespace,
+            visibility: 'public',
+          },
         },
-        actions: ['view', 'edit', 'manage', 'configure']
+        actions: ['view', 'edit', 'manage', 'configure'],
       });
     }
-    
+
     // Test user admin permissions
     testScenarios.push({
       name: 'User administration',
       resource: {
         kind: 'user_admin',
         id: 'test_admin',
-        attributes: { 
+        attributes: {
           scope: namespace ? 'namespace' : site ? 'site' : 'system',
           namespace: namespace,
-          siteKey: site
-        }
+          siteKey: site,
+        },
       },
-      actions: ['view_users', 'assign_roles']
+      actions: ['view_users', 'assign_roles'],
     });
 
-    console.log(`\n${colors.cyan}=== PERMISSION TEST RESULTS ===${colors.reset}`);
-    
+    console.log(
+      `\n${colors.cyan}=== PERMISSION TEST RESULTS ===${colors.reset}`,
+    );
+
     for (const scenario of testScenarios) {
       try {
         const result = await cerbos.checkResource({
           principal,
           resource: scenario.resource,
-          actions: scenario.actions
+          actions: scenario.actions,
         });
-        
+
         console.log(`\n${colors.bold}${scenario.name}:${colors.reset}`);
         for (const action of scenario.actions) {
           const isAllowed = result.isAllowed(action);
-          const status = isAllowed ? `${colors.green}✓ ALLOWED${colors.reset}` : `${colors.red}✗ DENIED${colors.reset}`;
+          const status = isAllowed
+            ? `${colors.green}✓ ALLOWED${colors.reset}`
+            : `${colors.red}✗ DENIED${colors.reset}`;
           console.log(`  ${action}: ${status}`);
         }
       } catch (err) {
@@ -509,7 +538,6 @@ async function testPermissions(user, namespace, site) {
         console.log(`  ${colors.red}ERROR: ${err.message}${colors.reset}`);
       }
     }
-    
   } catch (err) {
     warning(`Permission testing failed: ${err.message}`);
     warning('Continuing without permission validation...');
@@ -518,27 +546,39 @@ async function testPermissions(user, namespace, site) {
 
 // Display selected configuration
 async function displayConfiguration(role, namespace, site, user) {
-  console.log(`\\n${colors.bold}=== ROLE TESTING CONFIGURATION ===${colors.reset}`);
+  console.log(
+    `\\n${colors.bold}=== ROLE TESTING CONFIGURATION ===${colors.reset}`,
+  );
   console.log(`${colors.green}Role:${colors.reset} ${role}`);
-  console.log(`${colors.green}Description:${colors.reset} ${ROLES[role]?.description || 'Custom role'}`);
-  console.log(`${colors.green}Level:${colors.reset} ${ROLES[role]?.level || 'custom'}`);
-  console.log(`${colors.green}Scope:${colors.reset} ${ROLES[role]?.scope || 'varies'}`);
-  
+  console.log(
+    `${colors.green}Description:${colors.reset} ${ROLES[role]?.description || 'Custom role'}`,
+  );
+  console.log(
+    `${colors.green}Level:${colors.reset} ${ROLES[role]?.level || 'custom'}`,
+  );
+  console.log(
+    `${colors.green}Scope:${colors.reset} ${ROLES[role]?.scope || 'varies'}`,
+  );
+
   if (namespace) {
-    console.log(`${colors.green}Namespace:${colors.reset} ${namespace} (${NAMESPACES[namespace]?.name || 'Unknown'})`);
+    console.log(
+      `${colors.green}Namespace:${colors.reset} ${namespace} (${NAMESPACES[namespace]?.name || 'Unknown'})`,
+    );
   }
-  
+
   if (site) {
     console.log(`${colors.green}Site:${colors.reset} ${site}`);
   }
-  
+
   console.log(`\\n${colors.cyan}Generated Mock User:${colors.reset}`);
   console.log(JSON.stringify(user, null, 2));
-  
+
   // Test permissions with Cerbos
   await testPermissions(user, namespace, site);
-  
-  console.log(`\\n${colors.bold}=== STARTING TEST ENVIRONMENT ===${colors.reset}`);
+
+  console.log(
+    `\\n${colors.bold}=== STARTING TEST ENVIRONMENT ===${colors.reset}`,
+  );
 }
 
 // Helper functions for demo setup
@@ -551,7 +591,7 @@ function getSitePort(siteKey) {
     isbd: 3004,
     muldicat: 3005,
     unimarc: 3006,
-    newtest: 3008
+    newtest: 3008,
   };
   return portMap[siteKey] || 3008;
 }
@@ -561,13 +601,13 @@ function generateAuthenticationUrl(user, role, targetSite) {
   if (role.includes('site-')) {
     const sitePort = getSitePort(targetSite);
     const siteUrl = `http://localhost:${sitePort}/${targetSite}/`;
-    
+
     // Create admin portal URL that will authenticate and redirect to site management
     const mockUserParam = encodeURIComponent(JSON.stringify(user));
     const managementUrl = `http://localhost:3007/dashboard/${targetSite}`;
     return `http://localhost:3007/auth/signin?mockUser=${mockUserParam}&callbackUrl=${encodeURIComponent(managementUrl)}`;
   }
-  
+
   // For namespace or system roles, go to general dashboard
   const mockUserParam = encodeURIComponent(JSON.stringify(user));
   const dashboardUrl = 'http://localhost:3007/dashboard';
@@ -577,38 +617,70 @@ function generateAuthenticationUrl(user, role, targetSite) {
 function displayTestingInstructions(user, role, targetSite) {
   success('🎯 ROLE-BASED TESTING ENVIRONMENT READY!');
   console.log();
-  
+
   log('📋 TESTING SCENARIO:');
-  console.log(`  ${colors.green}•${colors.reset} User is pre-authenticated as: ${colors.cyan}${user.attributes.name}${colors.reset}`);
-  console.log(`  ${colors.green}•${colors.reset} Role: ${colors.yellow}${role}${colors.reset}`);
-  console.log(`  ${colors.green}•${colors.reset} Expected behavior: ${getExpectedBehavior(role, targetSite)}`);
+  console.log(
+    `  ${colors.green}•${colors.reset} User is pre-authenticated as: ${colors.cyan}${user.attributes.name}${colors.reset}`,
+  );
+  console.log(
+    `  ${colors.green}•${colors.reset} Role: ${colors.yellow}${role}${colors.reset}`,
+  );
+  console.log(
+    `  ${colors.green}•${colors.reset} Expected behavior: ${getExpectedBehavior(role, targetSite)}`,
+  );
   console.log();
-  
+
   if (role.includes('site-')) {
     log('🎯 SITE-ADMIN WORKFLOW:');
-    console.log(`  ${colors.green}1.${colors.reset} Browser should open directly to: ${colors.blue}${targetSite} management interface${colors.reset}`);
-    console.log(`  ${colors.green}2.${colors.reset} User should ${colors.yellow}skip the portal${colors.reset} and land on site-specific admin`);
-    console.log(`  ${colors.green}3.${colors.reset} Verify the "Manage Site" functionality works correctly`);
+    console.log(
+      `  ${colors.green}1.${colors.reset} Browser should open directly to: ${colors.blue}${targetSite} management interface${colors.reset}`,
+    );
+    console.log(
+      `  ${colors.green}2.${colors.reset} User should ${colors.yellow}skip the portal${colors.reset} and land on site-specific admin`,
+    );
+    console.log(
+      `  ${colors.green}3.${colors.reset} Verify the "Manage Site" functionality works correctly`,
+    );
   } else if (role.includes('namespace-')) {
     log('🎯 NAMESPACE-ADMIN WORKFLOW:');
-    console.log(`  ${colors.green}1.${colors.reset} Browser should open to: ${colors.blue}admin dashboard${colors.reset}`);
-    console.log(`  ${colors.green}2.${colors.reset} User should see sites within their namespace scope`);
-    console.log(`  ${colors.green}3.${colors.reset} Verify access to multiple sites in the namespace`);
+    console.log(
+      `  ${colors.green}1.${colors.reset} Browser should open to: ${colors.blue}admin dashboard${colors.reset}`,
+    );
+    console.log(
+      `  ${colors.green}2.${colors.reset} User should see sites within their namespace scope`,
+    );
+    console.log(
+      `  ${colors.green}3.${colors.reset} Verify access to multiple sites in the namespace`,
+    );
   } else {
     log('🎯 SYSTEM-ADMIN WORKFLOW:');
-    console.log(`  ${colors.green}1.${colors.reset} Browser should open to: ${colors.blue}full admin dashboard${colors.reset}`);
-    console.log(`  ${colors.green}2.${colors.reset} User should see all sites and namespaces`);
-    console.log(`  ${colors.green}3.${colors.reset} Verify full system management capabilities`);
+    console.log(
+      `  ${colors.green}1.${colors.reset} Browser should open to: ${colors.blue}full admin dashboard${colors.reset}`,
+    );
+    console.log(
+      `  ${colors.green}2.${colors.reset} User should see all sites and namespaces`,
+    );
+    console.log(
+      `  ${colors.green}3.${colors.reset} Verify full system management capabilities`,
+    );
   }
-  
+
   console.log();
   log('🔧 WHAT TO TEST:');
-  console.log(`  ${colors.green}•${colors.reset} Authentication flow (should be seamless)`);
-  console.log(`  ${colors.green}•${colors.reset} Landing page accuracy (correct destination)`);
-  console.log(`  ${colors.green}•${colors.reset} Permission boundaries (what user can/cannot access)`);
-  console.log(`  ${colors.green}•${colors.reset} Navigation between admin portal and sites`);
+  console.log(
+    `  ${colors.green}•${colors.reset} Authentication flow (should be seamless)`,
+  );
+  console.log(
+    `  ${colors.green}•${colors.reset} Landing page accuracy (correct destination)`,
+  );
+  console.log(
+    `  ${colors.green}•${colors.reset} Permission boundaries (what user can/cannot access)`,
+  );
+  console.log(
+    `  ${colors.green}•${colors.reset} Navigation between admin portal and sites`,
+  );
   console.log();
-  
+
   warning('Press Ctrl+C to stop the testing environment');
 }
 
@@ -633,7 +705,7 @@ async function checkUrl(url, maxRetries = 30) {
     } catch (e) {
       // URL not ready yet
     }
-    await new Promise(resolve => setTimeout(resolve, 1000));
+    await new Promise((resolve) => setTimeout(resolve, 1000));
     process.stdout.write('.');
   }
   return false;
@@ -673,16 +745,16 @@ async function openBrowser(url) {
 // Start the demo with mock authentication and intelligent routing
 async function startDemo(user, role, namespace, site) {
   log('Setting up mock authentication...');
-  
+
   // Set environment variables for mock auth
   process.env.MOCK_AUTH_USER = JSON.stringify(user);
   process.env.NODE_ENV = 'development';
   process.env.USE_MOCK_AUTH = 'true';
-  
+
   // Determine which site to start based on user role
   let targetSite = 'newtest'; // Default for testing
   let shouldStartMultipleSites = false;
-  
+
   if (role.includes('site-') && site) {
     targetSite = site;
     log(`Starting ${targetSite} site for site-specific role testing...`);
@@ -700,16 +772,16 @@ async function startDemo(user, role, namespace, site) {
     shouldStartMultipleSites = true;
     log('Starting portal for system-level role...');
   }
-  
+
   try {
     // Clean up any existing processes
     await execAsync('pnpm ports:kill').catch(() => {});
-    
+
     // Start admin portal
     log('Starting admin portal...');
-    const adminProcess = spawn('nx', ['serve', 'admin-portal'], {
+    const adminProcess = spawn('nx', ['serve', 'admin'], {
       stdio: ['ignore', 'pipe', 'pipe'],
-      env: { ...process.env }
+      env: { ...process.env },
     });
 
     let siteProcess;
@@ -720,14 +792,14 @@ async function startDemo(user, role, namespace, site) {
       log('Starting portal for multi-site management...');
       portalProcess = spawn('nx', ['start', 'portal'], {
         stdio: ['ignore', 'pipe', 'pipe'],
-        env: { ...process.env, DOCS_ENV: 'local' }
+        env: { ...process.env, DOCS_ENV: 'local' },
       });
     } else {
       // Start specific site
       log(`Starting ${targetSite} site...`);
       siteProcess = spawn('nx', ['start', targetSite], {
         stdio: ['ignore', 'pipe', 'pipe'],
-        env: { ...process.env, DOCS_ENV: 'local' }
+        env: { ...process.env, DOCS_ENV: 'local' },
       });
     }
 
@@ -762,7 +834,7 @@ async function startDemo(user, role, namespace, site) {
       log('Waiting for portal to start...');
       const portalReady = await checkUrl('http://localhost:3000');
       console.log();
-      
+
       if (!portalReady) {
         error('Portal failed to start after 30 seconds');
         cleanup();
@@ -772,7 +844,7 @@ async function startDemo(user, role, namespace, site) {
     } else {
       const sitePort = getSitePort(targetSite);
       const siteUrl = `http://localhost:${sitePort}/${targetSite}/`;
-      
+
       log(`Waiting for ${targetSite} site to start...`);
       const siteReady = await checkUrl(siteUrl);
       console.log();
@@ -786,18 +858,25 @@ async function startDemo(user, role, namespace, site) {
     }
 
     // Generate the appropriate authentication URL
-    const authUrl = generateAuthenticationUrl(user, role, shouldStartMultipleSites ? 'portal' : targetSite);
-    
+    const authUrl = generateAuthenticationUrl(
+      user,
+      role,
+      shouldStartMultipleSites ? 'portal' : targetSite,
+    );
+
     // Open browser with pre-authentication
     log('Opening browser with pre-authenticated session...');
     await openBrowser(authUrl);
 
     // Display instructions
-    displayTestingInstructions(user, role, shouldStartMultipleSites ? 'portal' : targetSite);
+    displayTestingInstructions(
+      user,
+      role,
+      shouldStartMultipleSites ? 'portal' : targetSite,
+    );
 
     // Keep processes running
     await new Promise(() => {}); // Run forever until interrupted
-    
   } catch (err) {
     error(`Failed to start demo: ${err.message}`);
     process.exit(1);
@@ -807,21 +886,23 @@ async function startDemo(user, role, namespace, site) {
 // Main function
 async function main() {
   const options = parseArgs();
-  
+
   if (options.help) {
     showHelp();
     return;
   }
-  
+
   highlight('IFLA Standards Admin Portal Role Testing Tool');
-  console.log('This tool allows you to test different user roles and permissions\\n');
-  
+  console.log(
+    'This tool allows you to test different user roles and permissions\\n',
+  );
+
   let role, namespace, site;
-  
+
   if (options.interactive) {
     // Interactive mode
     role = await selectRoleInteractively();
-    
+
     if (ROLES[role]?.level === 'namespace' || role.includes('namespace')) {
       namespace = await selectNamespaceInteractively();
     } else if (ROLES[role]?.level === 'site' || role.includes('site')) {
@@ -832,21 +913,25 @@ async function main() {
     role = options.role;
     namespace = options.namespace;
     site = options.site;
-    
+
     // Validate role
     if (!role || !ROLES[role]) {
       error(`Invalid role: ${role}`);
       error('Use --help to see available roles');
       process.exit(1);
     }
-    
+
     // Validate namespace if needed
-    if ((role.includes('namespace') || namespace) && namespace && !NAMESPACES[namespace]) {
+    if (
+      (role.includes('namespace') || namespace) &&
+      namespace &&
+      !NAMESPACES[namespace]
+    ) {
       error(`Invalid namespace: ${namespace}`);
       error('Available namespaces: ' + Object.keys(NAMESPACES).join(', '));
       process.exit(1);
     }
-    
+
     // Validate site if needed
     const allSites = getAllSites();
     if ((role.includes('site') || site) && site && !allSites.includes(site)) {
@@ -855,16 +940,16 @@ async function main() {
       process.exit(1);
     }
   }
-  
+
   // Generate mock user
   const mockUser = generateMockUser(role, namespace, site, {
     namespaces: options.namespaces,
-    sites: options.sites
+    sites: options.sites,
   });
-  
+
   // Display configuration
   await displayConfiguration(role, namespace, site, mockUser);
-  
+
   // Start demo with role-based routing
   await startDemo(mockUser, role, namespace, site);
 }

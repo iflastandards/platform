@@ -1,12 +1,12 @@
 #!/bin/bash
 
 # Admin Portal Testing Examples
-# This script demonstrates how to run different types of tests for the admin-portal
+# This script demonstrates how to run different types of tests for the admin
 
 echo "🧪 Admin Portal Testing Examples"
 echo "================================"
 
-# Change to admin-portal directory
+# Change to admin directory
 cd "$(dirname "$0")/.." || exit 1
 
 echo ""
@@ -36,54 +36,54 @@ run_test() {
 echo "🧩 UNIT TESTS"
 echo "=============="
 run_test "All Unit Tests" \
-    "nx test admin-portal" \
+    "nx test admin" \
     "Run all unit and integration tests"
 
 run_test "Unit Tests Only" \
-    "nx run admin-portal:test:unit" \
+    "nx run admin:test:unit" \
     "Run only unit tests (fast feedback)"
 
 run_test "Integration Tests Only" \
-    "nx run admin-portal:test:integration" \
+    "nx run admin:test:integration" \
     "Run only integration tests (external dependencies)"
 
 run_test "Watch Mode" \
-    "echo 'To run in watch mode: nx run admin-portal:test:watch'" \
+    "echo 'To run in watch mode: nx run admin:test:watch'" \
     "Run tests in watch mode for development"
 
 run_test "Coverage Report" \
-    "nx run admin-portal:test:coverage" \
+    "nx run admin:test:coverage" \
     "Generate test coverage report"
 
 echo ""
 echo "🌐 E2E TESTS"
 echo "============"
 run_test "Admin Portal E2E" \
-    "nx run admin-portal:e2e" \
+    "nx run admin:e2e" \
     "Run E2E tests using newtest as target site"
 
 run_test "E2E with UI" \
-    "echo 'To run with UI: playwright test --project=admin-portal --ui'" \
+    "echo 'To run with UI: playwright test --project=admin --ui'" \
     "Run E2E tests in interactive mode"
 
 run_test "E2E Debug Mode" \
-    "echo 'To debug: playwright test --project=admin-portal --debug'" \
+    "echo 'To debug: playwright test --project=admin --debug'" \
     "Run E2E tests in debug mode"
 
 echo ""
 echo "🔧 DEVELOPMENT WORKFLOW"
 echo "======================="
 run_test "Type Check" \
-    "nx run admin-portal:typecheck" \
+    "nx run admin:typecheck" \
     "Check TypeScript types"
 
 run_test "Lint" \
-    "nx run admin-portal:lint" \
+    "nx run admin:lint" \
     "Check code quality with ESLint"
 
 run_test "Build" \
-    "nx run admin-portal:build" \
-    "Build admin-portal for production"
+    "nx run admin:build" \
+    "Build admin for production"
 
 echo ""
 echo "🎯 TESTING TARGETS"
@@ -91,9 +91,9 @@ echo "=================="
 echo "newtest site (localhost:3008):"
 echo "  - Full Docusaurus site with real content"
 echo "  - Safe testing environment"
-echo "  - Integrated with admin-portal workflow"
+echo "  - Integrated with admin workflow"
 echo ""
-echo "admin-portal (localhost:3007):"
+echo "admin (localhost:3007):"
 echo "  - Next.js application with NextAuth"
 echo "  - Site management interface"
 echo "  - Direct integration with Docusaurus sites"
@@ -102,9 +102,9 @@ echo ""
 echo "🚀 QUICK START"
 echo "=============="
 echo "1. Start newtest site:     nx start newtest"
-echo "2. Start admin-portal:     nx serve admin-portal"
-echo "3. Run unit tests:         nx test admin-portal"
-echo "4. Run E2E tests:          playwright test --project=admin-portal"
+echo "2. Start admin:     nx serve admin"
+echo "3. Run unit tests:         nx test admin"
+echo "4. Run E2E tests:          playwright test --project=admin"
 echo ""
 
 echo "📖 TESTING PATTERNS"
@@ -121,7 +121,7 @@ echo "  - Authentication and authorization flows"
 echo ""
 echo "E2E Tests:"
 echo "  - Full user workflows across both applications"
-echo "  - Cross-site navigation (newtest ↔ admin-portal)"
+echo "  - Cross-site navigation (newtest ↔ admin)"
 echo "  - Real browser interactions and validations"
 echo ""
 

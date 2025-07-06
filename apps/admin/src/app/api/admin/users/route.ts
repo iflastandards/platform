@@ -1,4 +1,4 @@
-// apps/admin-portal/src/app/api/admin/users/route.ts
+// apps/admin/src/app/api/admin/users/route.ts
 import { NextResponse } from 'next/server';
 import { auth } from '@/app/lib/auth';
 import cerbos from '@/lib/cerbos';

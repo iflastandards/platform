@@ -1,4 +1,4 @@
-// apps/admin-portal/src/lib/roles.ts
+// apps/admin/src/lib/roles.ts
 
 export interface RoleAssignment {
   userId: string;

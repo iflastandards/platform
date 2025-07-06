@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # Demo script for admin portal integration
-# Starts admin-portal and newtest site, then opens both in browser
+# Starts admin and newtest site, then opens both in browser
 
 set -e  # Exit on any error
 
@@ -30,7 +30,7 @@ print_error() {
 }
 
 # Check if we're in the right directory
-if [ ! -f "package.json" ] || [ ! -d "apps/admin-portal" ]; then
+if [ ! -f "package.json" ] || [ ! -d "apps/admin" ]; then
     print_error "Please run this script from the workspace root directory"
     exit 1
 fi
@@ -50,7 +50,7 @@ echo
 
 # Start admin portal in background
 print_status "Starting admin portal..."
-nx serve admin-portal > /dev/null 2>&1 &
+nx serve admin > /dev/null 2>&1 &
 ADMIN_PID=$!
 
 # Start newtest site in background  
