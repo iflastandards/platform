@@ -63,7 +63,7 @@ This PRD outlines the comprehensive redesign of the IFLA Standards Development P
 ```
 ifla-standards-platform/
 ├── apps/                          # Next.js applications
-│   ├── admin-portal/             # Administrative interface
+│   ├── admin/                     # Administrative interface
 │   │   ├── src/
 │   │   │   ├── app/              # App Router structure
 │   │   │   ├── components/       # UI components

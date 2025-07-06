@@ -133,12 +133,12 @@
 
 
 
-| **Task ID** | **Task**                                       | **Who** | **AI Prompt / Manual Note**                     |
-| ----------- | ---------------------------------------------- | ------- | ----------------------------------------------- |
-| **3-1**     | Rename Next.js apps/admin-portal → apps/portal | AI      | nx move apps/admin-portal apps/portal           |
-| **3-2**     | Extract shared UI to packages/ui               | AI      | Move Navbar/Auth components; add barrel export. |
-| **3-3**     | Add Docusaurus → Next.js redirects             | Human   | Configure Vercel rewrites; verify locally.      |
-| **3-4**     | Update README & architecture docs              | AI      | Include updated diagram.                        |
+| **Task ID** | **Task**                                      | **Who** | **AI Prompt / Manual Note**                     |
+| ----------- | --------------------------------------------- | ------- | ----------------------------------------------- |
+| **3-1**     | Rename Next.js apps/admin-portal → apps/admin | AI      | nx move apps/admin-portal apps/admin            |
+| **3-2**     | Extract shared UI to packages/ui              | AI      | Move Navbar/Auth components; add barrel export. |
+| **3-3**     | Add Docusaurus → Next.js redirects            | Human   | Configure Vercel rewrites; verify locally.      |
+| **3-4**     | Update README & architecture docs             | AI      | Include updated diagram.                        |
 
 
 
