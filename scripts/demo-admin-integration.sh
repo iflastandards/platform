@@ -44,7 +44,7 @@ export DOCS_ENV=local
 
 print_status "Starting admin portal and newtest site..."
 print_warning "This will start two development servers:"
-print_warning "  • Admin Portal: http://localhost:3007"
+print_warning "  • Admin Portal: http://localhost:3007/admin"
 print_warning "  • newtest Site: http://localhost:3008/newtest/"
 echo
 
@@ -90,7 +90,7 @@ if [ "$ADMIN_READY" = false ]; then
     exit 1
 fi
 
-print_success "Admin portal is ready at http://localhost:3007"
+print_success "Admin portal is ready at http://localhost:3007/admin"
 
 # Wait for newtest site (max 30 seconds)
 NEWTEST_READY=false
@@ -118,38 +118,38 @@ if command -v open > /dev/null 2>&1; then
     # macOS - try Chrome first, fallback to default
     if open -a "Google Chrome" "http://localhost:3008/newtest/" 2>/dev/null; then
         sleep 2
-        open -a "Google Chrome" "http://localhost:3007" 2>/dev/null || open "http://localhost:3007"
+        open -a "Google Chrome" "http://localhost:3007/admin" 2>/dev/null || open "http://localhost:3007/admin"
     else
         print_warning "Chrome not found, using default browser"
         open "http://localhost:3008/newtest/"
         sleep 2
-        open "http://localhost:3007"
+        open "http://localhost:3007/admin"
     fi
 elif command -v google-chrome > /dev/null 2>&1; then
     # Linux - try Chrome variants
     google-chrome "http://localhost:3008/newtest/" &
     sleep 2
-    google-chrome "http://localhost:3007" &
+    google-chrome "http://localhost:3007/admin" &
 elif command -v chromium-browser > /dev/null 2>&1; then
     # Linux - Chromium
     chromium-browser "http://localhost:3008/newtest/" &
     sleep 2
-    chromium-browser "http://localhost:3007" &
+    chromium-browser "http://localhost:3007/admin" &
 elif command -v start > /dev/null 2>&1; then
     # Windows - try Chrome first
     if start chrome "http://localhost:3008/newtest/" 2>/dev/null; then
         sleep 2
-        start chrome "http://localhost:3007" 2>/dev/null || start "http://localhost:3007"
+        start chrome "http://localhost:3007/admin" 2>/dev/null || start "http://localhost:3007/admin"
     else
         print_warning "Chrome not found, using default browser"
         start "http://localhost:3008/newtest/"
         sleep 2
-        start "http://localhost:3007"
+        start "http://localhost:3007/admin"
     fi
 else
     print_warning "Could not detect browser command. Please manually open:"
     print_warning "  • newtest site: http://localhost:3008/newtest/"
-    print_warning "  • Admin portal: http://localhost:3007"
+    print_warning "  • Admin portal: http://localhost:3007/admin"
 fi
 
 print_success "Demo started successfully!"

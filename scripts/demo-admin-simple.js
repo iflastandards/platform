@@ -94,7 +94,7 @@ async function main() {
   }
 
   warning('This will start two development servers:');
-  warning('  • Admin Portal: http://localhost:3007');
+  warning('  • Admin Portal: http://localhost:3007/admin');
   warning('  • newtest Site: http://localhost:3008/newtest/');
   console.log();
 
@@ -133,7 +133,7 @@ async function main() {
     cleanup();
     return;
   }
-  success('Admin portal is ready at http://localhost:3007');
+  success('Admin portal is ready at http://localhost:3007/admin');
 
   // Wait for newtest site to be ready
   log('Waiting for newtest site to start...');
@@ -151,7 +151,7 @@ async function main() {
   log('Opening browsers...');
   await openBrowser('http://localhost:3008/newtest/');
   await new Promise((resolve) => setTimeout(resolve, 2000)); // Wait 2 seconds
-  await openBrowser('http://localhost:3007');
+  await openBrowser('http://localhost:3007/admin');
 
   success('Demo started successfully!');
   console.log();
