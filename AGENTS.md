@@ -4,8 +4,8 @@ Essential guidance for coding agents working in this IFLA Standards monorepo.
 
 ## Commands
 - **Package manager**: Always use `pnpm` (never npm/yarn)
-- **Build**: `nx build {site}` (e.g., `nx build portal`, `nx build admin-portal`)
-- **Dev server**: `nx start {site}` or `nx dev admin-portal` (Next.js)
+- **Build**: `nx build {site}` (e.g., `nx build portal`, `nx build admin`)
+- **Dev server**: `nx start {site}` or `nx dev admin` (Next.js)
 - **Single test**: `nx test {project}` or `nx test --testNamePattern="test name"`
 - **Test all**: `pnpm test` (nx affected parallel), `pnpm test:all` (all projects)
 - **Type check**: `pnpm typecheck` (nx affected parallel)

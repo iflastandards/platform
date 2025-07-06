@@ -75,27 +75,27 @@
       },
       "dependsOn": ["build-all"]
     },
-    "e2e:admin-portal": {
+    "e2e:admin": {
       "executor": "nx:run-commands",
       "options": {
-        "command": "playwright test --project=admin-portal"
+        "command": "playwright test --project=admin"
       },
-      "dependsOn": ["admin-portal:build"],
+      "dependsOn": ["admin:build"],
       "inputs": [
         "default",
-        "{projectRoot}/e2e/admin-portal/**/*",
+        "{projectRoot}/e2e/admin/**/*",
         "{projectRoot}/playwright.config.ts"
       ]
     },
-    "e2e:admin-portal:fail-fast": {
+    "e2e:admin:fail-fast": {
       "executor": "nx:run-commands",
       "options": {
-        "command": "FAIL_FAST=true playwright test --project=admin-portal --max-failures=1"
+        "command": "FAIL_FAST=true playwright test --project=admin --max-failures=1"
       },
-      "dependsOn": ["admin-portal:build"],
+      "dependsOn": ["admin:build"],
       "inputs": [
         "default",
-        "{projectRoot}/e2e/admin-portal/**/*",
+        "{projectRoot}/e2e/admin/**/*",
         "{projectRoot}/playwright.config.ts"
       ]
     },
@@ -136,9 +136,7 @@
     "build-all": {
       "executor": "nx:run-commands",
       "options": {
-        "commands": [
-          "nx run-many --target=build --all --parallel=1"
-        ]
+        "commands": ["nx run-many --target=build --all --parallel=1"]
       },
       "outputs": [
         "{projectRoot}/portal/build",
@@ -164,7 +162,7 @@
       }
     },
     "serve-all": {
-      "executor": "nx:run-commands", 
+      "executor": "nx:run-commands",
       "options": {
         "command": "pnpm serve:all"
       }
@@ -216,7 +214,7 @@
       "options": {
         "commands": [
           "nx affected --target=typecheck --parallel=3",
-          "nx affected --target=lint --parallel=3", 
+          "nx affected --target=lint --parallel=3",
           "nx affected --target=test --parallel=3",
           "nx affected --target=build --parallel=3"
         ],
