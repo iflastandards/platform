@@ -952,14 +952,33 @@ export const ADMIN_PORTAL_CONFIG: Record<Environment, AdminPortalConfig> = {
 ### Epic 8: Testing & Documentation 🧪 (Week 8-9)
 
 #### Tasks:
-- [ ] **8.1** Write unit tests for new components
-- [ ] **8.2** Write integration tests for API routes
-- [ ] **8.3** Write E2E tests for dashboard workflows
-- [ ] **8.4** Update existing tests for new architecture
-- [ ] **8.5** Test role-based access controls
-- [ ] **8.6** Test data conversion pipelines
-- [ ] **8.7** Create user documentation
-- [ ] **8.8** Create developer documentation
+
+- [ ] **8.1 Write unit tests for new components**
+    - **`ProtectedRoute.tsx`**: Test that it correctly handles loading states, redirects unauthenticated users, and enforces role-based access.
+    - **`DashboardLayout.tsx`**: Test that it renders correctly and displays the user's name.
+    - **MUI Components**: Write unit tests for any custom MUI components you create.
+
+- [ ] **8.2 Write integration tests for API routes**
+    - Use a library like `supertest` or `node-mocks-http` to write integration tests for your API routes in `apps/admin`.
+    - Test all possible success and error cases, including authentication, authorization, and input validation.
+    - **Example:** For the `/api/scaffold` route, test that it correctly creates a new site, handles errors, and returns the correct response.
+
+- [ ] **8.3 Write E2E tests for dashboard workflows**
+    - Adapt the existing E2E tests in `e2e/admin` to test the new dashboard workflows in the `portal` app.
+    - Use a tool like Playwright to simulate user interactions and test the entire workflow from the UI to the API.
+    - **Example:** For the "Site Administrator - New Site Creation" user story, write an E2E test that fills out the new site form, submits it, and verifies that the new site is created correctly.
+
+- [ ] **8.4 Update existing tests for new architecture**
+    - Review the existing tests in `packages/theme` and update them to reflect any changes in the new architecture.
+
+- [ ] **8.5 Test role-based access controls**
+    - Write a combination of unit, integration, and E2E tests to ensure that your role-based access controls are working correctly.
+
+- [ ] **8.6 Test data conversion pipelines**
+    - Expand the existing tests for your data conversion scripts to cover the new API-driven workflow.
+
+- [ ] **8.7 Create user documentation**
+- [ ] **8.8 Create developer documentation**
 
 ### Epic 9: Migration & Deployment 🚀 (Week 9-10)
 
