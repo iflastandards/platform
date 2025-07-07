@@ -3,7 +3,6 @@ import { JWT } from 'next-auth/jwt';
 import GitHub from 'next-auth/providers/github';
 import Credentials from 'next-auth/providers/credentials';
 import { createUser } from './mock-auth';
-import type { NextAuthResult } from 'next-auth';
 
 const authConfig: NextAuthConfig = {
   debug: process.env.NODE_ENV === 'development',
@@ -190,6 +189,14 @@ const authConfig: NextAuthConfig = {
   },
 };
 
-const nextAuthResult = NextAuth(authConfig) as NextAuthResult;
+const nextAuthResult = NextAuth(authConfig);
 
-export const { handlers, auth, signIn, signOut } = nextAuthResult;
+// Export with explicit type annotations to avoid TypeScript inference issues in Vercel
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export const handlers: any = nextAuthResult.handlers;
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export const auth: any = nextAuthResult.auth;
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export const signIn: any = nextAuthResult.signIn;
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export const signOut: any = nextAuthResult.signOut;

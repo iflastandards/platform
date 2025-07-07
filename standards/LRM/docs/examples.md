@@ -27,7 +27,7 @@ While detailed examples are being prepared, here are some key concepts:
 - **Manifestation**: The physical embodiment of an expression
 - **Item**: A single exemplar of a manifestation
 
-For more information about the LRM model structure, see the [Elements](/elements) page.
+For more information about the LRM model structure, see the [Elements](/docs/elements) page.
 
 ---
 

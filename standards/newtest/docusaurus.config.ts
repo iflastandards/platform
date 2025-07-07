@@ -61,7 +61,7 @@ const config: Config = {
       '@easyops-cn/docusaurus-search-local',
       {
         hashed: true,
-        indexBlog: true,
+        indexBlog: false,
       },
     ],
 
@@ -84,17 +84,6 @@ const config: Config = {
           },
           lastVersion: 'current',
           onlyIncludeVersions: ['current'],
-        },
-        blog: {
-          showReadingTime: true,
-          feedOptions: {
-            type: ['rss', 'atom'],
-            xslt: true,
-          },
-          editUrl: 'https://github.com/iflastandards/standards-dev/tree/main/standards/newtest/',
-          onInlineTags: 'warn',
-          onInlineAuthors: 'warn',
-          onUntruncatedBlogPosts: 'warn',
         },
         theme: {
           customCss: './src/css/custom.css',
@@ -129,7 +118,6 @@ const config: Config = {
           position: 'left',
           label: 'Introduction',
         },
-        {to: '/blog', label: 'Blog', position: 'right'},
         {
           type: 'docsVersionDropdown',
           position: 'right',

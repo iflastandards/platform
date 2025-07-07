@@ -26,7 +26,7 @@ function HomepageHeader() {
           </Link>
           <Link
             className="button button--outline button--secondary button--lg"
-            to="/docs/elements">
+            to="/docs/intro">
             Browse Dictionary Terms
           </Link>
         </div>
@@ -172,7 +172,7 @@ function CallToAction() {
               </Link>
               <Link
                 className="button button--secondary button--lg"
-                to="/docs/elements">
+                to="/docs/intro">
                 Browse Dictionary Terms
               </Link>
             </div>
