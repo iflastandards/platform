@@ -113,7 +113,7 @@ jobs:
       - name: Build portal
         run: pnpm exec docusaurus build portal
         env:
-          BASE_URL: /standards-dev/
+          BASE_URL: /platform/
           NODE_ENV: production
           DOCS_ENV: development
           
@@ -188,7 +188,7 @@ jobs:
         if: steps.should-build.outputs.build == 'true'
         run: pnpm exec docusaurus build standards/${{ matrix.standard }}
         env:
-          BASE_URL: /standards-dev/${{ matrix.standard }}/
+          BASE_URL: /platform/${{ matrix.standard }}/
           NODE_ENV: production
           DOCS_ENV: development
           

@@ -1,415 +1,357 @@
-# Dual CI Architecture Documentation
+# CI/CD Architecture Documentation
 
 ## Overview
 
-This project uses a **Dual CI Architecture** to separate development testing from client preview validation. This ensures comprehensive testing during development while maintaining fast, reliable client previews.
+This project uses a streamlined CI/CD architecture with clear environment separation. The workflow emphasizes local development and testing, direct deployment to preview environments, and controlled production releases through pull requests.
 
 ## Architecture Diagram
 
 ```
 ┌─────────────────────────────────────────────────────────────────────────────┐
-│                            DUAL CI ARCHITECTURE                             │
+│                         SIMPLIFIED CI/CD ARCHITECTURE                       │
 ├─────────────────────────────────────────────────────────────────────────────┤
 │                                                                             │
-│  Development Fork (jonphipps/standards-dev)                                │
+│  Local Development Environment                                              │
 │  ┌─────────────────────────────────────────────────────────────────────┐   │
-│  │ Development CI (Nx Cloud)                                           │   │
-│  │ • File: .github/workflows/nx-optimized-ci.yml                      │   │
-│  │ • Nx Cloud Workspace: 6857fccbb755d4191ce6fbe4                     │   │
-│  │ • Triggers: Push to fork/dev, fork/main                            │   │
-│  │ • Purpose: Comprehensive development testing                       │   │
+│  │ Local Testing & Development                                         │   │
+│  │ • All development happens locally                                  │   │
+│  │ • Comprehensive testing before pushing                             │   │
 │  │                                                                     │   │
-│  │ ✅ Full unit tests (475+ tests)                                     │   │
-│  │ ✅ Integration tests (external services)                            │   │
-│  │ ✅ TypeScript compilation                                           │   │
-│  │ ✅ ESLint validation                                                │   │
-│  │ ✅ Theme package builds                                             │   │
-│  │ ✅ Nx caching & remote execution                                    │   │
-│  │ ✅ Affected project optimization                                    │   │
+│  │ ✅ Unit tests (475+ tests with Vitest)                             │   │
+│  │ ✅ Integration tests (external services)                           │   │
+│  │ ✅ E2E tests (Playwright)                                          │   │
+│  │ ✅ TypeScript compilation                                          │   │
+│  │ ✅ ESLint validation                                               │   │
+│  │ ✅ Build validation                                                │   │
+│  │ ✅ Git hooks (pre-commit, pre-push)                               │   │
 │  └─────────────────────────────────────────────────────────────────────┘   │
 │                                      │                                      │
-│                                      │ git push-dev                         │
+│                                      │ git push origin preview              │
 │                                      ▼                                      │
 │                                                                             │
-│  Preview Repo (iflastandards/standards-dev)                               │
+│  Preview Environment (iflastandards/platform:preview)                      │
 │  ┌─────────────────────────────────────────────────────────────────────┐   │
-│  │ Preview CI (Deployment Validation)                                  │   │
-│  │ • File: .github/workflows/preview-ci.yml                           │   │
-│  │ • Triggers: Push to origin/dev                                     │   │
-│  │ • Purpose: Fast deployment validation                              │   │
+│  │ Preview Deployment & Validation                                     │   │
+│  │ • Branch: preview                                                   │   │
+│  │ • Purpose: Client review and integration testing                   │   │
+│  │ • CI/CD: Automated deployment pipeline                             │   │
 │  │                                                                     │   │
-│  │ ✅ TypeScript compilation check                                     │   │
-│  │ ✅ Theme package build                                              │   │
-│  │ ✅ Basic configuration validation                                   │   │
-│  │ ✅ Representative site build (portal)                               │   │
-│  │ ✅ Deployment readiness verification                                │   │
+│  │ ✅ Build all sites                                                 │   │
+│  │ ✅ Deploy to preview environment                                   │   │
+│  │ ✅ Integration validation                                           │   │
+│  │ ✅ Cross-site link checking                                        │   │
+│  │ ✅ Client accessibility                                            │   │
 │  └─────────────────────────────────────────────────────────────────────┘   │
 │                                      │                                      │
-│                                      │ git push-preview                     │
+│                                      │ Pull Request                         │
 │                                      ▼                                      │
 │                                                                             │
-│  Client Preview Deployment                                                 │
-│  • GitHub Pages deployment                                                 │
-│  • Environment: preview                                                    │
-│  • URL: https://iflastandards.github.io/standards-dev/                    │
+│  Production Environment (iflastandards/platform:main)                      │
+│  ┌─────────────────────────────────────────────────────────────────────┐   │
+│  │ Production Deployment                                               │   │
+│  │ • Branch: main (protected)                                         │   │
+│  │ • Purpose: Live production site                                    │   │
+│  │ • Deployment: Via approved pull requests only                      │   │
+│  │                                                                     │   │
+│  │ ✅ Full production build                                           │   │
+│  │ ✅ Security validation                                             │   │
+│  │ ✅ Performance optimization                                        │   │
+│  │ ✅ CDN deployment                                                  │   │
+│  │ ✅ Monitoring & alerting                                           │   │
+│  └─────────────────────────────────────────────────────────────────────┘   │
 │                                                                             │
 └─────────────────────────────────────────────────────────────────────────────┘
 ```
 
 ## Repository Configuration
 
-### Remote Setup
+### Repository: iflastandards/platform
 ```bash
-# View current remotes
+# Single remote for all environments
 git remote -v
-
-# Expected output:
-# fork     git@github.com:jonphipps/standards-dev.git (fetch)
-# fork     git@github.com:jonphipps/standards-dev.git (push)
-# origin   git@github.com:iflastandards/standards-dev.git (fetch)
-# origin   git@github.com:iflastandards/standards-dev.git (push)
+# origin   git@github.com:iflastandards/platform.git (fetch)
+# origin   git@github.com:iflastandards/platform.git (push)
 ```
 
-### Branch Tracking
-```bash
-# Check branch tracking
-git branch -vv
-
-# dev should track fork/dev:
-# * dev    2b4bea87 [fork/dev] latest commit message
-```
-
-### Git Aliases (Configured)
-```bash
-# Daily development pushes
-git push-dev        # Alias for: git push fork dev
-
-# Client preview updates  
-git push-preview    # Alias for: git push origin dev
-```
+### Branch Structure
+- **feature branches**: All development work
+- **preview**: Integration and client review (protected)
+- **main**: Production deployment (protected, requires PR)
 
 ## Workflow Documentation
 
-### 1. Daily Development Workflow
+### 1. Local Development Workflow
 
-**Purpose**: Comprehensive testing and development iteration
+**Purpose**: Develop and thoroughly test all changes locally before deployment
 
 ```bash
-# 1. Make your changes
+# 1. Create feature branch
+git checkout -b feature/your-feature-name
+
+# 2. Make your changes
 # ... edit files ...
 
-# 2. Test locally (optional but recommended)
-pnpm test:pre-commit
+# 3. Test locally (automated via git hooks)
+pnpm test:pre-commit    # Runs on git commit
+pnpm test:pre-push      # Runs on git push
 
-# 3. Commit changes
-git add .
-git commit -m "your changes"
-
-# 4. Push to development fork (triggers comprehensive CI)
-git push-dev
+# 4. Manual testing (optional but recommended)
+pnpm test:comprehensive  # Full test suite
+nx affected --target=test --parallel=3  # Test only changed projects
 ```
 
-**What happens:**
-- Triggers `Development CI (Nx Cloud)` on your fork
-- Runs 475+ unit tests with Vitest
-- Runs integration tests for external services
-- TypeScript compilation validation
-- ESLint code quality checks
-- Theme package builds with tsup
-- Nx caching provides ~70% faster subsequent runs
-- Cost: Runs on your personal GitHub account
+**Local Testing Commands:**
+- `pnpm typecheck` - TypeScript validation
+- `pnpm lint` - ESLint code quality
+- `pnpm test` - Unit and integration tests
+- `pnpm test:e2e` - End-to-end browser tests
+- `nx build portal` - Build specific site
+- `nx start portal` - Start dev server
 
-### 2. Client Preview Workflow
+### 2. Preview Deployment Workflow
 
-**Purpose**: Update client-facing preview site after development testing passes
+**Purpose**: Deploy to preview environment for integration testing and client review
 
 ```bash
-# 1. Ensure development CI passed on fork
-# Check: https://github.com/jonphipps/standards-dev/actions
+# 1. Push to preview branch (after local testing)
+git push origin feature/your-feature-name:preview
 
-# 2. Update preview site for client review
-git push-preview
+# Alternative: Create PR to preview branch
+git push origin feature/your-feature-name
+# Then create PR on GitHub to merge into preview branch
 ```
 
 **What happens:**
-- Triggers `Preview CI (Deployment Validation)` on preview repo
-- Lightweight validation focused on deployment readiness
-- TypeScript compilation check
-- Basic configuration validation  
-- Representative build test (portal site)
-- GitHub Pages deployment to preview environment
-- Cost: Runs on organization account (minimal usage)
+- Triggers automated CI/CD pipeline
+- Builds all sites and the admin portal
+- Deploys to preview environment
+- Runs integration tests
+- Validates cross-site functionality
 
-**Client Access:**
-- Preview URL: https://iflastandards.github.io/standards-dev/
+**Preview Access:**
+- URL: Configured preview URL
 - Environment: `DOCS_ENV=preview`
+- Purpose: Client review, integration testing
 
-### 3. Sync Workflow
+### 3. Production Deployment Workflow
 
-**Purpose**: Keep your fork up-to-date with any changes in preview repo
+**Purpose**: Deploy thoroughly tested changes to production
 
 ```bash
-# Periodically sync your fork with preview repo
-git fetch origin
-git checkout dev
-git merge origin/dev  # or git rebase origin/dev
-git push fork dev
+# 1. Ensure preview deployment is stable and approved
+
+# 2. Create pull request from preview to main
+# This MUST be done via GitHub UI or API
+
+# 3. PR Review process:
+# - Code review by team members
+# - Automated CI checks must pass
+# - Client approval confirmation
+# - Security and performance validation
+
+# 4. Merge PR (authorized maintainers only)
+# Production deployment happens automatically
 ```
 
-## CI Configuration Details
+**Production safeguards:**
+- Protected branch rules on main
+- Required PR reviews
+- CI/CD validation must pass
+- No direct pushes allowed
 
-### Development CI (nx-optimized-ci.yml)
+## Environment Configuration
 
-**Location**: `.github/workflows/nx-optimized-ci.yml`  
-**Runs on**: Development fork (jonphipps/standards-dev)  
-**Nx Cloud Workspace**: `6857fccbb755d4191ce6fbe4`
-
-**Triggers:**
+### Local Environment
 ```yaml
-on:
-  push:
-    branches: [main, dev]
-  pull_request:
-    branches: [main, dev]
-  workflow_dispatch:
+DOCS_ENV: local
+Ports: 3000-3008 (Docusaurus sites), 4200 (Admin)
+Purpose: Development and testing
 ```
 
-**Key Features:**
-- Nx Cloud integration with remote caching
-- Affected project detection
-- Parallel execution (up to 3 concurrent processes)
-- Environment variables for external service testing
-- Skip cache option via workflow dispatch
-
-**Environment Variables:**
-```yaml
-GOOGLE_SHEETS_API_KEY: ${{ secrets.GOOGLE_SHEETS_API_KEY }}
-GSHEETS_SA_KEY: ${{ secrets.GSHEETS_SA_KEY }}
-GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-```
-
-### Preview CI (preview-ci.yml)
-
-**Location**: `.github/workflows/preview-ci.yml`  
-**Runs on**: Preview repo (iflastandards/standards-dev)
-
-**Triggers:**
-```yaml
-on:
-  push:
-    branches: [dev]
-  pull_request:
-    branches: [dev]
-  workflow_dispatch:
-```
-
-**Key Features:**
-- Fast deployment validation (< 3 minutes)
-- No external service dependencies
-- Preview environment configuration
-- Representative build testing
-
-**Environment Variables:**
+### Preview Environment
 ```yaml
 DOCS_ENV: preview
-SITE_TITLE: IFLA Standards Portal
-SITE_TAGLINE: International Federation of Library Associations and Institutions
+Branch: preview
+URL: [Preview deployment URL]
+Purpose: Integration testing, client review
 ```
 
-## Nx Cloud Configuration
+### Production Environment
+```yaml
+DOCS_ENV: production
+Branch: main
+URL: https://www.iflastandards.info
+Purpose: Live public site
+```
 
-### Workspace Settings
-- **Workspace ID**: `6857fccbb755d4191ce6fbe4`
-- **Location**: `nx.json`
-- **Connected to**: Development fork (jonphipps/standards-dev)
+## Testing Strategy
 
-### Features Used
-- Remote caching for builds and tests
-- Distributed task execution
-- Affected project detection
-- Build insights and analytics
+### Pre-commit Tests (Automatic)
+**File**: `.husky/pre-commit`
+- TypeScript checking
+- ESLint validation
+- Unit tests
+- Configuration validation
+- **Target**: < 60 seconds
 
-### Access
-- Dashboard: https://cloud.nx.app/
-- Login with GitHub account connected to development fork
+### Pre-push Tests (Automatic)
+**File**: `.husky/pre-push-optimized`
+- Branch-aware testing
+- Protected branches: Full validation
+- Feature branches: Affected testing only
+- **Target**: < 180 seconds
 
-## Git Hook Integration
+### Comprehensive Testing
+```bash
+# Full local test suite
+pnpm test:comprehensive
 
-### Pre-commit Hook
-**File**: `.husky/pre-commit`  
-**Purpose**: Fast feedback before commits
+# Includes:
+# - All unit tests (475+)
+# - Integration tests
+# - E2E browser tests
+# - Build validation
+# - Link checking
+```
 
-**Runs:**
-- TypeScript type checking: `pnpm typecheck`
-- ESLint validation: `pnpm lint --quiet`
-- Unit tests: `pnpm test --run`
-- Configuration validation: `node scripts/test-site-builds.js --skip-build`
+## CI/CD Pipeline Details
 
-### Pre-push Hook  
-**File**: `.husky/pre-push-optimized`  
-**Purpose**: Comprehensive validation before sharing changes
+### Preview Pipeline
+**Trigger**: Push to preview branch
+**Steps**:
+1. Checkout code
+2. Install dependencies
+3. Run linting and type checking
+4. Build theme package
+5. Build all Docusaurus sites
+6. Build admin portal
+7. Run integration tests
+8. Deploy to preview environment
+9. Post-deployment validation
 
-**Branch-aware behavior:**
-- **Protected branches (main/dev)**: Full regression testing
-- **Feature branches**: Affected testing only
+### Production Pipeline
+**Trigger**: Merge PR to main branch
+**Steps**:
+1. All preview pipeline steps
+2. Security scanning
+3. Performance optimization
+4. Production build with minification
+5. Deploy to CDN
+6. Cache invalidation
+7. Monitoring setup
+8. Notification of deployment
 
-## Testing Strategy Integration
+## Nx Workspace Optimization
 
-The dual CI architecture supports the project's 5-group testing strategy:
+### Commands
+```bash
+# Build affected projects only
+nx affected --target=build
 
-### Group 1: Selective Tests (Development CI)
-- Individual unit tests: `nx test portal`, `nx test @ifla/theme`
-- Affected tests: `pnpm test` (Nx-optimized)
-- Browser-specific E2E: `pnpm test:e2e:chromium`
+# Test affected projects
+nx affected --target=test
 
-### Group 5: CI Tests (Preview CI)
-- Connectivity tests: `pnpm test:ci:connectivity`
-- Configuration validation: `pnpm test:ci:config`
-- Deployment builds: `nx affected --target=build`
+# Build specific site
+nx build portal
+
+# Serve specific site
+nx serve isbdm
+
+# Run many in parallel
+nx run-many --target=test --all --parallel=3
+```
+
+### Benefits
+- Smart caching reduces build times
+- Affected detection minimizes unnecessary work
+- Parallel execution speeds up CI/CD
+- Consistent tooling across all projects
 
 ## Troubleshooting
 
 ### Common Issues
 
-#### 1. Development CI Not Triggering
-**Problem**: Push to fork doesn't trigger Nx Cloud CI
-
-**Check:**
+#### 1. Local Tests Failing
 ```bash
-# Verify you're pushing to the right remote
-git remote -v
-git branch -vv
+# Clear Nx cache
+nx reset
 
-# Should show fork as the remote for dev branch
+# Reinstall dependencies
+pnpm install
+
+# Run specific test
+nx test @ifla/theme --watch
 ```
 
-**Solution:**
+#### 2. Preview Deployment Issues
 ```bash
-# Ensure proper branch tracking
-git checkout dev
-git branch --set-upstream-to=fork/dev dev
-git push fork dev
+# Check git status
+git status
+
+# Ensure on correct branch
+git branch -a
+
+# Force push if needed (carefully)
+git push origin preview --force-with-lease
 ```
 
-#### 2. Preview CI Not Running
-**Problem**: Push to preview repo doesn't trigger deployment validation
-
-**Check:**
+#### 3. Build Failures
 ```bash
-# Verify preview repo has the workflow
-git ls-remote origin | grep refs/heads
+# Check for TypeScript errors
+pnpm typecheck
+
+# Validate configurations
+node scripts/test-site-builds.js --site all --env preview
+
+# Build single site for debugging
+nx build portal --verbose
 ```
 
-**Solution:**
-```bash
-# Ensure workflows are on main branch of preview repo
-git fetch origin
-git log origin/main --oneline -3
-# Should show dual CI commit
-```
+## Best Practices
 
-#### 3. Nx Cloud Authentication Issues
-**Problem**: Nx Cloud workspace not accessible
+### Development
+1. **Always test locally** before pushing
+2. **Use feature branches** for all work
+3. **Write descriptive commit messages**
+4. **Keep PRs focused** on single features/fixes
 
-**Solution:**
-1. Visit https://cloud.nx.app/
-2. Sign in with GitHub account
-3. Verify workspace `6857fccbb755d4191ce6fbe4` is accessible
-4. Check `nx.json` contains correct `nxCloudId`
+### Testing
+1. **Run affected tests** frequently during development
+2. **Don't skip pre-commit hooks** without good reason
+3. **Add tests** for new features
+4. **Update tests** when changing functionality
 
-#### 4. Workflow Permissions
-**Problem**: CI failing due to permission issues
-
-**Check:**
-- Fork PRs have restricted secrets access (expected)
-- Preview repo has required secrets configured
-- Workflow permissions are correctly set
-
-### Performance Monitoring
-
-#### Development CI Targets
-- **Selective tests**: < 30s
-- **Comprehensive suite**: < 300s
-- **With Nx cache**: ~70% faster subsequent runs
-
-#### Preview CI Targets  
-- **Full validation**: < 180s
-- **Deployment**: < 60s additional
-
-### Cost Management
-
-#### Development Fork (Your Account)
-- Nx Cloud: Free tier covers most usage
-- GitHub Actions: Included in free tier
-- Monitor usage via Nx Cloud dashboard
-
-#### Preview Repo (Organization Account)
-- Minimal CI usage (lightweight validation only)
-- Primary cost is GitHub Pages hosting (free)
-
-## Maintenance
-
-### Monthly Tasks
-1. **Monitor Nx Cloud usage** in dashboard
-2. **Review CI performance** metrics
-3. **Check for outdated dependencies** in workflows
-4. **Verify backup remote** (backup remote) is up-to-date
-
-### When Adding New Sites
-1. **Update both CI workflows** with new site configurations
-2. **Test deployment** on preview environment
-3. **Verify Nx cache** works with new projects
-
-### Workflow Updates
-When modifying workflows:
-1. **Test on development fork** first
-2. **Push to preview repo** main branch to register changes
-3. **Verify both environments** work correctly
-
-## Architecture Benefits
-
-### Development Benefits
-- **Fast feedback** with Nx Cloud caching
-- **Comprehensive testing** before client exposure
-- **Cost-effective** development iteration
-- **Full IDE integration** with local development
-
-### Client Benefits
-- **Reliable previews** with deployment validation
-- **Fast updates** without full CI overhead
-- **Production-like environment** for review
-- **Consistent deployment** process
-
-### Maintenance Benefits
-- **Clear separation** of concerns
-- **Independent scaling** of each CI system
-- **Reduced complexity** in each workflow
-- **Future flexibility** for production deployment
-
----
+### Deployment
+1. **Never push directly to main**
+2. **Test on preview** before production
+3. **Document breaking changes**
+4. **Coordinate** major deployments with team
 
 ## Quick Reference
 
 ```bash
-# Daily Development
-git push-dev           # Comprehensive CI on fork
+# Local Development
+git checkout -b feature/my-feature
+pnpm test:affected
+git commit -m "feat: add new feature"
+git push origin feature/my-feature
 
-# Client Previews  
-git push-preview       # Lightweight CI + deployment
+# Deploy to Preview
+git push origin feature/my-feature:preview
+# OR create PR to preview branch
 
-# Sync Fork
-git pull origin dev    # Get preview repo changes
-git push fork dev      # Update fork
+# Deploy to Production
+# Create PR from preview to main on GitHub
+# Get reviews and approval
+# Merge when ready
 
-# Local Testing
-pnpm test:pre-commit   # Fast pre-commit validation
-pnpm test:comprehensive # Full local test suite
-
-# Nx Cloud
-nx affected --target=test  # Test affected projects
-nx run-many --target=build --all  # Build all projects
+# Useful Commands
+nx affected --target=test        # Test changed projects
+nx build portal                  # Build single site
+pnpm test:comprehensive          # Full test suite
+pnpm start:robust                # Start all sites locally
 ```
 
 ---
 
-*This documentation was created on June 30, 2025, for the IFLA Standards Development dual CI architecture.*
+*This documentation was updated on January 7, 2025, to reflect the simplified CI/CD architecture.*

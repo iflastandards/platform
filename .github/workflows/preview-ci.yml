@@ -4,9 +4,9 @@ name: Preview CI (Deployment Validation)
 
 on:
   push:
-    branches: [dev]
+    branches: [preview]
   pull_request:
-    branches: [dev]
+    branches: [preview]
   workflow_dispatch:
 
 permissions:

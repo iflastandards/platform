@@ -1,5 +1,5 @@
 {
-  "name": "standards-dev",
+  "name": "platform",
   "root": ".",
   "sourceRoot": ".",
   "projectType": "application",
@@ -112,13 +112,6 @@
         "{projectRoot}/packages/theme/src/config/siteConfigCore.ts"
       ]
     },
-    "e2e:site-validation:dev": {
-      "executor": "nx:run-commands",
-      "options": {
-        "command": "DOCS_ENV=development playwright test e2e/site-validation.spec.ts"
-      },
-      "dependsOn": ["build-all"]
-    },
     "e2e:site-validation:preview": {
       "executor": "nx:run-commands",
       "options": {
@@ -198,13 +191,13 @@
       "executor": "nx:run-commands",
       "options": {
         "commands": [
-          "nx run standards-dev:typecheck",
-          "nx run standards-dev:lint",
-          "nx run standards-dev:test",
-          "nx run standards-dev:build-all",
-          "nx run standards-dev:validate:builds",
-          "nx run standards-dev:validate:build-warnings",
-          "nx run standards-dev:e2e"
+          "nx run platform:typecheck",
+          "nx run platform:lint",
+          "nx run platform:test",
+          "nx run platform:build-all",
+          "nx run platform:validate:builds",
+          "nx run platform:validate:build-warnings",
+          "nx run platform:e2e"
         ],
         "parallel": false
       }

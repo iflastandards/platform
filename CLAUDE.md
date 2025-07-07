@@ -82,7 +82,7 @@ nx run standards-dev:e2e:admin
 ```
 
 #### Environment-Aware E2E Configuration
-- **Dynamic URLs**: E2E tests automatically adapt to different environments (local/preview/development/production)
+- **Dynamic URLs**: E2E tests automatically adapt to different environments (local/preview/production)
 - **Cross-domain Authentication**: Tests validate authentication flows between admin portal and Docusaurus sites
 - **CORS Integration**: Tests verify cross-origin session sharing and cookie handling
 - **Configuration**: Uses `packages/theme/src/config/siteConfig.ts` for environment-specific URLs
@@ -178,7 +178,7 @@ nx run-many --target=test:integration --all
 The project recently migrated (December 2024) from shared-config to **self-contained configurations**:
 
 - **Configuration source**: `packages/theme/src/config/siteConfig.ts` (single source of truth)
-- **Environment handling**: Set via `DOCS_ENV` environment variable (local, preview, development, production)
+- **Environment handling**: Set via `DOCS_ENV` environment variable (local, preview, production)
 - **Inter-site navigation**: Use `SiteLink` component from theme, never hardcode URLs
 - **Site generation**: Use `scripts/generate-individual-config.ts` for creating new site configs
 
@@ -498,7 +498,7 @@ Previously, tests would fail with "port already in use" errors when dev servers 
 - **Key features**: Administrative interface for IFLA standards management
 - **Testing environment**: Uses 'newtest' site (port 3008) as fully featured testing target for E2E workflows
 - **Cross-domain authentication**: CORS-enabled session sharing between admin and Docusaurus sites
-- **Environment-aware URLs**: Automatic URL configuration for local/preview/development/production
+- **Environment-aware URLs**: Automatic URL configuration for local/preview/production
 - **Architecture documentation**: See `developer_notes/admin-authentication-architecture.md`
 
 ### Admin Testing Strategy
@@ -841,33 +841,33 @@ Automatically runs on `git push` with different strategies based on branch:
 
 This approach provides high deployment confidence while minimizing CI compute costs through intelligent local validation.
 
-## Dual CI Architecture (Critical)
-The project uses a **dual CI system** with different purposes:
+## CI/CD Architecture
+The project uses a streamlined CI/CD system with clear environment separation:
 
-### Development Fork (jonphipps/standards-dev)
-- **Remote**: `fork` → `git@github.com:jonphipps/standards-dev.git`
-- **Workflow**: `.github/workflows/nx-optimized-ci.yml` (Development CI)
-- **Purpose**: Comprehensive testing with Nx Cloud integration
-- **Nx Cloud Workspace**: `6857fccbb755d4191ce6fbe4`
-- **Daily workflow**: `git push-dev` (alias for `git push fork dev`)
+### Repository: iflastandards/platform
+- **Preview Environment**: Deployed from `preview` branch
+- **Production Environment**: Deployed from `main` branch
+- **Workflow**: Automated CI/CD pipelines for testing and deployment
 
-### Preview Repo (iflastandards/standards-dev)  
-- **Remote**: `origin` → `git@github.com:iflastandards/standards-dev.git`
-- **Workflow**: `.github/workflows/preview-ci.yml` (Preview CI)
-- **Purpose**: Lightweight deployment validation + GitHub Pages deployment
-- **Client previews**: `git push-preview` (alias for `git push origin dev`)
+### Environment Workflow
+1. **Local Development**: Work on feature branches locally
+2. **Preview Deployment**: Merge to `preview` branch for staging/client review
+3. **Production Deployment**: Merge to `main` branch for production release
 
 ### Key Rules
-- **NEVER push directly to origin/main** (production will be managed separately)
-- **Development testing**: Always happens on fork with Nx Cloud
-- **Client previews**: Push to origin/dev after development CI passes
-- **Documentation**: See `docs/architecture/dual-ci-architecture.md` for complete details
+- **Feature branches**: All development work happens in feature branches
+- **Preview branch**: Integration branch for testing and client preview
+- **Main branch**: Protected branch for production deployments
+- **No direct commits**: Always use pull requests for preview and main branches
 
-### Git Configuration
+### Deployment Configuration
 ```bash
-# Aliases configured in local git config:
-git push-dev        # Development: git push fork dev  
-git push-preview    # Client preview: git push origin dev
+# Preview environment
+git push origin feature-branch  # Push feature branch
+# Create PR to preview branch for staging deployment
+
+# Production environment  
+# Create PR from preview to main for production deployment
 ```
 
 ## Role-Based Access Control (RBAC) with Cerbos

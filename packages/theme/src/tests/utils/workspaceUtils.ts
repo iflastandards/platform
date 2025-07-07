@@ -22,7 +22,7 @@ export const findWorkspaceRoot = (): string => {
     if (fs.existsSync(packageJsonPath)) {
       try {
         const packageJson = require(packageJsonPath);
-        if (packageJson.name === 'standards-dev') {
+        if (packageJson.name === 'platform') {
           return currentDir;
         }
       } catch (e) {
@@ -33,7 +33,7 @@ export const findWorkspaceRoot = (): string => {
     currentDir = path.dirname(currentDir);
   }
   
-  throw new Error('Could not find workspace root - no package.json with name "standards-dev" found');
+  throw new Error('Could not find workspace root - no package.json with name "platform" found');
 };
 
 /**

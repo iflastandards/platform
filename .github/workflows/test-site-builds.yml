@@ -14,7 +14,7 @@ on:
   #     - 'pnpm-lock.yaml'
   #     - 'tsconfig.json'
   pull_request:
-    branches: [main, dev]
+    branches: [main, preview]
   workflow_dispatch:
     inputs:
       site:

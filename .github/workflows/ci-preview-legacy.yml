@@ -32,49 +32,49 @@ jobs:
       - name: Build portal
         run: pnpm exec docusaurus build portal
         env:
-          BASE_URL: /standards-dev/portal/
+          BASE_URL: /platform/portal/
           NODE_ENV: production
           DOCS_ENV: preview
           
       - name: Build ISBDM
         run: pnpm exec docusaurus build standards/ISBDM
         env:
-          BASE_URL: /standards-dev/ISBDM/
+          BASE_URL: /platform/ISBDM/
           NODE_ENV: production
           DOCS_ENV: preview
           
       - name: Build LRM
         run: pnpm exec docusaurus build standards/LRM
         env:
-          BASE_URL: /standards-dev/LRM/
+          BASE_URL: /platform/LRM/
           NODE_ENV: production
           DOCS_ENV: preview
           
       - name: Build ISBD
         run: pnpm exec docusaurus build standards/isbd
         env:
-          BASE_URL: /standards-dev/isbd/
+          BASE_URL: /platform/isbd/
           NODE_ENV: production
           DOCS_ENV: preview
           
       - name: Build FRBR
         run: pnpm exec docusaurus build standards/FRBR
         env:
-          BASE_URL: /standards-dev/FRBR/
+          BASE_URL: /platform/FRBR/
           NODE_ENV: production
           DOCS_ENV: preview
           
       - name: Build MulDiCat
         run: pnpm exec docusaurus build standards/muldicat
         env:
-          BASE_URL: /standards-dev/muldicat/
+          BASE_URL: /platform/muldicat/
           NODE_ENV: production
           DOCS_ENV: preview
           
       - name: Build UNIMARC
         run: pnpm exec docusaurus build standards/unimarc
         env:
-          BASE_URL: /standards-dev/unimarc/
+          BASE_URL: /platform/unimarc/
           NODE_ENV: production
           DOCS_ENV: preview
           

@@ -16,7 +16,7 @@ describe('workspaceUtils', () => {
       expect(fs.existsSync(packageJsonPath)).toBe(true);
       
       const packageJson = require(packageJsonPath);
-      expect(packageJson.name).toBe('standards-dev');
+      expect(packageJson.name).toBe('platform');
     });
 
     it('should return the same path when called multiple times', () => {

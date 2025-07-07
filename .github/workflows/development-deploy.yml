@@ -1,10 +1,10 @@
 name: Development Deploy
 # Deploys to GitHub Pages for development environment testing
-# This runs on the development fork (jonphipps/standards-dev)
+# This runs on the platform repository (iflastandards/platform)
 
 on:
   push:
-    branches: [dev]
+    branches: [preview]
   workflow_dispatch:
 
 permissions:
