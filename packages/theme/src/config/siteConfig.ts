@@ -62,7 +62,7 @@ export const SITE_CONFIG: Record<
   portal: {
     local: { url: 'http://localhost:3000', baseUrl: '/', port: 3000 },
     preview: {
-      url: 'https://platform-preview.vercel.app',
+      url: 'https://platform-git-preview-ifla.vercel.app',
       baseUrl: '/',
     },
     production: { url: 'https://www.iflastandards.info', baseUrl: '/' },
@@ -70,7 +70,7 @@ export const SITE_CONFIG: Record<
   ISBDM: {
     local: { url: 'http://localhost:3001', baseUrl: '/ISBDM/', port: 3001 },
     preview: {
-      url: 'https://platform-preview.vercel.app',
+      url: 'https://platform-git-preview-ifla.vercel.app',
       baseUrl: '/ISBDM/',
     },
     production: { url: 'https://www.iflastandards.info', baseUrl: '/ISBDM/' },
@@ -78,7 +78,7 @@ export const SITE_CONFIG: Record<
   LRM: {
     local: { url: 'http://localhost:3002', baseUrl: '/LRM/', port: 3002 },
     preview: {
-      url: 'https://platform-preview.vercel.app',
+      url: 'https://platform-git-preview-ifla.vercel.app',
       baseUrl: '/LRM/',
     },
     production: { url: 'https://www.iflastandards.info', baseUrl: '/LRM/' },
@@ -86,7 +86,7 @@ export const SITE_CONFIG: Record<
   FRBR: {
     local: { url: 'http://localhost:3003', baseUrl: '/FRBR/', port: 3003 },
     preview: {
-      url: 'https://platform-preview.vercel.app',
+      url: 'https://platform-git-preview-ifla.vercel.app',
       baseUrl: '/FRBR/',
     },
     production: { url: 'https://www.iflastandards.info', baseUrl: '/FRBR/' },
@@ -94,7 +94,7 @@ export const SITE_CONFIG: Record<
   isbd: {
     local: { url: 'http://localhost:3004', baseUrl: '/isbd/', port: 3004 },
     preview: {
-      url: 'https://platform-preview.vercel.app',
+      url: 'https://platform-git-preview-ifla.vercel.app',
       baseUrl: '/isbd/',
     },
     production: { url: 'https://www.iflastandards.info', baseUrl: '/isbd/' },
@@ -102,7 +102,7 @@ export const SITE_CONFIG: Record<
   muldicat: {
     local: { url: 'http://localhost:3005', baseUrl: '/muldicat/', port: 3005 },
     preview: {
-      url: 'https://platform-preview.vercel.app',
+      url: 'https://platform-git-preview-ifla.vercel.app',
       baseUrl: '/muldicat/',
     },
     production: {
@@ -113,7 +113,7 @@ export const SITE_CONFIG: Record<
   unimarc: {
     local: { url: 'http://localhost:3006', baseUrl: '/unimarc/', port: 3006 },
     preview: {
-      url: 'https://platform-preview.vercel.app',
+      url: 'https://platform-git-preview-ifla.vercel.app',
       baseUrl: '/unimarc/',
     },
     production: { url: 'https://www.iflastandards.info', baseUrl: '/unimarc/' },
@@ -122,7 +122,7 @@ export const SITE_CONFIG: Record<
   newtest: {
     local: { url: 'http://localhost:3008', baseUrl: '/newtest/', port: 3008 },
     preview: {
-      url: 'https://platform-preview.vercel.app',
+      url: 'https://platform-git-preview-ifla.vercel.app',
       baseUrl: '/newtest/',
     },
     production: { url: 'https://www.iflastandards.info', baseUrl: '/newtest/' },
@@ -140,11 +140,11 @@ export const ADMIN_PORTAL_CONFIG: Record<Environment, AdminPortalConfig> = {
     port: 3007,
   },
   preview: {
-    url: 'https://platform-preview.vercel.app/admin',
-    signinUrl: 'https://platform-preview.vercel.app/admin/auth/signin',
-    dashboardUrl: 'https://platform-preview.vercel.app/admin/dashboard',
-    signoutUrl: 'https://platform-preview.vercel.app/admin/api/auth/signout',
-    sessionApiUrl: 'https://platform-preview.vercel.app/admin/api/auth/session',
+    url: 'https://platform-git-preview-ifla.vercel.app/admin',
+    signinUrl: 'https://platform-git-preview-ifla.vercel.app/admin/auth/signin',
+    dashboardUrl: 'https://platform-git-preview-ifla.vercel.app/admin/dashboard',
+    signoutUrl: 'https://platform-git-preview-ifla.vercel.app/admin/api/auth/signout',
+    sessionApiUrl: 'https://platform-git-preview-ifla.vercel.app/admin/api/auth/session',
   },
   production: {
     url: 'https://www.iflastandards.info/admin',

@@ -27,7 +27,7 @@ describe('getSiteConfig', () => {
     it('should return correct config for ISBDM in preview environment', () => {
       const config = getSiteConfig('ISBDM', 'preview');
       expect(config).toEqual({
-        url: 'https://platform-preview.vercel.app',
+        url: 'https://platform-git-preview-ifla.vercel.app',
         baseUrl: '/ISBDM/',
       });
     });
@@ -129,7 +129,7 @@ describe('getSiteConfig', () => {
       ];
       sites.forEach((site) => {
         const config = getSiteConfig(site, 'preview');
-        expect(config.url).toBe('https://platform-preview.vercel.app');
+        expect(config.url).toBe('https://platform-git-preview-ifla.vercel.app');
         // Portal has root baseUrl, others have site-specific paths
         if (site === 'portal') {
           expect(config.baseUrl).toBe('/');
