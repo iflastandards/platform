@@ -1,12 +1,12 @@
 #!/usr/bin/env tsx
 /**
  * Site Template Generator for IFLA Standards
- * 
+ *
  * This creates a complete, working site template that combines:
  * - Fresh Docusaurus v3.8 structure (clean baseline)
- * - ISBDM's proven configuration (works without contamination)  
+ * - ISBDM's proven configuration (works without contamination)
  * - Simplified setup (easier to scaffold)
- * 
+ *
  * The template can work with either:
  * 1. Individual configs (completely isolated)
  * 2. Shared-config (with isolated build process)
@@ -17,15 +17,15 @@ export interface SiteTemplateConfig {
   siteKey: string;
   title: string;
   tagline: string;
-  
+
   // Port assignment (auto-assigned if not provided)
   port?: number;
-  
+
   // GitHub configuration
   organizationName?: string;
   projectName?: string;
   editUrl?: string;
-  
+
   // Vocabulary configuration (optional)
   vocabulary?: {
     prefix: string;
@@ -34,7 +34,7 @@ export interface SiteTemplateConfig {
     elementUri?: string;
     elementProfile?: string;
   };
-  
+
   // Navigation customization
   navbar?: {
     customItems?: any[];
@@ -43,7 +43,7 @@ export interface SiteTemplateConfig {
     includeLocaleDropdown?: boolean;
     includeSearch?: boolean;
   };
-  
+
   // Feature flags
   features?: {
     enableBlog?: boolean;
@@ -53,7 +53,7 @@ export interface SiteTemplateConfig {
     enableCustomSidebar?: boolean;
     enableElementRedirects?: boolean;
   };
-  
+
   // Build configuration
   buildConfig?: {
     onBrokenLinks?: 'throw' | 'warn' | 'ignore';
@@ -67,87 +67,92 @@ export const SITE_TEMPLATE = {
     name: config.siteKey.toLowerCase(),
     root: `standards/${config.siteKey}`,
     sourceRoot: `standards/${config.siteKey}`,
-    projectType: "application",
-    tags: ["docusaurus", "site", "standard", config.siteKey.toLowerCase()],
-    implicitDependencies: ["@ifla/theme"],
+    projectType: 'application',
+    tags: ['docusaurus', 'site', 'standard', config.siteKey.toLowerCase()],
+    implicitDependencies: ['@ifla/theme'],
     targets: {
       build: {
-        executor: "nx:run-commands",
+        executor: 'nx:run-commands',
         options: {
-          command: `docusaurus build standards/${config.siteKey}`
+          command: `docusaurus build standards/${config.siteKey}`,
         },
-        outputs: ["{projectRoot}/build"],
+        outputs: ['{projectRoot}/build'],
         cache: true,
         dependsOn: [
-          "^build",
+          '^build',
           {
-            target: "build",
-            projects: ["@ifla/theme"]
-          }
+            target: 'build',
+            projects: ['@ifla/theme'],
+          },
         ],
-        inputs: ["production", "^production", "docusaurus-no-theme"]
+        inputs: ['production', '^production', 'docusaurus-no-theme'],
       },
       start: {
-        executor: "nx:run-commands",
+        executor: 'nx:run-commands',
         options: {
-          command: `docusaurus start standards/${config.siteKey} --port ${config.port || 3007}`
+          command: `docusaurus start standards/${config.siteKey} --port ${config.port || 3007}`,
         },
-        cache: false
+        cache: false,
       },
       serve: {
-        executor: "nx:run-commands",
+        executor: 'nx:run-commands',
         options: {
-          command: `docusaurus serve standards/${config.siteKey} --port ${config.port || 3007}`
+          command: `docusaurus serve standards/${config.siteKey} --port ${config.port || 3007}`,
         },
-        cache: false
+        cache: false,
       },
       clear: {
-        executor: "nx:run-commands",
+        executor: 'nx:run-commands',
         options: {
-          command: `docusaurus clear standards/${config.siteKey}`
+          command: `docusaurus clear standards/${config.siteKey}`,
         },
-        cache: false
+        cache: false,
       },
       typecheck: {
-        executor: "nx:run-commands",
+        executor: 'nx:run-commands',
         options: {
-          command: "tsc --noEmit",
-          cwd: `standards/${config.siteKey}`
+          command: 'tsc --noEmit',
+          cwd: `standards/${config.siteKey}`,
         },
         cache: true,
-        dependsOn: ["^build"],
+        dependsOn: ['^build'],
         inputs: [
-          "default",
-          "{projectRoot}/tsconfig.json",
-          "{workspaceRoot}/tsconfig.json"
-        ]
+          'default',
+          '{projectRoot}/tsconfig.json',
+          '{workspaceRoot}/tsconfig.json',
+        ],
       },
       e2e: {
-        executor: "nx:run-commands",
+        executor: 'nx:run-commands',
         options: {
-          command: "playwright test e2e/standards-smoke.spec.ts e2e/vocabulary-functionality.spec.ts"
+          command:
+            'playwright test e2e/standards-smoke.spec.ts e2e/vocabulary-functionality.spec.ts',
         },
-        dependsOn: ["build"],
+        dependsOn: ['build'],
         cache: true,
         inputs: [
-          "default",
-          "{workspaceRoot}/e2e/standards-smoke.spec.ts",
-          "{workspaceRoot}/e2e/vocabulary-functionality.spec.ts",
-          "{workspaceRoot}/playwright.config.ts"
+          'default',
+          '{workspaceRoot}/e2e/standards-smoke.spec.ts',
+          '{workspaceRoot}/e2e/vocabulary-functionality.spec.ts',
+          '{workspaceRoot}/playwright.config.ts',
         ],
         outputs: [
-          "{workspaceRoot}/test-results",
-          "{workspaceRoot}/playwright-report"
-        ]
-      }
-    }
+          '{workspaceRoot}/test-results',
+          '{workspaceRoot}/playwright-report',
+        ],
+      },
+    },
   }),
 
   // Individual docusaurus.config.ts template (based on clean Docusaurus + old ISBDM)
-  individualConfigTemplate: (config: SiteTemplateConfig) => `import { themes as prismThemes } from 'prism-react-renderer';
+  individualConfigTemplate: (
+    config: SiteTemplateConfig,
+  ) => `import { themes as prismThemes } from 'prism-react-renderer';
 import type { Config } from '@docusaurus/types';
 import type * as Preset from '@docusaurus/preset-classic';
-import { getSiteConfig, getSiteConfigMap, type SiteKey, type Environment } from '@ifla/theme/config/siteConfig';${config.features?.enableCustomSidebar ? `
+import { getSiteConfig, getSiteConfigMap, type SiteKey, type Environment } from '@ifla/theme/config/siteConfig';${
+    config.features?.enableCustomSidebar
+      ? `
 import type { SidebarItemsGeneratorArgs, NormalizedSidebarItem } from '@docusaurus/plugin-content-docs/lib/sidebars/types';
 
 // Create a custom type that includes the undocumented \`defaultSidebarItemsGenerator\`
@@ -185,14 +190,16 @@ const customSidebarGenerator = async (generatorArgs: SidebarItemsGeneratorArgs) 
   }
 
   return filterIndexMdx(sidebarItems);
-};` : ''}
+};`
+      : ''
+  }
 
 // Get current environment from DOCS_ENV
 const DOCS_ENV = process.env.DOCS_ENV as Environment;
 if (!DOCS_ENV) {
   throw new Error(
     'DOCS_ENV environment variable is required but not set. ' +
-    'Valid values: local, preview, development, production'
+    'Valid values: local, preview, production'
   );
 }
 
@@ -217,8 +224,12 @@ const config: Config = {
   projectName: '${config.projectName || config.siteKey}',
 
   onBrokenLinks: '${config.buildConfig?.onBrokenLinks || 'warn'}',
-  onBrokenMarkdownLinks: 'warn',${config.buildConfig?.onBrokenAnchors ? `
-  onBrokenAnchors: '${config.buildConfig.onBrokenAnchors}',` : ''}
+  onBrokenMarkdownLinks: 'warn',${
+    config.buildConfig?.onBrokenAnchors
+      ? `
+  onBrokenAnchors: '${config.buildConfig.onBrokenAnchors}',`
+      : ''
+  }
 
   // Shared static directories
   staticDirectories: ['static', '../../packages/theme/static'],
@@ -266,18 +277,26 @@ const config: Config = {
 
   plugins: [
     'docusaurus-plugin-sass',
-    ${config.features?.enableSearch !== false ? `[
+    ${
+      config.features?.enableSearch !== false
+        ? `[
       '@easyops-cn/docusaurus-search-local',
       {
         hashed: true,
         indexBlog: ${config.features?.enableBlog !== false},
       },
-    ],` : ''}
-    ${config.features?.enableRedirects ? `[
+    ],`
+        : ''
+    }
+    ${
+      config.features?.enableRedirects
+        ? `[
       '@docusaurus/plugin-client-redirects',
       {
         redirects: [],
-        createRedirects: (existingPath: string) => {${config.features?.enableElementRedirects ? `
+        createRedirects: (existingPath: string) => {${
+          config.features?.enableElementRedirects
+            ? `
           // ISBDM-specific element redirects
           // Only process element paths - be very specific to avoid interfering with other routes
           // This regex specifically matches element paths with numeric IDs only
@@ -290,12 +309,16 @@ const config: Config = {
             }
           }
           // Don't redirect anything else - this prevents interference with other routes
-          return undefined;` : `
+          return undefined;`
+            : `
           // Add custom redirect logic here
-          return undefined;`}
+          return undefined;`
+        }
         },
       },
-    ],` : ''}
+    ],`
+        : ''
+    }
   ],
 
   presets: [
@@ -306,8 +329,12 @@ const config: Config = {
           sidebarPath: './sidebars.ts',
           editUrl: '${config.editUrl || `https://github.com/iflastandards/standards-dev/tree/main/standards/${config.siteKey}/`}',
           showLastUpdateAuthor: true,
-          showLastUpdateTime: true,${config.features?.enableCustomSidebar ? `
-          sidebarItemsGenerator: customSidebarGenerator,` : ''}
+          showLastUpdateTime: true,${
+            config.features?.enableCustomSidebar
+              ? `
+          sidebarItemsGenerator: customSidebarGenerator,`
+              : ''
+          }
           versions: {
             current: {
               label: 'Latest',
@@ -317,7 +344,9 @@ const config: Config = {
           lastVersion: 'current',
           onlyIncludeVersions: ['current'],
         },
-        ${config.features?.enableBlog !== false ? `blog: {
+        ${
+          config.features?.enableBlog !== false
+            ? `blog: {
           showReadingTime: true,
           editUrl: '${config.editUrl || `https://github.com/iflastandards/standards-dev/tree/main/standards/${config.siteKey}/`}',
           feedOptions: {
@@ -327,7 +356,9 @@ const config: Config = {
             copyright: \`Copyright © \${new Date().getFullYear()} IFLA.\`,
             language: 'en',
           },
-        },` : ''}
+        },`
+            : ''
+        }
         theme: {
           customCss: './src/css/custom.css',
         },
@@ -362,18 +393,30 @@ const config: Config = {
           label: 'Introduction',
         },
         ${config.features?.enableBlog ? `{to: '/blog', label: 'Blog', position: 'right'},` : ''}
-        ${config.navbar?.includeVersionDropdown ? `{
+        ${
+          config.navbar?.includeVersionDropdown
+            ? `{
           type: 'docsVersionDropdown',
           position: 'right',
-        },` : ''}
-        ${config.navbar?.includeLocaleDropdown ? `{
+        },`
+            : ''
+        }
+        ${
+          config.navbar?.includeLocaleDropdown
+            ? `{
           type: 'localeDropdown',
           position: 'right',
-        },` : ''}
-        ${config.navbar?.includeSearch ? `{
+        },`
+            : ''
+        }
+        ${
+          config.navbar?.includeSearch
+            ? `{
           type: 'search',
           position: 'right',
-        },` : ''}
+        },`
+            : ''
+        }
       ],
     },
     footer: {
@@ -382,10 +425,14 @@ const config: Config = {
         {
           title: 'Resources',
           items: [
-            ${config.features?.enableRdfDownloads !== false ? `{
+            ${
+              config.features?.enableRdfDownloads !== false
+                ? `{
               label: 'RDF Downloads',
               to: '/rdf/',
-            },` : ''}
+            },`
+                : ''
+            }
             {
               label: 'Sitemap',
               to: '/sitemap',
@@ -437,7 +484,9 @@ const config: Config = {
 export default config;`,
 
   // Basic navbar template
-  navbarTemplate: (config: SiteTemplateConfig) => `// ${config.siteKey} navbar configuration
+  navbarTemplate: (
+    config: SiteTemplateConfig,
+  ) => `// ${config.siteKey} navbar configuration
 export default [
   {
     type: 'doc',
@@ -448,7 +497,8 @@ export default [
 ];`,
 
   // Basic sidebars template
-  sidebarsTemplate: () => `import type { SidebarsConfig } from '@docusaurus/plugin-content-docs';
+  sidebarsTemplate:
+    () => `import type { SidebarsConfig } from '@docusaurus/plugin-content-docs';
 
 const sidebars: SidebarsConfig = {
   tutorialSidebar: [
@@ -587,13 +637,16 @@ Navigate through the sections to find:
 - Detailed specifications
 - Implementation guidance
 - Examples and use cases`,
-
 };
 
 // Default configurations for different types of sites
 export const SITE_PRESETS = {
   // Standard IFLA site with all features
-  standard: (siteKey: string, title: string, tagline: string): SiteTemplateConfig => ({
+  standard: (
+    siteKey: string,
+    title: string,
+    tagline: string,
+  ): SiteTemplateConfig => ({
     siteKey,
     title,
     tagline,
@@ -616,7 +669,11 @@ export const SITE_PRESETS = {
   }),
 
   // Minimal site (no blog, basic features)
-  minimal: (siteKey: string, title: string, tagline: string): SiteTemplateConfig => ({
+  minimal: (
+    siteKey: string,
+    title: string,
+    tagline: string,
+  ): SiteTemplateConfig => ({
     siteKey,
     title,
     tagline,
@@ -637,7 +694,6 @@ export const SITE_PRESETS = {
       onBrokenAnchors: 'warn',
     },
   }),
-
 };
 
 export default SITE_TEMPLATE;

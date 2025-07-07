@@ -5,7 +5,7 @@ const { program } = require('commander');
 const inquirer = require('inquirer').default;
 
 // Environment options aligned with the new env-based system
-const validEnvironments = ['local', 'development', 'preview', 'production'];
+const validEnvironments = ['local', 'preview', 'production'];
 
 // Discover sites dynamically by looking for docusaurus.config.ts files
 const fs = require('fs');
@@ -13,12 +13,12 @@ const path = require('path');
 
 function discoverSites() {
   const sites = ['all']; // Keep 'all' option
-  
+
   // Check portal directory
   if (fs.existsSync(path.join(__dirname, '../portal/docusaurus.config.ts'))) {
     sites.push('portal');
   }
-  
+
   // Check standards directory
   const standardsDir = path.join(__dirname, '../standards');
   if (fs.existsSync(standardsDir)) {
@@ -30,7 +30,7 @@ function discoverSites() {
       }
     }
   }
-  
+
   return sites;
 }
 
@@ -40,7 +40,10 @@ program
   .option('--env <environment>', 'Environment to build for')
   .option('--site <site>', 'Site to build')
   .option('--clean-packages', 'Clean and rebuild theme package before building')
-  .option('--clean-theme', 'Clean and rebuild the theme package before building')
+  .option(
+    '--clean-theme',
+    'Clean and rebuild the theme package before building',
+  )
   .parse(process.argv);
 
 async function main() {
@@ -55,8 +58,8 @@ async function main() {
         name: 'environment',
         message: 'Select build environment:',
         choices: validEnvironments,
-        default: 'local'
-      }
+        default: 'local',
+      },
     ]);
     env = envAnswer.environment;
   }
@@ -69,8 +72,8 @@ async function main() {
         name: 'site',
         message: 'Select site to build:',
         choices: validSites,
-        default: 'all'
-      }
+        default: 'all',
+      },
     ]);
     site = siteAnswer.site;
   }
@@ -84,12 +87,12 @@ async function main() {
         message: 'Clean packages before building?',
         choices: [
           { name: 'No cleaning', value: 'none' },
-          { name: 'Clean theme package', value: 'theme' }
+          { name: 'Clean theme package', value: 'theme' },
         ],
-        default: 'none'
-      }
+        default: 'none',
+      },
     ]);
-    
+
     switch (cleanAnswer.cleanOption) {
       case 'theme':
         cleanTheme = true;
@@ -99,20 +102,24 @@ async function main() {
         break;
     }
   }
-  
+
   // Default clean options to false if still undefined
   cleanPackages = cleanPackages || false;
   cleanTheme = cleanTheme || false;
 
   // Validate environment
   if (!validEnvironments.includes(env)) {
-    console.error(`Invalid environment: ${env}. Must be one of: ${validEnvironments.join(', ')}`);
+    console.error(
+      `Invalid environment: ${env}. Must be one of: ${validEnvironments.join(', ')}`,
+    );
     process.exit(1);
   }
 
   // Validate site
   if (!validSites.includes(site.toLowerCase())) {
-    console.error(`Invalid site: ${site}. Must be one of: ${validSites.join(', ')}`);
+    console.error(
+      `Invalid site: ${site}. Must be one of: ${validSites.join(', ')}`,
+    );
     process.exit(1);
   }
 
@@ -123,7 +130,6 @@ async function main() {
       execSync('pnpm clear:theme', { stdio: 'inherit' });
       execSync('pnpm build:theme', { stdio: 'inherit' });
       console.log('Theme package rebuilt successfully.');
-       
     } catch (error) {
       console.error('Failed to rebuild theme package.');
       process.exit(1);
@@ -131,30 +137,29 @@ async function main() {
   }
 
   // Build command
-  const buildScript = site === 'all' ? 'build:all' : `build:${site.toLowerCase()}`;
+  const buildScript =
+    site === 'all' ? 'build:all' : `build:${site.toLowerCase()}`;
 
   console.log(`\nBuilding ${site} for ${env} environment...`);
 
   try {
     // Map environment to NODE_ENV for the new env-based system
     const envMapping = {
-      'local': 'local',
-      'development': 'development',
-      'preview': 'preview', 
-      'production': 'production'
+      local: 'local',
+      preview: 'preview',
+      production: 'production',
     };
-    
+
     // Set both NODE_ENV (new system) and DOCS_ENV (legacy compatibility)
     execSync(`pnpm run ${buildScript}`, {
       stdio: 'inherit',
       env: {
         ...process.env,
         NODE_ENV: envMapping[env] || env,
-        DOCS_ENV: env // Keep for backward compatibility during transition
-      }
+        DOCS_ENV: env, // Keep for backward compatibility during transition
+      },
     });
     console.log(`\nSuccessfully built ${site} for ${env} environment.`);
-     
   } catch (error) {
     console.error(`\nBuild failed for ${site} in ${env} environment.`);
     process.exit(1);

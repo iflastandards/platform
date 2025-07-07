@@ -46,7 +46,7 @@ const DOCS_ENV = process.env.DOCS_ENV as Environment;
 if (!DOCS_ENV) {
   throw new Error(
     'DOCS_ENV environment variable is required but not set. ' +
-    'Valid values: local, preview, development, production'
+    'Valid values: local, preview, production'
   );
 }
 

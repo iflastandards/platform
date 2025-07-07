@@ -27,8 +27,8 @@ describe('getSiteConfig', () => {
     it('should return correct config for ISBDM in preview environment', () => {
       const config = getSiteConfig('ISBDM', 'preview');
       expect(config).toEqual({
-        url: 'https://iflastandards.github.io/platform',
-        baseUrl: '/ISBDM/',
+        url: 'https://iflastandards.github.io',
+        baseUrl: '/platform/ISBDM/',
       });
     });
   });
@@ -129,12 +129,12 @@ describe('getSiteConfig', () => {
       ];
       sites.forEach((site) => {
         const config = getSiteConfig(site, 'preview');
-        expect(config.url).toBe('https://iflastandards.github.io/platform');
-        // Portal has root baseUrl, others have site-specific paths
+        expect(config.url).toBe('https://iflastandards.github.io');
+        // Portal has platform root baseUrl, others have site-specific paths under platform
         if (site === 'portal') {
-          expect(config.baseUrl).toBe('/');
+          expect(config.baseUrl).toBe('/platform/');
         } else {
-          expect(config.baseUrl).toMatch(new RegExp(`^/${site}/`));
+          expect(config.baseUrl).toMatch(new RegExp(`^/platform/${site}/`));
         }
       });
     });

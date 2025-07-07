@@ -12,11 +12,6 @@
         "command": "docusaurus build standards/muldicat"
       },
       "configurations": {
-        "development": {
-          "env": {
-            "DOCS_ENV": "development"
-          }
-        },
         "production": {
           "env": {
             "DOCS_ENV": "production"

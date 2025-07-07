@@ -172,7 +172,6 @@
     "test:portal:e2e": "./scripts/test-portal-builds.sh",
     "test:portal:optimized": "./scripts/test-portal-builds-optimized.sh",
     "test:post-build": "DOCS_ENV=${DOCS_ENV:-local} playwright test e2e/post-build-validation.spec.ts",
-    "test:post-build:development": "DOCS_ENV=development playwright test e2e/post-build-validation.spec.ts",
     "test:post-build:local": "DOCS_ENV=local playwright test e2e/post-build-validation.spec.ts",
     "test:post-build:preview": "DOCS_ENV=preview playwright test e2e/post-build-validation.spec.ts",
     "test:post-build:production": "DOCS_ENV=production playwright test e2e/post-build-validation.spec.ts",

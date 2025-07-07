@@ -18,8 +18,8 @@ concurrency:
 
 env:
   HUSKY: 0
-  # Development environment configuration
-  DOCS_ENV: development
+  # Preview environment configuration for development deployment
+  DOCS_ENV: preview
   SITE_TITLE: IFLA Standards Portal (Development)
   SITE_TAGLINE: International Federation of Library Associations and Institutions
 

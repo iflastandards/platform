@@ -62,48 +62,48 @@ export const SITE_CONFIG: Record<
   portal: {
     local: { url: 'http://localhost:3000', baseUrl: '/', port: 3000 },
     preview: {
-      url: 'https://iflastandards.github.io/platform',
-      baseUrl: '/',
+      url: 'https://iflastandards.github.io',
+      baseUrl: '/platform/',
     },
     production: { url: 'https://www.iflastandards.info', baseUrl: '/' },
   },
   ISBDM: {
     local: { url: 'http://localhost:3001', baseUrl: '/ISBDM/', port: 3001 },
     preview: {
-      url: 'https://iflastandards.github.io/platform',
-      baseUrl: '/ISBDM/',
+      url: 'https://iflastandards.github.io',
+      baseUrl: '/platform/ISBDM/',
     },
     production: { url: 'https://www.iflastandards.info', baseUrl: '/ISBDM/' },
   },
   LRM: {
     local: { url: 'http://localhost:3002', baseUrl: '/LRM/', port: 3002 },
     preview: {
-      url: 'https://iflastandards.github.io/platform',
-      baseUrl: '/LRM/',
+      url: 'https://iflastandards.github.io',
+      baseUrl: '/platform/LRM/',
     },
     production: { url: 'https://www.iflastandards.info', baseUrl: '/LRM/' },
   },
   FRBR: {
     local: { url: 'http://localhost:3003', baseUrl: '/FRBR/', port: 3003 },
     preview: {
-      url: 'https://iflastandards.github.io/platform',
-      baseUrl: '/FRBR/',
+      url: 'https://iflastandards.github.io',
+      baseUrl: '/platform/FRBR/',
     },
     production: { url: 'https://www.iflastandards.info', baseUrl: '/FRBR/' },
   },
   isbd: {
     local: { url: 'http://localhost:3004', baseUrl: '/isbd/', port: 3004 },
     preview: {
-      url: 'https://iflastandards.github.io/platform',
-      baseUrl: '/isbd/',
+      url: 'https://iflastandards.github.io',
+      baseUrl: '/platform/isbd/',
     },
     production: { url: 'https://www.iflastandards.info', baseUrl: '/isbd/' },
   },
   muldicat: {
     local: { url: 'http://localhost:3005', baseUrl: '/muldicat/', port: 3005 },
     preview: {
-      url: 'https://iflastandards.github.io/platform',
-      baseUrl: '/muldicat/',
+      url: 'https://iflastandards.github.io',
+      baseUrl: '/platform/muldicat/',
     },
     production: {
       url: 'https://www.iflastandards.info',
@@ -113,8 +113,8 @@ export const SITE_CONFIG: Record<
   unimarc: {
     local: { url: 'http://localhost:3006', baseUrl: '/unimarc/', port: 3006 },
     preview: {
-      url: 'https://iflastandards.github.io/platform',
-      baseUrl: '/unimarc/',
+      url: 'https://iflastandards.github.io',
+      baseUrl: '/platform/unimarc/',
     },
     production: { url: 'https://www.iflastandards.info', baseUrl: '/unimarc/' },
   },
@@ -122,8 +122,8 @@ export const SITE_CONFIG: Record<
   newtest: {
     local: { url: 'http://localhost:3008', baseUrl: '/newtest/', port: 3008 },
     preview: {
-      url: 'https://iflastandards.github.io/platform',
-      baseUrl: '/newtest/',
+      url: 'https://iflastandards.github.io',
+      baseUrl: '/platform/newtest/',
     },
     production: { url: 'https://www.iflastandards.info', baseUrl: '/newtest/' },
   },
@@ -143,8 +143,10 @@ export const ADMIN_PORTAL_CONFIG: Record<Environment, AdminPortalConfig> = {
     url: 'https://iflastandards.github.io/platform/admin',
     signinUrl: 'https://iflastandards.github.io/platform/admin/auth/signin',
     dashboardUrl: 'https://iflastandards.github.io/platform/admin/dashboard',
-    signoutUrl: 'https://iflastandards.github.io/platform/admin/api/auth/signout',
-    sessionApiUrl: 'https://iflastandards.github.io/platform/admin/api/auth/session',
+    signoutUrl:
+      'https://iflastandards.github.io/platform/admin/api/auth/signout',
+    sessionApiUrl:
+      'https://iflastandards.github.io/platform/admin/api/auth/session',
   },
   production: {
     url: 'https://www.iflastandards.info/admin',
