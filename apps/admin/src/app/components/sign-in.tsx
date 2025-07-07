@@ -1,8 +1,14 @@
+'use client';
+
 import { signInWithGitHub } from '@/app/lib/actions';
+import { useSearchParams } from 'next/navigation';
 
 export function SignIn() {
+  const searchParams = useSearchParams();
+  const callbackUrl = searchParams.get('callbackUrl') || '/dashboard';
+  
   return (
-    <form action={signInWithGitHub}>
+    <form action={() => signInWithGitHub(callbackUrl)}>
       <button
         type="submit"
         className="w-full bg-gray-900 hover:bg-gray-800 text-white font-medium py-3 px-4 rounded-lg flex items-center justify-center space-x-3 transition-colors duration-200"

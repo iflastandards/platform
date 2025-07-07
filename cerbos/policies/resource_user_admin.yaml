@@ -1,5 +1,5 @@
 # User Administration Resource Policy
-# Defines permissions for managing user roles and assignments
+# Defines permissions for managing user roles and assignments.
 ---
 apiVersion: api.cerbos.dev/v1
 resourcePolicy:
@@ -8,47 +8,32 @@ resourcePolicy:
   importDerivedRoles:
     - ifla_standards_roles
   rules:
-    # System administrators can manage all users
+    # Superadmins can manage all users and roles.
     - actions: ["*"]
       effect: EFFECT_ALLOW
-      roles: ["system-admin", "ifla-admin"]
-      
-    # Review group administrators can manage users within their review group
-    - actions: ["view_users", "assign_rg_roles", "assign_site_roles", "remove_roles"]
+      derivedRoles: ["superadmin"]
+
+    # Namespace admins can manage users within their namespace.
+    - actions: ["view_users", "assign_roles", "remove_roles"]
       effect: EFFECT_ALLOW
-      derivedRoles: ["rg_admin"]
+      derivedRoles: ["namespace_admin"]
       condition:
         match:
-          expr: R.attr.scope == "rg" && P.attr.rgs.exists(r, r == R.attr.rg && P.attr.rgs[r] in ["admin"])
-          
-    # Site administrators can manage users for their specific site
-    - actions: ["view_users", "assign_site_roles", "remove_site_roles"]
-      effect: EFFECT_ALLOW
-      derivedRoles: ["site_admin"]
-      condition:
-        match:
-          expr: R.attr.scope == "site" && P.attr.sites.exists(s, s == R.attr.siteKey && P.attr.sites[s] == "admin")
-          
-    # Users can view their own role assignments
+          # Ensures they are acting within the scope of their namespace.
+          expr: R.attr.namespace == P.attr.namespaces.keys().find(k, P.attr.namespaces[k] == "admin")
+
+    # Users can view their own role assignments.
     - actions: ["view_own_roles"]
       effect: EFFECT_ALLOW
       roles: ["user"]
       condition:
         match:
           expr: P.id == R.attr.userId
-          
-    # Prevent privilege escalation - cannot assign higher roles than you have
-    - actions: ["assign_rg_roles", "assign_site_roles"]
+
+    # Prevent privilege escalation.
+    - actions: ["assign_roles"]
       effect: EFFECT_DENY
-      roles: ["*"]
+      derivedRoles: ["namespace_admin"]
       condition:
         match:
-          expr: |
-            R.attr.targetRole in ["system-admin", "ifla-admin"] && 
-            !("system-admin" in P.roles || "ifla-admin" in P.roles)
-            
-  schemas:
-    principalSchema:
-      ref: cerbos:///principal.json
-    resourceSchema:
-      ref: cerbos:///user_admin.json
+          expr: 'R.attr.targetRole == "superadmin"'

@@ -1,0 +1,42 @@
+# Vocabulary Resource Policy
+# Defines permissions for viewing and editing vocabulary content (MDX files).
+---
+apiVersion: api.cerbos.dev/v1
+resourcePolicy:
+  version: "default"
+  resource: "vocabulary"
+  importDerivedRoles:
+    - ifla_standards_roles
+  rules:
+    # Superadmins can do anything.
+    - actions: ["*"]
+      effect: EFFECT_ALLOW
+      derivedRoles: ["superadmin"]
+
+    # Namespace admins can manage their vocabulary.
+    - actions: ["view", "edit", "manage", "configure"]
+      effect: EFFECT_ALLOW
+      derivedRoles: ["namespace_admin"]
+
+    # Namespace editors can create, update, and view.
+    - actions: ["view", "edit", "create", "update"]
+      effect: EFFECT_ALLOW
+      derivedRoles: ["namespace_editor"]
+
+    # Namespace reviewers can review and comment.
+    - actions: ["view", "review", "comment"]
+      effect: EFFECT_ALLOW
+      derivedRoles: ["namespace_reviewer"]
+
+    # Namespace translators can handle translations.
+    - actions: ["view", "translate", "edit_translation"]
+      effect: EFFECT_ALLOW
+      derivedRoles: ["namespace_translator"]
+
+    # Anyone can view public vocabularies.
+    - actions: ["view"]
+      effect: EFFECT_ALLOW
+      roles: ["*"]
+      condition:
+        match:
+          expr: R.attr.visibility == "public"

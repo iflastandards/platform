@@ -44,11 +44,19 @@ const SITES = [
   },
 ];
 
-export default async function DashboardPage() {
+interface DashboardPageProps {
+  searchParams: { sitekey?: string };
+}
+
+export default async function DashboardPage({ searchParams }: DashboardPageProps) {
   const session = await auth();
+  const sitekey = searchParams.sitekey;
 
   if (!session?.user) {
-    redirect('/auth/signin');
+    const returnUrl = sitekey 
+      ? `/dashboard?sitekey=${sitekey}`
+      : '/dashboard';
+    redirect(`/auth/signin?callbackUrl=${encodeURIComponent(returnUrl)}`);
   }
 
   const userRoles = (session.user.roles as string[]) || [];
@@ -66,6 +74,13 @@ export default async function DashboardPage() {
           <h1 className="text-4xl font-bold text-gray-900 dark:text-gray-100 mb-4">
             IFLA Admin Dashboard
           </h1>
+          {sitekey && (
+            <div className="mb-4 p-4 bg-green-50 dark:bg-green-900 rounded-lg">
+              <p className="text-lg text-green-700 dark:text-green-300 font-medium">
+                Hello from {sitekey} dashboard!
+              </p>
+            </div>
+          )}
           <p className="text-xl text-gray-600 dark:text-gray-400">
             Welcome, {session.user.name || session.user.email}
           </p>

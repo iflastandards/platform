@@ -468,6 +468,40 @@ Previously, tests would fail with "port already in use" errors when dev servers 
 - **Navigation**: `pnpm validate:navigation` 
 - **Environment URLs**: `pnpm validate:env-urls`
 
+### Vocabulary Lifecycle Architecture
+The project implements a sophisticated 4-phase content lifecycle for vocabulary management:
+
+#### Phase 1: Editorial Cycle Initiation (Bootstrap)
+- **Administrator-triggered**: Start new standard version via `/dashboard`
+- **Google Sheets Export**: Export latest RDF to spreadsheet for revision
+- **Bulk Import**: `POST /api/cycle/import` validates and imports data
+- **Output**: Git repository with MDX files containing embedded RDF metadata
+
+#### Phase 2: Continuous Editorial Workflow
+- **TinaCMS Integration**: Visual editing for prose and structured data
+- **Real-time Validation**: `POST /api/tina/validateOnSave` validates before commits
+- **Dual Editing**: Rich-text for documentation, forms for RDF metadata
+- **Git Tracking**: Every change tracked with full audit trail
+
+#### Phase 3: Nightly Quality Assurance
+- **Automated Assembly**: `nx affected --target=harvest` runs nightly
+- **Draft Generation**: Assembles complete vocabulary from changes
+- **AI-Powered Analysis**: Semantic versioning recommendations
+- **Impact Reports**: `SEMANTIC_IMPACT_REPORT.md` for admin review
+
+#### Phase 4: Streamlined Publication
+- **One-Click Publishing**: `POST /api/publish` deploys validated content
+- **Version Management**: Semantic versioning (major/minor/patch)
+- **Git Tagging**: Links published versions to source commits
+- **Vocabulary Server**: Final RDF pushed to official server
+
+#### Key Implementation Scripts
+- `scripts/bootstrap-cycle.ts`: Google Sheets import and MDX generation
+- `scripts/nightly-assembly.ts`: Automated vocabulary assembly and analysis
+- `scripts/publish-vocabulary.ts`: Final publication to vocabulary server
+
+See `developer_notes/vocabulary-lifecycle-architecture.md` for complete details.
+
 ## Site-Specific Features
 
 ### ISBDM (Complex Configuration)
@@ -487,7 +521,7 @@ Previously, tests would fail with "port already in use" errors when dev servers 
 - **Build command**: `nx build admin` or `pnpm build:admin`
 - **Serve built app**: `nx serve admin` or `pnpm serve:admin`
 - **Port**: 3007 (development server)
-- **Environment variables**: Requires `GITHUB_ID`, `GITHUB_SECRET`, `NEXTAUTH_URL`, `NEXTAUTH_SECRET`
+- **Environment variables**: Requires `GITHUB_ID`, `GITHUB_SECRET`, `NEXTAUTH_URL`, `NEXTAUTH_SECRET`, `NEXT_PUBLIC_CERBOS_PDP_URL`
 - **Testing infrastructure**: Complete Vitest + Playwright setup with central mocks and fixtures
 - **Unit tests**: `nx test admin` or `nx run admin:test:unit` (components, utilities)
 - **Integration tests**: `nx run admin:test:integration` (API interactions, authentication flows)
@@ -500,6 +534,19 @@ Previously, tests would fail with "port already in use" errors when dev servers 
 - **Cross-domain authentication**: CORS-enabled session sharing between admin and Docusaurus sites
 - **Environment-aware URLs**: Automatic URL configuration for local/preview/production
 - **Architecture documentation**: See `developer_notes/admin-authentication-architecture.md`
+
+### Admin Portal Architecture Evolution
+The admin portal is evolving from a full Next.js app to a headless authentication service:
+- **Current State**: Full admin functionality at `/admin` with Next.js
+- **Target State**: Auth service only (Next.js) + Portal UI (Docusaurus with MUI/TinaCMS)
+- **Portal Dashboards**: Role-based dashboards moving to Portal app:
+  - `/dashboard` (superadmin)
+  - `/admin-dashboard/[standard]` (site admin)
+  - `/editor-dashboard/[standard]` (editor)
+  - `/reviewer-dashboard/[standard]` (reviewer)
+- **MUI Integration**: Material UI components for admin interfaces
+- **TinaCMS Integration**: Content management with Git-backed workflows
+- **Implementation Plan**: See `developer_notes/admin-architecture-implementation-plan.md`
 
 ### Admin Testing Strategy
 The admin application uses a comprehensive testing approach that leverages the existing Nx infrastructure:
@@ -906,10 +953,20 @@ cerbos/
 └── .cerbos-hub.yaml              # Cerbos Hub configuration
 ```
 
+#### Cerbos PDP Configuration by Environment
+- **Local**: `http://localhost:3593` - loads policies from local `cerbos/policies` directory
+- **Development/Preview**: Uses `development` label from Cerbos Hub (dev branch policies)
+- **Production**: Uses `stable` label from Cerbos Hub (main branch policies)
+- **Environment Variables**:
+  - `NEXT_PUBLIC_CERBOS_PDP_URL`: PDP endpoint URL
+  - `CERBOS_HUB_SECRET`: Hub authentication secret
+  - `CERBOS_HUB_LABEL`: Policy deployment label (development/stable)
+
 #### Testing with Roles
 - **Interactive testing**: `pnpm test:admin:roles` (coming soon)
 - **Command-line options**: `pnpm test:admin:roles --role namespace-admin --namespace ISBD`
 - **E2E role testing**: Use mock authentication in development mode
+- **Mock Session Format**: `E2E_MOCK_USER_ROLES='{"newtest": "namespace_admin", "unimarc": "namespace_editor"}'`
 
 ### Development Workflow
 

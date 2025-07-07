@@ -1,4 +1,9 @@
 import { defineConfig, devices } from '@playwright/test';
+import * as dotenv from 'dotenv';
+import * as path from 'path';
+
+// Load environment variables from .env.test
+dotenv.config({ path: path.resolve(__dirname, '.env.test') });
 
 /**
  * See https://playwright.dev/docs/test-configuration.
@@ -46,6 +51,13 @@ export default defineConfig({
     screenshot: 'only-on-failure',
     /* Video recording */
     video: 'retain-on-failure',
+    /* Run in headless mode for speed */
+    headless: true,
+  },
+
+  /* Set a shorter timeout for assertions */
+  expect: {
+    timeout: 5000, // 5 seconds
   },
 
   /* Configure projects for major browsers */
@@ -77,29 +89,11 @@ export default defineConfig({
 
     /* Admin Portal specific tests */
     {
-      name: 'admin',
+      name: 'portal-e2e',
       use: { ...devices['Desktop Chrome'] },
-      testMatch: '**/e2e/admin/**/*.e2e.test.ts',
+      testMatch: '**/e2e/admin/**/*.spec.ts',
     },
-
-    /* Test against branded browsers. */
-    // {
-    //   name: 'Microsoft Edge',
-    //   use: { ...devices['Desktop Edge'], channel: 'msedge' },
-    // },
-    // {
-    //   name: 'Google Chrome',
-    //   use: { ...devices['Desktop Chrome'], channel: 'chrome' },
-    // },
   ],
 
-  /* Run your local dev server before starting the tests */
-  webServer: {
-    command: process.env.CI
-      ? 'node scripts/start-with-port-cleanup.js serve'
-      : 'node scripts/start-with-port-cleanup.js start',
-    url: 'http://localhost:3000',
-    reuseExistingServer: !process.env.CI,
-    timeout: 120 * 1000, // Increased timeout to account for port cleanup
-  },
+  
 });

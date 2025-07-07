@@ -2,375 +2,155 @@
 
 ## Overview
 
-The Admin Portal is a Next.js 15.2.5 application with comprehensive testing infrastructure built on Nx, Vitest, and Playwright. It provides administrative management for IFLA standards sites with full GitHub OAuth integration.
+This guide outlines the testing infrastructure for the IFLA Standards platform, focusing on the **Admin Portal** (a headless Next.js service) and the **Portal** (a Docusaurus application). The Admin Portal provides authentication and API services, while the Portal contains all administrative UI, including role-based dashboards built with MUI and TinaCMS.
 
 ## Architecture
 
-- **Framework**: Next.js 15.2.5 with App Router
-- **Authentication**: NextAuth.js v4.24.11 with GitHub OAuth
-- **Testing**: Vitest for unit/integration, Playwright for E2E
-- **Port**: 3007 (development), 4200 (production build)
-- **Testing Target**: Uses 'newtest' site (port 3008) for realistic E2E testing
+- **Admin Service**: Headless Next.js 15.2.5 application.
+  - **Responsibilities**: Authentication (NextAuth.js v4.24.11 with GitHub OAuth), backend APIs.
+  - **Port**: 3007 (local).
+- **Portal (UI)**: Docusaurus application.
+  - **Responsibilities**: All user-facing administrative interfaces, including role-based dashboards.
+  - **Port**: 3000 (local).
+- **Testing**: Vitest for unit/integration, Playwright for E2E.
+- **E2E Target**: The 'newtest' site (port 3008) is used as the content target for testing role-based actions within the Portal UI.
 
 ## Test Types
 
-### Unit Tests
-**Purpose**: Test components, utilities, and business logic in isolation
-**Location**: `apps/admin-portal/src/test/components/`
+### Unit & Integration Tests (Vitest)
+**Purpose**: Test components, utilities, and API logic in isolation or with mocked dependencies.
+**Location**: `apps/admin/src/test/` and `portal/src/test/`
 **Framework**: Vitest + React Testing Library
-**Command**: `nx run admin-portal:test:unit`
-
-```bash
-# Run unit tests only (fast feedback)
-nx run admin-portal:test:unit
-
-# Watch mode for TDD
-nx run admin-portal:test:watch
-
-# With coverage reporting
-nx run admin-portal:test:coverage
-```
+**Commands**:
+- `nx test admin`: Runs tests for the headless admin service.
+- `nx test portal`: Runs tests for the portal UI components.
 
 **What's Tested**:
-- React component rendering and behavior
-- User interaction handlers (clicks, form submissions)
-- Component prop validation and edge cases
-- Utility functions and helpers
-- Authentication logic (mocked)
+- **Admin Service**: API endpoint logic, authentication helpers, Cerbos integration.
+- **Portal**: React component rendering, user interaction handlers (clicks, form submissions), custom hooks.
 
-### Integration Tests
-**Purpose**: Test component workflows with external dependencies
-**Location**: `apps/admin-portal/src/test/integration/`
-**Framework**: Vitest with API mocking
-**Command**: `nx run admin-portal:test:integration`
-
-```bash
-# Run integration tests only
-nx run admin-portal:test:integration
-
-# All tests (unit + integration)
-nx test admin-portal
-```
+### E2E Tests (Playwright)
+**Purpose**: Test complete, role-based user workflows in a real browser.
+**Location**: `e2e/admin/`
+**Framework**: Playwright, targeting the Portal UI and interacting with the Admin service API.
+**Command**: `nx run portal:e2e` or `nx e2e portal`
 
 **What's Tested**:
-- API interactions with GitHub
-- Site management workflows
-- Authentication flows with NextAuth
-- Cross-component data flow
-- Form submission and validation
+- **Role-Based Access Control**: Verifies that users with different roles (`superadmin`, `namespace_admin`, `namespace_editor`, etc.) see the correct UI and have the correct permissions.
+- **Authentication and Authorization**: Full login flow and subsequent authenticated API requests.
+- **Complete Admin Workflows**: Scenarios like creating a new vocabulary, editing content via TinaCMS, and publishing, all tested from the perspective of a specific user role.
+- **Cross-site Integration**: Navigation and data flow between the Portal's admin dashboards and the content of the `newtest` site.
 
-### E2E Tests
-**Purpose**: Test complete user workflows in real browser
-**Location**: `e2e/admin-portal/`
-**Framework**: Playwright with newtest site as target
-**Command**: `nx run admin-portal:e2e`
+## E2E Test Configuration for Role-Based Access
 
-```bash
-# Run E2E tests
-nx run admin-portal:e2e
+### Simulating Roles
+To test different user roles without a full GitHub login for each run, we use environment variables to inject a mock user session into the browser context.
 
-# Run with Playwright UI
-playwright test --project=admin-portal --ui
+- **Environment Variable**: `E2E_MOCK_USER_ROLES`
+- **Format**: A JSON string representing the user's roles map.
+  - *Example*: `{"newtest": "namespace_admin", "unimarc": "namespace_editor"}`
 
-# Debug mode
-playwright test --project=admin-portal --debug
-```
-
-**What's Tested**:
-- Authentication and authorization flows
-- Navigation between admin-portal and newtest site
-- Complete site management workflows
-- Cross-site integration (newtest ↔ admin-portal)
-- Browser compatibility and accessibility
-
-## Test Configuration
-
-### Vitest Configuration
-**File**: `apps/admin-portal/vitest.config.ts`
-
-```typescript
-export default defineConfig({
-  plugins: [react()],
-  test: {
-    globals: true,
-    environment: 'jsdom',
-    setupFiles: ['./src/test/setup.ts'],
-    include: ['src/**/*.{test,spec}.{js,mjs,cjs,ts,mts,cts,jsx,tsx}'],
-    exclude: ['**/*.e2e.{test,spec}.{js,ts,jsx,tsx}']
-  },
-  resolve: {
-    alias: {
-      '@': resolve(__dirname, './src'),
-      '@/test': resolve(__dirname, './src/test'),
-    },
-  },
-});
-```
+This variable is read by a custom test setup file that creates a valid `next-auth.session-token` cookie before the test begins.
 
 ### Playwright Configuration
-**File**: `playwright.config.ts` (admin-portal project)
+**File**: `playwright.config.ts` (root)
 
 ```typescript
+// Example project configuration for role-based E2E tests
 {
-  name: 'admin-portal',
+  name: 'portal-e2e',
   use: { ...devices['Desktop Chrome'] },
-  testMatch: '**/e2e/admin-portal/**/*.e2e.test.ts',
+  testMatch: '**/e2e/admin/**/*.spec.ts',
   webServer: [
+    {
+      command: 'nx serve admin',
+      url: 'http://localhost:3007',
+      reuseExistingServer: !process.env.CI,
+    },
+    {
+      command: 'nx serve portal',
+      url: 'http://localhost:3000',
+      reuseExistingServer: !process.env.CI,
+    },
     {
       command: 'nx start newtest',
       url: 'http://localhost:3008',
-    },
-    {
-      command: 'nx serve admin-portal',
-      url: 'http://localhost:3007',
+      reuseExistingServer: !process.env.CI,
     },
   ],
 }
 ```
 
-## Test Utilities
+## Writing E2E Tests for Roles
 
-### Mocks and Fixtures
-**Location**: `apps/admin-portal/src/test/`
+### E2E Test Example: `namespace_editor`
+**File**: `e2e/admin/auth-roles.spec.ts`
 
-```
-src/test/
-├── fixtures/
-│   └── mockData.ts          # Test data (sessions, sites, GitHub)
-├── mocks/
-│   ├── api.ts              # API response mocks
-│   └── components.tsx      # React component mocks
-└── setup.ts                # Test environment setup
-```
-
-### Mock Data Examples
 ```typescript
-// Mock authenticated session
-export const mockSession: Session = {
-  user: {
-    id: 'test-user-id',
-    name: 'Test User',
-    email: 'test@example.com',
-  },
-  expires: new Date(Date.now() + 24 * 60 * 60 * 1000).toISOString(),
-};
-
-// Mock site data
-export const mockSiteData = {
-  newtest: {
-    siteKey: 'newtest',
-    title: 'New Test Site',
-    code: 'NEWTEST',
-    status: 'development',
-  },
-};
-```
-
-### API Mocking
-```typescript
-// Setup global fetch mock
-setupFetchMock();
-
-// Mock specific API responses
-mockApiCall('/api/sites/newtest', mockSiteData.newtest);
-mockApiError('/api/invalid', 'Not found', 404);
-```
-
-## Testing Workflow
-
-### Development Workflow
-```bash
-# 1. Start development servers
-nx start newtest           # Testing target site
-nx serve admin-portal      # Admin portal
-
-# 2. Run tests during development
-nx run admin-portal:test:watch    # TDD with watch mode
-
-# 3. Run full test suite before commits
-nx test admin-portal              # All unit + integration tests
-nx run admin-portal:e2e          # E2E validation
-```
-
-### CI/CD Integration
-```bash
-# Pre-commit (automatic)
-nx affected --target=test:unit    # Fast unit tests
-
-# Pre-push (automatic)
-nx test admin-portal              # Full test suite
-
-# CI Pipeline
-nx run admin-portal:e2e          # E2E validation in CI
-```
-
-## Writing Tests
-
-### Unit Test Example
-```typescript
-// apps/admin-portal/src/test/components/SiteManagementClient.test.tsx
-import { render, screen, fireEvent } from '@testing-library/react';
-import SiteManagementClient from '@/app/dashboard/[siteKey]/SiteManagementClient';
-
-describe('SiteManagementClient', () => {
-  it('should render site management interface', () => {
-    render(
-      <SiteManagementClient 
-        siteTitle="Test Site"
-        siteCode="TEST"
-        siteKey="newtest"
-      />
-    );
-    
-    expect(screen.getByText('Test Site Management')).toBeInTheDocument();
-  });
-
-  it('should switch tabs when clicked', async () => {
-    render(<SiteManagementClient {...props} />);
-    
-    fireEvent.click(screen.getByText('Content'));
-    
-    await waitFor(() => {
-      expect(screen.getByText('Content Management')).toBeVisible();
-    });
-  });
-});
-```
-
-### Integration Test Example
-```typescript
-// apps/admin-portal/src/test/integration/site-management.integration.test.tsx
-import { auth } from '@/app/api/auth/auth';
-import { mockSession } from '../fixtures/mockData';
-
-vi.mock('@/app/api/auth/auth', () => ({
-  auth: vi.fn(),
-}));
-
-describe('Site Management Integration', () => {
-  beforeEach(() => {
-    (auth as any).mockResolvedValue(mockSession);
-    setupFetchMock();
-  });
-
-  it('should load site data from API', async () => {
-    mockApiCall('/api/sites/newtest', mockSiteData.newtest);
-    
-    render(<SiteManagementClient siteKey="newtest" />);
-    
-    await waitFor(() => {
-      expect(screen.getByText('New Test Site Management')).toBeInTheDocument();
-    });
-  });
-});
-```
-
-### E2E Test Example
-```typescript
-// e2e/admin-portal/site-management-workflow.e2e.test.ts
 import { test, expect } from '@playwright/test';
+import { mockSessionCookie } from '../utils/session-mock';
 
-test('should navigate from newtest to admin portal', async ({ page }) => {
-  // Start at newtest site
-  await page.goto('http://localhost:3008');
-  await expect(page.getByText('New Test Site')).toBeVisible();
+test.describe('Role-Based Access for newtest namespace', () => {
   
-  // Navigate to admin portal
-  await page.goto('http://localhost:3007/dashboard/newtest');
-  await expect(page.getByText('New Test Site Management')).toBeVisible();
+  test('as namespace_editor, should see editor controls but not admin controls', async ({ browser }) => {
+    // 1. Define the user's roles for this test run
+    const userRoles = {
+      newtest: 'namespace_editor',
+    };
+
+    // 2. Create a browser context with the mocked session
+    const context = await mockSessionCookie({ browser, userRoles });
+    const page = await context.newPage();
+
+    // 3. Navigate to the editor dashboard for the 'newtest' site
+    await page.goto('/editor-dashboard/newtest');
+
+    // 4. Assertions
+    // Check that editor-specific UI is visible
+    await expect(page.getByRole('button', { name: 'Edit Content' })).toBeVisible();
+    await expect(page.getByRole('button', { name: 'Sheets → RDF' })).toBeVisible();
+
+    // Check that admin-specific UI is NOT visible
+    await expect(page.getByRole('button', { name: 'Publish Version' })).not.toBeVisible();
+    await expect(page.getByRole('button', { name: 'Manage Users' })).not.toBeVisible();
+    
+    await page.close();
+  });
+
+  test('as unauthenticated, "Editor Login" link should redirect to auth', async ({ page }) => {
+    // Start at a page within the 'newtest' site
+    await page.goto('/newtest/some-page');
+    
+    // Find and click the login link
+    await page.getByRole('link', { name: 'Editor Login' }).click();
+    
+    // Assert the URL is the sign-in page of the admin service
+    await expect(page).toHaveURL(/localhost:3007\/auth\/signin/);
+  });
 });
 ```
 
-## Performance Targets
-
-- **Unit Tests**: < 10 seconds (fast feedback)
-- **Integration Tests**: < 30 seconds (API interactions)
-- **E2E Tests**: < 60 seconds (full workflows)
-- **Coverage Target**: > 80% for critical paths
+### Test Scenarios to Cover
+- **Superadmin**: Can see and access global settings and all namespace dashboards.
+- **Namespace Admin**: Can access admin controls (Publish, Manage Users) only for their assigned namespace (`newtest`).
+- **Namespace Editor**: Can access content editing controls but not admin controls.
+- **Namespace Reviewer**: Can view content and review tools, but cannot edit.
+- **Namespace Translator**: Can access translation-specific UI.
+- **User with multiple roles**: Verify correct permissions are applied when navigating between different namespace dashboards.
+- **Unauthenticated User**: Is properly redirected to the login page.
 
 ## Troubleshooting
 
 ### Common Issues
 
 **1. Authentication Mock Issues**
-```bash
-# Clear auth mocks between tests
-afterEach(() => {
-  vi.clearAllMocks();
-});
-```
+- **Symptom**: Tests fail with "Unauthorized" or redirect loops.
+- **Solution**: Ensure the `E2E_MOCK_USER_ROLES` variable is correctly formatted JSON. Verify that the `mockSessionCookie` utility is correctly signing the session token.
 
-**2. API Mock Conflicts**
-```bash
-# Reset fetch mocks
-afterEach(() => {
-  cleanupFetchMock();
-});
-```
+**2. E2E Server Startup**
+- **Symptom**: Playwright times out waiting for a server.
+- **Solution**: Run the `webServer` commands manually in separate terminals to check for errors: `nx serve admin`, `nx serve portal`, `nx start newtest`.
 
-**3. E2E Server Startup**
-```bash
-# Manual server start if auto-start fails
-nx start newtest &
-nx serve admin-portal &
-playwright test --project=admin-portal
-```
-
-**4. Port Conflicts**
-```bash
-# Kill conflicting processes
-pnpm ports:kill
-# or for specific ports
-lsof -ti:3007,3008 | xargs kill -9
-```
-
-### Debug Commands
-```bash
-# Debug unit tests
-nx run admin-portal:test:watch --ui
-
-# Debug E2E tests  
-playwright test --project=admin-portal --debug --headed
-
-# Inspect test coverage
-nx run admin-portal:test:coverage
-open coverage/index.html
-```
-
-## Quick Reference
-
-### Essential Commands
-```bash
-# Development
-nx serve admin-portal                   # Start dev server
-nx start newtest                       # Start test target
-
-# Testing  
-nx test admin-portal                   # All tests
-nx run admin-portal:test:unit         # Unit tests only
-nx run admin-portal:test:integration  # Integration tests only
-nx run admin-portal:e2e               # E2E tests
-
-# Development workflow
-nx run admin-portal:test:watch        # TDD mode
-nx run admin-portal:test:coverage     # With coverage
-
-# Convenience scripts (package.json)
-pnpm test:admin-portal               # All tests
-pnpm test:admin-portal:unit         # Unit tests only
-pnpm test:admin-portal:e2e          # E2E tests only
-```
-
-### Test File Patterns
-- Unit: `*.test.tsx` in `src/test/components/`
-- Integration: `*.integration.test.tsx` in `src/test/integration/`
-- E2E: `*.e2e.test.ts` in `e2e/admin-portal/`
-
-### Key Testing Principles
-1. **Fast Feedback**: Unit tests provide immediate validation
-2. **Realistic Integration**: Integration tests use mocked external services
-3. **End-to-End Confidence**: E2E tests validate complete user workflows
-4. **Isolation**: Each test is independent and repeatable
-5. **Real Environment**: E2E tests use actual newtest site for realistic scenarios
-
-This testing infrastructure ensures the admin-portal maintains high quality while providing fast development feedback and comprehensive validation of user workflows.
+**3. Port Conflicts**
+- **Symptom**: Server fails to start with "address already in use".
+- **Solution**: Use `pnpm ports:kill` or `lsof -ti:3000,3007,3008 | xargs kill -9` to free up the required ports.

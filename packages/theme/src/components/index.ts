@@ -29,6 +29,9 @@ export { default as Unique } from './Unique';
 export { default as Figure } from './Figure';
 export { ExampleTable } from './ExampleTable';
 
+// Auth components
+export { ProtectedRoute } from './ProtectedRoute';
+
 
 
 // Legacy exports for backward compatibility

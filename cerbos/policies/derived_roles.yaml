@@ -1,116 +1,48 @@
 # Derived Roles Policy
-# Defines how roles are derived from principal attributes
+# Defines how roles are derived from principal attributes based on the new architecture.
 ---
 apiVersion: api.cerbos.dev/v1
 derivedRoles:
   name: ifla_standards_roles
   definitions:
-    # Review group-level derived roles
-    - name: rg_admin
+    # A global superadmin.
+    - name: superadmin
+      parentRoles: ["user"]
+      condition:
+        match:
+          expr: '"superadmin" in P.roles'
+
+    # Administrator for a specific namespace.
+    - name: namespace_admin
+      parentRoles: ["user"]
+      condition:
+        match:
+          expr: 'P.attr.namespaces[R.attr.namespace] == "admin"'
+
+    # Editor for a specific namespace. Admins are implicitly editors.
+    - name: namespace_editor
       parentRoles: ["user"]
       condition:
         match:
           any:
             of:
-              # Global admins have review group admin rights everywhere
-              - expr: '"system-admin" in P.roles'
-              - expr: '"ifla-admin" in P.roles'
-              # User has admin role for this specific review group
-              - expr: 'P.attr.rgs.exists(r, r == R.attr.rg && P.attr.rgs[r] == "admin")'
-              
-    - name: rg_editor
+              - expr: 'P.attr.namespaces[R.attr.namespace] == "admin"'
+              - expr: 'P.attr.namespaces[R.attr.namespace] == "editor"'
+
+    # Reviewer for a specific namespace. Admins and editors are implicitly reviewers.
+    - name: namespace_reviewer
       parentRoles: ["user"]
       condition:
         match:
           any:
             of:
-              # Review group admins also have editor rights
-              - expr: 'P.attr.rgs.exists(r, r == R.attr.rg && P.attr.rgs[r] == "admin")'
-              # User has editor role for this review group
-              - expr: 'P.attr.rgs.exists(r, r == R.attr.rg && P.attr.rgs[r] == "editor")'
-              
-    - name: rg_reviewer
+              - expr: 'P.attr.namespaces[R.attr.namespace] == "admin"'
+              - expr: 'P.attr.namespaces[R.attr.namespace] == "editor"'
+              - expr: 'P.attr.namespaces[R.attr.namespace] == "reviewer"'
+
+    # Translator for a specific namespace.
+    - name: namespace_translator
       parentRoles: ["user"]
       condition:
         match:
-          any:
-            of:
-              # Higher roles include reviewer privileges
-              - expr: 'P.attr.rgs.exists(r, r == R.attr.rg && P.attr.rgs[r] in ["admin", "editor"])'
-              # User has reviewer role for this review group
-              - expr: 'P.attr.rgs.exists(r, r == R.attr.rg && P.attr.rgs[r] == "reviewer")'
-              
-    - name: rg_translator
-      parentRoles: ["user"]
-      condition:
-        match:
-          any:
-            of:
-              # Higher roles include translator privileges
-              - expr: 'P.attr.rgs.exists(r, r == R.attr.rg && P.attr.rgs[r] in ["admin", "editor"])'
-              # User has translator role for this review group
-              - expr: 'P.attr.rgs.exists(r, r == R.attr.rg && P.attr.rgs[r] == "translator")'
-              
-    - name: rg_contributor
-      parentRoles: ["user"]
-      condition:
-        match:
-          any:
-            of:
-              # Higher roles include contributor privileges
-              - expr: 'P.attr.rgs.exists(r, r == R.attr.rg && P.attr.rgs[r] in ["admin", "editor", "reviewer", "translator"])'
-              # User has contributor role for this review group
-              - expr: 'P.attr.rgs.exists(r, r == R.attr.rg && P.attr.rgs[r] == "contributor")'
-              
-    # Site-level derived roles
-    - name: site_admin
-      parentRoles: ["user"]
-      condition:
-        match:
-          any:
-            of:
-              # Global admins have site admin rights everywhere
-              - expr: '"system-admin" in P.roles'
-              - expr: '"ifla-admin" in P.roles'
-              # Review group admins have site admin rights in their review group
-              - expr: 'P.attr.rgs.exists(r, r == R.attr.rg && P.attr.rgs[r] == "admin")'
-              # User has admin role for this specific site
-              - expr: 'P.attr.sites.exists(s, s == R.attr.siteKey && P.attr.sites[s] == "admin")'
-              
-    - name: site_editor
-      parentRoles: ["user"]
-      condition:
-        match:
-          any:
-            of:
-              # Higher roles include editor privileges
-              - expr: 'P.attr.rgs.exists(r, r == R.attr.rg && P.attr.rgs[r] in ["admin", "editor"])'
-              - expr: 'P.attr.sites.exists(s, s == R.attr.siteKey && P.attr.sites[s] == "admin")'
-              # User has editor role for this site
-              - expr: 'P.attr.sites.exists(s, s == R.attr.siteKey && P.attr.sites[s] == "editor")'
-              
-    - name: site_translator
-      parentRoles: ["user"]
-      condition:
-        match:
-          any:
-            of:
-              # Review group translator role applies to all sites in review group
-              - expr: 'P.attr.rgs.exists(r, r == R.attr.rg && P.attr.rgs[r] in ["admin", "editor", "translator"])'
-              # Higher site roles include translator privileges
-              - expr: 'P.attr.sites.exists(s, s == R.attr.siteKey && P.attr.sites[s] in ["admin", "editor"])'
-              # User has translator role for this site
-              - expr: 'P.attr.sites.exists(s, s == R.attr.siteKey && P.attr.sites[s] == "translator")'
-              
-    - name: site_contributor
-      parentRoles: ["user"]
-      condition:
-        match:
-          any:
-            of:
-              # Review group contributor role applies to all sites in review group
-              - expr: 'P.attr.rgs.exists(r, r == R.attr.rg && P.attr.rgs[r] in ["admin", "editor", "reviewer", "translator", "contributor"])'
-              # Higher site roles include contributor privileges
-              - expr: 'P.attr.sites.exists(s, s == R.attr.siteKey && P.attr.sites[s] in ["admin", "editor", "translator"])'
-              # User has contributor role for this site
-              - expr: 'P.attr.sites.exists(s, s == R.attr.siteKey && P.attr.sites[s] == "contributor")'
+          expr: 'P.attr.namespaces[R.attr.namespace] == "translator"'

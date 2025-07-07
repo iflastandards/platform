@@ -25,7 +25,7 @@ const nextConfig = {
             value:
               process.env.NODE_ENV === 'production'
                 ? 'https://www.iflastandards.info'
-                : 'http://localhost:3008', // Allow newtest site to access admin API
+                : 'http://localhost:3008', // Allow newtest site in development
           },
           {
             key: 'Access-Control-Allow-Credentials',

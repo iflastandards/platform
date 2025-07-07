@@ -52,6 +52,13 @@ const authConfig: NextAuthConfig = {
       if (!token.roles) {
         token.roles = [];
       }
+      
+      // Handle mock users in development
+      if (process.env.NODE_ENV === 'development' && user && 'roles' in user) {
+        token.roles = user.roles as string[];
+        token.name = user.name;
+        return token;
+      }
 
       if (account && user) {
         token.accessToken = account.access_token;

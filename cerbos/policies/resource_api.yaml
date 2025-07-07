@@ -1,0 +1,19 @@
+# API Resource Policy
+# Defines permissions for the new vocabulary lifecycle APIs.
+---
+apiVersion: api.cerbos.dev/v1
+resourcePolicy:
+  version: "default"
+  resource: "api"
+  importDerivedRoles:
+    - ifla_standards_roles
+  rules:
+    # Administrators can perform lifecycle actions like import and publish.
+    - actions: ["cycle:import", "publish:version"]
+      effect: EFFECT_ALLOW
+      derivedRoles: ["namespace_admin", "superadmin"]
+
+    # Editors and Translators can trigger validation on save.
+    - actions: ["tina:validateOnSave"]
+      effect: EFFECT_ALLOW
+      derivedRoles: ["namespace_editor", "namespace_translator", "superadmin"]
