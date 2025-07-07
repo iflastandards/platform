@@ -3,6 +3,7 @@ import { JWT } from 'next-auth/jwt';
 import GitHub from 'next-auth/providers/github';
 import Credentials from 'next-auth/providers/credentials';
 import { createUser } from './mock-auth';
+import type { NextAuthResult } from 'next-auth';
 
 const authConfig: NextAuthConfig = {
   debug: process.env.NODE_ENV === 'development',
@@ -189,4 +190,6 @@ const authConfig: NextAuthConfig = {
   },
 };
 
-export const { handlers, auth, signIn, signOut } = NextAuth(authConfig) as ReturnType<typeof NextAuth>;
+const nextAuthResult = NextAuth(authConfig) as NextAuthResult;
+
+export const { handlers, auth, signIn, signOut } = nextAuthResult;
