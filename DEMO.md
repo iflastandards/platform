@@ -1,6 +1,6 @@
-# Admin Portal Integration Demo
+# Admin Services Integration Demo
 
-This document explains how to run the demo that showcases the integration between Docusaurus sites and the admin portal.
+This document explains how to run the demo that showcases the integration between the Portal site and the admin services.
 
 ## Quick Start
 
@@ -15,39 +15,39 @@ pnpm demo:admin
 ```
 
 Both commands will:
-1. 🧹 Clean up any existing processes on ports 3007 and 3008
-2. 🚀 Start the admin portal on `http://localhost:3007`
-3. 🚀 Start the newtest site on `http://localhost:3008/newtest/`
+1. 🧹 Clean up any existing processes on ports 3000 and 3007
+2. 🚀 Start the admin services on `http://localhost:3007/services`
+3. 🚀 Start the portal site on `http://localhost:3000`
 4. 🌐 Automatically open both URLs in your browser
 5. 📋 Display demo instructions
 
 ## What to Test
 
-### 1. Navbar Integration
-- **Visit**: `http://localhost:3008/newtest/`
-- **Look for**: Blue "Manage Site" button in the top-right navbar
-- **Action**: Click the button
+### 1. Portal Admin Navigation
+- **Visit**: `http://localhost:3000`
+- **Navigate to**: `/admin` or click "Admin" in navbar
+- **Look for**: Login prompt with GitHub authentication
 
-### 2. Admin Portal Access
-- **Expect**: New tab opens to `http://localhost:3007/dashboard/newtest`
-- **First time**: You'll be redirected to sign-in page
+### 2. Authentication Flow
+- **Click**: "Login with GitHub" button
+- **Redirect**: To `http://localhost:3007/services/auth/signin`
 - **Sign in**: Use your GitHub account
-- **Result**: Access to newtest site management dashboard
+- **Return**: Back to portal admin interface at `http://localhost:3000/admin`
 
-### 3. Authentication Flow
-- **Sign-in page**: Clean, branded interface
-- **GitHub OAuth**: Secure authentication
-- **Role assignment**: Site owner gets automatic admin access
-- **Dashboard access**: Full site management interface
+### 3. Admin Interface Features
+- **Namespace selection**: Choose which standards to manage
+- **Role-based dashboards**: Different views based on your permissions
+- **Action pages**: Scaffold sites, manage teams, import data
 
-### 4. Cross-Site Integration
-- **Seamless transition**: From public site to admin interface
-- **Context preservation**: Automatically opens correct site dashboard
-- **Security**: Authentication required before access
+### 4. Services Integration
+- **Portal UI**: All admin interface at `http://localhost:3000/admin/*`
+- **Auth Services**: Authentication handled by `http://localhost:3007/services`
+- **API Endpoints**: All API calls go to `/services/api/*`
+- **Session Sharing**: Authenticated state shared between portal and services
 
 ## Demo Features
 
-### Admin Portal (localhost:3007)
+### Portal Site (localhost:3000)
 - ✅ NextAuth v5 authentication
 - ✅ GitHub OAuth integration
 - ✅ Role-based access control

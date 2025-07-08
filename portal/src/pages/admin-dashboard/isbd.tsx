@@ -2,7 +2,6 @@ import React from 'react';
 import Layout from '@theme/Layout';
 import { ProtectedRoute } from '@ifla/theme';
 import { useAdminSession } from '@ifla/theme';
-import Link from '@docusaurus/Link';
 import styles from '../manage/styles.module.css';
 
 const namespace = 'isbd';

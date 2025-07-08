@@ -45,12 +45,13 @@ const SITES = [
 ];
 
 interface DashboardPageProps {
-  searchParams: { sitekey?: string };
+  searchParams: Promise<{ sitekey?: string }>;
 }
 
 export default async function DashboardPage({ searchParams }: DashboardPageProps) {
   const session = await auth();
-  const sitekey = searchParams.sitekey;
+  const params = await searchParams;
+  const sitekey = params.sitekey;
 
   if (!session?.user) {
     const returnUrl = sitekey 

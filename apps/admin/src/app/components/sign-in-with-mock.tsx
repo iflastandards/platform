@@ -49,7 +49,7 @@ export function SignInWithMock() {
               setError('Authentication failed');
               setIsLoading(false);
             });
-        } catch (_err) {
+        } catch {
           setError('Invalid mock user data');
           setIsLoading(false);
         }

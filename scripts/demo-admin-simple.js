@@ -1,8 +1,8 @@
 #!/usr/bin/env node
 
 /**
- * Simple demo script for admin portal integration
- * Starts admin and newtest site, then opens them in browser
+ * Simple demo script for admin services integration
+ * Starts admin services and portal site, then opens them in browser
  */
 
 const { spawn, exec } = require('child_process');
@@ -49,41 +49,53 @@ async function checkUrl(url, maxRetries = 30) {
   return false;
 }
 
-// Open URL in Chrome specifically
-async function openBrowser(url) {
+// Open URL in default browser
+async function openBrowser(url, preferChrome = false) {
   const platform = process.platform;
   let command;
 
-  if (platform === 'darwin') {
-    command = `open -a "Google Chrome" "${url}"`;
-  } else if (platform === 'win32') {
-    command = `start chrome "${url}"`;
-  } else {
-    // Linux
-    command = `google-chrome "${url}" || chromium-browser "${url}" || chromium "${url}"`;
-  }
-
   try {
-    await execAsync(command);
-  } catch (e) {
-    warning(`Could not open Chrome automatically. Please visit: ${url}`);
-    // Fallback to default browser
-    try {
-      if (platform === 'darwin') {
-        await execAsync(`open "${url}"`);
-      } else if (platform === 'win32') {
-        await execAsync(`start "${url}"`);
+    if (platform === 'darwin') {
+      if (preferChrome) {
+        // Try to open in Chrome specifically
+        command = `open -a "Google Chrome" "${url}"`;
       } else {
-        await execAsync(`xdg-open "${url}"`);
+        // Use default browser
+        command = `open "${url}"`;
       }
-    } catch (e2) {
-      warning(`Could not open any browser. Please manually visit: ${url}`);
+    } else if (platform === 'win32') {
+      // On Windows, use start command
+      command = `start "" "${url}"`;
+    } else {
+      // On Linux, try xdg-open first
+      command = `xdg-open "${url}"`;
+    }
+    
+    await execAsync(command);
+    log(`Opened ${url} in ${preferChrome ? 'Chrome' : 'default browser'}`);
+  } catch (e) {
+    // If Chrome isn't available, fall back to default browser
+    if (preferChrome && platform === 'darwin') {
+      try {
+        await execAsync(`open "${url}"`);
+        log(`Chrome not found, opened ${url} in default browser`);
+      } catch (e2) {
+        warning(`Could not open browser automatically. Please manually visit: ${url}`);
+      }
+    } else if (platform !== 'darwin' && platform !== 'win32') {
+      try {
+        await execAsync(`google-chrome "${url}" || chromium-browser "${url}" || chromium "${url}" || firefox "${url}"`);
+      } catch (e2) {
+        warning(`Could not open browser automatically. Please manually visit: ${url}`);
+      }
+    } else {
+      warning(`Could not open browser automatically. Please manually visit: ${url}`);
     }
   }
 }
 
 async function main() {
-  log('Starting admin portal integration demo...');
+  log('Starting admin services integration demo...');
 
   // Clean up any existing processes
   log('Cleaning up existing processes...');
@@ -94,90 +106,99 @@ async function main() {
   }
 
   warning('This will start two development servers:');
-  warning('  • Admin Portal: http://localhost:3007/admin');
-  warning('  • newtest Site: http://localhost:3008/newtest/');
+  warning('  • Admin Services: http://localhost:3007/services');
+  warning('  • Portal Site: http://localhost:3000');
   console.log();
 
-  // Start admin portal
-  log('Starting admin portal...');
-  const adminProcess = spawn('nx', ['serve', 'admin'], {
+  // Start admin services
+  log('Starting admin services...');
+  const adminProcess = spawn('nx', ['dev', 'admin'], {
     stdio: ['ignore', 'pipe', 'pipe'],
     env: { ...process.env },
   });
 
-  // Start newtest site
-  log('Starting newtest site...');
-  const newtestProcess = spawn('nx', ['start', 'newtest'], {
+  // Start portal site
+  log('Starting portal site...');
+  const portalProcess = spawn('nx', ['start', 'portal'], {
     stdio: ['ignore', 'pipe', 'pipe'],
-    env: { ...process.env, DOCS_ENV: 'local' },
+    env: { 
+      ...process.env, 
+      DOCS_ENV: 'local',
+      BROWSER: 'none' // This might prevent auto-opening
+    },
   });
 
   // Handle cleanup on exit
   const cleanup = () => {
     log('Cleaning up processes...');
     adminProcess.kill();
-    newtestProcess.kill();
+    portalProcess.kill();
     process.exit(0);
   };
 
   process.on('SIGINT', cleanup);
   process.on('SIGTERM', cleanup);
 
-  // Wait for admin portal to be ready
-  log('Waiting for admin portal to start...');
-  const adminReady = await checkUrl('http://localhost:3007');
+  // Wait for admin services to be ready
+  log('Waiting for admin services to start...');
+  const adminReady = await checkUrl('http://localhost:3007/services');
   console.log(); // New line after dots
 
   if (!adminReady) {
-    error('Admin portal failed to start after 30 seconds');
+    error('Admin services failed to start after 30 seconds');
     cleanup();
     return;
   }
-  success('Admin portal is ready at http://localhost:3007/admin');
+  success('Admin services are ready at http://localhost:3007/services');
 
-  // Wait for newtest site to be ready
-  log('Waiting for newtest site to start...');
-  const newtestReady = await checkUrl('http://localhost:3008/newtest/');
+  // Wait for portal site to be ready
+  log('Waiting for portal site to start...');
+  const portalReady = await checkUrl('http://localhost:3000');
   console.log(); // New line after dots
 
-  if (!newtestReady) {
-    error('newtest site failed to start after 30 seconds');
+  if (!portalReady) {
+    error('Portal site failed to start after 30 seconds');
     cleanup();
     return;
   }
-  success('newtest site is ready at http://localhost:3008/newtest/');
+  success('Portal site is ready at http://localhost:3000');
 
-  // Open browsers
-  log('Opening browsers...');
-  await openBrowser('http://localhost:3008/newtest/');
-  await new Promise((resolve) => setTimeout(resolve, 2000)); // Wait 2 seconds
-  await openBrowser('http://localhost:3007/admin');
+  // Small delay to ensure servers are fully initialized
+  await new Promise(resolve => setTimeout(resolve, 1000));
+
+  // Open browser to admin page
+  // Note: If the portal server auto-opens a browser tab to '/', we'll open '/admin' in Chrome
+  log('Opening browser to admin page...');
+  await openBrowser('http://localhost:3000/admin', true); // true = prefer Chrome
 
   success('Demo started successfully!');
   console.log();
   log('🎯 DEMO INSTRUCTIONS:');
   console.log(
-    `  ${colors.green}1.${colors.reset} Visit the newtest site: ${colors.blue}http://localhost:3008/newtest/${colors.reset}`,
+    `  ${colors.green}1.${colors.reset} Visit the portal site: ${colors.blue}http://localhost:3000${colors.reset}`,
   );
   console.log(
-    `  ${colors.green}2.${colors.reset} Look for the ${colors.yellow}'Manage Site'${colors.reset} button in the top-right navbar`,
+    `  ${colors.green}2.${colors.reset} Navigate to the admin section: ${colors.blue}http://localhost:3000/admin${colors.reset}`,
   );
   console.log(
-    `  ${colors.green}3.${colors.reset} Click it to open the admin portal for this site`,
+    `  ${colors.green}3.${colors.reset} Click ${colors.yellow}'Login with GitHub'${colors.reset} to authenticate`,
   );
   console.log(
-    `  ${colors.green}4.${colors.reset} Sign in with GitHub to access site management`,
+    `  ${colors.green}4.${colors.reset} After login, you'll return to the portal admin interface`,
   );
   console.log();
-  log('🔧 TESTING WORKFLOW:');
+  log('🔧 AUTHENTICATION FLOW:');
   console.log(
-    `  ${colors.green}•${colors.reset} The navbar integration allows seamless admin access`,
+    `  ${colors.green}•${colors.reset} Portal UI at ${colors.blue}http://localhost:3000/admin${colors.reset}`,
   );
   console.log(
-    `  ${colors.green}•${colors.reset} Authentication is handled by NextAuth v5`,
+    `  ${colors.green}•${colors.reset} Auth services at ${colors.blue}http://localhost:3007/services${colors.reset}`,
   );
   console.log(
-    `  ${colors.green}•${colors.reset} Site owner gets automatic admin privileges`,
+    `  ${colors.green}•${colors.reset} GitHub OAuth handled by admin services`,
+  );
+  console.log(
+    `  ${colors.green}•${colors.reset} Session shared between portal and services`,
   );
   console.log();
   warning('Press Ctrl+C to stop the demo and clean up processes');

@@ -3,7 +3,55 @@ import type { NextRequest } from 'next/server';
 import { auth } from '@/app/lib/auth';
 import { getRoleBasedLandingPage } from '@/app/lib/role-based-routing';
 
+// Allowed origins for CORS - Only portal needs access
+const allowedOrigins = process.env.NODE_ENV === 'production'
+  ? ['https://www.iflastandards.info'] // Production portal
+  : process.env.VERCEL_ENV === 'preview' || process.env.GITHUB_PAGES === 'true'
+  ? ['https://iflastandards.github.io'] // Preview environment (GitHub Pages)
+  : ['http://localhost:3000']; // Development portal only
+
 export async function middleware(request: NextRequest) {
+  const { pathname } = request.nextUrl;
+
+  // Handle CORS for API and auth routes
+  if (pathname.startsWith('/api/') || pathname.startsWith('/auth/')) {
+    // Get the origin from the request
+    const origin = request.headers.get('origin') || '';
+
+    // Check if the origin is allowed
+    const isAllowedOrigin = allowedOrigins.includes(origin);
+
+    // Handle preflight requests
+    if (request.method === 'OPTIONS') {
+      const response = new NextResponse(null, { status: 200 });
+
+      if (isAllowedOrigin) {
+        response.headers.set('Access-Control-Allow-Origin', origin);
+        response.headers.set('Access-Control-Allow-Credentials', 'true');
+        response.headers.set('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS');
+        response.headers.set('Access-Control-Allow-Headers', 'Content-Type, Authorization, Cookie');
+        response.headers.set('Access-Control-Max-Age', '86400');
+      }
+
+      return response;
+    }
+
+    // Handle actual requests - continue processing but add CORS headers at the end
+    const response = await handleNonCorsLogic(request);
+
+    if (isAllowedOrigin) {
+      response.headers.set('Access-Control-Allow-Origin', origin);
+      response.headers.set('Access-Control-Allow-Credentials', 'true');
+    }
+
+    return response;
+  }
+
+  // Handle non-CORS logic for other routes
+  return handleNonCorsLogic(request);
+}
+
+async function handleNonCorsLogic(request: NextRequest) {
   const { pathname } = request.nextUrl;
 
   // Only handle dashboard redirects for authenticated users
@@ -49,5 +97,5 @@ export async function middleware(request: NextRequest) {
 }
 
 export const config = {
-  matcher: ['/dashboard/:path*', '/auth/signin'],
+  matcher: ['/dashboard/:path*', '/auth/:path*', '/api/:path*'],
 };

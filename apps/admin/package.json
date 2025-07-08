@@ -1,6 +1,7 @@
 {
   "name": "@ifla/admin",
   "version": "0.1.0",
+  "description": "Authentication and API services for IFLA Standards platform",
   "private": true,
   "scripts": {
     "build": "next build",

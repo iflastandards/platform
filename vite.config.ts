@@ -49,6 +49,10 @@ export default defineConfig({
         __dirname,
         'packages/theme/src/tests/__mocks__/Heading.tsx',
       ),
+      '@docusaurus/BrowserOnly': path.resolve(
+        __dirname,
+        'packages/theme/src/tests/__mocks__/BrowserOnly.tsx',
+      ),
       '@ifla/theme': path.resolve(__dirname, 'packages/theme/src'),
     },
   },

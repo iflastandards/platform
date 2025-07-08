@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from 'react';
 import Layout from '@theme/Layout';
-import useDocusaurusContext from '@docusaurus/useDocusaurusContext';
 import useIsBrowser from '@docusaurus/useIsBrowser';
 import BrowserOnly from '@docusaurus/BrowserOnly';
 import { AdminRouter } from '@ifla/theme';

@@ -1,547 +1,610 @@
-# Complete Implementation Plan: Docusaurus + TinaCMS + MUI Admin Architecture
+# Complete Implementation Plan: Portal-Based Admin UI with Simplified Authentication
 
 ## Overview
-Transform the current admin app into a minimal auth service while moving all UI to Docusaurus with TinaCMS content management and MUI interactive components.
+Implement a streamlined admin interface directly in the Portal (Docusaurus) site, with the admin app serving purely as an authentication and API service. This approach eliminates the double-login issue and creates a seamless user experience.
 
 ## Architecture Summary
 
 ### Current State
-- **Admin app** at `/admin` provides full admin functionality
-- **Portal** at `/` with basic management page
-- Authentication flows through admin app's NextAuth implementation
-- Docusaurus sites can check auth status via `useAdminSession` hook
+- **Portal site** has admin routes via plugin that render `AdminRouter` component
+- **Admin app** is a full Next.js app with UI pages, causing redirect loops
+- **Authentication issue**: CORS only allows `localhost:3008`, blocking portal
+- **Login flow**: Confusing double-redirect between portal and admin
 
 ### Target Architecture
 
 #### Components & URLs
-- **Auth Service (Next.js)**: `http://localhost:3007/auth/*`, `/api/*`
-- **Portal (Docusaurus)**: `http://localhost:3000/` with admin dashboards
-- **TinaCMS**: `http://localhost:3000/tina` for content management
-- **Role-Based Dashboards**:
-  - `/dashboard` (superadmin)
-  - `/admin-dashboard/[standard]` (site admin)
-  - `/editor-dashboard/[standard]` (editor)
-  - `/reviewer-dashboard/[standard]` (reviewer)
+- **Portal (Docusaurus)**: `http://localhost:3000/` with all admin UI
+  - `/admin/login` - Login page within portal
+  - `/admin/[role]/[namespace]` - Role-based dashboards
+  - `/admin/[action]/[namespace]` - Action pages
+- **Auth Service (Next.js)**: `http://localhost:3007` - API only
+  - `/auth/signin` - OAuth handler
+  - `/api/auth/*` - Auth endpoints
+  - `/api/actions/*` - Workflow APIs
+  - `/api/admin/*` - Data APIs
+- **Individual Sites**: No direct auth integration
+  - Standard Docusaurus sites without admin features
+  - "Edit this page" → GitHub (standard Docusaurus flow)
+  - Admin tasks require navigation to portal
+
+#### Authentication Scope
+- **Portal Only**: Authentication is exclusively through the portal
+- **No Cross-Site Auth**: Individual sites (ISBDM, LRM, etc.) don't authenticate
+- **Admin Navigation**: Users must go to portal for any admin tasks
+- **CORS Simplification**: Only portal needs access to admin API
+
+#### Future TinaCMS Integration
+- **Authorized Users**: "Edit this page" → TinaCMS editor
+- **Unauthorized Users**: "Edit this page" → GitHub (standard flow)
+- **Session Check**: TinaCMS checks portal session for edit permissions
+
+#### New Login Flow
+1. User clicks login in portal navbar
+2. Shows `/admin/login` page in portal (no redirect)
+3. "Login with GitHub" button initiates OAuth
+4. OAuth handled by admin app, returns to portal
+5. User avatar appears in portal navbar only
+6. Dashboard shows based on role/namespace
 
 #### User Story Mapping
 
-**User Story 1: Site Administrator - New Site Creation**
-- **UI**: Portal `/dashboard` with MUI forms
-- **API**: `/api/admin/scaffold`, `/api/admin/github`
-- **Processing**: Server-side scaffolding scripts
-- **Integration**: Nx workspace updates, TinaCMS schema generation
+**User Story 1: Super Admin - Namespace Selection**
+- **UI**: Portal `/admin/dashboard` showing all namespaces
+- **Features**: Namespace cards with progress stats
+- **Navigation**: Click namespace → `/admin/admin/[namespace]`
+- **API**: `/api/admin/namespaces` for listing
 
-**User Story 2: Standards Site Admin - Site Management**
-- **UI**: Portal `/admin-dashboard/[standard]` with TinaCMS + MUI
-- **Content Management**: TinaCMS for docs, metadata, templates
-- **API**: `/api/admin/teams`, `/api/admin/publish`
-- **Features**: Team management, translations, project boards
+**User Story 2: Namespace Admin - Spreadsheet Import Workflow**
+- **Landing**: `/admin/admin/[namespace]` dashboard
+- **Notification**: GitHub issue with spreadsheet submission
+- **Action**: Click "scaffold from spreadsheet" → `/admin/scaffold-from-spreadsheet/[namespace]`
+- **Process**: Verify → Confirm → Supabase queue → Completion webhook
+- **API**: `/api/actions/scaffold-from-spreadsheet`
 
-**User Story 3: Editor - Content Editing & Data Conversion**
-- **UI**: Portal `/editor-dashboard/[standard]` with editorial workflows
-- **Content**: TinaCMS direct editing with Git integration
-- **API**: `/api/editor/convert`, `/api/editor/github`
-- **Processing**: Google Sheets ↔ CSV ↔ RDF ↔ Documentation
+**User Story 3: Multi-Role User - Role Selection**
+- **Landing**: `/admin/dashboard` with role/namespace choices
+- **Example**: Admin for ISBD, Reviewer for LRM
+- **Navigation**: Select role+namespace → appropriate dashboard
+- **Persistence**: Remember last selection
 
-**User Story 4: Reviewer - Review & Discussion**
-- **UI**: Portal `/reviewer-dashboard/[standard]` for review workflows
-- **Content**: TinaCMS reviewer mode with PR-based workflow
-- **API**: `/api/reviewer/pullrequests`
-- **Integration**: GitHub discussions, PR management
+**User Story 4: Editor - Quick Actions**
+- **Dashboard**: `/admin/editor/[namespace]` with action cards
+- **Actions**: Import data, export RDF, manage translations
+- **Navigation**: Click action → `/admin/[action]/[namespace]`
+- **API**: Action-specific endpoints
 
 ---
 
-## Migration Plan
+## Implementation Phases
 
-### Phase 1: Foundation Setup ⚡ (Week 1-2)
-- Install dependencies (MUI, TinaCMS, GitHub API)
-- Configure MUI + Docusaurus theme integration
-- Set up TinaCMS configuration and basic schemas
-- Create protected route and dashboard layout components
+### Phase 1: Fix Authentication Flow 🔐 (Immediate)
+- Update CORS in admin app to allow portal URL
+- Fix redirect logic in auth.ts
+- Update LoginPrompt component to show login UI directly
+- Test authentication flow end-to-end
 
-### Phase 2: API Service Restructure 🔧 (Week 2-3)
-- Remove UI components from admin app
-- Update next.config.js and CORS settings
-- Update URL configurations
-- Test authentication flow
+### Phase 2: Implement New Routing 🛣️ (Day 1-2)
+- Update AdminRouter to parse new route patterns
+- Create route handlers for `/admin/[role]/[namespace]`
+- Create route handlers for `/admin/[action]/[namespace]`
+- Add navigation helper functions
 
-### Phase 3: Dashboard Implementation 📊 (Week 3-4)
-- Create role-based dashboard pages
-- Implement MUI forms and interfaces
-- Add role-based access controls
-- Style with IFLA theme
+### Phase 3: Build Dashboard Components 📊 (Day 3-5)
+- Install MUI dependencies in theme package
+- Create DashboardLayout component
+- Build role-based dashboard components
+- Create action card components
+- Implement namespace selection page
 
-### Phase 4: API Development 🔗 (Week 4-5)
-- Build GitHub integration APIs
-- Create scaffolding and data conversion APIs
-- Add error handling and validation
-- Test API functionality
+### Phase 4: Create Action Pages 🎯 (Day 6-8)
+- Build scaffold-from-spreadsheet page
+- Create confirmation workflows
+- Add progress tracking UI
+- Implement error handling
 
-### Phase 5: TinaCMS Content Management 📝 (Week 5-6)
-- Configure content editing schemas
-- Set up Git-backed workflows
-- Create custom MUI-styled components
-- Implement multi-language support
+### Phase 5: API Development 🔗 (Day 9-11)
+- Create `/api/actions/scaffold-from-spreadsheet`
+- Implement Supabase queue integration
+- Add webhook endpoints
+- Build namespace/role query APIs
 
-### Phase 6: Data Processing Pipeline 🔄 (Week 6-7)
-- Google Sheets API integration
-- CSV ↔ RDF conversion scripts
-- Documentation scaffolding automation
-- Reverse data flow implementation
+### Phase 6: Clean Up Admin App 🧹 (Day 12-13)
+- Remove all UI pages from admin app
+- Keep only auth and API routes
+- Update build configuration
+- Test minimal admin app
 
-### Phase 7: GitHub Integration 🐙 (Week 7-8)
-- Team and repository management
-- PR workflow automation
-- Notification systems
-- Project board integration
+### Phase 7: Testing & Polish 🧪 (Day 14-15)
+- Update E2E tests for new flow
+- Test all user stories
+- Fix styling and responsiveness
+- Document new architecture
 
-### Phase 8: Testing & Documentation 🧪 (Week 8-9)
-- Comprehensive testing suite
-- User and developer documentation
-- E2E workflow testing
-- Performance optimization
+---
 
-### Phase 9: Migration & Deployment 🚀 (Week 9-10)
-- Data migration and CI/CD updates
-- Production deployment
-- User training and monitoring
-- Issue resolution
+## Immediate Implementation (Phase 1 Detail)
+
+### 1.1 Fix CORS Configuration
+**File**: `apps/admin/next.config.js`
+```javascript
+headers: [
+  {
+    key: 'Access-Control-Allow-Origin',
+    value: process.env.NODE_ENV === 'production'
+      ? 'https://www.iflastandards.info'
+      : process.env.ALLOWED_ORIGINS || 'http://localhost:3000,http://localhost:3008',
+  },
+]
+```
+
+### 1.2 Fix Auth Redirect
+**File**: `apps/admin/src/app/lib/auth.ts`
+```typescript
+async redirect({ url, baseUrl }) {
+  // Handle callbackUrl parameter properly
+  const urlObj = new URL(url, baseUrl);
+  const callbackUrl = urlObj.searchParams.get('callbackUrl');
+  
+  if (callbackUrl) {
+    // Validate it's a safe redirect
+    const allowedHosts = ['localhost:3000', 'localhost:3008', 'www.iflastandards.info'];
+    try {
+      const callbackUrlObj = new URL(callbackUrl);
+      if (allowedHosts.some(host => callbackUrlObj.host.includes(host))) {
+        return callbackUrl;
+      }
+    } catch {}
+  }
+  
+  return url.startsWith(baseUrl) ? url : `${baseUrl}/dashboard`;
+}
+```
+
+### 1.3 Update LoginPrompt
+**File**: `packages/theme/src/components/AdminRouter/LoginPrompt.tsx`
+```tsx
+export function LoginPrompt({ currentPath }: LoginPromptProps) {
+  const adminConfig = getAdminPortalConfigAuto();
+  const returnUrl = `/admin/${currentPath}`.replace(/\/+/g, '/');
+  const fullReturnUrl = `${window.location.origin}${returnUrl}`;
+  
+  return (
+    <div className="container margin-vert--lg">
+      <div className="row">
+        <div className="col col--8 col--offset-2">
+          <div className="card">
+            <div className="card__header">
+              <h2>IFLA Standards Administration</h2>
+            </div>
+            <div className="card__body">
+              <p>Access restricted to authorized IFLA team members.</p>
+              <p>Please sign in with your GitHub account to continue.</p>
+            </div>
+            <div className="card__footer">
+              <a
+                href={`${adminConfig.signinUrl}?callbackUrl=${encodeURIComponent(fullReturnUrl)}`}
+                className="button button--primary button--lg button--block"
+              >
+                <i className="fab fa-github"></i> Login with GitHub
+              </a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
+```
 
 ---
 
 ## Detailed Implementation Instructions
 
-### 1. Dependencies Installation
+### 2. New Routing Implementation (Phase 2 Detail)
 
-```bash
-# MUI Core (in theme package)
-cd packages/theme
-pnpm add @mui/material @emotion/react @emotion/styled
-pnpm add @mui/icons-material
-pnpm add @mui/x-data-grid @mui/x-tree-view
-
-# React Hook Form for complex forms
-pnpm add react-hook-form @hookform/resolvers
-pnpm add zod # Already installed, but verify
-
-# TinaCMS (in portal)
-cd ../../portal
-pnpm add tinacms @tinacms/cli
-pnpm add @tinacms/auth
-
-# GitHub API integration (in admin)
-cd ../apps/admin
-pnpm add @octokit/rest
-pnpm add @octokit/webhooks
-```
-
-### 2. MUI Integration Setup
-
-#### A. Theme Provider Setup
-**File**: `packages/theme/src/components/MUIThemeProvider.tsx`
+#### 2.1 Update AdminRouter
+**File**: `packages/theme/src/components/AdminRouter/index.tsx`
 ```tsx
-import React from 'react';
-import { ThemeProvider, createTheme } from '@mui/material/styles';
-import { CssBaseline } from '@mui/material';
-import { useColorMode } from '@docusaurus/theme-common';
-
-const MUIThemeProvider = ({ children }) => {
-  const { colorMode } = useColorMode();
+export function AdminRouter({ currentPath, navigate }: AdminRouterProps) {
+  const { isAuthenticated, loading, username, teams } = useAdminSession();
   
-  const theme = createTheme({
-    palette: {
-      mode: colorMode,
-      primary: {
-        main: '#4a8f5b', // IFLA green
-      },
-      secondary: {
-        main: '#4a9d8e', // IFLA teal
-      },
-    },
-    typography: {
-      fontFamily: [
-        '-apple-system',
-        'BlinkMacSystemFont',
-        'Segoe UI',
-        'Roboto',
-        'Helvetica Neue',
-        'sans-serif',
-      ].join(','),
-    },
-  });
-
-  return (
-    <ThemeProvider theme={theme}>
-      <CssBaseline />
-      {children}
-    </ThemeProvider>
-  );
-};
-
-export default MUIThemeProvider;
-```
-
-#### B. Root Component Integration
-**File**: `portal/src/theme/Root.tsx`
-```tsx
-import React from 'react';
-import { MUIThemeProvider } from '@ifla/theme/components/MUIThemeProvider';
-
-export default function Root({ children }) {
-  return (
-    <MUIThemeProvider>
-      {children}
-    </MUIThemeProvider>
-  );
-}
-```
-
-### 3. TinaCMS Setup
-
-#### A. TinaCMS Configuration
-**File**: `portal/tina/config.ts`
-```tsx
-import { defineConfig } from 'tinacms';
-
-export default defineConfig({
-  branch: 'main',
-  clientId: process.env.TINA_CLIENT_ID,
-  token: process.env.TINA_TOKEN,
+  // Parse the current path
+  const pathSegments = currentPath.split('/').filter(Boolean);
   
-  build: {
-    basePath: 'tina',
-    outputFolder: 'admin',
-    publicFolder: 'static',
-  },
+  // Handle login route
+  if (pathSegments[0] === 'login') {
+    return <LoginPrompt currentPath={currentPath.slice(6)} />;
+  }
   
-  media: {
-    tina: {
-      mediaRoot: 'uploads',
-      publicFolder: 'static',
-    },
-  },
-  
-  schema: {
-    collections: [
-      {
-        name: 'site_config',
-        label: 'Site Configuration',
-        path: 'config',
-        format: 'json',
-        ui: {
-          allowedActions: {
-            create: false,
-            delete: false,
-          },
-        },
-        fields: [
-          {
-            type: 'string',
-            name: 'title',
-            label: 'Site Title',
-            required: true,
-          },
-          {
-            type: 'string',
-            name: 'tagline',
-            label: 'Site Tagline',
-          },
-          {
-            type: 'object',
-            name: 'vocabulary',
-            label: 'Vocabulary Settings',
-            fields: [
-              {
-                type: 'string',
-                name: 'prefix',
-                label: 'URI Prefix',
-              },
-              {
-                type: 'number',
-                name: 'startCounter',
-                label: 'Start Counter',
-              },
-            ],
-          },
-        ],
-      },
-      {
-        name: 'docs',
-        label: 'Documentation',
-        path: 'docs',
-        format: 'mdx',
-        fields: [
-          {
-            type: 'string',
-            name: 'title',
-            label: 'Title',
-            isTitle: true,
-            required: true,
-          },
-          {
-            type: 'rich-text',
-            name: 'body',
-            label: 'Body',
-            isBody: true,
-          },
-        ],
-      },
-    ],
-  },
-});
-```
-
-#### B. Authentication Setup
-**File**: `portal/pages/api/tina/[...routes].ts`
-```tsx
-import { TinaNodeBackend, LocalBackendAuthProvider } from 'tinacms';
-
-const handler = TinaNodeBackend({
-  authentication: LocalBackendAuthProvider(),
-  databaseAdapter: new GitHubProvider({
-    branch: 'main',
-    owner: 'iflastandards',
-    repo: 'standards-dev',
-    token: process.env.GITHUB_TOKEN,
-  }),
-});
-
-export default handler;
-```
-
-### 4. Dashboard Structure Setup
-
-#### A. Protected Route Component
-**File**: `packages/theme/src/components/ProtectedRoute.tsx`
-```tsx
-import React from 'react';
-import { CircularProgress, Alert, Box } from '@mui/material';
-import { useAdminSession } from '../hooks/useAdminSession';
-import { getAdminPortalConfigAuto } from '../config/siteConfig';
-
-interface ProtectedRouteProps {
-  children: React.ReactNode;
-  requiredRoles?: string[];
-  requiredTeams?: string[];
-}
-
-export const ProtectedRoute: React.FC<ProtectedRouteProps> = ({
-  children,
-  requiredRoles = [],
-  requiredTeams = [],
-}) => {
-  const { isAuthenticated, teams, loading } = useAdminSession();
-
   if (loading) {
-    return (
-      <Box display="flex" justifyContent="center" alignItems="center" minHeight="200px">
-        <CircularProgress />
-      </Box>
-    );
+    return <LoadingSpinner />;
   }
-
+  
   if (!isAuthenticated) {
-    const adminConfig = getAdminPortalConfigAuto();
-    window.location.href = `${adminConfig.signinUrl}?returnUrl=${encodeURIComponent(window.location.pathname)}`;
-    return null;
+    return <LoginPrompt currentPath={currentPath} />;
   }
-
-  // Check role/team access
-  const hasAccess = requiredRoles.length === 0 || 
-    requiredRoles.some(role => teams?.includes(role)) ||
-    requiredTeams.some(team => teams?.includes(team));
-
-  if (!hasAccess) {
-    return (
-      <Alert severity="error">
-        You don't have permission to access this page.
-      </Alert>
-    );
+  
+  // Route patterns:
+  // /admin/dashboard - namespace selection
+  // /admin/[role]/[namespace] - role-based dashboard
+  // /admin/[action]/[namespace] - action page
+  
+  if (!pathSegments.length || pathSegments[0] === 'dashboard') {
+    return <NamespaceSelection username={username} teams={teams} navigate={navigate} />;
   }
-
-  return <>{children}</>;
-};
+  
+  // Check if first segment is a role
+  const roles = ['admin', 'editor', 'reviewer', 'translator'];
+  if (roles.includes(pathSegments[0])) {
+    const role = pathSegments[0];
+    const namespace = pathSegments[1];
+    return <RoleDashboard role={role} namespace={namespace} navigate={navigate} />;
+  }
+  
+  // Otherwise it's an action
+  const action = pathSegments[0];
+  const namespace = pathSegments[1];
+  return <ActionPage action={action} namespace={namespace} navigate={navigate} />;
+}
 ```
 
-#### B. Dashboard Layout Component
-**File**: `packages/theme/src/components/DashboardLayout.tsx`
+### 3. Dashboard Components (Phase 3 Detail)
+
+#### 3.1 Namespace Selection Component
+**File**: `packages/theme/src/components/AdminRouter/NamespaceSelection.tsx`
 ```tsx
 import React from 'react';
-import { Box, AppBar, Toolbar, Typography, Container } from '@mui/material';
-import { useAdminSession } from '../hooks/useAdminSession';
 
-interface DashboardLayoutProps {
-  title: string;
-  children: React.ReactNode;
+interface NamespaceSelectionProps {
+  username: string;
+  teams: string[];
+  navigate: (path: string) => void;
 }
 
-export const DashboardLayout: React.FC<DashboardLayoutProps> = ({
-  title,
-  children,
-}) => {
-  const { username } = useAdminSession();
-
-  return (
-    <Box sx={{ flexGrow: 1 }}>
-      <AppBar position="static">
-        <Toolbar>
-          <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
-            {title}
-          </Typography>
-          <Typography variant="body2">
-            Welcome, {username}
-          </Typography>
-        </Toolbar>
-      </AppBar>
-      <Container maxWidth="xl" sx={{ mt: 4, mb: 4 }}>
-        {children}
-      </Container>
-    </Box>
-  );
-};
-```
-
-### 5. Admin App Restructure
-
-#### A. Remove Dashboard Components
-**Remove these directories:**
-- `apps/admin/src/app/dashboard/`
-- `apps/admin/src/app/site/`
-- Most UI components (keep auth-related ones)
-
-#### B. Update next.config.js
-**File**: `apps/admin/next.config.js`
-```javascript
-const nextConfig = {
-  // Remove basePath: '/admin'
-  transpilePackages: ['next-auth'],
-  async headers() {
-    return [
-      {
-        source: '/api/:path*',
-        headers: [
-          {
-            key: 'Access-Control-Allow-Origin',
-            value: process.env.NODE_ENV === 'production'
-              ? 'https://www.iflastandards.info'
-              : 'http://localhost:3000', // Portal URL
-          },
-          {
-            key: 'Access-Control-Allow-Credentials',
-            value: 'true',
-          },
-          {
-            key: 'Access-Control-Allow-Methods',
-            value: 'GET, POST, PUT, DELETE, OPTIONS',
-          },
-          {
-            key: 'Access-Control-Allow-Headers',
-            value: 'Content-Type, Authorization, Cookie',
-          },
-        ],
-      },
-    ];
-  },
-};
-```
-
-### 6. API Routes Implementation
-
-#### A. GitHub Integration API
-**File**: `apps/admin/src/app/api/github/teams/route.ts`
-```tsx
-import { NextRequest, NextResponse } from 'next/server';
-import { Octokit } from '@octokit/rest';
-import { auth } from '@/app/lib/auth';
-
-export async function POST(request: NextRequest) {
-  const session = await auth();
-  if (!session?.user || !session.user.roles?.includes('system-admin')) {
-    return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
-  }
-
-  const { teamName, description, members } = await request.json();
+export function NamespaceSelection({ username, teams, navigate }: NamespaceSelectionProps) {
+  // Parse teams to extract namespaces and roles
+  const namespaceRoles = teams.reduce((acc, team) => {
+    // Teams are formatted as "namespace-role" (e.g., "isbd-admin", "lrm-reviewer")
+    const match = team.match(/^(\w+)-(admin|editor|reviewer|translator)$/);
+    if (match) {
+      const [, namespace, role] = match;
+      if (!acc[namespace]) acc[namespace] = [];
+      acc[namespace].push(role);
+    }
+    return acc;
+  }, {} as Record<string, string[]>);
   
-  const octokit = new Octokit({
-    auth: process.env.GITHUB_TOKEN,
-  });
+  const isSuperAdmin = teams.includes('system-admin') || teams.includes('ifla-admin');
+  
+  return (
+    <div className="container margin-vert--lg">
+      <h1>Welcome, {username}</h1>
+      
+      {isSuperAdmin && (
+        <div className="card margin-bottom--lg">
+          <div className="card__header">
+            <h2>System Administration</h2>
+          </div>
+          <div className="card__body">
+            <button 
+              className="button button--primary button--lg"
+              onClick={() => navigate('admin/system')}
+            >
+              Manage All Namespaces
+            </button>
+          </div>
+        </div>
+      )}
+      
+      <h2>Your Namespaces</h2>
+      <div className="row">
+        {Object.entries(namespaceRoles).map(([namespace, roles]) => (
+          <div key={namespace} className="col col--4 margin-bottom--lg">
+            <div className="card">
+              <div className="card__header">
+                <h3>{namespace.toUpperCase()}</h3>
+              </div>
+              <div className="card__body">
+                <p>Your roles: {roles.join(', ')}</p>
+                {roles.map(role => (
+                  <button
+                    key={role}
+                    className="button button--secondary button--block margin-bottom--sm"
+                    onClick={() => navigate(`${role}/${namespace}`)}
+                  >
+                    Open as {role}
+                  </button>
+                ))}
+              </div>
+            </div>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+}
+```
 
-  try {
-    // Create team
-    const team = await octokit.rest.teams.create({
-      org: 'iflastandards',
-      name: teamName,
-      description,
-      privacy: 'closed',
-    });
+#### 3.2 Role Dashboard Component
+**File**: `packages/theme/src/components/AdminRouter/RoleDashboard.tsx`
+```tsx
+import React from 'react';
 
-    // Add members
-    for (const member of members) {
-      await octokit.rest.teams.addOrUpdateMembershipForUserInOrg({
-        org: 'iflastandards',
-        team_slug: team.data.slug,
-        username: member.username,
-        role: member.role || 'member',
+interface RoleDashboardProps {
+  role: string;
+  namespace: string;
+  navigate: (path: string) => void;
+}
+
+export function RoleDashboard({ role, namespace, navigate }: RoleDashboardProps) {
+  // Define actions based on role
+  const actions = {
+    admin: [
+      { id: 'scaffold-from-spreadsheet', label: 'Import from Spreadsheet', icon: '📊' },
+      { id: 'manage-team', label: 'Manage Team', icon: '👥' },
+      { id: 'configure-site', label: 'Site Configuration', icon: '⚙️' },
+    ],
+    editor: [
+      { id: 'import-data', label: 'Import Data', icon: '📥' },
+      { id: 'export-rdf', label: 'Export RDF', icon: '📤' },
+      { id: 'manage-translations', label: 'Translations', icon: '🌍' },
+    ],
+    reviewer: [
+      { id: 'review-changes', label: 'Review Changes', icon: '👁️' },
+      { id: 'manage-issues', label: 'Manage Issues', icon: '📝' },
+    ],
+    translator: [
+      { id: 'translate-content', label: 'Translate Content', icon: '🌐' },
+      { id: 'review-translations', label: 'Review Translations', icon: '✅' },
+    ],
+  };
+  
+  const currentActions = actions[role] || [];
+  
+  return (
+    <div className="container margin-vert--lg">
+      <div className="margin-bottom--lg">
+        <button 
+          className="button button--secondary"
+          onClick={() => navigate('dashboard')}
+        >
+          ← Back to Namespaces
+        </button>
+      </div>
+      
+      <h1>{namespace.toUpperCase()} - {role.charAt(0).toUpperCase() + role.slice(1)} Dashboard</h1>
+      
+      <div className="row margin-bottom--lg">
+        <div className="col col--4">
+          <div className="card">
+            <div className="card__body">
+              <h3>📊 Progress</h3>
+              <p>75% Complete</p>
+              <div className="progress-bar">
+                <div className="progress-bar__fill" style={{width: '75%'}}></div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div className="col col--4">
+          <div className="card">
+            <div className="card__body">
+              <h3>🔔 New Issues</h3>
+              <p className="text--large">3</p>
+            </div>
+          </div>
+        </div>
+        <div className="col col--4">
+          <div className="card">
+            <div className="card__body">
+              <h3>👥 Team Members</h3>
+              <p className="text--large">12</p>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <h2>Actions</h2>
+      <div className="row">
+        {currentActions.map(action => (
+          <div key={action.id} className="col col--4 margin-bottom--lg">
+            <div 
+              className="card card--full-height clickable-card"
+              onClick={() => navigate(`../${action.id}/${namespace}`)}
+              style={{cursor: 'pointer'}}
+            >
+              <div className="card__header">
+                <h3>{action.icon} {action.label}</h3>
+              </div>
+              <div className="card__body">
+                <p>Click to {action.label.toLowerCase()} for {namespace}</p>
+              </div>
+            </div>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+}
+```
+
+### 4. Action Page Implementation (Phase 4 Detail)
+
+#### 4.1 Scaffold from Spreadsheet Action
+**File**: `packages/theme/src/components/AdminRouter/actions/ScaffoldFromSpreadsheet.tsx`
+```tsx
+import React, { useState, useEffect } from 'react';
+import { getAdminPortalConfigAuto } from '../../../config/siteConfig';
+
+interface ScaffoldFromSpreadsheetProps {
+  namespace: string;
+  navigate: (path: string) => void;
+}
+
+export function ScaffoldFromSpreadsheet({ namespace, navigate }: ScaffoldFromSpreadsheetProps) {
+  const [spreadsheetUrl, setSpreadsheetUrl] = useState('');
+  const [loading, setLoading] = useState(false);
+  const [status, setStatus] = useState<'idle' | 'processing' | 'success' | 'error'>('idle');
+  const adminConfig = getAdminPortalConfigAuto();
+  
+  // Check for GitHub issue with spreadsheet
+  useEffect(() => {
+    fetch(`${adminConfig.url}/api/admin/namespace/${namespace}/pending-spreadsheets`, {
+      credentials: 'include',
+    })
+      .then(res => res.json())
+      .then(data => {
+        if (data.spreadsheetUrl) {
+          setSpreadsheetUrl(data.spreadsheetUrl);
+        }
       });
+  }, [namespace]);
+  
+  const handleScaffold = async () => {
+    setLoading(true);
+    setStatus('processing');
+    
+    try {
+      const response = await fetch(`${adminConfig.url}/api/actions/scaffold-from-spreadsheet`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        credentials: 'include',
+        body: JSON.stringify({
+          namespace,
+          spreadsheetUrl,
+        }),
+      });
+      
+      if (response.ok) {
+        setStatus('success');
+        // Redirect after success
+        setTimeout(() => navigate(`../admin/${namespace}`), 2000);
+      } else {
+        setStatus('error');
+      }
+    } catch (error) {
+      setStatus('error');
+    } finally {
+      setLoading(false);
     }
+  };
+  
+  return (
+    <div className="container margin-vert--lg">
+      <button 
+        className="button button--secondary margin-bottom--lg"
+        onClick={() => navigate(`../admin/${namespace}`)}
+      >
+        ← Back to Dashboard
+      </button>
+      
+      <h1>Scaffold {namespace.toUpperCase()} from Spreadsheet</h1>
+      
+      <div className="card">
+        <div className="card__header">
+          <h2>Import Configuration</h2>
+        </div>
+        <div className="card__body">
+          <div className="margin-bottom--md">
+            <label htmlFor="spreadsheet-url">Spreadsheet URL:</label>
+            <input
+              id="spreadsheet-url"
+              type="url"
+              className="input"
+              value={spreadsheetUrl}
+              onChange={(e) => setSpreadsheetUrl(e.target.value)}
+              placeholder="https://docs.google.com/spreadsheets/d/..."
+              disabled={loading}
+            />
+          </div>
+          
+          {status === 'processing' && (
+            <div className="alert alert--info">
+              <p>Processing spreadsheet... This may take a few minutes.</p>
+              <div className="loader">Loading...</div>
+            </div>
+          )}
+          
+          {status === 'success' && (
+            <div className="alert alert--success">
+              <p>✅ Scaffolding complete! Redirecting to dashboard...</p>
+            </div>
+          )}
+          
+          {status === 'error' && (
+            <div className="alert alert--danger">
+              <p>❌ Error during scaffolding. Please check the logs.</p>
+            </div>
+          )}
+        </div>
+        <div className="card__footer">
+          <button
+            className="button button--primary button--lg"
+            onClick={handleScaffold}
+            disabled={!spreadsheetUrl || loading}
+          >
+            {loading ? 'Processing...' : 'Start Import'}
+          </button>
+        </div>
+      </div>
+    </div>
+  );
+}
+```
 
-    return NextResponse.json({ team: team.data });
-  } catch (error) {
-    return NextResponse.json({ error: error.message }, { status: 500 });
+#### 4.2 Generic Action Page Handler
+**File**: `packages/theme/src/components/AdminRouter/ActionPage.tsx`
+```tsx
+import React from 'react';
+import { ScaffoldFromSpreadsheet } from './actions/ScaffoldFromSpreadsheet';
+// Import other action components as needed
+
+interface ActionPageProps {
+  action: string;
+  namespace: string;
+  navigate: (path: string) => void;
+}
+
+export function ActionPage({ action, namespace, navigate }: ActionPageProps) {
+  switch (action) {
+    case 'scaffold-from-spreadsheet':
+      return <ScaffoldFromSpreadsheet namespace={namespace} navigate={navigate} />;
+    
+    // Add other actions here
+    case 'manage-team':
+      return <div>Manage Team for {namespace} (Coming Soon)</div>;
+    
+    case 'import-data':
+      return <div>Import Data for {namespace} (Coming Soon)</div>;
+    
+    case 'export-rdf':
+      return <div>Export RDF for {namespace} (Coming Soon)</div>;
+    
+    default:
+      return (
+        <div className="container margin-vert--lg">
+          <h1>Unknown Action: {action}</h1>
+          <button 
+            className="button button--secondary"
+            onClick={() => navigate('dashboard')}
+          >
+            Back to Dashboard
+          </button>
+        </div>
+      );
   }
 }
 ```
 
-#### B. Site Scaffolding API
-**File**: `apps/admin/src/app/api/scaffold/route.ts`
+### 5. API Implementation (Phase 5 Detail)
+
+#### 5.1 Scaffold from Spreadsheet API
+**File**: `apps/admin/src/app/api/actions/scaffold-from-spreadsheet/route.ts`
 ```tsx
 import { NextRequest, NextResponse } from 'next/server';
-import { exec } from 'child_process';
-import { promisify } from 'util';
 import { auth } from '@/app/lib/auth';
-
-const execAsync = promisify(exec);
-
-export async function POST(request: NextRequest) {
-  const session = await auth();
-  if (!session?.user || !session.user.roles?.includes('system-admin')) {
-    return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
-  }
-
-  const { siteKey, title, tagline, dataset } = await request.json();
-
-  try {
-    // Save uploaded dataset
-    if (dataset) {
-      // Process and save RDF/CSV file
-    }
-
-    // Run scaffolding script
-    const { stdout, stderr } = await execAsync(
-      `pnpm tsx scripts/scaffold-site.ts --siteKey=${siteKey} --title="${title}" --tagline="${tagline}"`,
-      { cwd: process.cwd() }
-    );
-
-    return NextResponse.json({ 
-      success: true, 
-      output: stdout,
-      siteKey 
-    });
-  } catch (error) {
-    return NextResponse.json({ 
-      error: error.message,
-      stderr: error.stderr 
-    }, { status: 500 });
-  }
-}
-```
-
-#### C. Data Conversion API
-**File**: `apps/admin/src/app/api/convert/sheets-to-rdf/route.ts`
-```tsx
-import { NextRequest, NextResponse } from 'next/server';
-import { GoogleSpreadsheet } from 'google-spreadsheet';
-import { auth } from '@/app/lib/auth';
+import { createClient } from '@supabase/supabase-js';
 
 export async function POST(request: NextRequest) {
   const session = await auth();
@@ -549,533 +612,312 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
   }
 
-  const { spreadsheetId, worksheetName, siteKey } = await request.json();
+  const { namespace, spreadsheetUrl } = await request.json();
+  
+  // Verify user has admin role for this namespace
+  const hasAccess = session.user.roles?.includes(`${namespace}-admin`) || 
+                    session.user.roles?.includes('system-admin');
+  
+  if (!hasAccess) {
+    return NextResponse.json({ error: 'Forbidden' }, { status: 403 });
+  }
+
+  // Initialize Supabase client
+  const supabase = createClient(
+    process.env.SUPABASE_URL!,
+    process.env.SUPABASE_SERVICE_KEY!
+  );
 
   try {
-    // Initialize Google Sheets API
-    const doc = new GoogleSpreadsheet(spreadsheetId);
-    await doc.useServiceAccountAuth({
-      client_email: process.env.GOOGLE_SERVICE_ACCOUNT_EMAIL,
-      private_key: process.env.GOOGLE_PRIVATE_KEY,
-    });
+    // Create job in Supabase queue
+    const { data, error } = await supabase
+      .from('scaffold_jobs')
+      .insert({
+        namespace,
+        spreadsheet_url: spreadsheetUrl,
+        status: 'pending',
+        created_by: session.user.email,
+        webhook_url: `${process.env.NEXTAUTH_URL}/api/webhooks/scaffold-complete`,
+      })
+      .select()
+      .single();
 
-    await doc.loadInfo();
-    const sheet = doc.sheetsByTitle[worksheetName];
-    const rows = await sheet.getRows();
+    if (error) throw error;
 
-    // Convert to RDF
-    const rdfData = convertRowsToRDF(rows, siteKey);
-
-    // Save to site directory
-    const filePath = `standards/${siteKey}/data/vocabulary.ttl`;
-    await fs.writeFile(filePath, rdfData);
-
+    // Trigger async processing (e.g., via Vercel Edge Function)
+    // This would handle the actual conversion and scaffolding
+    
     return NextResponse.json({ 
-      success: true, 
-      filePath,
-      recordCount: rows.length 
+      jobId: data.id,
+      status: 'queued',
+      message: 'Scaffolding job queued successfully' 
     });
-  } catch (error) {
+  } catch (error: any) {
     return NextResponse.json({ error: error.message }, { status: 500 });
   }
 }
 ```
 
-### 7. Dashboard Page Implementation
-
-#### A. Superadmin Dashboard
-**File**: `portal/src/pages/dashboard/index.tsx`
+#### 5.2 Namespace Listing API
+**File**: `apps/admin/src/app/api/admin/namespaces/route.ts`
 ```tsx
-import React, { useState } from 'react';
-import Layout from '@theme/Layout';
-import { 
-  Grid, 
-  Card, 
-  CardContent, 
-  Typography, 
-  Button,
-  Dialog,
-  DialogTitle,
-  DialogContent,
-  TextField,
-  Box 
-} from '@mui/material';
-import { ProtectedRoute, DashboardLayout } from '@ifla/theme/components';
+import { NextRequest, NextResponse } from 'next/server';
+import { auth } from '@/app/lib/auth';
 
-const SuperAdminDashboard = () => {
-  const [createSiteOpen, setCreateSiteOpen] = useState(false);
-  const [siteData, setSiteData] = useState({
-    siteKey: '',
-    title: '',
-    tagline: '',
-  });
+export async function GET(request: NextRequest) {
+  const session = await auth();
+  if (!session?.user) {
+    return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+  }
 
-  const handleCreateSite = async () => {
-    try {
-      const response = await fetch('/api/scaffold', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(siteData),
-        credentials: 'include',
-      });
-      
-      if (response.ok) {
-        // Handle success
-        setCreateSiteOpen(false);
-      }
-    } catch (error) {
-      console.error('Failed to create site:', error);
-    }
-  };
+  // Define all namespaces with metadata
+  const allNamespaces = [
+    { id: 'isbd', name: 'ISBD', description: 'International Standard Bibliographic Description' },
+    { id: 'lrm', name: 'LRM', description: 'Library Reference Model' },
+    { id: 'frbr', name: 'FRBR', description: 'Functional Requirements for Bibliographic Records' },
+    { id: 'muldicat', name: 'MulDiCat', description: 'Multilingual Dictionary of Cataloguing' },
+    { id: 'unimarc', name: 'UNIMARC', description: 'Universal MARC Format' },
+  ];
 
-  return (
-    <ProtectedRoute requiredRoles={['system-admin', 'ifla-admin']}>
-      <DashboardLayout title="System Administration">
-        <Grid container spacing={3}>
-          <Grid item xs={12} md={6}>
-            <Card>
-              <CardContent>
-                <Typography variant="h5" gutterBottom>
-                  Site Management
-                </Typography>
-                <Button 
-                  variant="contained" 
-                  onClick={() => setCreateSiteOpen(true)}
-                >
-                  Create New Site
-                </Button>
-              </CardContent>
-            </Card>
-          </Grid>
-          
-          <Grid item xs={12} md={6}>
-            <Card>
-              <CardContent>
-                <Typography variant="h5" gutterBottom>
-                  Team Management
-                </Typography>
-                <Button variant="outlined">
-                  Manage GitHub Teams
-                </Button>
-              </CardContent>
-            </Card>
-          </Grid>
-        </Grid>
+  // Filter based on user's teams
+  const userNamespaces = session.user.roles?.includes('system-admin')
+    ? allNamespaces
+    : allNamespaces.filter(ns => 
+        session.user.roles?.some(role => role.startsWith(`${ns.id}-`))
+      );
 
-        {/* Create Site Dialog */}
-        <Dialog open={createSiteOpen} onClose={() => setCreateSiteOpen(false)}>
-          <DialogTitle>Create New Site</DialogTitle>
-          <DialogContent>
-            <Box component="form" sx={{ mt: 1 }}>
-              <TextField
-                fullWidth
-                label="Site Key"
-                value={siteData.siteKey}
-                onChange={(e) => setSiteData({...siteData, siteKey: e.target.value})}
-                margin="normal"
-              />
-              <TextField
-                fullWidth
-                label="Title"
-                value={siteData.title}
-                onChange={(e) => setSiteData({...siteData, title: e.target.value})}
-                margin="normal"
-              />
-              <TextField
-                fullWidth
-                label="Tagline"
-                value={siteData.tagline}
-                onChange={(e) => setSiteData({...siteData, tagline: e.target.value})}
-                margin="normal"
-              />
-              <Button onClick={handleCreateSite} sx={{ mt: 2 }}>
-                Create Site
-              </Button>
-            </Box>
-          </DialogContent>
-        </Dialog>
-      </DashboardLayout>
-    </ProtectedRoute>
-  );
-};
-
-export default function Dashboard() {
-  return (
-    <Layout title="System Dashboard">
-      <SuperAdminDashboard />
-    </Layout>
-  );
+  return NextResponse.json({ namespaces: userNamespaces });
 }
 ```
 
-#### B. Editor Dashboard
-**File**: `portal/src/pages/editor-dashboard/[standard].tsx`
+#### 5.3 Webhook Handler for Completion
+**File**: `apps/admin/src/app/api/webhooks/scaffold-complete/route.ts`
 ```tsx
-import React from 'react';
-import { useRouter } from '@docusaurus/router';
-import Layout from '@theme/Layout';
-import { 
-  Grid, 
-  Card, 
-  CardContent, 
-  Typography, 
-  Button,
-  List,
-  ListItem,
-  ListItemText,
-  Chip 
-} from '@mui/material';
-import { ProtectedRoute, DashboardLayout } from '@ifla/theme/components';
+import { NextRequest, NextResponse } from 'next/server';
+import { createClient } from '@supabase/supabase-js';
 
-const EditorDashboard = () => {
-  const router = useRouter();
-  const { standard } = router.query;
+export async function POST(request: NextRequest) {
+  // Verify webhook signature
+  const signature = request.headers.get('x-webhook-signature');
+  if (!verifyWebhookSignature(signature, await request.text())) {
+    return NextResponse.json({ error: 'Invalid signature' }, { status: 401 });
+  }
 
-  const handleDataConversion = async (type: string) => {
-    try {
-      const response = await fetch(`/api/convert/${type}`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ siteKey: standard }),
-        credentials: 'include',
-      });
-      // Handle response
-    } catch (error) {
-      console.error('Conversion failed:', error);
-    }
-  };
-
-  return (
-    <ProtectedRoute requiredTeams={[`${standard}-editors`, `${standard}-admin`]}>
-      <DashboardLayout title={`Editor Dashboard - ${standard}`}>
-        <Grid container spacing={3}>
-          <Grid item xs={12} md={8}>
-            <Card>
-              <CardContent>
-                <Typography variant="h5" gutterBottom>
-                  Editorial Status
-                </Typography>
-                <List>
-                  <ListItem>
-                    <ListItemText 
-                      primary="Introduction" 
-                      secondary="Last edited 2 days ago"
-                    />
-                    <Chip label="Draft" color="warning" />
-                  </ListItem>
-                  <ListItem>
-                    <ListItemText 
-                      primary="Element Definitions" 
-                      secondary="Last edited 1 week ago"
-                    />
-                    <Chip label="Review" color="info" />
-                  </ListItem>
-                </List>
-                <Button 
-                  variant="contained" 
-                  href={`/tina#/collections/docs`}
-                  sx={{ mt: 2 }}
-                >
-                  Edit Content
-                </Button>
-              </CardContent>
-            </Card>
-          </Grid>
-          
-          <Grid item xs={12} md={4}>
-            <Card>
-              <CardContent>
-                <Typography variant="h5" gutterBottom>
-                  Data Conversion
-                </Typography>
-                <Button 
-                  fullWidth 
-                  variant="outlined" 
-                  onClick={() => handleDataConversion('sheets-to-rdf')}
-                  sx={{ mb: 1 }}
-                >
-                  Sheets → RDF
-                </Button>
-                <Button 
-                  fullWidth 
-                  variant="outlined"
-                  onClick={() => handleDataConversion('rdf-to-docs')}
-                >
-                  RDF → Docs
-                </Button>
-              </CardContent>
-            </Card>
-          </Grid>
-        </Grid>
-      </DashboardLayout>
-    </ProtectedRoute>
+  const { jobId, status, result } = await request.json();
+  
+  // Update job status in Supabase
+  const supabase = createClient(
+    process.env.SUPABASE_URL!,
+    process.env.SUPABASE_SERVICE_KEY!
   );
-};
 
-export default function EditorDashboardPage() {
-  return (
-    <Layout title="Editor Dashboard">
-      <EditorDashboard />
-    </Layout>
-  );
+  await supabase
+    .from('scaffold_jobs')
+    .update({ 
+      status: status,
+      completed_at: new Date().toISOString(),
+      result: result 
+    })
+    .eq('id', jobId);
+
+  // Could send notification email here
+  
+  return NextResponse.json({ received: true });
+}
+
+function verifyWebhookSignature(signature: string | null, body: string): boolean {
+  // Implement webhook signature verification
+  return true; // Placeholder
 }
 ```
 
-### 8. URL Configuration Updates
+### 6. Key Implementation Notes
 
-**File**: `packages/theme/src/config/siteConfig.ts`
-```typescript
-// Update admin portal configuration
-export const ADMIN_PORTAL_CONFIG: Record<Environment, AdminPortalConfig> = {
-  local: {
-    url: 'http://localhost:3007',           // Auth service root
-    signinUrl: 'http://localhost:3007/auth/signin',
-    dashboardUrl: 'http://localhost:3000/dashboard', // Portal dashboard
-    signoutUrl: 'http://localhost:3007/api/auth/signout',
-    sessionApiUrl: 'http://localhost:3007/api/auth/session',
-    port: 3007,
-  },
-  preview: {
-    url: 'https://iflastandards.github.io/standards-dev',
-    signinUrl: 'https://iflastandards.github.io/standards-dev/auth/signin',
-    dashboardUrl: 'https://iflastandards.github.io/standards-dev/dashboard',
-    signoutUrl: 'https://iflastandards.github.io/standards-dev/api/auth/signout',
-    sessionApiUrl: 'https://iflastandards.github.io/standards-dev/api/auth/session',
-  },
-  development: {
-    url: 'https://jonphipps.github.io/standards-dev',
-    signinUrl: 'https://jonphipps.github.io/standards-dev/auth/signin',
-    dashboardUrl: 'https://jonphipps.github.io/standards-dev/dashboard',
-    signoutUrl: 'https://jonphipps.github.io/standards-dev/api/auth/signout',
-    sessionApiUrl: 'https://jonphipps.github.io/standards-dev/api/auth/session',
-  },
-  production: {
-    url: 'https://www.iflastandards.info',
-    signinUrl: 'https://www.iflastandards.info/auth/signin',
-    dashboardUrl: 'https://www.iflastandards.info/dashboard',
-    signoutUrl: 'https://www.iflastandards.info/api/auth/signout',
-    sessionApiUrl: 'https://www.iflastandards.info/api/auth/session',
-  },
-};
-```
+#### Authentication Flow
+1. User clicks login in portal navbar
+2. Portal shows `/admin/login` page (no redirect to admin app)
+3. "Login with GitHub" button links to admin app OAuth handler
+4. Admin app handles GitHub OAuth and redirects back to portal
+5. Portal shows user avatar and appropriate dashboard
 
----
+#### Routing Patterns
+- `/admin/login` - Login page
+- `/admin/dashboard` - Namespace selection for multi-role users
+- `/admin/[role]/[namespace]` - Role-specific dashboards
+- `/admin/[action]/[namespace]` - Action pages
 
-## Epics and Tasks Checklist
+#### API Patterns
+- Authentication: `http://localhost:3007/api/auth/*`
+- Actions: `http://localhost:3007/api/actions/*`
+- Data: `http://localhost:3007/api/admin/*`
+- Webhooks: `http://localhost:3007/api/webhooks/*`
 
-### Epic 1: Foundation Setup ⚡ (Week 1-2)
+#### Supabase Integration
+- Job queue for long-running processes
+- Webhook notifications for completion
+- Status tracking and error handling
 
-#### Tasks:
-- [ ] **1.1** Install MUI dependencies in theme package
-- [ ] **1.2** Install TinaCMS dependencies in portal
-- [ ] **1.3** Install GitHub API dependencies in admin
-- [ ] **1.4** Create MUI theme provider component
-- [ ] **1.5** Configure Docusaurus Root with MUI integration
-- [ ] **1.6** Set up TinaCMS configuration file
-- [ ] **1.7** Create base TinaCMS schemas (docs, site_config)
-- [ ] **1.8** Test MUI + Docusaurus theme synchronization
-- [ ] **1.9** Test TinaCMS basic editing functionality
-
-### Epic 2: Authentication & Protection 🔐 (Week 2-3)
-
-#### Tasks:
-- [ ] **2.1** Create ProtectedRoute component with MUI loading states
-- [ ] **2.2** Create DashboardLayout component
-- [ ] **2.3** Update admin app next.config.js (remove basePath)
-- [ ] **2.4** Update CORS configuration for portal access
-- [ ] **2.5** Update siteConfig.ts URLs for new structure
-- [ ] **2.6** Test authentication flow from portal to admin service
-- [ ] **2.7** Implement role-based redirection logic
-- [ ] **2.8** Add error handling for auth failures
-
-### Epic 3: Dashboard Pages 📊 (Week 3-4)
-
-#### Tasks:
-- [ ] **3.1** Create `/dashboard/index.tsx` (superadmin)
-- [ ] **3.2** Create `/admin-dashboard/[standard].tsx`
-- [ ] **3.3** Create `/editor-dashboard/[standard].tsx`
-- [ ] **3.4** Create `/reviewer-dashboard/[standard].tsx`
-- [ ] **3.5** Implement site creation form (MUI)
-- [ ] **3.6** Implement team management interface (MUI)
-- [ ] **3.7** Implement editorial status displays (MUI)
-- [ ] **3.8** Test role-based access to each dashboard
-- [ ] **3.9** Style dashboards with IFLA theme
-
-### Epic 4: API Service Development 🔧 (Week 4-5)
-
-#### Tasks:
-- [ ] **4.1** Create GitHub teams API (`/api/github/teams`)
-- [ ] **4.2** Create site scaffolding API (`/api/scaffold`)
-- [ ] **4.3** Create data conversion APIs (`/api/convert/*`)
-- [ ] **4.4** Create notification API (`/api/notifications`)
-- [ ] **4.5** Implement GitHub webhook handling
-- [ ] **4.6** Add error handling and validation
-- [ ] **4.7** Test API routes with Postman/curl
-- [ ] **4.8** Add API documentation
-
-### Epic 5: TinaCMS Content Management 📝 (Week 5-6)
-
-#### Tasks:
-- [ ] **5.1** Configure TinaCMS schemas for each site type
-- [ ] **5.2** Set up Git-backed content editing
-- [ ] **5.3** Create custom TinaCMS components with MUI styling
-- [ ] **5.4** Implement vocabulary editing schemas
-- [ ] **5.5** Configure multi-language content support
-- [ ] **5.6** Set up TinaCMS media management
-- [ ] **5.7** Test content editing workflows
-- [ ] **5.8** Configure TinaCMS permissions by role
-
-### Epic 6: Data Processing Pipeline 🔄 (Week 6-7)
-
-#### Tasks:
-- [ ] **6.1** Implement Google Sheets API integration
-- [ ] **6.2** Create CSV to RDF conversion scripts
-- [ ] **6.3** Create RDF to documentation scaffolding
-- [ ] **6.4** Implement reverse data flow (docs to RDF/CSV)
-- [ ] **6.5** Add data validation and error handling
-- [ ] **6.6** Create progress tracking for long conversions
-- [ ] **6.7** Test full data conversion pipeline
-- [ ] **6.8** Add conversion history and rollback
-
-### Epic 7: GitHub Integration 🐙 (Week 7-8)
-
-#### Tasks:
-- [ ] **7.1** Implement team creation and management
-- [ ] **7.2** Set up PR workflow automation
-- [ ] **7.3** Configure GitHub discussions integration
-- [ ] **7.4** Implement notification system for PR events
-- [ ] **7.5** Add project board creation and management
-- [ ] **7.6** Set up repository permissions automation
-- [ ] **7.7** Test full GitHub workflow
-- [ ] **7.8** Add GitHub webhook security
-
-### Epic 8: Testing & Documentation 🧪 (Week 8-9)
-
-#### Tasks:
-
-- [ ] **8.1 Write unit tests for new components**
-    - **`ProtectedRoute.tsx`**: Test that it correctly handles loading states, redirects unauthenticated users, and enforces role-based access.
-    - **`DashboardLayout.tsx`**: Test that it renders correctly and displays the user's name.
-    - **MUI Components**: Write unit tests for any custom MUI components you create.
-
-- [ ] **8.2 Write integration tests for API routes**
-    - Use a library like `supertest` or `node-mocks-http` to write integration tests for your API routes in `apps/admin`.
-    - Test all possible success and error cases, including authentication, authorization, and input validation.
-    - **Example:** For the `/api/scaffold` route, test that it correctly creates a new site, handles errors, and returns the correct response.
-
-- [ ] **8.3 Write E2E tests for dashboard workflows**
-    - Adapt the existing E2E tests in `e2e/admin` to test the new dashboard workflows in the `portal` app.
-    - Use a tool like Playwright to simulate user interactions and test the entire workflow from the UI to the API.
-    - **Example:** For the "Site Administrator - New Site Creation" user story, write an E2E test that fills out the new site form, submits it, and verifies that the new site is created correctly.
-
-- [ ] **8.4 Update existing tests for new architecture**
-    - Review the existing tests in `packages/theme` and update them to reflect any changes in the new architecture.
-
-- [ ] **8.5 Test role-based access controls**
-    - Write a combination of unit, integration, and E2E tests to ensure that your role-based access controls are working correctly.
-
-- [ ] **8.6 Test data conversion pipelines**
-    - Expand the existing tests for your data conversion scripts to cover the new API-driven workflow.
-
-- [ ] **8.7 Create user documentation**
-- [ ] **8.8 Create developer documentation**
-
-### Epic 9: Migration & Deployment 🚀 (Week 9-10)
-
-#### Tasks:
-- [ ] **9.1** Migrate existing admin data to new structure
-- [ ] **9.2** Update CI/CD pipelines for new architecture
-- [ ] **9.3** Configure production environment variables
-- [ ] **9.4** Test deployment to preview environment
-- [ ] **9.5** Conduct user acceptance testing
-- [ ] **9.6** Train users on new interface
-- [ ] **9.7** Deploy to production
-- [ ] **9.8** Monitor and fix any deployment issues
-
----
-
-## Vercel Deployment Configuration
-
-### Environment Variables Required:
-```bash
-# Auth Service (admin app)
-GITHUB_ID=your_github_app_id
-GITHUB_SECRET=your_github_app_secret
-NEXTAUTH_URL=https://your-domain.com
-NEXTAUTH_SECRET=your_nextauth_secret
-GITHUB_TOKEN=github_personal_access_token
-
-# TinaCMS
-TINA_CLIENT_ID=your_tina_client_id
-TINA_TOKEN=your_tina_token
-
-# Google Sheets API
-GOOGLE_SERVICE_ACCOUNT_EMAIL=your_service_account@project.iam.gserviceaccount.com
-GOOGLE_PRIVATE_KEY=your_google_private_key
-```
-
-### Vercel Configuration
-**File**: `vercel.json`
-```json
-{
-  "builds": [
-    {
-      "src": "apps/admin/package.json",
-      "use": "@vercel/next"
-    },
-    {
-      "src": "portal/package.json", 
-      "use": "@vercel/static-build",
-      "config": {
-        "buildCommand": "pnpm build"
-      }
-    }
-  ],
-  "routes": [
-    {
-      "src": "/api/(.*)",
-      "dest": "apps/admin/api/$1"
-    },
-    {
-      "src": "/auth/(.*)",
-      "dest": "apps/admin/auth/$1"
-    },
-    {
-      "src": "/(.*)",
-      "dest": "portal/$1"
-    }
-  ]
-}
-```
-
----
-
-## Implementation Notes
-
-### Key Integration Points
-1. **MUI + Docusaurus**: Theme synchronization via Root component
-2. **TinaCMS + Git**: Direct repository manipulation for content
-3. **NextAuth + Portal**: Session sharing via CORS and localStorage
-4. **API + Vercel**: Function deployment for server-side processing
-
-### Security Considerations
-- Role-based access controls at component level
-- Server-side API authentication
+#### Security Considerations
+- Role-based access at component level
+- API-level authorization checks
 - CORS configuration for cross-origin requests
-- GitHub token management and permissions
+- Webhook signature verification
 
-### Performance Optimizations
-- Dynamic imports for dashboard components
-- Client-side caching for session data
-- Nx build optimizations for development
-- Static generation where possible
+### 7. CSS Styling for Portal Admin
 
-### Monitoring & Maintenance
-- Error tracking for API failures
-- Session monitoring and timeout handling
-- GitHub webhook reliability
-- Data conversion pipeline monitoring
+**File**: `portal/src/css/custom.css`
+```css
+/* Admin dashboard styles */
+.clickable-card:hover {
+  box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+  transform: translateY(-2px);
+  transition: all 0.2s ease;
+}
+
+.progress-bar {
+  height: 20px;
+  background-color: #f0f0f0;
+  border-radius: 10px;
+  overflow: hidden;
+}
+
+.progress-bar__fill {
+  height: 100%;
+  background-color: var(--ifm-color-primary);
+  transition: width 0.3s ease;
+}
+
+.input {
+  width: 100%;
+  padding: 0.5rem;
+  border: 1px solid var(--ifm-color-emphasis-300);
+  border-radius: 4px;
+  font-size: 1rem;
+}
+
+.loader {
+  display: inline-block;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+```
 
 ---
 
-This comprehensive plan provides a complete roadmap for implementing the new architecture with clear tasks, migration steps, and deployment configuration. Each epic builds upon the previous one, ensuring a systematic and reliable implementation process.
+## Summary
+
+This implementation plan transforms the admin architecture from a confusing double-app setup to a streamlined portal-based UI with the admin app serving purely as an auth/API service. Key benefits:
+
+1. **Simplified Login Flow**: No more redirect loops - login happens directly in portal
+2. **Unified Experience**: All UI in Docusaurus, consistent with the rest of the platform
+3. **Clean Separation**: Admin app becomes a minimal auth + API service
+4. **Flexible Routing**: Support for role-based dashboards and action pages
+5. **Scalable Architecture**: Easy to add new actions and workflows
+
+The phased approach allows for incremental implementation while maintaining functionality throughout the migration.
+
+---
+
+## Task Checklist
+
+### Phase 1: Fix Authentication Flow 🔐 (Immediate)
+- [ ] Update CORS in `apps/admin/next.config.js` to allow portal URL
+- [ ] Fix redirect logic in `apps/admin/src/app/lib/auth.ts`
+- [ ] Update `LoginPrompt` component to show proper login UI
+- [ ] Test authentication flow from portal → admin → portal
+
+### Phase 2: Implement New Routing 🛣️ (Day 1-2)
+- [ ] Update `AdminRouter` to parse new route patterns
+- [ ] Add route handler for `/admin/login`
+- [ ] Add route handler for `/admin/dashboard`
+- [ ] Add route handlers for `/admin/[role]/[namespace]`
+- [ ] Add route handlers for `/admin/[action]/[namespace]`
+- [ ] Create navigation helper functions
+
+### Phase 3: Build Dashboard Components 📊 (Day 3-5)
+- [ ] Create `NamespaceSelection` component
+- [ ] Create `RoleDashboard` component
+- [ ] Create `ActionPage` router component
+- [ ] Build action card UI components
+- [ ] Add progress/stats display components
+- [ ] Style with Docusaurus theme classes
+
+### Phase 4: Create Action Pages 🎯 (Day 6-8)
+- [ ] Build `ScaffoldFromSpreadsheet` component
+- [ ] Create confirmation workflow UI
+- [ ] Add progress tracking display
+- [ ] Implement error handling UI
+- [ ] Add other action components as needed
+
+### Phase 5: API Development 🔗 (Day 9-11)
+- [ ] Create `/api/actions/scaffold-from-spreadsheet`
+- [ ] Create `/api/admin/namespaces` endpoint
+- [ ] Create `/api/webhooks/scaffold-complete`
+- [ ] Set up Supabase client and tables
+- [ ] Implement job queue logic
+- [ ] Add webhook signature verification
+
+### Phase 6: Clean Up Admin App 🧹 (Day 12-13)
+- [ ] Remove `/dashboard` and `/site` directories
+- [ ] Remove UI components (keep auth components)
+- [ ] Update `next.config.js` configuration
+- [ ] Remove unused dependencies
+- [ ] Test minimal admin app functionality
+
+### Phase 7: Testing & Polish 🧪 (Day 14-15)
+- [ ] Update E2E tests for new authentication flow
+- [ ] Test all user stories end-to-end
+- [ ] Fix styling and responsiveness issues
+- [ ] Add loading states and error boundaries
+- [ ] Document new architecture and flows
+
+### Future Enhancements 🚀
+- [ ] Add MUI for richer UI components
+- [ ] Implement TinaCMS for content management
+- [ ] Add more sophisticated data conversion tools
+- [ ] Create GitHub team management UI
+- [ ] Build notification system for long-running tasks
+
+---
+
+## Environment Variables
+
+### Admin App (Next.js)
+```bash
+# GitHub OAuth
+GITHUB_ID=your_github_oauth_app_id
+GITHUB_SECRET=your_github_oauth_app_secret
+
+# NextAuth
+NEXTAUTH_URL=http://localhost:3007
+NEXTAUTH_SECRET=your_random_secret
+
+# Supabase
+SUPABASE_URL=your_supabase_url
+SUPABASE_SERVICE_KEY=your_supabase_service_key
+
+# CORS
+ALLOWED_ORIGINS=http://localhost:3000,http://localhost:3008
+```
+
+### Portal (Docusaurus)
+```bash
+# Environment
+DOCS_ENV=local
+```
+
+
+---
+
+## Next Steps
+
+1. **Start with Phase 1** - Fix the immediate authentication issues
+2. **Test the flow** - Ensure login works smoothly from portal
+3. **Build incrementally** - Add dashboard components one at a time
+4. **Keep it simple** - Use Docusaurus styling, avoid complex dependencies initially
+5. **Iterate** - Get basic functionality working, then enhance
+
+This simplified approach gets us to a working admin interface quickly while laying the foundation for future enhancements like MUI components and advanced workflows.

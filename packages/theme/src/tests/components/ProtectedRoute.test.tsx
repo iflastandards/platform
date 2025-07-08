@@ -18,7 +18,7 @@ describe('ProtectedRoute', () => {
     vi.clearAllMocks();
     // Mock window.location
     delete (window as any).location;
-    window.location = { href: '' } as Location;
+    window.location = { href: '', pathname: '/' } as Location;
   });
 
   describe('Loading States', () => {
@@ -36,7 +36,7 @@ describe('ProtectedRoute', () => {
         </ProtectedRoute>
       );
 
-      expect(screen.getByRole('progressbar')).toBeInTheDocument();
+      expect(screen.getByText('Loading...')).toBeInTheDocument();
       expect(screen.queryByText('Protected Content')).not.toBeInTheDocument();
     });
   });

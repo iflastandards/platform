@@ -1,9 +1,8 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest';
-import { NextRequest, NextResponse } from 'next/server';
+import { NextRequest } from 'next/server';
 import { POST } from '../../../app/api/scaffold/route';
 import { auth } from '../../../app/lib/auth';
 import { exec } from 'child_process';
-import { promisify } from 'util';
 
 // Mock dependencies
 vi.mock('../../../app/lib/auth');

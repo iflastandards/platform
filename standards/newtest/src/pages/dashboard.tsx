@@ -2,7 +2,6 @@ import React from 'react';
 import Layout from '@theme/Layout';
 import BrowserOnly from '@docusaurus/BrowserOnly';
 import { useAdminSession } from '@ifla/theme';
-import styles from './dashboard.module.css';
 
 function DashboardContent() {
   const { isAuthenticated, username, loading, teams } = useAdminSession();
