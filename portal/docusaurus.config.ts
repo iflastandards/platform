@@ -96,6 +96,7 @@ const config: Config = {
         indexBlog: true,
       },
     ],
+    './plugins/admin-routes-plugin.js',
   ],
 
   presets: [

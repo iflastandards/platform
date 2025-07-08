@@ -32,6 +32,9 @@ export { ExampleTable } from './ExampleTable';
 // Auth components
 export { ProtectedRoute } from './ProtectedRoute';
 
+// Admin components
+export { AdminRouter } from './AdminRouter';
+
 
 
 // Legacy exports for backward compatibility

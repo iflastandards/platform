@@ -132,28 +132,28 @@ export const SITE_CONFIG: Record<
 // Admin Portal configuration matrix
 export const ADMIN_PORTAL_CONFIG: Record<Environment, AdminPortalConfig> = {
   local: {
-    url: 'http://localhost:3007/admin',
-    signinUrl: 'http://localhost:3007/admin/auth/signin',
-    dashboardUrl: 'http://localhost:3007/admin/dashboard',
-    signoutUrl: 'http://localhost:3007/admin/api/auth/signout',
-    sessionApiUrl: 'http://localhost:3007/admin/api/auth/session',
+    url: 'http://localhost:3007',
+    signinUrl: 'http://localhost:3007/auth/signin',
+    dashboardUrl: 'http://localhost:3000/admin/dashboard',
+    signoutUrl: 'http://localhost:3007/api/auth/signout',
+    sessionApiUrl: 'http://localhost:3007/api/auth/session',
     port: 3007,
   },
   preview: {
-    url: 'https://iflastandards.github.io/platform/admin',
-    signinUrl: 'https://iflastandards.github.io/platform/admin/auth/signin',
+    url: 'https://iflastandards.github.io/platform',
+    signinUrl: 'https://iflastandards.github.io/platform/auth/signin',
     dashboardUrl: 'https://iflastandards.github.io/platform/admin/dashboard',
     signoutUrl:
-      'https://iflastandards.github.io/platform/admin/api/auth/signout',
+      'https://iflastandards.github.io/platform/api/auth/signout',
     sessionApiUrl:
-      'https://iflastandards.github.io/platform/admin/api/auth/session',
+      'https://iflastandards.github.io/platform/api/auth/session',
   },
   production: {
-    url: 'https://www.iflastandards.info/admin',
-    signinUrl: 'https://www.iflastandards.info/admin/auth/signin',
+    url: 'https://www.iflastandards.info',
+    signinUrl: 'https://www.iflastandards.info/auth/signin',
     dashboardUrl: 'https://www.iflastandards.info/admin/dashboard',
-    signoutUrl: 'https://www.iflastandards.info/admin/api/auth/signout',
-    sessionApiUrl: 'https://www.iflastandards.info/admin/api/auth/session',
+    signoutUrl: 'https://www.iflastandards.info/api/auth/signout',
+    sessionApiUrl: 'https://www.iflastandards.info/api/auth/session',
   },
 };
 
