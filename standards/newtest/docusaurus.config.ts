@@ -130,10 +130,6 @@ const config: Config = {
           type: 'search',
           position: 'right',
         },
-        {
-          type: 'custom-authDropdown',
-          position: 'right',
-        }
       ],
     },
     footer: {
