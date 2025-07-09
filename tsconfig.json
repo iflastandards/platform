@@ -71,7 +71,12 @@
     "**/tests/**/*",
     "**/test/**/*",
     "**/__tests__/**/*",
-    "**/e2e/**/*"
+    "**/e2e/**/*",
+    "**/.next/**/*",
+    "**/dist/**/*",
+    "**/.docusaurus/**/*",
+    "**/coverage/**/*",
+    "**/.nx/**/*"
   ],
   "ts-node": {
     "compilerOptions": {

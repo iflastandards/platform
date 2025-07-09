@@ -4,6 +4,7 @@ import type * as Preset from '@docusaurus/preset-classic';
 import {
   getSiteConfig,
   getSiteConfigMap,
+  getAdminPortalConfig,
   type SiteKey,
   type Environment,
 } from '@ifla/theme/config/siteConfig';
@@ -20,6 +21,7 @@ if (!DOCS_ENV) {
 // Get configuration for this site
 const siteConfig = getSiteConfig('portal' as SiteKey, DOCS_ENV);
 const siteConfigMap = getSiteConfigMap(DOCS_ENV);
+const adminConfig = getAdminPortalConfig(DOCS_ENV);
 
 const config: Config = {
   future: {
@@ -96,7 +98,6 @@ const config: Config = {
         indexBlog: true,
       },
     ],
-    './plugins/admin-routes-plugin.js',
   ],
 
   presets: [
@@ -181,7 +182,12 @@ const config: Config = {
       links: [
         {
           title: 'Resources',
-          items: [],
+          items: [
+            {
+              label: 'Admin Dashboard',
+              href: adminConfig.dashboardUrl,
+            },
+          ],
         },
         {
           title: 'Community',

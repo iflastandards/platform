@@ -1,7 +1,7 @@
-import React from 'react';
 import Layout from '@theme/Layout';
 import { ProtectedRoute } from '@ifla/theme';
 import { useAdminSession } from '@ifla/theme';
+import { getAdminPortalConfigAuto } from '@ifla/theme/config/siteConfig';
 import Link from '@docusaurus/Link';
 import styles from '../manage/styles.module.css';
 
@@ -50,9 +50,11 @@ const SITES = [
 
 function SuperAdminDashboard() {
   const { username, teams } = useAdminSession();
-  
+  const adminConfig = getAdminPortalConfigAuto();
+
   // Check if user has superadmin access
-  const isSuperAdmin = teams?.includes('system-admin') || teams?.includes('ifla-admin');
+  const isSuperAdmin =
+    teams?.includes('system-admin') || teams?.includes('ifla-admin');
 
   return (
     <div className={styles.managementContainer}>
@@ -95,14 +97,16 @@ function SuperAdminDashboard() {
                 <h3>{site.title}</h3>
                 <p>{site.description}</p>
                 <div className={styles.actionGroup}>
-                  <Link
+                  <a
                     className="button button--primary button--sm"
-                    to={`/admin-dashboard/${site.key.toLowerCase()}`}>
+                    href={`${adminConfig.dashboardUrl}/${site.key.toLowerCase()}`}
+                  >
                     Manage
-                  </Link>
+                  </a>
                   <Link
                     className="button button--secondary button--sm"
-                    to={`/${site.key}/`}>
+                    to={`/${site.key}/`}
+                  >
                     View Site
                   </Link>
                 </div>
@@ -117,7 +121,10 @@ function SuperAdminDashboard() {
 
 export default function DashboardPage() {
   return (
-    <Layout title="Admin Dashboard" description="IFLA Standards Admin Dashboard">
+    <Layout
+      title="Admin Dashboard"
+      description="IFLA Standards Admin Dashboard"
+    >
       <ProtectedRoute requiredTeams={['system-admin', 'ifla-admin']}>
         <SuperAdminDashboard />
       </ProtectedRoute>

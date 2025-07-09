@@ -1,7 +1,7 @@
-import React from 'react';
 import Layout from '@theme/Layout';
 import { ProtectedRoute } from '@ifla/theme';
 import { useAdminSession } from '@ifla/theme';
+import { getAdminPortalConfigAuto } from '@ifla/theme/config/siteConfig';
 import Link from '@docusaurus/Link';
 import styles from '../manage/styles.module.css';
 
@@ -9,12 +9,14 @@ const namespace = 'newtest';
 
 function NewtestEditorDashboard() {
   const { username, teams } = useAdminSession();
-  
+  const adminConfig = getAdminPortalConfigAuto();
+
   // Check if user has editor access to this namespace
-  const hasEditorAccess = teams?.includes(`${namespace}-editor`) ||
-                         teams?.includes(`${namespace}-admin`) || 
-                         teams?.includes('system-admin') || 
-                         teams?.includes('ifla-admin');
+  const hasEditorAccess =
+    teams?.includes(`${namespace}-editor`) ||
+    teams?.includes(`${namespace}-admin`) ||
+    teams?.includes('system-admin') ||
+    teams?.includes('ifla-admin');
 
   if (!hasEditorAccess) {
     return (
@@ -42,12 +44,11 @@ function NewtestEditorDashboard() {
               <h2>Content Editing</h2>
               <p>Edit documentation and vocabulary content</p>
               <div className={styles.actionGroup}>
-                <button className="button button--primary">
-                  Edit Content
-                </button>
-                <Link 
+                <button className="button button--primary">Edit Content</button>
+                <Link
                   className="button button--secondary"
-                  to={`/${namespace}/docs/intro`}>
+                  to={`/${namespace}/docs/intro`}
+                >
                   View Docs
                 </Link>
               </div>
@@ -59,12 +60,8 @@ function NewtestEditorDashboard() {
               <h2>Data Conversion</h2>
               <p>Convert between Google Sheets, CSV, and RDF</p>
               <div className={styles.actionGroup}>
-                <button className="button button--primary">
-                  Sheets → RDF
-                </button>
-                <button className="button button--secondary">
-                  RDF → CSV
-                </button>
+                <button className="button button--primary">Sheets → RDF</button>
+                <button className="button button--secondary">RDF → CSV</button>
               </div>
             </div>
           </div>
@@ -76,7 +73,9 @@ function NewtestEditorDashboard() {
             <div className="col">
               <div className="alert alert--info" role="alert">
                 You also have admin access. Visit the{' '}
-                <Link to={`/admin-dashboard/${namespace}`}>Admin Dashboard</Link>{' '}
+                <a href={`${adminConfig.dashboardUrl}/${namespace}`}>
+                  Admin Dashboard
+                </a>{' '}
                 for publishing and team management.
               </div>
             </div>
@@ -89,9 +88,10 @@ function NewtestEditorDashboard() {
 
 export default function EditorDashboardPage() {
   return (
-    <Layout 
-      title={`${namespace.toUpperCase()} Editor Dashboard`} 
-      description={`Editor dashboard for ${namespace}`}>
+    <Layout
+      title={`${namespace.toUpperCase()} Editor Dashboard`}
+      description={`Editor dashboard for ${namespace}`}
+    >
       <ProtectedRoute>
         <NewtestEditorDashboard />
       </ProtectedRoute>

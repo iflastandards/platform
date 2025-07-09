@@ -3,12 +3,23 @@ import type { NextRequest } from 'next/server';
 import { auth } from '@/app/lib/auth';
 import { getRoleBasedLandingPage } from '@/app/lib/role-based-routing';
 
-// Allowed origins for CORS - Only portal needs access
-const allowedOrigins = process.env.NODE_ENV === 'production'
-  ? ['https://www.iflastandards.info'] // Production portal
-  : process.env.VERCEL_ENV === 'preview' || process.env.GITHUB_PAGES === 'true'
-  ? ['https://iflastandards.github.io'] // Preview environment (GitHub Pages)
-  : ['http://localhost:3000']; // Development portal only
+// Allowed origins for CORS - Portal and all Docusaurus sites for development
+const allowedOrigins =
+  process.env.NODE_ENV === 'production'
+    ? ['https://www.iflastandards.info'] // Production portal
+    : process.env.VERCEL_ENV === 'preview' ||
+        process.env.GITHUB_PAGES === 'true'
+      ? ['https://iflastandards.github.io'] // Preview environment (GitHub Pages)
+      : [
+          'http://localhost:3000', // Portal
+          'http://localhost:3001', // ISBDM
+          'http://localhost:3002', // LRM
+          'http://localhost:3003', // FRBR
+          'http://localhost:3004', // ISBD
+          'http://localhost:3005', // MulDiCat
+          'http://localhost:3006', // UniMARC
+          'http://localhost:3008', // NewTest
+        ]; // Development - all sites
 
 export async function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl;
@@ -17,6 +28,14 @@ export async function middleware(request: NextRequest) {
   if (pathname.startsWith('/api/') || pathname.startsWith('/auth/')) {
     // Get the origin from the request
     const origin = request.headers.get('origin') || '';
+
+    // Debug logging for development
+    if (process.env.NODE_ENV === 'development') {
+      console.log(
+        `[MIDDLEWARE] ${request.method} ${pathname} from origin: ${origin}`,
+      );
+      console.log(`[MIDDLEWARE] Allowed origins:`, allowedOrigins);
+    }
 
     // Check if the origin is allowed
     const isAllowedOrigin = allowedOrigins.includes(origin);
@@ -28,8 +47,14 @@ export async function middleware(request: NextRequest) {
       if (isAllowedOrigin) {
         response.headers.set('Access-Control-Allow-Origin', origin);
         response.headers.set('Access-Control-Allow-Credentials', 'true');
-        response.headers.set('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS');
-        response.headers.set('Access-Control-Allow-Headers', 'Content-Type, Authorization, Cookie');
+        response.headers.set(
+          'Access-Control-Allow-Methods',
+          'GET, POST, PUT, DELETE, OPTIONS',
+        );
+        response.headers.set(
+          'Access-Control-Allow-Headers',
+          'Content-Type, Authorization, Cookie',
+        );
         response.headers.set('Access-Control-Max-Age', '86400');
       }
 

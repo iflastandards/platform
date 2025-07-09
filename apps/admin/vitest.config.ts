@@ -18,6 +18,7 @@ export default defineConfig({
       '.next',
       'coverage',
       '**/*.e2e.{test,spec}.{js,ts,jsx,tsx}',
+      'src/test/integration/server-dependent/**/*.{test,spec}.{js,ts,jsx,tsx}',
     ],
     coverage: {
       provider: 'v8',
