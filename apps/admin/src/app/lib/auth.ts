@@ -6,7 +6,7 @@ import { createUser } from './mock-auth';
 
 const authConfig: NextAuthConfig = {
   debug: process.env.NODE_ENV === 'development',
-  basePath: '/api/auth',
+  basePath: '/admin/api/auth',
   providers: [
     GitHub({
       clientId: process.env.GITHUB_ID!,
@@ -45,7 +45,7 @@ const authConfig: NextAuthConfig = {
       : []),
   ],
   pages: {
-    signIn: '/auth/signin',
+    signIn: '/admin/auth/signin',
   },
   callbacks: {
     async jwt({ token, account, user }) {

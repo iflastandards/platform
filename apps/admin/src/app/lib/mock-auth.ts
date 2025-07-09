@@ -8,12 +8,13 @@ interface MockUser {
 }
 
 const mockUsers: Record<string, MockUser> = {};
+let userCounter = 0;
 
 export function createUser(userData: {
   name: string;
   roles: string[];
 }): MockUser {
-  const id = `mock-${Date.now()}`;
+  const id = `mock-${Date.now()}-${++userCounter}`;
   const user: MockUser = {
     id,
     name: userData.name,
