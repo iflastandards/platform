@@ -80,7 +80,7 @@ export function getRoleBasedLandingPage(
  */
 function getAdminPortalUrl(env: Environment): string {
   const urls = {
-    local: 'http://localhost:3007',
+    local: 'http://localhost:3007/admin',
     preview: 'https://iflastandards.github.io/standards-dev/admin',
     development: 'https://jonphipps.github.io/standards-dev/admin',
     production: 'https://www.iflastandards.info/admin',

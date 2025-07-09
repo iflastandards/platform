@@ -6,8 +6,7 @@ const { composePlugins, withNx } = require('@nx/next');
  * @type {import('@nx/next/plugins/with-nx').WithNxOptions}
  **/
 const nextConfig = {
-  // basePath clearly indicates this is a services provider, not the admin UI
-  basePath: '/services',
+  basePath: '/admin',
   transpilePackages: ['next-auth'],
   // Use this to set Nx-specific options
   // See: https://nx.dev/recipes/next/next-config-setup

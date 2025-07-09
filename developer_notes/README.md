@@ -19,15 +19,36 @@ This directory contains detailed documentation for developers working on the IFL
 - **tools/** - Notes about development tools and utilities
   - `language-checking-scripts.md` - Language validation tools
 
+### Admin Portal Architecture
+- **`admin-architecture-implementation-plan.md`** - **UPDATED** Current Next.js admin architecture
+- **`admin-portal-authentication-architecture.md`** - **UPDATED** Authentication and CORS configuration
+- **`admin-spa-architecture.md`** - **DEPRECATED** Previous Docusaurus SPA approach
+- **`admin-portal-testing.md`** - Complete testing guide for Next.js admin portal
+- **`rbac-implementation-plan.md`** - Role-based access control with Cerbos
+
 ### Testing and Validation
 - **`build-regression-testing.md`** - Comprehensive build regression testing strategy
-- **`admin-portal-testing.md`** - **NEW** Complete testing guide for Next.js admin portal
 - **`testing-vocabulary-pages.md`** - Testing vocabulary page functionality
 - **`vocabulary-comparison-testing.md`** - Testing vocabulary server responses
 - **`url-validation-guide.md`** - URL validation and link checking
 - **`link-validation-organization.md`** - Link validation system organization
 
 ## Recent Updates
+
+### January 2025: Admin Portal Architecture Finalized
+- **✅ ARCHITECTURE DECISION** - Chose Next.js admin app over Docusaurus SPA approach
+- **Established `/admin` base path** - All admin routes use consistent URL structure
+- **Fixed NextAuth routing** - Resolved UnknownAction errors with proper basePath configuration
+- **Updated site configuration** - Centralized admin portal URLs in theme package
+- **Fixed inactivity logout** - Proper redirects to signin page instead of 404 errors
+- **Updated documentation** - Comprehensive admin portal guides and API documentation
+
+### Key Admin Portal Features
+- **44 TypeScript files** - Substantial existing functionality
+- **Complete authentication** - GitHub OAuth with team role detection
+- **Role-based access control** - Cerbos integration for fine-grained permissions
+- **Site management dashboards** - Individual management interfaces for each standard
+- **Cross-site integration** - CORS-enabled session sharing with Docusaurus sites
 
 ### December 2024: Centralized Configuration Migration
 - **✅ MAJOR REFACTOR COMPLETED** - Migrated from environment files to TypeScript configuration matrix

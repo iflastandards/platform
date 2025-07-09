@@ -604,14 +604,14 @@ function generateAuthenticationUrl(user, role, targetSite) {
 
     // Create admin portal URL that will authenticate and redirect to site management
     const mockUserParam = encodeURIComponent(JSON.stringify(user));
-    const managementUrl = `http://localhost:3007/dashboard/${targetSite}`;
-    return `http://localhost:3007/auth/signin?mockUser=${mockUserParam}&callbackUrl=${encodeURIComponent(managementUrl)}`;
+    const managementUrl = `http://localhost:3007/admin/dashboard/${targetSite}`;
+    return `http://localhost:3007/admin/auth/signin?mockUser=${mockUserParam}&callbackUrl=${encodeURIComponent(managementUrl)}`;
   }
 
   // For namespace or system roles, go to general dashboard
   const mockUserParam = encodeURIComponent(JSON.stringify(user));
-  const dashboardUrl = 'http://localhost:3007/dashboard';
-  return `http://localhost:3007/auth/signin?mockUser=${mockUserParam}&callbackUrl=${encodeURIComponent(dashboardUrl)}`;
+  const dashboardUrl = 'http://localhost:3007/admin/dashboard';
+  return `http://localhost:3007/admin/auth/signin?mockUser=${mockUserParam}&callbackUrl=${encodeURIComponent(dashboardUrl)}`;
 }
 
 function displayTestingInstructions(user, role, targetSite) {
@@ -819,7 +819,7 @@ async function startDemo(user, role, namespace, site) {
 
     // Wait for admin portal to be ready
     log('Waiting for admin portal to start...');
-    const adminReady = await checkUrl('http://localhost:3007');
+    const adminReady = await checkUrl('http://localhost:3007/admin');
     console.log(); // New line after dots
 
     if (!adminReady) {
@@ -827,7 +827,7 @@ async function startDemo(user, role, namespace, site) {
       cleanup();
       return;
     }
-    success('Admin portal is ready at http://localhost:3007');
+    success('Admin portal is ready at http://localhost:3007/admin');
 
     // Wait for site/portal to be ready
     if (shouldStartMultipleSites) {

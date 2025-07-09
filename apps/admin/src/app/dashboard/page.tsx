@@ -48,15 +48,15 @@ interface DashboardPageProps {
   searchParams: Promise<{ sitekey?: string }>;
 }
 
-export default async function DashboardPage({ searchParams }: DashboardPageProps) {
+export default async function DashboardPage({
+  searchParams,
+}: DashboardPageProps) {
   const session = await auth();
   const params = await searchParams;
   const sitekey = params.sitekey;
 
   if (!session?.user) {
-    const returnUrl = sitekey 
-      ? `/dashboard?sitekey=${sitekey}`
-      : '/dashboard';
+    const returnUrl = sitekey ? `/dashboard?sitekey=${sitekey}` : '/dashboard';
     redirect(`/auth/signin?callbackUrl=${encodeURIComponent(returnUrl)}`);
   }
 

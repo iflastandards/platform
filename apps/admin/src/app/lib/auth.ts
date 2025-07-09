@@ -6,6 +6,7 @@ import { createUser } from './mock-auth';
 
 const authConfig: NextAuthConfig = {
   debug: process.env.NODE_ENV === 'development',
+  basePath: '/api/auth',
   providers: [
     GitHub({
       clientId: process.env.GITHUB_ID!,
@@ -52,7 +53,7 @@ const authConfig: NextAuthConfig = {
       if (!token.roles) {
         token.roles = [];
       }
-      
+
       // Handle mock users in development
       if (process.env.NODE_ENV === 'development' && user && 'roles' in user) {
         token.roles = user.roles as string[];
@@ -187,33 +188,41 @@ const authConfig: NextAuthConfig = {
       // Handle callbackUrl parameter for cross-domain redirects
       const urlObj = new URL(url, baseUrl);
       const callbackUrl = urlObj.searchParams.get('callbackUrl');
-      
+
       if (callbackUrl) {
         // Validate it's a safe redirect to our portal
-        const allowedHosts = process.env.NODE_ENV === 'production'
-          ? ['www.iflastandards.info']
-          : ['localhost:3000'];
-        
+        const allowedHosts =
+          process.env.NODE_ENV === 'production'
+            ? ['www.iflastandards.info']
+            : ['localhost:3000'];
+
         try {
           const callbackUrlObj = new URL(callbackUrl);
           // Check if the host is allowed
-          if (allowedHosts.some(host => callbackUrlObj.host === host || callbackUrlObj.host.includes(host))) {
+          if (
+            allowedHosts.some(
+              (host) =>
+                callbackUrlObj.host === host ||
+                callbackUrlObj.host.includes(host),
+            )
+          ) {
             return callbackUrl;
           }
         } catch (e) {
           console.error('Invalid callback URL:', e);
         }
       }
-      
+
       // Default behavior for URLs within the admin app
       if (url.startsWith(baseUrl)) {
         return url;
       }
 
       // Default redirect to portal admin dashboard
-      const portalBase = process.env.NODE_ENV === 'production'
-        ? 'https://www.iflastandards.info'
-        : 'http://localhost:3000';
+      const portalBase =
+        process.env.NODE_ENV === 'production'
+          ? 'https://www.iflastandards.info'
+          : 'http://localhost:3000';
       return `${portalBase}/admin/dashboard`;
     },
   },

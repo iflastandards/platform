@@ -70,7 +70,7 @@ async function openBrowser(url, preferChrome = false) {
       // On Linux, try xdg-open first
       command = `xdg-open "${url}"`;
     }
-    
+
     await execAsync(command);
     log(`Opened ${url} in ${preferChrome ? 'Chrome' : 'default browser'}`);
   } catch (e) {
@@ -80,16 +80,24 @@ async function openBrowser(url, preferChrome = false) {
         await execAsync(`open "${url}"`);
         log(`Chrome not found, opened ${url} in default browser`);
       } catch (e2) {
-        warning(`Could not open browser automatically. Please manually visit: ${url}`);
+        warning(
+          `Could not open browser automatically. Please manually visit: ${url}`,
+        );
       }
     } else if (platform !== 'darwin' && platform !== 'win32') {
       try {
-        await execAsync(`google-chrome "${url}" || chromium-browser "${url}" || chromium "${url}" || firefox "${url}"`);
+        await execAsync(
+          `google-chrome "${url}" || chromium-browser "${url}" || chromium "${url}" || firefox "${url}"`,
+        );
       } catch (e2) {
-        warning(`Could not open browser automatically. Please manually visit: ${url}`);
+        warning(
+          `Could not open browser automatically. Please manually visit: ${url}`,
+        );
       }
     } else {
-      warning(`Could not open browser automatically. Please manually visit: ${url}`);
+      warning(
+        `Could not open browser automatically. Please manually visit: ${url}`,
+      );
     }
   }
 }
@@ -106,7 +114,7 @@ async function main() {
   }
 
   warning('This will start two development servers:');
-  warning('  • Admin Services: http://localhost:3007/services');
+  warning('  • Admin Services: http://localhost:3007/admin');
   warning('  • Portal Site: http://localhost:3000');
   console.log();
 
@@ -121,10 +129,10 @@ async function main() {
   log('Starting portal site...');
   const portalProcess = spawn('nx', ['start', 'portal'], {
     stdio: ['ignore', 'pipe', 'pipe'],
-    env: { 
-      ...process.env, 
+    env: {
+      ...process.env,
       DOCS_ENV: 'local',
-      BROWSER: 'none' // This might prevent auto-opening
+      BROWSER: 'none', // This might prevent auto-opening
     },
   });
 
@@ -141,7 +149,7 @@ async function main() {
 
   // Wait for admin services to be ready
   log('Waiting for admin services to start...');
-  const adminReady = await checkUrl('http://localhost:3007/services');
+  const adminReady = await checkUrl('http://localhost:3007/admin');
   console.log(); // New line after dots
 
   if (!adminReady) {
@@ -164,7 +172,7 @@ async function main() {
   success('Portal site is ready at http://localhost:3000');
 
   // Small delay to ensure servers are fully initialized
-  await new Promise(resolve => setTimeout(resolve, 1000));
+  await new Promise((resolve) => setTimeout(resolve, 1000));
 
   // Open browser to admin page
   // Note: If the portal server auto-opens a browser tab to '/', we'll open '/admin' in Chrome
@@ -192,7 +200,7 @@ async function main() {
     `  ${colors.green}•${colors.reset} Portal UI at ${colors.blue}http://localhost:3000/admin${colors.reset}`,
   );
   console.log(
-    `  ${colors.green}•${colors.reset} Auth services at ${colors.blue}http://localhost:3007/services${colors.reset}`,
+    `  ${colors.green}•${colors.reset} Auth services at ${colors.blue}http://localhost:3007/admin${colors.reset}`,
   );
   console.log(
     `  ${colors.green}•${colors.reset} GitHub OAuth handled by admin services`,

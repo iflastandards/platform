@@ -124,7 +124,7 @@
     "start:robust:nx": "nx run platform:start-all:robust",
     "start:robust:site": "node scripts/start-with-port-cleanup.js start",
     "start:unimarc": "pnpm stop:unimarc && DOCS_ENV=local docusaurus start standards/unimarc --port 3006",
-    "stop:all": "lsof -ti:3000,3001,3002,3003,3004,3005,3006 | xargs kill -9 2>/dev/null || true && pkill -f 'docusaurus start' 2>/dev/null || true",
+    "stop:all": "lsof -ti:3000,3001,3002,3003,3004,3005,3006,3007,3008 | xargs kill -9 2>/dev/null || true && pkill -f 'docusaurus start' 2>/dev/null || true",
     "stop:frbr": "lsof -ti:3003 | xargs kill -9 2>/dev/null || true",
     "stop:isbd": "lsof -ti:3004 | xargs kill -9 2>/dev/null || true",
     "stop:isbdm": "lsof -ti:3001 | xargs kill -9 2>/dev/null || true",

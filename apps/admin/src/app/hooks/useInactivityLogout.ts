@@ -27,11 +27,11 @@ export function useInactivityLogout({
       if (onLogout) {
         onLogout();
       }
-      await signOut({ callbackUrl: '/signin?reason=inactivity' });
+      await signOut({ callbackUrl: '/auth/signin?reason=inactivity' });
     } catch (error) {
       console.error('Logout failed:', error);
       // Force redirect if signOut fails
-      window.location.href = '/signin?reason=inactivity';
+      window.location.href = '/auth/signin?reason=inactivity';
     }
   }, [onLogout]);
 

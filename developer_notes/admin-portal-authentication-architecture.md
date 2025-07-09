@@ -32,20 +32,27 @@ This document describes the comprehensive authentication and testing architectur
 // Environment-specific admin portal URLs
 export const ADMIN_PORTAL_CONFIG: Record<Environment, AdminPortalConfig> = {
   local: {
-    url: 'http://localhost:3007',
-    signinUrl: 'http://localhost:3007/signin',
-    // ...
+    url: 'http://localhost:3007/admin',
+    signinUrl: 'http://localhost:3007/admin/auth/signin',
+    dashboardUrl: 'http://localhost:3007/admin/dashboard',
+    signoutUrl: 'http://localhost:3007/admin/api/auth/signout',
+    sessionApiUrl: 'http://localhost:3007/admin/api/auth/session',
+    port: 3007,
   },
   preview: {
-    url: 'https://iflastandards.github.io/standards-dev/admin',
-    signinUrl: 'https://iflastandards.github.io/standards-dev/admin/signin',
-    // ...
+    url: 'https://iflastandards.github.io/platform/admin',
+    signinUrl: 'https://iflastandards.github.io/platform/admin/auth/signin',
+    dashboardUrl: 'https://iflastandards.github.io/platform/admin/dashboard',
+    signoutUrl: 'https://iflastandards.github.io/platform/admin/api/auth/signout',
+    sessionApiUrl: 'https://iflastandards.github.io/platform/admin/api/auth/session',
   },
   production: {
     url: 'https://www.iflastandards.info/admin',
-    signinUrl: 'https://www.iflastandards.info/admin/signin',
-    // ...
-  }
+    signinUrl: 'https://www.iflastandards.info/admin/auth/signin',
+    dashboardUrl: 'https://www.iflastandards.info/admin/dashboard',
+    signoutUrl: 'https://www.iflastandards.info/admin/api/auth/signout',
+    sessionApiUrl: 'https://www.iflastandards.info/admin/api/auth/session',
+  },
 };
 ```
 

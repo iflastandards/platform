@@ -32,7 +32,7 @@ export function DocusaurusNavbar({
 
   // Handle logout
   const handleLogout = async () => {
-    await signOut({ callbackUrl: '/signin' });
+    await signOut({ callbackUrl: '/auth/signin' });
     setIsDropdownOpen(false);
   };
 
@@ -291,7 +291,7 @@ export function DocusaurusNavbar({
               )}
             </div>
           ) : (
-            <Link href="/signin" className="docusaurus-navbar__signin">
+            <Link href="/auth/signin" className="docusaurus-navbar__signin">
               Sign In
             </Link>
           )}

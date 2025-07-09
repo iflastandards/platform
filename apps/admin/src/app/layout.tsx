@@ -19,7 +19,7 @@ export default async function RootLayout({
   return (
     <html lang="en">
       <body suppressHydrationWarning={true}>
-        <SessionProvider>
+        <SessionProvider basePath="/api/auth">
           {process.env.NODE_ENV === 'development' &&
             isMockUser &&
             session?.user && <MockUserIndicator user={session.user!} />}
