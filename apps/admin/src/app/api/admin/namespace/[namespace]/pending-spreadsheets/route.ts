@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { auth } from '../../../../../lib/auth';
+import { getCerbosUser } from '@/lib/clerk-cerbos';
 
 export async function GET(
   request: NextRequest,
@@ -7,19 +7,19 @@ export async function GET(
 ) {
   try {
     // Check authentication
-    const session = await auth();
-    if (!session) {
+    const user = await getCerbosUser();
+    if (!user) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
 
     const { namespace } = await context.params;
 
     // Check user has appropriate role for this namespace
-    const userTeams = session.user?.teams || [];
-    const hasAccess = userTeams.some((team: string) => 
-      team === 'ifla-admin' || 
-      team === 'site-admin' || 
-      team.startsWith(`${namespace}-`)
+    const userRoles = user.roles || [];
+    const hasAccess = userRoles.some((role: string) => 
+      role === 'ifla-admin' || 
+      role === 'site-admin' || 
+      role.startsWith(`${namespace}-`)
     );
 
     if (!hasAccess) {

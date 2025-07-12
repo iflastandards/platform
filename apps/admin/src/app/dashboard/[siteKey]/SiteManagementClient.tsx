@@ -2,7 +2,6 @@
 
 import React, { useState } from 'react';
 import { DocusaurusNavbar } from '@/app/components/docusaurus-navbar';
-import { useInactivityLogout } from '@/app/hooks/useInactivityLogout';
 
 interface ManagementAction {
   id: string;
@@ -539,20 +538,6 @@ export default function SiteManagementClient({
   githubRepo = 'iflastandards/standards-dev',
 }: SiteManagementClientProps) {
   const [activeTab, setActiveTab] = useState('overview');
-
-  // Set up inactivity logout with warning
-  useInactivityLogout({
-    timeoutMinutes: 30,
-    warningMinutes: 5,
-    checkKeepSignedIn: true,
-    onWarning: () => {
-      // Could show a toast notification here
-      console.log('Session will expire in 5 minutes due to inactivity');
-    },
-    onLogout: () => {
-      console.log('Logging out due to inactivity');
-    },
-  });
 
   const currentTab = managementTabs.find((tab) => tab.id === activeTab);
 

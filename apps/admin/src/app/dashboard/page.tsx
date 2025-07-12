@@ -1,7 +1,7 @@
-import { auth } from '@/app/lib/auth';
+import { getCerbosUser } from '@/lib/clerk-cerbos';
 import { redirect } from 'next/navigation';
 import Link from 'next/link';
-import { SignOut } from '@/app/components/sign-out';
+import { UserButton } from '@clerk/nextjs';
 
 // Force dynamic rendering to avoid static generation issues with auth
 export const dynamic = 'force-dynamic';
@@ -51,24 +51,32 @@ interface DashboardPageProps {
 export default async function DashboardPage({
   searchParams,
 }: DashboardPageProps) {
-  const session = await auth();
+  const user = await getCerbosUser();
   const params = await searchParams;
   const sitekey = params.sitekey;
 
-  if (!session?.user) {
+  // Clerk middleware ensures authentication, but double-check
+  if (!user) {
     const returnUrl = sitekey ? `/dashboard?sitekey=${sitekey}` : '/dashboard';
-    redirect(`/auth/signin?callbackUrl=${encodeURIComponent(returnUrl)}`);
+    redirect(`/sign-in?redirect_url=${encodeURIComponent(returnUrl)}`);
   }
 
-  const userRoles = (session.user.roles as string[]) || [];
+  const userRoles = user.roles || [];
 
   return (
     <div className="min-h-screen bg-gray-50 dark:bg-gray-900">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        {/* Header with sign out */}
+        {/* Header with UserButton */}
         <div className="flex justify-between items-center mb-8">
           <div></div>
-          <SignOut />
+          <UserButton 
+            afterSignOutUrl="/admin"
+            appearance={{
+              elements: {
+                userButtonAvatarBox: "w-10 h-10",
+              }
+            }}
+          />
         </div>
 
         <div className="text-center mb-12">
@@ -83,7 +91,7 @@ export default async function DashboardPage({
             </div>
           )}
           <p className="text-xl text-gray-600 dark:text-gray-400">
-            Welcome, {session.user.name || session.user.email}
+            Welcome, {user.name || user.email}
           </p>
           <div className="mt-4 inline-block bg-blue-50 dark:bg-blue-900 px-4 py-2 rounded-lg">
             <p className="text-sm text-blue-700 dark:text-blue-300">

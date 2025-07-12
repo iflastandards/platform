@@ -29,11 +29,7 @@ export { default as Unique } from './Unique';
 export { default as Figure } from './Figure';
 export { ExampleTable } from './ExampleTable';
 
-// Auth components
-export { ProtectedRoute } from './ProtectedRoute';
-
-// Admin components
-export { AdminRouter } from './AdminRouter';
+// Auth components - removed (authentication now handled by admin app)
 
 
 

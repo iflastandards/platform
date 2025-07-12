@@ -1,21 +1,19 @@
 // apps/admin/src/app/api/admin/users/route.ts
 import { NextResponse } from 'next/server';
-import { auth } from '@/app/lib/auth';
+import { getCerbosUser } from '@/lib/clerk-cerbos';
 import cerbos from '@/lib/cerbos';
 
 export async function GET() {
-  const session = await auth();
+  const user = await getCerbosUser();
 
-  if (!session?.user) {
+  if (!user) {
     return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
   }
 
   const principal = {
-    id: session.user.id,
-    roles: session.user.roles || [],
-    attributes: {
-      // Add any other attributes needed for policy evaluation
-    },
+    id: user.id,
+    roles: user.roles || [],
+    attributes: user.attributes || {},
   };
 
   const resource = {

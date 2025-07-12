@@ -1,12 +1,23 @@
 // Mock data for testing
-export const mockSession = {
-  user: {
-    id: 'test-user-id',
-    name: 'Test User',
-    email: 'test@example.com',
-    image: 'https://example.com/avatar.jpg',
+export const mockCerbosUser = {
+  id: 'test-user-id',
+  name: 'Test User',
+  email: 'test@example.com',
+  roles: ['site-admin', 'newtest-admin'],
+  attributes: {
+    rgs: { ISBD: 'admin' },
+    sites: { newtest: 'admin' },
   },
-  expires: '2024-12-31T23:59:59.999Z',
+};
+
+export const mockClerkAuth = {
+  userId: 'test-user-id',
+  sessionId: 'test-session-id',
+  sessionClaims: {
+    roles: ['site-admin', 'newtest-admin'],
+    rgs: { ISBD: 'admin' },
+    sites: { newtest: 'admin' },
+  },
 };
 
 export const mockSites = [

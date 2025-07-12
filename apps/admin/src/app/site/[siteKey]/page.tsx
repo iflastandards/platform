@@ -1,4 +1,3 @@
-import { auth } from '@/app/lib/auth';
 import { redirect } from 'next/navigation';
 
 // Force dynamic rendering to avoid static generation issues with auth
@@ -40,8 +39,6 @@ export default async function DirectSiteAccessPage({
   params,
   searchParams,
 }: PageProps) {
-  // Get the user session
-  const session = await auth();
   const { siteKey: rawSiteKey } = await params;
   const { returnUrl, ref } = await searchParams;
 
@@ -49,16 +46,6 @@ export default async function DirectSiteAccessPage({
   const siteKey = rawSiteKey as SiteKey;
   if (!VALID_SITES[siteKey]) {
     redirect('/dashboard');
-  }
-
-  // If user is not authenticated, redirect to sign in with return URL
-  if (!session?.user) {
-    const signInUrl = new URL('/', 'http://localhost:4200');
-    if (returnUrl) {
-      signInUrl.searchParams.set('returnUrl', returnUrl);
-    }
-    signInUrl.searchParams.set('siteKey', siteKey);
-    redirect(signInUrl.toString());
   }
 
   // Build the redirect URL to the main dashboard with context
@@ -76,6 +63,7 @@ export default async function DirectSiteAccessPage({
   }
 
   // Redirect to the main dashboard route
+  // Clerk middleware will handle authentication
   redirect(dashboardUrl.toString());
 }
 

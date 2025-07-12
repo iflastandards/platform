@@ -271,7 +271,7 @@
     "mermaid": "^11.6.0",
     "n3": "^1.26.0",
     "next": "~15.2.4",
-    "next-auth": "5.0.0-beta.29",
+    "@clerk/nextjs": "latest",
     "node-fetch": "^3.3.2",
     "openai": "^4.104.0",
     "ora": "^8.2.0",

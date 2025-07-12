@@ -1,35 +1,33 @@
 // apps/admin/src/app/api/admin/roles/route.ts
 import { NextResponse } from 'next/server';
-import { auth } from '@/app/lib/auth';
+import { getCerbosUser } from '@/lib/clerk-cerbos';
 import cerbos from '@/lib/cerbos';
 
 export async function GET() {
-  const session = await auth();
+  const user = await getCerbosUser();
 
-  if (!session?.user) {
+  if (!user) {
     return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
   }
 
   // In a real application, you would fetch user roles from a database.
-  // For now, we'll return the roles from the session.
-  return NextResponse.json({ roles: session.user.roles });
+  // For now, we'll return the roles from the user object.
+  return NextResponse.json({ roles: user.roles });
 }
 
 export async function POST(request: Request) {
-  const session = await auth();
+  const user = await getCerbosUser();
 
-  if (!session?.user) {
+  if (!user) {
     return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
   }
 
   const { userId, role, rg, site } = await request.json();
 
   const principal = {
-    id: session.user.id,
-    roles: session.user.roles || [],
-    attributes: {
-      // Add any other attributes needed for policy evaluation
-    },
+    id: user.id,
+    roles: user.roles || [],
+    attributes: user.attributes || {},
   };
 
   const resource = {

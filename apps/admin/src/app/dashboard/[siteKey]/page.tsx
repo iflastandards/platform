@@ -1,7 +1,7 @@
-import { auth } from '@/app/lib/auth';
+import { getCerbosUser } from '@/lib/clerk-cerbos';
 import { redirect } from 'next/navigation';
 import SiteManagementClient from './SiteManagementClient';
-import { SignOut } from '@/app/components/sign-out';
+import { UserButton } from '@clerk/nextjs';
 
 // Force dynamic rendering to avoid static generation issues with auth
 export const dynamic = 'force-dynamic';
@@ -64,12 +64,12 @@ function isAuthorizedForSite(
 }
 
 export default async function SiteManagementPage({ params }: PageProps) {
-  // Get the user session
-  const session = await auth();
+  // Get the user from Clerk via Cerbos bridge
+  const user = await getCerbosUser();
 
-  // Redirect to sign in if not authenticated
-  if (!session?.user) {
-    redirect('/auth/signin');
+  // Redirect to sign in if not authenticated (though Clerk middleware should handle this)
+  if (!user) {
+    redirect('/sign-in');
   }
 
   // Await the params in Next.js 15
@@ -81,8 +81,8 @@ export default async function SiteManagementPage({ params }: PageProps) {
     redirect('/dashboard');
   }
 
-  // Get user roles from session
-  const userRoles = session.user.roles as string[] | undefined;
+  // Get user roles
+  const userRoles = user.roles;
 
   // Check authorization for this site
   if (!isAuthorizedForSite(userRoles, siteKey)) {
@@ -132,8 +132,15 @@ export default async function SiteManagementPage({ params }: PageProps) {
               >
                 Request Access
               </a>
-              <div className="pt-2">
-                <SignOut />
+              <div className="pt-2 flex justify-center">
+                <UserButton 
+                  afterSignOutUrl="/admin"
+                  appearance={{
+                    elements: {
+                      userButtonAvatarBox: "w-10 h-10",
+                    }
+                  }}
+                />
               </div>
             </div>
           </div>

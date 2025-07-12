@@ -1,31 +1,23 @@
 import './global.css';
-import { SessionProvider } from 'next-auth/react';
-import { auth } from './lib/auth';
-import MockUserIndicator from './components/mock-user-indicator';
+import { ClerkProvider } from '@clerk/nextjs';
 
 export const metadata = {
   title: 'IFLA Admin Portal',
   description: 'Administrative portal for IFLA Standards management',
 };
 
-export default async function RootLayout({
+export default function RootLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
-  const session = await auth();
-  const isMockUser = session?.user?.email?.endsWith('@example.com');
-
   return (
-    <html lang="en">
-      <body suppressHydrationWarning={true}>
-        <SessionProvider basePath="/api/auth">
-          {process.env.NODE_ENV === 'development' &&
-            isMockUser &&
-            session?.user && <MockUserIndicator user={session.user!} />}
+    <ClerkProvider>
+      <html lang="en">
+        <body suppressHydrationWarning={true}>
           {children}
-        </SessionProvider>
-      </body>
-    </html>
+        </body>
+      </html>
+    </ClerkProvider>
   );
 }
