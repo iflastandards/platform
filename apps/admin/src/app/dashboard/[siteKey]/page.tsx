@@ -2,6 +2,7 @@ import { getCerbosUser } from '@/lib/clerk-cerbos';
 import { redirect } from 'next/navigation';
 import SiteManagementClient from './SiteManagementClient';
 import { UserButton } from '@clerk/nextjs';
+import { getPortalUrl } from '@/lib/get-portal-url';
 
 // Force dynamic rendering to avoid static generation issues with auth
 export const dynamic = 'force-dynamic';
@@ -46,7 +47,7 @@ function isAuthorizedForSite(
   }
 
   // Check for admin roles that can access all sites
-  const adminRoles = ['ifla-admin', 'standards-admin', 'site-admin'];
+  const adminRoles = ['superadmin', 'ifla-admin', 'standards-admin', 'site-admin'];
   if (userRoles.some((role) => adminRoles.includes(role))) {
     return true;
   }
@@ -134,7 +135,7 @@ export default async function SiteManagementPage({ params }: PageProps) {
               </a>
               <div className="pt-2 flex justify-center">
                 <UserButton 
-                  afterSignOutUrl="/admin"
+                  afterSignOutUrl={getPortalUrl()}
                   appearance={{
                     elements: {
                       userButtonAvatarBox: "w-10 h-10",

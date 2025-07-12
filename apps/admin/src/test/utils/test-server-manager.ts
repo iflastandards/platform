@@ -268,15 +268,15 @@ export const SERVER_CONFIGS = {
     command: 'pnpm',
     args: ['nx', 'dev', 'admin'],
     port: 3007,
-    healthCheckUrl: 'http://localhost:3007',
+    healthCheckUrl: 'http://localhost:3007/admin',
     startupTimeout: 45000, // Next.js can take a while to start
     shutdownTimeout: 10000,
     cwd: '/Users/jonphipps/Code/IFLA/standards-dev',
     env: {
-      NEXTAUTH_URL: 'http://localhost:3007',
-      NEXTAUTH_SECRET: 'test-secret-for-integration-tests',
-      GITHUB_ID: 'test-github-id',
-      GITHUB_SECRET: 'test-github-secret',
+      NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY: process.env.NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY || 'pk_test_fake',
+      CLERK_SECRET_KEY: process.env.CLERK_SECRET_KEY || 'sk_test_fake',
+      NEXT_PUBLIC_CLERK_SIGN_IN_URL: '/admin/sign-in',
+      NEXT_PUBLIC_CLERK_AFTER_SIGN_IN_URL: '/admin/dashboard',
       NEXT_PUBLIC_CERBOS_PDP_URL: 'http://localhost:3593',
       PATH: process.env.PATH, // Use current PATH to find correct node
     },

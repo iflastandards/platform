@@ -1,13 +1,13 @@
 import React, { ReactElement } from 'react';
 import { render, RenderOptions } from '@testing-library/react';
-import { SessionProvider } from 'next-auth/react';
+import { ClerkProvider } from '@clerk/nextjs';
 
 interface AllTheProvidersProps {
   children: React.ReactNode;
 }
 
 const AllTheProviders: React.FC<AllTheProvidersProps> = ({ children }) => {
-  return <SessionProvider session={null}>{children}</SessionProvider>;
+  return <ClerkProvider>{children}</ClerkProvider>;
 };
 
 const customRender = (

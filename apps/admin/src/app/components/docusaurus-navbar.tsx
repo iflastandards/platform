@@ -4,6 +4,7 @@ import React from 'react';
 import Link from 'next/link';
 import { UserButton } from '@clerk/nextjs';
 import { usePathname } from 'next/navigation';
+import { getPortalUrl } from '@/lib/get-portal-url';
 import './docusaurus-navbar.css';
 
 interface DocusaurusNavbarProps {
@@ -28,40 +29,38 @@ export function DocusaurusNavbar({
   ];
 
   return (
-    <nav className="navbar navbar--fixed-top">
-      <div className="navbar__inner">
-        <div className="navbar__items">
+    <nav className="docusaurus-navbar">
+      <div className="docusaurus-navbar__inner">
+        <div className="docusaurus-navbar__left">
           <Link
-            className="navbar__brand"
+            className="docusaurus-navbar__brand"
             href="/dashboard"
             aria-label="IFLA Admin Portal"
           >
-            <div className="navbar__logo">
-              <img
-                src="/img/logo-ifla_black.png"
-                alt="IFLA"
-                className="themedImage_node_modules-@docusaurus-theme-classic-lib-theme-ThemedImage-styles-module themedImage--light_node_modules-@docusaurus-theme-classic-lib-theme-ThemedImage-styles-module"
-              />
-            </div>
-            <b className="navbar__title text--truncate">Admin Portal</b>
+            <img
+              src="/admin/img/logo-ifla_black.png"
+              alt="IFLA"
+              className="docusaurus-navbar__logo"
+            />
+            <span className="docusaurus-navbar__title">Admin Portal</span>
           </Link>
           {siteKey && (
             <>
-              <span className="navbar__separator">|</span>
-              <span className="navbar__site-title">{siteKey}</span>
+              <span className="docusaurus-navbar__breadcrumb-separator">›</span>
+              <span className="docusaurus-navbar__breadcrumb docusaurus-navbar__breadcrumb--active">{siteKey}</span>
             </>
           )}
         </div>
 
-        <div className="navbar__items navbar__items--right">
+        <div className="docusaurus-navbar__right">
           {/* Navigation menu items */}
           {siteKey &&
             navItems.map((item) => (
               <Link
                 key={item.href}
                 href={item.href}
-                className={`navbar__item navbar__link ${
-                  pathname === item.href ? 'navbar__link--active' : ''
+                className={`docusaurus-navbar__breadcrumb ${
+                  pathname === item.href ? 'docusaurus-navbar__breadcrumb--active' : ''
                 }`}
               >
                 {item.label}
@@ -69,9 +68,9 @@ export function DocusaurusNavbar({
             ))}
 
           {/* User menu */}
-          <div className="navbar__item">
+          <div className="docusaurus-navbar__user-menu">
             <UserButton 
-              afterSignOutUrl="/admin"
+              afterSignOutUrl={getPortalUrl()}
               appearance={{
                 elements: {
                   userButtonAvatarBox: "w-8 h-8",

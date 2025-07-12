@@ -2,6 +2,7 @@ import { getCerbosUser } from '@/lib/clerk-cerbos';
 import { redirect } from 'next/navigation';
 import Link from 'next/link';
 import { UserButton } from '@clerk/nextjs';
+import { getPortalUrl } from '@/lib/get-portal-url';
 
 // Force dynamic rendering to avoid static generation issues with auth
 export const dynamic = 'force-dynamic';
@@ -70,7 +71,7 @@ export default async function DashboardPage({
         <div className="flex justify-between items-center mb-8">
           <div></div>
           <UserButton 
-            afterSignOutUrl="/admin"
+            afterSignOutUrl={getPortalUrl()}
             appearance={{
               elements: {
                 userButtonAvatarBox: "w-10 h-10",

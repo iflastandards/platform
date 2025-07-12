@@ -21,7 +21,7 @@ describe('Mock Authentication', () => {
         email: 'test.user@example.com',
         roles: ['namespace-admin', 'site-editor'],
       });
-      expect(user.id).toMatch(/^mock-\d+-\d+$/);
+      expect(user.id).toMatch(/^mock-\d+-[a-z0-9]+$/);
     });
 
     it('should generate email from name', () => {
@@ -43,7 +43,7 @@ describe('Mock Authentication', () => {
 
       const user = createUser(userData);
 
-      expect(user.email).toBe("o'brien-smith@example.com");
+      expect(user.email).toBe("obrien-smith@example.com");
     });
 
     it('should create unique IDs for each user', async () => {

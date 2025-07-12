@@ -10,7 +10,7 @@ describe('Basic Server Test', () => {
       console.log('Admin server started successfully');
 
       // Simple health check
-      const response = await fetch('http://localhost:3007/api/auth/session');
+      const response = await fetch('http://localhost:3007/admin');
       console.log('Health check response status:', response.status);
 
       expect(response.status).toBeLessThan(500);
