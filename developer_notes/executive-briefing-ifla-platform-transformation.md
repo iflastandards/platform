@@ -259,50 +259,58 @@ GitHub is a cloud platform built on Git that adds powerful collaboration feature
 - **Issue Tracking**: Centralized feedback and task management
 - **Discussion Forums**: Contextual conversations about specific changes
 
-### GitHub Teams and IFLA's Team-Based Collaboration Model
+### GitHub Projects and IFLA's Working Group Model
 
-**Enhanced Organizational Structure:**
-Our platform introduces a sophisticated team-based model that builds upon GitHub's team capabilities while addressing IFLA's unique collaboration needs. This model creates a clear distinction between Review Groups (perpetual organizational entities) and teams (flexible collaborative units).
+**Project-Based Collaboration Structure:**
+Our platform leverages GitHub Projects as the central organizing unit for work, similar to W3C working groups. This model provides focused, goal-oriented collaboration while maintaining clear governance through Review Groups.
 
-**Review Groups as Organizational Units:**
-- **BCM Review Group**: Manages FRBR, LRM, FRAD namespaces
-- **ISBD Review Group**: Manages ISBD, ISBDM, and planned expansions
-- **PUC Review Group**: Manages UNIMARC namespace
-- **ICP Review Group**: Manages MulDiCat namespace
+**Review Groups as Chartering Organizations:**
+- **BCM Review Group**: Charters projects for FRBR, LRM, FRAD work
+- **ISBD Review Group**: Charters projects for ISBD family standards
+- **PUC Review Group**: Charters projects for UNIMARC development
+- **ICP Review Group**: Charters projects for MulDiCat initiatives
 
-**Teams Enable Flexible Collaboration:**
-Within each Review Group, teams provide the mechanism for flexible, cross-namespace collaboration:
-- **Editorial Teams**: Content creators working across multiple namespaces
-- **Review Teams**: Subject matter experts providing quality assurance
-- **Translation Teams**: Language-specific teams ensuring consistent translations
-- **Technical Teams**: Specialized teams for RDF and technical implementations
+**Projects as Working Groups:**
+Review Groups create Projects that function like W3C working groups:
+- **"ISBD Maintenance WG 2024-2026"**: Ongoing maintenance and updates
+- **"MulDiCat Translation Initiative"**: Adding new language translations
+- **"LRM 2.0 Development"**: Major revision project
+- **"BCM Harmonization Project"**: Cross-namespace alignment
 
-**Key Innovation: Cross-Namespace Team Assignment**
-- Teams belong to ONE Review Group but can work on MULTIPLE namespaces
-- Team members maintain consistent roles across all assigned namespaces
-- Adding a namespace to a team grants all members immediate access
-- Simplifies permission management dramatically
+**Teams Within Projects:**
+Each Project has dedicated teams with specific roles:
+- **Editors**: Content creation and maintenance
+- **Reviewers/Authors**: Quality assurance and validation
+- **Translators**: Language-specific content adaptation
+- **External Contributors**: Domain experts without IFLA membership
 
-**Team Benefits:**
-- **Simplified Access Control**: Assign once, access many namespaces
-- **Consistent Roles**: Same permissions across assigned namespaces
-- **Flexible Assignment**: Easy to expand team scope as needed
-- **Clear Boundaries**: Teams stay within their Review Group
-- **Efficient Management**: Bulk permission updates through team assignment
+**Key Innovation: Project-Namespace Assignment**
+- Projects are assigned specific namespaces to work on
+- Teams access namespaces through their Project assignment
+- External contributors can participate without IFLA membership
+- GitHub Projects provides complete task tracking
+- Clear scope and deliverables for each initiative
+
+**Benefits of the Project Model:**
+- **Focused Work**: Each Project has clear goals and deliverables
+- **Flexible Timeline**: Projects can run for months or years
+- **Open Participation**: External experts can join Project teams
+- **Progress Tracking**: GitHub Projects boards show real-time status
+- **Natural Workflow**: Aligns with how standards development actually works
 
 ### GitHub Authentication: Secure Single Sign-On
 
 **Simplified Access Management:**
 - **One Account, All Access**: Single GitHub login provides access to all authorized resources
 - **Organization Membership**: IFLA organization membership grants base access
-- **Team-Based Permissions**: Additional permissions based on team memberships
+- **Project-Based Permissions**: Access determined by Project team membership
 - **OAuth Integration**: Secure authentication without managing separate passwords
 
 **Security Benefits:**
 - **Two-Factor Authentication**: Enhanced security for all team members
 - **Audit Trail**: Complete log of who accessed what and when
-- **Centralized Control**: IT can manage access from one location
-- **Immediate Revocation**: Remove access instantly when roles change
+- **Centralized Control**: Review Group admins manage Project access
+- **Immediate Revocation**: Remove from Project team to revoke access
 
 ### Pull Requests: Global Review Made Simple
 
@@ -349,27 +357,28 @@ Pre-formatted templates guide users to provide necessary information:
 - **Accountability**: Assigned team members responsible for resolution
 - **Metrics**: Track response times and resolution rates
 
-### GitHub Projects: Task-Focused Initiatives
+### GitHub Projects: Working Group Infrastructure
 
-**Clear Distinction from Review Groups:**
-GitHub Projects are used for **finite, goal-oriented initiatives** with defined endpoints, while Review Groups are **perpetual organizational entities**. This separation eliminates confusion and aligns with GitHub's intended use of projects.
+**Projects as Standards Working Groups:**
+GitHub Projects serve as the infrastructure for IFLA's working groups, providing structured collaboration for both short-term initiatives and long-term maintenance work.
 
-**GitHub Projects for Specific Goals:**
-- **Migration Projects**: "Migrate ISBD to new schema" with clear completion criteria
-- **Translation Initiatives**: "Add French translations to LRM" with defined scope
-- **Feature Development**: "Implement new validation rules" with specific deliverables
-- **Time-boxed Efforts**: Projects with start dates, milestones, and end dates
+**Types of IFLA Projects:**
+- **Maintenance Working Groups**: "ISBD Maintenance WG 2024-2026" for ongoing work
+- **Translation Projects**: "MulDiCat Multilingual Expansion" adding multiple languages
+- **Major Revisions**: "LRM 2.0 Development" with multi-year timeline
+- **Harmonization Initiatives**: "BCM Cross-Standard Alignment" for consistency
 
 **Project Management Features:**
-- **Kanban Boards**: Visual workflow from "To Do" to "Done"
-- **Sprint Planning**: Organize work into time-boxed periods
-- **Progress Tracking**: Real-time visibility of initiative status
-- **Resource Planning**: See who's working on what
+- **Kanban Boards**: Track tasks from inception to completion
+- **Milestones**: Major deliverables and version releases
+- **Team Assignment**: Clear roles and responsibilities
+- **Progress Metrics**: Velocity and completion tracking
 
-**Integration with Teams:**
-- Review Group teams can create GitHub projects for specific initiatives
-- Team members automatically have access to relevant projects
-- Projects link back to the namespaces and Review Groups they support
+**Workflow Integration:**
+- Review Groups charter Projects with defined scope
+- Projects are assigned specific namespaces to work on
+- Teams are created for each Project with appropriate roles
+- External experts can join Project teams without IFLA membership
 
 ### Discussion Forums: Contextual Collaboration
 
@@ -387,36 +396,41 @@ GitHub Projects are used for **finite, goal-oriented initiatives** with defined 
 
 ### Real-World Value for IFLA
 
-**Scenario 1: Global Translation Coordination**
-- Translation teams work in parallel on different languages
-- Pull requests show exact translations for review
-- Discussions capture cultural adaptation decisions
-- Issues track inconsistencies across languages
+**Scenario 1: Translation Project**
+- ICP Review Group charters "MulDiCat French Translation Initiative"
+- Creates Project team with French-speaking librarians (some external)
+- Assigns roles: translators, reviewers, editor
+- Project assigned to `muldicat` namespace
+- GitHub Project board tracks translation progress
+- Pull requests show translations for review
+- 6-month timeline with monthly milestones
 
-**Scenario 2: External Expert Contribution**
-- Domain expert from another continent spots improvement opportunity
-- Creates fork and implements enhancement
-- Submits pull request with detailed explanation
-- Relevant Review Group team members with reviewer role receive notification
-- Team evaluates asynchronously across time zones
-- Approved changes merged with full attribution
+**Scenario 2: Maintenance Working Group**
+- ISBD Review Group creates "ISBD Maintenance WG 2024-2026"
+- Long-term Project for ongoing standards maintenance
+- Team includes editors and reviewers from multiple countries
+- Assigned to `isbd`, `isbdm`, and future namespaces
+- Quarterly releases tracked as deliverables
+- External experts contribute via pull requests
+- Team membership evolves as needs change
 
-**Scenario 3: Cross-Namespace Editorial Work**
-- ISBD Review Group needs editors for multiple ISBD-family namespaces
-- Creates "ISBD Editorial Team" with editor role
-- Assigns team to isbd, isbdm, and future namespace expansions
-- All team members immediately have edit access to all assigned namespaces
-- Adding new ISBD namespaces automatically grants team access
-- Single management point for cross-namespace permissions
+**Scenario 3: Cross-Namespace Harmonization**
+- BCM Review Group charters "BCM Alignment Project"
+- Goal: Harmonize terminology across FRBR, LRM, FRAD
+- Creates team with experts from each standard
+- Project assigned all BCM namespaces
+- 18-month timeline with clear deliverables
+- GitHub Project tracks mapping work
+- Results in aligned vocabularies
 
-**Scenario 4: Major Standard Revision**
-- GitHub Project created for the revision initiative (finite goal)
-- Project board tracks all planned changes
-- Issues capture all stakeholder feedback
-- Pull requests group related changes for review
-- Review Group teams coordinate the work
-- Discussions host strategic decisions
-- Complete audit trail for governance
+**Scenario 4: External Expert Participation**
+- Expert identifies improvement opportunity
+- Review Group admin invites them to relevant Project
+- No IFLA membership required
+- Assigned reviewer role in Project team
+- Contributes through pull requests and reviews
+- Access limited to Project's assigned namespaces
+- Full attribution for contributions
 
 ---
 
@@ -472,8 +486,8 @@ Our workflow design reflects extensive analysis of actual IFLA standards develop
 
 ### Authorization Model
 
-**Team-Based Permission System:**
-Our authorization model revolutionizes permission management through a sophisticated team-based approach that reflects IFLA's actual governance structure while dramatically simplifying administration.
+**Project-Based Permission System:**
+Our authorization model leverages GitHub Projects to provide natural, workflow-aligned permissions that reflect how standards development actually works.
 
 **System-Level Roles:**
 
@@ -489,39 +503,39 @@ Our authorization model revolutionizes permission management through a sophistic
 
 **Review Group Admin** (ICP, BCM, ISBD, PUC)
 - Complete authority over assigned Review Group
-- Team creation and management within Review Group
-- Namespace creation and assignment to teams
-- Cross-namespace coordination within Review Group
+- Charter new Projects with defined scope
+- Create Teams for Projects and invite members
+- Assign namespaces to Projects
 - Final approval authority for releases
 
-**Team-Based Roles (Revolutionary Approach):**
+**Project Team Roles:**
 
-Instead of managing individual user permissions per namespace, users join teams with specific roles. The team's namespace assignments determine where those permissions apply.
+Users gain permissions through membership in Project teams. Each Project is assigned specific namespaces, and team members can work on those namespaces according to their role.
 
-**Editor** (Team Role)
+**Editor** (Project Team Role)
 - Content creation, editing, and maintenance
 - Vocabulary development and documentation authoring
 - Quality assurance execution and validation
-- Permissions automatically apply to all namespaces assigned to their team
+- Permissions apply to all namespaces assigned to their Project
 
-**Reviewer** (Team Role)
+**Reviewer/Author** (Project Team Role)
 - Review participation and approval authority
 - Pull request evaluation and feedback
 - Expert consultation and validation
-- Permissions automatically apply to all namespaces assigned to their team
+- Permissions apply to all namespaces assigned to their Project
 
-**Translator** (Team Role)
+**Translator** (Project Team Role)
 - Language-specific content translation and localization
 - Translation consistency and terminology management
 - Cultural appropriateness validation
-- Permissions automatically apply to all namespaces assigned to their team
+- Permissions apply to all namespaces assigned to their Project
 
-**Key Benefits of Team-Based Permissions:**
-- **One Assignment, Multiple Access**: Add user to team once, access all team namespaces
-- **Consistent Roles**: User has same role across all team namespaces
-- **Simplified Management**: Change team assignments, not individual permissions
-- **Clear Boundaries**: Teams operate within Review Group boundaries
-- **Scalable Growth**: Add namespaces to teams as they're created
+**Key Benefits of Project-Based Permissions:**
+- **Natural Workflow**: Permissions align with actual work patterns
+- **External Participation**: Non-IFLA members can join Projects
+- **Clear Scope**: Each Project has defined namespace access
+- **Flexible Timeline**: Projects can run as long as needed
+- **Simple Management**: Add/remove users from Project teams
 
 **Quality Gates and Approval Authority:**
 Each workflow phase includes specific approval requirements matching IFLA governance:
