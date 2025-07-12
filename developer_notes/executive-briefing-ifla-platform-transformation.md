@@ -259,20 +259,36 @@ GitHub is a cloud platform built on Git that adds powerful collaboration feature
 - **Issue Tracking**: Centralized feedback and task management
 - **Discussion Forums**: Contextual conversations about specific changes
 
-### GitHub Teams: Digital Mirror of IFLA Organization
+### GitHub Teams and IFLA's Team-Based Collaboration Model
 
-**Organizational Alignment:**
-GitHub Teams directly reflect IFLA's governance structure, providing:
-- **Review Group Teams**: BCM Team, ISBD Team, PUC Team, ICP Team
-- **Namespace Teams**: Specific teams for each standard (e.g., ISBDM Team, LRM Team)
-- **Working Groups**: Temporary teams for specific projects or initiatives
-- **Translation Teams**: Language-specific groups for coordinated translation
+**Enhanced Organizational Structure:**
+Our platform introduces a sophisticated team-based model that builds upon GitHub's team capabilities while addressing IFLA's unique collaboration needs. This model creates a clear distinction between Review Groups (perpetual organizational entities) and teams (flexible collaborative units).
+
+**Review Groups as Organizational Units:**
+- **BCM Review Group**: Manages FRBR, LRM, FRAD namespaces
+- **ISBD Review Group**: Manages ISBD, ISBDM, and planned expansions
+- **PUC Review Group**: Manages UNIMARC namespace
+- **ICP Review Group**: Manages MulDiCat namespace
+
+**Teams Enable Flexible Collaboration:**
+Within each Review Group, teams provide the mechanism for flexible, cross-namespace collaboration:
+- **Editorial Teams**: Content creators working across multiple namespaces
+- **Review Teams**: Subject matter experts providing quality assurance
+- **Translation Teams**: Language-specific teams ensuring consistent translations
+- **Technical Teams**: Specialized teams for RDF and technical implementations
+
+**Key Innovation: Cross-Namespace Team Assignment**
+- Teams belong to ONE Review Group but can work on MULTIPLE namespaces
+- Team members maintain consistent roles across all assigned namespaces
+- Adding a namespace to a team grants all members immediate access
+- Simplifies permission management dramatically
 
 **Team Benefits:**
-- **Access Control**: Teams automatically inherit appropriate permissions
-- **Notification Management**: Team mentions alert all relevant members
-- **Organizational Clarity**: Clear representation of who works on what
-- **Scalable Permissions**: Easy to add/remove members as roles change
+- **Simplified Access Control**: Assign once, access many namespaces
+- **Consistent Roles**: Same permissions across assigned namespaces
+- **Flexible Assignment**: Easy to expand team scope as needed
+- **Clear Boundaries**: Teams stay within their Review Group
+- **Efficient Management**: Bulk permission updates through team assignment
 
 ### GitHub Authentication: Secure Single Sign-On
 
@@ -333,19 +349,27 @@ Pre-formatted templates guide users to provide necessary information:
 - **Accountability**: Assigned team members responsible for resolution
 - **Metrics**: Track response times and resolution rates
 
-### Project Management: Coordinating Complex Initiatives
+### GitHub Projects: Task-Focused Initiatives
 
-**GitHub Projects for Standards Development:**
+**Clear Distinction from Review Groups:**
+GitHub Projects are used for **finite, goal-oriented initiatives** with defined endpoints, while Review Groups are **perpetual organizational entities**. This separation eliminates confusion and aligns with GitHub's intended use of projects.
+
+**GitHub Projects for Specific Goals:**
+- **Migration Projects**: "Migrate ISBD to new schema" with clear completion criteria
+- **Translation Initiatives**: "Add French translations to LRM" with defined scope
+- **Feature Development**: "Implement new validation rules" with specific deliverables
+- **Time-boxed Efforts**: Projects with start dates, milestones, and end dates
+
+**Project Management Features:**
 - **Kanban Boards**: Visual workflow from "To Do" to "Done"
 - **Sprint Planning**: Organize work into time-boxed periods
 - **Progress Tracking**: Real-time visibility of initiative status
 - **Resource Planning**: See who's working on what
 
-**Project Views:**
-- **By Review Group**: See all work for specific review group
-- **By Standard**: Track progress on individual standards
-- **By Milestone**: Monitor progress toward major releases
-- **By Team Member**: Understand individual workloads
+**Integration with Teams:**
+- Review Group teams can create GitHub projects for specific initiatives
+- Team members automatically have access to relevant projects
+- Projects link back to the namespaces and Review Groups they support
 
 ### Discussion Forums: Contextual Collaboration
 
@@ -373,13 +397,24 @@ Pre-formatted templates guide users to provide necessary information:
 - Domain expert from another continent spots improvement opportunity
 - Creates fork and implements enhancement
 - Submits pull request with detailed explanation
-- Review team evaluates asynchronously across time zones
+- Relevant Review Group team members with reviewer role receive notification
+- Team evaluates asynchronously across time zones
 - Approved changes merged with full attribution
 
-**Scenario 3: Major Standard Revision**
+**Scenario 3: Cross-Namespace Editorial Work**
+- ISBD Review Group needs editors for multiple ISBD-family namespaces
+- Creates "ISBD Editorial Team" with editor role
+- Assigns team to isbd, isbdm, and future namespace expansions
+- All team members immediately have edit access to all assigned namespaces
+- Adding new ISBD namespaces automatically grants team access
+- Single management point for cross-namespace permissions
+
+**Scenario 4: Major Standard Revision**
+- GitHub Project created for the revision initiative (finite goal)
 - Project board tracks all planned changes
 - Issues capture all stakeholder feedback
 - Pull requests group related changes for review
+- Review Group teams coordinate the work
 - Discussions host strategic decisions
 - Complete audit trail for governance
 
@@ -437,45 +472,56 @@ Our workflow design reflects extensive analysis of actual IFLA standards develop
 
 ### Authorization Model
 
-**IFLA-Aligned Role Hierarchy:**
-Our authorization model directly reflects IFLA's actual governance structure, eliminating mismatches between technical permissions and organizational authority.
+**Team-Based Permission System:**
+Our authorization model revolutionizes permission management through a sophisticated team-based approach that reflects IFLA's actual governance structure while dramatically simplifying administration.
 
-**Role Definitions:**
+**System-Level Roles:**
 
 **Superadmin**
 - Global system authority and emergency intervention
-- Cross-namespace coordination and policy enforcement
+- Cross-Review Group coordination and policy enforcement
 - Technical platform maintenance and security oversight
 
+**IFLA Admin**
+- IFLA-wide administration and governance
+- Review Group creation and oversight
+- Cross-Review Group policy implementation
+
 **Review Group Admin** (ICP, BCM, ISBD, PUC)
-- Complete authority over assigned review group namespaces
-- Namespace creation, deletion, and major policy decisions
-- Cross-namespace coordination within review group
-- Final approval authority for releases and major changes
+- Complete authority over assigned Review Group
+- Team creation and management within Review Group
+- Namespace creation and assignment to teams
+- Cross-namespace coordination within Review Group
+- Final approval authority for releases
 
-**Namespace Admin**
-- Full management authority within assigned namespace(s)
-- Element set and concept scheme lifecycle management
-- Team membership and role assignment
-- Translation coordination and quality oversight
+**Team-Based Roles (Revolutionary Approach):**
 
-**Namespace Editor**
-- Content creation, editing, and maintenance within namespace
+Instead of managing individual user permissions per namespace, users join teams with specific roles. The team's namespace assignments determine where those permissions apply.
+
+**Editor** (Team Role)
+- Content creation, editing, and maintenance
 - Vocabulary development and documentation authoring
 - Quality assurance execution and validation
-- Collaboration with reviewers and translators
+- Permissions automatically apply to all namespaces assigned to their team
 
-**Namespace Translator**
+**Reviewer** (Team Role)
+- Review participation and approval authority
+- Pull request evaluation and feedback
+- Expert consultation and validation
+- Permissions automatically apply to all namespaces assigned to their team
+
+**Translator** (Team Role)
 - Language-specific content translation and localization
 - Translation consistency and terminology management
 - Cultural appropriateness validation
-- Coordination with other translators for consistency
+- Permissions automatically apply to all namespaces assigned to their team
 
-**Namespace Reviewer**
-- Review participation and feedback provision
-- Pull request submission and issue reporting
-- Expert consultation and validation
-- Community representation in development processes
+**Key Benefits of Team-Based Permissions:**
+- **One Assignment, Multiple Access**: Add user to team once, access all team namespaces
+- **Consistent Roles**: User has same role across all team namespaces
+- **Simplified Management**: Change team assignments, not individual permissions
+- **Clear Boundaries**: Teams operate within Review Group boundaries
+- **Scalable Growth**: Add namespaces to teams as they're created
 
 **Quality Gates and Approval Authority:**
 Each workflow phase includes specific approval requirements matching IFLA governance:
@@ -486,7 +532,7 @@ Each workflow phase includes specific approval requirements matching IFLA govern
 
 ---
 
-## Project Goals and Success Metrics
+## Platform Goals and Success Metrics
 
 ### Primary Objectives
 
@@ -720,11 +766,11 @@ Our implementation strategy builds on extensive prototyping and testing of criti
 - Resource allocation and budget approval
 - Communication to IFLA community and stakeholders
 
-**2. Project Team Assembly**
+**2. Implementation Team Assembly**
 - Technical team recruitment and assignment
 - IFLA stakeholder team identification and engagement
 - External consultant selection and contracting
-- Project management structure and governance
+- Implementation management structure and governance
 
 **3. Detailed Planning**
 - Detailed project plan with milestones and dependencies

@@ -37,6 +37,20 @@ The four primary review groups—International Cataloguing Principles (ICP), Bib
 
 Our proposed enhancement builds upon this proven organizational model by providing technical tools that make the existing governance structure more efficient and accessible. Rather than changing how IFLA operates, we are proposing to enhance how effectively IFLA can execute its established processes through better technical infrastructure and automated workflow support.
 
+## Revolutionary Team-Based Collaboration Model
+
+Building upon IFLA's Review Group structure, we introduce a sophisticated team-based collaboration model that addresses one of the most challenging aspects of standards development: managing permissions and access across multiple related namespaces while maintaining clear governance boundaries.
+
+The innovation lies in creating "teams" as flexible collaborative units within Review Groups. Unlike traditional permission systems where individual users must be granted access to each namespace separately—a management nightmare as organizations scale—our team-based approach enables administrators to create a team once, assign it to multiple namespaces, and have all team members automatically inherit appropriate permissions across those namespaces.
+
+Consider the practical implications for IFLA's work. The ISBD Review Group manages not just the core ISBD namespace but also ISBDM and multiple planned expansions. Under traditional models, adding an editor to work across all ISBD namespaces would require multiple permission assignments, each needing separate management. With our team-based model, the Review Group administrator creates an "ISBD Editorial Team," assigns it to all relevant namespaces, and any editor added to that team immediately gains appropriate access across the entire ISBD family of standards.
+
+This approach reflects how people actually work in standards development. Translators typically work across multiple related standards to ensure terminology consistency. Editors often need to harmonize content across a family of related namespaces. Technical specialists may need to implement changes that span multiple vocabularies. The team model acknowledges these realities and provides elegant technical support for these natural work patterns.
+
+The boundaries are clear and respect IFLA's governance structure: teams belong to one Review Group and can only be assigned to namespaces within that Review Group. This ensures that the BCM Review Group maintains authority over its namespaces (FRBR, LRM, FRAD) while still enabling flexible collaboration patterns within those boundaries. A BCM translation team can work across all BCM namespaces but cannot be assigned to ISBD namespaces—maintaining the separation of authority that good governance requires.
+
+Most importantly, this model dramatically simplifies ongoing management. When new namespaces are created within a Review Group, existing teams can be assigned to them with a single action, instantly granting all team members appropriate access. When team members change roles or leave, a single update to their team membership cascades appropriately across all affected namespaces. This reduction in administrative overhead allows Review Group administrators to focus on content quality and strategic direction rather than permission management.
+
 ## Technical Architecture and Modern Capabilities
 
 The proposed technical architecture represents a careful balance between innovation and reliability. We have designed a multi-type monorepo system that can support different types of applications and content while maintaining the simplicity and reliability that characterizes IFLA's current successful approach.
