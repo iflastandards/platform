@@ -1,0 +1,59 @@
+{
+  "extends": "./tsconfig.json",
+  "compilerOptions": {
+    // Less strict type checking for tests
+    "strict": false,
+    "noImplicitAny": false,
+    "strictNullChecks": false,
+    "strictFunctionTypes": false,
+    "strictBindCallApply": false,
+    "strictPropertyInitialization": false,
+    "noImplicitThis": false,
+    "alwaysStrict": false,
+    
+    // Allow more flexibility in tests
+    "allowJs": true,
+    "checkJs": false,
+    "noUnusedLocals": false,
+    "noUnusedParameters": false,
+    "noImplicitReturns": false,
+    "noFallthroughCasesInSwitch": false,
+    
+    // Test-specific types
+    "types": [
+      "node",
+      "react",
+      "vitest/globals",
+      "jest",
+      "@testing-library/jest-dom"
+    ]
+  },
+  "include": [
+    "**/*.test.ts",
+    "**/*.test.tsx",
+    "**/*.spec.ts",
+    "**/*.spec.tsx",
+    "**/tests/**/*.ts",
+    "**/tests/**/*.tsx",
+    "**/test/**/*.ts",
+    "**/test/**/*.tsx",
+    "**/__tests__/**/*.ts",
+    "**/__tests__/**/*.tsx",
+    "**/e2e/**/*.ts",
+    "**/e2e/**/*.tsx",
+    "vitest.*.ts",
+    "jest.*.ts",
+    "playwright.*.ts",
+    "test-*.ts",
+    "test-*.tsx",
+    "scripts/test-*.ts",
+    "scripts/test-*.tsx"
+  ],
+  "exclude": [
+    "node_modules",
+    "build",
+    "dist",
+    ".idea",
+    ".vscode"
+  ]
+}

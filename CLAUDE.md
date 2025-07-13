@@ -37,11 +37,58 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 - **ALWAYS CHECK MUI MCP AND CONTEXT7 MCP FOR EXAMPLES BEFORE WRITING CODE**
 - **ALWAYS RUN TYPECHECK AND ESLINT AFTER WRITING CODE BEFORE MOVING TO THE NEXT TASK**
 
+### Test File Linting
+- **Test files use relaxed linting rules**: See `pnpm lint:test-rules` for details
+- **Less strict TypeScript**: Tests use `tsconfig.test.json` with relaxed type checking
+- **Allowed in tests**: `any` types, console logs, longer functions, empty mocks
+- **Test patterns**: `**/*.{test,spec}.{js,jsx,ts,tsx}`, `**/tests/**/*`, `**/e2e/**/*`
+- **Commands**: 
+  - `pnpm lint:tests` (lint only test files)
+  - `pnpm lint:test-rules` (show relaxed rules explanation)
+
+### Git Hooks (Layered Testing)
+
+#### Pre-commit (Fast Feedback - ~30s)
+- **Purpose**: Catch basic errors before commit
+- **Command**: `pnpm test:pre-commit`
+- **Runs**: TypeScript check, ESLint, Unit tests (affected)
+- **Philosophy**: Warnings allowed, errors block commit
+- **Goal**: Fast feedback loop for developers
+
+#### Pre-push (Production Readiness - ~2-5min)
+- **Purpose**: Ensure production readiness before push
+- **Command**: `pnpm test:pre-push:flexible`
+- **Assumes**: Pre-commit tests already passed
+- **Runs**: Integration tests, Production builds (affected), Smart E2E
+- **Goal**: Confidence that code works in production
+- **Uses Nx affected**: Only tests what changed
+- **E2E Strategy**: Auto-triggers when portal/admin affected
+
+#### Post-push (GitHub Pages)
+- **Purpose**: Verify deployment and external integrations
+- **Runs**: Full site builds, GitHub Pages deployment, External service validation
+- **Goal**: Catch issues that only appear in production environment
+
+#### E2E Test Triggers
+- **Auto-trigger**: When `portal` or `admin` projects are affected
+- **Manual override**: Set `"runE2E": true` in `.prepushrc.json`
+- **Critical changes**: UI/UX, navigation, search, auth flows, vocabulary functionality
+- **Rationale**: E2E can be slow/flaky locally, only run when high-impact changes
+
+#### Configuration
+- **`.precommitrc.json`**: Pre-commit behavior
+- **`.prepushrc.json`**: Pre-push behavior (integration tests, builds, smart e2e)
+- **Philosophy**: No redundant testing between layers
+
 ### Development Tools
 - **Ripgrep (rg)**: Fast file search tool installed and available
   - Use via the Grep tool (not bash commands)
   - Supports regex patterns, file type filtering, and context lines
   - Example: Search for "github" in TypeScript files with context
+- **Flexible Linting**: Different strictness levels for production vs test code
+  - Production code: Strict linting with warnings as errors
+  - Test code: Relaxed rules allowing `any`, console logs, longer functions
+  - Scripts: `scripts/pre-commit-check.js`, `scripts/pre-push-check.js`
 
 ### GitHub Services Integration
 

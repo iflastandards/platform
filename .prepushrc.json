@@ -1,0 +1,12 @@
+{
+  "allowWarnings": true,
+  "runTests": true,
+  "runBuilds": true,
+  "runE2E": false,
+  "parallelJobs": 3,
+  "comment": "Pre-push assumes pre-commit passed (typecheck, lint, unit tests)",
+  "comment2": "Pre-push adds: integration tests, production builds, smart e2e",
+  "comment3": "E2E auto-triggers when portal/admin affected, or set runE2E: true",
+  "criticalE2EProjects": ["portal", "admin"],
+  "e2eStrategy": "smart-detection"
+}
