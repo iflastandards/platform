@@ -76,7 +76,9 @@
     "**/dist/**/*",
     "**/.docusaurus/**/*",
     "**/coverage/**/*",
-    "**/.nx/**/*"
+    "**/.nx/**/*",
+    ".idea/**/*",
+    ".vscode/**/*"
   ],
   "ts-node": {
     "compilerOptions": {

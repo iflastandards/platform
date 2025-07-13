@@ -22,7 +22,9 @@
           "!.nx/**/*",
           "!**/.next/**/*",
           "!playwright-report/**/*",
-          "!test-results/**/*"
+          "!test-results/**/*",
+          "!.idea/**/*",
+          "!.vscode/**/*"
         ]
       }
     },

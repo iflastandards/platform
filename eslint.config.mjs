@@ -29,6 +29,10 @@ export default [
       '**/coverage/**/*',
       '**/.docusaurus/**/*',
       '**/dist/**/*',
+      '.idea/',
+      '.idea/**/*',
+      '.vscode/',
+      '.vscode/**/*',
     ],
   },
   {
