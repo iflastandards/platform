@@ -30,9 +30,7 @@ import Grid from '@mui/material/Grid';
 import {
   Dashboard as DashboardIcon,
   People as PeopleIcon,
-  Language as LanguageIcon,
   Folder as FolderIcon,
-  Book as BookIcon,
   Assignment as AssignmentIcon,
   History as HistoryIcon,
   PersonAdd as PersonAddIcon,
@@ -41,7 +39,7 @@ import {
   LightMode as LightModeIcon,
 } from '@mui/icons-material';
 import { useTheme as useAppTheme } from '@/contexts/theme-context';
-import { mockNamespaces, mockReviewGroups, getNamespacesByReviewGroup } from '@/lib/mock-data/namespaces-extended';
+import { mockReviewGroups, getNamespacesByReviewGroup } from '@/lib/mock-data/namespaces-extended';
 
 interface ReviewGroupDashboardProps {
   userRoles: string[];
@@ -343,7 +341,7 @@ export default function ReviewGroupDashboard({
                   <Box mt={3} pt={2} borderTop={1} borderColor="divider">
                     <MuiLink
                       component={Link}
-                      href="/admin/dashboard/rg/namespaces?demo=true"
+                      href="/dashboard/rg/namespaces?demo=true"
                       color="primary"
                       underline="hover"
                       fontSize="small"
@@ -384,7 +382,7 @@ export default function ReviewGroupDashboard({
                         fullWidth
                         startIcon={<AddTaskIcon />}
                         component={Link}
-                        href="/admin/dashboard/rg/projects/new?demo=true"
+                        href="/dashboard/rg/projects/new?demo=true"
                       >
                         Start New Project
                       </Button>
@@ -393,7 +391,7 @@ export default function ReviewGroupDashboard({
                         fullWidth
                         startIcon={<PersonAddIcon />}
                         component={Link}
-                        href="/admin/dashboard/rg/team/invite?demo=true"
+                        href="/dashboard/rg/team/invite?demo=true"
                       >
                         Invite Team Member
                       </Button>

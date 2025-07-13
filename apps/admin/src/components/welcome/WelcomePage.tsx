@@ -233,7 +233,7 @@ export default function WelcomePage() {
                     bgcolor: 'grey.100',
                   },
                 }}
-                href="/admin/api/auth/signin?demo=true&userId=user-admin-1"
+                href="/api/auth/signin?demo=true&userId=user-admin-1"
               >
                 Super Admin Demo
               </Button>
@@ -251,7 +251,7 @@ export default function WelcomePage() {
                     borderColor: 'white',
                   },
                 }}
-                href="/admin/api/auth/signin?demo=true&userId=user-isbd-rg-admin"
+                href="/api/auth/signin?demo=true&userId=user-isbd-rg-admin"
               >
                 RG Admin Demo
               </Button>
@@ -269,7 +269,7 @@ export default function WelcomePage() {
                     borderColor: 'white',
                   },
                 }}
-                href="/admin/api/auth/signin?demo=true&userId=user-isbd-editor"
+                href="/api/auth/signin?demo=true&userId=user-isbd-editor"
               >
                 Member Demo
               </Button>

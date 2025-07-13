@@ -76,7 +76,7 @@ export default function Navbar({ userId = 'user-admin-1' }: NavbarProps) {
 
   const handleLogout = () => {
     // In demo mode, redirect to admin welcome page
-    router.push('/admin');
+    router.push('/');
   };
 
   const navigationItems = [
