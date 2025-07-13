@@ -19,7 +19,7 @@ describe('CORS Integration (Server-Dependent)', () => {
   }, 15000); // 15 second timeout for cleanup
 
   it('should allow CORS requests from portal origin', async () => {
-    const response = await fetch(`${adminBaseUrl}/api/auth/session`, {
+    const response = await fetch(`${adminBaseUrl}/api/hello`, {
       method: 'GET',
       headers: {
         Origin: portalOrigin,
@@ -32,11 +32,11 @@ describe('CORS Integration (Server-Dependent)', () => {
     // expect(response.headers.get('Access-Control-Allow-Credentials')).toBe('true');
 
     // For now, just verify the server responds
-    expect(response.status).toBeLessThan(500);
+    expect(response.status).toBe(200);
   });
 
   it('should handle preflight OPTIONS requests', async () => {
-    const response = await fetch(`${adminBaseUrl}/api/auth/session`, {
+    const response = await fetch(`${adminBaseUrl}/api/hello`, {
       method: 'OPTIONS',
       headers: {
         Origin: portalOrigin,
@@ -58,7 +58,7 @@ describe('CORS Integration (Server-Dependent)', () => {
   it('should reject requests from unauthorized origins', async () => {
     const unauthorizedOrigin = 'http://malicious-site.com';
 
-    const response = await fetch(`${adminBaseUrl}/api/auth/session`, {
+    const response = await fetch(`${adminBaseUrl}/api/hello`, {
       method: 'GET',
       headers: {
         Origin: unauthorizedOrigin,
@@ -80,7 +80,7 @@ describe('CORS Integration (Server-Dependent)', () => {
     ];
 
     for (const origin of allowedOrigins) {
-      const response = await fetch(`${adminBaseUrl}/api/auth/session`, {
+      const response = await fetch(`${adminBaseUrl}/api/hello`, {
         method: 'GET',
         headers: {
           Origin: origin,
@@ -93,7 +93,7 @@ describe('CORS Integration (Server-Dependent)', () => {
       // expect(response.headers.get('Access-Control-Allow-Credentials')).toBe('true');
 
       // For now, just verify the server responds
-      expect(response.status).toBeLessThan(500);
+      expect(response.status).toBe(200);
     }
   });
 });

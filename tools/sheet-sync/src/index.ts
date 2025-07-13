@@ -34,34 +34,37 @@ const PROJECT_ROOT = join(__dirname, '../../../');
 const STANDARDS: Record<string, StandardConfig> = {
   ISBDM: {
     name: 'ISBDM',
-    csvDir: join(PROJECT_ROOT, 'standards/ISBDM/static/vocabs/xml_csv_new/ns/isbd'),
-    configPath: join(PROJECT_ROOT, 'standards/ISBDM/.config/sheet.json')
+    csvDir: join(
+      PROJECT_ROOT,
+      'standards/ISBDM/static/vocabs/xml_csv_new/ns/isbd',
+    ),
+    configPath: join(PROJECT_ROOT, 'standards/ISBDM/.config/sheet.json'),
   },
   LRM: {
     name: 'LRM',
     csvDir: join(PROJECT_ROOT, 'standards/LRM/csv'),
-    configPath: join(PROJECT_ROOT, 'standards/LRM/.config/sheet.json')
+    configPath: join(PROJECT_ROOT, 'standards/LRM/.config/sheet.json'),
   },
   FRBR: {
     name: 'FRBR',
     csvDir: join(PROJECT_ROOT, 'standards/FRBR/csv'),
-    configPath: join(PROJECT_ROOT, 'standards/FRBR/.config/sheet.json')
+    configPath: join(PROJECT_ROOT, 'standards/FRBR/.config/sheet.json'),
   },
   isbd: {
     name: 'isbd',
     csvDir: join(PROJECT_ROOT, 'standards/isbd/csv'),
-    configPath: join(PROJECT_ROOT, 'standards/isbd/.config/sheet.json')
+    configPath: join(PROJECT_ROOT, 'standards/isbd/.config/sheet.json'),
   },
   muldicat: {
     name: 'muldicat',
     csvDir: join(PROJECT_ROOT, 'standards/muldicat/csv'),
-    configPath: join(PROJECT_ROOT, 'standards/muldicat/.config/sheet.json')
+    configPath: join(PROJECT_ROOT, 'standards/muldicat/.config/sheet.json'),
   },
   unimarc: {
     name: 'unimarc',
     csvDir: join(PROJECT_ROOT, 'standards/unimarc/csv'),
-    configPath: join(PROJECT_ROOT, 'standards/unimarc/.config/sheet.json')
-  }
+    configPath: join(PROJECT_ROOT, 'standards/unimarc/.config/sheet.json'),
+  },
 };
 
 class SheetSyncError extends Error {
@@ -72,14 +75,32 @@ class SheetSyncError extends Error {
 }
 
 export class SheetSync {
-  private sheets: any;
+  private sheets: {
+    spreadsheets: {
+      get: (params: {
+        spreadsheetId: string;
+      }) => Promise<{
+        data: { sheets: Array<{ properties: { title: string } }> };
+      }>;
+      values: {
+        get: (params: {
+          spreadsheetId: string;
+          range: string;
+        }) => Promise<{ data: { values: string[][] } }>;
+        update: (params: Record<string, unknown>) => Promise<unknown>;
+        batchUpdate: (params: Record<string, unknown>) => Promise<unknown>;
+        clear: (params: Record<string, unknown>) => Promise<unknown>;
+      };
+      batchUpdate: (params: Record<string, unknown>) => Promise<unknown>;
+    };
+  } = {} as any;
   private globalConfig: GlobalConfig;
 
   constructor() {
     // Load global configuration from environment
     this.globalConfig = {
       gsheetsSaKey: process.env.GSHEETS_SA_KEY,
-      defaultSpreadsheetId: process.env.SPREADSHEET_ID
+      defaultSpreadsheetId: process.env.SPREADSHEET_ID,
     };
   }
 
@@ -89,22 +110,26 @@ export class SheetSync {
     }
 
     if (!this.globalConfig.gsheetsSaKey) {
-      throw new SheetSyncError('GSHEETS_SA_KEY environment variable is required');
+      throw new SheetSyncError(
+        'GSHEETS_SA_KEY environment variable is required',
+      );
     }
 
     try {
       const credentials = JSON.parse(
-        Buffer.from(this.globalConfig.gsheetsSaKey, 'base64').toString('utf8')
+        Buffer.from(this.globalConfig.gsheetsSaKey, 'base64').toString('utf8'),
       );
 
       const auth = new google.auth.GoogleAuth({
         credentials,
-        scopes: ['https://www.googleapis.com/auth/spreadsheets']
+        scopes: ['https://www.googleapis.com/auth/spreadsheets'],
       });
 
       this.sheets = google.sheets({ version: 'v4', auth });
     } catch (error) {
-      throw new SheetSyncError(`Failed to initialize Google Sheets auth: ${error}`);
+      throw new SheetSyncError(
+        `Failed to initialize Google Sheets auth: ${error}`,
+      );
     }
   }
 
@@ -112,7 +137,7 @@ export class SheetSync {
     const config = STANDARDS[standard.toUpperCase()];
     if (!config) {
       throw new SheetSyncError(
-        `Unknown standard: ${standard}. Available: ${Object.keys(STANDARDS).join(', ')}`
+        `Unknown standard: ${standard}. Available: ${Object.keys(STANDARDS).join(', ')}`,
       );
     }
     return config;
@@ -133,13 +158,13 @@ export class SheetSync {
     // Use local sheetUrl/sheetId if available, otherwise fall back to global default
     const config: SheetConfig = {
       sheetUrl: localConfig.sheetUrl,
-      sheetId: localConfig.sheetId || this.globalConfig.defaultSpreadsheetId
+      sheetId: localConfig.sheetId || this.globalConfig.defaultSpreadsheetId,
     };
 
     // Validate that we have either a sheetUrl or sheetId
     if (!config.sheetUrl && !config.sheetId) {
       throw new SheetSyncError(
-        `No sheet configuration found. Either set sheetUrl in ${configPath} or SPREADSHEET_ID in .env`
+        `No sheet configuration found. Either set sheetUrl in ${configPath} or SPREADSHEET_ID in .env`,
       );
     }
 
@@ -154,9 +179,13 @@ export class SheetSync {
 
     // Otherwise, extract from URL
     if (sheetConfig.sheetUrl) {
-      const match = sheetConfig.sheetUrl.match(/\/spreadsheets\/d\/([a-zA-Z0-9-_]+)/);
+      const match = sheetConfig.sheetUrl.match(
+        /\/spreadsheets\/d\/([a-zA-Z0-9-_]+)/,
+      );
       if (!match) {
-        throw new SheetSyncError(`Invalid Google Sheets URL: ${sheetConfig.sheetUrl}`);
+        throw new SheetSyncError(
+          `Invalid Google Sheets URL: ${sheetConfig.sheetUrl}`,
+        );
       }
       return match[1];
     }
@@ -176,7 +205,9 @@ export class SheetSync {
 
     try {
       // Get spreadsheet metadata to list all sheets
-      const spreadsheet = await this.sheets.spreadsheets.get({ spreadsheetId: sheetId });
+      const spreadsheet = await this.sheets.spreadsheets.get({
+        spreadsheetId: sheetId,
+      });
       const sheets = spreadsheet.data.sheets || [];
 
       console.log(`📊 Found ${sheets.length} sheets in workbook`);
@@ -197,12 +228,16 @@ export class SheetSync {
     }
   }
 
-  private async pullSheet(sheetId: string, sheetName: string, csvDir: string): Promise<void> {
+  private async pullSheet(
+    sheetId: string,
+    sheetName: string,
+    csvDir: string,
+  ): Promise<void> {
     try {
       // Get sheet data
       const response = await this.sheets.spreadsheets.values.get({
         spreadsheetId: sheetId,
-        range: `${sheetName}!A:ZZ`
+        range: `${sheetName}!A:ZZ`,
       });
 
       const rows = response.data.values || [];
@@ -237,7 +272,9 @@ export class SheetSync {
     try {
       // Find all CSV files in the directory
       const { readdirSync } = require('fs');
-      const files = readdirSync(config.csvDir).filter((file: string) => file.endsWith('.csv'));
+      const files = readdirSync(config.csvDir).filter((file: string) =>
+        file.endsWith('.csv'),
+      );
 
       console.log(`📁 Found ${files.length} CSV files to push`);
 
@@ -255,7 +292,11 @@ export class SheetSync {
     }
   }
 
-  private async pushSheet(sheetId: string, sheetName: string, csvPath: string): Promise<void> {
+  private async pushSheet(
+    sheetId: string,
+    sheetName: string,
+    csvPath: string,
+  ): Promise<void> {
     try {
       // Read CSV file
       const csvContent = readFileSync(csvPath, 'utf8');
@@ -272,7 +313,7 @@ export class SheetSync {
       // Clear existing data
       await this.sheets.spreadsheets.values.clear({
         spreadsheetId: sheetId,
-        range: `${sheetName}!A:ZZ`
+        range: `${sheetName}!A:ZZ`,
       });
 
       // Upload new data
@@ -280,7 +321,7 @@ export class SheetSync {
         spreadsheetId: sheetId,
         range: `${sheetName}!A1`,
         valueInputOption: 'RAW',
-        requestBody: { values: rows }
+        requestBody: { values: rows },
       });
 
       console.log(`💾 Updated sheet ${sheetName} with ${rows.length} rows`);
@@ -289,15 +330,20 @@ export class SheetSync {
     }
   }
 
-  private async ensureSheetExists(sheetId: string, sheetName: string): Promise<void> {
+  private async ensureSheetExists(
+    sheetId: string,
+    sheetName: string,
+  ): Promise<void> {
     try {
       // Get spreadsheet metadata
-      const spreadsheet = await this.sheets.spreadsheets.get({ spreadsheetId: sheetId });
+      const spreadsheet = await this.sheets.spreadsheets.get({
+        spreadsheetId: sheetId,
+      });
       const existingSheets = spreadsheet.data.sheets || [];
 
       // Check if sheet already exists
       const sheetExists = existingSheets.some(
-        (sheet: any) => sheet.properties?.title === sheetName
+        (sheet: any) => sheet.properties?.title === sheetName,
       );
 
       if (!sheetExists) {
@@ -305,12 +351,14 @@ export class SheetSync {
         await this.sheets.spreadsheets.batchUpdate({
           spreadsheetId: sheetId,
           requestBody: {
-            requests: [{
-              addSheet: {
-                properties: { title: sheetName }
-              }
-            }]
-          }
+            requests: [
+              {
+                addSheet: {
+                  properties: { title: sheetName },
+                },
+              },
+            ],
+          },
         });
       }
     } catch (error) {
@@ -340,8 +388,12 @@ export class SheetSync {
       // Check CSV directory
       if (existsSync(config.csvDir)) {
         const { readdirSync } = require('fs');
-        const csvFiles = readdirSync(config.csvDir).filter((file: string) => file.endsWith('.csv'));
-        console.log(`📁 CSV files: ${csvFiles.length} found in ${config.csvDir}`);
+        const csvFiles = readdirSync(config.csvDir).filter((file: string) =>
+          file.endsWith('.csv'),
+        );
+        console.log(
+          `📁 CSV files: ${csvFiles.length} found in ${config.csvDir}`,
+        );
         csvFiles.forEach((file: string) => console.log(`   - ${file}`));
       } else {
         console.log(`❌ CSV directory not found: ${config.csvDir}`);
@@ -351,7 +403,9 @@ export class SheetSync {
       if (this.globalConfig.gsheetsSaKey) {
         try {
           this.initializeAuth();
-          const spreadsheet = await this.sheets.spreadsheets.get({ spreadsheetId: sheetId });
+          const spreadsheet = await this.sheets.spreadsheets.get({
+            spreadsheetId: sheetId,
+          });
           const sheets = spreadsheet.data.sheets || [];
           console.log(`📊 Google Sheets: ${sheets.length} sheets found`);
           sheets.forEach((sheet: any) => {
@@ -364,7 +418,6 @@ export class SheetSync {
       } else {
         console.log(`⚠️  GSHEETS_SA_KEY not set - cannot access Google Sheets`);
       }
-
     } catch (error) {
       console.log(`❌ Error: ${error}`);
     }

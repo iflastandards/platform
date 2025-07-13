@@ -47,11 +47,9 @@ export interface SiteConfig {
       defaultLanguage?: string;
       availableLanguages?: readonly string[];
     };
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    [key: string]: any;
+    [key: string]: string | number | boolean | object | undefined;
   };
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  [key: string]: any;
+  [key: string]: string | number | boolean | object | undefined;
 }
 
 // Central configuration matrix - single source of truth

@@ -24,12 +24,12 @@ describe('Role-Based Access Control (RBAC)', () => {
         { userId: 'user-1', role: 'system-admin' },
         { userId: 'user-2', role: 'ifla-admin' },
       ];
-      
+
       userRoles.forEach((assignment) => {
         expect(systemRoles).toContain(assignment.role);
       });
     });
-    
+
     it('should recognize namespace-level roles', () => {
       const namespaceRoles = [
         'namespace-admin',
@@ -37,34 +37,30 @@ describe('Role-Based Access Control (RBAC)', () => {
         'namespace-reviewer',
         'namespace-translator',
       ];
-      
+
       const userRoles: RoleAssignment[] = [
         { userId: 'user-1', role: 'namespace-admin', rg: 'ISBD' },
         { userId: 'user-2', role: 'namespace-editor', rg: 'LRM' },
         { userId: 'user-3', role: 'namespace-reviewer', rg: 'FRBR' },
         { userId: 'user-4', role: 'namespace-translator', rg: 'UNIMARC' },
       ];
-      
+
       userRoles.forEach((assignment) => {
-        const baseRole = assignment.role.replace('namespace-', '');
+        const _baseRole = assignment.role.replace('namespace-', '');
         expect(namespaceRoles).toContain(assignment.role);
         expect(assignment.rg).toBeDefined();
       });
     });
-    
+
     it('should recognize site-level roles', () => {
-      const siteRoles = [
-        'site-admin',
-        'site-editor',
-        'site-translator',
-      ];
-      
+      const siteRoles = ['site-admin', 'site-editor', 'site-translator'];
+
       const userRoles: RoleAssignment[] = [
         { userId: 'user-1', role: 'site-admin', site: 'isbdm' },
         { userId: 'user-2', role: 'site-editor', site: 'lrm' },
         { userId: 'user-3', role: 'site-translator', site: 'frbr' },
       ];
-      
+
       userRoles.forEach((assignment) => {
         expect(siteRoles).toContain(assignment.role);
         expect(assignment.site).toBeDefined();
@@ -83,7 +79,7 @@ describe('Role-Based Access Control (RBAC)', () => {
           },
         },
       });
-      
+
       const result = await mockCerbos.checkResource({
         principal: {
           id: 'super-admin',
@@ -95,12 +91,12 @@ describe('Role-Based Access Control (RBAC)', () => {
         },
         actions: ['admin', 'edit', 'view'],
       });
-      
+
       expect(result.resource.actions.admin).toBe('EFFECT_ALLOW');
       expect(result.resource.actions.edit).toBe('EFFECT_ALLOW');
       expect(result.resource.actions.view).toBe('EFFECT_ALLOW');
     });
-    
+
     it('namespace-admin should have access to all sites in namespace', async () => {
       mockCerbos.checkResource.mockResolvedValueOnce({
         resource: {
@@ -111,7 +107,7 @@ describe('Role-Based Access Control (RBAC)', () => {
           },
         },
       });
-      
+
       const result = await mockCerbos.checkResource({
         principal: {
           id: 'isbd-admin',
@@ -126,10 +122,10 @@ describe('Role-Based Access Control (RBAC)', () => {
         },
         actions: ['admin', 'publish', 'edit'],
       });
-      
+
       expect(result.resource.actions.admin).toBe('EFFECT_ALLOW');
     });
-    
+
     it('namespace roles should not grant access to other namespaces', async () => {
       mockCerbos.checkResource.mockResolvedValueOnce({
         resource: {
@@ -139,7 +135,7 @@ describe('Role-Based Access Control (RBAC)', () => {
           },
         },
       });
-      
+
       const result = await mockCerbos.checkResource({
         principal: {
           id: 'isbd-editor',
@@ -151,7 +147,7 @@ describe('Role-Based Access Control (RBAC)', () => {
         },
         actions: ['edit', 'admin'],
       });
-      
+
       expect(result.resource.actions.edit).toBe('EFFECT_DENY');
       expect(result.resource.actions.admin).toBe('EFFECT_DENY');
     });
@@ -165,21 +161,22 @@ describe('Role-Based Access Control (RBAC)', () => {
       UNIMARC: ['unimarc'],
       MulDiCat: ['muldicat'],
     };
-    
+
     it('should correctly map ISBD namespace to its sites', () => {
       const namespace = 'ISBD';
       const sites = namespaceSiteMapping[namespace];
-      
+
       expect(sites).toContain('isbd');
       expect(sites).toContain('isbdm');
       expect(sites).toHaveLength(2);
     });
-    
+
     it('should handle single-site namespaces', () => {
       const singleSiteNamespaces = ['LRM', 'FRBR', 'UNIMARC', 'MulDiCat'];
-      
+
       singleSiteNamespaces.forEach((namespace) => {
-        const sites = namespaceSiteMapping[namespace as keyof typeof namespaceSiteMapping];
+        const sites =
+          namespaceSiteMapping[namespace as keyof typeof namespaceSiteMapping];
         expect(sites).toHaveLength(1);
       });
     });
@@ -190,11 +187,18 @@ describe('Role-Based Access Control (RBAC)', () => {
       const testCases = [
         {
           roles: ['system-admin'],
-          expectedDashboards: ['/dashboard', '/admin-dashboard/*', '/editor-dashboard/*'],
+          expectedDashboards: [
+            '/dashboard',
+            '/admin-dashboard/*',
+            '/editor-dashboard/*',
+          ],
         },
         {
           roles: ['namespace-admin:ISBD'],
-          expectedDashboards: ['/admin-dashboard/isbd', '/admin-dashboard/isbdm'],
+          expectedDashboards: [
+            '/admin-dashboard/isbd',
+            '/admin-dashboard/isbdm',
+          ],
         },
         {
           roles: ['site-editor:isbdm'],
@@ -205,20 +209,20 @@ describe('Role-Based Access Control (RBAC)', () => {
           expectedDashboards: ['/reviewer-dashboard/lrm'],
         },
       ];
-      
-      testCases.forEach(({ roles, expectedDashboards }) => {
+
+      testCases.forEach(({ roles: _roles, expectedDashboards }) => {
         // This would be implemented in the actual access control logic
         expect(expectedDashboards.length).toBeGreaterThan(0);
       });
     });
-    
+
     it('should handle users with multiple roles', () => {
-      const userRoles = [
+      const _userRoles = [
         'namespace-admin:ISBD',
         'site-editor:lrm',
         'namespace-reviewer:FRBR',
       ];
-      
+
       // User should have access to multiple dashboards
       const expectedAccess = [
         '/admin-dashboard/isbd',
@@ -226,7 +230,7 @@ describe('Role-Based Access Control (RBAC)', () => {
         '/editor-dashboard/lrm',
         '/reviewer-dashboard/frbr',
       ];
-      
+
       expect(expectedAccess).toHaveLength(4);
     });
   });
@@ -234,7 +238,7 @@ describe('Role-Based Access Control (RBAC)', () => {
   describe('Permission Checks for Common Operations', () => {
     it('should check vocabulary edit permissions', async () => {
       mockCerbos.isAllowed.mockResolvedValueOnce(true);
-      
+
       const canEdit = await mockCerbos.isAllowed({
         principal: {
           id: 'editor-123',
@@ -250,13 +254,13 @@ describe('Role-Based Access Control (RBAC)', () => {
         },
         action: 'edit',
       });
-      
+
       expect(canEdit).toBe(true);
     });
-    
+
     it('should check site publish permissions', async () => {
       mockCerbos.isAllowed.mockResolvedValueOnce(false);
-      
+
       const canPublish = await mockCerbos.isAllowed({
         principal: {
           id: 'editor-123',
@@ -268,13 +272,13 @@ describe('Role-Based Access Control (RBAC)', () => {
         },
         action: 'publish',
       });
-      
+
       expect(canPublish).toBe(false); // Editors can't publish
     });
-    
+
     it('should check translation permissions', async () => {
       mockCerbos.isAllowed.mockResolvedValueOnce(true);
-      
+
       const canTranslate = await mockCerbos.isAllowed({
         principal: {
           id: 'translator-123',
@@ -290,7 +294,7 @@ describe('Role-Based Access Control (RBAC)', () => {
         },
         action: 'edit',
       });
-      
+
       expect(canTranslate).toBe(true);
     });
   });
@@ -303,27 +307,31 @@ describe('Role-Based Access Control (RBAC)', () => {
         'site-isbdm-admin': 'site-admin:isbdm',
         'namespace-admins': 'system-admin',
       };
-      
-      Object.entries(teamSlugToRole).forEach(([slug, expectedRole]) => {
+
+      Object.entries(teamSlugToRole).forEach(([_slug, expectedRole]) => {
         expect(expectedRole).toBeTruthy();
-        
+
         // Verify role structure
         if (expectedRole.includes(':')) {
           const [roleType, scope] = expectedRole.split(':');
-          expect(['namespace-editor', 'namespace-reviewer', 'site-admin']).toContain(roleType);
+          expect([
+            'namespace-editor',
+            'namespace-reviewer',
+            'site-admin',
+          ]).toContain(roleType);
           expect(scope).toBeTruthy();
         }
       });
     });
-    
+
     it('should handle legacy role names', () => {
       const legacyRoleMappings = {
         'rg-admin': 'namespace-admin',
         'rg-editor': 'namespace-editor',
         'review-group-admin': 'namespace-admin',
       };
-      
-      Object.entries(legacyRoleMappings).forEach(([legacy, modern]) => {
+
+      Object.entries(legacyRoleMappings).forEach(([_legacy, modern]) => {
         expect(modern).toMatch(/^namespace-/);
       });
     });
@@ -353,19 +361,22 @@ describe('Role-Based Access Control (RBAC)', () => {
           },
         ],
       });
-      
+
       const result = await mockCerbos.checkResources({
         principal: {
           id: 'user-123',
           roles: ['namespace-editor:ISBD', 'site-viewer:lrm'],
         },
         resources: [
-          { resource: { id: 'isbdm', kind: 'site' }, actions: ['view', 'edit'] },
+          {
+            resource: { id: 'isbdm', kind: 'site' },
+            actions: ['view', 'edit'],
+          },
           { resource: { id: 'isbd', kind: 'site' }, actions: ['view', 'edit'] },
           { resource: { id: 'lrm', kind: 'site' }, actions: ['view', 'edit'] },
         ],
       });
-      
+
       // User can edit ISBD namespace sites but only view LRM
       expect(result.results[0].resource.actions.edit).toBe('EFFECT_ALLOW');
       expect(result.results[1].resource.actions.edit).toBe('EFFECT_ALLOW');

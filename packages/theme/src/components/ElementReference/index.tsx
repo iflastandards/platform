@@ -17,131 +17,111 @@ declare module '@theme/TabItem' {
   }
 }
 
-interface ElementSubType {
-  uri: string;
-  url: string;
-  label: string;
-}
-
-interface ElementSuperType {
-  uri: string;
-  url: string;
-  label: string;
-}
-
-interface RDFData {
-  language?: string;
-  label: string;
-  definition: string;
-  scopeNote?: string;
-  domain?: string;
-  range?: string;
-  elementSubType?: ElementSubType[];
-  elementSuperType?: ElementSuperType[];
-  uri?: string;
-  type?: string;
-  status?: string;
-  isDefinedBy?: string;
-  subPropertyOf?: string[];
-  equivalentProperty?: string[];
-  inverseOf?: string[];
-  deprecated?: boolean;
-  deprecatedInVersion?: string;
-  willBeRemovedInVersion?: string;
-}
-
-interface ElementReferenceProps {
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  frontMatter: any; // Accept any frontmatter structure
-}
+import type {
+  ElementReferenceProps,
+  ElementFrontMatter,
+  AdaptedFrontMatter,
+  ElementDefaults,
+  ElementSuperType,
+  RDFData,
+} from '../../types';
 
 // Adapter function to convert from new frontmatter structure to component-expected structure
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-function adaptFrontMatter(frontMatter: any, elementDefaults: any): { RDF: RDFData } {
-  
+function adaptFrontMatter(
+  frontMatter: ElementFrontMatter,
+  elementDefaults: ElementDefaults,
+): AdaptedFrontMatter {
   // Check if frontMatter already has the expected structure with RDF containing required properties
-  if (frontMatter.RDF?.definition && 
-      !frontMatter.hasOwnProperty('deprecated')) {
+  if (
+    frontMatter.RDF?.definition &&
+    !frontMatter.hasOwnProperty('deprecated')
+  ) {
     // Already in the expected format, no adaptation needed
-    return frontMatter as { RDF: RDFData };
+    return { RDF: frontMatter.RDF };
   }
 
   // Create adapted frontmatter with RDF object
-  const adaptedFrontMatter = {
+  const adaptedFrontMatter: AdaptedFrontMatter = {
     RDF: {
+      label: frontMatter.RDF?.label || frontMatter.title || '',
+      definition: frontMatter.RDF?.definition || '',
       ...frontMatter.RDF,
       // Move deprecation info from root level into RDF if it exists
       deprecated: frontMatter.deprecated || false,
-      deprecatedInVersion: frontMatter.deprecatedInVersion || "",
-      willBeRemovedInVersion: frontMatter.willBeRemovedInVersion || "",
-    }
+      deprecatedInVersion: frontMatter.deprecatedInVersion || '',
+      willBeRemovedInVersion: frontMatter.willBeRemovedInVersion || '',
+    },
   };
-  
+
   // Handle assembled URI if needed
   if (!adaptedFrontMatter.RDF.uri && frontMatter.id) {
     // Choose prefix based on type (case-insensitive)
-    const type = adaptedFrontMatter.RDF.type || "";
+    const type = adaptedFrontMatter.RDF.type || '';
     let prefix = elementDefaults.propertyPrefix;
-    
+
     // Use class prefix if type contains 'class'
     if (type.toLowerCase().includes('class')) {
       prefix = elementDefaults.classPrefix;
     }
-    
+
     // Construct URI based on ID and type
     adaptedFrontMatter.RDF.uri = `${elementDefaults.uri}/${prefix}${frontMatter.id}`;
   }
-  
+
   // If label is not in RDF but in root (title), use that
   if (!adaptedFrontMatter.RDF.label && frontMatter.title) {
     adaptedFrontMatter.RDF.label = frontMatter.title;
   }
-  
+
   // Ensure language is present
   if (!adaptedFrontMatter.RDF.language) {
-    adaptedFrontMatter.RDF.language = "en"; // Default language
+    adaptedFrontMatter.RDF.language = 'en'; // Default language
   }
-  
+
   // Ensure status is present
   if (!adaptedFrontMatter.RDF.status) {
-    adaptedFrontMatter.RDF.status = "Published"; // Default status
+    adaptedFrontMatter.RDF.status = 'Published'; // Default status
   }
-  
+
   // Ensure isDefinedBy is present
   if (!adaptedFrontMatter.RDF.isDefinedBy) {
-    adaptedFrontMatter.RDF.isDefinedBy = elementDefaults.uri + "/";
+    adaptedFrontMatter.RDF.isDefinedBy = elementDefaults.uri + '/';
   }
-  
+
   // Handle elementSuperType conversion to subPropertyOf if needed
-  if (adaptedFrontMatter.RDF.elementSuperType && 
-      adaptedFrontMatter.RDF.elementSuperType.length > 0 && 
-      (!adaptedFrontMatter.RDF.subPropertyOf || adaptedFrontMatter.RDF.subPropertyOf.length === 0)) {
-    adaptedFrontMatter.RDF.subPropertyOf = adaptedFrontMatter.RDF.elementSuperType.map(
-      (superType: ElementSuperType) => superType.uri
-    );
+  if (
+    adaptedFrontMatter.RDF.elementSuperType &&
+    adaptedFrontMatter.RDF.elementSuperType.length > 0 &&
+    (!adaptedFrontMatter.RDF.subPropertyOf ||
+      adaptedFrontMatter.RDF.subPropertyOf.length === 0)
+  ) {
+    adaptedFrontMatter.RDF.subPropertyOf =
+      adaptedFrontMatter.RDF.elementSuperType.map(
+        (superType: ElementSuperType) => superType.uri,
+      );
   }
-  
+
   // Ensure required arrays exist
   if (!adaptedFrontMatter.RDF.equivalentProperty) {
     adaptedFrontMatter.RDF.equivalentProperty = [];
   }
-  
+
   if (!adaptedFrontMatter.RDF.inverseOf) {
     adaptedFrontMatter.RDF.inverseOf = [];
   }
-  
+
   if (!adaptedFrontMatter.RDF.elementSubType) {
     adaptedFrontMatter.RDF.elementSubType = [];
   }
-  
+
   if (!adaptedFrontMatter.RDF.elementSuperType) {
     adaptedFrontMatter.RDF.elementSuperType = [];
   }
-  
+
   if (!adaptedFrontMatter.RDF.subPropertyOf) {
     adaptedFrontMatter.RDF.subPropertyOf = [];
   }
-  
+
   return adaptedFrontMatter;
 }
 
@@ -149,38 +129,38 @@ export default function ElementReference({
   frontMatter,
 }: ElementReferenceProps): JSX.Element {
   // Get config from Docusaurus context
-  const {siteConfig} = useDocusaurusContext();
-  
+  const { siteConfig } = useDocusaurusContext();
+
   // Extract element defaults from config
-  const elementDefaults = siteConfig.customFields?.elementDefaults || {
-    uri: "https://www.iflastandards.info/ISBDM/elements",
-    prefix: "isbdm",
-    classPrefix: "C",
-    propertyPrefix: "P",
+  const elementDefaults: ElementDefaults = (siteConfig.customFields
+    ?.elementDefaults as ElementDefaults) || {
+    uri: 'https://www.iflastandards.info/ISBDM/elements',
+    classPrefix: 'C',
+    propertyPrefix: 'P',
   };
-  
+
   // Apply adapter to frontMatter before using it
   const adaptedFrontMatter = adaptFrontMatter(frontMatter, elementDefaults);
-  
+
   const {
-    language: _language = "en",
+    language: _language = 'en',
     label: _label,
     definition,
-    scopeNote = "",
-    domain = "",
-    range = "",
+    scopeNote = '',
+    domain = '',
+    range = '',
     elementSubType = [],
     elementSuperType = [],
-    uri = "",
-    type = "",
-    status = "",
-    isDefinedBy: _isDefinedBy = "",
+    uri = '',
+    type = '',
+    status = '',
+    isDefinedBy: _isDefinedBy = '',
     subPropertyOf: _subPropertyOf = [],
     equivalentProperty = [],
     inverseOf = [],
     deprecated = false,
-    deprecatedInVersion = "",
-    willBeRemovedInVersion = "",
+    deprecatedInVersion = '',
+    willBeRemovedInVersion = '',
   } = adaptedFrontMatter.RDF;
 
   const { colorMode } = useColorMode();
@@ -188,17 +168,21 @@ export default function ElementReference({
 
   // Pre-process URLs for element sub-types and super-types to avoid calling hooks in callbacks
   const processedElementSubTypes = React.useMemo(() => {
-    return elementSubType?.map(subType => ({
-      ...subType,
-      processedUrl: subType.url
-    })) || [];
+    return (
+      elementSubType?.map((subType) => ({
+        ...subType,
+        processedUrl: subType.url,
+      })) || []
+    );
   }, [elementSubType]);
 
   const processedElementSuperTypes = React.useMemo(() => {
-    return elementSuperType?.map(superType => ({
-      ...superType,
-      processedUrl: superType.url
-    })) || [];
+    return (
+      elementSuperType?.map((superType) => ({
+        ...superType,
+        processedUrl: superType.url,
+      })) || []
+    );
   }, [elementSuperType]);
 
   // Generate JSON-LD
@@ -222,7 +206,11 @@ export default function ElementReference({
       )}
 
       <Tabs>
-        <TabItem value="attribute" label="Attribute:Value" data-testid="tab-attribute-value">
+        <TabItem
+          value="attribute"
+          label="Attribute:Value"
+          data-testid="tab-attribute-value"
+        >
           <div className={styles.referenceTable}>
             <div className={styles.row}>
               <div className={styles.label}>Definition</div>
@@ -299,7 +287,9 @@ export default function ElementReference({
             {equivalentProperty && equivalentProperty.length > 0 && (
               <div className={styles.row}>
                 <div className={styles.label}>Equivalent Property</div>
-                <div className={styles.value}>{equivalentProperty.join(', ')}</div>
+                <div className={styles.value}>
+                  {equivalentProperty.join(', ')}
+                </div>
               </div>
             )}
             {inverseOf && inverseOf.length > 0 && (
@@ -322,7 +312,9 @@ export default function ElementReference({
                 )}
                 {willBeRemovedInVersion && (
                   <div className={styles.row}>
-                    <div className={styles.label}>Will Be Removed In Version</div>
+                    <div className={styles.label}>
+                      Will Be Removed In Version
+                    </div>
                     <div className={styles.value}>{willBeRemovedInVersion}</div>
                   </div>
                 )}
@@ -331,13 +323,19 @@ export default function ElementReference({
           </div>
         </TabItem>
         <TabItem value="json-ld" label="JSON-LD" data-testid="tab-json-ld">
-          <CodeBlock language="json" data-testid="codeblock-json">{jsonLD}</CodeBlock>
+          <CodeBlock language="json" data-testid="codeblock-json">
+            {jsonLD}
+          </CodeBlock>
         </TabItem>
         <TabItem value="turtle" label="Turtle" data-testid="tab-turtle">
-          <CodeBlock language="turtle" data-testid="codeblock-turtle">{turtle}</CodeBlock>
+          <CodeBlock language="turtle" data-testid="codeblock-turtle">
+            {turtle}
+          </CodeBlock>
         </TabItem>
         <TabItem value="rdf-xml" label="RDF/XML" data-testid="tab-rdf-xml">
-          <CodeBlock language="markup" data-testid="codeblock-xml">{rdfXML}</CodeBlock>
+          <CodeBlock language="markup" data-testid="codeblock-xml">
+            {rdfXML}
+          </CodeBlock>
         </TabItem>
       </Tabs>
     </div>
@@ -347,7 +345,7 @@ export default function ElementReference({
 // Helper functions to generate RDF formats
 function generateJsonLD(rdfData: RDFData): string {
   const {
-    language = "en",
+    language = 'en',
     label,
     definition,
     domain,
@@ -359,58 +357,68 @@ function generateJsonLD(rdfData: RDFData): string {
     deprecated,
     deprecatedInVersion,
     willBeRemovedInVersion,
-    elementSuperType: _elementSuperType = []
+    elementSuperType: _elementSuperType = [],
   } = rdfData;
 
   const jsonObj = {
-    "@context": {
-      "rdf": "http://www.w3.org/1999/02/22-rdf-syntax-ns#",
-      "rdfs": "http://www.w3.org/2000/01/rdf-schema#",
-      "owl": "http://www.w3.org/2002/07/owl#",
-      "skos": "http://www.w3.org/2004/02/skos/core#",
-      "dcterms": "http://purl.org/dc/terms/",
-      "ifla": "http://iflastandards.info/ns/isbd/terms/",
-      "isbdm": "http://iflastandards.info/ns/isbdm/elements/"
+    '@context': {
+      rdf: 'http://www.w3.org/1999/02/22-rdf-syntax-ns#',
+      rdfs: 'http://www.w3.org/2000/01/rdf-schema#',
+      owl: 'http://www.w3.org/2002/07/owl#',
+      skos: 'http://www.w3.org/2004/02/skos/core#',
+      dcterms: 'http://purl.org/dc/terms/',
+      ifla: 'http://iflastandards.info/ns/isbd/terms/',
+      isbdm: 'http://iflastandards.info/ns/isbdm/elements/',
     },
-    "@graph": [
+    '@graph': [
       {
-        "@id": uri,
-        "@type": type?.toLowerCase().includes("class") 
-          ? ["rdfs:Class", "owl:Class"] 
-          : type?.toLowerCase().includes("object") 
-            ? ["rdf:Property", "owl:ObjectProperty"] 
-            : ["rdf:Property", "owl:DatatypeProperty"],
-        "label": {
-          [language]: label
+        '@id': uri,
+        '@type': type?.toLowerCase().includes('class')
+          ? ['rdfs:Class', 'owl:Class']
+          : type?.toLowerCase().includes('object')
+            ? ['rdf:Property', 'owl:ObjectProperty']
+            : ['rdf:Property', 'owl:DatatypeProperty'],
+        label: {
+          [language]: label,
         },
-        "description": {
-          [language]: definition
+        description: {
+          [language]: definition,
         },
-        ...(domain ? {
-          "domain": {
-            "@id": `http://iflastandards.info/ns/isbdm/elements/${domain}`
-          }
-        } : {}),
+        ...(domain
+          ? {
+              domain: {
+                '@id': `http://iflastandards.info/ns/isbdm/elements/${domain}`,
+              },
+            }
+          : {}),
         /* Removed upper_value from JSON-LD output */
-        ...(subPropertyOf && subPropertyOf.length > 0 ? {
-          "subPropertyOf": {
-            "@id": subPropertyOf[0]
-          }
-        } : {}),
-        "isDefinedBy": {
-          "@id": isDefinedBy,
-          "label": "ISBD Manifestation elements"
+        ...(subPropertyOf && subPropertyOf.length > 0
+          ? {
+              subPropertyOf: {
+                '@id': subPropertyOf[0],
+              },
+            }
+          : {}),
+        isDefinedBy: {
+          '@id': isDefinedBy,
+          label: 'ISBD Manifestation elements',
         },
-        "status": {
-          "label": status
+        status: {
+          label: status,
         },
-        ...(deprecated ? {
-          "owl:deprecated": deprecated,
-          ...(deprecatedInVersion ? { "ifla:deprecatedInVersion": deprecatedInVersion } : {}),
-          ...(willBeRemovedInVersion ? { "ifla:willBeRemovedInVersion": willBeRemovedInVersion } : {})
-        } : {})
-      }
-    ]
+        ...(deprecated
+          ? {
+              'owl:deprecated': deprecated,
+              ...(deprecatedInVersion
+                ? { 'ifla:deprecatedInVersion': deprecatedInVersion }
+                : {}),
+              ...(willBeRemovedInVersion
+                ? { 'ifla:willBeRemovedInVersion': willBeRemovedInVersion }
+                : {}),
+            }
+          : {}),
+      },
+    ],
   };
 
   return JSON.stringify(jsonObj, null, 2);
@@ -418,7 +426,7 @@ function generateJsonLD(rdfData: RDFData): string {
 
 function generateTurtle(rdfData: RDFData): string {
   const {
-    language = "en",
+    language = 'en',
     label,
     definition,
     domain,
@@ -429,7 +437,7 @@ function generateTurtle(rdfData: RDFData): string {
     status,
     deprecated,
     deprecatedInVersion,
-    willBeRemovedInVersion
+    willBeRemovedInVersion,
   } = rdfData;
 
   const prefixes = `@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
@@ -442,8 +450,8 @@ function generateTurtle(rdfData: RDFData): string {
 `;
 
   // Determine the resource type based on type value (case insensitive)
-  let resourceTypeDeclaration = "";
-  if (type?.toLowerCase().includes("class")) {
+  let resourceTypeDeclaration = '';
+  if (type?.toLowerCase().includes('class')) {
     resourceTypeDeclaration = `a rdfs:Class, owl:Class`;
   } else {
     resourceTypeDeclaration = `a rdf:Property, owl:DatatypeProperty`;
@@ -484,14 +492,14 @@ function generateTurtle(rdfData: RDFData): string {
   }
 
   // Replace final semicolon with a period
-  turtleContent = turtleContent.replace(/;$/, ".");
+  turtleContent = turtleContent.replace(/;$/, '.');
 
-  return prefixes + "\n" + turtleContent;
+  return prefixes + '\n' + turtleContent;
 }
 
 function generateRdfXml(rdfData: RDFData): string {
   const {
-    language = "en",
+    language = 'en',
     label,
     definition,
     domain,
@@ -502,14 +510,14 @@ function generateRdfXml(rdfData: RDFData): string {
     status,
     deprecated,
     deprecatedInVersion,
-    willBeRemovedInVersion
+    willBeRemovedInVersion,
   } = rdfData;
 
   // Determine the proper type
   let rdfXmlContent: string;
   let propertyType;
-  
-  if (type?.toLowerCase().includes("class")) {
+
+  if (type?.toLowerCase().includes('class')) {
     // Special handling for Class type
     rdfXmlContent = `<?xml version="1.0" encoding="UTF-8"?>
 <rdf:RDF
@@ -526,8 +534,10 @@ function generateRdfXml(rdfData: RDFData): string {
     <rdfs:comment xml:lang="${language}">${definition}</rdfs:comment>`;
   } else {
     // For properties
-    propertyType = type?.toLowerCase().includes("object") ? "ObjectProperty" : "DatatypeProperty";
-    
+    propertyType = type?.toLowerCase().includes('object')
+      ? 'ObjectProperty'
+      : 'DatatypeProperty';
+
     rdfXmlContent = `<?xml version="1.0" encoding="UTF-8"?>
 <rdf:RDF
   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
@@ -574,7 +584,7 @@ function generateRdfXml(rdfData: RDFData): string {
   }
 
   // Close the appropriate tag
-  if (type?.toLowerCase().includes("class")) {
+  if (type?.toLowerCase().includes('class')) {
     rdfXmlContent += `\n  </rdfs:Class>\n</rdf:RDF>`;
   } else {
     rdfXmlContent += `\n  </rdf:Property>\n</rdf:RDF>`;

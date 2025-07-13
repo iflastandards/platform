@@ -1,7 +1,7 @@
 /**
  * Shared types for IFLA theme components
  */
-import React from "react";
+import React from 'react';
 
 export interface ElementSubType {
   uri: string;
@@ -39,9 +39,9 @@ export interface RDFData {
 export interface VocabularyDefaults {
   prefix: string;
   startCounter: number;
-  uriStyle: "numeric" | "kebab-case" | "camelCase";
+  uriStyle: 'numeric' | 'kebab-case' | 'camelCase';
   numberPrefix: string;
-  caseStyle: "kebab-case" | "camelCase" | "PascalCase";
+  caseStyle: 'kebab-case' | 'camelCase' | 'PascalCase';
   showFilter: boolean;
   filterPlaceholder: string;
   showTitle: boolean;
@@ -49,9 +49,7 @@ export interface VocabularyDefaults {
   showCSVErrors: boolean;
   profile: string;
   profileShapeId: string;
-  RDF: {
-    [key: string]: any;
-  };
+  RDF: RDFMetadata;
   elementDefaults: {
     uri: string;
     classPrefix: string;
@@ -103,10 +101,39 @@ export interface TOCItem {
   children?: TOCItem[];
 }
 
-export type UriCaseStyle = 'kebab-case' | 'camelCase' | 'PascalCase' | 'numeric';
+export type UriCaseStyle =
+  | 'kebab-case'
+  | 'camelCase'
+  | 'PascalCase'
+  | 'numeric';
 
 export interface RDFMetadata {
-  [key: string]: any;
+  language?: string;
+  label?: string;
+  definition?: string;
+  uri?: string;
+  type?: string;
+  status?: string;
+  deprecated?: boolean;
+  deprecatedInVersion?: string;
+  willBeRemovedInVersion?: string;
+  domain?: string;
+  range?: string;
+  scopeNote?: string;
+  isDefinedBy?: string;
+  subPropertyOf?: string[];
+  equivalentProperty?: string[];
+  inverseOf?: string[];
+  elementSubType?: ElementSubType[];
+  elementSuperType?: ElementSuperType[];
+  [key: string]:
+    | string
+    | number
+    | boolean
+    | string[]
+    | ElementSubType[]
+    | ElementSuperType[]
+    | undefined;
 }
 
 export interface ConceptProps {
@@ -134,7 +161,7 @@ export interface ConceptProps {
   definition_source?: string;
   editorialNote?: MultilingualText | string;
   historyNote?: MultilingualText | string;
-  [key: string]: any;
+  [key: string]: string | string[] | MultilingualText | boolean | undefined;
 }
 
 export interface VocabularyTableProps {
@@ -179,23 +206,49 @@ export interface VocabularyTableProps {
   onSelectionChange?: (selectedRows: ConceptProps[]) => void;
   onRowClick?: (concept: ConceptProps) => void;
   customRenderers?: {
-    [columnName: string]: (value: any, concept: ConceptProps) => React.ReactNode;
+    [columnName: string]: (
+      value: string | string[] | MultilingualText | boolean | undefined,
+      concept: ConceptProps,
+    ) => React.ReactNode;
   };
   errorBoundary?: boolean;
   loadingComponent?: React.ComponentType;
-  errorComponent?: React.ComponentType<{error: Error; retry: () => void}>;
+  errorComponent?: React.ComponentType<{ error: Error; retry: () => void }>;
   emptyComponent?: React.ComponentType;
 }
 
 export const DEFAULT_LANGUAGE_CONFIG: LanguageConfig = {
   code: 'en',
   label: 'English',
-  direction: 'ltr'
+  direction: 'ltr',
 };
+
+// FrontMatter interfaces
+export interface ElementFrontMatter {
+  id?: string;
+  title?: string;
+  deprecated?: boolean;
+  deprecatedInVersion?: string;
+  willBeRemovedInVersion?: string;
+  RDF?: RDFData;
+  [key: string]: string | boolean | RDFData | undefined;
+}
+
+export interface AdaptedFrontMatter {
+  RDF: RDFData;
+}
+
+export interface ElementDefaults {
+  uri: string;
+  classPrefix: string;
+  propertyPrefix: string;
+  profile?: string;
+  profileShapeId?: string;
+}
 
 // Component props interfaces
 export interface ElementReferenceProps {
-  frontMatter: any;
+  frontMatter: ElementFrontMatter;
 }
 
 export interface InLinkProps {

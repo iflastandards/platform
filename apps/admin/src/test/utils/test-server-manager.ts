@@ -49,7 +49,7 @@ export class TestServerManager {
 
       // Wait a moment for processes to be killed
       await sleep(2000);
-    } catch (error) {
+    } catch (_error) {
       // Ignore errors - processes might not exist
       console.log(
         `Note: Could not kill existing ${serverName} processes (this is usually fine)`,
@@ -250,7 +250,7 @@ export class TestServerManager {
       console.log(`Cleaning up server: ${name}`);
       try {
         process.kill('SIGKILL');
-      } catch (error) {
+      } catch (_error) {
         // Ignore errors during cleanup
       }
     }
@@ -273,7 +273,8 @@ export const SERVER_CONFIGS = {
     shutdownTimeout: 10000,
     cwd: '/Users/jonphipps/Code/IFLA/standards-dev',
     env: {
-      NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY: process.env.NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY || 'pk_test_fake',
+      NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY:
+        process.env.NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY || 'pk_test_fake',
       CLERK_SECRET_KEY: process.env.CLERK_SECRET_KEY || 'sk_test_fake',
       NEXT_PUBLIC_CLERK_SIGN_IN_URL: '/admin/sign-in',
       NEXT_PUBLIC_CLERK_AFTER_SIGN_IN_URL: '/admin/dashboard',

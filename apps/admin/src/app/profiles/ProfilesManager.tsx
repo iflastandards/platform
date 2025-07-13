@@ -82,14 +82,18 @@ interface ProfilesManagerProps {
   userEmail?: string;
 }
 
-function TabPanel({ children, value, index }: { children: React.ReactNode; value: number; index: number }) {
+function TabPanel({
+  children,
+  value,
+  index,
+}: {
+  children: React.ReactNode;
+  value: number;
+  index: number;
+}) {
   return (
     <div role="tabpanel" hidden={value !== index}>
-      {value === index && (
-        <Box sx={{ py: 3 }}>
-          {children}
-        </Box>
-      )}
+      {value === index && <Box sx={{ py: 3 }}>{children}</Box>}
     </div>
   );
 }
@@ -99,7 +103,7 @@ export default function ProfilesManager({
   userName: _userName,
   userEmail: _userEmail,
 }: ProfilesManagerProps) {
-  const router = useRouter(); // eslint-disable-line @typescript-eslint/no-unused-vars
+  const _router = useRouter();
   const [tabValue, setTabValue] = useState(0);
   const [profiles, setProfiles] = useState<DCTAPProfile[]>([
     {
@@ -121,7 +125,7 @@ export default function ProfilesManager({
           repeatable: 'false',
           valueNodeType: 'Literal',
           valueDataType: 'xsd:string',
-          note: 'Unique identifier for the concept'
+          note: 'Unique identifier for the concept',
         },
         {
           id: 'prop-2',
@@ -131,7 +135,7 @@ export default function ProfilesManager({
           repeatable: 'false',
           valueNodeType: 'Literal',
           valueDataType: 'rdf:langString',
-          note: 'Primary label for the concept'
+          note: 'Primary label for the concept',
         },
         {
           id: 'prop-3',
@@ -141,9 +145,9 @@ export default function ProfilesManager({
           repeatable: 'false',
           valueNodeType: 'Literal',
           valueDataType: 'rdf:langString',
-          note: 'Precise definition of the concept'
-        }
-      ]
+          note: 'Precise definition of the concept',
+        },
+      ],
     },
     {
       id: 'profile-2',
@@ -163,7 +167,7 @@ export default function ProfilesManager({
           mandatory: 'true',
           repeatable: 'false',
           valueNodeType: 'IRI',
-          note: 'ISBD element reference'
+          note: 'ISBD element reference',
         },
         {
           id: 'prop-5',
@@ -173,9 +177,9 @@ export default function ProfilesManager({
           repeatable: 'false',
           valueNodeType: 'Literal',
           valueConstraint: '[0-8]',
-          note: 'ISBD area number (0-8)'
-        }
-      ]
+          note: 'ISBD area number (0-8)',
+        },
+      ],
     },
     {
       id: 'profile-3',
@@ -187,16 +191,23 @@ export default function ProfilesManager({
       author: 'BCM Working Group',
       lastModified: '2024-01-28T09:15:00Z',
       usageCount: 8,
-      properties: []
-    }
+      properties: [],
+    },
   ]);
 
-  const [selectedProfile, setSelectedProfile] = useState<DCTAPProfile | null>(null);
+  const [selectedProfile, setSelectedProfile] = useState<DCTAPProfile | null>(
+    null,
+  );
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
   const [dialogOpen, setDialogOpen] = useState(false);
-  const [dialogMode, setDialogMode] = useState<'create' | 'edit' | 'view'>('create');
+  const [dialogMode, setDialogMode] = useState<'create' | 'edit' | 'view'>(
+    'create',
+  );
 
-  const handleMenuClick = (event: React.MouseEvent<HTMLElement>, profile: DCTAPProfile) => {
+  const handleMenuClick = (
+    event: React.MouseEvent<HTMLElement>,
+    profile: DCTAPProfile,
+  ) => {
     event.stopPropagation();
     setAnchorEl(event.currentTarget);
     setSelectedProfile(profile);
@@ -228,11 +239,13 @@ export default function ProfilesManager({
   };
 
   const handleDeleteProfile = (profile: DCTAPProfile) => {
-    setProfiles(profiles.filter(p => p.id !== profile.id));
+    setProfiles(profiles.filter((p) => p.id !== profile.id));
     handleMenuClose();
   };
 
-  const getStatusColor = (status: string): 'success' | 'warning' | 'error' | 'default' => {
+  const getStatusColor = (
+    status: string,
+  ): 'success' | 'warning' | 'error' | 'default' => {
     switch (status) {
       case 'active':
         return 'success';
@@ -245,29 +258,33 @@ export default function ProfilesManager({
     }
   };
 
-  const activeProfiles = profiles.filter(p => p.status === 'active');
-  const draftProfiles = profiles.filter(p => p.status === 'draft');
-  const deprecatedProfiles = profiles.filter(p => p.status === 'deprecated'); // eslint-disable-line @typescript-eslint/no-unused-vars
+  const activeProfiles = profiles.filter((p) => p.status === 'active');
+  const draftProfiles = profiles.filter((p) => p.status === 'draft');
+  const _deprecatedProfiles = profiles.filter((p) => p.status === 'deprecated');
 
   return (
     <Container maxWidth="xl" sx={{ py: 4 }}>
       <Box sx={{ mb: 4 }}>
-        <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', mb: 2 }}>
+        <Box
+          sx={{
+            display: 'flex',
+            justifyContent: 'space-between',
+            alignItems: 'flex-start',
+            mb: 2,
+          }}
+        >
           <Box>
             <Typography variant="h4" fontWeight="bold" gutterBottom>
               DCTAP Profiles
             </Typography>
             <Typography variant="body1" color="text.secondary">
-              Manage Dublin Core Tabular Application Profiles for vocabulary validation
+              Manage Dublin Core Tabular Application Profiles for vocabulary
+              validation
             </Typography>
           </Box>
-          
+
           <Stack direction="row" spacing={1}>
-            <Button
-              startIcon={<UploadIcon />}
-              variant="outlined"
-              size="small"
-            >
+            <Button startIcon={<UploadIcon />} variant="outlined" size="small">
               Import
             </Button>
             <Button
@@ -281,7 +298,8 @@ export default function ProfilesManager({
         </Box>
 
         <Alert severity="info" sx={{ mb: 3 }}>
-          DCTAP profiles define the structure and validation rules for vocabulary data import and validation.
+          DCTAP profiles define the structure and validation rules for
+          vocabulary data import and validation.
         </Alert>
       </Box>
 
@@ -299,7 +317,7 @@ export default function ProfilesManager({
             </CardContent>
           </Card>
         </Grid>
-        
+
         <Grid size={{ xs: 12, sm: 6, md: 3 }}>
           <Card>
             <CardContent sx={{ textAlign: 'center' }}>
@@ -312,7 +330,7 @@ export default function ProfilesManager({
             </CardContent>
           </Card>
         </Grid>
-        
+
         <Grid size={{ xs: 12, sm: 6, md: 3 }}>
           <Card>
             <CardContent sx={{ textAlign: 'center' }}>
@@ -325,7 +343,7 @@ export default function ProfilesManager({
             </CardContent>
           </Card>
         </Grid>
-        
+
         <Grid size={{ xs: 12, sm: 6, md: 3 }}>
           <Card>
             <CardContent sx={{ textAlign: 'center' }}>
@@ -343,7 +361,10 @@ export default function ProfilesManager({
       {/* Tabs */}
       <Card>
         <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
-          <Tabs value={tabValue} onChange={(e, newValue) => setTabValue(newValue)}>
+          <Tabs
+            value={tabValue}
+            onChange={(e, newValue) => setTabValue(newValue)}
+          >
             <Tab label={`All Profiles (${profiles.length})`} />
             <Tab label={`Active (${activeProfiles.length})`} />
             <Tab label={`Drafts (${draftProfiles.length})`} />
@@ -379,22 +400,25 @@ export default function ProfilesManager({
                       </Box>
                     </TableCell>
                     <TableCell>
-                      <Typography variant="body2" sx={{ fontFamily: 'monospace' }}>
+                      <Typography
+                        variant="body2"
+                        sx={{ fontFamily: 'monospace' }}
+                      >
                         {profile.namespace}
                       </Typography>
                     </TableCell>
                     <TableCell>
-                      <Chip 
-                        label={profile.version} 
-                        size="small" 
+                      <Chip
+                        label={profile.version}
+                        size="small"
                         variant="outlined"
                         sx={{ fontFamily: 'monospace' }}
                       />
                     </TableCell>
                     <TableCell>
-                      <Chip 
-                        label={profile.status} 
-                        size="small" 
+                      <Chip
+                        label={profile.status}
+                        size="small"
                         color={getStatusColor(profile.status)}
                         variant="outlined"
                       />
@@ -406,7 +430,10 @@ export default function ProfilesManager({
                     </TableCell>
                     <TableCell>
                       <Typography variant="body2">
-                        {new Date(profile.lastModified).toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' })}
+                        {new Date(profile.lastModified).toLocaleDateString(
+                          'en-US',
+                          { year: 'numeric', month: 'short', day: 'numeric' },
+                        )}
                       </Typography>
                     </TableCell>
                     <TableCell>
@@ -469,11 +496,15 @@ export default function ProfilesManager({
         open={Boolean(anchorEl)}
         onClose={handleMenuClose}
       >
-        <MenuItem onClick={() => selectedProfile && handleViewProfile(selectedProfile)}>
+        <MenuItem
+          onClick={() => selectedProfile && handleViewProfile(selectedProfile)}
+        >
           <ViewIcon fontSize="small" sx={{ mr: 1 }} />
           View Details
         </MenuItem>
-        <MenuItem onClick={() => selectedProfile && handleEditProfile(selectedProfile)}>
+        <MenuItem
+          onClick={() => selectedProfile && handleEditProfile(selectedProfile)}
+        >
           <EditIcon fontSize="small" sx={{ mr: 1 }} />
           Edit
         </MenuItem>
@@ -486,8 +517,10 @@ export default function ProfilesManager({
           Export
         </MenuItem>
         <Divider />
-        <MenuItem 
-          onClick={() => selectedProfile && handleDeleteProfile(selectedProfile)}
+        <MenuItem
+          onClick={() =>
+            selectedProfile && handleDeleteProfile(selectedProfile)
+          }
           sx={{ color: 'error.main' }}
         >
           <DeleteIcon fontSize="small" sx={{ mr: 1 }} />
@@ -496,8 +529,8 @@ export default function ProfilesManager({
       </Menu>
 
       {/* Profile Dialog */}
-      <Dialog 
-        open={dialogOpen} 
+      <Dialog
+        open={dialogOpen}
         onClose={() => setDialogOpen(false)}
         maxWidth="md"
         fullWidth
@@ -525,7 +558,9 @@ export default function ProfilesManager({
               <TextField
                 label="Namespace"
                 fullWidth
-                defaultValue={selectedProfile?.namespace || 'https://iflastandards.info/ns/'}
+                defaultValue={
+                  selectedProfile?.namespace || 'https://iflastandards.info/ns/'
+                }
               />
               <Grid container spacing={2}>
                 <Grid size={{ xs: 6 }}>
@@ -560,26 +595,36 @@ export default function ProfilesManager({
               <Typography variant="body2" paragraph>
                 {selectedProfile.description}
               </Typography>
-              
-              <Box component="dl" sx={{ '& dt': { fontWeight: 'medium' }, '& dd': { ml: 0, mb: 1 } }}>
+
+              <Box
+                component="dl"
+                sx={{
+                  '& dt': { fontWeight: 'medium' },
+                  '& dd': { ml: 0, mb: 1 },
+                }}
+              >
                 <Box component="dt">Namespace:</Box>
-                <Box component="dd" sx={{ fontFamily: 'monospace' }}>{selectedProfile.namespace}</Box>
-                
+                <Box component="dd" sx={{ fontFamily: 'monospace' }}>
+                  {selectedProfile.namespace}
+                </Box>
+
                 <Box component="dt">Version:</Box>
                 <Box component="dd">{selectedProfile.version}</Box>
-                
+
                 <Box component="dt">Status:</Box>
                 <Box component="dd">
-                  <Chip 
-                    label={selectedProfile.status} 
-                    size="small" 
+                  <Chip
+                    label={selectedProfile.status}
+                    size="small"
                     color={getStatusColor(selectedProfile.status)}
                   />
                 </Box>
-                
+
                 <Box component="dt">Properties:</Box>
-                <Box component="dd">{selectedProfile.properties.length} defined</Box>
-                
+                <Box component="dd">
+                  {selectedProfile.properties.length} defined
+                </Box>
+
                 <Box component="dt">Usage:</Box>
                 <Box component="dd">{selectedProfile.usageCount} imports</Box>
               </Box>
@@ -607,10 +652,18 @@ export default function ProfilesManager({
                               {prop.propertyID}
                             </TableCell>
                             <TableCell>
-                              <Chip 
-                                label={prop.mandatory === 'true' ? 'Required' : 'Optional'} 
+                              <Chip
+                                label={
+                                  prop.mandatory === 'true'
+                                    ? 'Required'
+                                    : 'Optional'
+                                }
                                 size="small"
-                                color={prop.mandatory === 'true' ? 'error' : 'default'}
+                                color={
+                                  prop.mandatory === 'true'
+                                    ? 'error'
+                                    : 'default'
+                                }
                                 variant="outlined"
                               />
                             </TableCell>
@@ -626,9 +679,7 @@ export default function ProfilesManager({
           )}
         </DialogContent>
         <DialogActions>
-          <Button onClick={() => setDialogOpen(false)}>
-            Cancel
-          </Button>
+          <Button onClick={() => setDialogOpen(false)}>Cancel</Button>
           {(dialogMode === 'create' || dialogMode === 'edit') && (
             <Button variant="contained">
               {dialogMode === 'create' ? 'Create' : 'Save'}

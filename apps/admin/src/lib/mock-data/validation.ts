@@ -50,7 +50,8 @@ export const mockValidationReports: MockValidationReport[] = [
         line: 45,
         column: 'definition@en',
         field: 'skos:definition',
-        message: 'Definition is shorter than recommended (less than 20 characters)',
+        message:
+          'Definition is shorter than recommended (less than 20 characters)',
         suggestion: 'Consider providing a more detailed definition',
         rule: 'definition-length',
       },
@@ -71,7 +72,8 @@ export const mockValidationReports: MockValidationReport[] = [
         column: 'status',
         field: 'isbd:status',
         message: 'Element marked as deprecated but no replacement specified',
-        suggestion: 'Use dcterms:isReplacedBy to indicate the replacement element',
+        suggestion:
+          'Use dcterms:isReplacedBy to indicate the replacement element',
         rule: 'deprecation-replacement',
       },
       {
@@ -171,7 +173,8 @@ export const mockValidationReports: MockValidationReport[] = [
         column: 'prefLabel@fr',
         field: 'skos:prefLabel',
         message: 'Potential translation inconsistency detected',
-        suggestion: 'Review translation for consistency with other French terms',
+        suggestion:
+          'Review translation for consistency with other French terms',
         rule: 'translation-consistency',
       },
       {
@@ -188,29 +191,40 @@ export const mockValidationReports: MockValidationReport[] = [
 ];
 
 // Helper functions
-export function getValidationReport(reportId: string): MockValidationReport | undefined {
-  return mockValidationReports.find(r => r.id === reportId);
+export function getValidationReport(
+  reportId: string,
+): MockValidationReport | undefined {
+  return mockValidationReports.find((r) => r.id === reportId);
 }
 
-export function getLatestValidationForNamespace(namespace: string): MockValidationReport | undefined {
+export function getLatestValidationForNamespace(
+  namespace: string,
+): MockValidationReport | undefined {
   const reports = mockValidationReports
-    .filter(r => r.namespace === namespace)
-    .sort((a, b) => new Date(b.validatedAt).getTime() - new Date(a.validatedAt).getTime());
+    .filter((r) => r.namespace === namespace)
+    .sort(
+      (a, b) =>
+        new Date(b.validatedAt).getTime() - new Date(a.validatedAt).getTime(),
+    );
   return reports[0];
 }
 
-export function getValidationErrors(report: MockValidationReport): ValidationResult[] {
-  return report.results.filter(r => r.severity === 'error');
+export function getValidationErrors(
+  report: MockValidationReport,
+): ValidationResult[] {
+  return report.results.filter((r) => r.severity === 'error');
 }
 
-export function getValidationWarnings(report: MockValidationReport): ValidationResult[] {
-  return report.results.filter(r => r.severity === 'warning');
+export function getValidationWarnings(
+  report: MockValidationReport,
+): ValidationResult[] {
+  return report.results.filter((r) => r.severity === 'warning');
 }
 
 // Generate validation summary text
 export function getValidationSummaryText(report: MockValidationReport): string {
-  const { errors, warnings, info } = report.summary;
-  
+  const { errors, warnings, info: _info } = report.summary;
+
   if (errors === 0 && warnings === 0) {
     return `✅ All ${report.totalRecords} records passed validation`;
   } else if (errors > 0) {
@@ -221,18 +235,25 @@ export function getValidationSummaryText(report: MockValidationReport): string {
 }
 
 // Get severity color for MUI
-export function getSeverityColor(severity: 'error' | 'warning' | 'info'): 'error' | 'warning' | 'info' | 'success' {
+export function getSeverityColor(
+  severity: 'error' | 'warning' | 'info',
+): 'error' | 'warning' | 'info' | 'success' {
   return severity;
 }
 
 // Group validation results by field
-export function groupResultsByField(results: ValidationResult[]): Record<string, ValidationResult[]> {
-  return results.reduce((acc, result) => {
-    const field = result.field;
-    if (!acc[field]) {
-      acc[field] = [];
-    }
-    acc[field].push(result);
-    return acc;
-  }, {} as Record<string, ValidationResult[]>);
+export function groupResultsByField(
+  results: ValidationResult[],
+): Record<string, ValidationResult[]> {
+  return results.reduce(
+    (acc, result) => {
+      const field = result.field;
+      if (!acc[field]) {
+        acc[field] = [];
+      }
+      acc[field].push(result);
+      return acc;
+    },
+    {} as Record<string, ValidationResult[]>,
+  );
 }

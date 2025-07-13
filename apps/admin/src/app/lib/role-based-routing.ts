@@ -8,10 +8,14 @@
 
 type Environment = 'local' | 'preview' | 'development' | 'production';
 
+type UserRole = 'admin' | 'editor' | 'contributor';
+
 interface UserAttributes {
-  rgs?: Record<string, string>;
-  sites?: Record<string, string>;
-  [key: string]: any; // eslint-disable-line @typescript-eslint/no-explicit-any
+  rgs?: Record<string, UserRole>;
+  sites?: Record<string, UserRole>;
+  teams?: string[];
+  permissions?: string[];
+  [key: string]: Record<string, UserRole> | string[] | undefined;
 }
 
 interface SessionUser {

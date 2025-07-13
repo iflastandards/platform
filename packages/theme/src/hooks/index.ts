@@ -4,7 +4,11 @@
 
 import { useState, useEffect, useMemo, useCallback, useRef } from 'react';
 import { ConceptProps, CSVConceptRow, MultilingualText } from '../types';
-import { getLocalizedText, extractAvailableLanguages, debounce } from '../utils';
+import {
+  getLocalizedText,
+  extractAvailableLanguages,
+  debounce,
+} from '../utils';
 
 /**
  * Hook for loading and parsing CSV data
@@ -20,31 +24,36 @@ export function useCsvLoader(csvUrl?: string, csvData?: CSVConceptRow[]) {
       setError(null);
 
       fetch(csvUrl)
-        .then(response => {
+        .then((response) => {
           if (!response.ok) {
             throw new Error(`HTTP error! status: ${response.status}`);
           }
           return response.text();
         })
-        .then(csvText => {
+        .then((csvText) => {
           // Simple CSV parsing - in production, you'd use a library like papaparse
           const lines = csvText.split('\n');
-          const headers = lines[0].split(',').map(h => h.trim().replace(/"/g, ''));
-          const rows = lines.slice(1)
-            .filter(line => line.trim())
-            .map(line => {
-              const values = line.split(',').map(v => v.trim().replace(/"/g, ''));
+          const headers = lines[0]
+            .split(',')
+            .map((h) => h.trim().replace(/"/g, ''));
+          const rows = lines
+            .slice(1)
+            .filter((line) => line.trim())
+            .map((line) => {
+              const values = line
+                .split(',')
+                .map((v) => v.trim().replace(/"/g, ''));
               const row: CSVConceptRow = {};
               headers.forEach((header, index) => {
                 row[header] = values[index] || '';
               });
               return row;
             });
-          
+
           setData(rows);
           setLoading(false);
         })
-        .catch(err => {
+        .catch((err) => {
           setError(err.message);
           setLoading(false);
         });
@@ -59,34 +68,31 @@ export function useCsvLoader(csvUrl?: string, csvData?: CSVConceptRow[]) {
  */
 export function useMultilingualText(
   initialText: MultilingualText | string = '',
-  defaultLanguage: string = 'en'
+  defaultLanguage: string = 'en',
 ) {
   const [currentLanguage, setCurrentLanguage] = useState(defaultLanguage);
   const [text, setText] = useState<MultilingualText>(
-    typeof initialText === 'string' 
+    typeof initialText === 'string'
       ? { [defaultLanguage]: initialText }
-      : initialText
+      : initialText,
   );
 
   const currentText = useMemo(
     () => getLocalizedText(text, currentLanguage, defaultLanguage),
-    [text, currentLanguage, defaultLanguage]
+    [text, currentLanguage, defaultLanguage],
   );
 
-  const availableLanguages = useMemo(
-    () => Object.keys(text),
-    [text]
-  );
+  const availableLanguages = useMemo(() => Object.keys(text), [text]);
 
   const updateText = useCallback((language: string, value: string) => {
-    setText(prev => ({
+    setText((prev) => ({
       ...prev,
-      [language]: value
+      [language]: value,
     }));
   }, []);
 
   const removeLanguage = useCallback((language: string) => {
-    setText(prev => {
+    setText((prev) => {
       const { [language]: _removed, ...rest } = prev;
       return rest;
     });
@@ -99,7 +105,7 @@ export function useMultilingualText(
     text,
     availableLanguages,
     updateText,
-    removeLanguage
+    removeLanguage,
   };
 }
 
@@ -108,7 +114,7 @@ export function useMultilingualText(
  */
 export function useVocabularyTable(
   concepts: ConceptProps[],
-  initialFilters: Record<string, unknown> = {}
+  initialFilters: Record<string, unknown> = {},
 ) {
   const [filter, setFilter] = useState('');
   const [sortField, setSortField] = useState<string>('');
@@ -120,14 +126,11 @@ export function useVocabularyTable(
   // Available languages from concepts
   const availableLanguages = useMemo(
     () => extractAvailableLanguages(concepts),
-    [concepts]
+    [concepts],
   );
 
   // Debounced filter setter
-  const debouncedSetFilter = useMemo(
-    () => debounce(setFilter, 300),
-    []
-  );
+  const debouncedSetFilter = useMemo(() => debounce(setFilter, 300), []);
 
   // Filtered and sorted concepts
   const processedConcepts = useMemo(() => {
@@ -136,21 +139,28 @@ export function useVocabularyTable(
     // Apply text filter
     if (filter) {
       const lowerFilter = filter.toLowerCase();
-      filtered = concepts.filter(concept =>
-        getLocalizedText(concept.label, selectedLanguage)?.toLowerCase().includes(lowerFilter) ||
-        getLocalizedText(concept.definition, selectedLanguage)?.toLowerCase().includes(lowerFilter) ||
-        getLocalizedText(concept.scopeNote, selectedLanguage)?.toLowerCase().includes(lowerFilter) ||
-        concept.notation?.toLowerCase().includes(lowerFilter)
+      filtered = concepts.filter(
+        (concept) =>
+          getLocalizedText(concept.label, selectedLanguage)
+            ?.toLowerCase()
+            .includes(lowerFilter) ||
+          getLocalizedText(concept.definition, selectedLanguage)
+            ?.toLowerCase()
+            .includes(lowerFilter) ||
+          getLocalizedText(concept.scopeNote, selectedLanguage)
+            ?.toLowerCase()
+            .includes(lowerFilter) ||
+          concept.notation?.toLowerCase().includes(lowerFilter),
       );
     }
 
     // Apply additional filters
     Object.entries(filters).forEach(([key, value]) => {
       if (value !== undefined && value !== '') {
-        filtered = filtered.filter(concept => {
+        filtered = filtered.filter((concept) => {
           const conceptValue = concept[key as keyof ConceptProps];
           if (Array.isArray(conceptValue)) {
-            return conceptValue.includes(value);
+            return conceptValue.includes(value as string);
           }
           return conceptValue === value;
         });
@@ -160,9 +170,31 @@ export function useVocabularyTable(
     // Apply sorting
     if (sortField) {
       filtered.sort((a, b) => {
-        const aValue = getLocalizedText(a[sortField as keyof ConceptProps], selectedLanguage) || '';
-        const bValue = getLocalizedText(b[sortField as keyof ConceptProps], selectedLanguage) || '';
-        
+        const aFieldValue = a[sortField as keyof ConceptProps];
+        const bFieldValue = b[sortField as keyof ConceptProps];
+
+        // Handle different value types for sorting
+        const aValue =
+          typeof aFieldValue === 'string' ||
+          (typeof aFieldValue === 'object' &&
+            aFieldValue !== null &&
+            !Array.isArray(aFieldValue))
+            ? getLocalizedText(
+                aFieldValue as MultilingualText | string,
+                selectedLanguage,
+              ) || ''
+            : String(aFieldValue || '');
+        const bValue =
+          typeof bFieldValue === 'string' ||
+          (typeof bFieldValue === 'object' &&
+            bFieldValue !== null &&
+            !Array.isArray(bFieldValue))
+            ? getLocalizedText(
+                bFieldValue as MultilingualText | string,
+                selectedLanguage,
+              ) || ''
+            : String(bFieldValue || '');
+
         const comparison = aValue.localeCompare(bValue);
         return sortDirection === 'asc' ? comparison : -comparison;
       });
@@ -171,17 +203,20 @@ export function useVocabularyTable(
     return filtered;
   }, [concepts, filter, sortField, sortDirection, selectedLanguage, filters]);
 
-  const handleSort = useCallback((field: string) => {
-    if (sortField === field) {
-      setSortDirection(prev => prev === 'asc' ? 'desc' : 'asc');
-    } else {
-      setSortField(field);
-      setSortDirection('asc');
-    }
-  }, [sortField]);
+  const handleSort = useCallback(
+    (field: string) => {
+      if (sortField === field) {
+        setSortDirection((prev) => (prev === 'asc' ? 'desc' : 'asc'));
+      } else {
+        setSortField(field);
+        setSortDirection('asc');
+      }
+    },
+    [sortField],
+  );
 
   const toggleRowSelection = useCallback((id: string) => {
-    setSelectedRows(prev => {
+    setSelectedRows((prev) => {
       const newSet = new Set(prev);
       if (newSet.has(id)) {
         newSet.delete(id);
@@ -193,7 +228,7 @@ export function useVocabularyTable(
   }, []);
 
   const selectAllRows = useCallback(() => {
-    setSelectedRows(new Set(processedConcepts.map(c => c.id || c.uri || '')));
+    setSelectedRows(new Set(processedConcepts.map((c) => c.id || c.uri || '')));
   }, [processedConcepts]);
 
   const clearSelection = useCallback(() => {
@@ -201,9 +236,9 @@ export function useVocabularyTable(
   }, []);
 
   const updateFilter = useCallback((key: string, value: unknown) => {
-    setFilters(prev => ({
+    setFilters((prev) => ({
       ...prev,
-      [key]: value
+      [key]: value,
     }));
   }, []);
 
@@ -211,22 +246,22 @@ export function useVocabularyTable(
     // Data
     processedConcepts,
     availableLanguages,
-    
+
     // Filter state
     filter,
     setFilter: debouncedSetFilter,
     filters,
     updateFilter,
-    
+
     // Sort state
     sortField,
     sortDirection,
     handleSort,
-    
+
     // Language state
     selectedLanguage,
     setSelectedLanguage,
-    
+
     // Selection state
     selectedRows,
     toggleRowSelection,
@@ -252,18 +287,22 @@ export function useLocalStorage<T>(key: string, initialValue: T) {
     }
   });
 
-  const setValue = useCallback((value: T | ((val: T) => T)) => {
-    try {
-      const valueToStore = value instanceof Function ? value(storedValue) : value;
-      setStoredValue(valueToStore);
-      
-      if (typeof window !== 'undefined') {
-        window.localStorage.setItem(key, JSON.stringify(valueToStore));
+  const setValue = useCallback(
+    (value: T | ((val: T) => T)) => {
+      try {
+        const valueToStore =
+          value instanceof Function ? value(storedValue) : value;
+        setStoredValue(valueToStore);
+
+        if (typeof window !== 'undefined') {
+          window.localStorage.setItem(key, JSON.stringify(valueToStore));
+        }
+      } catch (error) {
+        console.warn(`Error setting localStorage key "${key}":`, error);
       }
-    } catch (error) {
-      console.warn(`Error setting localStorage key "${key}":`, error);
-    }
-  }, [key, storedValue]);
+    },
+    [key, storedValue],
+  );
 
   return [storedValue, setValue] as const;
 }
@@ -273,9 +312,11 @@ export function useLocalStorage<T>(key: string, initialValue: T) {
  */
 export function useAsync<T, E = string>(
   asyncFunction: () => Promise<T>,
-  immediate: boolean = true
+  immediate: boolean = true,
 ) {
-  const [status, setStatus] = useState<'idle' | 'pending' | 'success' | 'error'>('idle');
+  const [status, setStatus] = useState<
+    'idle' | 'pending' | 'success' | 'error'
+  >('idle');
   const [data, setData] = useState<T | null>(null);
   const [error, setError] = useState<E | null>(null);
 
@@ -342,7 +383,7 @@ export function useWindowSize() {
  * Hook for handling click outside events
  */
 export function useClickOutside<T extends HTMLElement = HTMLElement>(
-  handler: () => void
+  handler: () => void,
 ) {
   const ref = useRef<T>(null);
 
@@ -368,7 +409,7 @@ export function useClickOutside<T extends HTMLElement = HTMLElement>(
 export function useToggle(initialValue: boolean = false) {
   const [value, setValue] = useState(initialValue);
 
-  const toggle = useCallback(() => setValue(prev => !prev), []);
+  const toggle = useCallback(() => setValue((prev) => !prev), []);
   const setTrue = useCallback(() => setValue(true), []);
   const setFalse = useCallback(() => setValue(false), []);
 

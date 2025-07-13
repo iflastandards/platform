@@ -13,11 +13,11 @@ export interface MultilingualText {
 
 // Concept (term) properties with multilingual support
 export interface ConceptProps {
-  value: string | MultilingualText;      // Maps to skos:prefLabel
+  value: string | MultilingualText; // Maps to skos:prefLabel
   definition: string | MultilingualText; // Maps to skos:definition
   scopeNote?: string | MultilingualText; // Maps to skos:scopeNote
-  notation?: string | MultilingualText;  // Maps to skos:notation
-  example?: string | MultilingualText;   // Maps to skos:example
+  notation?: string | MultilingualText; // Maps to skos:notation
+  example?: string | MultilingualText; // Maps to skos:example
   changeNote?: string | MultilingualText; // Maps to skos:changeNote
   historyNote?: string | MultilingualText; // Maps to skos:historyNote
   editorialNote?: string | MultilingualText; // Maps to skos:editorialNote
@@ -39,7 +39,11 @@ export interface TOCItem {
   level: number; // Required by Docusaurus
 }
 
-export type UriCaseStyle = 'kebab-case' | 'snake_case' | 'camelCase' | 'PascalCase';
+export type UriCaseStyle =
+  | 'kebab-case'
+  | 'snake_case'
+  | 'camelCase'
+  | 'PascalCase';
 
 export interface RDFMetadata {
   'rdf:type'?: string[];
@@ -59,14 +63,14 @@ export interface VocabularyTableProps {
   description?: string | MultilingualText;
   scopeNote?: string | MultilingualText;
   isDefinedBy?: string;
-  
+
   // Either use the legacy RDF structure, new concepts array, or CSV data
   RDF?: RDFMetadata;
   concepts?: ConceptProps[];
   csvData?: CSVConceptRow[]; // CSV data as source of truth
   csvFile?: string; // Path to CSV file to load automatically
   csvUrl?: string; // URL to fetch CSV data
-  
+
   // Component configuration (UI only)
   startCounter?: number;
   uriStyle?: 'numeric' | 'slug';
@@ -93,7 +97,7 @@ export const DEFAULT_LANGUAGE_CONFIG: LanguageConfig[] = [
   { code: 'ru', name: 'Russian', nativeName: 'Русский' },
   { code: 'bg', name: 'Bulgarian', nativeName: 'Български' },
   { code: 'hr', name: 'Croatian', nativeName: 'Hrvatski' },
-  { code: 'lv', name: 'Latvian', nativeName: 'Latviešu' }
+  { code: 'lv', name: 'Latvian', nativeName: 'Latviešu' },
 ];
 
 // Vocabulary defaults interface for site configuration
@@ -119,8 +123,13 @@ declare global {
       siteConfig: {
         customFields?: {
           vocabularyDefaults?: VocabularyDefaults;
-          // eslint-disable-next-line @typescript-eslint/no-explicit-any
-          [key: string]: any;
+          [key: string]:
+            | VocabularyDefaults
+            | string
+            | number
+            | boolean
+            | object
+            | undefined;
         };
       };
     };

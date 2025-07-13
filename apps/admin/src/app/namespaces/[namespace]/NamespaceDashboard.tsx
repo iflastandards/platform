@@ -40,8 +40,8 @@ import {
   Comment as CommentIcon,
 } from '@mui/icons-material';
 import { format } from 'date-fns';
-import { 
-  mockNamespaces, 
+import {
+  mockNamespaces,
   getProjectsByNamespace,
   getIssuesByProject,
 } from '@/lib/mock-data';
@@ -77,65 +77,83 @@ function TabPanel(props: TabPanelProps) {
   );
 }
 
-export default function NamespaceDashboard({ 
-  namespace, 
+export default function NamespaceDashboard({
+  namespace,
   userId: _userId = 'user-admin-1',
-  isDemo: _isDemo = false 
+  isDemo: _isDemo = false,
 }: NamespaceDashboardProps) {
   const theme = useTheme();
   const [currentTab, setCurrentTab] = useState(0);
-  const [issueMenuAnchor, setIssueMenuAnchor] = useState<null | HTMLElement>(null);
-  const [selectedIssue, setSelectedIssue] = useState<string | null>(null); // eslint-disable-line @typescript-eslint/no-unused-vars
+  const [issueMenuAnchor, setIssueMenuAnchor] = useState<null | HTMLElement>(
+    null,
+  );
+  const [_selectedIssue, setSelectedIssue] = useState<string | null>(null);
   const [refreshing, setRefreshing] = useState(false);
 
   // Get namespace data
-  const namespaceData = Object.values(mockNamespaces).find(ns => ns.slug === namespace);
+  const namespaceData = Object.values(mockNamespaces).find(
+    (ns) => ns.slug === namespace,
+  );
   if (!namespaceData) {
     return <Typography>Namespace not found</Typography>;
   }
 
   // Get related data
   const projects = getProjectsByNamespace(namespace);
-  const allIssues = projects.flatMap(project => 
-    getIssuesByProject(project.id).map(issue => ({
+  const allIssues = projects.flatMap((project) =>
+    getIssuesByProject(project.id).map((issue) => ({
       ...issue,
       projectName: project.name,
       projectId: project.id,
-    }))
+    })),
   );
 
   // Get latest cycle and build
   const latestCycle = mockEditorialCycles
-    .filter(cycle => cycle.namespace_id === `ns-${namespace}`)
-    .sort((a, b) => new Date(b.started_at).getTime() - new Date(a.started_at).getTime())[0];
-  
+    .filter((cycle) => cycle.namespace_id === `ns-${namespace}`)
+    .sort(
+      (a, b) =>
+        new Date(b.started_at).getTime() - new Date(a.started_at).getTime(),
+    )[0];
+
   const latestBuild = mockNightlyBuilds
-    .filter(build => build.namespace_id === `ns-${namespace}`)
-    .sort((a, b) => new Date(b.run_date).getTime() - new Date(a.run_date).getTime())[0];
+    .filter((build) => build.namespace_id === `ns-${namespace}`)
+    .sort(
+      (a, b) => new Date(b.run_date).getTime() - new Date(a.run_date).getTime(),
+    )[0];
 
   // Get active imports
   const activeImports = mockImportJobs.filter(
-    job => job.namespace_id === namespace && 
-    (job.status === 'pending' || job.status === 'processing')
+    (job) =>
+      job.namespace_id === namespace &&
+      (job.status === 'pending' || job.status === 'processing'),
   );
 
   // Convert data for ActivityFeed
   const recentActivity = allIssues
-    .sort((a, b) => new Date(b.updated_at).getTime() - new Date(a.updated_at).getTime())
+    .sort(
+      (a, b) =>
+        new Date(b.updated_at).getTime() - new Date(a.updated_at).getTime(),
+    )
     .slice(0, 10)
-    .map(issue => ({
+    .map((issue) => ({
       id: `issue-${issue.number}`,
-      type: issue.labels.includes('import-request') ? 'import' as const : 
-            issue.labels.includes('validation') ? 'validation' as const : 
-            issue.labels.includes('translation') ? 'translation' as const : 
-            'edit' as const,
+      type: issue.labels.includes('import-request')
+        ? ('import' as const)
+        : issue.labels.includes('validation')
+          ? ('validation' as const)
+          : issue.labels.includes('translation')
+            ? ('translation' as const)
+            : ('edit' as const),
       title: issue.title,
       description: `${issue.projectName} • ${issue.state}`,
-      user: issue.assignee ? {
-        id: issue.assignee,
-        name: issue.assignee,
-        avatar: `https://i.pravatar.cc/150?u=${issue.assignee}`,
-      } : undefined,
+      user: issue.assignee
+        ? {
+            id: issue.assignee,
+            name: issue.assignee,
+            avatar: `https://i.pravatar.cc/150?u=${issue.assignee}`,
+          }
+        : undefined,
       timestamp: issue.updated_at,
       metadata: {
         issue: `#${issue.number}`,
@@ -150,11 +168,14 @@ export default function NamespaceDashboard({
   const handleRefresh = async () => {
     setRefreshing(true);
     // Simulate refresh delay
-    await new Promise(resolve => setTimeout(resolve, 1500));
+    await new Promise((resolve) => setTimeout(resolve, 1500));
     setRefreshing(false);
   };
 
-  const handleIssueMenuOpen = (event: React.MouseEvent<HTMLElement>, issueId: string) => {
+  const handleIssueMenuOpen = (
+    event: React.MouseEvent<HTMLElement>,
+    issueId: string,
+  ) => {
     setIssueMenuAnchor(event.currentTarget);
     setSelectedIssue(issueId);
   };
@@ -168,26 +189,34 @@ export default function NamespaceDashboard({
     setCurrentTab(newValue);
   };
 
-  const renderIssueCard = (issue: any) => { // TODO: Define proper issue type
+  const renderIssueCard = (issue: any) => {
+    // TODO: Define proper issue type
     const labelColors: Record<string, string> = {
       'import-request': theme.palette.primary.main,
-      'validation': theme.palette.success.main,
-      'translation': theme.palette.info.main,
-      'bug': theme.palette.error.main,
-      'enhancement': theme.palette.secondary.main,
+      validation: theme.palette.success.main,
+      translation: theme.palette.info.main,
+      bug: theme.palette.error.main,
+      enhancement: theme.palette.secondary.main,
     };
 
     return (
       <Card key={issue.id} sx={{ mb: 2 }}>
         <CardContent>
-          <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', mb: 2 }}>
+          <Box
+            sx={{
+              display: 'flex',
+              justifyContent: 'space-between',
+              alignItems: 'flex-start',
+              mb: 2,
+            }}
+          >
             <Box sx={{ flex: 1 }}>
               <Typography variant="h6" gutterBottom>
-                <Link 
-                  href={issue.html_url} 
-                  target="_blank" 
+                <Link
+                  href={issue.html_url}
+                  target="_blank"
                   rel="noopener"
-                  sx={{ 
+                  sx={{
                     textDecoration: 'none',
                     color: 'inherit',
                     '&:hover': { textDecoration: 'underline' },
@@ -196,14 +225,16 @@ export default function NamespaceDashboard({
                   {issue.title}
                 </Link>
               </Typography>
-              <Box sx={{ display: 'flex', gap: 1, alignItems: 'center', mb: 1 }}>
-                <Chip 
-                  label={`#${issue.number}`} 
-                  size="small" 
+              <Box
+                sx={{ display: 'flex', gap: 1, alignItems: 'center', mb: 1 }}
+              >
+                <Chip
+                  label={`#${issue.number}`}
+                  size="small"
                   variant="outlined"
                 />
-                <StatusChip 
-                  status={issue.state === 'open' ? 'active' : 'completed'} 
+                <StatusChip
+                  status={issue.state === 'open' ? 'active' : 'completed'}
                   size="small"
                 />
                 <Typography variant="caption" color="text.secondary">
@@ -227,7 +258,9 @@ export default function NamespaceDashboard({
                 size="small"
                 icon={<LabelIcon />}
                 sx={{
-                  bgcolor: labelColors[label] ? `${labelColors[label]}20` : undefined,
+                  bgcolor: labelColors[label]
+                    ? `${labelColors[label]}20`
+                    : undefined,
                   color: labelColors[label] || undefined,
                   borderColor: labelColors[label] || undefined,
                 }}
@@ -236,19 +269,23 @@ export default function NamespaceDashboard({
             ))}
           </Box>
 
-          <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+          <Box
+            sx={{
+              display: 'flex',
+              justifyContent: 'space-between',
+              alignItems: 'center',
+            }}
+          >
             <Box sx={{ display: 'flex', gap: 2, alignItems: 'center' }}>
               {issue.author && (
                 <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-                  <Avatar 
-                    src={issue.author.avatar} 
+                  <Avatar
+                    src={issue.author.avatar}
                     sx={{ width: 24, height: 24 }}
                   >
                     {issue.author.name.charAt(0)}
                   </Avatar>
-                  <Typography variant="caption">
-                    {issue.author.name}
-                  </Typography>
+                  <Typography variant="caption">{issue.author.name}</Typography>
                 </Box>
               )}
               {issue.assignee && (
@@ -256,8 +293,8 @@ export default function NamespaceDashboard({
                   <Typography variant="caption" color="text.secondary">
                     →
                   </Typography>
-                  <Avatar 
-                    src={issue.assignee.avatar} 
+                  <Avatar
+                    src={issue.assignee.avatar}
                     sx={{ width: 24, height: 24 }}
                   >
                     {issue.assignee.name.charAt(0)}
@@ -286,7 +323,14 @@ export default function NamespaceDashboard({
     <Box>
       {/* Header */}
       <Box sx={{ mb: 4 }}>
-        <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 2 }}>
+        <Box
+          sx={{
+            display: 'flex',
+            justifyContent: 'space-between',
+            alignItems: 'center',
+            mb: 2,
+          }}
+        >
           <Box>
             <Typography variant="h4" fontWeight="bold" gutterBottom>
               {namespaceData.name}
@@ -311,7 +355,9 @@ export default function NamespaceDashboard({
             <Button
               variant="contained"
               startIcon={<CloudUploadIcon />}
-              onClick={() => {/* Navigate to import */}}
+              onClick={() => {
+                /* Navigate to import */
+              }}
             >
               New Import
             </Button>
@@ -331,10 +377,15 @@ export default function NamespaceDashboard({
                     <TimelineIcon color="primary" />
                     <Box>
                       <Typography variant="h6">
-                        {latestCycle.phase.charAt(0).toUpperCase() + latestCycle.phase.slice(1)}
+                        {latestCycle.phase.charAt(0).toUpperCase() +
+                          latestCycle.phase.slice(1)}
                       </Typography>
                       <Typography variant="caption" color="text.secondary">
-                        Started {format(new Date(latestCycle.started_at), 'MMM d, yyyy')}
+                        Started{' '}
+                        {format(
+                          new Date(latestCycle.started_at),
+                          'MMM d, yyyy',
+                        )}
                       </Typography>
                     </Box>
                   </Box>
@@ -363,7 +414,10 @@ export default function NamespaceDashboard({
                         v{latestBuild.suggested_version}
                       </Typography>
                       <Typography variant="caption" color="text.secondary">
-                        {format(new Date(latestBuild.run_date), 'MMM d, h:mm a')}
+                        {format(
+                          new Date(latestBuild.run_date),
+                          'MMM d, h:mm a',
+                        )}
                       </Typography>
                     </Box>
                   </Box>
@@ -382,10 +436,15 @@ export default function NamespaceDashboard({
                   <AssignmentIcon color="primary" />
                   <Box>
                     <Typography variant="h6">
-                      {allIssues.filter(i => i.state === 'open').length}
+                      {allIssues.filter((i) => i.state === 'open').length}
                     </Typography>
                     <Typography variant="caption" color="text.secondary">
-                      {allIssues.filter(i => i.labels.includes('import-request')).length} imports pending
+                      {
+                        allIssues.filter((i) =>
+                          i.labels.includes('import-request'),
+                        ).length
+                      }{' '}
+                      imports pending
                     </Typography>
                   </Box>
                 </Box>
@@ -406,7 +465,11 @@ export default function NamespaceDashboard({
                       {activeImports.length} running
                     </Typography>
                     <Typography variant="caption" color="text.secondary">
-                      {activeImports.filter(i => i.status === 'processing').length} processing
+                      {
+                        activeImports.filter((i) => i.status === 'processing')
+                          .length
+                      }{' '}
+                      processing
                     </Typography>
                   </Box>
                 </Box>
@@ -431,46 +494,50 @@ export default function NamespaceDashboard({
       {/* Tab Panels */}
       <TabPanel value={currentTab} index={0}>
         <Box>
-          <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 3 }}>
+          <Box
+            sx={{
+              display: 'flex',
+              justifyContent: 'space-between',
+              alignItems: 'center',
+              mb: 3,
+            }}
+          >
             <Typography variant="h6">
               All Issues ({allIssues.length})
             </Typography>
             <Box sx={{ display: 'flex', gap: 1 }}>
-              <Chip 
-                label="Open" 
-                size="small" 
+              <Chip
+                label="Open"
+                size="small"
                 color="primary"
                 onClick={() => {}}
               />
-              <Chip 
-                label="Import Requests" 
-                size="small" 
+              <Chip
+                label="Import Requests"
+                size="small"
                 variant="outlined"
                 onClick={() => {}}
               />
-              <Chip 
-                label="Validation" 
-                size="small" 
+              <Chip
+                label="Validation"
+                size="small"
                 variant="outlined"
                 onClick={() => {}}
               />
             </Box>
           </Box>
-          
-          {allIssues.map(issue => renderIssueCard(issue))}
+
+          {allIssues.map((issue) => renderIssueCard(issue))}
         </Box>
       </TabPanel>
 
       <TabPanel value={currentTab} index={1}>
-        <ActivityFeed 
-          activities={recentActivity}
-          maxItems={20}
-        />
+        <ActivityFeed activities={recentActivity} maxItems={20} />
       </TabPanel>
 
       <TabPanel value={currentTab} index={2}>
         <Grid container spacing={3}>
-          {projects.map(project => (
+          {projects.map((project) => (
             <Grid key={project.id} size={{ xs: 12, md: 6 }}>
               <Card>
                 <CardContent>
@@ -480,10 +547,16 @@ export default function NamespaceDashboard({
                   <Typography variant="body2" color="text.secondary" paragraph>
                     {project.body}
                   </Typography>
-                  <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                  <Box
+                    sx={{
+                      display: 'flex',
+                      justifyContent: 'space-between',
+                      alignItems: 'center',
+                    }}
+                  >
                     <StatusChip status={project.state} />
-                    <Button 
-                      size="small" 
+                    <Button
+                      size="small"
                       href={`https://github.com/iflastandards/${namespace}/projects/${project.number}`}
                       target="_blank"
                       endIcon={<OpenInNewIcon />}

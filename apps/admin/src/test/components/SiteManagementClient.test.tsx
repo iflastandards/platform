@@ -5,6 +5,16 @@ import { setupFetchMock, cleanupFetchMock } from '../mocks/api';
 
 vi.mock('next/navigation', () => ({
   usePathname: () => '/dashboard/newtest',
+  useRouter: () => ({
+    push: vi.fn(),
+    replace: vi.fn(),
+    back: vi.fn(),
+    forward: vi.fn(),
+    refresh: vi.fn(),
+    prefetch: vi.fn(),
+  }),
+  useSearchParams: () => new URLSearchParams(),
+  useParams: () => ({ siteKey: 'newtest' }),
 }));
 
 describe('SiteManagementClient', () => {

@@ -16,7 +16,7 @@ vi.mock('@/lib/cerbos', () => ({
  * These tests restore the Review Group (RG) authorization functionality
  * that was previously deleted. Review Groups are the organizational units
  * that manage standards within IFLA.
- * 
+ *
  * Note: The system uses "namespace" and "review group" interchangeably,
  * with "namespace" being the technical term and "review group" being
  * the organizational term.
@@ -60,7 +60,7 @@ describe('Review Group (RG) Authorization', () => {
           sites: ['muldicat'],
         },
       ];
-      
+
       reviewGroups.forEach((rg) => {
         expect(rg.type).toBe('review_group');
         expect(rg.sites.length).toBeGreaterThan(0);
@@ -77,18 +77,18 @@ describe('Review Group (RG) Authorization', () => {
         'rg_translator',
         'rg_contributor',
       ];
-      
+
       const testUser = {
         id: 'user-123',
-        roles: rgRoles.map(role => `${role}:ISBD`),
+        roles: rgRoles.map((role) => `${role}:ISBD`),
       };
-      
+
       expect(testUser.roles).toHaveLength(5);
       testUser.roles.forEach((role) => {
         expect(role).toMatch(/^rg_\w+:ISBD$/);
       });
     });
-    
+
     it('should map legacy namespace roles to RG roles', () => {
       const roleMappings = {
         'namespace-admin': 'rg_admin',
@@ -96,8 +96,8 @@ describe('Review Group (RG) Authorization', () => {
         'namespace-reviewer': 'rg_reviewer',
         'namespace-translator': 'rg_translator',
       };
-      
-      Object.entries(roleMappings).forEach(([legacy, modern]) => {
+
+      Object.entries(roleMappings).forEach(([_legacy, modern]) => {
         expect(modern).toMatch(/^rg_/);
       });
     });
@@ -118,7 +118,7 @@ describe('Review Group (RG) Authorization', () => {
           },
         },
       });
-      
+
       const result = await mockCerbos.checkResource({
         principal: {
           id: 'admin-user',
@@ -129,21 +129,26 @@ describe('Review Group (RG) Authorization', () => {
           id: 'ISBD',
         },
         actions: [
-          'view', 'edit', 'admin', 'manage_members',
-          'manage_sites', 'approve_vocabulary', 'publish'
+          'view',
+          'edit',
+          'admin',
+          'manage_members',
+          'manage_sites',
+          'approve_vocabulary',
+          'publish',
         ],
       });
-      
+
       Object.values(result.resource.actions).forEach((permission) => {
         expect(permission).toBe('EFFECT_ALLOW');
       });
     });
-    
+
     it('should allow RG admin to manage all sites in the review group', async () => {
       const isbdSites = ['isbd', 'isbdm'];
-      
+
       mockCerbos.checkResources.mockResolvedValueOnce({
-        results: isbdSites.map(site => ({
+        results: isbdSites.map((site) => ({
           resource: {
             id: site,
             actions: {
@@ -155,13 +160,13 @@ describe('Review Group (RG) Authorization', () => {
           },
         })),
       });
-      
+
       const result = await mockCerbos.checkResources({
         principal: {
           id: 'rg-admin',
           roles: ['rg_admin:ISBD'],
         },
-        resources: isbdSites.map(site => ({
+        resources: isbdSites.map((site) => ({
           resource: {
             id: site,
             kind: 'site',
@@ -172,7 +177,7 @@ describe('Review Group (RG) Authorization', () => {
           actions: ['admin', 'publish', 'delete', 'manage_editors'],
         })),
       });
-      
+
       result.results.forEach((siteResult) => {
         expect(siteResult.resource.actions.admin).toBe('EFFECT_ALLOW');
       });
@@ -194,7 +199,7 @@ describe('Review Group (RG) Authorization', () => {
           },
         },
       });
-      
+
       const result = await mockCerbos.checkResource({
         principal: {
           id: 'editor-user',
@@ -209,11 +214,16 @@ describe('Review Group (RG) Authorization', () => {
           },
         },
         actions: [
-          'view', 'edit', 'create_draft', 'delete_draft',
-          'submit_for_review', 'admin', 'publish'
+          'view',
+          'edit',
+          'create_draft',
+          'delete_draft',
+          'submit_for_review',
+          'admin',
+          'publish',
         ],
       });
-      
+
       expect(result.resource.actions.edit).toBe('EFFECT_ALLOW');
       expect(result.resource.actions.submit_for_review).toBe('EFFECT_ALLOW');
       expect(result.resource.actions.publish).toBe('EFFECT_DENY');
@@ -235,7 +245,7 @@ describe('Review Group (RG) Authorization', () => {
           },
         },
       });
-      
+
       const result = await mockCerbos.checkResource({
         principal: {
           id: 'reviewer-user',
@@ -250,11 +260,16 @@ describe('Review Group (RG) Authorization', () => {
           },
         },
         actions: [
-          'view', 'comment', 'approve', 'reject',
-          'request_changes', 'edit', 'delete'
+          'view',
+          'comment',
+          'approve',
+          'reject',
+          'request_changes',
+          'edit',
+          'delete',
         ],
       });
-      
+
       expect(result.resource.actions.approve).toBe('EFFECT_ALLOW');
       expect(result.resource.actions.reject).toBe('EFFECT_ALLOW');
       expect(result.resource.actions.edit).toBe('EFFECT_DENY');
@@ -275,7 +290,7 @@ describe('Review Group (RG) Authorization', () => {
           },
         },
       });
-      
+
       const result = await mockCerbos.checkResource({
         principal: {
           id: 'translator-user',
@@ -292,11 +307,15 @@ describe('Review Group (RG) Authorization', () => {
           },
         },
         actions: [
-          'view', 'create_translation', 'edit_translation',
-          'submit_translation', 'edit_source', 'approve_translation'
+          'view',
+          'create_translation',
+          'edit_translation',
+          'submit_translation',
+          'edit_source',
+          'approve_translation',
         ],
       });
-      
+
       expect(result.resource.actions.edit_translation).toBe('EFFECT_ALLOW');
       expect(result.resource.actions.edit_source).toBe('EFFECT_DENY');
       expect(result.resource.actions.approve_translation).toBe('EFFECT_DENY');
@@ -316,7 +335,7 @@ describe('Review Group (RG) Authorization', () => {
           },
         },
       });
-      
+
       const result = await mockCerbos.checkResource({
         principal: {
           id: 'contributor-user',
@@ -332,7 +351,7 @@ describe('Review Group (RG) Authorization', () => {
         },
         actions: ['view', 'suggest_edit', 'comment', 'edit', 'delete'],
       });
-      
+
       expect(result.resource.actions.view).toBe('EFFECT_ALLOW');
       expect(result.resource.actions.suggest_edit).toBe('EFFECT_ALLOW');
       expect(result.resource.actions.edit).toBe('EFFECT_DENY');
@@ -342,7 +361,7 @@ describe('Review Group (RG) Authorization', () => {
   describe('Cross-Review Group Access', () => {
     it('should deny access to other review groups', async () => {
       mockCerbos.isAllowed.mockResolvedValueOnce(false);
-      
+
       const allowed = await mockCerbos.isAllowed({
         principal: {
           id: 'isbd-editor',
@@ -357,10 +376,10 @@ describe('Review Group (RG) Authorization', () => {
         },
         action: 'edit',
       });
-      
+
       expect(allowed).toBe(false);
     });
-    
+
     it('should allow users with multiple RG roles', async () => {
       mockCerbos.checkResources.mockResolvedValueOnce({
         results: [
@@ -378,7 +397,7 @@ describe('Review Group (RG) Authorization', () => {
           },
         ],
       });
-      
+
       const result = await mockCerbos.checkResources({
         principal: {
           id: 'multi-rg-editor',
@@ -403,7 +422,7 @@ describe('Review Group (RG) Authorization', () => {
           },
         ],
       });
-      
+
       expect(result.results[0].resource.actions.edit).toBe('EFFECT_ALLOW');
       expect(result.results[1].resource.actions.edit).toBe('EFFECT_ALLOW');
     });
@@ -412,13 +431,38 @@ describe('Review Group (RG) Authorization', () => {
   describe('Review Group Workflows', () => {
     it('should enforce vocabulary approval workflow', async () => {
       const workflowStages = [
-        { status: 'draft', rg_editor: true, rg_reviewer: false, rg_admin: true },
-        { status: 'submitted', rg_editor: false, rg_reviewer: true, rg_admin: true },
-        { status: 'under_review', rg_editor: false, rg_reviewer: true, rg_admin: true },
-        { status: 'approved', rg_editor: false, rg_reviewer: false, rg_admin: true },
-        { status: 'published', rg_editor: false, rg_reviewer: false, rg_admin: false },
+        {
+          status: 'draft',
+          rg_editor: true,
+          rg_reviewer: false,
+          rg_admin: true,
+        },
+        {
+          status: 'submitted',
+          rg_editor: false,
+          rg_reviewer: true,
+          rg_admin: true,
+        },
+        {
+          status: 'under_review',
+          rg_editor: false,
+          rg_reviewer: true,
+          rg_admin: true,
+        },
+        {
+          status: 'approved',
+          rg_editor: false,
+          rg_reviewer: false,
+          rg_admin: true,
+        },
+        {
+          status: 'published',
+          rg_editor: false,
+          rg_reviewer: false,
+          rg_admin: false,
+        },
       ];
-      
+
       for (const stage of workflowStages) {
         // Test editor permissions
         mockCerbos.isAllowed.mockResolvedValueOnce(stage.rg_editor);
@@ -431,7 +475,7 @@ describe('Review Group (RG) Authorization', () => {
           action: 'edit',
         });
         expect(editorCanEdit).toBe(stage.rg_editor);
-        
+
         // Test reviewer permissions
         mockCerbos.isAllowed.mockResolvedValueOnce(stage.rg_reviewer);
         const reviewerCanApprove = await mockCerbos.isAllowed({
@@ -457,7 +501,7 @@ describe('Review Group (RG) Authorization', () => {
           },
         },
       });
-      
+
       const result = await mockCerbos.checkResource({
         principal: {
           id: 'system-admin',
@@ -469,15 +513,15 @@ describe('Review Group (RG) Authorization', () => {
         },
         actions: ['admin', 'override_workflow'],
       });
-      
+
       // System admin can override RG permissions
       expect(result.resource.actions.admin).toBe('EFFECT_ALLOW');
       expect(result.resource.actions.override_workflow).toBe('EFFECT_ALLOW');
     });
-    
+
     it('should propagate RG permissions to sites', async () => {
       mockCerbos.isAllowed.mockResolvedValueOnce(true);
-      
+
       const allowed = await mockCerbos.isAllowed({
         principal: {
           id: 'rg-admin',
@@ -492,7 +536,7 @@ describe('Review Group (RG) Authorization', () => {
         },
         action: 'admin',
       });
-      
+
       // RG admin should have admin access to all sites in the RG
       expect(allowed).toBe(true);
     });
