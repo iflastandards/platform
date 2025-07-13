@@ -95,11 +95,11 @@ function TabPanel({ children, value, index }: { children: React.ReactNode; value
 }
 
 export default function ProfilesManager({
-  userRoles,
-  userName,
-  userEmail,
+  userRoles: _userRoles,
+  userName: _userName,
+  userEmail: _userEmail,
 }: ProfilesManagerProps) {
-  const router = useRouter();
+  const router = useRouter(); // eslint-disable-line @typescript-eslint/no-unused-vars
   const [tabValue, setTabValue] = useState(0);
   const [profiles, setProfiles] = useState<DCTAPProfile[]>([
     {
@@ -247,7 +247,7 @@ export default function ProfilesManager({
 
   const activeProfiles = profiles.filter(p => p.status === 'active');
   const draftProfiles = profiles.filter(p => p.status === 'draft');
-  const deprecatedProfiles = profiles.filter(p => p.status === 'deprecated');
+  const deprecatedProfiles = profiles.filter(p => p.status === 'deprecated'); // eslint-disable-line @typescript-eslint/no-unused-vars
 
   return (
     <Container maxWidth="xl" sx={{ py: 4 }}>

@@ -17,7 +17,6 @@ import {
   IconButton,
   Menu,
   MenuItem,
-  Badge,
 } from '@mui/material';
 import Grid from '@mui/material/Grid';
 import {
@@ -35,7 +34,6 @@ import { useRouter } from 'next/navigation';
 import { mockNamespaces, mockUsers, getProjectsByNamespace, getIssuesByProject } from '@/lib/mock-data';
 import { mockEditorialCycles } from '@/lib/mock-data/supabase/editorial-cycles';
 import { mockNightlyBuilds } from '@/lib/mock-data/supabase/nightly-builds';
-import { StatusChip } from '@/components/common';
 
 interface NamespacesListProps {
   userId?: string;
@@ -44,7 +42,7 @@ interface NamespacesListProps {
 
 export default function NamespacesList({ 
   userId = 'user-admin-1',
-  isDemo = false 
+  isDemo: _isDemo = false 
 }: NamespacesListProps) {
   const router = useRouter();
   const [searchQuery, setSearchQuery] = useState('');

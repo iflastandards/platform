@@ -26,7 +26,6 @@ import {
   GitHub as GitHubIcon,
   Assignment as AssignmentIcon,
   CheckCircle as CheckCircleIcon,
-  Warning as WarningIcon,
   Error as ErrorIcon,
   Schedule as ScheduleIcon,
   Refresh as RefreshIcon,
@@ -43,8 +42,6 @@ import {
 import { format } from 'date-fns';
 import { 
   mockNamespaces, 
-  mockGitHubProjects, 
-  mockIssues,
   getProjectsByNamespace,
   getIssuesByProject,
 } from '@/lib/mock-data';
@@ -82,13 +79,13 @@ function TabPanel(props: TabPanelProps) {
 
 export default function NamespaceDashboard({ 
   namespace, 
-  userId = 'user-admin-1',
-  isDemo = false 
+  userId: _userId = 'user-admin-1',
+  isDemo: _isDemo = false 
 }: NamespaceDashboardProps) {
   const theme = useTheme();
   const [currentTab, setCurrentTab] = useState(0);
   const [issueMenuAnchor, setIssueMenuAnchor] = useState<null | HTMLElement>(null);
-  const [selectedIssue, setSelectedIssue] = useState<string | null>(null);
+  const [selectedIssue, setSelectedIssue] = useState<string | null>(null); // eslint-disable-line @typescript-eslint/no-unused-vars
   const [refreshing, setRefreshing] = useState(false);
 
   // Get namespace data
@@ -171,7 +168,7 @@ export default function NamespaceDashboard({
     setCurrentTab(newValue);
   };
 
-  const renderIssueCard = (issue: any) => {
+  const renderIssueCard = (issue: any) => { // TODO: Define proper issue type
     const labelColors: Record<string, string> = {
       'import-request': theme.palette.primary.main,
       'validation': theme.palette.success.main,

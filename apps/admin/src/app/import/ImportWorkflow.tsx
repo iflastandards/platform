@@ -10,7 +10,6 @@ import {
   Stepper,
   Step,
   StepLabel,
-  StepContent,
   Button,
   TextField,
   Select,
@@ -29,7 +28,6 @@ import {
   ListItemIcon,
   ListItemText,
   Collapse,
-  IconButton,
 } from '@mui/material';
 import Grid from '@mui/material/Grid';
 import {
@@ -40,7 +38,6 @@ import {
   ExpandMore as ExpandMoreIcon,
   ExpandLess as ExpandLessIcon,
   Visibility as PreviewIcon,
-  Download as DownloadIcon,
   GitHub as GitHubIcon,
 } from '@mui/icons-material';
 import { mockNamespaces } from '@/lib/mock-data/namespaces-extended';
@@ -68,10 +65,10 @@ interface ImportStep {
 }
 
 export default function ImportWorkflow({ 
-  userRoles,
-  userName,
-  userEmail,
-  accessibleNamespaces 
+  userRoles: _userRoles,
+  userName: _userName,
+  userEmail: _userEmail,
+  accessibleNamespaces: _accessibleNamespaces 
 }: ImportWorkflowProps) {
   const router = useRouter();
   const [activeStep, setActiveStep] = useState(0);
@@ -226,7 +223,7 @@ export default function ImportWorkflow({
                 Import Progress
               </Typography>
               <Stepper activeStep={activeStep} orientation="vertical">
-                {steps.map((step, index) => (
+                {steps.map((step, _index) => (
                   <Step key={step.label} completed={step.completed}>
                     <StepLabel
                       optional={

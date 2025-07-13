@@ -117,7 +117,7 @@ export default function SpreadsheetViewer({
     setSelectedRow(null);
   };
 
-  const formatCellValue = (value: any, column: SpreadsheetColumn) => {
+  const formatCellValue = (value: any, column: SpreadsheetColumn) => { // TODO: Define proper cell value type
     if (value === null || value === undefined || value === '') {
       return (
         <Typography variant="body2" color="text.disabled">
