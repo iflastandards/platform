@@ -318,6 +318,7 @@
     "@docusaurus/tsconfig": "3.8.1",
     "@docusaurus/types": "3.8.1",
     "@docusaurus/utils-common": "^3.8.1",
+    "@kie/mock-github": "^2.0.1",
     "@modelcontextprotocol/inspector": "0.13.0",
     "@nx/eslint": "21.2.2",
     "@nx/jest": "21.2.2",
