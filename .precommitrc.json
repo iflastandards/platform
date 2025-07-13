@@ -1,0 +1,11 @@
+{
+  "allowWarnings": true,
+  "maxWarnings": 100,
+  "ignoredWarningPatterns": [
+    "Unexpected any",
+    "is defined but never used",
+    "is assigned a value but never used"
+  ],
+  "runTests": true,
+  "parallelJobs": 3
+}
