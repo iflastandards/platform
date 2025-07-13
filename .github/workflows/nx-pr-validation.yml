@@ -1,0 +1,76 @@
+name: PR Validation
+on:
+  pull_request:
+    types: [opened, synchronize, reopened]
+
+env:
+  # CI environment
+  CI: true
+  HUSKY: 0
+  
+  # Nx Cloud configuration
+  # PUBLIC REPO: Always use read-only token
+  NX_CLOUD_ACCESS_TOKEN: ${{ secrets.NX_CLOUD_ACCESS_TOKEN }}
+  NX_CLOUD_DISTRIBUTED_EXECUTION: true
+  NX_CLOUD_DISTRIBUTED_EXECUTION_AGENT_COUNT: 4
+  NX_BRANCH: ${{ github.head_ref }}
+  
+  # Nx optimizations
+  NX_DAEMON: true
+  NX_PARALLEL: 4
+  
+  # Node settings
+  NODE_OPTIONS: "--max-old-space-size=6144"
+
+jobs:
+  validate:
+    name: Validate PR
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          
+      - uses: pnpm/action-setup@v4
+        with:
+          version: 9.15.2
+          
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: 'pnpm'
+          
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+        
+      - name: Set Nx SHA
+        uses: nrwl/nx-set-shas@v4
+        with:
+          main-branch-name: ${{ github.base_ref }}
+          
+      - name: Run affected lint
+        run: pnpm nx affected -t lint --parallel=4
+        
+      - name: Run affected typecheck
+        run: pnpm nx affected -t typecheck --parallel=4
+        
+      - name: Run affected tests
+        run: pnpm nx affected -t test --parallel=4 --coverage
+        
+      - name: Run affected builds
+        run: pnpm nx affected -t build --parallel=4
+        
+      - name: Comment PR
+        uses: actions/github-script@v7
+        if: always()
+        with:
+          script: |
+            const { NX_CLOUD_RUN_URL } = process.env;
+            if (NX_CLOUD_RUN_URL) {
+              github.rest.issues.createComment({
+                issue_number: context.issue.number,
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                body: `📊 [Nx Cloud Results](${NX_CLOUD_RUN_URL})`
+              });
+            }

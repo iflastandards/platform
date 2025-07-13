@@ -7,12 +7,22 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 ### Essential Commands
 - **Package manager**: Always use `pnpm` (never npm or yarn)
 - **Build single site**: `nx build {name}` (e.g., `nx build portal`, `nx build isbdm`, `nx build admin`)
+- **Build all sites**: `pnpm build:all` (optimized with Nx caching and parallelization)
 - **Start dev server**: `nx start {site}` or `nx run {site}:start:robust` (with port cleanup)
-- **Start Next.js dev**: `nx dev admin` (for admin development)
+- **Start Next.js dev**: `nx dev admin --turbopack` (for admin development)
 - **Serve built site**: `nx serve {site}` or `nx run {site}:serve:robust` (with port cleanup)
 - **Test execution**: `pnpm test` (nx affected with parallel execution)
 - **Type checking**: `pnpm typecheck` (nx affected with parallel execution)
 - **Linting**: `pnpm lint` (nx affected with parallel execution)
+- **Health check**: `pnpm health` (comprehensive system check)
+- **Fresh install**: `pnpm fresh` (clean install with cache clear)
+
+### Performance Optimization Commands
+- **Optimize Nx**: `pnpm nx:optimize` (run performance optimization script)
+- **Start Nx daemon**: `pnpm nx:daemon:start` (speeds up all Nx commands)
+- **Clear cache**: `pnpm nx:cache:clear` (when you need a fresh build)
+- **View cache stats**: `pnpm nx:cache:stats` (monitor cache effectiveness)
+- **View dependency graph**: `pnpm nx:graph` (visualize project dependencies)
 
 ### Site Scaffolding
 - **Create new site**: `pnpm tsx scripts/scaffold-site.ts --siteKey=newsite --title="New Standard" --tagline="A new IFLA standard"`
@@ -84,4 +94,69 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
   - `GITHUB_TOOLSETS`: Comma-separated list of toolsets
   - `GITHUB_HOST`: For GitHub Enterprise Server
 
-[... rest of the existing content remains unchanged ...]
+## Performance Optimizations
+
+### pnpm Configuration
+The project uses optimized pnpm settings configured in `.npmrc`:
+- **Workspace hoisting**: Optimized for monorepo with shared dependencies
+- **Auto peer deps**: Automatically installs peer dependencies (helps with React 19)
+- **Deep linking**: Better cross-package dependency resolution
+- **Performance caching**: Side effects cache enabled for faster installs
+
+### Nx Configuration
+Nx is configured for maximum performance:
+- **Daemon process**: Always running for faster command execution
+- **Distributed caching**: Nx Cloud enabled for team cache sharing
+- **Parallel execution**: Configured to use 8 cores (adjustable)
+- **Remote caching**: Enabled for CI/CD pipeline optimization
+
+### CI/CD Pipeline
+The project has optimized GitHub Actions workflows:
+- **Preview deployments**: Push to `preview` branch → GitHub Pages at `iflastandards.github.io/platform`
+- **Production deployments**: PR from `preview` to `main` → GitHub Pages at `www.iflastandards.info`
+- **Vercel previews**: Automatic preview deployments for each push to preview branch
+- **Nx Cloud integration**: Distributed builds with 6-8 agents depending on environment
+
+### Development Environment
+- **VS Code**: Configured with `.vscode/settings.json` for optimal development
+- **JetBrains IDEs**: Pre-configured run configurations and code styles in `.idea/`
+- **Environment variables**: Use `.env.nx` for Nx-specific optimizations
+- **Health check**: Run `pnpm health` to verify system configuration
+
+## Deployment Workflow
+
+### Branch Strategy
+1. **Development**: Work on feature branches
+2. **Preview**: Merge to `preview` branch for staging
+3. **Production**: Create PR from `preview` to `main` (protected branch)
+
+### Deployment URLs
+- **Preview**: https://iflastandards.github.io/platform/
+- **Production**: https://www.iflastandards.info/
+- **Vercel Previews**: Automatic for each preview branch commit
+
+### Build Process
+1. **Unified build**: Scripts create a single deployment directory
+2. **Environment-specific**: Different configurations for preview/production
+3. **Validation**: Automated checks before deployment
+4. **Caching**: Aggressive caching for faster builds
+
+## Troubleshooting
+
+### Common Issues
+1. **Slow builds**: Run `pnpm nx:optimize` and ensure daemon is running
+2. **Cache issues**: Run `pnpm nx:cache:clear` for a fresh build
+3. **Dependency conflicts**: Run `pnpm fresh` for clean install
+4. **Port conflicts**: Use `pnpm ports:kill` to free up ports
+
+### Performance Tips
+1. Always have Nx daemon running: `pnpm nx:daemon:start`
+2. Use affected commands when possible: `nx affected -t build`
+3. Monitor cache effectiveness: `pnpm nx:cache:stats`
+4. Run health check regularly: `pnpm health`
+
+## important-instruction-reminders
+Do what has been asked; nothing more, nothing less.
+NEVER create files unless they're absolutely necessary for achieving your goal.
+ALWAYS prefer editing an existing file to creating a new one.
+NEVER proactively create documentation files (*.md) or README files. Only create documentation files if explicitly requested by the User.

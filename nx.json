@@ -189,10 +189,22 @@
   "cli": { "analytics": false },
   "parallel": 8,
   "cacheDirectory": ".nx/cache",
+  "useDaemonProcess": true,
+  "useInferencePlugins": true,
+  "defaultTasksRunnerOptions": {
+    "parallel": 8,
+    "cacheableOperations": ["build", "test", "lint", "typecheck", "e2e"],
+    "runtimeCacheInputs": ["node -v", "pnpm --version"],
+    "remoteCache": {
+      "enabled": true,
+      "silent": false
+    }
+  },
   "runtimeCacheInputs": [
     "node -v",
     "pnpm --version",
     "echo $NODE_ENV",
+    "echo $DOCS_ENV",
     "echo $DOCUSAURUS_SWIZZLE"
   ],
   "generators": {
@@ -208,7 +220,30 @@
         "cacheableOperations": ["build", "test", "lint", "typecheck", "e2e"],
         "canTrackAnalytics": false,
         "showUsageWarnings": true,
-        "useDaemonProcess": true
+        "useDaemonProcess": true,
+        "parallel": 8,
+        "lifeCycle": {
+          "startCommand": "echo 'Starting Nx Cloud execution'",
+          "endCommand": "echo 'Nx Cloud execution completed'"
+        },
+        "remoteCache": {
+          "enabled": true,
+          "timeout": 300,
+          "silent": false
+        }
+      }
+    }
+  },
+  "workspaceLayout": {
+    "appsDir": "apps",
+    "libsDir": "packages",
+    "standaloneConfig": true
+  },
+  "release": {
+    "version": {
+      "generatorOptions": {
+        "packageRoot": "dist/packages/{projectName}",
+        "currentVersionResolver": "git-tag"
       }
     }
   }

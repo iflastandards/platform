@@ -1,8 +1,16 @@
 node_modules/
 .pnpm-store/
+.pnpm-cache/
 # editors
 .vscode/
 .idea/
+# Keep JetBrains run configurations and code styles
+!.idea/runConfigurations/
+!.idea/codeStyles/
+!.idea/fileTemplates/
+!.idea/scopes/
+!.idea/externalDependencies.xml
+!.idea/watcherTasks.xml
 # build artefacts
 build/
 dist/
@@ -45,3 +53,6 @@ coverage/
 **/.env*
 **/test-results/
 .env
+.env.nx
+.nxrc
+nx-cloud.env

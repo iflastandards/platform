@@ -1,0 +1,30 @@
+# Example .npmrc for IFLA Standards monorepo
+
+# Essential for workspace root
+ignore-workspace-root-check=true
+
+# Recommended for Nx monorepos
+prefer-workspace-packages=true
+link-workspace-packages=deep
+
+# For better Docusaurus compatibility
+public-hoist-pattern[]=*docusaurus*
+public-hoist-pattern[]=@mdx-js/*
+public-hoist-pattern[]=*babel*
+
+# For better Next.js compatibility
+public-hoist-pattern[]=*next*
+public-hoist-pattern[]=*react*
+public-hoist-pattern[]=*react-dom*
+
+# CI-specific (add these in CI environment)
+# frozen-lockfile=true
+# prefer-offline=true
+
+# If you encounter peer dependency issues
+# auto-install-peers=true
+# strict-peer-dependencies=false
+
+# For faster installs (aggressive caching)
+# side-effects-cache=true
+# verify-store-integrity=false

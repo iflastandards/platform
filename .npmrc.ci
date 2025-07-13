@@ -1,0 +1,24 @@
+# CI-specific pnpm configuration
+# Use this in CI environments by setting NPMRC=.npmrc.ci
+
+# Include base configuration
+# All settings from .npmrc are inherited
+
+# CI-specific overrides
+frozen-lockfile=true
+prefer-offline=true
+reporter=append-only
+loglevel=error
+
+# Disable interactive prompts
+no-color=true
+
+# Fail fast on peer dependency issues
+strict-peer-dependencies=true
+
+# Use cache aggressively in CI
+cache-dir=.pnpm-cache
+use-store-server=false
+
+# Disable progress bars for cleaner logs
+progress=false
