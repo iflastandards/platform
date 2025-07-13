@@ -41,11 +41,13 @@ import {
   LightMode as LightModeIcon,
 } from '@mui/icons-material';
 import { useTheme as useAppTheme } from '@/contexts/theme-context';
+import { mockNamespaces, mockReviewGroups, getNamespacesByReviewGroup } from '@/lib/mock-data/namespaces-extended';
 
-interface AdminDashboardProps {
+interface ReviewGroupDashboardProps {
   userRoles: string[];
   userName?: string;
   userEmail?: string;
+  reviewGroups: string[];
 }
 
 interface StatsCardProps {
@@ -112,70 +114,114 @@ function ActivityItem({ action, author, time, type }: ActivityItemProps) {
   );
 }
 
-interface SystemStatusItemProps {
-  service: string;
-  status: 'online' | 'offline' | 'maintenance';
+interface NamespaceCardProps {
+  name: string;
+  description: string;
+  status: 'active' | 'maintenance' | 'archived';
+  currentVersion: string;
+  color: string;
+  statistics: {
+    elements: number;
+    concepts: number;
+    translations: number;
+    contributors: number;
+  };
 }
 
-function SystemStatusItem({ service, status }: SystemStatusItemProps) {
+function NamespaceCard({ name, description, status, currentVersion, color, statistics }: NamespaceCardProps) {
   const statusConfig = {
-    online: { color: 'success', label: 'Online' },
-    offline: { color: 'error', label: 'Offline' },
+    active: { color: 'success', label: 'Active' },
     maintenance: { color: 'warning', label: 'Maintenance' },
+    archived: { color: 'error', label: 'Archived' },
   } as const;
   
   const config = statusConfig[status];
   
   return (
-    <Box display="flex" justifyContent="space-between" alignItems="center" py={1.5}>
-      <Typography variant="body2" color="text.secondary">
-        {service}:
-      </Typography>
-      <Chip 
-        label={config.label} 
-        color={config.color} 
-        size="small"
-        sx={{ fontWeight: 600 }}
-      />
-    </Box>
+    <Card elevation={0} sx={{ border: 1, borderColor: 'divider', height: '100%' }}>
+      <CardContent>
+        <Box display="flex" justifyContent="space-between" alignItems="flex-start" mb={2}>
+          <Typography variant="h6" fontWeight="bold" sx={{ color }}>
+            {name}
+          </Typography>
+          <Chip 
+            label={config.label} 
+            color={config.color} 
+            size="small"
+            sx={{ fontWeight: 600 }}
+          />
+        </Box>
+        <Typography variant="body2" color="text.secondary" gutterBottom>
+          {description}
+        </Typography>
+        <Typography variant="caption" color="text.secondary" display="block" mb={2}>
+          Version {currentVersion}
+        </Typography>
+        
+        <Stack direction="row" spacing={2}>
+          <Box textAlign="center">
+            <Typography variant="body2" fontWeight="bold" color="primary.main">
+              {statistics.elements + statistics.concepts}
+            </Typography>
+            <Typography variant="caption" color="text.secondary">
+              Items
+            </Typography>
+          </Box>
+          <Box textAlign="center">
+            <Typography variant="body2" fontWeight="bold" color="primary.main">
+              {statistics.translations}
+            </Typography>
+            <Typography variant="caption" color="text.secondary">
+              Languages
+            </Typography>
+          </Box>
+          <Box textAlign="center">
+            <Typography variant="body2" fontWeight="bold" color="primary.main">
+              {statistics.contributors}
+            </Typography>
+            <Typography variant="caption" color="text.secondary">
+              Contributors
+            </Typography>
+          </Box>
+        </Stack>
+      </CardContent>
+    </Card>
   );
 }
 
-export default function AdminDashboard({ userRoles: _userRoles, userName: _userName, userEmail: _userEmail }: AdminDashboardProps) {
+export default function ReviewGroupDashboard({ 
+  userRoles: _userRoles, 
+  userName: _userName, 
+  userEmail: _userEmail,
+  reviewGroups 
+}: ReviewGroupDashboardProps) {
   const { mode, toggleTheme } = useAppTheme();
   
   const drawerWidth = 240;
   
+  // Get user's review group info
+  const userReviewGroups = reviewGroups.map(rgId => mockReviewGroups[rgId]).filter(Boolean);
+  const userNamespaces = reviewGroups.flatMap(rgId => getNamespacesByReviewGroup(rgId));
+  
   const sidebarItems = [
-    { key: 'dashboard', label: 'Dashboard', icon: <DashboardIcon />, href: '/dashboard', active: true },
-    { key: 'users', label: 'Users', icon: <PeopleIcon />, href: '/dashboard/users' },
-    { key: 'review-groups', label: 'Review Groups', icon: <LanguageIcon />, href: '/dashboard/review-groups' },
-    { key: 'projects', label: 'Projects', icon: <AssignmentIcon />, href: '/dashboard/projects' },
-    { key: 'namespaces', label: 'Namespaces', icon: <FolderIcon />, href: '/dashboard/namespaces' },
-    { key: 'vocabularies', label: 'Vocabularies', icon: <BookIcon />, href: '/dashboard/vocabularies' },
-    { key: 'profiles', label: 'DCTAP Profiles', icon: <BookIcon />, href: '/dashboard/profiles' },
-    { key: 'activity', label: 'Activity Log', icon: <HistoryIcon />, href: '/dashboard/activity' },
+    { key: 'dashboard', label: 'RG Dashboard', icon: <DashboardIcon />, href: '/admin/dashboard/rg', active: true },
+    { key: 'projects', label: 'My Projects', icon: <AssignmentIcon />, href: '/admin/dashboard/rg/projects' },
+    { key: 'namespaces', label: 'My Namespaces', icon: <FolderIcon />, href: '/admin/dashboard/rg/namespaces' },
+    { key: 'team', label: 'Team Members', icon: <PeopleIcon />, href: '/admin/dashboard/rg/team' },
+    { key: 'activity', label: 'Activity Log', icon: <HistoryIcon />, href: '/admin/dashboard/rg/activity' },
   ];
 
   const stats = [
-    { title: 'Total Users', value: 352, change: '+14 this month', changeType: 'increase' as const },
-    { title: 'Active Projects', value: 12, change: '+2 this month', changeType: 'increase' as const },
-    { title: 'Total Vocabularies', value: 824, change: '+38 this month', changeType: 'increase' as const },
+    { title: 'My Namespaces', value: userNamespaces.length, change: 'Under your management', changeType: 'neutral' as const },
+    { title: 'Active Projects', value: 4, change: '+1 this month', changeType: 'increase' as const },
+    { title: 'Team Members', value: 12, change: '+2 this quarter', changeType: 'increase' as const },
   ];
 
   const recentActivity = [
-    { action: 'Project "MulDiCat French Translation" milestone completed', author: 'John Smith', time: '2 hours ago', type: 'project' as const },
-    { action: 'User "alice@example.com" joined "LRM 2.0 Development" project', author: 'James Wilson', time: '3 hours ago', type: 'user' as const },
-    { action: 'ISBD Review Group chartered "ISBD Maintenance WG 2024-2026"', author: 'Sarah Johnson', time: '5 hours ago', type: 'project' as const },
-    { action: 'DCTAP Profile "Standard" created', author: 'Mike Davis', time: '1 day ago', type: 'profile' as const },
-    { action: 'Vocabulary "Elements" RDF generated', author: 'Jennifer Lee', time: '1 day ago', type: 'vocabulary' as const },
-  ];
-
-  const systemStatus = [
-    { service: 'GitHub API', status: 'online' as const },
-    { service: 'Cerbos PDP', status: 'online' as const },
-    { service: 'Vocabulary Server', status: 'online' as const },
-    { service: 'Build System', status: 'online' as const },
+    { action: 'ISBD translation milestone completed by your team', author: 'Maria Editor', time: '2 hours ago', type: 'project' as const },
+    { action: 'New team member joined ISBD Review Group', author: 'John Smith', time: '1 day ago', type: 'user' as const },
+    { action: 'ISBD(M) vocabulary updated', author: 'Sarah Wilson', time: '2 days ago', type: 'vocabulary' as const },
+    { action: 'Review group meeting notes published', author: 'You', time: '3 days ago', type: 'project' as const },
   ];
 
   return (
@@ -193,8 +239,11 @@ export default function AdminDashboard({ userRoles: _userRoles, userName: _userN
         }}
       >
         <Box sx={{ p: 3, borderBottom: 1, borderColor: 'divider' }}>
-          <Typography variant="h5" fontWeight="bold">
-            IFLA Admin
+          <Typography variant="h6" fontWeight="bold">
+            Review Group Admin
+          </Typography>
+          <Typography variant="body2" color="text.secondary">
+            {userReviewGroups.map(rg => rg.name).join(', ')}
           </Typography>
         </Box>
         <List sx={{ px: 2 }}>
@@ -239,7 +288,7 @@ export default function AdminDashboard({ userRoles: _userRoles, userName: _userN
             <Box sx={{ flexGrow: 1 }}>
               <Breadcrumbs>
                 <Typography color="text.secondary">Admin</Typography>
-                <Typography color="text.primary">Dashboard</Typography>
+                <Typography color="text.primary">Review Group Dashboard</Typography>
               </Breadcrumbs>
             </Box>
             <IconButton onClick={toggleTheme} sx={{ mr: 2 }}>
@@ -260,10 +309,10 @@ export default function AdminDashboard({ userRoles: _userRoles, userName: _userN
         <Container maxWidth="xl" sx={{ py: 4 }}>
           <Box mb={4}>
             <Typography variant="h4" fontWeight="bold" gutterBottom>
-              Admin Dashboard
+              Review Group Dashboard
             </Typography>
             <Typography variant="body1" color="text.secondary">
-              System overview and key metrics
+              Manage your review group projects, namespaces, and team members
             </Typography>
           </Box>
 
@@ -277,45 +326,47 @@ export default function AdminDashboard({ userRoles: _userRoles, userName: _userN
           </Grid>
 
           <Grid container spacing={3}>
-            {/* Recent Activity */}
+            {/* My Namespaces */}
             <Grid size={{ xs: 12, lg: 8 }}>
               <Card elevation={0}>
                 <CardContent>
                   <Typography variant="h6" fontWeight="bold" gutterBottom>
-                    Recent System Activity
+                    My Namespaces
                   </Typography>
-                  <Box>
-                    {recentActivity.map((activity, index) => (
-                      <ActivityItem key={index} {...activity} />
+                  <Grid container spacing={2}>
+                    {userNamespaces.map((namespace) => (
+                      <Grid size={{ xs: 12, md: 6 }} key={namespace.id}>
+                        <NamespaceCard {...namespace} />
+                      </Grid>
                     ))}
-                  </Box>
+                  </Grid>
                   <Box mt={3} pt={2} borderTop={1} borderColor="divider">
                     <MuiLink
                       component={Link}
-                      href="/dashboard/activity?demo=true"
+                      href="/admin/dashboard/rg/namespaces?demo=true"
                       color="primary"
                       underline="hover"
                       fontSize="small"
                     >
-                      View all activity →
+                      Manage all namespaces →
                     </MuiLink>
                   </Box>
                 </CardContent>
               </Card>
             </Grid>
 
-            {/* System Status & Quick Actions */}
+            {/* Recent Activity & Quick Actions */}
             <Grid size={{ xs: 12, lg: 4 }}>
               <Stack spacing={3}>
-                {/* System Status */}
+                {/* Recent Activity */}
                 <Card elevation={0}>
                   <CardContent>
                     <Typography variant="h6" fontWeight="bold" gutterBottom>
-                      System Status
+                      Recent Activity
                     </Typography>
                     <Box>
-                      {systemStatus.map((status) => (
-                        <SystemStatusItem key={status.service} {...status} />
+                      {recentActivity.map((activity, index) => (
+                        <ActivityItem key={index} {...activity} />
                       ))}
                     </Box>
                   </CardContent>
@@ -333,18 +384,18 @@ export default function AdminDashboard({ userRoles: _userRoles, userName: _userN
                         fullWidth
                         startIcon={<AddTaskIcon />}
                         component={Link}
-                        href="/dashboard/projects/new?demo=true"
+                        href="/admin/dashboard/rg/projects/new?demo=true"
                       >
-                        Charter New Project
+                        Start New Project
                       </Button>
                       <Button
                         variant="outlined"
                         fullWidth
                         startIcon={<PersonAddIcon />}
                         component={Link}
-                        href="/dashboard/users/invite?demo=true"
+                        href="/admin/dashboard/rg/team/invite?demo=true"
                       >
-                        Invite User
+                        Invite Team Member
                       </Button>
                     </Stack>
                   </CardContent>
