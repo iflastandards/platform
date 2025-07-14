@@ -19,15 +19,15 @@ export default async function ReviewGroupAdminPage({
   // In demo mode, use mock data
   if (isDemo) {
     const demoUserId = userId || 'user-editor-1';
-    const demoUser = mockUsers.find(u => u.id === demoUserId) || mockUsers[1];
-    
+    const demoUser = mockUsers.find((u) => u.id === demoUserId) || mockUsers[1];
+
     // Only allow users with review group admin role to access this page
     if (!demoUser.publicMetadata.reviewGroupAdmin?.length) {
-      redirect('/admin/dashboard?demo=true&userId=' + demoUserId);
+      redirect('/dashboard?demo=true&userId=' + demoUserId);
     }
 
     return (
-      <ReviewGroupDashboard 
+      <ReviewGroupDashboard
         userRoles={[demoUser.publicMetadata.iflaRole || 'member']}
         userName={demoUser.name}
         userEmail={demoUser.email}
@@ -39,22 +39,22 @@ export default async function ReviewGroupAdminPage({
   // Production mode - use real auth
   const user = await currentUser();
   if (!user) {
-    redirect(`/sign-in?redirect_url=${encodeURIComponent('/admin/dashboard/rg')}`);
+    redirect(`/sign-in?redirect_url=${encodeURIComponent('/dashboard/rg')}`);
   }
 
   // Check if user has review group admin role
-  const publicMetadata = user.publicMetadata as { 
-    iflaRole?: string; 
+  const publicMetadata = user.publicMetadata as {
+    iflaRole?: string;
     reviewGroupAdmin?: string[];
   };
-  
+
   const hasReviewGroupAdmin = publicMetadata?.reviewGroupAdmin?.length;
   if (!hasReviewGroupAdmin) {
-    redirect('/admin/dashboard'); // Redirect to regular dashboard
+    redirect('/dashboard'); // Redirect to regular dashboard
   }
 
   return (
-    <ReviewGroupDashboard 
+    <ReviewGroupDashboard
       userRoles={[publicMetadata?.iflaRole || 'member']}
       userName={(user.firstName || '') + ' ' + (user.lastName || '')}
       userEmail={user.emailAddresses?.[0]?.emailAddress}

@@ -14,6 +14,18 @@ const nextConfig = {
     svgr: false,
   },
   // Note: CORS is handled by middleware.ts for dynamic origin support
+
+  // Add this redirects function
+  async redirects() {
+    return [
+      {
+        source: '/',
+        destination: '/admin',
+        permanent: false,
+        basePath: false, // Important: bypass basePath for this redirect
+      },
+    ];
+  },
 };
 
 const plugins = [

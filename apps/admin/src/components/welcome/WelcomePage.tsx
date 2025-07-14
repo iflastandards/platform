@@ -24,6 +24,8 @@ import {
   Error as ErrorIcon,
 } from '@mui/icons-material';
 import { mockNamespaces, getNamespaceStats } from '@/lib/mock-data/namespaces-extended';
+import RequestInviteButton from '@/components/welcome/RequestInviteButton';
+import { SignInButton } from '@clerk/nextjs';
 
 interface NamespaceStatusCardProps {
   name: string;
@@ -48,7 +50,6 @@ function NamespaceStatusCard({
   currentVersion, 
   lastPublished,
   color,
-  statistics 
 }: NamespaceStatusCardProps) {
   
   const statusConfig = {
@@ -113,32 +114,76 @@ function NamespaceStatusCard({
           <Typography variant="body2" color="text.secondary" gutterBottom>
             Version {currentVersion} • Published {publishedDate}
           </Typography>
-          
-          <Stack direction="row" spacing={2} sx={{ mt: 2 }}>
-            <Box textAlign="center">
-              <Typography variant="h6" fontWeight="bold" color="primary.main">
-                {statistics.elements + statistics.concepts}
-              </Typography>
-              <Typography variant="caption" color="text.secondary">
-                Items
-              </Typography>
-            </Box>
-            <Box textAlign="center">
-              <Typography variant="h6" fontWeight="bold" color="primary.main">
-                {statistics.translations}
-              </Typography>
-              <Typography variant="caption" color="text.secondary">
-                Languages
-              </Typography>
-            </Box>
-            <Box textAlign="center">
-              <Typography variant="h6" fontWeight="bold" color="primary.main">
-                {statistics.contributors}
-              </Typography>
-              <Typography variant="caption" color="text.secondary">
-                Contributors
-              </Typography>
-            </Box>
+
+          <Stack direction="row" spacing={2} justifyContent="center" flexWrap="wrap" mb={3}>
+            <Button
+              variant="contained"
+              size="large"
+              startIcon={<GitHubIcon />}
+              sx={{
+                bgcolor: 'white',
+                color: 'primary.main',
+                fontWeight: 'bold',
+                px: 4,
+                py: 1.5,
+                fontSize: '1.1rem',
+                '&:hover': { bgcolor: 'grey.100' },
+              }}
+              href="/api/auth/signin?demo=true&userId=user-admin-1"
+            >
+              Super Admin Demo
+            </Button>
+            <Button
+              variant="outlined"
+              size="large"
+              sx={{
+                color: 'white',
+                borderColor: 'white',
+                fontWeight: 'bold',
+                px: 3,
+                py: 1.5,
+                '&:hover': { bgcolor: 'rgba(255, 255, 255, 0.1)', borderColor: 'white' },
+              }}
+              href="/api/auth/signin?demo=true&userId=user-isbd-rg-admin"
+            >
+              RG Admin Demo
+            </Button>
+            <Button
+              variant="outlined"
+              size="large"
+              sx={{
+                color: 'white',
+                borderColor: 'white',
+                fontWeight: 'bold',
+                px: 3,
+                py: 1.5,
+                '&:hover': { bgcolor: 'rgba(255, 255, 255, 0.1)', borderColor: 'white' },
+              }}
+              href="/api/auth/signin?demo=true&userId=user-isbd-editor"
+            >
+              Member Demo
+            </Button>
+          </Stack>
+
+          {/* Clerk Sign-In and Invitation CTA */}
+          <Stack direction="row" spacing={2} justifyContent="center" mt={2}>
+            <SignInButton mode="modal">
+              <Button
+                variant="contained"
+                color="secondary"
+                size="large"
+                startIcon={<GitHubIcon />}
+                sx={{
+                  fontWeight: 'bold',
+                  px: 4,
+                  py: 1.5,
+                  fontSize: '1.1rem',
+                }}
+              >
+                Sign In with GitHub
+              </Button>
+            </SignInButton>
+            <RequestInviteButton />
           </Stack>
         </Box>
       </CardContent>

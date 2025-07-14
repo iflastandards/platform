@@ -13,16 +13,16 @@ export function getDefaultDashboardRoute(user: User | MockUser, isDemo: boolean 
   
   // Super Admin - goes to super admin dashboard
   if (user.publicMetadata.iflaRole === 'admin') {
-    return `/admin/dashboard/admin${demoParam}`;
+    return `/dashboard/admin${demoParam}`;
   }
   
   // Review Group Admin - goes to RG dashboard
   if (user.publicMetadata.reviewGroupAdmin?.length) {
-    return `/admin/dashboard/rg${demoParam}`;
+    return `/dashboard/rg${demoParam}`;
   }
   
   // Regular users - goes to regular dashboard
-  return `/admin/dashboard${demoParam}`;
+  return `/dashboard${demoParam}`;
 }
 
 export function validateRouteAccess(
@@ -33,7 +33,7 @@ export function validateRouteAccess(
   const isReviewGroupAdmin = user.publicMetadata.reviewGroupAdmin?.length;
   
   // Super admin routes
-  if (route.startsWith('/admin/dashboard/admin')) {
+  if (route.startsWith('/dashboard/admin')) {
     if (userRole === 'admin') {
       return { hasAccess: true };
     }
@@ -44,7 +44,7 @@ export function validateRouteAccess(
   }
   
   // Review group admin routes
-  if (route.startsWith('/admin/dashboard/rg')) {
+  if (route.startsWith('/dashboard/rg')) {
     if (userRole === 'admin' || isReviewGroupAdmin) {
       return { hasAccess: true };
     }
@@ -55,7 +55,7 @@ export function validateRouteAccess(
   }
   
   // Regular dashboard routes - accessible to all authenticated users
-  if (route.startsWith('/admin/dashboard') || route.startsWith('/dashboard')) {
+  if (route.startsWith('/dashboard')) {
     return { hasAccess: true };
   }
   

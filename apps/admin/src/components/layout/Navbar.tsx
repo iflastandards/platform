@@ -1,11 +1,12 @@
 'use client';
 
 import React, { useState } from 'react';
-import { 
-  AppBar, 
-  Toolbar, 
-  Typography, 
-  IconButton, 
+import Link from 'next/link';
+import {
+  AppBar,
+  Toolbar,
+  Typography,
+  IconButton,
   Button,
   Menu,
   MenuItem,
@@ -41,7 +42,6 @@ import {
   Build as BuildIcon,
   Timeline as TimelineIcon,
 } from '@mui/icons-material';
-import { useRouter } from 'next/navigation';
 import { mockUsers } from '@/lib/mock-data/auth';
 
 interface NavbarProps {
@@ -51,13 +51,12 @@ interface NavbarProps {
 export default function Navbar({ userId = 'user-admin-1' }: NavbarProps) {
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down('md'));
-  const router = useRouter();
   const [mobileOpen, setMobileOpen] = useState(false);
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
   const [namespacesOpen, setNamespacesOpen] = useState(true);
 
   // Get current user from mock data
-  const currentUser = mockUsers.find(u => u.id === userId) || mockUsers[0];
+  const currentUser = mockUsers.find((u) => u.id === userId) || mockUsers[0];
   const userRole = currentUser.publicMetadata.iflaRole || 'member';
   const isAdmin = userRole === 'admin';
   const isStaff = userRole === 'staff' || isAdmin;
@@ -75,8 +74,10 @@ export default function Navbar({ userId = 'user-admin-1' }: NavbarProps) {
   };
 
   const handleLogout = () => {
-    // In demo mode, redirect to admin welcome page
-    router.push('/');
+    // Clear all query parameters to ensure clean logout
+    // This removes demo=true and userId params, effectively "logging out" demo users
+    // Using window.location for a full page refresh to clear any client-side state
+    window.location.href = '/';
   };
 
   const navigationItems = [
@@ -143,12 +144,14 @@ export default function Navbar({ userId = 'user-admin-1' }: NavbarProps) {
       <Divider />
       <List>
         {navigationItems
-          .filter(item => item.show)
+          .filter((item) => item.show)
           .map((item) => (
             <React.Fragment key={item.label}>
               {item.expandable ? (
                 <>
-                  <ListItemButton onClick={() => setNamespacesOpen(!namespacesOpen)}>
+                  <ListItemButton
+                    onClick={() => setNamespacesOpen(!namespacesOpen)}
+                  >
                     <ListItemIcon>{item.icon}</ListItemIcon>
                     <ListItemText primary={item.label} />
                     {namespacesOpen ? <ExpandLess /> : <ExpandMore />}
@@ -156,13 +159,16 @@ export default function Navbar({ userId = 'user-admin-1' }: NavbarProps) {
                   <Collapse in={namespacesOpen} timeout="auto" unmountOnExit>
                     <List component="div" disablePadding>
                       {item.children?.map((child) => (
-                        <ListItemButton 
+                        <ListItemButton
                           key={child.label}
-                          sx={{ pl: 4 }}
-                          onClick={() => {
-                            router.push(child.href);
-                            setMobileOpen(false);
+                          component={Link}
+                          href={child.href}
+                          sx={{
+                            pl: 4,
+                            textDecoration: 'none',
+                            color: 'inherit',
                           }}
+                          onClick={() => setMobileOpen(false)}
                         >
                           <ListItemText primary={child.label} />
                         </ListItemButton>
@@ -173,12 +179,10 @@ export default function Navbar({ userId = 'user-admin-1' }: NavbarProps) {
               ) : (
                 <ListItem disablePadding>
                   <ListItemButton
-                    onClick={() => {
-                      if (item.href) {
-                        router.push(item.href);
-                        setMobileOpen(false);
-                      }
-                    }}
+                    component={Link}
+                    href={item.href || '#'}
+                    sx={{ textDecoration: 'none', color: 'inherit' }}
+                    onClick={() => setMobileOpen(false)}
                   >
                     <ListItemIcon>
                       {item.badge ? (
@@ -201,11 +205,12 @@ export default function Navbar({ userId = 'user-admin-1' }: NavbarProps) {
 
   return (
     <>
-      <AppBar 
-        position="fixed" 
-        sx={{ 
+      <AppBar
+        position="fixed"
+        sx={{
           zIndex: (theme) => theme.zIndex.drawer + 1,
-          backgroundColor: theme.palette.mode === 'dark' ? 'background.paper' : 'primary.main',
+          backgroundColor:
+            theme.palette.mode === 'dark' ? 'background.paper' : 'primary.main',
         }}
       >
         <Toolbar>
@@ -218,26 +223,37 @@ export default function Navbar({ userId = 'user-admin-1' }: NavbarProps) {
           >
             <MenuIcon />
           </IconButton>
-          
-          <Typography variant="h6" noWrap component="div" sx={{ flexGrow: 0, mr: 4 }}>
+
+          <Typography
+            variant="h6"
+            noWrap
+            component="div"
+            sx={{ flexGrow: 0, mr: 4 }}
+          >
             IFLA Admin
           </Typography>
 
           {!isMobile && (
             <Box sx={{ display: 'flex', gap: 2, flexGrow: 1 }}>
               {navigationItems
-                .filter(item => item.show && !item.expandable)
+                .filter((item) => item.show && !item.expandable)
                 .slice(0, 5)
                 .map((item) => (
                   <Button
                     key={item.label}
+                    component={Link}
+                    href={item.href || '#'}
                     color="inherit"
-                    startIcon={item.badge ? (
-                      <Badge badgeContent={item.badge} color="error">
-                        {item.icon}
-                      </Badge>
-                    ) : item.icon}
-                    onClick={() => item.href && router.push(item.href)}
+                    startIcon={
+                      item.badge ? (
+                        <Badge badgeContent={item.badge} color="error">
+                          {item.icon}
+                        </Badge>
+                      ) : (
+                        item.icon
+                      )
+                    }
+                    sx={{ textDecoration: 'none' }}
                   >
                     {item.label}
                   </Button>
@@ -245,14 +261,16 @@ export default function Navbar({ userId = 'user-admin-1' }: NavbarProps) {
             </Box>
           )}
 
-          <Box sx={{ display: 'flex', alignItems: 'center', gap: 2, ml: 'auto' }}>
+          <Box
+            sx={{ display: 'flex', alignItems: 'center', gap: 2, ml: 'auto' }}
+          >
             <Chip
               label={userRole}
               size="small"
               color={isAdmin ? 'error' : isStaff ? 'primary' : 'default'}
               sx={{ display: { xs: 'none', sm: 'flex' } }}
             />
-            
+
             <IconButton color="inherit">
               <Badge badgeContent={5} color="error">
                 <NotificationsIcon />
@@ -323,13 +341,21 @@ export default function Navbar({ userId = 'user-admin-1' }: NavbarProps) {
           </Box>
         </MenuItem>
         <Divider />
-        <MenuItem onClick={() => router.push('/profile?demo=true')}>
+        <MenuItem
+          component={Link}
+          href="/profile?demo=true"
+          sx={{ textDecoration: 'none', color: 'inherit' }}
+        >
           <ListItemIcon>
             <PersonIcon fontSize="small" />
           </ListItemIcon>
           <ListItemText>Profile</ListItemText>
         </MenuItem>
-        <MenuItem onClick={() => router.push('/settings?demo=true')}>
+        <MenuItem
+          component={Link}
+          href="/settings?demo=true"
+          sx={{ textDecoration: 'none', color: 'inherit' }}
+        >
           <ListItemIcon>
             <SettingsIcon fontSize="small" />
           </ListItemIcon>

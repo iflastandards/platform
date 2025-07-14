@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { auth, canPerformAction, getAuthContext, getUserAccessibleResources } from '@/lib/authorization';
+import { auth, getAuthContext, getUserAccessibleResources } from '@/lib/authorization';
 
 /**
  * GET /api/admin/namespaces

@@ -19,7 +19,14 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body suppressHydrationWarning={true}>
-        <ClerkProvider>
+        <ClerkProvider
+          appearance={{
+            elements: {
+              rootBox: "w-full",
+              card: "shadow-none",
+            }
+          }}
+        >
           <ThemeProvider>
             {children}
           </ThemeProvider>
