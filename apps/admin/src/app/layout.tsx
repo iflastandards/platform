@@ -7,7 +7,7 @@ export const metadata: Metadata = {
   title: 'IFLA Admin Portal',
   description: 'Administrative portal for IFLA Standards management',
   icons: {
-    icon: '/admin/favicon.ico',
+    icon: '/favicon.ico',
   },
 };
 
@@ -22,14 +22,12 @@ export default function RootLayout({
         <ClerkProvider
           appearance={{
             elements: {
-              rootBox: "w-full",
-              card: "shadow-none",
-            }
+              rootBox: 'w-full',
+              card: 'shadow-none',
+            },
           }}
         >
-          <ThemeProvider>
-            {children}
-          </ThemeProvider>
+          <ThemeProvider>{children}</ThemeProvider>
         </ClerkProvider>
       </body>
     </html>

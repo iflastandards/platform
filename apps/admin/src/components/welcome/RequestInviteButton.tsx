@@ -1,5 +1,14 @@
-import React, { useState } from 'react';
-import { Button, TextField, Dialog, DialogTitle, DialogContent, DialogActions, Typography } from '@mui/material';
+import { useState } from 'react';
+import {
+  Button,
+  TextField,
+  Dialog,
+  DialogTitle,
+  DialogContent,
+  DialogActions,
+  Typography,
+} from '@mui/material';
+import { addBasePath } from '@ifla/theme/utils';
 
 export default function RequestInviteButton() {
   const [open, setOpen] = useState(false);
@@ -8,7 +17,7 @@ export default function RequestInviteButton() {
 
   const handleRequest = async () => {
     setStatus('Sending...');
-    const res = await fetch('/api/request-invite', {
+    const res = await fetch(addBasePath('/api/request-invite'), {
       method: 'POST',
       body: JSON.stringify({ email }),
       headers: { 'Content-Type': 'application/json' },
@@ -38,13 +47,16 @@ export default function RequestInviteButton() {
             type="email"
             fullWidth
             value={email}
-            onChange={e => setEmail(e.target.value)}
+            onChange={(e) => setEmail(e.target.value)}
           />
           {status && <Typography sx={{ mt: 2 }}>{status}</Typography>}
         </DialogContent>
         <DialogActions>
           <Button onClick={() => setOpen(false)}>Cancel</Button>
-          <Button onClick={handleRequest} disabled={!email || status === 'Sending...'}>
+          <Button
+            onClick={handleRequest}
+            disabled={!email || status === 'Sending...'}
+          >
             Send
           </Button>
         </DialogActions>

@@ -1,5 +1,9 @@
 # Admin Authorization Model
 
+> **Note**: This document contains the original authorization model design. For the current implementation with team-based permissions through projects, see [Authorization Architecture Reference](./authorization-architecture-reference.md).
+>
+> **Last Updated**: 2025-01-14
+
 ## Entity Hierarchy
 
 ### Top-Level Entities

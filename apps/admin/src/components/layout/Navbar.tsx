@@ -2,6 +2,8 @@
 
 import React, { useState } from 'react';
 import Link from 'next/link';
+import { useClerk, useUser } from '@clerk/nextjs';
+import { addBasePath } from '@ifla/theme/utils';
 import {
   AppBar,
   Toolbar,
@@ -73,13 +75,33 @@ export default function Navbar({ userId = 'user-admin-1' }: NavbarProps) {
     setAnchorEl(null);
   };
 
-  const handleLogout = () => {
-    // Clear all query parameters to ensure clean logout
-    // This removes demo=true and userId params, effectively "logging out" demo users
-    // Using window.location for a full page refresh to clear any client-side state
-    window.location.href = '/';
-  };
+  const { signOut } = useClerk();
+  const { isSignedIn } = useUser();
 
+  const handleLogout = async () => {
+    try {
+      if (isSignedIn) {
+        // Use Clerk's signOut method for authenticated users
+        await signOut({
+          redirectUrl:
+            typeof window !== 'undefined'
+              ? window.location.origin + addBasePath('/')
+              : addBasePath('/'),
+        });
+      } else {
+        // For demo users, clear query parameters and redirect
+        if (typeof window !== 'undefined') {
+          window.location.href = addBasePath('/');
+        }
+      }
+    } catch (error) {
+      console.error('Error signing out:', error);
+      // Fallback: force redirect anyway
+      if (typeof window !== 'undefined') {
+        window.location.href = addBasePath('/');
+      }
+    }
+  };
   const navigationItems = [
     {
       label: 'Dashboard',

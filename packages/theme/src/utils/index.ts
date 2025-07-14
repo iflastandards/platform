@@ -2,7 +2,13 @@
  * Shared utilities for IFLA theme components
  */
 
-import { MultilingualText, LanguageConfig, UriCaseStyle, ConceptProps, CSVConceptRow } from '../types';
+import {
+  MultilingualText,
+  LanguageConfig,
+  UriCaseStyle,
+  ConceptProps,
+  CSVConceptRow,
+} from '../types';
 
 /**
  * Get localized text from multilingual text object
@@ -10,21 +16,21 @@ import { MultilingualText, LanguageConfig, UriCaseStyle, ConceptProps, CSVConcep
 export function getLocalizedText(
   text: MultilingualText | string | undefined,
   language: string = 'en',
-  fallbackLanguage: string = 'en'
+  fallbackLanguage: string = 'en',
 ): string {
   if (!text) return '';
   if (typeof text === 'string') return text;
-  
+
   // Try requested language first
   if (text[language]) return text[language];
-  
+
   // Try fallback language
   if (text[fallbackLanguage]) return text[fallbackLanguage];
-  
+
   // Return first available language
   const keys = Object.keys(text);
   if (keys.length > 0) return text[keys[0]];
-  
+
   return '';
 }
 
@@ -32,7 +38,7 @@ export function getLocalizedText(
  * Get all localized versions of text
  */
 export function getAllLocalizedText(
-  text: MultilingualText | string | undefined
+  text: MultilingualText | string | undefined,
 ): Record<string, string> {
   if (!text) return {};
   if (typeof text === 'string') return { en: text };
@@ -42,7 +48,10 @@ export function getAllLocalizedText(
 /**
  * Create a URL-safe slug from text
  */
-export function createSlug(text: string, caseStyle: UriCaseStyle = 'kebab-case'): string {
+export function createSlug(
+  text: string,
+  caseStyle: UriCaseStyle = 'kebab-case',
+): string {
   let slug = text
     .toLowerCase()
     .replace(/[^\w\s-]/g, '') // Remove special characters
@@ -55,7 +64,9 @@ export function createSlug(text: string, caseStyle: UriCaseStyle = 'kebab-case')
     case 'camelCase':
       return slug.replace(/-([a-z])/g, (_, letter) => letter.toUpperCase());
     case 'PascalCase':
-      return slug.replace(/(^|-)([a-z])/g, (_, __, letter) => letter.toUpperCase());
+      return slug.replace(/(^|-)([a-z])/g, (_, __, letter) =>
+        letter.toUpperCase(),
+      );
     case 'kebab-case':
     default:
       return slug;
@@ -70,10 +81,10 @@ export function generateConceptUri(
   baseUri: string,
   uriStyle: UriCaseStyle = 'numeric',
   prefix: string = '',
-  startCounter: number = 1000
+  startCounter: number = 1000,
 ): string {
   const baseUrl = baseUri.endsWith('/') ? baseUri : `${baseUri}/`;
-  
+
   switch (uriStyle) {
     case 'numeric':
       const numericId = parseInt(id) || startCounter;
@@ -95,13 +106,21 @@ export function parseCSVToConcepts(
   vocabularyUri?: string,
   uriStyle: UriCaseStyle = 'numeric',
   prefix: string = '',
-  startCounter: number = 1000
+  startCounter: number = 1000,
 ): ConceptProps[] {
   return csvData.map((row, index) => {
     const id = row.id || row.notation || `concept-${index}`;
-    const uri = row.uri || (vocabularyUri ? 
-      generateConceptUri(id, vocabularyUri, uriStyle, prefix, startCounter + index) : 
-      `#${id}`);
+    const uri =
+      row.uri ||
+      (vocabularyUri
+        ? generateConceptUri(
+            id,
+            vocabularyUri,
+            uriStyle,
+            prefix,
+            startCounter + index,
+          )
+        : `#${id}`);
 
     return {
       id,
@@ -128,7 +147,7 @@ export function parseCSVToConcepts(
       topConceptOf: parseArrayField(row.topConceptOf),
       scheme: row.scheme,
       definition_source: row.definition_source,
-      ...row // Include any additional fields
+      ...row, // Include any additional fields
     };
   });
 }
@@ -136,24 +155,26 @@ export function parseCSVToConcepts(
 /**
  * Parse multilingual field from CSV (e.g., "en:Hello|fr:Bonjour")
  */
-function parseMultilingualField(value: string | undefined): MultilingualText | string | undefined {
+function parseMultilingualField(
+  value: string | undefined,
+): MultilingualText | string | undefined {
   if (!value) return undefined;
-  
+
   // Check if it contains language codes
   if (value.includes('|') && value.includes(':')) {
     const result: MultilingualText = {};
     const parts = value.split('|');
-    
+
     for (const part of parts) {
       const [lang, text] = part.split(':');
       if (lang && text) {
         result[lang.trim()] = text.trim();
       }
     }
-    
+
     return Object.keys(result).length > 0 ? result : value;
   }
-  
+
   return value;
 }
 
@@ -162,27 +183,38 @@ function parseMultilingualField(value: string | undefined): MultilingualText | s
  */
 function parseArrayField(value: string | undefined): string[] {
   if (!value) return [];
-  return value.split('|').map(v => v.trim()).filter(v => v.length > 0);
+  return value
+    .split('|')
+    .map((v) => v.trim())
+    .filter((v) => v.length > 0);
 }
 
 /**
  * Extract available languages from concepts
  */
-export function extractAvailableLanguages(concepts: ConceptProps[]): LanguageConfig[] {
+export function extractAvailableLanguages(
+  concepts: ConceptProps[],
+): LanguageConfig[] {
   const languages = new Set<string>();
-  
-  concepts.forEach(concept => {
-    Object.values(concept).forEach(value => {
-      if (typeof value === 'object' && value !== null && !Array.isArray(value)) {
-        Object.keys(value as MultilingualText).forEach(lang => languages.add(lang));
+
+  concepts.forEach((concept) => {
+    Object.values(concept).forEach((value) => {
+      if (
+        typeof value === 'object' &&
+        value !== null &&
+        !Array.isArray(value)
+      ) {
+        Object.keys(value as MultilingualText).forEach((lang) =>
+          languages.add(lang),
+        );
       }
     });
   });
 
-  return Array.from(languages).map(code => ({
+  return Array.from(languages).map((code) => ({
     code,
     label: getLanguageLabel(code),
-    direction: getLanguageDirection(code)
+    direction: getLanguageDirection(code),
   }));
 }
 
@@ -191,19 +223,19 @@ export function extractAvailableLanguages(concepts: ConceptProps[]): LanguageCon
  */
 function getLanguageLabel(code: string): string {
   const labels: Record<string, string> = {
-    'en': 'English',
-    'fr': 'Français',
-    'de': 'Deutsch',
-    'es': 'Español',
-    'it': 'Italiano',
-    'pt': 'Português',
-    'ru': 'Русский',
-    'zh': '中文',
-    'ja': '日本語',
-    'ar': 'العربية',
-    'hi': 'हिन्दी',
+    en: 'English',
+    fr: 'Français',
+    de: 'Deutsch',
+    es: 'Español',
+    it: 'Italiano',
+    pt: 'Português',
+    ru: 'Русский',
+    zh: '中文',
+    ja: '日本語',
+    ar: 'العربية',
+    hi: 'हिन्दी',
   };
-  
+
   return labels[code] || code.toUpperCase();
 }
 
@@ -223,17 +255,17 @@ export function exportToCSV(concepts: ConceptProps[]): string {
 
   // Get all unique field names
   const fieldNames = new Set<string>();
-  concepts.forEach(concept => {
-    Object.keys(concept).forEach(key => fieldNames.add(key));
+  concepts.forEach((concept) => {
+    Object.keys(concept).forEach((key) => fieldNames.add(key));
   });
 
   const headers = Array.from(fieldNames);
   const csvRows = [headers.join(',')];
 
-  concepts.forEach(concept => {
-    const row = headers.map(header => {
+  concepts.forEach((concept) => {
+    const row = headers.map((header) => {
       const value = concept[header as keyof ConceptProps];
-      
+
       if (Array.isArray(value)) {
         return `"${value.join('|')}"`;
       } else if (typeof value === 'object' && value !== null) {
@@ -243,10 +275,10 @@ export function exportToCSV(concepts: ConceptProps[]): string {
       } else if (typeof value === 'string' && value.includes(',')) {
         return `"${value}"`;
       }
-      
+
       return value || '';
     });
-    
+
     csvRows.push(row.join(','));
   });
 
@@ -257,7 +289,7 @@ export function exportToCSV(concepts: ConceptProps[]): string {
  * Generate table of contents from concepts
  */
 export function generateTOCFromProps(concepts: ConceptProps[]): any[] {
-  return concepts.map(concept => ({
+  return concepts.map((concept) => ({
     id: concept.id || concept.uri,
     label: getLocalizedText(concept.label) || 'Untitled',
     level: 1,
@@ -269,15 +301,15 @@ export function generateTOCFromProps(concepts: ConceptProps[]): any[] {
  */
 export function validateConcept(concept: ConceptProps): string[] {
   const errors: string[] = [];
-  
+
   if (!concept.id && !concept.uri) {
     errors.push('Concept must have either id or uri');
   }
-  
+
   if (!concept.label && !concept.prefLabel) {
     errors.push('Concept must have either label or prefLabel');
   }
-  
+
   return errors;
 }
 
@@ -286,11 +318,11 @@ export function validateConcept(concept: ConceptProps): string[] {
  */
 export function formatFileSize(bytes: number): string {
   if (bytes === 0) return '0 Bytes';
-  
+
   const k = 1024;
   const sizes = ['Bytes', 'KB', 'MB', 'GB'];
   const i = Math.floor(Math.log(bytes) / Math.log(k));
-  
+
   return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
 }
 
@@ -299,10 +331,10 @@ export function formatFileSize(bytes: number): string {
  */
 export function debounce<T extends (...args: any[]) => any>(
   func: T,
-  wait: number
+  wait: number,
 ): (...args: Parameters<T>) => void {
   let timeout: NodeJS.Timeout;
-  
+
   return (...args: Parameters<T>) => {
     clearTimeout(timeout);
     timeout = setTimeout(() => func(...args), wait);
@@ -314,17 +346,21 @@ export function debounce<T extends (...args: any[]) => any>(
  */
 export function deepMerge<T>(target: T, source: Partial<T>): T {
   const result = { ...target };
-  
+
   for (const key in source) {
     if (source[key] !== undefined) {
-      if (typeof source[key] === 'object' && source[key] !== null && !Array.isArray(source[key])) {
-        result[key] = deepMerge(result[key] || {} as any, source[key] as any);
+      if (
+        typeof source[key] === 'object' &&
+        source[key] !== null &&
+        !Array.isArray(source[key])
+      ) {
+        result[key] = deepMerge(result[key] || ({} as any), source[key] as any);
       } else {
         result[key] = source[key] as any;
       }
     }
   }
-  
+
   return result;
 }
 
@@ -355,3 +391,6 @@ export function sanitizeHtml(html: string): string {
 export function generateId(prefix: string = 'id'): string {
   return `${prefix}-${Math.random().toString(36).substr(2, 9)}`;
 }
+
+// Export addBasePath utility
+export { addBasePath } from './addBasePath';

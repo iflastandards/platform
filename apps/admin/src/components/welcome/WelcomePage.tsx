@@ -1,6 +1,7 @@
 'use client';
 
 import React from 'react';
+import Link from 'next/link';
 import {
   Box,
   Card,
@@ -23,7 +24,10 @@ import {
   Warning as WarningIcon,
   Error as ErrorIcon,
 } from '@mui/icons-material';
-import { mockNamespaces, getNamespaceStats } from '@/lib/mock-data/namespaces-extended';
+import {
+  mockNamespaces,
+  getNamespaceStats,
+} from '@/lib/mock-data/namespaces-extended';
 import RequestInviteButton from '@/components/welcome/RequestInviteButton';
 import { SignInButton } from '@clerk/nextjs';
 
@@ -43,44 +47,43 @@ interface NamespaceStatusCardProps {
   };
 }
 
-function NamespaceStatusCard({ 
-  name, 
-  description, 
-  status, 
-  currentVersion, 
+function NamespaceStatusCard({
+  name,
+  description,
+  status,
+  currentVersion,
   lastPublished,
   color,
 }: NamespaceStatusCardProps) {
-  
   const statusConfig = {
-    active: { 
-      color: 'success' as const, 
-      label: 'Active', 
-      icon: <CheckCircleIcon fontSize="small" />
+    active: {
+      color: 'success' as const,
+      label: 'Active',
+      icon: <CheckCircleIcon fontSize="small" />,
     },
-    maintenance: { 
-      color: 'warning' as const, 
-      label: 'Maintenance', 
-      icon: <WarningIcon fontSize="small" />
+    maintenance: {
+      color: 'warning' as const,
+      label: 'Maintenance',
+      icon: <WarningIcon fontSize="small" />,
     },
-    archived: { 
-      color: 'error' as const, 
-      label: 'Archived', 
-      icon: <ErrorIcon fontSize="small" />
+    archived: {
+      color: 'error' as const,
+      label: 'Archived',
+      icon: <ErrorIcon fontSize="small" />,
     },
   };
-  
+
   const config = statusConfig[status];
   const publishedDate = new Date(lastPublished).toLocaleDateString('en-US', {
     year: 'numeric',
     month: 'short',
-    day: 'numeric'
+    day: 'numeric',
   });
-  
+
   return (
-    <Card 
-      elevation={0} 
-      sx={{ 
+    <Card
+      elevation={0}
+      sx={{
         height: '100%',
         border: 1,
         borderColor: 'divider',
@@ -91,17 +94,29 @@ function NamespaceStatusCard({
         transition: 'all 0.2s ease-in-out',
       }}
     >
-      <CardContent sx={{ height: '100%', display: 'flex', flexDirection: 'column' }}>
-        <Box display="flex" justifyContent="space-between" alignItems="flex-start" mb={2}>
+      <CardContent
+        sx={{ height: '100%', display: 'flex', flexDirection: 'column' }}
+      >
+        <Box
+          display="flex"
+          justifyContent="space-between"
+          alignItems="flex-start"
+          mb={2}
+        >
           <Box>
-            <Typography variant="h6" fontWeight="bold" gutterBottom sx={{ color }}>
+            <Typography
+              variant="h6"
+              fontWeight="bold"
+              gutterBottom
+              sx={{ color }}
+            >
               {name}
             </Typography>
             <Typography variant="body2" color="text.secondary" sx={{ mb: 1 }}>
               {description}
             </Typography>
           </Box>
-          <Chip 
+          <Chip
             label={config.label}
             color={config.color}
             size="small"
@@ -109,81 +124,85 @@ function NamespaceStatusCard({
             sx={{ fontWeight: 600 }}
           />
         </Box>
-        
+
         <Box flex={1}>
           <Typography variant="body2" color="text.secondary" gutterBottom>
             Version {currentVersion} • Published {publishedDate}
           </Typography>
 
-          <Stack direction="row" spacing={2} justifyContent="center" flexWrap="wrap" mb={3}>
-            <Button
-              variant="contained"
-              size="large"
-              startIcon={<GitHubIcon />}
-              sx={{
-                bgcolor: 'white',
-                color: 'primary.main',
-                fontWeight: 'bold',
-                px: 4,
-                py: 1.5,
-                fontSize: '1.1rem',
-                '&:hover': { bgcolor: 'grey.100' },
-              }}
+          <Stack
+            direction="row"
+            spacing={2}
+            justifyContent="center"
+            flexWrap="wrap"
+            mb={3}
+          >
+            <Link
               href="/api/auth/signin?demo=true&userId=user-admin-1"
+              passHref
             >
-              Super Admin Demo
-            </Button>
-            <Button
-              variant="outlined"
-              size="large"
-              sx={{
-                color: 'white',
-                borderColor: 'white',
-                fontWeight: 'bold',
-                px: 3,
-                py: 1.5,
-                '&:hover': { bgcolor: 'rgba(255, 255, 255, 0.1)', borderColor: 'white' },
-              }}
-              href="/api/auth/signin?demo=true&userId=user-isbd-rg-admin"
-            >
-              RG Admin Demo
-            </Button>
-            <Button
-              variant="outlined"
-              size="large"
-              sx={{
-                color: 'white',
-                borderColor: 'white',
-                fontWeight: 'bold',
-                px: 3,
-                py: 1.5,
-                '&:hover': { bgcolor: 'rgba(255, 255, 255, 0.1)', borderColor: 'white' },
-              }}
-              href="/api/auth/signin?demo=true&userId=user-isbd-editor"
-            >
-              Member Demo
-            </Button>
-          </Stack>
-
-          {/* Clerk Sign-In and Invitation CTA */}
-          <Stack direction="row" spacing={2} justifyContent="center" mt={2}>
-            <SignInButton mode="modal">
               <Button
-                variant="contained"
-                color="secondary"
+                variant="outlined"
                 size="large"
-                startIcon={<GitHubIcon />}
                 sx={{
+                  color: 'white',
+                  borderColor: 'white',
                   fontWeight: 'bold',
-                  px: 4,
+                  px: 3,
                   py: 1.5,
-                  fontSize: '1.1rem',
+                  '&:hover': {
+                    bgcolor: 'rgba(255, 255, 255, 0.1)',
+                    borderColor: 'white',
+                  },
                 }}
               >
-                Sign In with GitHub
+                Admin Demo
               </Button>
-            </SignInButton>
-            <RequestInviteButton />
+            </Link>
+            <Link
+              href="/api/auth/signin?demo=true&userId=user-isbd-rg-admin"
+              passHref
+            >
+              <Button
+                variant="outlined"
+                size="large"
+                sx={{
+                  color: 'white',
+                  borderColor: 'white',
+                  fontWeight: 'bold',
+                  px: 3,
+                  py: 1.5,
+                  '&:hover': {
+                    bgcolor: 'rgba(255, 255, 255, 0.1)',
+                    borderColor: 'white',
+                  },
+                }}
+              >
+                RG Admin Demo
+              </Button>
+            </Link>
+            <Link
+              href="/api/auth/signin?demo=true&userId=user-isbd-editor"
+              passHref
+            >
+              <Button
+                variant="outlined"
+                size="large"
+                sx={{
+                  color: 'white',
+                  borderColor: 'white',
+                  fontWeight: 'bold',
+                  px: 3,
+                  py: 1.5,
+                  '&:hover': {
+                    bgcolor: 'rgba(255, 255, 255, 0.1)',
+                    borderColor: 'white',
+                  },
+                }}
+              >
+                Member Demo
+              </Button>
+            </Link>
           </Stack>
         </Box>
       </CardContent>
@@ -194,35 +213,39 @@ function NamespaceStatusCard({
 export default function WelcomePage() {
   const theme = useTheme();
   const stats = getNamespaceStats();
-  
+
   const features = [
     {
       icon: <LanguageIcon />,
       title: 'Multilingual Standards',
-      description: 'Manage and maintain IFLA standards across multiple languages with collaborative translation workflows.',
+      description:
+        'Manage and maintain IFLA standards across multiple languages with collaborative translation workflows.',
     },
     {
       icon: <GitHubIcon />,
       title: 'GitHub Integration',
-      description: 'Seamless integration with GitHub for version control, issue tracking, and collaborative development.',
+      description:
+        'Seamless integration with GitHub for version control, issue tracking, and collaborative development.',
     },
     {
       icon: <SecurityIcon />,
       title: 'Role-Based Access',
-      description: 'Secure, invitation-only access with granular permissions based on your role and project assignments.',
+      description:
+        'Secure, invitation-only access with granular permissions based on your role and project assignments.',
     },
     {
       icon: <PeopleIcon />,
       title: 'Team Collaboration',
-      description: 'Work together with review groups, editors, translators, and contributors in structured workflows.',
+      description:
+        'Work together with review groups, editors, translators, and contributors in structured workflows.',
     },
   ];
 
   return (
     <Box sx={{ bgcolor: 'background.default', minHeight: '100vh' }}>
       {/* Hero Section */}
-      <Box 
-        sx={{ 
+      <Box
+        sx={{
           bgcolor: 'primary.main',
           color: 'white',
           py: 8,
@@ -235,13 +258,14 @@ export default function WelcomePage() {
               IFLA Standards Management Toolkit
             </Typography>
             <Typography variant="h5" sx={{ mb: 4, opacity: 0.9 }}>
-              Collaborative platform for developing, maintaining, and publishing international library standards
+              Collaborative platform for developing, maintaining, and publishing
+              international library standards
             </Typography>
-            
-            <Alert 
-              severity="info" 
-              sx={{ 
-                mb: 4, 
+
+            <Alert
+              severity="info"
+              sx={{
+                mb: 4,
                 bgcolor: 'rgba(255, 255, 255, 0.95)',
                 color: 'grey.800',
                 border: 1,
@@ -258,66 +282,105 @@ export default function WelcomePage() {
                 🔒 Access by invitation only
               </Typography>
               <Typography variant="body2" sx={{ mt: 1 }}>
-                This platform is exclusively for IFLA review group members, editors, translators, and authorized contributors.
+                This platform is exclusively for IFLA review group members,
+                editors, translators, and authorized contributors.
               </Typography>
             </Alert>
-            
-            <Stack direction="row" spacing={2} justifyContent="center" flexWrap="wrap">
-              <Button
-                variant="contained"
-                size="large"
-                startIcon={<GitHubIcon />}
-                sx={{ 
-                  bgcolor: 'white',
-                  color: 'primary.main',
-                  fontWeight: 'bold',
-                  px: 4,
-                  py: 1.5,
-                  fontSize: '1.1rem',
-                  '&:hover': {
-                    bgcolor: 'grey.100',
-                  },
-                }}
+
+            <Stack
+              direction="row"
+              spacing={2}
+              justifyContent="center"
+              flexWrap="wrap"
+            >
+              <Link
                 href="/api/auth/signin?demo=true&userId=user-admin-1"
+                passHref
               >
-                Super Admin Demo
-              </Button>
-              <Button
-                variant="outlined"
-                size="large"
-                sx={{ 
-                  color: 'white',
-                  borderColor: 'white',
-                  fontWeight: 'bold',
-                  px: 3,
-                  py: 1.5,
-                  '&:hover': {
-                    bgcolor: 'rgba(255, 255, 255, 0.1)',
-                    borderColor: 'white',
-                  },
-                }}
+                <Button
+                  variant="contained"
+                  size="large"
+                  startIcon={<GitHubIcon />}
+                  sx={{
+                    bgcolor: 'white',
+                    color: 'primary.main',
+                    fontWeight: 'bold',
+                    px: 4,
+                    py: 1.5,
+                    fontSize: '1.1rem',
+                    '&:hover': {
+                      bgcolor: 'grey.100',
+                    },
+                  }}
+                >
+                  Super Admin Demo
+                </Button>
+              </Link>
+              <Link
                 href="/api/auth/signin?demo=true&userId=user-isbd-rg-admin"
+                passHref
               >
-                RG Admin Demo
-              </Button>
-              <Button
-                variant="outlined"
-                size="large"
-                sx={{ 
-                  color: 'white',
-                  borderColor: 'white',
-                  fontWeight: 'bold',
-                  px: 3,
-                  py: 1.5,
-                  '&:hover': {
-                    bgcolor: 'rgba(255, 255, 255, 0.1)',
+                <Button
+                  variant="outlined"
+                  size="large"
+                  sx={{
+                    color: 'white',
                     borderColor: 'white',
-                  },
-                }}
+                    fontWeight: 'bold',
+                    px: 3,
+                    py: 1.5,
+                    '&:hover': {
+                      bgcolor: 'rgba(255, 255, 255, 0.1)',
+                      borderColor: 'white',
+                    },
+                  }}
+                >
+                  RG Admin Demo
+                </Button>
+              </Link>
+              <Link
                 href="/api/auth/signin?demo=true&userId=user-isbd-editor"
+                passHref
               >
-                Member Demo
-              </Button>
+                <Button
+                  variant="outlined"
+                  size="large"
+                  sx={{
+                    color: 'white',
+                    borderColor: 'white',
+                    fontWeight: 'bold',
+                    px: 3,
+                    py: 1.5,
+                    '&:hover': {
+                      bgcolor: 'rgba(255, 255, 255, 0.1)',
+                      borderColor: 'white',
+                    },
+                  }}
+                >
+                  Member Demo
+                </Button>
+              </Link>
+            </Stack>
+
+            {/* Clerk Sign-In and Invitation CTA */}
+            <Stack direction="row" spacing={2} justifyContent="center" mt={4}>
+              <SignInButton mode="modal">
+                <Button
+                  variant="contained"
+                  color="secondary"
+                  size="large"
+                  startIcon={<GitHubIcon />}
+                  sx={{
+                    fontWeight: 'bold',
+                    px: 4,
+                    py: 1.5,
+                    fontSize: '1.1rem',
+                  }}
+                >
+                  Sign In with GitHub
+                </Button>
+              </SignInButton>
+              <RequestInviteButton />
             </Stack>
           </Box>
         </Container>
@@ -398,11 +461,14 @@ export default function WelcomePage() {
         <Grid container spacing={4} sx={{ mb: 6 }}>
           {features.map((feature, index) => (
             <Grid size={{ xs: 12, md: 6 }} key={index}>
-              <Card elevation={0} sx={{ height: '100%', border: 1, borderColor: 'divider' }}>
+              <Card
+                elevation={0}
+                sx={{ height: '100%', border: 1, borderColor: 'divider' }}
+              >
                 <CardContent sx={{ p: 3 }}>
                   <Box display="flex" alignItems="flex-start" gap={2}>
-                    <Box 
-                      sx={{ 
+                    <Box
+                      sx={{
                         p: 1.5,
                         borderRadius: 2,
                         bgcolor: 'primary.main',
@@ -447,8 +513,8 @@ export default function WelcomePage() {
       </Container>
 
       {/* Footer */}
-      <Box 
-        sx={{ 
+      <Box
+        sx={{
           bgcolor: 'grey.50',
           borderTop: 1,
           borderColor: 'divider',
@@ -459,7 +525,8 @@ export default function WelcomePage() {
         <Container maxWidth="lg">
           <Box textAlign="center">
             <Typography variant="body2" color="text.secondary">
-              © 2024 International Federation of Library Associations and Institutions (IFLA)
+              © 2024 International Federation of Library Associations and
+              Institutions (IFLA)
             </Typography>
             <Typography variant="body2" color="text.secondary" sx={{ mt: 1 }}>
               Standards Management Toolkit • Powered by modern web technologies

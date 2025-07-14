@@ -9,21 +9,41 @@ When using a `basePath` (e.g., `/admin`) in your monorepo, especially with an LL
   - Always provide the path as if the app is deployed at the root (e.g., `/dashboard`, not `/admin/dashboard`).
   - Next.js will automatically prepend the `basePath` to all internal links when rendering[1][2][3].
 
-### 2. **API Calls: Always Reference the Base Path Explicitly**
+### 2. **API Calls: Use Custom `addBasePath` Utility**
 
-- **When making API calls from the client:**
-  - Use relative paths (e.g., `/api/route`) so that the browser includes the `basePath` automatically.
-  - Never hardcode the `basePath` in the fetch URL; let the browser resolve it.
+- **For all API calls (client and server):**
+  - Use our custom `addBasePath` utility function: `fetch(addBasePath('/api/route'))`
+  - Never use raw relative paths or manually prepend basePath
+  - The utility automatically handles environment detection and basePath resolution
 
-- **When making API calls from the server (e.g., getServerSideProps, server components):**
-  - You must prepend the `basePath` to the API route (e.g., `/admin/api/route`), as the server does not know about the browser's current path context[4][5].
-  - Consider centralizing the base path in a utility constant to avoid duplication and mistakes.
+- **Import the utility:**
+  ```javascript
+  import { addBasePath } from '@ifla/theme/utils';
+  ```
 
-### 3. **Static Assets and Images**
+### 3. **Static Assets and Images: Use Custom `addBasePath` Utility**
 
 - **For static assets (public folder) and images:**
-  - Manually prepend the `basePath` to asset URLs when using `<img>` or Next.js `<Image>` components (e.g., `/admin/logo.png` if your basePath is `/admin`)[1][6].
-  - Do not assume Next.js will add the basePath for static assets.
+  - Use our custom `addBasePath` utility function for all static assets
+  - Never manually prepend basePath or use Next.js internal functions
+  - The utility automatically handles environment detection (local/preview/production) using `DOCS_ENV` and `window.location`
+
+- **Examples:**
+  ```javascript
+  import { addBasePath } from '@ifla/theme/utils';
+  
+  // Images
+  <img src={addBasePath('/logo.png')} />
+  <Image src={addBasePath('/images/hero.jpg')} />
+  
+  // Favicon in layout
+  export const metadata = {
+    icons: { icon: addBasePath('/favicon.ico') }
+  };
+  
+  // API calls
+  fetch(addBasePath('/api/request-invite'))
+  ```
 
 ### 4. **Middleware and Matchers**
 
@@ -46,12 +66,21 @@ When using a `basePath` (e.g., `/admin`) in your monorepo, especially with an LL
 | Scenario             | Do                                                           | Don’t                                                |
 | -------------------- | ------------------------------------------------------------ | ---------------------------------------------------- |
 | Page Links           | `<Link href="/dashboard">`                                   | `<a href="/admin/dashboard">`                        |
-| API Calls (Client)   | `fetch("/api/route")`                                        | `fetch("/admin/api/route")`                          |
-| API Calls (Server)   | `fetch(\`\${basePath}/api/route\`)`              | `fetch("/api/route")` (will miss basePath) |                                                      |
-| Static Assets/Images | `<img src="/admin/logo.png" />`                              | `<img src="/logo.png" />` (will break with basePath) |
+| API Calls            | `fetch(addBasePath('/api/route'))`                           | `fetch("/admin/api/route")` or `fetch("/api/route")` |
+| Static Assets/Images | `<img src={addBasePath('/logo.png')} />`                     | `<img src="/admin/logo.png" />` (manual prepending) |
 | Middleware Matchers  | `matcher: "/dashboard/:path*"`                               | `matcher: "/admin/dashboard/:path*"`                 |
 
-### 8. **Special Cases**
+### 8. **Custom `addBasePath` Utility Implementation**
+
+Our custom `addBasePath` utility provides environment-aware basePath handling:
+
+- **Server-side**: Uses `DOCS_ENV` environment variable for environment detection
+- **Client-side**: Uses `window.location` hostname detection  
+- **Environments supported**: `local` (`/admin`), `preview` (`/platform/admin`), `production` (`/admin`)
+- **Location**: `packages/theme/src/utils/addBasePath.ts`
+- **Benefits**: No dependency on Next.js internals, environment-aware, integrates with existing `ADMIN_PORTAL_CONFIG`
+
+### 9. **Special Cases**
 
 - **If using custom wrappers or utilities for links or fetch:** Ensure they are basePath-aware and follow the above rules.
 - **For NextAuth and third-party integrations:** Set environment variables like `NEXTAUTH_URL` to include the basePath if needed[8].
