@@ -16,14 +16,28 @@
         "name": "next"
       }
     ],
-    "types": ["jest", "node", "vitest/globals"],
+    "types": [
+      "jest",
+      "node",
+      "vitest/globals"
+    ],
     "baseUrl": ".",
     "paths": {
-      "@/*": ["./src/*"],
-      "@ifla/theme": ["../../packages/theme/src/index.ts"],
-      "@ifla/theme/*": ["../../packages/theme/src/*"],
-      "@ifla/theme/config": ["../../packages/theme/src/config/index.ts"],
-      "@ifla/theme/config/*": ["../../packages/theme/src/config/*"]
+      "@/*": [
+        "./src/*"
+      ],
+      "@ifla/theme": [
+        "../../packages/theme/src/index.ts"
+      ],
+      "@ifla/theme/*": [
+        "../../packages/theme/src/*"
+      ],
+      "@ifla/theme/config": [
+        "../../packages/theme/src/config/index.ts"
+      ],
+      "@ifla/theme/config/*": [
+        "../../packages/theme/src/config/*"
+      ]
     }
   },
   "include": [
@@ -32,10 +46,10 @@
     "**/*.ts",
     "**/*.tsx",
     "../../apps/admin/.next/types/**/*.ts",
-    "../../dist/apps/admin/.next/types/**/*.ts",
-    "next-env.d.ts",
+    ".next/types/**/*.ts",
     "next-auth-types.d.ts",
-    ".next/types/**/*.ts"
+    "next-env.d.ts",
+    "../../dist/apps/admin/.next/types/**/*.ts"
   ],
   "exclude": [
     "node_modules",
