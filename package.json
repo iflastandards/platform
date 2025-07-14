@@ -64,6 +64,7 @@
     "detect:language-mismatches-local": "node scripts/detect-language-mismatches-local.mjs",
     "detect:language-mismatches-skos": "node scripts/detect-language-mismatches-skos.mjs",
     "dev:admin": "nx dev admin --turbopack",
+    "dev:admin:debug": "NODE_OPTIONS='--inspect' nx dev admin",
     "docs:build": "docusaurus build",
     "docs:release": "node scripts/release-docs.js",
     "format:mdx": "remark --rc-path .remarkrc.js \"docs/**/*.{md,mdx}\" --output",
