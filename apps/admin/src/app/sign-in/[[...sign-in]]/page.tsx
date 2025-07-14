@@ -4,9 +4,8 @@ export default function SignInPage() {
   return (
     <div className="min-h-screen flex items-center justify-center bg-gray-50">
       <SignIn
-        path="/sign-in"
+        path={process.env.NEXT_PUBLIC_CLERK_SIGN_IN_URL || "/sign-in"}
         routing="path"
-        forceRedirectUrl="/dashboard"
         appearance={{
           baseTheme: undefined,
           elements: {

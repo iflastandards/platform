@@ -16,7 +16,7 @@ export const mockApiResponses = {
       ? createMockResponse(site)
       : createMockError('Site not found', 404);
   },
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+   
   updateSite: (siteKey: string, data: any) => {
     const site = mockSiteData[siteKey as keyof typeof mockSiteData];
     return site
@@ -150,7 +150,7 @@ export const cleanupFetchMock = () => {
 };
 
 // Mock specific API calls
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
+ 
 export const mockApiCall = (endpoint: string, response: any, status = 200) => {
   global.fetch = vi
     .fn()

@@ -2,6 +2,7 @@ import { currentUser } from '@clerk/nextjs/server';
 import { redirect } from 'next/navigation';
 import AdminDashboard from '../AdminDashboard';
 import { mockUsers } from '@/lib/mock-data/auth';
+import { addBasePath } from '@ifla/theme/utils';
 
 // Force dynamic rendering
 export const dynamic = 'force-dynamic';
@@ -38,7 +39,7 @@ export default async function SuperAdminPage({
   // Production mode - use real auth
   const user = await currentUser();
   if (!user) {
-    redirect(`/sign-in?redirect_url=${encodeURIComponent('/dashboard/admin')}`);
+    redirect(addBasePath(`/sign-in?redirect_url=${encodeURIComponent(addBasePath('/dashboard/admin'))}`));
   }
 
   // Check if user has admin role

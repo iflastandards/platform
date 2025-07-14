@@ -5,6 +5,7 @@ import Link from 'next/link';
 import { UserButton } from '@clerk/nextjs';
 import { usePathname } from 'next/navigation';
 import { getPortalUrl } from '@/lib/get-portal-url';
+import { addBasePath } from '@ifla/theme/utils';
 import './docusaurus-navbar.css';
 
 interface DocusaurusNavbarProps {
@@ -38,7 +39,7 @@ export function DocusaurusNavbar({
             aria-label="IFLA Admin Portal"
           >
             <img
-              src="/admin/img/logo-ifla_black.png"
+              src={addBasePath("/img/logo-ifla_black.png")}
               alt="IFLA"
               className="docusaurus-navbar__logo"
             />

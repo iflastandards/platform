@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { currentUser } from '@clerk/nextjs/server';
 import { getDefaultDashboardRoute } from '@/lib/auth-routing';
+import { addBasePath } from '@ifla/theme/utils';
 
 export async function GET(request: NextRequest) {
   const { searchParams } = new URL(request.url);
@@ -40,6 +41,6 @@ export async function GET(request: NextRequest) {
   }
 
   // Redirect to Clerk's sign-in page with proper callback
-  const signInUrl = `/sign-in?redirect_url=${encodeURIComponent('/api/auth/callback')}`;
+  const signInUrl = addBasePath(`/sign-in?redirect_url=${encodeURIComponent(addBasePath('/api/auth/callback'))}`);
   return NextResponse.redirect(new URL(signInUrl, request.url));
 }

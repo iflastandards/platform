@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { currentUser } from '@clerk/nextjs/server';
 import { getDefaultDashboardRoute } from '@/lib/auth-routing';
 import { addBasePath } from '@ifla/theme/utils';
+import { checkAndSyncGitHubData } from '@/lib/github-integration';
 
 export async function GET(request: NextRequest) {
   // Get the authenticated user
@@ -19,23 +20,38 @@ export async function GET(request: NextRequest) {
   let detectedRole: 'member' | 'staff' | 'admin' = 'member';
 
   if (githubAccount) {
-    // For now, use a simple username-based check
-    // TODO: Implement proper GitHub API integration when Clerk token access is available
-    const githubUsername = githubAccount.username;
-    const adminUsernames = ['jonphipps']; // Add known admin usernames
+    // Sync GitHub data and check organization ownership
+    try {
+      await checkAndSyncGitHubData(user.id);
+      
+      // Re-fetch user to get updated metadata
+      const { currentUser: refreshUser } = await import('@clerk/nextjs/server');
+      const updatedUser = await refreshUser();
+      
+      if (updatedUser?.publicMetadata?.systemRole === 'superadmin') {
+        detectedRole = 'admin';
+        console.log('User granted superadmin role based on GitHub org ownership');
+      }
+    } catch (error) {
+      console.error('Error syncing GitHub data:', error);
+      // Fall back to username-based check
+      const githubUsername = githubAccount.username;
+      const adminUsernames = ['jonphipps']; // Fallback for known admins
 
-    console.log('GitHub account detected:', {
-      username: githubUsername,
-      emailAddress: githubAccount.emailAddress,
-    });
+      console.log('GitHub account detected:', {
+        username: githubUsername,
+        emailAddress: githubAccount.emailAddress,
+      });
 
-    if (adminUsernames.includes(githubUsername || '')) {
-      detectedRole = 'admin';
-      console.log('User granted admin role based on username:', githubUsername);
+      if (adminUsernames.includes(githubUsername || '')) {
+        detectedRole = 'admin';
+        console.log('User granted admin role based on username (fallback):', githubUsername);
+      }
     }
   }
 
   const publicMetadata = user.publicMetadata as {
+    systemRole?: 'superadmin';
     iflaRole?: 'member' | 'staff' | 'admin';
     reviewGroupAdmin?: string[];
     externalContributor?: boolean;
