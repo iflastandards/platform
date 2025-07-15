@@ -19,9 +19,12 @@ export default function HomePage() {
     }
   }, [isSignedIn, user, router]);
 
+  // When user signs out, they are redirected here and see the welcome page
+  // The navbar is only shown in authenticated routes under (authenticated)/
   if (!isSignedIn) {
     return <WelcomePage />;
   }
 
+  // During sign-in process, show nothing while redirecting
   return null;
 }

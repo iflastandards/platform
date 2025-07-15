@@ -1,7 +1,7 @@
 import { Box, Container } from '@mui/material';
 import Navbar from '@/components/layout/Navbar';
 
-export default function DashboardLayout({
+export default function AuthenticatedLayout({
   children,
 }: {
   children: React.ReactNode;

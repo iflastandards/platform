@@ -290,7 +290,7 @@ export default function Navbar() {
             </IconButton>
 
             <UserButton 
-              afterSignOutUrl={getAdminPortalConfigAuto().url}
+              afterSignOutUrl="/"
               appearance={{
                 elements: {
                   userButtonAvatarBox: "w-8 h-8",

@@ -1,6 +1,6 @@
 import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest';
 import { render, screen, fireEvent, waitFor } from '../utils/test-utils';
-import SiteManagementClient from '../../app/dashboard/[siteKey]/SiteManagementClient';
+import SiteManagementClient from '../../app/(authenticated)/dashboard/[siteKey]/SiteManagementClient';
 import { setupFetchMock, cleanupFetchMock } from '../mocks/api';
 
 vi.mock('next/navigation', () => ({
