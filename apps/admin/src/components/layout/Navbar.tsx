@@ -289,7 +289,7 @@ export default function Navbar() {
             </IconButton>
 
             <UserButton 
-              afterSignOutUrl="/admin"
+              afterSignOutUrl="/"
               appearance={{
                 elements: {
                   userButtonAvatarBox: "w-8 h-8",

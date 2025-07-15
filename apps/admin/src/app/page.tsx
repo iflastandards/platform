@@ -11,11 +11,8 @@ export default function HomePage() {
 
   useEffect(() => {
     if (isSignedIn) {
-      // Role-based redirect logic
-      const role = user?.publicMetadata?.role;
-      if (role === 'superadmin') router.replace('/dashboard');
-      else if (role === 'editor') router.replace('/editor/dashboard');
-      else router.replace('/dashboard');
+      // All users go to /dashboard which will handle role-based routing
+      router.replace('/dashboard');
     }
   }, [isSignedIn, user, router]);
 

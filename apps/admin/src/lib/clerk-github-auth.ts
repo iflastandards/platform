@@ -133,6 +133,19 @@ export function getDashboardRoute(user: AppUser): string {
     return '/dashboard/rg';
   }
   
+  // Check for project-specific roles
+  const projectRoles = Object.values(user.projects);
+  
+  // Users with lead/editor roles get editor dashboard
+  if (projectRoles.some(p => p.role === 'lead' || p.role === 'editor')) {
+    return '/dashboard/editor';
+  }
+  
+  // Users with reviewer/translator roles get author dashboard
+  if (projectRoles.some(p => p.role === 'reviewer' || p.role === 'translator')) {
+    return '/dashboard/author';
+  }
+  
   // Users with namespace access go to personal dashboard
   if (user.accessibleNamespaces.length > 0) {
     return '/dashboard';

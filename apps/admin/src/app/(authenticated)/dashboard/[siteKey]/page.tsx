@@ -1,34 +1,70 @@
 import { getCerbosUser } from '@/lib/clerk-cerbos';
 import { redirect } from 'next/navigation';
-import SiteManagementClient from './SiteManagementClient';
+import NamespaceManagementClient from './NamespaceManagementClient';
 import { UserButton } from '@clerk/nextjs';
 import { getPortalUrl } from '@/lib/get-portal-url';
+import { mockNamespaces } from '@/lib/mock-data/namespaces-extended';
 
 // Force dynamic rendering to avoid static generation issues with auth
 export const dynamic = 'force-dynamic';
 
-// Define the valid site keys and their display names
-const VALID_SITES = {
-  portal: { title: 'IFLA Portal', code: 'PORTAL' },
-  ISBDM: { title: 'ISBD Manifestation', code: 'ISBDM' },
-  LRM: { title: 'Library Reference Model', code: 'LRM' },
-  FRBR: {
+// Define the valid namespace keys and their display names
+// Note: Each 'site' is actually a namespace, except portal and newtest which are special cases
+interface NamespaceConfig {
+  title: string;
+  code: string;
+  description?: string;
+  isSpecialCase?: boolean;
+}
+
+const VALID_NAMESPACES: Record<string, NamespaceConfig> = {
+  // Special cases - not standard namespaces
+  portal: { 
+    title: 'IFLA Portal', 
+    code: 'PORTAL',
+    isSpecialCase: true,
+    description: 'Main IFLA standards platform - requires superadmin access'
+  },
+  newtest: { 
+    title: 'Test Environment', 
+    code: 'NEWTEST',
+    isSpecialCase: true,
+    description: 'Development and testing environment - requires superadmin access'
+  },
+  // Standard namespaces
+  isbdm: { 
+    title: 'ISBD Manifestation', 
+    code: 'ISBDM',
+    description: mockNamespaces['isbdm']?.description
+  },
+  lrm: { 
+    title: 'Library Reference Model', 
+    code: 'LRM',
+    description: mockNamespaces['lrm']?.description
+  },
+  frbr: {
     title: 'Functional Requirements for Bibliographic Records',
     code: 'FRBR',
+    description: mockNamespaces['frbr']?.description
   },
   isbd: {
     title: 'International Standard Bibliographic Description',
     code: 'ISBD',
+    description: mockNamespaces['isbd']?.description
   },
   muldicat: {
     title: 'Multilingual Dictionary of Cataloguing Terms',
     code: 'MULDICAT',
+    description: mockNamespaces['muldicat']?.description
   },
-  unimarc: { title: 'UNIMARC Format', code: 'UNIMARC' },
-  newtest: { title: 'New Test Site', code: 'NEWTEST' },
-} as const;
+  unimarc: { 
+    title: 'UNIMARC Format', 
+    code: 'UNIMARC',
+    description: mockNamespaces['unimarc']?.description
+  },
+};
 
-type SiteKey = keyof typeof VALID_SITES;
+type NamespaceKey = keyof typeof VALID_NAMESPACES;
 
 interface PageProps {
   params: Promise<{
@@ -36,35 +72,41 @@ interface PageProps {
   }>;
 }
 
-// Security function to check if user is authorized for the site
-function isAuthorizedForSite(
+// Security function to check if user is authorized for the namespace
+function isAuthorizedForNamespace(
   userRoles: string[] | undefined,
-  siteKey: string,
+  namespaceKey: string,
+  isSpecialCase: boolean,
 ): boolean {
   // If no roles, user is not authorized
   if (!userRoles || userRoles.length === 0) {
     return false;
   }
 
-  // Check for admin roles that can access all sites
-  const adminRoles = ['superadmin', 'ifla-admin', 'standards-admin', 'site-admin'];
+  // For special cases (portal/newtest), only superadmins have access
+  if (isSpecialCase) {
+    return userRoles.includes('superadmin');
+  }
+
+  // Check for admin roles that can access all namespaces
+  const adminRoles = ['superadmin', 'ifla-admin', 'standards-admin'];
   if (userRoles.some((role) => adminRoles.includes(role))) {
     return true;
   }
 
-  // Check for site-specific roles
-  const siteSpecificRoles = [
-    `${siteKey.toLowerCase()}-admin`,
-    `${siteKey.toLowerCase()}-editor`,
-    `${siteKey.toLowerCase()}-contributor`,
+  // Check for namespace-specific roles
+  const namespaceSpecificRoles = [
+    `${namespaceKey.toLowerCase()}-admin`,
+    `${namespaceKey.toLowerCase()}-editor`,
+    `${namespaceKey.toLowerCase()}-contributor`,
   ];
 
   return userRoles.some((role) =>
-    siteSpecificRoles.includes(role.toLowerCase()),
+    namespaceSpecificRoles.includes(role.toLowerCase()),
   );
 }
 
-export default async function SiteManagementPage({ params }: PageProps) {
+export default async function NamespaceManagementPage({ params }: PageProps) {
   // Get the user from Clerk via Cerbos bridge
   const user = await getCerbosUser();
 
@@ -74,19 +116,24 @@ export default async function SiteManagementPage({ params }: PageProps) {
   }
 
   // Await the params in Next.js 15
-  const { siteKey: rawSiteKey } = await params;
+  const { siteKey: rawNamespaceKey } = await params;
 
-  // Validate the site key
-  const siteKey = rawSiteKey as SiteKey;
-  if (!VALID_SITES[siteKey]) {
+  // Validate the namespace key (still using siteKey in URL for backwards compatibility)
+  const namespaceKey = rawNamespaceKey.toLowerCase() as NamespaceKey;
+  if (!VALID_NAMESPACES[namespaceKey]) {
     redirect('/dashboard');
   }
 
+  // Get namespace configuration
+  const namespaceConfig = VALID_NAMESPACES[namespaceKey];
+  const isSpecialCase = namespaceConfig.isSpecialCase || false;
+
   // Get user roles
   const userRoles = user.roles;
+  const isSuperAdmin = userRoles?.includes('superadmin') || false;
 
-  // Check authorization for this site
-  if (!isAuthorizedForSite(userRoles, siteKey)) {
+  // Check authorization for this namespace
+  if (!isAuthorizedForNamespace(userRoles, namespaceKey, isSpecialCase)) {
     return (
       <div className="min-h-screen bg-gray-50 dark:bg-gray-900 flex items-center justify-center">
         <div className="max-w-md mx-auto text-center">
@@ -110,8 +157,17 @@ export default async function SiteManagementPage({ params }: PageProps) {
               Access Denied
             </h1>
             <p className="text-gray-600 dark:text-gray-400 mb-6">
-              You don't have permission to manage the{' '}
-              {VALID_SITES[siteKey].title} site.
+              {isSpecialCase ? (
+                <>
+                  You don't have permission to manage {namespaceConfig.title}. 
+                  This is a special system area that requires superadmin access.
+                </>
+              ) : (
+                <>
+                  You don't have permission to manage the{' '}
+                  {namespaceConfig.title} namespace.
+                </>
+              )}
             </p>
             <div className="bg-gray-50 dark:bg-gray-700 rounded-lg p-4 mb-6">
               <p className="text-sm text-gray-600 dark:text-gray-400">
@@ -150,32 +206,36 @@ export default async function SiteManagementPage({ params }: PageProps) {
     );
   }
 
-  const siteConfig = VALID_SITES[siteKey];
-
   return (
-    <SiteManagementClient
-      siteKey={siteKey}
-      siteTitle={siteConfig.title}
-      siteCode={siteConfig.code}
+    <NamespaceManagementClient
+      namespaceKey={namespaceKey}
+      namespaceTitle={namespaceConfig.title}
+      namespaceCode={namespaceConfig.code}
+      namespaceDescription={namespaceConfig.description}
       githubRepo="iflastandards/standards-dev"
+      isSpecialCase={isSpecialCase}
+      isSuperAdmin={isSuperAdmin}
     />
   );
 }
 
 // Generate metadata for the page
 export async function generateMetadata({ params }: PageProps) {
-  const { siteKey: rawSiteKey } = await params;
-  const siteKey = rawSiteKey as SiteKey;
-  const siteConfig = VALID_SITES[siteKey];
+  const { siteKey: rawNamespaceKey } = await params;
+  const namespaceKey = rawNamespaceKey.toLowerCase() as NamespaceKey;
+  const namespaceConfig = VALID_NAMESPACES[namespaceKey];
 
-  if (!siteConfig) {
+  if (!namespaceConfig) {
     return {
-      title: 'Site Not Found',
+      title: 'Namespace Not Found',
     };
   }
 
+  const titleSuffix = namespaceConfig.isSpecialCase ? 'System' : 'Namespace';
+
   return {
-    title: `${siteConfig.title} Management | IFLA Admin Portal`,
-    description: `Manage content, workflows, and team collaboration for the ${siteConfig.title} standard.`,
+    title: `${namespaceConfig.title} ${titleSuffix} Management | IFLA Admin Portal`,
+    description: namespaceConfig.description || 
+      `Manage content, workflows, and team collaboration for the ${namespaceConfig.title} namespace.`,
   };
 }

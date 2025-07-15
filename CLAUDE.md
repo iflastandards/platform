@@ -2,6 +2,34 @@
 
 This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
 
+## 🚨 CRITICAL RULES - NEVER FORGET THESE 🚨
+
+### Next.js Coding Standards (ALWAYS CHECK THESE FIRST)
+1. **Internal Links**: Always use `<Link href="/dashboard">` - NEVER `<a href="/admin/dashboard">`
+2. **API Calls**: Always use `fetch(addBasePath('/api/route'))` - NEVER hardcode basePath
+3. **Static Assets**: Always use `addBasePath('/logo.png')` - NEVER manual prepending
+4. **Write paths as if app is at root** - Next.js adds basePath automatically
+5. **Import utility**: `import { addBasePath } from '@ifla/theme/utils';`
+
+### Testing Strategy (MANDATORY FOR ALL TESTS)
+1. **Pre-commit target**: < 60 seconds (use `nx affected`)
+2. **Use 5-level strategy**: Selective → Comprehensive → Pre-commit → Pre-push → CI
+3. **Always use `nx affected`** for development testing
+4. **Parallel execution**: `--parallel=3` for performance
+5. **Speed targets**: Selective <30s, Pre-commit <60s, Pre-push <180s
+
+### Before ANY code/test work:
+- [ ] Check if basePath applies (use root-relative paths like `/dashboard`)
+- [ ] Choose appropriate test level (usually selective/affected)
+- [ ] Verify API calls use `addBasePath()` utility
+- [ ] Use `nx affected` instead of running everything
+
+### Critical File References
+- **Full Testing Strategy**: `@developer_notes/TESTING_STRATEGY.md`
+- **Complete Next.js Standards**: `@developer_notes/NEXTJS_CODING_STANDARDS.MD`
+
+---
+
 ## Core Development Workflows
 
 ### Essential Commands

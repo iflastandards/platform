@@ -19,11 +19,13 @@ MDX (source of truth) → Export to Sheets → Collaborative Editing → Import 
 ## Export Phase
 
 ### 1. Project Setup
+- The primary actor is Project **Editor**
 - Editor selects element sets OR value vocabularies (never mixed in same sheet)
 - Chooses languages to include
 - Can add new language columns (with optional AI pre-translation)
 - Can add new elements or reorder DCTAP columns
 - Cannot edit/delete existing DCTAP rows (preserves RDF integrity)
+- The DCTAP as altered by the 
 
 ### 2. Sheet Creation
 - System creates sheet in IFLA's Google Drive

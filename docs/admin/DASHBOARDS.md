@@ -4,6 +4,17 @@
 
 The IFLA Standards Admin App features a sophisticated, role-based dashboard system designed to provide different levels of access and functionality based on user permissions. This document details the architecture, features, and implementation of each dashboard type.
 
+### Key Concept: Sites as Namespaces
+
+**Important**: In our system, each site represents a namespace. All 'site' functions are actually namespace-related operations. This means:
+- Site management = Namespace management
+- Site roles = Namespace-specific permissions
+- Site dashboards = Namespace dashboards
+
+**Special Cases**: 
+- **Portal**: Not a standard namespace - it's the main IFLA standards portal managed exclusively by superadmins
+- **Newtest**: Not a standard namespace - it's a development/testing environment managed exclusively by superadmins
+
 ## Table of Contents
 
 1. [Dashboard Architecture](#dashboard-architecture)
@@ -21,13 +32,13 @@ The dashboard system follows a hierarchical structure with progressive disclosur
 /dashboard (RoleBasedDashboard) ← Universal entry point
 ├── /dashboard/admin (AdminDashboard) ← Super admins only
 ├── /dashboard/rg (ReviewGroupDashboard) ← Review group admins
-└── /dashboard/[siteKey] (SiteManagementDashboard) ← Site-specific roles
-    ├── /dashboard/portal
-    ├── /dashboard/isbdm
-    ├── /dashboard/lrm
-    └── ... (other sites)
+└── /dashboard/[siteKey] (SiteManagementDashboard) ← Namespace-specific roles
+    ├── /dashboard/portal ← Special case: superadmin-only portal management
+    ├── /dashboard/isbdm ← Standard namespace dashboard
+    ├── /dashboard/lrm ← Standard namespace dashboard
+    └── ... (other namespace dashboards)
 
-/namespaces/[namespace] (NamespaceDashboard) ← Namespace management
+/namespaces/[namespace] (NamespaceDashboard) ← Direct namespace management
 ```
 
 ## Dashboard Types
@@ -133,37 +144,46 @@ user.publicMetadata.reviewGroupAdmin?.length > 0
 
 ### 4. SiteManagementDashboard (`/dashboard/[siteKey]`)
 
-**Purpose**: Site-specific management interface for users with site roles
+**Purpose**: Namespace-specific management interface for users with namespace roles
 
 **File Location**: `/apps/admin/src/app/dashboard/[siteKey]/page.tsx`
 
+**Important**: Despite the naming convention using 'site', this dashboard manages namespaces. Each siteKey corresponds to a namespace.
+
 **Access Patterns**:
+
 ```typescript
-// Site-specific roles follow the pattern:
-// {siteKey}-admin | {siteKey}-editor | {siteKey}-contributor
+// Namespace-specific roles follow the pattern:
+// {namespace}-admin | {namespace}-editor | {namespace}-contributor
 
 // Examples:
-portal-admin, portal-editor, portal-contributor
-isbdm-admin, isbdm-editor, isbdm-contributor
+isbdm-admin, isbdm-editor, isbdm-contributor  // Standard namespace roles
+lrm-admin, lrm-editor, lrm-contributor        // Standard namespace roles
+
+// Special cases (superadmin-only):
+portal-admin  // Only superadmins can have portal roles
+newtest-admin // Only superadmins can have newtest roles
 ```
 
-**Supported Sites**:
-| Site Key | Full Name | Description |
-|----------|-----------|-------------|
-| portal | IFLA Portal | Main IFLA standards portal |
-| isbdm | ISBD Manifestation | ISBD for manifestations |
-| lrm | Library Reference Model | Conceptual reference model |
-| frbr | FRBR | Functional Requirements for Bibliographic Records |
-| isbd | ISBD | International Standard Bibliographic Description |
-| muldicat | Multilingual Dictionary | Cataloguing terms dictionary |
-| unimarc | UNIMARC | Universal MARC format |
-| newtest | Test Site | Development and testing |
+**Supported Namespaces**:
+| Namespace Key | Full Name | Description | Type |
+|---------------|-----------|-------------|------|
+| portal | IFLA Portal | Main IFLA standards portal | Special (superadmin-only) |
+| newtest | Test Site | Development and testing | Special (superadmin-only) |
+| isbdm | ISBD Manifestation | ISBD for manifestations | Standard namespace |
+| lrm | Library Reference Model | Conceptual reference model | Standard namespace |
+| frbr | FRBR | Functional Requirements for Bibliographic Records | Standard namespace |
+| isbd | ISBD | International Standard Bibliographic Description | Standard namespace |
+| muldicat | Multilingual Dictionary | Cataloguing terms dictionary | Standard namespace |
+| unimarc | UNIMARC | Universal MARC format | Standard namespace |
 
 ### 5. NamespaceDashboard (`/namespaces/[namespace]`)
 
-**Purpose**: Detailed namespace management interface
+**Purpose**: Direct namespace management interface (alternative to site dashboard)
 
 **File Location**: `/apps/admin/src/app/namespaces/[namespace]/NamespaceDashboard.tsx`
+
+**Note**: This provides the same namespace management functionality as SiteManagementDashboard but with a clearer URL structure that reflects the actual resource being managed.
 
 **Key Features**:
 - Namespace header with description and metadata
@@ -190,7 +210,7 @@ interface UserPublicMetadata {
   systemRole?: 'superadmin';
   reviewGroupAdmin?: string[];
   externalContributor?: boolean;
-  sites?: Record<string, 'admin' | 'editor' | 'contributor'>;
+  sites?: Record<string, 'admin' | 'editor' | 'contributor'>; // Actually namespace permissions
 }
 ```
 
@@ -226,12 +246,12 @@ interface UserPublicMetadata {
   }
 }
 
-// Site Editor
+// Namespace Editor (referred to as 'site' for historical reasons)
 {
   id: "user-isbd-editor",
   publicMetadata: {
     iflaRole: 'member',
-    sites: { isbdm: 'editor' }
+    sites: { isbdm: 'editor' }  // This grants editor access to the isbdm namespace
   }
 }
 
@@ -304,8 +324,8 @@ graph TD
     D -->|Member| G
     
     G --> H{User Action}
-    H -->|Select Site| I[/dashboard/siteKey]
-    H -->|Select Namespace| J[/namespaces/namespace]
+    H -->|Select Namespace (via site)| I[/dashboard/siteKey]
+    H -->|Select Namespace (direct)| J[/namespaces/namespace]
     
     E --> K[Full Admin Features]
     F --> L[RG Management Features]
@@ -353,8 +373,8 @@ GET /api/admin/users - User management
 GET /api/admin/activity - Activity feed
 GET /api/rg/:rgId/stats - Review group statistics
 GET /api/rg/:rgId/namespaces - RG namespaces
-GET /api/sites/:siteKey/dashboard - Site dashboard data
-GET /api/namespaces/:namespace/stats - Namespace statistics
+GET /api/sites/:siteKey/dashboard - Namespace dashboard data (via site key)
+GET /api/namespaces/:namespace/stats - Namespace statistics (direct access)
 ```
 
 ## Best Practices
@@ -383,6 +403,32 @@ GET /api/namespaces/:namespace/stats - Namespace statistics
 - Touch-friendly action buttons
 - Responsive data tables and cards
 
+## Building New Dashboards
+
+### Key Guidelines
+
+1. **Namespace-Centric Design**: Always remember that sites = namespaces. Design with namespace management in mind.
+
+2. **Role Hierarchy**: 
+   - Superadmins: Full access to all namespaces + special portal/newtest management
+   - Review Group Admins: Manage multiple related namespaces
+   - Namespace Admins/Editors/Contributors: Specific namespace permissions
+
+3. **Special Cases**:
+   - Portal and newtest are NOT standard namespaces
+   - They should have restricted UI and superadmin-only access
+   - Don't expose portal/newtest management to regular namespace admins
+
+4. **URL Structure**:
+   - Use `/dashboard/[namespace]` for namespace-specific dashboards
+   - Use `/namespaces/[namespace]` for direct namespace management
+   - Keep special cases (`/dashboard/admin`, `/dashboard/rg`) separate
+
+5. **Component Reuse**:
+   - Use shared components for namespace statistics
+   - Implement consistent permission checking
+   - Follow the established dashboard layout patterns
+
 ## Future Enhancements
 
 1. **Real-time Updates**: WebSocket integration for live activity feeds
@@ -393,6 +439,7 @@ GET /api/namespaces/:namespace/stats - Namespace statistics
 6. **Export Capabilities**: Dashboard data export to PDF/Excel
 7. **Collaborative Features**: Real-time collaboration indicators
 8. **Performance Metrics**: Page load and interaction metrics
+9. **Namespace Migration**: Clearer separation between portal/newtest and standard namespaces
 
 ---
 
