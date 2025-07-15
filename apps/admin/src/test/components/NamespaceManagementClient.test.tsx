@@ -1,6 +1,6 @@
 import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest';
 import { render, screen, fireEvent, waitFor } from '../utils/test-utils';
-import SiteManagementClient from '../../app/(authenticated)/dashboard/[siteKey]/SiteManagementClient';
+import NamespaceManagementClient from '../../app/(authenticated)/dashboard/[siteKey]/NamespaceManagementClient';
 import { setupFetchMock, cleanupFetchMock } from '../mocks/api';
 
 vi.mock('next/navigation', () => ({
@@ -17,11 +17,11 @@ vi.mock('next/navigation', () => ({
   useParams: () => ({ siteKey: 'newtest' }),
 }));
 
-describe('SiteManagementClient', () => {
+describe('NamespaceManagementClient', () => {
   const defaultProps = {
-    siteTitle: 'Test Site',
-    siteCode: 'TEST',
-    siteKey: 'newtest',
+    namespaceTitle: 'Test Namespace',
+    namespaceCode: 'TEST',
+    namespaceKey: 'newtest',
     githubRepo: 'iflastandards/standards-dev',
   };
 
@@ -34,15 +34,15 @@ describe('SiteManagementClient', () => {
   });
 
   describe('Rendering', () => {
-    it('should render the component with correct site information', () => {
-      render(<SiteManagementClient {...defaultProps} />);
+    it('should render the component with correct namespace information', () => {
+      render(<NamespaceManagementClient {...defaultProps} />);
 
-      expect(screen.getByText('Test Site Management')).toBeInTheDocument();
-      expect(screen.getAllByText(/Test Site/).length).toBeGreaterThan(0);
+      expect(screen.getByText('Test Namespace Namespace Management')).toBeInTheDocument();
+      expect(screen.getAllByText(/Test Namespace/).length).toBeGreaterThan(0);
     });
 
     it('should render all tab navigation items', () => {
-      render(<SiteManagementClient {...defaultProps} />);
+      render(<NamespaceManagementClient {...defaultProps} />);
 
       expect(
         screen.getByRole('button', { name: 'Overview' }),
@@ -74,7 +74,7 @@ describe('SiteManagementClient', () => {
     });
 
     it('should have overview tab active by default', () => {
-      render(<SiteManagementClient {...defaultProps} />);
+      render(<NamespaceManagementClient {...defaultProps} />);
 
       const overviewTab = screen.getByRole('button', { name: 'Overview' });
       // Check for the active tab classes used in the component
@@ -84,7 +84,7 @@ describe('SiteManagementClient', () => {
 
   describe('Tab Navigation', () => {
     it('should switch tabs when clicked', async () => {
-      render(<SiteManagementClient {...defaultProps} />);
+      render(<NamespaceManagementClient {...defaultProps} />);
 
       const contentTab = screen.getByRole('button', {
         name: 'Content Management',
@@ -97,10 +97,10 @@ describe('SiteManagementClient', () => {
     });
 
     it('should display different content for each tab', async () => {
-      render(<SiteManagementClient {...defaultProps} />);
+      render(<NamespaceManagementClient {...defaultProps} />);
 
       // Check overview content
-      expect(screen.getByText('Test Site Status')).toBeInTheDocument();
+      expect(screen.getByText('Namespace Status')).toBeInTheDocument();
 
       // Switch to content tab
       fireEvent.click(
@@ -114,17 +114,17 @@ describe('SiteManagementClient', () => {
   });
 
   describe('Overview Tab', () => {
-    it('should display site information', () => {
-      render(<SiteManagementClient {...defaultProps} />);
+    it('should display namespace information', () => {
+      render(<NamespaceManagementClient {...defaultProps} />);
 
-      expect(screen.getByText('Test Site Status')).toBeInTheDocument();
+      expect(screen.getByText('Namespace Status')).toBeInTheDocument();
       expect(screen.getByText('Last Updated:')).toBeInTheDocument();
     });
   });
 
   describe('Content Tab', () => {
     it('should display content management tab', async () => {
-      render(<SiteManagementClient {...defaultProps} />);
+      render(<NamespaceManagementClient {...defaultProps} />);
 
       fireEvent.click(
         screen.getByRole('button', { name: 'Content Management' }),
@@ -142,9 +142,9 @@ describe('SiteManagementClient', () => {
   describe('Error Handling', () => {
     it('should handle missing props gracefully', () => {
       const minimalProps = {
-        siteTitle: 'Test',
-        siteCode: 'TEST',
-        siteKey: 'test',
+        namespaceTitle: 'Test',
+        namespaceCode: 'TEST',
+        namespaceKey: 'test',
       };
 
       expect(() => {

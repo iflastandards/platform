@@ -220,7 +220,7 @@ export default function RoleBasedDashboard({ userId }: RoleBasedDashboardProps) 
       {/* Main Content */}
       <Paper sx={{ width: '100%' }}>
         <Tabs value={tabValue} onChange={handleTabChange} sx={{ borderBottom: 1, borderColor: 'divider' }}>
-          <Tab label="My Namespaces" icon={<DashboardIcon />} iconPosition="start" />
+          <Tab label="Your Namespaces" icon={<DashboardIcon />} iconPosition="start" />
           {isAdmin && <Tab label="All Activity" icon={<Timeline />} iconPosition="start" />}
           {isAdmin && <Tab label="Quick Actions" icon={<Add />} iconPosition="start" />}
         </Tabs>
