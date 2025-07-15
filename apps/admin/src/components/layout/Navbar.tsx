@@ -2,21 +2,16 @@
 
 import React, { useState } from 'react';
 import Link from 'next/link';
-import { useClerk, useUser } from '@clerk/nextjs';
-import { addBasePath } from '@ifla/theme/utils';
+import { useUser, UserButton } from '@clerk/nextjs';
+import { getAdminPortalConfigAuto } from '@ifla/theme/config/siteConfig';
+import { useTheme as useAppTheme } from '@/contexts/theme-context';
 import {
   AppBar,
   Toolbar,
   Typography,
   IconButton,
   Button,
-  Menu,
-  MenuItem,
   Box,
-  Avatar,
-  Divider,
-  ListItemIcon,
-  ListItemText,
   Drawer,
   List,
   ListItem,
@@ -26,6 +21,9 @@ import {
   Chip,
   useTheme,
   useMediaQuery,
+  Divider,
+  ListItemIcon,
+  ListItemText,
 } from '@mui/material';
 import {
   Menu as MenuIcon,
@@ -34,15 +32,14 @@ import {
   ExpandLess,
   ExpandMore,
   Notifications as NotificationsIcon,
-  Settings as SettingsIcon,
-  Logout as LogoutIcon,
-  Person as PersonIcon,
   Code as CodeIcon,
   Translate as TranslateIcon,
   RateReview as ReviewIcon,
   GitHub as GitHubIcon,
   Build as BuildIcon,
   Timeline as TimelineIcon,
+  DarkMode as DarkModeIcon,
+  LightMode as LightModeIcon,
 } from '@mui/icons-material';
 import { mockUsers } from '@/lib/mock-data/auth';
 
@@ -52,55 +49,22 @@ interface NavbarProps {
 
 export default function Navbar({ userId = 'user-admin-1' }: NavbarProps) {
   const theme = useTheme();
+  const { mode, toggleTheme } = useAppTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down('md'));
   const [mobileOpen, setMobileOpen] = useState(false);
-  const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
   const [namespacesOpen, setNamespacesOpen] = useState(true);
 
-  // Get current user from mock data
+  // Get current user from Clerk or mock data
+  const { user: clerkUser, isLoaded: _isLoaded } = useUser();
+  
+  // For demo mode, use mock data
   const currentUser = mockUsers.find((u) => u.id === userId) || mockUsers[0];
-  const userRole = currentUser.publicMetadata.iflaRole || 'member';
+  const userRole = clerkUser?.publicMetadata?.iflaRole as string || currentUser.publicMetadata.iflaRole || 'member';
   const isAdmin = userRole === 'admin';
   const isStaff = userRole === 'staff' || isAdmin;
 
   const handleDrawerToggle = () => {
     setMobileOpen(!mobileOpen);
-  };
-
-  const handleProfileMenuOpen = (event: React.MouseEvent<HTMLElement>) => {
-    setAnchorEl(event.currentTarget);
-  };
-
-  const handleProfileMenuClose = () => {
-    setAnchorEl(null);
-  };
-
-  const { signOut } = useClerk();
-  const { isSignedIn } = useUser();
-
-  const handleLogout = async () => {
-    try {
-      if (isSignedIn) {
-        // Use Clerk's signOut method for authenticated users
-        await signOut({
-          redirectUrl:
-            typeof window !== 'undefined'
-              ? window.location.origin + addBasePath('/')
-              : addBasePath('/'),
-        });
-      } else {
-        // For demo users, clear query parameters and redirect
-        if (typeof window !== 'undefined') {
-          window.location.href = addBasePath('/');
-        }
-      }
-    } catch (error) {
-      console.error('Error signing out:', error);
-      // Fallback: force redirect anyway
-      if (typeof window !== 'undefined') {
-        window.location.href = addBasePath('/');
-      }
-    }
   };
   const navigationItems = [
     {
@@ -299,18 +263,18 @@ export default function Navbar({ userId = 'user-admin-1' }: NavbarProps) {
               </Badge>
             </IconButton>
 
-            <IconButton
-              onClick={handleProfileMenuOpen}
-              size="small"
-              sx={{ ml: 2 }}
-              aria-controls={Boolean(anchorEl) ? 'account-menu' : undefined}
-              aria-haspopup="true"
-              aria-expanded={Boolean(anchorEl) ? 'true' : undefined}
-            >
-              <Avatar sx={{ width: 32, height: 32 }}>
-                {currentUser.name.charAt(0)}
-              </Avatar>
+            <IconButton onClick={toggleTheme} color="inherit">
+              {mode === 'dark' ? <LightModeIcon /> : <DarkModeIcon />}
             </IconButton>
+
+            <UserButton 
+              afterSignOutUrl={getAdminPortalConfigAuto().url}
+              appearance={{
+                elements: {
+                  userButtonAvatarBox: "w-8 h-8",
+                }
+              }}
+            />
           </Box>
         </Toolbar>
       </AppBar>
@@ -329,67 +293,6 @@ export default function Navbar({ userId = 'user-admin-1' }: NavbarProps) {
       >
         {drawer}
       </Drawer>
-
-      <Menu
-        anchorEl={anchorEl}
-        id="account-menu"
-        open={Boolean(anchorEl)}
-        onClose={handleProfileMenuClose}
-        onClick={handleProfileMenuClose}
-        PaperProps={{
-          elevation: 0,
-          sx: {
-            overflow: 'visible',
-            filter: 'drop-shadow(0px 2px 8px rgba(0,0,0,0.32))',
-            mt: 1.5,
-            '& .MuiAvatar-root': {
-              width: 32,
-              height: 32,
-              ml: -0.5,
-              mr: 1,
-            },
-          },
-        }}
-        transformOrigin={{ horizontal: 'right', vertical: 'top' }}
-        anchorOrigin={{ horizontal: 'right', vertical: 'bottom' }}
-      >
-        <MenuItem>
-          <Avatar>{currentUser.name.charAt(0)}</Avatar>
-          <Box>
-            <Typography variant="body2">{currentUser.name}</Typography>
-            <Typography variant="caption" color="text.secondary">
-              {currentUser.email}
-            </Typography>
-          </Box>
-        </MenuItem>
-        <Divider />
-        <MenuItem
-          component={Link}
-          href="/profile?demo=true"
-          sx={{ textDecoration: 'none', color: 'inherit' }}
-        >
-          <ListItemIcon>
-            <PersonIcon fontSize="small" />
-          </ListItemIcon>
-          <ListItemText>Profile</ListItemText>
-        </MenuItem>
-        <MenuItem
-          component={Link}
-          href="/settings?demo=true"
-          sx={{ textDecoration: 'none', color: 'inherit' }}
-        >
-          <ListItemIcon>
-            <SettingsIcon fontSize="small" />
-          </ListItemIcon>
-          <ListItemText>Settings</ListItemText>
-        </MenuItem>
-        <MenuItem onClick={handleLogout}>
-          <ListItemIcon>
-            <LogoutIcon fontSize="small" />
-          </ListItemIcon>
-          <ListItemText>Logout</ListItemText>
-        </MenuItem>
-      </Menu>
     </>
   );
 }

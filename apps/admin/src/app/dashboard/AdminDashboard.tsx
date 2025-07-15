@@ -2,8 +2,6 @@
 
 import React from 'react';
 import Link from 'next/link';
-import { UserButton } from '@clerk/nextjs';
-import { getPortalUrl } from '@/lib/get-portal-url';
 import {
   Box,
   Card,
@@ -16,10 +14,6 @@ import {
   ListItemButton,
   ListItemIcon,
   ListItemText,
-  AppBar,
-  Toolbar,
-  IconButton,
-  Breadcrumbs,
   Link as MuiLink,
   Button,
   Stack,
@@ -37,10 +31,7 @@ import {
   History as HistoryIcon,
   PersonAdd as PersonAddIcon,
   AddTask as AddTaskIcon,
-  DarkMode as DarkModeIcon,
-  LightMode as LightModeIcon,
 } from '@mui/icons-material';
-import { useTheme as useAppTheme } from '@/contexts/theme-context';
 
 interface AdminDashboardProps {
   userRoles: string[];
@@ -142,7 +133,6 @@ function SystemStatusItem({ service, status }: SystemStatusItemProps) {
 }
 
 export default function AdminDashboard({ userRoles: _userRoles, userName: _userName, userEmail: _userEmail }: AdminDashboardProps) {
-  const { mode, toggleTheme } = useAppTheme();
   
   const drawerWidth = 240;
   
@@ -233,31 +223,8 @@ export default function AdminDashboard({ userRoles: _userRoles, userName: _userN
 
       {/* Main Content */}
       <Box component="main" sx={{ flexGrow: 1, bgcolor: 'background.default', overflow: 'auto' }}>
-        {/* Top Bar */}
-        <AppBar position="sticky" elevation={0} sx={{ bgcolor: 'background.paper', borderBottom: 1, borderColor: 'divider' }}>
-          <Toolbar>
-            <Box sx={{ flexGrow: 1 }}>
-              <Breadcrumbs>
-                <Typography color="text.secondary">Admin</Typography>
-                <Typography color="text.primary">Dashboard</Typography>
-              </Breadcrumbs>
-            </Box>
-            <IconButton onClick={toggleTheme} sx={{ mr: 2 }}>
-              {mode === 'dark' ? <LightModeIcon /> : <DarkModeIcon />}
-            </IconButton>
-            <UserButton 
-              afterSignOutUrl={getPortalUrl()}
-              appearance={{
-                elements: {
-                  userButtonAvatarBox: "w-10 h-10",
-                }
-              }}
-            />
-          </Toolbar>
-        </AppBar>
-
         {/* Page Content */}
-        <Container maxWidth="xl" sx={{ py: 4 }}>
+        <Container maxWidth="xl" sx={{ py: 4, mt: 8 }}>
           <Box mb={4}>
             <Typography variant="h4" fontWeight="bold" gutterBottom>
               Admin Dashboard

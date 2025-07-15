@@ -2,8 +2,6 @@
 
 import React from 'react';
 import Link from 'next/link';
-import { UserButton } from '@clerk/nextjs';
-import { getPortalUrl } from '@/lib/get-portal-url';
 import { addBasePath } from '@ifla/theme/utils';
 import {
   Box,
@@ -17,10 +15,6 @@ import {
   ListItemButton,
   ListItemIcon,
   ListItemText,
-  AppBar,
-  Toolbar,
-  IconButton,
-  Breadcrumbs,
   Link as MuiLink,
   Button,
   Stack,
@@ -36,10 +30,7 @@ import {
   History as HistoryIcon,
   PersonAdd as PersonAddIcon,
   AddTask as AddTaskIcon,
-  DarkMode as DarkModeIcon,
-  LightMode as LightModeIcon,
 } from '@mui/icons-material';
-import { useTheme as useAppTheme } from '@/contexts/theme-context';
 import { mockReviewGroups, getNamespacesByReviewGroup } from '@/lib/mock-data/namespaces-extended';
 
 interface ReviewGroupDashboardProps {
@@ -194,7 +185,6 @@ export default function ReviewGroupDashboard({
   userEmail: _userEmail,
   reviewGroups 
 }: ReviewGroupDashboardProps) {
-  const { mode, toggleTheme } = useAppTheme();
   
   const drawerWidth = 240;
   
@@ -219,7 +209,7 @@ export default function ReviewGroupDashboard({
   const recentActivity = [
     { action: 'ISBD translation milestone completed by your team', author: 'Maria Editor', time: '2 hours ago', type: 'project' as const },
     { action: 'New team member joined ISBD Review Group', author: 'John Smith', time: '1 day ago', type: 'user' as const },
-    { action: 'ISBD(M) vocabulary updated', author: 'Sarah Wilson', time: '2 days ago', type: 'vocabulary' as const },
+    { action: 'ISBD/M vocabulary updated', author: 'Sarah Wilson', time: '2 days ago', type: 'vocabulary' as const },
     { action: 'Review group meeting notes published', author: 'You', time: '3 days ago', type: 'project' as const },
   ];
 
@@ -281,31 +271,8 @@ export default function ReviewGroupDashboard({
 
       {/* Main Content */}
       <Box component="main" sx={{ flexGrow: 1, bgcolor: 'background.default', overflow: 'auto' }}>
-        {/* Top Bar */}
-        <AppBar position="sticky" elevation={0} sx={{ bgcolor: 'background.paper', borderBottom: 1, borderColor: 'divider' }}>
-          <Toolbar>
-            <Box sx={{ flexGrow: 1 }}>
-              <Breadcrumbs>
-                <Typography color="text.secondary">Admin</Typography>
-                <Typography color="text.primary">Review Group Dashboard</Typography>
-              </Breadcrumbs>
-            </Box>
-            <IconButton onClick={toggleTheme} sx={{ mr: 2 }}>
-              {mode === 'dark' ? <LightModeIcon /> : <DarkModeIcon />}
-            </IconButton>
-            <UserButton 
-              afterSignOutUrl={getPortalUrl()}
-              appearance={{
-                elements: {
-                  userButtonAvatarBox: "w-10 h-10",
-                }
-              }}
-            />
-          </Toolbar>
-        </AppBar>
-
         {/* Page Content */}
-        <Container maxWidth="xl" sx={{ py: 4 }}>
+        <Container maxWidth="xl" sx={{ py: 4, mt: 8 }}>
           <Box mb={4}>
             <Typography variant="h4" fontWeight="bold" gutterBottom>
               Review Group Dashboard
