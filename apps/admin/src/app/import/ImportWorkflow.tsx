@@ -173,11 +173,39 @@ export default function ImportWorkflow({
 
   const handleSubmitImport = async () => {
     setIsSubmitting(true);
-    // Simulate import submission
-    setTimeout(() => {
+    
+    try {
+      // Call the API to create import job
+      const response = await fetch('/api/actions/scaffold-from-spreadsheet', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          namespace: selectedNamespace,
+          spreadsheetUrl,
+          githubIssueNumber: null, // Can be added later if needed
+        }),
+      });
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        throw new Error(data.error || 'Failed to start import');
+      }
+
+      // Store job ID for tracking
+      const jobId = data.jobId;
+      
+      // Redirect to status page to monitor progress
+      router.push(`/import/status/${jobId}`);
+      
+    } catch (error) {
+      console.error('Import error:', error);
       setIsSubmitting(false);
-      router.push('/dashboard?demo=true&importSuccess=true');
-    }, 3000);
+      // TODO: Show error notification
+      alert(error instanceof Error ? error.message : 'Failed to start import');
+    }
   };
 
   const canProceed = () => {
