@@ -61,6 +61,21 @@ export interface NamespaceProfile {
   updated_by: string;
 }
 
+export interface ActiveSheet {
+  id: string;
+  namespace_id: string;
+  sheet_id: string;
+  sheet_url: string;
+  created_by: string;
+  created_at: string;
+  last_edited_at?: string;
+  last_edited_by?: string;
+  status: 'ready' | 'in_progress' | 'imported' | 'archived';
+  import_job_id?: string;
+  project_id?: string;
+  metadata?: any;
+}
+
 // Database types
 export interface Database {
   public: {
@@ -90,6 +105,11 @@ export interface Database {
         Insert: Omit<NamespaceProfile, 'id' | 'created_at' | 'updated_at'>;
         Update: Partial<Omit<NamespaceProfile, 'id'>>;
       };
+      active_sheets: {
+        Row: ActiveSheet;
+        Insert: Omit<ActiveSheet, 'id' | 'created_at'>;
+        Update: Partial<Omit<ActiveSheet, 'id'>>;
+      };
     };
   };
 }
@@ -113,6 +133,7 @@ const mockStorage: Record<string, any[]> = {
   activity_logs: [],
   projects: [],
   namespace_profiles: [],
+  active_sheets: [],
 };
 
 // Mock client for development without Supabase

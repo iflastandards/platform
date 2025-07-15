@@ -31,6 +31,7 @@ import {
   History as HistoryIcon,
   PersonAdd as PersonAddIcon,
   AddTask as AddTaskIcon,
+  CloudUpload as CloudUploadIcon,
 } from '@mui/icons-material';
 
 interface AdminDashboardProps {
@@ -137,13 +138,14 @@ export default function AdminDashboard({ userRoles: _userRoles, userName: _userN
   const drawerWidth = 240;
   
   const sidebarItems = [
-    { key: 'dashboard', label: 'Dashboard', icon: <DashboardIcon />, href: '/dashboard', active: true },
+    { key: 'dashboard', label: 'Dashboard', icon: <DashboardIcon />, href: '/dashboard/admin', active: true },
     { key: 'users', label: 'Users', icon: <PeopleIcon />, href: '/dashboard/users' },
     { key: 'review-groups', label: 'Review Groups', icon: <LanguageIcon />, href: '/dashboard/review-groups' },
     { key: 'projects', label: 'Projects', icon: <AssignmentIcon />, href: '/dashboard/projects' },
     { key: 'namespaces', label: 'Namespaces', icon: <FolderIcon />, href: '/dashboard/namespaces' },
     { key: 'vocabularies', label: 'Vocabularies', icon: <BookIcon />, href: '/dashboard/vocabularies' },
     { key: 'profiles', label: 'DCTAP Profiles', icon: <BookIcon />, href: '/dashboard/profiles' },
+    { key: 'adopt', label: 'Adopt Spreadsheet', icon: <CloudUploadIcon />, href: '/dashboard/admin/adopt-spreadsheet' },
     { key: 'activity', label: 'Activity Log', icon: <HistoryIcon />, href: '/dashboard/activity' },
   ];
 
@@ -303,6 +305,15 @@ export default function AdminDashboard({ userRoles: _userRoles, userName: _userN
                         href="/dashboard/projects/new?demo=true"
                       >
                         Charter New Project
+                      </Button>
+                      <Button
+                        variant="outlined"
+                        fullWidth
+                        startIcon={<CloudUploadIcon />}
+                        component={Link}
+                        href="/dashboard/admin/adopt-spreadsheet"
+                      >
+                        Adopt Spreadsheet
                       </Button>
                       <Button
                         variant="outlined"
