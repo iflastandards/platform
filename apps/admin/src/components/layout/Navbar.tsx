@@ -41,27 +41,49 @@ import {
   DarkMode as DarkModeIcon,
   LightMode as LightModeIcon,
 } from '@mui/icons-material';
-import { mockUsers } from '@/lib/mock-data/auth';
+import { getMockGitHubData } from '@/lib/github-mock-service';
 
-interface NavbarProps {
-  userId?: string;
-}
-
-export default function Navbar({ userId = 'user-admin-1' }: NavbarProps) {
+export default function Navbar() {
   const theme = useTheme();
   const { mode, toggleTheme } = useAppTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down('md'));
   const [mobileOpen, setMobileOpen] = useState(false);
   const [namespacesOpen, setNamespacesOpen] = useState(true);
 
-  // Get current user from Clerk or mock data
-  const { user: clerkUser, isLoaded: _isLoaded } = useUser();
+  // Get current user from Clerk
+  const { user: clerkUser, isLoaded } = useUser();
+  const isDemo = process.env.NEXT_PUBLIC_IFLA_DEMO === 'true';
   
-  // For demo mode, use mock data
-  const currentUser = mockUsers.find((u) => u.id === userId) || mockUsers[0];
-  const userRole = clerkUser?.publicMetadata?.iflaRole as string || currentUser.publicMetadata.iflaRole || 'member';
-  const isAdmin = userRole === 'admin';
-  const isStaff = userRole === 'staff' || isAdmin;
+  // Determine user role based on demo mode
+  let userRole = 'member';
+  let isAdmin = false;
+  let isStaff = false;
+  
+  if (isLoaded && clerkUser) {
+    const email = clerkUser.emailAddresses?.[0]?.emailAddress || '';
+    
+    if (isDemo) {
+      // In demo mode, get role from mock GitHub data
+      const mockData = getMockGitHubData(email);
+      isAdmin = mockData.systemRole === 'admin';
+      isStaff = isAdmin || mockData.reviewGroups.some(rg => rg.role === 'maintainer');
+      
+      if (isAdmin) {
+        userRole = 'admin';
+      } else if (isStaff) {
+        userRole = 'maintainer';
+      } else if (mockData.reviewGroups.length > 0 || Object.keys(mockData.projects).length > 0) {
+        userRole = 'member';
+      } else {
+        userRole = 'guest';
+      }
+    } else {
+      // In production mode, use Clerk metadata
+      userRole = clerkUser.publicMetadata?.iflaRole as string || 'member';
+      isAdmin = userRole === 'admin';
+      isStaff = userRole === 'staff' || isAdmin;
+    }
+  }
 
   const handleDrawerToggle = () => {
     setMobileOpen(!mobileOpen);
@@ -70,7 +92,7 @@ export default function Navbar({ userId = 'user-admin-1' }: NavbarProps) {
     {
       label: 'Dashboard',
       icon: <DashboardIcon />,
-      href: '/dashboard?demo=true',
+      href: '/dashboard',
       show: true,
     },
     {
@@ -79,47 +101,47 @@ export default function Navbar({ userId = 'user-admin-1' }: NavbarProps) {
       expandable: true,
       show: true,
       children: [
-        { label: 'ISBD', href: '/namespaces/isbd?demo=true' },
-        { label: 'ISBD-M', href: '/namespaces/isbdm?demo=true' },
-        { label: 'MulDiCat', href: '/namespaces/muldicat?demo=true' },
-        { label: 'All Namespaces', href: '/namespaces?demo=true' },
+        { label: 'ISBD', href: '/namespaces/isbd' },
+        { label: 'ISBD-M', href: '/namespaces/isbdm' },
+        { label: 'MulDiCat', href: '/namespaces/muldicat' },
+        { label: 'All Namespaces', href: '/namespaces' },
       ],
     },
     {
       label: 'Import Workflow',
       icon: <CodeIcon />,
-      href: '/import?demo=true',
+      href: '/import',
       show: true,
     },
     {
       label: 'Translation',
       icon: <TranslateIcon />,
-      href: '/translation?demo=true',
+      href: '/translation',
       show: true,
     },
     {
       label: 'Review Queue',
       icon: <ReviewIcon />,
-      href: '/review?demo=true',
+      href: '/review',
       show: true,
       badge: '3',
     },
     {
       label: 'GitHub Integration',
       icon: <GitHubIcon />,
-      href: '/github?demo=true',
+      href: '/github',
       show: isStaff,
     },
     {
       label: 'Build Pipeline',
       icon: <BuildIcon />,
-      href: '/builds?demo=true',
+      href: '/builds',
       show: isStaff,
     },
     {
       label: 'Editorial Cycles',
       icon: <TimelineIcon />,
-      href: '/cycles?demo=true',
+      href: '/cycles',
       show: isStaff,
     },
   ];

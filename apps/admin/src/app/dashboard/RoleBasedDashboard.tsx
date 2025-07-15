@@ -40,9 +40,12 @@ import {
   getTranslationStats,
   MockUser,
 } from '@/lib/mock-data';
+import { AppUser } from '@/lib/clerk-github-auth';
 
 interface RoleBasedDashboardProps {
   userId?: string;
+  isDemo?: boolean;
+  appUser?: AppUser;
 }
 
 interface TabPanelProps {

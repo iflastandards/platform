@@ -49,7 +49,7 @@ export const mockNamespaces: Record<string, MockNamespace> = {
   'isbdm': {
     id: 'ns-isbdm',
     slug: 'isbdm',
-    name: 'ISBD(M)',
+    name: 'ISBD/M',
     description: 'International Standard Bibliographic Description for Monographic Publications',
     reviewGroup: 'isbd',
     reviewGroupName: 'ISBD Review Group',

@@ -1,7 +1,6 @@
 'use client';
 
 import React from 'react';
-import Link from 'next/link';
 import {
   Box,
   Card,
@@ -130,80 +129,6 @@ function NamespaceStatusCard({
             Version {currentVersion} • Published {publishedDate}
           </Typography>
 
-          <Stack
-            direction="row"
-            spacing={2}
-            justifyContent="center"
-            flexWrap="wrap"
-            mb={3}
-          >
-            <Link
-              href="/api/auth/signin?demo=true&userId=user-admin-1"
-              passHref
-            >
-              <Button
-                variant="outlined"
-                size="large"
-                sx={{
-                  color: 'white',
-                  borderColor: 'white',
-                  fontWeight: 'bold',
-                  px: 3,
-                  py: 1.5,
-                  '&:hover': {
-                    bgcolor: 'rgba(255, 255, 255, 0.1)',
-                    borderColor: 'white',
-                  },
-                }}
-              >
-                Admin Demo
-              </Button>
-            </Link>
-            <Link
-              href="/api/auth/signin?demo=true&userId=user-isbd-rg-admin"
-              passHref
-            >
-              <Button
-                variant="outlined"
-                size="large"
-                sx={{
-                  color: 'white',
-                  borderColor: 'white',
-                  fontWeight: 'bold',
-                  px: 3,
-                  py: 1.5,
-                  '&:hover': {
-                    bgcolor: 'rgba(255, 255, 255, 0.1)',
-                    borderColor: 'white',
-                  },
-                }}
-              >
-                RG Admin Demo
-              </Button>
-            </Link>
-            <Link
-              href="/api/auth/signin?demo=true&userId=user-isbd-editor"
-              passHref
-            >
-              <Button
-                variant="outlined"
-                size="large"
-                sx={{
-                  color: 'white',
-                  borderColor: 'white',
-                  fontWeight: 'bold',
-                  px: 3,
-                  py: 1.5,
-                  '&:hover': {
-                    bgcolor: 'rgba(255, 255, 255, 0.1)',
-                    borderColor: 'white',
-                  },
-                }}
-              >
-                Member Demo
-              </Button>
-            </Link>
-          </Stack>
         </Box>
       </CardContent>
     </Card>
@@ -287,89 +212,13 @@ export default function WelcomePage() {
               </Typography>
             </Alert>
 
-            <Stack
-              direction="row"
-              spacing={2}
-              justifyContent="center"
-              flexWrap="wrap"
-            >
-              <Link
-                href="/api/auth/signin?demo=true&userId=user-admin-1"
-                passHref
-              >
-                <Button
-                  variant="contained"
-                  size="large"
-                  startIcon={<GitHubIcon />}
-                  sx={{
-                    bgcolor: 'white',
-                    color: 'primary.main',
-                    fontWeight: 'bold',
-                    px: 4,
-                    py: 1.5,
-                    fontSize: '1.1rem',
-                    '&:hover': {
-                      bgcolor: 'grey.100',
-                    },
-                  }}
-                >
-                  Super Admin Demo
-                </Button>
-              </Link>
-              <Link
-                href="/api/auth/signin?demo=true&userId=user-isbd-rg-admin"
-                passHref
-              >
-                <Button
-                  variant="outlined"
-                  size="large"
-                  sx={{
-                    color: 'white',
-                    borderColor: 'white',
-                    fontWeight: 'bold',
-                    px: 3,
-                    py: 1.5,
-                    '&:hover': {
-                      bgcolor: 'rgba(255, 255, 255, 0.1)',
-                      borderColor: 'white',
-                    },
-                  }}
-                >
-                  RG Admin Demo
-                </Button>
-              </Link>
-              <Link
-                href="/api/auth/signin?demo=true&userId=user-isbd-editor"
-                passHref
-              >
-                <Button
-                  variant="outlined"
-                  size="large"
-                  sx={{
-                    color: 'white',
-                    borderColor: 'white',
-                    fontWeight: 'bold',
-                    px: 3,
-                    py: 1.5,
-                    '&:hover': {
-                      bgcolor: 'rgba(255, 255, 255, 0.1)',
-                      borderColor: 'white',
-                    },
-                  }}
-                >
-                  Member Demo
-                </Button>
-              </Link>
-            </Stack>
-
             {/* Clerk Sign-In and Invitation CTA */}
-            <Stack direction="row" spacing={2} justifyContent="center" mt={4}>
+            <Stack direction="row" spacing={2} justifyContent="center">
               <SignInButton mode="modal">
                 <Button
                   variant="contained"
                   color="secondary"
                   size="large"
-                  startIcon={<GitHubIcon />}
                   sx={{
                     fontWeight: 'bold',
                     px: 4,
@@ -377,7 +226,7 @@ export default function WelcomePage() {
                     fontSize: '1.1rem',
                   }}
                 >
-                  Sign In with GitHub
+                  Sign In
                 </Button>
               </SignInButton>
               <RequestInviteButton />

@@ -1,38 +1,27 @@
-import { getCerbosUser } from '@/lib/clerk-cerbos';
+import { getAppUser, getDashboardRoute } from '@/lib/clerk-github-auth';
 import { redirect } from 'next/navigation';
-import RoleBasedDashboard from './RoleBasedDashboard';
+import PersonalDashboard from './PersonalDashboard';
 
 // Force dynamic rendering to avoid static generation issues with auth
 export const dynamic = 'force-dynamic';
 
-interface DashboardPageProps {
-  searchParams: Promise<{ sitekey?: string; demo?: string; userId?: string }>;
-}
-
-export default async function DashboardPage({
-  searchParams,
-}: DashboardPageProps) {
-  const params = await searchParams;
-  const sitekey = params.sitekey;
-  const isDemo = params.demo === 'true';
-
-  // In demo mode, use mock data
-  if (isDemo) {
-    // Get demo user from query param or default to admin
-    const demoUserId = params.userId || 'user-admin-1';
-    return <RoleBasedDashboard userId={demoUserId} />;
-  }
-
-  // Production mode - use real auth
-  const user = await getCerbosUser();
+export default async function DashboardPage() {
+  // Get the authenticated user with GitHub metadata (real or mocked based on IFLA_DEMO)
+  const user = await getAppUser();
 
   // Clerk middleware ensures authentication, but double-check
   if (!user) {
-    const returnUrl = sitekey ? `/dashboard?sitekey=${sitekey}` : '/dashboard';
-    redirect(`/sign-in?redirect_url=${encodeURIComponent(returnUrl)}`);
+    redirect('/sign-in?redirect_url=/dashboard');
   }
 
-  // For now, show the role-based dashboard for all users
-  // In production, you would map the real user to appropriate roles
-  return <RoleBasedDashboard />;
+  // Determine the appropriate dashboard based on user's roles
+  const dashboardRoute = getDashboardRoute(user);
+  
+  // If user should go to a different dashboard, redirect them
+  if (dashboardRoute !== '/dashboard') {
+    redirect(dashboardRoute);
+  }
+
+  // Show the personal dashboard for regular users
+  return <PersonalDashboard user={user} />;
 }
