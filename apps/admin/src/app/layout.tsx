@@ -26,6 +26,8 @@ export default function RootLayout({
               card: 'shadow-none',
             },
           }}
+          signInUrl="/admin"
+          afterSignOutUrl="/admin"
         >
           <ThemeProvider>{children}</ThemeProvider>
         </ClerkProvider>

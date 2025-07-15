@@ -3,7 +3,6 @@
 import React, { useState } from 'react';
 import Link from 'next/link';
 import { useUser, UserButton } from '@clerk/nextjs';
-import { getAdminPortalConfigAuto } from '@ifla/theme/config/siteConfig';
 import { useTheme as useAppTheme } from '@/contexts/theme-context';
 import {
   AppBar,
@@ -290,7 +289,7 @@ export default function Navbar() {
             </IconButton>
 
             <UserButton 
-              afterSignOutUrl="/"
+              afterSignOutUrl="/admin"
               appearance={{
                 elements: {
                   userButtonAvatarBox: "w-8 h-8",

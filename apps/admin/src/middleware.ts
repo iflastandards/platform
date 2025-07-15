@@ -1,11 +1,8 @@
 import { clerkMiddleware, createRouteMatcher } from '@clerk/nextjs/server';
 
 const isPublicRoute = createRouteMatcher([
-  '/', // Public home page
-  '/sign-in(.*)', // Public sign-in
-  '/sign-up(.*)', // Public sign-up
+  '/', // Public home page with SignInButton modal
   '/request-invite', // Public invitation request
-  '/api/auth/signin', // Public auth signin API
   '/api/auth/callback', // Public auth callback API
   '/api/request-invite', // Public request invite API
   // Add other public routes as needed
