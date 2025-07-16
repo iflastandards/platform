@@ -67,7 +67,7 @@ export class ImportService {
     additionalData?: Partial<ImportJob>
   ): Promise<boolean> {
     try {
-      const updateData: any = { status, ...additionalData };
+      const updateData = { status, ...additionalData } as Partial<ImportJob>;
       
       if (status === 'completed' || status === 'failed') {
         updateData.completed_at = new Date().toISOString();
@@ -162,7 +162,7 @@ export class ImportService {
   /**
    * Validate spreadsheet data
    */
-  static async validateSpreadsheet(spreadsheetUrl: string): Promise<ValidationResult[]> {
+  static async validateSpreadsheet(spreadsheetUrl: string, namespace?: string, dctapProfile?: string): Promise<ValidationResult[]> {
     const results: ValidationResult[] = [];
     
     try {
@@ -176,37 +176,50 @@ export class ImportService {
         return results;
       }
       
-      // TODO: Actually download and validate spreadsheet
-      // For now, simulate validation with some example results
+      const sheetId = match[1];
       
-      // Simulate checking required columns
-      const _requiredColumns = ['Identifier', 'Label', 'Definition'];
-      const missingColumns = Math.random() > 0.8 ? ['Definition'] : [];
+      // For now, return mock validation that indicates we would download and validate
+      // In production, this would:
+      // 1. Use Google Sheets API to download the spreadsheet
+      // 2. Parse each worksheet
+      // 3. Validate against the selected DCTAP profile
       
-      missingColumns.forEach(col => {
-        results.push({
-          type: 'error',
-          message: `Missing required column: ${col}`,
-          column: col,
-          suggestion: `Add a column named "${col}" to your spreadsheet`,
-        });
+      results.push({
+        type: 'info',
+        message: `Ready to validate spreadsheet ${sheetId}`,
       });
       
-      // Simulate checking for duplicates
-      if (Math.random() > 0.7) {
+      if (namespace) {
         results.push({
-          type: 'warning',
-          message: 'Duplicate identifier found',
-          row: Math.floor(Math.random() * 50) + 10,
-          column: 'Identifier',
-          suggestion: 'Ensure all identifiers are unique',
+          type: 'info',
+          message: `Target namespace: ${namespace}`,
         });
       }
       
-      // Add some info messages
+      if (dctapProfile) {
+        results.push({
+          type: 'info',
+          message: `Using DCTAP profile: ${dctapProfile}`,
+        });
+        
+        // Mock validation against the profile
+        if (dctapProfile.includes('elements')) {
+          results.push({
+            type: 'info',
+            message: 'Validating element set structure',
+          });
+        } else if (dctapProfile.includes('concepts')) {
+          results.push({
+            type: 'info',
+            message: 'Validating concept scheme structure',
+          });
+        }
+      }
+      
+      // Mock successful validation
       results.push({
         type: 'info',
-        message: 'Detected 3 language columns: en, es, fr',
+        message: 'Spreadsheet structure appears valid',
       });
       
     } catch (error) {

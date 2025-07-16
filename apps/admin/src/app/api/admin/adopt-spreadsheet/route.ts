@@ -151,7 +151,7 @@ export async function GET(request: NextRequest) {
             })),
           },
         });
-      } catch (_error) {
+      } catch {
         // Even if analysis fails, return minimal info
         return NextResponse.json({
           success: true,
