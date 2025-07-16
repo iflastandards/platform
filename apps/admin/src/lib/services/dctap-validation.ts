@@ -200,8 +200,8 @@ export class DCTAPValidator {
           if (columnIndex !== undefined && constraint.valueConstraint) {
             const value = row[columnIndex];
             if (value && constraint.valueConstraintType === 'picklist') {
-              const allowedValues = constraint.valueConstraint.split(',').map(v => v.trim());
-              const cellValues = value.toString().split(';').map(v => v.trim());
+              const allowedValues = constraint.valueConstraint.split(',').map((v: string) => v.trim());
+              const cellValues = value.toString().split(';').map((v: string) => v.trim());
               
               for (const cellValue of cellValues) {
                 if (cellValue && !allowedValues.includes(cellValue)) {

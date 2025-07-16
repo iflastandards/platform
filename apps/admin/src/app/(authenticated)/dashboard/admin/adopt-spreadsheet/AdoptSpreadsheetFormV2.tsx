@@ -72,7 +72,7 @@ interface SpreadsheetMetadata {
   exportReason?: string;
   
   // Content type
-  contentType: 'element-sets' | 'concept-schemes' | 'mixed';
+  contentType: 'element-sets' | 'concept-schemes';
   
   // Worksheets to import
   worksheets: {
@@ -106,7 +106,7 @@ interface Project {
   namespaces: string[];
 }
 
-const steps = ['Basic Info', 'Content Details', 'Languages & DCTAP', 'Project & Submit'];
+const steps = ['Connect Spreadsheet', 'Basic Info', 'Content Details', 'Languages & DCTAP', 'Project & Submit'];
 
 // Mock data
 const mockNamespaces = [
@@ -209,16 +209,55 @@ export default function AdoptSpreadsheetFormV2({
         setBasicInfo(data.data);
         
         // Pre-populate metadata with what we found
-        setMetadata(prev => ({
-          ...prev,
-          spreadsheetName: data.data.sheetName || prev.spreadsheetName,
-          worksheets: data.data.worksheets.map((ws: { name: string; headers?: string[] }) => ({
-            name: ws.name,
-            type: 'skip', // User will set this
-            elementSetName: '',
-            conceptSchemeName: '',
-          })),
-        }));
+        setMetadata(prev => {
+          // Try to detect worksheet types based on name
+          const worksheets = data.data.worksheets.map((ws: { name: string; headers?: string[] }) => {
+            const lowerName = ws.name.toLowerCase();
+            let type: 'element-set' | 'concept-scheme' | 'index' | 'dctap' | 'skip' = 'skip';
+            let elementSetName = '';
+            let conceptSchemeName = '';
+            
+            if (lowerName === 'index') {
+              type = 'index';
+            } else if (lowerName.includes('element') || lowerName.includes('properties')) {
+              type = 'element-set';
+              // Extract element set name from sheet name
+              elementSetName = ws.name;
+            } else if (lowerName.includes('concept') || lowerName.includes('scheme') || lowerName.includes('vocabulary')) {
+              type = 'concept-scheme';
+              conceptSchemeName = ws.name;
+            } else if (lowerName.includes('dctap') || lowerName.includes('profile')) {
+              type = 'dctap';
+            }
+            
+            return {
+              name: ws.name,
+              type,
+              elementSetName,
+              conceptSchemeName,
+            };
+          });
+          
+          // Auto-detect content type based on worksheets
+          const hasElementSets = worksheets.some((ws: any) => ws.type === 'element-set');
+          const hasConceptSchemes = worksheets.some((ws: any) => ws.type === 'concept-scheme');
+          let contentType = prev.contentType;
+          
+          if (hasElementSets && !hasConceptSchemes) {
+            contentType = 'element-sets';
+          } else if (!hasElementSets && hasConceptSchemes) {
+            contentType = 'concept-schemes';
+          }
+          
+          return {
+            ...prev,
+            spreadsheetName: data.data.sheetName || prev.spreadsheetName,
+            worksheets,
+            contentType,
+            // Set export date to today if not already set
+            exportedAt: prev.exportedAt || new Date().toISOString().split('T')[0],
+          };
+        });
       } else {
         // If API fails, just use minimal info
         setBasicInfo({
@@ -228,6 +267,7 @@ export default function AdoptSpreadsheetFormV2({
         });
       }
       
+      // Move to next step after successful fetch
       setActiveStep(1);
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Failed to fetch spreadsheet info');
@@ -321,14 +361,14 @@ export default function AdoptSpreadsheetFormV2({
   // Render step content
   const renderStepContent = () => {
     switch (activeStep) {
-      case 0: // Basic Info
+      case 0: // Connect Spreadsheet
         return (
           <Box>
             <Typography variant="h6" gutterBottom>
-              Basic Spreadsheet Information
+              Connect to Google Sheets
             </Typography>
             <Typography variant="body2" color="text.secondary" sx={{ mb: 3 }}>
-              Enter the Google Sheets URL and basic information about when and why this spreadsheet was created.
+              Enter the Google Sheets URL to fetch spreadsheet information automatically.
             </Typography>
             
             <Stack spacing={3}>
@@ -339,14 +379,48 @@ export default function AdoptSpreadsheetFormV2({
                 onChange={(e) => setMetadata(prev => ({ ...prev, spreadsheetUrl: e.target.value }))}
                 placeholder="https://docs.google.com/spreadsheets/d/..."
                 required
+                helperText="Paste the full URL of your Google Sheets spreadsheet"
               />
               
+              {basicInfo && (
+                <Alert severity="success" icon={<CheckCircleIcon />}>
+                  <Typography variant="subtitle2">Connected to: {basicInfo.sheetName}</Typography>
+                  <Typography variant="body2">Found {basicInfo.worksheets.length} worksheets</Typography>
+                </Alert>
+              )}
+            </Stack>
+            
+            <Box sx={{ mt: 3, display: 'flex', justifyContent: 'flex-end' }}>
+              <Button
+                variant="contained"
+                onClick={fetchBasicInfo}
+                disabled={!metadata.spreadsheetUrl || loading}
+                startIcon={loading ? <CircularProgress size={20} /> : <CloudUploadIcon />}
+              >
+                {loading ? 'Connecting...' : 'Connect & Fetch Info'}
+              </Button>
+            </Box>
+          </Box>
+        );
+
+      case 1: // Basic Info
+        return (
+          <Box>
+            <Typography variant="h6" gutterBottom>
+              Basic Information
+            </Typography>
+            <Typography variant="body2" color="text.secondary" sx={{ mb: 3 }}>
+              Provide basic information about when and why this spreadsheet was created.
+            </Typography>
+            
+            <Stack spacing={3}>
               <TextField
                 fullWidth
                 label="Spreadsheet Name"
                 value={metadata.spreadsheetName}
                 onChange={(e) => setMetadata(prev => ({ ...prev, spreadsheetName: e.target.value }))}
                 helperText="A descriptive name for this spreadsheet"
+                required
               />
               
               <FormControl fullWidth required>
@@ -370,6 +444,7 @@ export default function AdoptSpreadsheetFormV2({
                 value={metadata.exportedBy}
                 onChange={(e) => setMetadata(prev => ({ ...prev, exportedBy: e.target.value }))}
                 helperText="Who created/exported this spreadsheet"
+                required
               />
               
               <TextField
@@ -379,6 +454,7 @@ export default function AdoptSpreadsheetFormV2({
                 value={metadata.exportedAt}
                 onChange={(e) => setMetadata(prev => ({ ...prev, exportedAt: e.target.value }))}
                 InputLabelProps={{ shrink: true }}
+                required
               />
               
               <TextField
@@ -392,20 +468,22 @@ export default function AdoptSpreadsheetFormV2({
               />
             </Stack>
             
-            <Box sx={{ mt: 3, display: 'flex', justifyContent: 'flex-end' }}>
-              <Button
-                variant="contained"
-                onClick={fetchBasicInfo}
-                disabled={!metadata.spreadsheetUrl || loading}
-                startIcon={loading ? <CircularProgress size={20} /> : <CloudUploadIcon />}
+            <Box sx={{ mt: 3, display: 'flex', justifyContent: 'space-between' }}>
+              <Button onClick={() => setActiveStep(0)} startIcon={<ArrowBackIcon />}>
+                Back
+              </Button>
+              <Button 
+                variant="contained" 
+                onClick={() => setActiveStep(2)}
+                disabled={!metadata.spreadsheetName || !metadata.namespace || !metadata.exportedBy}
               >
-                {loading ? 'Fetching...' : 'Next: Analyze Sheets'}
+                Next: Content Details
               </Button>
             </Box>
           </Box>
         );
 
-      case 1: // Content Details
+      case 2: // Content Details
         return (
           <Box>
             <Typography variant="h6" gutterBottom>
@@ -422,11 +500,10 @@ export default function AdoptSpreadsheetFormV2({
                 </Typography>
                 <RadioGroup
                   value={metadata.contentType}
-                  onChange={(e) => setMetadata(prev => ({ ...prev, contentType: e.target.value as 'element-sets' | 'concept-schemes' | 'mixed' }))}
+                  onChange={(e) => setMetadata(prev => ({ ...prev, contentType: e.target.value as 'element-sets' | 'concept-schemes' }))}
                 >
                   <FormControlLabel value="element-sets" control={<Radio />} label="Element Sets (Properties/Elements)" />
                   <FormControlLabel value="concept-schemes" control={<Radio />} label="Concept Schemes (Vocabularies/Terms)" />
-                  <FormControlLabel value="mixed" control={<Radio />} label="Mixed (Both types)" />
                 </RadioGroup>
               </FormControl>
               
@@ -496,17 +573,17 @@ export default function AdoptSpreadsheetFormV2({
             </Stack>
             
             <Box sx={{ mt: 3, display: 'flex', justifyContent: 'space-between' }}>
-              <Button onClick={() => setActiveStep(0)} startIcon={<ArrowBackIcon />}>
+              <Button onClick={() => setActiveStep(1)} startIcon={<ArrowBackIcon />}>
                 Back
               </Button>
-              <Button variant="contained" onClick={() => setActiveStep(2)}>
+              <Button variant="contained" onClick={() => setActiveStep(3)}>
                 Next: Languages & DCTAP
               </Button>
             </Box>
           </Box>
         );
 
-      case 2: // Languages & DCTAP
+      case 3: // Languages & DCTAP
         return (
           <Box>
             <Typography variant="h6" gutterBottom>
@@ -594,17 +671,17 @@ export default function AdoptSpreadsheetFormV2({
             </Stack>
             
             <Box sx={{ mt: 3, display: 'flex', justifyContent: 'space-between' }}>
-              <Button onClick={() => setActiveStep(1)} startIcon={<ArrowBackIcon />}>
+              <Button onClick={() => setActiveStep(2)} startIcon={<ArrowBackIcon />}>
                 Back
               </Button>
-              <Button variant="contained" onClick={() => setActiveStep(3)}>
+              <Button variant="contained" onClick={() => setActiveStep(4)}>
                 Next: Project Assignment
               </Button>
             </Box>
           </Box>
         );
 
-      case 3: // Project & Submit
+      case 4: // Project & Submit
         return (
           <Box>
             <Typography variant="h6" gutterBottom>
@@ -699,7 +776,7 @@ export default function AdoptSpreadsheetFormV2({
             </Stack>
             
             <Box sx={{ mt: 3, display: 'flex', justifyContent: 'space-between' }}>
-              <Button onClick={() => setActiveStep(2)} startIcon={<ArrowBackIcon />}>
+              <Button onClick={() => setActiveStep(3)} startIcon={<ArrowBackIcon />}>
                 Back
               </Button>
               <Button

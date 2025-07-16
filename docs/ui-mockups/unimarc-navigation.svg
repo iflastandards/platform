@@ -1,0 +1,141 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="1200" height="900" viewBox="0 0 1200 900" xmlns="http://www.w3.org/2000/svg">
+  <!-- Background -->
+  <rect width="1200" height="900" fill="#f8f9fa"/>
+  
+  <!-- Header -->
+  <rect x="0" y="0" width="1200" height="60" fill="#7b1fa2"/>
+  <text x="40" y="38" font-family="Arial, sans-serif" font-size="24" font-weight="bold" fill="white">UNIMARC - Universal Machine-Readable Cataloguing</text>
+  
+  <!-- Navigation Bar -->
+  <rect x="0" y="60" width="1200" height="50" fill="white" stroke="#e0e0e0"/>
+  <text x="40" y="90" font-family="Arial, sans-serif" font-size="16" fill="#333">Home</text>
+  
+  <!-- Element Sets Dropdown (shown expanded) -->
+  <rect x="120" y="75" width="150" height="30" fill="#f5f5f5" rx="4"/>
+  <text x="130" y="95" font-family="Arial, sans-serif" font-size="16" fill="#333">Element Sets ▼</text>
+  
+  <!-- Dropdown Menu -->
+  <rect x="120" y="110" width="300" height="400" fill="white" stroke="#ccc" stroke-width="1" rx="4"/>
+  <rect x="120" y="110" width="300" height="40" fill="#f5f5f5"/>
+  <text x="140" y="135" font-family="Arial, sans-serif" font-size="14" font-weight="bold" fill="#666">Control &amp; Coded Fields</text>
+  
+  <rect x="120" y="150" width="300" height="35" fill="white"/>
+  <text x="160" y="172" font-family="Arial, sans-serif" font-size="14" fill="#333">0XX - Control Fields</text>
+  
+  <rect x="120" y="185" width="300" height="35" fill="white"/>
+  <text x="160" y="207" font-family="Arial, sans-serif" font-size="14" fill="#333">1XX - Coded Information</text>
+  
+  <rect x="120" y="220" width="300" height="40" fill="#f5f5f5"/>
+  <text x="140" y="245" font-family="Arial, sans-serif" font-size="14" font-weight="bold" fill="#666">Descriptive Information</text>
+  
+  <rect x="120" y="260" width="300" height="35" fill="white"/>
+  <text x="160" y="282" font-family="Arial, sans-serif" font-size="14" fill="#333">2XX - Descriptive Info</text>
+  
+  <rect x="120" y="295" width="300" height="35" fill="white"/>
+  <text x="160" y="317" font-family="Arial, sans-serif" font-size="14" fill="#333">3XX - Notes</text>
+  
+  <rect x="120" y="330" width="300" height="40" fill="#f5f5f5"/>
+  <text x="140" y="355" font-family="Arial, sans-serif" font-size="14" font-weight="bold" fill="#666">Linking Fields (8 sets)</text>
+  
+  <rect x="120" y="370" width="300" height="35" fill="white"/>
+  <text x="160" y="392" font-family="Arial, sans-serif" font-size="14" fill="#333">41X-48X - Various Links</text>
+  
+  <rect x="120" y="405" width="300" height="40" fill="#f5f5f5"/>
+  <text x="140" y="430" font-family="Arial, sans-serif" font-size="14" font-weight="bold" fill="#666">Subject Access (6 sets)</text>
+  
+  <rect x="120" y="445" width="300" height="35" fill="white"/>
+  <text x="160" y="467" font-family="Arial, sans-serif" font-size="14" fill="#333">60X-68X - Subject Fields</text>
+  
+  <text x="280" y="90" font-family="Arial, sans-serif" font-size="16" fill="#333">Vocabularies ▼</text>
+  <text x="410" y="90" font-family="Arial, sans-serif" font-size="16" fill="#333">Documentation</text>
+  
+  <!-- Main Content Area -->
+  <text x="40" y="150" font-family="Arial, sans-serif" font-size="32" font-weight="bold" fill="#333">UNIMARC Namespace</text>
+  <text x="40" y="180" font-family="Arial, sans-serif" font-size="16" fill="#666">Comprehensive format for bibliographic data exchange with 24 specialized element sets</text>
+  
+  <!-- Stats -->
+  <rect x="40" y="200" width="1120" height="80" rx="8" fill="#f3e5f5"/>
+  <text x="100" y="230" font-family="Arial, sans-serif" font-size="14" fill="#666">Total Elements</text>
+  <text x="100" y="255" font-family="Arial, sans-serif" font-size="24" font-weight="bold" fill="#7b1fa2">2,847</text>
+  
+  <text x="350" y="230" font-family="Arial, sans-serif" font-size="14" fill="#666">Element Sets</text>
+  <text x="350" y="255" font-family="Arial, sans-serif" font-size="24" font-weight="bold" fill="#7b1fa2">24</text>
+  
+  <text x="600" y="230" font-family="Arial, sans-serif" font-size="14" fill="#666">Vocabularies</text>
+  <text x="600" y="255" font-family="Arial, sans-serif" font-size="24" font-weight="bold" fill="#7b1fa2">45+</text>
+  
+  <!-- Tree Navigation -->
+  <rect x="40" y="300" width="360" height="580" rx="8" fill="white" stroke="#e0e0e0"/>
+  <text x="60" y="330" font-family="Arial, sans-serif" font-size="20" font-weight="bold" fill="#333">Element Sets by Category</text>
+  
+  <!-- Tree Structure -->
+  <text x="80" y="370" font-family="Arial, sans-serif" font-size="14" fill="#333">▼ Control &amp; Coded Information</text>
+  <text x="100" y="395" font-family="Arial, sans-serif" font-size="13" fill="#7b1fa2">├─ 0XX - Control Fields</text>
+  <text x="100" y="420" font-family="Arial, sans-serif" font-size="13" fill="#7b1fa2">└─ 1XX - Coded Information</text>
+  
+  <text x="80" y="455" font-family="Arial, sans-serif" font-size="14" fill="#333">▼ Descriptive Information</text>
+  <text x="100" y="480" font-family="Arial, sans-serif" font-size="13" fill="#7b1fa2">├─ 2XX - Descriptive Info</text>
+  <text x="100" y="505" font-family="Arial, sans-serif" font-size="13" fill="#7b1fa2">└─ 3XX - Notes</text>
+  
+  <text x="80" y="540" font-family="Arial, sans-serif" font-size="14" fill="#333">▶ Linking Fields (8 sets)</text>
+  
+  <text x="80" y="575" font-family="Arial, sans-serif" font-size="14" fill="#333">▶ Related Titles</text>
+  
+  <text x="80" y="610" font-family="Arial, sans-serif" font-size="14" fill="#333">▼ Subject Access</text>
+  <text x="100" y="635" font-family="Arial, sans-serif" font-size="13" fill="#7b1fa2">├─ 60X - Subject Analysis</text>
+  <text x="100" y="660" font-family="Arial, sans-serif" font-size="13" fill="#7b1fa2">├─ 61X - Subject Terms</text>
+  <text x="100" y="685" font-family="Arial, sans-serif" font-size="13" fill="#7b1fa2">├─ 62X - Subject Classification</text>
+  <text x="100" y="710" font-family="Arial, sans-serif" font-size="13" fill="#7b1fa2">├─ 66X - Subject Codes</text>
+  <text x="100" y="735" font-family="Arial, sans-serif" font-size="13" fill="#7b1fa2">├─ 67X - UDC</text>
+  <text x="100" y="760" font-family="Arial, sans-serif" font-size="13" fill="#7b1fa2">└─ 68X - Other Classifications</text>
+  
+  <text x="80" y="795" font-family="Arial, sans-serif" font-size="14" fill="#333">▶ Responsibility &amp; Notes (6 sets)</text>
+  
+  <!-- Right Side - Element Set Grid -->
+  <text x="440" y="330" font-family="Arial, sans-serif" font-size="20" font-weight="bold" fill="#333">Browse Element Sets</text>
+  
+  <!-- Quick Access Grid -->
+  <rect x="440" y="360" width="160" height="100" rx="8" fill="white" stroke="#e0e0e0"/>
+  <text x="460" y="390" font-family="Arial, sans-serif" font-size="16" font-weight="bold" fill="#7b1fa2">0XX</text>
+  <text x="460" y="410" font-family="Arial, sans-serif" font-size="12" fill="#666">Control Fields</text>
+  <text x="460" y="430" font-family="Arial, sans-serif" font-size="12" fill="#666">15 elements</text>
+  
+  <rect x="620" y="360" width="160" height="100" rx="8" fill="white" stroke="#e0e0e0"/>
+  <text x="640" y="390" font-family="Arial, sans-serif" font-size="16" font-weight="bold" fill="#7b1fa2">1XX</text>
+  <text x="640" y="410" font-family="Arial, sans-serif" font-size="12" fill="#666">Coded Information</text>
+  <text x="640" y="430" font-family="Arial, sans-serif" font-size="12" fill="#666">125 elements</text>
+  
+  <rect x="800" y="360" width="160" height="100" rx="8" fill="white" stroke="#e0e0e0"/>
+  <text x="820" y="390" font-family="Arial, sans-serif" font-size="16" font-weight="bold" fill="#7b1fa2">2XX</text>
+  <text x="820" y="410" font-family="Arial, sans-serif" font-size="12" fill="#666">Descriptive Info</text>
+  <text x="820" y="430" font-family="Arial, sans-serif" font-size="12" fill="#666">210 elements</text>
+  
+  <rect x="980" y="360" width="160" height="100" rx="8" fill="white" stroke="#e0e0e0"/>
+  <text x="1000" y="390" font-family="Arial, sans-serif" font-size="16" font-weight="bold" fill="#7b1fa2">3XX</text>
+  <text x="1000" y="410" font-family="Arial, sans-serif" font-size="12" fill="#666">Notes</text>
+  <text x="1000" y="430" font-family="Arial, sans-serif" font-size="12" fill="#666">85 elements</text>
+  
+  <!-- Search Box -->
+  <rect x="440" y="490" width="700" height="80" rx="8" fill="#f3e5f5"/>
+  <text x="460" y="520" font-family="Arial, sans-serif" font-size="16" font-weight="bold" fill="#333">Quick Search</text>
+  <rect x="460" y="530" width="500" height="30" rx="4" fill="white" stroke="#ccc"/>
+  <text x="470" y="550" font-family="Arial, sans-serif" font-size="14" fill="#999">Search across all 24 element sets...</text>
+  
+  <rect x="980" y="530" width="140" height="30" rx="4" fill="#7b1fa2"/>
+  <text x="1010" y="550" font-family="Arial, sans-serif" font-size="14" fill="white">Search All</text>
+  
+  <!-- Bottom Info -->
+  <rect x="440" y="600" width="700" height="280" rx="8" fill="white" stroke="#e0e0e0"/>
+  <text x="460" y="630" font-family="Arial, sans-serif" font-size="18" font-weight="bold" fill="#333">Understanding UNIMARC Structure</text>
+  
+  <text x="460" y="660" font-family="Arial, sans-serif" font-size="14" fill="#666">UNIMARC organizes elements by field numbers:</text>
+  
+  <rect x="460" y="680" width="660" height="180" fill="#f5f5f5" rx="4"/>
+  <text x="480" y="705" font-family="Arial, sans-serif" font-size="13" fill="#333">• 0XX-1XX: Control and coded information</text>
+  <text x="480" y="730" font-family="Arial, sans-serif" font-size="13" fill="#333">• 2XX-3XX: Descriptive information and notes</text>
+  <text x="480" y="755" font-family="Arial, sans-serif" font-size="13" fill="#333">• 4XX: Linking fields for relationships between records</text>
+  <text x="480" y="780" font-family="Arial, sans-serif" font-size="13" fill="#333">• 5XX: Related titles</text>
+  <text x="480" y="805" font-family="Arial, sans-serif" font-size="13" fill="#333">• 6XX: Subject access points</text>
+  <text x="480" y="830" font-family="Arial, sans-serif" font-size="13" fill="#333">• 7XX-8XX: Responsibility, source, and holdings</text>
+</svg>

@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="1200" height="700" viewBox="0 0 1200 700" xmlns="http://www.w3.org/2000/svg">
+  <!-- Background -->
+  <rect width="1200" height="700" fill="#f8f9fa"/>
+  
+  <!-- Header -->
+  <rect x="0" y="0" width="1200" height="60" fill="#1976d2"/>
+  <text x="40" y="38" font-family="Arial, sans-serif" font-size="24" font-weight="bold" fill="white">Element Set Comparison Tool</text>
+  
+  <!-- Tool Description -->
+  <text x="40" y="100" font-family="Arial, sans-serif" font-size="18" font-weight="bold" fill="#333">Compare Elements Across ISBD Element Sets</text>
+  <text x="40" y="125" font-family="Arial, sans-serif" font-size="14" fill="#666">See how elements differ between constrained and unconstrained versions</text>
+  
+  <!-- View Toggle -->
+  <rect x="40" y="145" width="1120" height="50" rx="25" fill="#e0e0e0"/>
+  <rect x="45" y="150" width="200" height="40" rx="20" fill="#1976d2"/>
+  <text x="110" y="175" font-family="Arial, sans-serif" font-size="14" fill="white" font-weight="bold">Side by Side</text>
+  <text x="300" y="175" font-family="Arial, sans-serif" font-size="14" fill="#666">Show Differences Only</text>
+  
+  <!-- Comparison Header -->
+  <rect x="40" y="220" width="560" height="50" fill="#e3f2fd" stroke="#1976d2"/>
+  <text x="270" y="250" font-family="Arial, sans-serif" font-size="16" font-weight="bold" fill="#1976d2">ISBD Elements</text>
+  
+  <rect x="600" y="220" width="560" height="50" fill="#fce4ec" stroke="#c2185b"/>
+  <text x="810" y="250" font-family="Arial, sans-serif" font-size="16" font-weight="bold" fill="#c2185b">ISBD Unconstrained</text>
+  
+  <!-- Element Comparison 1 -->
+  <rect x="40" y="270" width="560" height="120" fill="white" stroke="#e0e0e0"/>
+  <rect x="600" y="270" width="560" height="120" fill="white" stroke="#e0e0e0"/>
+  
+  <!-- Left side - ISBD -->
+  <text x="60" y="300" font-family="Arial, sans-serif" font-size="16" font-weight="bold" fill="#1976d2">has title proper</text>
+  <text x="480" y="300" font-family="Arial, sans-serif" font-size="12" fill="#666">P1001</text>
+  <text x="60" y="320" font-family="Arial, sans-serif" font-size="13" fill="#333">Relates a resource to a title that is the</text>
+  <text x="60" y="335" font-family="Arial, sans-serif" font-size="13" fill="#333">chief title of a resource</text>
+  
+  <rect x="60" y="350" width="100" height="25" rx="4" fill="#e3f2fd"/>
+  <text x="80" y="367" font-family="Arial, sans-serif" font-size="12" fill="#1976d2">Domain: Resource</text>
+  
+  <rect x="170" y="350" width="100" height="25" rx="4" fill="#e3f2fd"/>
+  <text x="190" y="367" font-family="Arial, sans-serif" font-size="12" fill="#1976d2">Range: Literal</text>
+  
+  <!-- Right side - Unconstrained -->
+  <text x="620" y="300" font-family="Arial, sans-serif" font-size="16" font-weight="bold" fill="#c2185b">has title proper</text>
+  <text x="1040" y="300" font-family="Arial, sans-serif" font-size="12" fill="#666">U1001</text>
+  <text x="620" y="320" font-family="Arial, sans-serif" font-size="13" fill="#333">Relates a resource to a title that is the</text>
+  <text x="620" y="335" font-family="Arial, sans-serif" font-size="13" fill="#333">chief title of a resource</text>
+  
+  <rect x="620" y="350" width="180" height="25" rx="4" fill="#fce4ec"/>
+  <text x="640" y="367" font-family="Arial, sans-serif" font-size="12" fill="#c2185b">No domain/range constraints</text>
+  
+  <!-- Difference Indicator -->
+  <circle cx="580" cy="360" r="15" fill="#ff9800"/>
+  <text x="575" y="365" font-family="Arial, sans-serif" font-size="12" fill="white" font-weight="bold">!</text>
+  
+  <!-- Element Comparison 2 -->
+  <rect x="40" y="410" width="560" height="120" fill="#fafafa" stroke="#e0e0e0"/>
+  <rect x="600" y="410" width="560" height="120" fill="#fafafa" stroke="#e0e0e0"/>
+  
+  <!-- Left side - ISBD -->
+  <text x="60" y="440" font-family="Arial, sans-serif" font-size="16" font-weight="bold" fill="#1976d2">has creator agent of resource</text>
+  <text x="480" y="440" font-family="Arial, sans-serif" font-size="12" fill="#666">P1015</text>
+  <text x="60" y="460" font-family="Arial, sans-serif" font-size="13" fill="#333">Relates a resource to an agent responsible</text>
+  <text x="60" y="475" font-family="Arial, sans-serif" font-size="13" fill="#333">for the creation of the resource</text>
+  
+  <rect x="60" y="490" width="100" height="25" rx="4" fill="#e3f2fd"/>
+  <text x="80" y="507" font-family="Arial, sans-serif" font-size="12" fill="#1976d2">Domain: Resource</text>
+  
+  <rect x="170" y="490" width="100" height="25" rx="4" fill="#e3f2fd"/>
+  <text x="190" y="507" font-family="Arial, sans-serif" font-size="12" fill="#1976d2">Range: Agent</text>
+  
+  <!-- Right side - Unconstrained -->
+  <text x="620" y="440" font-family="Arial, sans-serif" font-size="16" font-weight="bold" fill="#c2185b">has creator agent</text>
+  <text x="1040" y="440" font-family="Arial, sans-serif" font-size="12" fill="#666">U1015</text>
+  <text x="620" y="460" font-family="Arial, sans-serif" font-size="13" fill="#333">Relates a resource to an agent responsible</text>
+  <text x="620" y="475" font-family="Arial, sans-serif" font-size="13" fill="#333">for the creation</text>
+  
+  <rect x="620" y="490" width="180" height="25" rx="4" fill="#fce4ec"/>
+  <text x="640" y="507" font-family="Arial, sans-serif" font-size="12" fill="#c2185b">No domain/range constraints</text>
+  
+  <!-- Difference Indicators -->
+  <circle cx="580" cy="440" r="15" fill="#ff9800"/>
+  <text x="575" y="445" font-family="Arial, sans-serif" font-size="12" fill="white" font-weight="bold">!</text>
+  
+  <circle cx="580" cy="500" r="15" fill="#ff9800"/>
+  <text x="575" y="505" font-family="Arial, sans-serif" font-size="12" fill="white" font-weight="bold">!</text>
+  
+  <!-- Summary Stats -->
+  <rect x="40" y="560" width="1120" height="120" rx="8" fill="#fff3e0"/>
+  <text x="60" y="590" font-family="Arial, sans-serif" font-size="18" font-weight="bold" fill="#333">Comparison Summary</text>
+  
+  <text x="60" y="620" font-family="Arial, sans-serif" font-size="14" fill="#666">Total elements compared: 185</text>
+  <text x="60" y="645" font-family="Arial, sans-serif" font-size="14" fill="#666">Elements with differences: 185 (100%)</text>
+  
+  <text x="400" y="620" font-family="Arial, sans-serif" font-size="14" fill="#666">Main differences:</text>
+  <text x="400" y="645" font-family="Arial, sans-serif" font-size="14" fill="#666">• All unconstrained elements lack domain/range</text>
+  
+  <text x="800" y="620" font-family="Arial, sans-serif" font-size="14" fill="#666">Label differences: 12</text>
+  <text x="800" y="645" font-family="Arial, sans-serif" font-size="14" fill="#666">Definition differences: 8</text>
+</svg>

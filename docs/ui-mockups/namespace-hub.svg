@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="1200" height="800" viewBox="0 0 1200 800" xmlns="http://www.w3.org/2000/svg">
+  <!-- Background -->
+  <rect width="1200" height="800" fill="#f8f9fa"/>
+  
+  <!-- Header -->
+  <rect x="0" y="0" width="1200" height="80" fill="#1976d2"/>
+  <text x="40" y="50" font-family="Arial, sans-serif" font-size="28" font-weight="bold" fill="white">ISBD - International Standard Bibliographic Description</text>
+  
+  <!-- Navigation Bar -->
+  <rect x="0" y="80" width="1200" height="60" fill="#ffffff" stroke="#e0e0e0"/>
+  <text x="40" y="115" font-family="Arial, sans-serif" font-size="16" fill="#333">Home</text>
+  <text x="120" y="115" font-family="Arial, sans-serif" font-size="16" fill="#333">Element Sets ▼</text>
+  <text x="250" y="115" font-family="Arial, sans-serif" font-size="16" fill="#333">Vocabularies ▼</text>
+  <text x="380" y="115" font-family="Arial, sans-serif" font-size="16" fill="#333">Documentation</text>
+  
+  <!-- Page Title and Description -->
+  <text x="40" y="190" font-family="Arial, sans-serif" font-size="32" font-weight="bold" fill="#333">ISBD Namespace</text>
+  <text x="40" y="220" font-family="Arial, sans-serif" font-size="16" fill="#666">The ISBD provides the requirements for the description and identification of published resources.</text>
+  
+  <!-- Stats Bar -->
+  <rect x="40" y="240" width="1120" height="80" rx="8" fill="#e3f2fd"/>
+  <text x="100" y="270" font-family="Arial, sans-serif" font-size="14" fill="#666">Total Elements</text>
+  <text x="100" y="295" font-family="Arial, sans-serif" font-size="24" font-weight="bold" fill="#1976d2">370</text>
+  
+  <text x="300" y="270" font-family="Arial, sans-serif" font-size="14" fill="#666">Element Sets</text>
+  <text x="300" y="295" font-family="Arial, sans-serif" font-size="24" font-weight="bold" fill="#1976d2">2</text>
+  
+  <text x="500" y="270" font-family="Arial, sans-serif" font-size="14" fill="#666">Vocabularies</text>
+  <text x="500" y="295" font-family="Arial, sans-serif" font-size="24" font-weight="bold" fill="#1976d2">7</text>
+  
+  <text x="700" y="270" font-family="Arial, sans-serif" font-size="14" fill="#666">Last Updated</text>
+  <text x="700" y="295" font-family="Arial, sans-serif" font-size="24" font-weight="bold" fill="#1976d2">2025-01-15</text>
+  
+  <!-- Element Sets Section -->
+  <text x="40" y="370" font-family="Arial, sans-serif" font-size="24" font-weight="bold" fill="#333">Element Sets</text>
+  
+  <!-- Element Set Card 1 -->
+  <rect x="40" y="400" width="540" height="160" rx="8" fill="white" stroke="#e0e0e0"/>
+  <text x="60" y="430" font-family="Arial, sans-serif" font-size="20" font-weight="bold" fill="#1976d2">ISBD Elements</text>
+  <text x="60" y="455" font-family="Arial, sans-serif" font-size="14" fill="#666">Core ISBD elements with domain and range constraints</text>
+  <text x="60" y="475" font-family="Arial, sans-serif" font-size="14" fill="#666">for RDF applications</text>
+  
+  <rect x="60" y="490" width="80" height="30" fill="#f5f5f5" rx="4"/>
+  <text x="80" y="508" font-family="Arial, sans-serif" font-size="12" fill="#666">185 elements</text>
+  
+  <rect x="150" y="490" width="100" height="30" fill="#f5f5f5" rx="4"/>
+  <text x="165" y="508" font-family="Arial, sans-serif" font-size="12" fill="#666">4 categories</text>
+  
+  <rect x="450" y="510" width="110" height="36" rx="4" fill="#1976d2"/>
+  <text x="470" y="532" font-family="Arial, sans-serif" font-size="14" fill="white">Browse →</text>
+  
+  <!-- Element Set Card 2 -->
+  <rect x="620" y="400" width="540" height="160" rx="8" fill="white" stroke="#e0e0e0"/>
+  <text x="640" y="430" font-family="Arial, sans-serif" font-size="20" font-weight="bold" fill="#1976d2">ISBD Unconstrained</text>
+  <text x="640" y="455" font-family="Arial, sans-serif" font-size="14" fill="#666">ISBD elements without domain/range constraints</text>
+  <text x="640" y="475" font-family="Arial, sans-serif" font-size="14" fill="#666">for maximum flexibility</text>
+  
+  <rect x="640" y="490" width="80" height="30" fill="#f5f5f5" rx="4"/>
+  <text x="660" y="508" font-family="Arial, sans-serif" font-size="12" fill="#666">185 elements</text>
+  
+  <rect x="730" y="490" width="100" height="30" fill="#f5f5f5" rx="4"/>
+  <text x="745" y="508" font-family="Arial, sans-serif" font-size="12" fill="#666">1 category</text>
+  
+  <rect x="1030" y="510" width="110" height="36" rx="4" fill="#1976d2"/>
+  <text x="1050" y="532" font-family="Arial, sans-serif" font-size="14" fill="white">Browse →</text>
+  
+  <!-- Vocabularies Section -->
+  <text x="40" y="620" font-family="Arial, sans-serif" font-size="24" font-weight="bold" fill="#333">Vocabularies</text>
+  
+  <!-- Vocabulary Cards (simplified) -->
+  <rect x="40" y="650" width="260" height="120" rx="8" fill="white" stroke="#e0e0e0"/>
+  <text x="60" y="680" font-family="Arial, sans-serif" font-size="18" font-weight="bold" fill="#388e3c">Content Form</text>
+  <text x="60" y="705" font-family="Arial, sans-serif" font-size="12" fill="#666">25 terms</text>
+  <rect x="210" y="720" width="70" height="30" rx="4" fill="#388e3c"/>
+  <text x="225" y="740" font-family="Arial, sans-serif" font-size="12" fill="white">View</text>
+  
+  <rect x="320" y="650" width="260" height="120" rx="8" fill="white" stroke="#e0e0e0"/>
+  <text x="340" y="680" font-family="Arial, sans-serif" font-size="18" font-weight="bold" fill="#388e3c">Media Type</text>
+  <text x="340" y="705" font-family="Arial, sans-serif" font-size="12" fill="#666">12 terms</text>
+  <rect x="490" y="720" width="70" height="30" rx="4" fill="#388e3c"/>
+  <text x="505" y="740" font-family="Arial, sans-serif" font-size="12" fill="white">View</text>
+  
+  <rect x="600" y="650" width="260" height="120" rx="8" fill="white" stroke="#e0e0e0"/>
+  <text x="620" y="680" font-family="Arial, sans-serif" font-size="18" font-weight="bold" fill="#388e3c">Content Form Base</text>
+  <text x="620" y="705" font-family="Arial, sans-serif" font-size="12" fill="#666">8 terms</text>
+  <rect x="770" y="720" width="70" height="30" rx="4" fill="#388e3c"/>
+  <text x="785" y="740" font-family="Arial, sans-serif" font-size="12" fill="white">View</text>
+  
+  <rect x="880" y="650" width="260" height="120" rx="8" fill="white" stroke="#e0e0e0"/>
+  <text x="900" y="680" font-family="Arial, sans-serif" font-size="18" font-weight="bold" fill="#388e3c">Content Qualification</text>
+  <text x="900" y="705" font-family="Arial, sans-serif" font-size="12" fill="#666">48 terms</text>
+  <rect x="1050" y="720" width="70" height="30" rx="4" fill="#388e3c"/>
+  <text x="1065" y="740" font-family="Arial, sans-serif" font-size="12" fill="white">View</text>
+</svg>
