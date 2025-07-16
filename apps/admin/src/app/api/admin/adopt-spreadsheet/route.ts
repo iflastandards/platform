@@ -18,18 +18,42 @@ export async function POST(request: NextRequest) {
 
     const body = await request.json();
     const {
+      // Basic info
       spreadsheetUrl,
+      spreadsheetName,
+      namespace,
+      
+      // Export info
+      exportedBy,
+      exportedAt,
+      exportReason,
+      
+      // Content info
+      contentType,
+      worksheets,
+      
+      // Languages
+      languages,
+      primaryLanguage,
+      
+      // DCTAP
+      dctapUsed,
+      dctapEmbedded,
+      
+      // Project
       projectId,
       projectName,
       reviewGroup,
-      dctapProfileId,
+      
+      // Additional
+      notes,
       userName,
     } = body;
 
     // Validate required fields
-    if (!spreadsheetUrl || !dctapProfileId) {
+    if (!spreadsheetUrl || !namespace || !contentType) {
       return NextResponse.json(
-        { error: 'Missing required fields' },
+        { error: 'Missing required fields: spreadsheetUrl, namespace, or contentType' },
         { status: 400 }
       );
     }
@@ -44,13 +68,29 @@ export async function POST(request: NextRequest) {
     // Create adoption service
     const adoptionService = new AdoptionService();
 
-    // Adopt the spreadsheet
-    const result = await adoptionService.adoptSpreadsheet({
-      spreadsheetUrl,
+    // Adopt the spreadsheet with comprehensive metadata
+    const result = await adoptionService.adoptSpreadsheetWithBirthCertificate({
+      // Birth certificate data
+      birthCertificate: {
+        spreadsheetUrl,
+        spreadsheetName,
+        namespace,
+        exportedBy,
+        exportedAt,
+        exportReason,
+        contentType,
+        worksheets,
+        languages,
+        primaryLanguage,
+        dctapUsed,
+        dctapEmbedded,
+        notes,
+      },
+      // Project info
       projectId,
       projectName,
       reviewGroup,
-      dctapProfileId,
+      // User info
       userId,
       userName,
     });
@@ -86,6 +126,43 @@ export async function GET(request: NextRequest) {
     const sheetUrl = searchParams.get('url');
 
     const adoptionService = new AdoptionService();
+
+    if (action === 'basic-info' && sheetUrl) {
+      // Get basic spreadsheet info (sheet names and headers)
+      const sheetId = adoptionService.extractSheetId(sheetUrl);
+      if (!sheetId) {
+        return NextResponse.json(
+          { error: 'Invalid Google Sheets URL' },
+          { status: 400 }
+        );
+      }
+
+      try {
+        const analysis = await adoptionService.analyzeSpreadsheet(sheetUrl);
+        // Return simplified info for the form
+        return NextResponse.json({
+          success: true,
+          data: {
+            sheetId,
+            sheetName: analysis.sheetName,
+            worksheets: analysis.worksheets.map(ws => ({
+              name: ws.name,
+              headers: ws.headers,
+            })),
+          },
+        });
+      } catch (_error) {
+        // Even if analysis fails, return minimal info
+        return NextResponse.json({
+          success: true,
+          data: {
+            sheetId,
+            sheetName: 'Unknown Spreadsheet',
+            worksheets: [],
+          },
+        });
+      }
+    }
 
     if (action === 'analyze' && sheetUrl) {
       // Analyze spreadsheet structure

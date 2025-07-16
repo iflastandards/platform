@@ -42,6 +42,7 @@ import {
 } from '@mui/icons-material';
 import Link from 'next/link';
 import { addBasePath } from '@ifla/theme/utils';
+import type { SpreadsheetAnalysis } from '@/lib/services/adoption-service';
 
 interface AdoptSpreadsheetFormProps {
   userId: string;
@@ -63,26 +64,57 @@ interface DCTAPProfile {
   description: string;
 }
 
-interface SpreadsheetAnalysis {
+// Simplified analysis - just basic sheet info
+interface _BasicSheetInfo {
   sheetId: string;
   sheetName: string;
-  worksheets: WorksheetInfo[];
-  inferredType: 'element-sets' | 'concept-schemes' | 'mixed' | 'unknown';
-  languages: string[];
-  totalRows: number;
-  totalColumns: number;
+  worksheets: {
+    name: string;
+    headers?: string[]; // First row if available
+  }[];
 }
 
-interface WorksheetInfo {
-  name: string;
-  type: 'element-set' | 'concept-scheme' | 'index' | 'dctap' | 'unknown';
-  rows: number;
-  columns: number;
-  headers: string[];
+// Comprehensive metadata for the "birth certificate"
+interface _SpreadsheetMetadata {
+  // Basic info
+  spreadsheetUrl: string;
+  spreadsheetName: string;
+  namespace: string;
+  
+  // Export info (who created this spreadsheet)
+  exportedBy: string;
+  exportedAt: string;
+  exportReason?: string;
+  
+  // Content type
+  contentType: 'element-sets' | 'concept-schemes' | 'mixed';
+  
+  // Worksheets to import
+  worksheets: {
+    name: string;
+    type: 'element-set' | 'concept-scheme' | 'index' | 'dctap' | 'skip';
+    elementSetName?: string; // For element-set worksheets
+    conceptSchemeName?: string; // For concept-scheme worksheets
+  }[];
+  
+  // Languages
   languages: string[];
+  primaryLanguage: string;
+  
+  // DCTAP info
+  dctapUsed?: string; // Reference to DCTAP if known
+  dctapEmbedded: boolean; // Is DCTAP in the spreadsheet?
+  
+  // Project assignment
+  projectId?: string;
+  projectName?: string;
+  reviewGroup?: string;
+  
+  // Additional notes
+  notes?: string;
 }
 
-const steps = ['Enter URL', 'Analyze Structure', 'Assign Project', 'Configure Import'];
+const steps = ['Basic Info', 'Content Details', 'Languages & DCTAP', 'Project & Submit'];
 
 // Mock data - replace with actual API calls
 const mockProjects: Project[] = [
@@ -334,7 +366,7 @@ export default function AdoptSpreadsheetForm({ userId: _userId, userName }: Adop
                   </TableRow>
                 </TableHead>
                 <TableBody>
-                  {analysis?.worksheets.map((worksheet) => (
+                  {analysis?.worksheets.map((worksheet: any) => (
                     <TableRow key={worksheet.name}>
                       <TableCell>
                         <Stack direction="row" spacing={1} alignItems="center">

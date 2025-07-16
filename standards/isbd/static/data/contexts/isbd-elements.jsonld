@@ -1,0 +1,92 @@
+{"@context": {
+    "dc": "http://purl.org/dc/elements/1.1/",
+    "rdf": "http://www.w3.org/1999/02/22-rdf-syntax-ns#",
+    "rdfs": "http://www.w3.org/2000/01/rdf-schema#",
+    "reg": "http://metadataregistry.org/uri/profile/RegAp/",
+    "regstat": "http://metadataregistry.org/uri/RegStatus/",
+    "skos": "http://www.w3.org/2004/02/skos/core#",
+    "owl": "http://www.w3.org/2002/07/owl#",
+    "foaf": "http://xmlns.com/foaf/0.1/",
+    "isbd": "http://iflastandards.info/ns/isbd/elements/",
+    "isbdunc": "http://iflastandards.info/ns/isbd/unc/elements/",
+    "Property": {
+        "@id": "rdf:Property",
+        "@type": "@id"
+    },
+    "Class": {
+        "@id": "rdf:Class",
+        "@type": "@id"
+    },
+    "domain": {
+        "@id": "rdfs:domain",
+        "@type": "@id"
+    },
+    "range": {
+        "@id": "rdfs:range",
+        "@type": "@id"
+    },
+    "isDefinedBy": {
+        "@id": "rdfs:isDefinedBy",
+        "@type": "@id"
+    },
+    "label": {
+        "@id": "rdfs:label",
+        "@container": "@language"
+    },
+    "subClassOf": {
+        "@id": "rdfs:subClassOf",
+        "@type": "@id"
+    },
+    "subPropertyOf": {
+        "@id": "rdfs:subPropertyOf",
+        "@type": "@id"
+    },
+    "inverseOf": {
+        "@id": "owl:inverseOf",
+        "@type": "@id"
+    },
+    "hasSubproperty": {
+        "@id": "reg:hasSubproperty",
+        "@type": "@id"
+    },
+    "hasSubclass": {
+        "@id": "reg:hasSubclass",
+        "@type": "@id"
+    },
+    "hasUnconstrained": {
+        "@id": "reg:hasUnconstrained",
+        "@type": "@id"
+    },
+    "name": {
+        "@id": "reg:name",
+        "@container": "@language"
+    },
+    "status": {
+        "@id": "reg:status",
+        "@type": "@id"
+    },
+    "title": {
+        "@id": "dc:title",
+        "@container": "@language"
+    },
+    "definition": {
+        "@id": "skos:definition",
+        "@container": "@language"
+    },
+    "prefLabel": {
+        "@id": "skos:prefLabel",
+        "@container": "@language"
+    },
+    "scopeNote": {
+        "@id": "skos:scopeNote",
+        "@container": "@language"
+    },
+    "note": {
+        "@id": "skos:note",
+        "@container": "@language"
+    },
+    "homepage": {
+        "@id": "foaf:homepage",
+        "@type": "@id"
+    }
+}}

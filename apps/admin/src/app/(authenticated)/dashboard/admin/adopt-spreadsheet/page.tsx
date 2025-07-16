@@ -1,6 +1,6 @@
 import { getAppUser } from '@/lib/clerk-github-auth';
 import { redirect } from 'next/navigation';
-import AdoptSpreadsheetForm from './AdoptSpreadsheetForm';
+import AdoptSpreadsheetFormV2 from './AdoptSpreadsheetFormV2';
 import { addBasePath } from '@ifla/theme/utils';
 
 // Force dynamic rendering
@@ -20,7 +20,7 @@ export default async function AdoptSpreadsheetPage() {
   }
 
   return (
-    <AdoptSpreadsheetForm
+    <AdoptSpreadsheetFormV2
       userId={user.id}
       userName={user.name}
       userEmail={user.email}

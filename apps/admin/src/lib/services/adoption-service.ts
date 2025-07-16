@@ -13,6 +13,49 @@ export interface AdoptionOptions {
   userName?: string;
 }
 
+export interface BirthCertificate {
+  // Basic info
+  spreadsheetUrl: string;
+  spreadsheetName: string;
+  namespace: string;
+  
+  // Export info (who created this spreadsheet)
+  exportedBy: string;
+  exportedAt: string;
+  exportReason?: string;
+  
+  // Content type
+  contentType: 'element-sets' | 'concept-schemes' | 'mixed';
+  
+  // Worksheets to import
+  worksheets: {
+    name: string;
+    type: 'element-set' | 'concept-scheme' | 'index' | 'dctap' | 'skip';
+    elementSetName?: string;
+    conceptSchemeName?: string;
+  }[];
+  
+  // Languages
+  languages: string[];
+  primaryLanguage: string;
+  
+  // DCTAP info
+  dctapUsed?: string;
+  dctapEmbedded: boolean;
+  
+  // Additional notes
+  notes?: string;
+}
+
+export interface AdoptionWithBirthCertificateOptions {
+  birthCertificate: BirthCertificate;
+  projectId?: string;
+  projectName?: string;
+  reviewGroup?: string;
+  userId: string;
+  userName?: string;
+}
+
 export interface AdoptionResult {
   activeSheetId: string;
   importJobId?: string;
@@ -81,7 +124,134 @@ export class AdoptionService {
   }
 
   /**
-   * Adopt an existing spreadsheet into the system
+   * Adopt a spreadsheet with comprehensive birth certificate metadata
+   */
+  async adoptSpreadsheetWithBirthCertificate(options: AdoptionWithBirthCertificateOptions): Promise<AdoptionResult> {
+    const { birthCertificate, projectId, userId, userName } = options;
+
+    // Validate URL
+    if (!this.isValidGoogleSheetsUrl(birthCertificate.spreadsheetUrl)) {
+      throw new Error('Invalid Google Sheets URL');
+    }
+
+    const sheetId = this.extractSheetId(birthCertificate.spreadsheetUrl);
+    if (!sheetId) {
+      throw new Error('Could not extract sheet ID from URL');
+    }
+
+    // Create or ensure project exists
+    let finalProjectId = projectId;
+    if (options.projectName && options.reviewGroup) {
+      // Create new project
+      finalProjectId = await this.createProject({
+        name: options.projectName,
+        reviewGroup: options.reviewGroup,
+        userId,
+      });
+    }
+
+    if (!finalProjectId) {
+      throw new Error('Project ID is required');
+    }
+
+    // Check if already adopted
+    const isAdopted = await this.isSpreadsheetAdopted(sheetId);
+    if (isAdopted) {
+      throw new Error('This spreadsheet has already been adopted');
+    }
+
+    // Register as active sheet with comprehensive metadata
+    const activeSheet: ActiveSheet = {
+      namespace_id: birthCertificate.namespace,
+      sheet_id: sheetId,
+      sheet_url: birthCertificate.spreadsheetUrl,
+      created_by: userId,
+      status: 'ready',
+      project_id: finalProjectId,
+      metadata: {
+        adoptedBy: userName || userId,
+        adoptedAt: new Date().toISOString(),
+        birthCertificate: {
+          ...birthCertificate,
+          // Store the original export metadata
+          export: {
+            exportedBy: birthCertificate.exportedBy,
+            exportedAt: birthCertificate.exportedAt,
+            exportReason: birthCertificate.exportReason,
+          },
+          // Store content configuration
+          content: {
+            type: birthCertificate.contentType,
+            worksheets: birthCertificate.worksheets,
+          },
+          // Store language configuration
+          languages: {
+            available: birthCertificate.languages,
+            primary: birthCertificate.primaryLanguage,
+          },
+          // Store DCTAP info
+          dctap: {
+            reference: birthCertificate.dctapUsed,
+            embedded: birthCertificate.dctapEmbedded,
+          },
+        },
+      },
+    };
+
+    const { data: sheetData, error: sheetError } = await db
+      .from('active_sheets')
+      .insert(activeSheet)
+      .select()
+      .single();
+
+    if (sheetError) {
+      throw new Error(`Failed to register active sheet: ${sheetError.message}`);
+    }
+
+    // Log the adoption
+    await this.logActivity({
+      action: 'spreadsheet_adopted_with_birth_certificate',
+      userId,
+      userName,
+      details: {
+        sheetId,
+        projectId: finalProjectId,
+        namespace: birthCertificate.namespace,
+        contentType: birthCertificate.contentType,
+        worksheetCount: birthCertificate.worksheets.filter(ws => ws.type !== 'skip').length,
+        languages: birthCertificate.languages,
+      },
+    });
+
+    // Generate an analysis-like object for compatibility
+    const analysis: SpreadsheetAnalysis = {
+      sheetId,
+      sheetName: birthCertificate.spreadsheetName,
+      worksheets: birthCertificate.worksheets.map(ws => ({
+        name: ws.name,
+        type: ws.type as any,
+        rows: 0, // Unknown from birth certificate
+        columns: 0, // Unknown from birth certificate
+        headers: [], // Unknown from birth certificate
+        languages: birthCertificate.languages,
+      })),
+      inferredType: birthCertificate.contentType as any,
+      languages: birthCertificate.languages,
+      totalRows: 0, // Unknown from birth certificate
+      totalColumns: 0, // Unknown from birth certificate
+    };
+
+    return {
+      activeSheetId: sheetData.id,
+      projectId: finalProjectId,
+      sheetId,
+      sheetUrl: birthCertificate.spreadsheetUrl,
+      analysis,
+    };
+  }
+
+  /**
+   * Adopt an existing spreadsheet into the system (legacy method)
    */
   async adoptSpreadsheet(options: AdoptionOptions): Promise<AdoptionResult> {
     const { spreadsheetUrl, projectId, dctapProfileId, userId, userName } = options;

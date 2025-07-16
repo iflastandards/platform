@@ -11,7 +11,7 @@ Source CSV files for ISBDM vocabularies. These files define controlled vocabular
 Dublin Core Tabular Application Profiles (DCTAP) that define the structure and constraints for ISBDM metadata:
 - `isbdm-elements-profile.csv` - Profile for ISBDM element metadata
 - `isbdm-values-profile.csv` - Profile for ISBDM value vocabulary metadata
-- `isbdm-values-profile-revised.csv` - Updated version of the values profile
+- `isbdm-values-profile-revised.csv` - Updated version of the values profile. Includes component configuration, different shape labels
 
 ### `/contexts/`
 JSON-LD context files for semantic web applications:

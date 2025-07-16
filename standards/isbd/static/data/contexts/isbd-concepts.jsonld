@@ -1,0 +1,72 @@
+{"@context": {
+    "dc": "http://purl.org/dc/elements/1.1/",
+    "rdf": "http://www.w3.org/1999/02/22-rdf-syntax-ns#",
+    "rdfs": "http://www.w3.org/2000/01/rdf-schema#",
+    "reg": "http://metadataregistry.org/uri/profile/regap/",
+    "skos": "http://www.w3.org/2004/02/skos/core#",
+    "xsd": "http://www.w3.org/2001/XMLSchema#",
+    "isbd": "http://iflastandards.info/ns/isbd/terms/",
+    "identifier": {
+        "@id": "reg:identifier",
+        "@type": "@id"
+    },
+    "uri": {
+        "@id": "reg:uri",
+        "@type": "@id"
+    },
+    "status": {
+        "@id": "reg:status",
+        "@type": "@id"
+    },
+    "title": {
+        "@id": "dc:title"
+    },
+    "ConceptScheme": {
+        "@id": "skos:ConceptScheme",
+        "@type": "@id"
+    },
+    "Concept": {
+        "@id": "skos:Concept",
+        "@type": "@id"
+    },
+    "hasTopConcept": {
+        "@id": "skos:hasTopConcept",
+        "@type": "@id"
+    },
+    "inScheme": {
+        "@id": "skos:inScheme",
+        "@type": "@id"
+    },
+    "topConceptOf": {
+        "@id": "skos:topConceptOf",
+        "@type": "@id"
+    },
+    "prefLabel": {
+        "@id": "skos:prefLabel",
+        "@container": "@language"
+    },
+    "altLabel": {
+        "@id": "skos:altLabel",
+        "@container": "@language"
+    },
+    "definition": {
+        "@id": "skos:definition",
+        "@container": "@language"
+    },
+    "scopeNote": {
+        "@id": "skos:scopeNote",
+        "@container": "@language"
+    },
+    "broader": {
+        "@id": "skos:broader",
+        "@type": "@id"
+    },
+    "narrower": {
+        "@id": "skos:narrower",
+        "@type": "@id"
+    },
+    "related": {
+        "@id": "skos:related",
+        "@type": "@id"
+    }
+}}
