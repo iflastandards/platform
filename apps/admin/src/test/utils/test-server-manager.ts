@@ -194,6 +194,10 @@ export class TestServerManager {
     if (!config) {
       throw new Error(`Server configuration not found: ${serverName}`);
     }
+    // For admin, include the basePath
+    if (serverName === 'admin') {
+      return `http://localhost:${config.port}/admin`;
+    }
     return `http://localhost:${config.port}`;
   }
 
@@ -273,9 +277,9 @@ export const SERVER_CONFIGS = {
     shutdownTimeout: 10000,
     cwd: '/Users/jonphipps/Code/IFLA/standards-dev',
     env: {
-      NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY:
-        process.env.NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY || 'pk_test_fake',
-      CLERK_SECRET_KEY: process.env.CLERK_SECRET_KEY || 'sk_test_fake',
+      NODE_ENV: 'test',
+      NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY: '',
+      CLERK_SECRET_KEY: '',
       NEXT_PUBLIC_CLERK_SIGN_IN_URL: '/admin/sign-in',
       NEXT_PUBLIC_CLERK_AFTER_SIGN_IN_URL: '/admin/dashboard',
       NEXT_PUBLIC_CERBOS_PDP_URL: 'http://localhost:3593',

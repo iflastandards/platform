@@ -1,7 +1,22 @@
 import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest';
-import { render, screen, fireEvent, waitFor } from '../utils/test-utils';
+import { render, screen, fireEvent, waitFor } from '@testing-library/react';
 import NamespaceManagementClient from '../../app/(authenticated)/dashboard/[siteKey]/NamespaceManagementClient';
 import { setupFetchMock, cleanupFetchMock } from '../mocks/api';
+
+vi.mock('@clerk/nextjs', () => ({
+  ClerkProvider: ({ children }: { children: React.ReactNode }) => children,
+  useAuth: () => ({ userId: 'test-user-id' }),
+  useUser: () => ({
+    user: {
+      id: 'test-user-id',
+      emailAddresses: [{ emailAddress: 'test@example.com' }],
+    },
+  }),
+  UserButton: () => null,
+  SignInButton: () => null,
+  SignUpButton: () => null,
+  SignOutButton: () => null,
+}));
 
 vi.mock('next/navigation', () => ({
   usePathname: () => '/dashboard/newtest',
@@ -37,7 +52,9 @@ describe('NamespaceManagementClient', () => {
     it('should render the component with correct namespace information', () => {
       render(<NamespaceManagementClient {...defaultProps} />);
 
-      expect(screen.getByText('Test Namespace Namespace Management')).toBeInTheDocument();
+      expect(
+        screen.getByText('Test Namespace Namespace Management'),
+      ).toBeInTheDocument();
       expect(screen.getAllByText(/Test Namespace/).length).toBeGreaterThan(0);
     });
 
@@ -148,7 +165,7 @@ describe('NamespaceManagementClient', () => {
       };
 
       expect(() => {
-        render(<SiteManagementClient {...minimalProps} />);
+        render(<NamespaceManagementClient {...minimalProps} />);
       }).not.toThrow();
     });
   });

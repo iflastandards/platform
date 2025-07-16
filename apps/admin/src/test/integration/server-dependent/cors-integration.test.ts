@@ -5,7 +5,7 @@ import {
 } from '../../utils/test-server-manager';
 
 describe('CORS Integration (Server-Dependent)', () => {
-  const adminBaseUrl = `http://localhost:${SERVER_CONFIGS.ADMIN.port}`;
+  const adminBaseUrl = `http://localhost:${SERVER_CONFIGS.ADMIN.port}/admin`;
   const portalOrigin = `http://localhost:${SERVER_CONFIGS.PORTAL.port}`;
 
   beforeAll(async () => {
@@ -19,7 +19,7 @@ describe('CORS Integration (Server-Dependent)', () => {
   }, 15000); // 15 second timeout for cleanup
 
   it('should allow CORS requests from portal origin', async () => {
-    const response = await fetch(`${adminBaseUrl}/api/hello`, {
+    const response = await fetch(`${adminBaseUrl}/api/health`, {
       method: 'GET',
       headers: {
         Origin: portalOrigin,
@@ -36,7 +36,7 @@ describe('CORS Integration (Server-Dependent)', () => {
   });
 
   it('should handle preflight OPTIONS requests', async () => {
-    const response = await fetch(`${adminBaseUrl}/api/hello`, {
+    const response = await fetch(`${adminBaseUrl}/api/health`, {
       method: 'OPTIONS',
       headers: {
         Origin: portalOrigin,
@@ -58,7 +58,7 @@ describe('CORS Integration (Server-Dependent)', () => {
   it('should reject requests from unauthorized origins', async () => {
     const unauthorizedOrigin = 'http://malicious-site.com';
 
-    const response = await fetch(`${adminBaseUrl}/api/hello`, {
+    const response = await fetch(`${adminBaseUrl}/api/health`, {
       method: 'GET',
       headers: {
         Origin: unauthorizedOrigin,
@@ -80,7 +80,7 @@ describe('CORS Integration (Server-Dependent)', () => {
     ];
 
     for (const origin of allowedOrigins) {
-      const response = await fetch(`${adminBaseUrl}/api/hello`, {
+      const response = await fetch(`${adminBaseUrl}/api/health`, {
         method: 'GET',
         headers: {
           Origin: origin,

@@ -1,5 +1,5 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
-import { AdoptionService } from './adoption-service';
+import { AdoptionService } from '../adoption-service';
 import { db } from '@/lib/supabase/client';
 
 // Mock the supabase client
@@ -13,7 +13,8 @@ vi.mock('@/lib/supabase/client', () => ({
               id: 'mock-sheet-id',
               namespace_id: 'isbd',
               sheet_id: 'test-sheet-123',
-              sheet_url: 'https://docs.google.com/spreadsheets/d/test-sheet-123',
+              sheet_url:
+                'https://docs.google.com/spreadsheets/d/test-sheet-123',
               status: 'ready',
               project_id: 'project-1',
             },
@@ -50,8 +51,18 @@ vi.mock('googleapis', () => ({
             properties: { title: 'Test Spreadsheet' },
             sheets: [
               { properties: { title: 'Index' } },
-              { properties: { title: 'Elements', gridProperties: { rowCount: 100, columnCount: 10 } } },
-              { properties: { title: 'Concepts', gridProperties: { rowCount: 50, columnCount: 8 } } },
+              {
+                properties: {
+                  title: 'Elements',
+                  gridProperties: { rowCount: 100, columnCount: 10 },
+                },
+              },
+              {
+                properties: {
+                  title: 'Concepts',
+                  gridProperties: { rowCount: 50, columnCount: 8 },
+                },
+              },
             ],
           },
         }),
@@ -62,7 +73,12 @@ vi.mock('googleapis', () => ({
                 data: {
                   values: [
                     ['URI', 'Label@en', 'Label@fr', 'Definition@en'],
-                    ['http://example.com/1', 'Term 1', 'Terme 1', 'Definition 1'],
+                    [
+                      'http://example.com/1',
+                      'Term 1',
+                      'Terme 1',
+                      'Definition 1',
+                    ],
                   ],
                 },
               });
@@ -95,7 +111,9 @@ vi.mock('fs', () => ({
 
 // Mock csv-stringify
 vi.mock('csv-stringify/sync', () => ({
-  stringify: vi.fn((rows) => rows.map((row: any[]) => row.join(',')).join('\n')),
+  stringify: vi.fn((rows) =>
+    rows.map((row: any[]) => row.join(',')).join('\n'),
+  ),
 }));
 
 describe('AdoptionService', () => {
@@ -106,18 +124,25 @@ describe('AdoptionService', () => {
     vi.clearAllMocks();
     // Set up a valid-looking service account key for testing
     const mockServiceAccount = {
-      type: "service_account",
-      project_id: "test-project",
-      private_key_id: "test-key-id",
-      private_key: "-----BEGIN PRIVATE KEY-----\ntest\n-----END PRIVATE KEY-----\n",
-      client_email: "test@test-project.iam.gserviceaccount.com",
-      client_id: "123456789",
-      auth_uri: "https://accounts.google.com/o/oauth2/auth",
-      token_uri: "https://oauth2.googleapis.com/token",
-      auth_provider_x509_cert_url: "https://www.googleapis.com/oauth2/v1/certs",
-      client_x509_cert_url: "https://www.googleapis.com/robot/v1/metadata/x509/test"
+      type: 'service_account',
+      project_id: 'test-project',
+      private_key_id: 'test-key-id',
+      private_key:
+        '-----BEGIN PRIVATE KEY-----\ntest\n-----END PRIVATE KEY-----\n',
+      client_email: 'test@test-project.iam.gserviceaccount.com',
+      client_id: '123456789',
+      auth_uri: 'https://accounts.google.com/o/oauth2/auth',
+      token_uri: 'https://oauth2.googleapis.com/token',
+      auth_provider_x509_cert_url: 'https://www.googleapis.com/oauth2/v1/certs',
+      client_x509_cert_url:
+        'https://www.googleapis.com/robot/v1/metadata/x509/test',
     };
-    process.env = { ...mockEnv, GSHEETS_SA_KEY: Buffer.from(JSON.stringify(mockServiceAccount)).toString('base64') };
+    process.env = {
+      ...mockEnv,
+      GSHEETS_SA_KEY: Buffer.from(JSON.stringify(mockServiceAccount)).toString(
+        'base64',
+      ),
+    };
     service = new AdoptionService();
   });
 
@@ -160,7 +185,9 @@ describe('AdoptionService', () => {
         sheetId: 'test-sheet-123',
         sheetName: expect.any(String),
         worksheets: expect.any(Array),
-        inferredType: expect.stringMatching(/element-sets|concept-schemes|mixed|unknown/),
+        inferredType: expect.stringMatching(
+          /element-sets|concept-schemes|mixed|unknown/,
+        ),
         languages: expect.any(Array),
         totalRows: expect.any(Number),
         totalColumns: expect.any(Number),
@@ -169,14 +196,17 @@ describe('AdoptionService', () => {
 
     it('should throw error for invalid URL', async () => {
       const url = 'https://example.com/not-a-sheet';
-      await expect(service.analyzeSpreadsheet(url)).rejects.toThrow('Invalid Google Sheets URL');
+      await expect(service.analyzeSpreadsheet(url)).rejects.toThrow(
+        'Invalid Google Sheets URL',
+      );
     });
   });
 
   describe('adoptSpreadsheet', () => {
     it('should adopt a spreadsheet successfully', async () => {
       const options = {
-        spreadsheetUrl: 'https://docs.google.com/spreadsheets/d/test-sheet-123/edit',
+        spreadsheetUrl:
+          'https://docs.google.com/spreadsheets/d/test-sheet-123/edit',
         projectId: 'project-1',
         dctapProfileId: 'dctap-1',
         userId: 'user-123',
@@ -199,7 +229,8 @@ describe('AdoptionService', () => {
 
     it('should create new project if name and review group provided', async () => {
       const options = {
-        spreadsheetUrl: 'https://docs.google.com/spreadsheets/d/test-sheet-123/edit',
+        spreadsheetUrl:
+          'https://docs.google.com/spreadsheets/d/test-sheet-123/edit',
         projectId: 'temp-id',
         projectName: 'New Project',
         reviewGroup: 'Test Group',
@@ -228,7 +259,7 @@ describe('AdoptionService', () => {
       const result = await service.downloadAdoptedSheet(
         'test-sheet-123',
         'isbd',
-        '/tmp/test-output'
+        '/tmp/test-output',
       );
 
       // The method should still return a valid response structure
@@ -242,18 +273,18 @@ describe('AdoptionService', () => {
       // Temporarily remove API key
       const originalKey = process.env.GSHEETS_SA_KEY;
       delete process.env.GSHEETS_SA_KEY;
-      
+
       // Create new service instance without API access
       const serviceNoApi = new AdoptionService();
-      
+
       const result = await serviceNoApi.downloadAdoptedSheet(
         'test-sheet-123',
         'isbd',
-        '/tmp/test-output'
+        '/tmp/test-output',
       );
 
       expect(result.csvFiles).toHaveLength(3); // From mock data
-      
+
       // Restore API key
       process.env.GSHEETS_SA_KEY = originalKey;
     });

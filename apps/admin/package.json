@@ -15,19 +15,5 @@
     "test:coverage": "vitest run --coverage",
     "typecheck": "tsc --noEmit",
     "lint": "next lint"
-  },
-  "devDependencies": {
-    "@types/node-fetch": "^2.6.12",
-    "node-fetch": "^3.3.2"
-  },
-  "dependencies": {
-    "@emotion/react": "^11.14.0",
-    "@emotion/styled": "^11.14.1",
-    "@mui/icons-material": "^7.2.0",
-    "@mui/lab": "7.0.0-beta.14",
-    "@mui/material": "^7.2.0",
-    "@mui/x-data-grid": "^8.7.0",
-    "@mui/x-tree-view": "^8.7.0",
-    "date-fns": "^4.1.0"
   }
 }

@@ -8,42 +8,60 @@ import { describe, it, expect, beforeEach, vi } from 'vitest';
 import { ImportService, type ValidationResult } from '../import-service';
 
 // Mock the database - we're testing logic, not DB integration
+const mockInsert = vi.fn();
+const mockUpdate = vi.fn();
+const mockSelect = vi.fn();
+const mockEq = vi.fn();
+const mockSingle = vi.fn();
+
 vi.mock('@/lib/supabase/client', () => ({
   db: {
-    from: () => ({
-      insert: () => ({
-        select: () => ({
-          single: () => Promise.resolve({
-            data: {
-              id: 'mock-job-id',
-              namespace_id: 'test-namespace',
-              status: 'pending',
-              created_at: new Date().toISOString(),
-              created_by: 'test-user',
-            },
-            error: null,
-          }),
-        }),
-      }),
-      update: () => ({
-        eq: () => Promise.resolve({ error: null }),
-      }),
-      select: () => ({
-        eq: () => ({
-          single: () => Promise.resolve({
-            data: {
-              id: 'mock-job-id',
-              namespace_id: 'test-namespace',
-              status: 'pending',
-              spreadsheet_url: 'https://docs.google.com/spreadsheets/d/123',
-            },
-            error: null,
-          }),
-        }),
-      }),
-    }),
+    from: vi.fn(() => ({
+      insert: mockInsert,
+      update: mockUpdate,
+      select: mockSelect,
+    })),
   },
 }));
+
+// Setup default mock implementations
+beforeEach(() => {
+  mockInsert.mockReturnValue({
+    select: vi.fn().mockReturnValue({
+      single: vi.fn().mockResolvedValue({
+        data: {
+          id: 'mock-job-id',
+          namespace_id: 'test-namespace',
+          status: 'pending',
+          created_at: new Date().toISOString(),
+          created_by: 'test-user',
+        },
+        error: null,
+      }),
+    }),
+  });
+
+  mockUpdate.mockReturnValue({
+    eq: vi.fn().mockResolvedValue({
+      data: { id: 'mock-job-id' },
+      error: null,
+    }),
+  });
+
+  mockSelect.mockReturnValue({
+    eq: vi.fn().mockReturnValue({
+      single: vi.fn().mockResolvedValue({
+        data: {
+          id: 'mock-job-id',
+          namespace_id: 'test-namespace',
+          status: 'pending',
+          spreadsheet_url: 'https://docs.google.com/spreadsheets/d/123',
+        },
+        error: null,
+      }),
+    }),
+  });
+});
 
 describe('ImportService - Fast Unit Tests', () => {
   beforeEach(() => {
@@ -61,10 +79,13 @@ describe('ImportService - Fast Unit Tests', () => {
 
       for (const url of invalidUrls) {
         const results = await ImportService.validateSpreadsheet(url);
-        expect(results.some(r => 
-          r.type === 'error' && 
-          r.message === 'Invalid Google Sheets URL format'
-        )).toBe(true);
+        expect(
+          results.some(
+            (r) =>
+              r.type === 'error' &&
+              r.message === 'Invalid Google Sheets URL format',
+          ),
+        ).toBe(true);
       }
     });
 
@@ -76,9 +97,10 @@ describe('ImportService - Fast Unit Tests', () => {
 
       for (const url of validUrls) {
         const results = await ImportService.validateSpreadsheet(url);
-        const urlError = results.find(r => 
-          r.type === 'error' && 
-          r.message === 'Invalid Google Sheets URL format'
+        const urlError = results.find(
+          (r) =>
+            r.type === 'error' &&
+            r.message === 'Invalid Google Sheets URL format',
         );
         expect(urlError).toBeUndefined();
       }
@@ -99,7 +121,10 @@ describe('ImportService - Fast Unit Tests', () => {
     });
 
     it('should update job status correctly', async () => {
-      const result = await ImportService.updateImportJobStatus('job-id', 'processing');
+      const result = await ImportService.updateImportJobStatus(
+        'job-id',
+        'processing',
+      );
       expect(result).toBe(true);
     });
 
@@ -109,7 +134,10 @@ describe('ImportService - Fast Unit Tests', () => {
         { type: 'warning', message: 'Test warning' },
       ];
 
-      const result = await ImportService.saveValidationResults('job-id', results);
+      const result = await ImportService.saveValidationResults(
+        'job-id',
+        results,
+      );
       expect(result).toBe(true);
     });
   });
@@ -120,8 +148,8 @@ describe('ImportService - Fast Unit Tests', () => {
       const validateIFLAColumns = (headers: string[]): ValidationResult[] => {
         const required = ['Identifier', 'Label', 'Definition'];
         const results: ValidationResult[] = [];
-        
-        required.forEach(col => {
+
+        required.forEach((col) => {
           if (!headers.includes(col)) {
             results.push({
               type: 'error',
@@ -131,13 +159,13 @@ describe('ImportService - Fast Unit Tests', () => {
             });
           }
         });
-        
+
         return results;
       };
 
       const headers = ['Identifier', 'Label']; // Missing Definition
       const errors = validateIFLAColumns(headers);
-      
+
       expect(errors).toHaveLength(1);
       expect(errors[0].column).toBe('Definition');
     });
@@ -146,12 +174,12 @@ describe('ImportService - Fast Unit Tests', () => {
       const detectLanguages = (headers: string[]): string[] => {
         const langPattern = /_([a-z]{2}(-[A-Z]{2})?)$/;
         const languages = new Set<string>();
-        
-        headers.forEach(header => {
+
+        headers.forEach((header) => {
           const match = header.match(langPattern);
           if (match) languages.add(match[1]);
         });
-        
+
         return Array.from(languages);
       };
 
@@ -162,13 +190,13 @@ describe('ImportService - Fast Unit Tests', () => {
     it('should validate identifier uniqueness', () => {
       const checkDuplicates = (rows: Array<{ Identifier: string }>) => {
         const seen = new Map<string, number[]>();
-        
+
         rows.forEach((row, idx) => {
           const existing = seen.get(row.Identifier) || [];
           existing.push(idx + 2); // +2 for header and 1-based
           seen.set(row.Identifier, existing);
         });
-        
+
         return Array.from(seen.entries())
           .filter(([_, rows]) => rows.length > 1)
           .map(([id, rows]) => ({ identifier: id, rows }));

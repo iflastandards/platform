@@ -7,20 +7,25 @@
 import { describe, it, expect, beforeEach, vi } from 'vitest';
 import { NextRequest } from 'next/server';
 import { POST, GET } from '../route';
+import { getCerbosUser } from '@/lib/clerk-cerbos';
 
 // Mock dependencies at the boundary
 vi.mock('@clerk/nextjs/server', () => ({
-  currentUser: vi.fn(() => Promise.resolve({
-    id: 'test-user-id',
-    emailAddresses: [{ emailAddress: 'test@example.com' }],
-  })),
+  currentUser: vi.fn(() =>
+    Promise.resolve({
+      id: 'test-user-id',
+      emailAddresses: [{ emailAddress: 'test@example.com' }],
+    }),
+  ),
 }));
 
 vi.mock('@/lib/clerk-cerbos', () => ({
-  getCerbosUser: vi.fn(() => Promise.resolve({
-    id: 'test-user-id',
-    roles: ['ifla-admin'],
-  })),
+  getCerbosUser: vi.fn(() =>
+    Promise.resolve({
+      id: 'test-user-id',
+      roles: ['ifla-admin'],
+    }),
+  ),
 }));
 
 // Simple mock for ImportService
@@ -45,14 +50,17 @@ describe('Scaffold API - Integration Tests', () => {
 
   describe('POST endpoint', () => {
     it('should create job with valid request', async () => {
-      const request = new NextRequest('http://localhost/api/actions/scaffold-from-spreadsheet', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          namespace: 'isbd',
-          spreadsheetUrl: 'https://docs.google.com/spreadsheets/d/123/edit',
-        }),
-      });
+      const request = new NextRequest(
+        'http://localhost/api/actions/scaffold-from-spreadsheet',
+        {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            namespace: 'isbd',
+            spreadsheetUrl: 'https://docs.google.com/spreadsheets/d/123/edit',
+          }),
+        },
+      );
 
       const response = await POST(request);
       const data = await response.json();
@@ -64,34 +72,39 @@ describe('Scaffold API - Integration Tests', () => {
     });
 
     it('should reject invalid spreadsheet URLs', async () => {
-      const request = new NextRequest('http://localhost/api/actions/scaffold-from-spreadsheet', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          namespace: 'isbd',
-          spreadsheetUrl: 'not-a-google-sheet',
-        }),
-      });
+      const request = new NextRequest(
+        'http://localhost/api/actions/scaffold-from-spreadsheet',
+        {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            namespace: 'isbd',
+            spreadsheetUrl: 'not-a-google-sheet',
+          }),
+        },
+      );
 
       const response = await POST(request);
       expect(response.status).toBe(400);
     });
 
     it('should check user permissions', async () => {
-      const { getCerbosUser } = await import('@/lib/clerk-cerbos');
       vi.mocked(getCerbosUser).mockResolvedValueOnce({
         id: 'test-user-id',
         roles: ['lrm-editor'], // No access to isbd
       });
 
-      const request = new NextRequest('http://localhost/api/actions/scaffold-from-spreadsheet', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          namespace: 'isbd',
-          spreadsheetUrl: 'https://docs.google.com/spreadsheets/d/123/edit',
-        }),
-      });
+      const request = new NextRequest(
+        'http://localhost/api/actions/scaffold-from-spreadsheet',
+        {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            namespace: 'isbd',
+            spreadsheetUrl: 'https://docs.google.com/spreadsheets/d/123/edit',
+          }),
+        },
+      );
 
       const response = await POST(request);
       expect(response.status).toBe(403);
@@ -101,16 +114,18 @@ describe('Scaffold API - Integration Tests', () => {
   describe('GET endpoint', () => {
     it('should retrieve job status', async () => {
       // Create a job first
-      const job = { 
-        id: 'test-job', 
-        namespace_id: 'isbd', 
+      const job = {
+        id: 'test-job',
+        namespace_id: 'isbd',
         status: 'processing',
         created_by: 'test-user',
         created_at: new Date().toISOString(),
       };
       mockJobs.set(job.id, job);
 
-      const request = new NextRequest('http://localhost/api/actions/scaffold-from-spreadsheet?jobId=test-job');
+      const request = new NextRequest(
+        'http://localhost/api/actions/scaffold-from-spreadsheet?jobId=test-job',
+      );
       const response = await GET(request);
       const data = await response.json();
 
@@ -121,9 +136,11 @@ describe('Scaffold API - Integration Tests', () => {
     });
 
     it('should return 404 for missing job', async () => {
-      const request = new NextRequest('http://localhost/api/actions/scaffold-from-spreadsheet?jobId=missing');
+      const request = new NextRequest(
+        'http://localhost/api/actions/scaffold-from-spreadsheet?jobId=missing',
+      );
       const response = await GET(request);
-      
+
       expect(response.status).toBe(404);
     });
   });

@@ -2,6 +2,12 @@ import '@testing-library/jest-dom';
 import { cleanup } from '@testing-library/react';
 import { afterEach, vi } from 'vitest';
 
+// Set up test environment variables
+process.env.NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY =
+  'pk_test_Y2xlcmstdGVzdC1rZXktZm9yLXRlc3RpbmctcHVycG9zZXMtb25seQ';
+process.env.CLERK_SECRET_KEY =
+  'sk_test_dGVzdC1zZWNyZXQta2V5LWZvci10ZXN0aW5nLXB1cnBvc2VzLW9ubHk';
+
 // Cleanup after each test
 afterEach(() => {
   cleanup();
@@ -61,11 +67,13 @@ vi.mock('@clerk/nextjs', () => ({
 
 // Mock Clerk server
 vi.mock('@clerk/nextjs/server', () => ({
-  auth: vi.fn(() => Promise.resolve({
-    userId: null,
-    sessionId: null,
-    sessionClaims: null,
-  })),
+  auth: vi.fn(() =>
+    Promise.resolve({
+      userId: null,
+      sessionId: null,
+      sessionClaims: null,
+    }),
+  ),
   currentUser: vi.fn(() => Promise.resolve(null)),
   clerkMiddleware: vi.fn(() => vi.fn()),
 }));

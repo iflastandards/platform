@@ -16,7 +16,7 @@ describe('Cross-Site Authentication (Server-Dependent)', () => {
   }, 20000); // 20 second timeout for cleanup
 
   it('should have admin server running', async () => {
-    const response = await fetch(`${adminBaseUrl}/api/hello`);
+    const response = await fetch(`${adminBaseUrl}/api/health`);
     expect(response.status).toBe(200); // Server is responding
   });
 
@@ -26,7 +26,7 @@ describe('Cross-Site Authentication (Server-Dependent)', () => {
   });
 
   it('should handle CORS for cross-site authentication requests', async () => {
-    const response = await fetch(`${adminBaseUrl}/api/hello`, {
+    const response = await fetch(`${adminBaseUrl}/api/health`, {
       method: 'GET',
       headers: {
         Origin: newtestBaseUrl,
@@ -51,7 +51,7 @@ describe('Cross-Site Authentication (Server-Dependent)', () => {
     // This test verifies that the authentication system can handle
     // cross-origin requests between admin and Docusaurus sites
 
-    const sessionResponse = await fetch(`${adminBaseUrl}/api/hello`, {
+    const sessionResponse = await fetch(`${adminBaseUrl}/api/health`, {
       method: 'GET',
       headers: {
         Origin: newtestBaseUrl,
@@ -76,7 +76,7 @@ describe('Cross-Site Authentication (Server-Dependent)', () => {
     // 2. Admin responds with appropriate CORS headers
     // 3. Authentication state can be shared across origins
 
-    const authCheckResponse = await fetch(`${adminBaseUrl}/api/hello`, {
+    const authCheckResponse = await fetch(`${adminBaseUrl}/api/health`, {
       method: 'GET',
       headers: {
         Origin: newtestBaseUrl,

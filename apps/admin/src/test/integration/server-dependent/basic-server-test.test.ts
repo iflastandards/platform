@@ -9,11 +9,14 @@ describe('Basic Server Test', () => {
       await testServerManager.startServer('admin');
       console.log('Admin server started successfully');
 
-      // Simple health check using API endpoint
-      const response = await fetch('http://localhost:3007/api/hello');
+      // Simple health check using API endpoint with basePath
+      const response = await fetch('http://localhost:3007/admin/api/health');
       console.log('Health check response status:', response.status);
 
       expect(response.status).toBe(200);
+
+      const data = await response.json();
+      expect(data.status).toBe('ok');
 
       await testServerManager.stopServer('admin');
       console.log('Admin server stopped successfully');

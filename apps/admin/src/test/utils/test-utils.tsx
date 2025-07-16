@@ -1,12 +1,12 @@
-import React, { ReactElement } from 'react';
+import { ReactElement, ReactNode, FC } from 'react';
 import { render, RenderOptions } from '@testing-library/react';
 import { ClerkProvider } from '@clerk/nextjs';
 
 interface AllTheProvidersProps {
-  children: React.ReactNode;
+  children: ReactNode;
 }
 
-const AllTheProviders: React.FC<AllTheProvidersProps> = ({ children }) => {
+const AllTheProviders: FC<AllTheProvidersProps> = ({ children }) => {
   return <ClerkProvider>{children}</ClerkProvider>;
 };
 
