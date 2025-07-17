@@ -1,7 +1,9 @@
 #!/usr/bin/env sh
+# always execute from repository root
+cd "$(git rev-parse --show-toplevel)" || exit
+
 # Group 3: Pre-commit tests (Fast feedback for commits)
 # Uses the new organized test structure
-
 echo "🔍 Running Group 3: Pre-commit tests..."
 
 # Use the optimized pre-commit command from package.json

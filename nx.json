@@ -1,8 +1,7 @@
 {
   "$schema": "./node_modules/nx/schemas/nx-schema.json",
-  "workspaceLayout": { "appsDir": "apps", "libsDir": "packages" },
   "npmScope": "ifla",
-  "installation": { "version": "21.2.2", "ensurePackageJsonConsistency": true },
+  "installation": { "version": "21.2.4", "ensurePackageJsonConsistency": true },
   "namedInputs": {
     "default": [
       "{projectRoot}/**/*",
@@ -185,7 +184,6 @@
   ],
   "nxCloudId": "6857fccbb755d4191ce6fbe4",
   "defaultBase": "preview",
-  "affected": { "defaultBase": "preview" },
   "cli": { "analytics": false },
   "parallel": 8,
   "cacheDirectory": ".nx/cache",
@@ -236,15 +234,9 @@
   },
   "workspaceLayout": {
     "appsDir": "apps",
-    "libsDir": "packages",
-    "standaloneConfig": true
+    "libsDir": "packages"
   },
   "release": {
-    "version": {
-      "generatorOptions": {
-        "packageRoot": "dist/packages/{projectName}",
-        "currentVersionResolver": "git-tag"
-      }
-    }
+    "version": {}
   }
 }
