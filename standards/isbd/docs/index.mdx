@@ -1,207 +1,197 @@
 ---
 sidebar_position: 1
-title: ISBD Overview
-sidebar_label: Overview
-description: ISBD Documentation Contents Overview
+title: ISBD - International Standard Bibliographic Description
+sidebar_label: ISBD Overview
+description: The ISBD namespace contains multiple element sets and vocabularies for bibliographic description
 hide_table_of_contents: true
 ---
 
 import CompactButton from '../src/components/CompactButton';
-import Tabs from '@theme/Tabs';
-import TabItem from '@theme/TabItem';
 
-# ISBD Contents Overview
+# ISBD - International Standard Bibliographic Description
 
-This page introduces the ISBD Element Sets and Value Vocabularies.
+The ISBD provides the requirements for the description and identification of published resources. This namespace contains two element sets and seven concept vocabularies that support bibliographic description.
 
-<Tabs groupId="isbd-overview">
-  <TabItem value="elements" label="Element Sets" default>
-    <div style={{ marginTop: '20px' }}>
+## Namespace Statistics
 
-    {/* ISBD Element Sets */}
-    <div style={{ marginBottom: '30px' }}>
-      <h3>ISBD Element Sets</h3>
+<div style={{ display: 'flex', gap: '20px', marginBottom: '40px', flexWrap: 'wrap' }}>
+  <div style={{ background: '#e3f2fd', padding: '20px', borderRadius: '8px', flex: '1', minWidth: '200px' }}>
+    <div style={{ fontSize: '0.9rem', color: '#666' }}>Total Elements</div>
+    <div style={{ fontSize: '2rem', fontWeight: 'bold', color: '#1976d2' }}>370</div>
+    <div style={{ fontSize: '0.8rem', color: '#999' }}>Across 2 element sets</div>
+  </div>
+  <div style={{ background: '#e8f5e9', padding: '20px', borderRadius: '8px', flex: '1', minWidth: '200px' }}>
+    <div style={{ fontSize: '0.9rem', color: '#666' }}>Vocabularies</div>
+    <div style={{ fontSize: '2rem', fontWeight: 'bold', color: '#388e3c' }}>7</div>
+    <div style={{ fontSize: '0.8rem', color: '#999' }}>Concept schemes</div>
+  </div>
+  <div style={{ background: '#fff3e0', padding: '20px', borderRadius: '8px', flex: '1', minWidth: '200px' }}>
+    <div style={{ fontSize: '0.9rem', color: '#666' }}>Terms</div>
+    <div style={{ fontSize: '2rem', fontWeight: 'bold', color: '#f57c00' }}>150+</div>
+    <div style={{ fontSize: '0.8rem', color: '#999' }}>Vocabulary concepts</div>
+  </div>
+</div>
 
-      <div style={{ background: '#f0f8f0', border: '2px solid #c8e6c9', borderRadius: '6px', padding: '20px', marginBottom: '20px' }}>
-        <h4>ISBD Elements</h4>
-        <span style={{ background: '#4a8f5b', color: 'white', fontSize: '10px', fontWeight: 'bold', padding: '2px 8px', borderRadius: '12px', float: 'right' }}>1,000+ elements</span>
-        <div style={{ color: '#666', marginBottom: '15px' }}>
-          The ISBD element set is a registration of classes and properties from International
-          Standard Bibliographic Description (ISBD), consolidated edition, published by De Gruyter
-          Saur in July 2011 (ISBN 978-3-11-026379-4).
-        </div>
-        <CompactButton href="/docs/elements">
-          → Browse elements
-        </CompactButton>
-      </div>
+## Element Sets
 
-      <div style={{ background: '#f4f4f4', border: '1px solid #e1e5e9', borderRadius: '6px', padding: '20px', marginBottom: '20px' }}>
-        <h4>ISBD Elements (unconstrained)</h4>
-        <div style={{ color: '#666', marginBottom: '15px' }}>
-          The ISBD element set is a registration of classes and properties from International
-          Standard Bibliographic Description (ISBD), consolidated edition, published by De Gruyter
-          Saur in July 2011 (ISBN 978-3-11-026379-4). This version has the same local URI part,
-          label, and definition as each element in the constrained version, but no domain
-          (i.e. Resource) or range is declared.
-        </div>
-        <CompactButton href="/docs/elements/unconstrained">
-          → View unconstrained elements
-        </CompactButton>
-      </div>
+<div style={{ display: 'grid', gap: '20px', marginBottom: '40px' }}>
+  <div style={{ background: '#fff', border: '2px solid #1976d2', borderRadius: '8px', padding: '24px', boxShadow: '0 2px 4px rgba(0,0,0,0.1)' }}>
+    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'start', marginBottom: '16px' }}>
+      <h3 style={{ margin: 0, color: '#1976d2' }}>ISBD Elements</h3>
+      <span style={{ background: '#1976d2', color: 'white', fontSize: '12px', fontWeight: 'bold', padding: '4px 12px', borderRadius: '16px' }}>185 elements</span>
     </div>
-
+    <p style={{ color: '#666', marginBottom: '20px' }}>
+      Core ISBD elements with domain and range constraints for RDF applications. These elements are formally defined with specific domains (typically Resource) and ranges (typically Literal or other RDF classes).
+    </p>
+    <div style={{ display: 'flex', gap: '12px', flexWrap: 'wrap', marginBottom: '16px' }}>
+      <span style={{ background: '#e3f2fd', color: '#1976d2', fontSize: '0.85rem', padding: '4px 12px', borderRadius: '4px' }}>RDF Constrained</span>
+      <span style={{ background: '#e3f2fd', color: '#1976d2', fontSize: '0.85rem', padding: '4px 12px', borderRadius: '4px' }}>Domain/Range Defined</span>
+      <span style={{ background: '#e3f2fd', color: '#1976d2', fontSize: '0.85rem', padding: '4px 12px', borderRadius: '4px' }}>Namespace: isbd</span>
     </div>
-  </TabItem>
+    <CompactButton href="/docs/elements/isbd">
+      Browse ISBD Elements →
+    </CompactButton>
+  </div>
 
-  <TabItem value="vocabularies" label="Value Vocabularies">
-    <div style={{ marginTop: '20px' }}>
-      <div style={{ color: '#666', marginBottom: '15px' }}>
-        The ISBD element set vocabulary includes RDF classes and properties corresponding to ISBD elements.
-        Six concept vocabularies give the controlled terminologies of the ISBD area 0 content forms,
-        qualifications, and media types. Each class, concept, and property has a Uniform Resource
-        Identifier (URI) for use in Semantic Web data triples.
-      </div>
-
-      {/* Vocabulary Grid */}
-      <div style={{ display: 'grid', gap: '15px' }}>
-        <div style={{ background: '#f4f4f4', border: '1px solid #e1e5e9', borderRadius: '6px', padding: '20px' }}>
-          <h5>ISBD Content Form</h5>
-          <div style={{ color: '#666', fontSize: '0.9rem', marginBottom: '10px' }}>
-            Content form categories reflect the fundamental form or forms in which the content
-            of a resource is expressed.
-          </div>
-          <CompactButton href="/docs/terms/contentform">
-            → View vocabulary
-          </CompactButton>
-        </div>
-
-        <div style={{ background: '#f4f4f4', border: '1px solid #e1e5e9', borderRadius: '6px', padding: '20px' }}>
-          <h5>ISBD Content Form Qualified Base</h5>
-          <div style={{ color: '#666', fontSize: '0.9rem', marginBottom: '10px' }}>
-            Compound terms for qualified ISBD content forms that map to RDA/ONIX Framework
-            for Resource Categorization base content categories.
-          </div>
-          <CompactButton href="/docs/terms/contentformbase">
-            → View vocabulary
-          </CompactButton>
-        </div>
-
-        <div style={{ background: '#f4f4f4', border: '1px solid #e1e5e9', borderRadius: '6px', padding: '20px' }}>
-          <h5>ISBD Content Qualification of Dimensionality</h5>
-          <div style={{ color: '#666', fontSize: '0.9rem', marginBottom: '10px' }}>
-            Content qualification sub-categories for the number of spatial dimensions in which
-            the image content of a resource is intended to be perceived which expand the content
-            form category of image.
-          </div>
-          <CompactButton href="/docs/terms/contentqualification/dimensionality">
-            → View vocabulary
-          </CompactButton>
-        </div>
-
-        <div style={{ background: '#f4f4f4', border: '1px solid #e1e5e9', borderRadius: '6px', padding: '20px' }}>
-          <h5>ISBD Content Qualification of Motion</h5>
-          <div style={{ color: '#666', fontSize: '0.9rem', marginBottom: '10px' }}>
-            Content qualification sub-categories for the perceived presence or absence of
-            movement in the image content of a resource which expand the content form category of image.
-          </div>
-          <CompactButton href="/docs/terms/contentqualification/motion">
-            → View vocabulary
-          </CompactButton>
-        </div>
-
-        <div style={{ background: '#f4f4f4', border: '1px solid #e1e5e9', borderRadius: '6px', padding: '20px' }}>
-          <h5>ISBD Content Qualification of Sensory Specification</h5>
-          <div style={{ color: '#666', fontSize: '0.9rem', marginBottom: '10px' }}>
-            Content qualification sub-categories for sensory specification, a human sense through
-            which the content of a resource as published is intended to be perceived, which expand
-            content form categories.
-          </div>
-          <CompactButton href="/docs/terms/contentqualification/sensoryspecification">
-            → View vocabulary
-          </CompactButton>
-        </div>
-
-        <div style={{ background: '#f4f4f4', border: '1px solid #e1e5e9', borderRadius: '6px', padding: '20px' }}>
-          <h5>ISBD Content Qualification of Type</h5>
-          <div style={{ color: '#666', fontSize: '0.9rem', marginBottom: '10px' }}>
-            Content qualification sub-categories for type which expand content form categories.
-          </div>
-          <CompactButton href="/docs/terms/contentqualification/type">
-            → View vocabulary
-          </CompactButton>
-        </div>
-
-        <div style={{ background: '#f4f4f4', border: '1px solid #e1e5e9', borderRadius: '6px', padding: '20px' }}>
-          <h5>ISBD Media Type</h5>
-          <div style={{ color: '#666', fontSize: '0.9rem', marginBottom: '10px' }}>
-            Media type categories record the type or types of carrier used to convey the content
-            of the resource. Categories generally reflect the format of the storage medium and
-            housing of a carrier in combination with the type of intermediation device required
-            to render, view, run, etc., the content of a resource.
-          </div>
-          <CompactButton href="/docs/terms/mediatype">
-            → View vocabulary
-          </CompactButton>
-        </div>
-      </div>
+  <div style={{ background: '#fff', border: '2px solid #c2185b', borderRadius: '8px', padding: '24px', boxShadow: '0 2px 4px rgba(0,0,0,0.1)' }}>
+    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'start', marginBottom: '16px' }}>
+      <h3 style={{ margin: 0, color: '#c2185b' }}>ISBD Unconstrained</h3>
+      <span style={{ background: '#c2185b', color: 'white', fontSize: '12px', fontWeight: 'bold', padding: '4px 12px', borderRadius: '16px' }}>185 elements</span>
     </div>
-  </TabItem>
-
-  <TabItem value="documentation" label="Documentation">
-    <div style={{ marginTop: '20px' }}>
-      <div style={{ background: '#f4f4f4', border: '1px solid #e1e5e9', borderRadius: '6px', padding: '20px', marginBottom: '20px' }}>
-        <h3>Introduction</h3>
-        <div style={{ color: '#666', marginBottom: '15px' }}>
-          Overview of ISBD principles, scope, and application guidelines
-        </div>
-        <CompactButton href="/docs/introduction">
-          → View introduction
-        </CompactButton>
-      </div>
-
-      <div style={{ background: '#f4f4f4', border: '1px solid #e1e5e9', borderRadius: '6px', padding: '20px', marginBottom: '20px' }}>
-        <h3>Assessment Guidelines</h3>
-        <div style={{ color: '#666', marginBottom: '15px' }}>
-          Criteria and methods for evaluating bibliographic descriptions
-        </div>
-        <CompactButton href="/docs/assessment">
-          → View assessment
-        </CompactButton>
-      </div>
-
-      <div style={{ background: '#f4f4f4', border: '1px solid #e1e5e9', borderRadius: '6px', padding: '20px', marginBottom: '20px' }}>
-        <h3>Examples & Use Cases</h3>
-        <div style={{ color: '#666', marginBottom: '15px' }}>
-          Practical examples of ISBD application across different resource types
-        </div>
-        <CompactButton href="/docs/examples">
-          → Browse examples
-        </CompactButton>
-      </div>
-
-      <div style={{ background: '#f4f4f4', border: '1px solid #e1e5e9', borderRadius: '6px', padding: '20px', marginBottom: '20px' }}>
-        <h3>Glossary</h3>
-        <div style={{ color: '#666', marginBottom: '15px' }}>
-          Definitions of key terms and concepts used throughout ISBD
-        </div>
-        <CompactButton href="/docs/glossary">
-          → View glossary
-        </CompactButton>
-      </div>
-
-      <div style={{ background: '#f4f4f4', border: '1px solid #e1e5e9', borderRadius: '6px', padding: '20px', marginBottom: '20px' }}>
-        <h3>About ISBD</h3>
-        <div style={{ color: '#666', marginBottom: '15px' }}>
-          History, development, and maintenance of the ISBD standard
-        </div>
-        <CompactButton href="/docs/about">
-          → Learn more
-        </CompactButton>
-      </div>
+    <p style={{ color: '#666', marginBottom: '20px' }}>
+      ISBD elements without domain/range constraints for maximum flexibility. These elements have the same labels and definitions as the constrained version but can be used with any RDF resource or literal.
+    </p>
+    <div style={{ display: 'flex', gap: '12px', flexWrap: 'wrap', marginBottom: '16px' }}>
+      <span style={{ background: '#fce4ec', color: '#c2185b', fontSize: '0.85rem', padding: '4px 12px', borderRadius: '4px' }}>No Constraints</span>
+      <span style={{ background: '#fce4ec', color: '#c2185b', fontSize: '0.85rem', padding: '4px 12px', borderRadius: '4px' }}>Flexible Use</span>
+      <span style={{ background: '#fce4ec', color: '#c2185b', fontSize: '0.85rem', padding: '4px 12px', borderRadius: '4px' }}>Namespace: isbdu</span>
     </div>
-  </TabItem>
-</Tabs>
+    <CompactButton href="/docs/elements/unconstrained">
+      Browse Unconstrained Elements →
+    </CompactButton>
+  </div>
+</div>
+
+## Vocabularies
+
+<div style={{ marginBottom: '20px' }}>
+  <p style={{ color: '#666' }}>
+    Seven concept vocabularies provide controlled terminologies for ISBD area 0 content forms, qualifications, and media types. Each concept has a Uniform Resource Identifier (URI) for use in Semantic Web data triples.
+  </p>
+</div>
+
+<div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(300px, 1fr))', gap: '16px', marginBottom: '40px' }}>
+  <div style={{ background: '#f8f9fa', border: '1px solid #e0e0e0', borderRadius: '6px', padding: '20px' }}>
+    <h4 style={{ margin: '0 0 8px 0', color: '#388e3c' }}>Content Form</h4>
+    <p style={{ color: '#666', fontSize: '0.9rem', marginBottom: '12px' }}>
+      Fundamental forms in which content is expressed
+    </p>
+    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+      <span style={{ color: '#999', fontSize: '0.85rem' }}>25 terms</span>
+      <CompactButton href="/docs/vocabularies/contentform" size="small">
+        View →
+      </CompactButton>
+    </div>
+  </div>
+
+  <div style={{ background: '#f8f9fa', border: '1px solid #e0e0e0', borderRadius: '6px', padding: '20px' }}>
+    <h4 style={{ margin: '0 0 8px 0', color: '#388e3c' }}>Content Form Base</h4>
+    <p style={{ color: '#666', fontSize: '0.9rem', marginBottom: '12px' }}>
+      Qualified content forms mapping to RDA/ONIX Framework
+    </p>
+    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+      <span style={{ color: '#999', fontSize: '0.85rem' }}>8 terms</span>
+      <CompactButton href="/docs/vocabularies/contentformbase" size="small">
+        View →
+      </CompactButton>
+    </div>
+  </div>
+
+  <div style={{ background: '#f8f9fa', border: '1px solid #e0e0e0', borderRadius: '6px', padding: '20px' }}>
+    <h4 style={{ margin: '0 0 8px 0', color: '#388e3c' }}>Media Type</h4>
+    <p style={{ color: '#666', fontSize: '0.9rem', marginBottom: '12px' }}>
+      Types of carrier used to convey content
+    </p>
+    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+      <span style={{ color: '#999', fontSize: '0.85rem' }}>12 terms</span>
+      <CompactButton href="/docs/vocabularies/mediatype" size="small">
+        View →
+      </CompactButton>
+    </div>
+  </div>
+
+  <div style={{ background: '#f8f9fa', border: '1px solid #e0e0e0', borderRadius: '6px', padding: '20px' }}>
+    <h4 style={{ margin: '0 0 8px 0', color: '#388e3c' }}>Dimensionality</h4>
+    <p style={{ color: '#666', fontSize: '0.9rem', marginBottom: '12px' }}>
+      Spatial dimensions for image content perception
+    </p>
+    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+      <span style={{ color: '#999', fontSize: '0.85rem' }}>2 terms</span>
+      <CompactButton href="/docs/vocabularies/contentqualification/dimensionality" size="small">
+        View →
+      </CompactButton>
+    </div>
+  </div>
+
+  <div style={{ background: '#f8f9fa', border: '1px solid #e0e0e0', borderRadius: '6px', padding: '20px' }}>
+    <h4 style={{ margin: '0 0 8px 0', color: '#388e3c' }}>Motion</h4>
+    <p style={{ color: '#666', fontSize: '0.9rem', marginBottom: '12px' }}>
+      Presence or absence of movement in image content
+    </p>
+    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+      <span style={{ color: '#999', fontSize: '0.85rem' }}>2 terms</span>
+      <CompactButton href="/docs/vocabularies/contentqualification/motion" size="small">
+        View →
+      </CompactButton>
+    </div>
+  </div>
+
+  <div style={{ background: '#f8f9fa', border: '1px solid #e0e0e0', borderRadius: '6px', padding: '20px' }}>
+    <h4 style={{ margin: '0 0 8px 0', color: '#388e3c' }}>Sensory Specification</h4>
+    <p style={{ color: '#666', fontSize: '0.9rem', marginBottom: '12px' }}>
+      Human senses for perceiving content
+    </p>
+    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+      <span style={{ color: '#999', fontSize: '0.85rem' }}>48 terms</span>
+      <CompactButton href="/docs/vocabularies/contentqualification/sensoryspecification" size="small">
+        View →
+      </CompactButton>
+    </div>
+  </div>
+
+  <div style={{ background: '#f8f9fa', border: '1px solid #e0e0e0', borderRadius: '6px', padding: '20px' }}>
+    <h4 style={{ margin: '0 0 8px 0', color: '#388e3c' }}>Type</h4>
+    <p style={{ color: '#666', fontSize: '0.9rem', marginBottom: '12px' }}>
+      Content qualification types
+    </p>
+    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+      <span style={{ color: '#999', fontSize: '0.85rem' }}>53 terms</span>
+      <CompactButton href="/docs/vocabularies/contentqualification/type" size="small">
+        View →
+      </CompactButton>
+    </div>
+  </div>
+</div>
+
+## Quick Links
+
+<div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '12px', marginTop: '32px' }}>
+  <CompactButton href="/docs/elements/isbd" variant="outline">
+    Browse All Elements
+  </CompactButton>
+  <CompactButton href="/docs/vocabularies" variant="outline">
+    Browse All Vocabularies
+  </CompactButton>
+  <CompactButton href="/docs/introduction" variant="outline">
+    Read Introduction
+  </CompactButton>
+  <CompactButton href="/docs/examples" variant="outline">
+    View Examples
+  </CompactButton>
+</div>
 
 <div style={{ marginTop: '40px', paddingTop: '20px', borderTop: '1px solid #e1e5e9', textAlign: 'center', color: '#999', fontSize: '0.9rem' }}>
-  <div><em>Added to this site: July 2020</em></div>
+  <div>International Standard Bibliographic Description (ISBD), Consolidated Edition</div>
+  <div>Published by De Gruyter Saur, July 2011 (ISBN 978-3-11-026379-4)</div>
+  <div style={{ marginTop: '8px' }}><em>Added to this site: July 2020</em></div>
 </div>

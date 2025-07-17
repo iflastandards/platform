@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import {
   Box,
@@ -106,48 +106,7 @@ interface Project {
   namespaces: string[];
 }
 
-const steps = ['Connect Spreadsheet', 'Basic Info', 'Content Details', 'Languages & DCTAP', 'Project & Submit'];
-
-// Mock data
-const mockNamespaces = [
-  { id: 'isbd', name: 'ISBD' },
-  { id: 'isbdm', name: 'ISBD Manifestation' },
-  { id: 'lrm', name: 'LRM' },
-  { id: 'frbr', name: 'FRBR' },
-  { id: 'unimarc', name: 'UNIMARC' },
-  { id: 'muldicat', name: 'MulDiCat' },
-];
-
-const mockProjects: Project[] = [
-  {
-    id: 'project-1',
-    name: 'ISBD Consolidation 2025',
-    reviewGroup: 'isbd-review-group',
-    namespaces: ['isbd', 'isbdm'],
-  },
-  {
-    id: 'project-2',
-    name: 'LRM Update 2024',
-    reviewGroup: 'bcm-review-group',
-    namespaces: ['lrm', 'frbr'],
-  },
-];
-
-const mockReviewGroups = [
-  { value: 'isbd-review-group', label: 'ISBD Review Group' },
-  { value: 'bcm-review-group', label: 'BCM Review Group' },
-  { value: 'cat-review-group', label: 'CAT Review Group' },
-  { value: 'unimarc-review-group', label: 'UNIMARC Review Group' },
-];
-
-const commonLanguages = [
-  { code: 'en', name: 'English' },
-  { code: 'fr', name: 'French' },
-  { code: 'es', name: 'Spanish' },
-  { code: 'de', name: 'German' },
-  { code: 'it', name: 'Italian' },
-  { code: 'pt', name: 'Portuguese' },
-];
+const steps = ['Connect Spreadsheet', 'Basic Info', 'Content Details', 'DCTAP & Settings', 'Project & Submit'];
 
 export default function AdoptSpreadsheetFormV2({ 
   userId: _userId, 
@@ -162,6 +121,16 @@ export default function AdoptSpreadsheetFormV2({
   // Basic sheet info from initial fetch
   const [basicInfo, setBasicInfo] = useState<BasicSheetInfo | null>(null);
   
+  // Available namespaces from API
+  const [availableNamespaces, setAvailableNamespaces] = useState<{ id: string; name: string; description: string }[]>([]);
+  
+  // Available element sets for the selected namespace
+  const [availableElementSets, setAvailableElementSets] = useState<{ id: string; title: string; description: string }[]>([]);
+  
+  // TODO: Fetch from GitHub API
+  const [availableProjects, setAvailableProjects] = useState<Project[]>([]);
+  const [availableReviewGroups, setAvailableReviewGroups] = useState<{ value: string; label: string }[]>([]);
+  
   // Form state - the "birth certificate"
   const [metadata, setMetadata] = useState<SpreadsheetMetadata>({
     spreadsheetUrl: '',
@@ -172,14 +141,33 @@ export default function AdoptSpreadsheetFormV2({
     exportReason: '',
     contentType: 'element-sets',
     worksheets: [],
-    languages: ['en'],
-    primaryLanguage: 'en',
+    languages: ['en'], // Default to English only
+    primaryLanguage: 'en', // Always English
     dctapEmbedded: false,
     notes: '',
   });
 
   // Project assignment
   const [projectMode, setProjectMode] = useState<'existing' | 'create'>('existing');
+  
+  // Fetch available namespaces on mount
+  useEffect(() => {
+    const fetchNamespaces = async () => {
+      try {
+        const response = await fetch(addBasePath('/api/admin/namespaces'));
+        if (response.ok) {
+          const data = await response.json();
+          setAvailableNamespaces(data.data || data.namespaces || []);
+        } else {
+          console.error('Failed to fetch namespaces');
+        }
+      } catch (err) {
+        console.error('Error fetching namespaces:', err);
+      }
+    };
+    
+    fetchNamespaces();
+  }, []);
 
   // Basic spreadsheet fetch - just to get sheet names
   const fetchBasicInfo = async () => {
@@ -206,65 +194,41 @@ export default function AdoptSpreadsheetFormV2({
       
       if (response.ok) {
         const data = await response.json();
+        
+        // Validate that we got proper data
+        if (!data.data || !data.data.worksheets || !Array.isArray(data.data.worksheets)) {
+          throw new Error('Invalid response from Google Sheets API - missing or invalid worksheets data');
+        }
+        
+        if (data.data.worksheets.length === 0) {
+          throw new Error('No worksheets found in the spreadsheet');
+        }
+        
         setBasicInfo(data.data);
         
         // Pre-populate metadata with what we found
         setMetadata(prev => {
-          // Try to detect worksheet types based on name
+          // Create worksheets based on the actual spreadsheet worksheets - no hardcoding
           const worksheets = data.data.worksheets.map((ws: { name: string; headers?: string[] }) => {
-            const lowerName = ws.name.toLowerCase();
-            let type: 'element-set' | 'concept-scheme' | 'index' | 'dctap' | 'skip' = 'skip';
-            let elementSetName = '';
-            let conceptSchemeName = '';
-            
-            if (lowerName === 'index') {
-              type = 'index';
-            } else if (lowerName.includes('element') || lowerName.includes('properties')) {
-              type = 'element-set';
-              // Extract element set name from sheet name
-              elementSetName = ws.name;
-            } else if (lowerName.includes('concept') || lowerName.includes('scheme') || lowerName.includes('vocabulary')) {
-              type = 'concept-scheme';
-              conceptSchemeName = ws.name;
-            } else if (lowerName.includes('dctap') || lowerName.includes('profile')) {
-              type = 'dctap';
-            }
-            
             return {
               name: ws.name,
-              type,
-              elementSetName,
-              conceptSchemeName,
+              type: 'skip' as const, // Start with skip, user will configure
+              elementSetName: '',
+              conceptSchemeName: '',
             };
           });
-          
-          // Auto-detect content type based on worksheets
-          const hasElementSets = worksheets.some((ws: any) => ws.type === 'element-set');
-          const hasConceptSchemes = worksheets.some((ws: any) => ws.type === 'concept-scheme');
-          let contentType = prev.contentType;
-          
-          if (hasElementSets && !hasConceptSchemes) {
-            contentType = 'element-sets';
-          } else if (!hasElementSets && hasConceptSchemes) {
-            contentType = 'concept-schemes';
-          }
           
           return {
             ...prev,
             spreadsheetName: data.data.sheetName || prev.spreadsheetName,
             worksheets,
-            contentType,
             // Set export date to today if not already set
             exportedAt: prev.exportedAt || new Date().toISOString().split('T')[0],
           };
         });
       } else {
-        // If API fails, just use minimal info
-        setBasicInfo({
-          sheetId: match[1],
-          sheetName: 'Unknown Spreadsheet',
-          worksheets: [],
-        });
+        const errorData = await response.json().catch(() => ({}));
+        throw new Error(errorData.error || 'Failed to fetch spreadsheet data from Google Sheets API');
       }
       
       // Move to next step after successful fetch
@@ -300,23 +264,50 @@ export default function AdoptSpreadsheetFormV2({
     });
   };
 
-  // Add/remove languages
-  const toggleLanguage = (langCode: string) => {
-    setMetadata(prev => {
-      const langs = prev.languages.includes(langCode)
-        ? prev.languages.filter(l => l !== langCode)
-        : [...prev.languages, langCode];
-      return { 
-        ...prev, 
-        languages: langs,
-        // Update primary language if it was removed
-        primaryLanguage: langs.includes(prev.primaryLanguage) ? prev.primaryLanguage : langs[0] || 'en'
-      };
-    });
+  // Fetch element sets for a given namespace
+  const fetchElementSets = async (namespace: string) => {
+    if (!namespace) {
+      setAvailableElementSets([]);
+      return;
+    }
+    
+    try {
+      const response = await fetch(addBasePath(`/api/admin/namespace/${namespace}/element-sets`));
+      
+      if (response.ok) {
+        const data = await response.json();
+        setAvailableElementSets(data.elementSets || []);
+      } else {
+        console.error('Failed to fetch element sets for namespace:', namespace);
+        setAvailableElementSets([]);
+      }
+    } catch (err) {
+      console.error('Error fetching element sets:', err);
+      setAvailableElementSets([]);
+    }
   };
+
+  // Handle namespace change
+  const handleNamespaceChange = (namespace: string) => {
+    setMetadata(prev => ({ 
+      ...prev, 
+      namespace
+    }));
+    
+    // Fetch element sets for the new namespace
+    fetchElementSets(namespace);
+  };
+
+  // Languages are now simplified - no need for toggle function
 
   // Handle final submission
   const handleSubmit = async () => {
+    // For now, since GitHub integration is pending, we'll store without project assignment
+    if (availableProjects.length === 0 && projectMode === 'existing') {
+      setError('GitHub integration is pending. Please create a new project or try again later.');
+      return;
+    }
+    
     setLoading(true);
     setError(null);
     
@@ -331,6 +322,8 @@ export default function AdoptSpreadsheetFormV2({
         userName,
       };
       
+      console.log('Submitting adoption data:', adoptionData);
+      
       const response = await fetch(addBasePath('/api/admin/adopt-spreadsheet'), {
         method: 'POST',
         headers: {
@@ -341,6 +334,7 @@ export default function AdoptSpreadsheetFormV2({
       
       if (!response.ok) {
         const errorData = await response.json();
+        console.error('Adoption API error:', errorData);
         throw new Error(errorData.error || 'Failed to adopt spreadsheet');
       }
       
@@ -349,7 +343,7 @@ export default function AdoptSpreadsheetFormV2({
       
       // Redirect to import workflow after 2 seconds
       setTimeout(() => {
-        router.push(addBasePath('/import'));
+        router.push('/import');
       }, 2000);
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Failed to adopt spreadsheet');
@@ -427,10 +421,10 @@ export default function AdoptSpreadsheetFormV2({
                 <InputLabel>Namespace</InputLabel>
                 <Select
                   value={metadata.namespace}
-                  onChange={(e) => setMetadata(prev => ({ ...prev, namespace: e.target.value }))}
+                  onChange={(e) => handleNamespaceChange(e.target.value)}
                   label="Namespace"
                 >
-                  {mockNamespaces.map(ns => (
+                  {availableNamespaces.map(ns => (
                     <MenuItem key={ns.id} value={ns.id}>
                       {ns.name}
                     </MenuItem>
@@ -548,12 +542,20 @@ export default function AdoptSpreadsheetFormV2({
                           </TableCell>
                           <TableCell>
                             {ws.type === 'element-set' && (
-                              <TextField
+                              <Select
                                 size="small"
-                                placeholder="e.g., ISBD Elements"
                                 value={ws.elementSetName || ''}
                                 onChange={(e) => updateWorksheetName(index, 'elementSetName', e.target.value)}
-                              />
+                                fullWidth
+                                displayEmpty
+                              >
+                                <MenuItem value="">Select Element Set</MenuItem>
+                                {availableElementSets.map((elementSet) => (
+                                  <MenuItem key={elementSet.id} value={elementSet.id}>
+                                    {elementSet.title}
+                                  </MenuItem>
+                                ))}
+                              </Select>
                             )}
                             {ws.type === 'concept-scheme' && (
                               <TextField
@@ -577,7 +579,7 @@ export default function AdoptSpreadsheetFormV2({
                 Back
               </Button>
               <Button variant="contained" onClick={() => setActiveStep(3)}>
-                Next: Languages & DCTAP
+                Next: DCTAP & Settings
               </Button>
             </Box>
           </Box>
@@ -587,46 +589,25 @@ export default function AdoptSpreadsheetFormV2({
         return (
           <Box>
             <Typography variant="h6" gutterBottom>
-              Languages & DCTAP Information
+              DCTAP & Settings
+            </Typography>
+            <Typography variant="body2" color="text.secondary" sx={{ mb: 3 }}>
+              Simple configuration for language requirements and DCTAP usage.
             </Typography>
             
             <Stack spacing={3}>
               <Box>
                 <Typography variant="subtitle2" gutterBottom>
-                  Languages in this spreadsheet
+                  Language Requirements
                 </Typography>
-                <FormGroup row>
-                  {commonLanguages.map(lang => (
-                    <FormControlLabel
-                      key={lang.code}
-                      control={
-                        <Checkbox
-                          checked={metadata.languages.includes(lang.code)}
-                          onChange={() => toggleLanguage(lang.code)}
-                        />
-                      }
-                      label={`${lang.name} (${lang.code})`}
-                    />
-                  ))}
-                </FormGroup>
-                
-                <FormControl sx={{ mt: 2, minWidth: 200 }}>
-                  <InputLabel>Primary Language</InputLabel>
-                  <Select
-                    value={metadata.primaryLanguage}
-                    onChange={(e) => setMetadata(prev => ({ ...prev, primaryLanguage: e.target.value }))}
-                    label="Primary Language"
-                  >
-                    {metadata.languages.map(langCode => {
-                      const lang = commonLanguages.find(l => l.code === langCode);
-                      return (
-                        <MenuItem key={langCode} value={langCode}>
-                          {lang?.name || langCode}
-                        </MenuItem>
-                      );
-                    })}
-                  </Select>
-                </FormControl>
+                <Alert severity="info" sx={{ mb: 2 }}>
+                  <Typography variant="body2">
+                    <strong>Required Language:</strong> English (en)
+                  </Typography>
+                  <Typography variant="body2" sx={{ mt: 1 }}>
+                    Individual worksheets may contain additional languages, but English is required for orphan validation.
+                  </Typography>
+                </Alert>
               </Box>
               
               <Divider />
@@ -646,15 +627,14 @@ export default function AdoptSpreadsheetFormV2({
                   label="DCTAP is embedded in the spreadsheet"
                 />
                 
-                <TextField
-                  fullWidth
-                  label="DCTAP Reference (if known)"
-                  value={metadata.dctapUsed || ''}
-                  onChange={(e) => setMetadata(prev => ({ ...prev, dctapUsed: e.target.value }))}
-                  placeholder="e.g., ISBD DCTAP v1.0"
-                  helperText="Leave blank if unknown. The import process will attempt to validate against the namespace's current DCTAP."
-                  sx={{ mt: 2 }}
-                />
+                <Alert severity="info" sx={{ mt: 2 }}>
+                  <Typography variant="body2">
+                    {metadata.dctapEmbedded 
+                      ? "The system will use the DCTAP embedded in the spreadsheet for validation."
+                      : `The system will use the default DCTAP for ${metadata.namespace} ${metadata.contentType} validation.`
+                    }
+                  </Typography>
+                </Alert>
               </Box>
               
               <Divider />
@@ -710,13 +690,19 @@ export default function AdoptSpreadsheetFormV2({
                     onChange={(e) => setMetadata(prev => ({ ...prev, projectId: e.target.value }))}
                     label="Select Project"
                   >
-                    {mockProjects
-                      .filter(p => p.namespaces.includes(metadata.namespace))
-                      .map(project => (
-                        <MenuItem key={project.id} value={project.id}>
-                          {project.name}
-                        </MenuItem>
-                      ))}
+                    {availableProjects.length === 0 ? (
+                      <MenuItem disabled>
+                        No projects available (GitHub integration pending)
+                      </MenuItem>
+                    ) : (
+                      availableProjects
+                        .filter(p => p.namespaces.includes(metadata.namespace))
+                        .map(project => (
+                          <MenuItem key={project.id} value={project.id}>
+                            {project.name}
+                          </MenuItem>
+                        ))
+                    )}
                   </Select>
                 </FormControl>
               ) : (
@@ -735,11 +721,17 @@ export default function AdoptSpreadsheetFormV2({
                       onChange={(e) => setMetadata(prev => ({ ...prev, reviewGroup: e.target.value }))}
                       label="Review Group"
                     >
-                      {mockReviewGroups.map(rg => (
-                        <MenuItem key={rg.value} value={rg.value}>
-                          {rg.label}
+                      {availableReviewGroups.length === 0 ? (
+                        <MenuItem disabled>
+                          No review groups available (GitHub integration pending)
                         </MenuItem>
-                      ))}
+                      ) : (
+                        availableReviewGroups.map(rg => (
+                          <MenuItem key={rg.value} value={rg.value}>
+                            {rg.label}
+                          </MenuItem>
+                        ))
+                      )}
                     </Select>
                   </FormControl>
                 </>
@@ -763,7 +755,10 @@ export default function AdoptSpreadsheetFormV2({
                       <strong>Content Type:</strong> {metadata.contentType}
                     </Typography>
                     <Typography variant="body2">
-                      <strong>Languages:</strong> {metadata.languages.join(', ')}
+                      <strong>Required Language:</strong> English (en)
+                    </Typography>
+                    <Typography variant="body2">
+                      <strong>DCTAP Source:</strong> {metadata.dctapEmbedded ? 'Embedded in spreadsheet' : 'Default for namespace'}
                     </Typography>
                     <Typography variant="body2">
                       <strong>Worksheets to Import:</strong> {
@@ -799,7 +794,7 @@ export default function AdoptSpreadsheetFormV2({
   return (
     <Box sx={{ p: 3 }}>
       <Box sx={{ mb: 3, display: 'flex', alignItems: 'center', gap: 2 }}>
-        <IconButton component={Link} href={addBasePath('/dashboard/admin')}>
+        <IconButton component={Link} href="/dashboard/admin">
           <ArrowBackIcon />
         </IconButton>
         <Typography variant="h4">Adopt Existing Spreadsheet</Typography>

@@ -113,33 +113,82 @@ export class AdoptionService {
       throw new Error('Invalid Google Sheets URL');
     }
 
-    // Mock implementation - in production this would call Google Sheets API
-    return {
-      sheetId,
-      sheetName: 'ISBD Vocabulary Export',
-      worksheets: [
-        {
-          name: 'Elements',
-          type: 'element-set',
-          rows: 100,
-          columns: 10,
-          headers: ['uri', 'rdfs:label@en', 'rdfs:label@es', 'rdfs:label@fr', 'skos:definition@en'],
-          languages: ['en', 'es', 'fr'],
-        },
-        {
-          name: 'Areas',
-          type: 'concept-scheme',
-          rows: 50,
-          columns: 8,
-          headers: ['uri', 'skos:prefLabel@en', 'skos:prefLabel@es', 'skos:broader', 'skos:narrower'],
-          languages: ['en', 'es'],
-        },
-      ],
-      languages: ['en', 'es', 'fr'],
-      inferredType: 'mixed',
-      totalRows: 150,
-      totalColumns: 10,
-    };
+    // Try to get real data from Google Sheets API
+    if (process.env.GSHEETS_SA_KEY) {
+      try {
+        const { google } = require('googleapis');
+        const auth = new google.auth.GoogleAuth({
+          credentials: JSON.parse(Buffer.from(process.env.GSHEETS_SA_KEY!, 'base64').toString('utf8')),
+          scopes: ['https://www.googleapis.com/auth/spreadsheets.readonly'],
+        });
+        const sheets = google.sheets({ version: 'v4', auth });
+
+        // Get spreadsheet metadata
+        const spreadsheet = await sheets.spreadsheets.get({
+          spreadsheetId: sheetId,
+        });
+
+        const title = spreadsheet.data.properties?.title || 'Unknown Spreadsheet';
+        const sheetList = spreadsheet.data.sheets || [];
+
+        // Analyze each worksheet
+        const worksheets = await Promise.all(
+          sheetList.map(async (sheet: any) => {
+            const sheetName = sheet.properties?.title || 'Unknown Sheet';
+            
+            try {
+              // Get first row to determine headers
+              const response = await sheets.spreadsheets.values.get({
+                spreadsheetId: sheetId,
+                range: `${sheetName}!1:1`,
+              });
+              
+              const headers = response.data.values?.[0] || [];
+              
+              // Get sheet dimensions
+              const gridProperties = sheet.properties?.gridProperties || {};
+              const rows = gridProperties.rowCount || 0;
+              const columns = gridProperties.columnCount || 0;
+              
+              return {
+                name: sheetName,
+                type: 'skip' as const, // Don't infer type, let user decide
+                rows,
+                columns,
+                headers,
+                languages: [], // Don't infer languages
+              };
+            } catch (error) {
+              console.warn(`Failed to analyze sheet ${sheetName}:`, error);
+              return {
+                name: sheetName,
+                type: 'skip' as const,
+                rows: 0,
+                columns: 0,
+                headers: [],
+                languages: [],
+              };
+            }
+          })
+        );
+
+        return {
+          sheetId,
+          sheetName: title,
+          worksheets,
+          languages: [], // Don't infer languages
+          inferredType: 'mixed',
+          totalRows: worksheets.reduce((sum, ws) => sum + ws.rows, 0),
+          totalColumns: Math.max(...worksheets.map(ws => ws.columns), 0),
+        };
+        
+      } catch (error) {
+        console.error('Failed to analyze spreadsheet with Google Sheets API:', error);
+        throw new Error('Failed to access Google Sheets. Please check the spreadsheet URL and permissions.');
+      }
+    } else {
+      throw new Error('Google Sheets API credentials not configured. Please set GSHEETS_SA_KEY environment variable.');
+    }
   }
 
   /**

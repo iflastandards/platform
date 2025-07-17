@@ -537,7 +537,7 @@ export default function AdoptSpreadsheetForm({ userId: _userId, userName }: Adop
           <Tooltip title="Back to Admin Dashboard">
             <IconButton
               component={Link}
-              href={addBasePath('/dashboard/admin')}
+              href="/dashboard/admin"
               size="small"
             >
               <ArrowBackIcon />

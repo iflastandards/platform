@@ -2,7 +2,6 @@
 
 import React from 'react';
 import Link from 'next/link';
-import { addBasePath } from '@ifla/theme/utils';
 import {
   Box,
   Card,
@@ -193,11 +192,11 @@ export default function ReviewGroupDashboard({
   const userNamespaces = reviewGroups.flatMap(rgId => getNamespacesByReviewGroup(rgId));
   
   const sidebarItems = [
-    { key: 'dashboard', label: 'RG Dashboard', icon: <DashboardIcon />, href: addBasePath('/dashboard/rg'), active: true },
-    { key: 'projects', label: 'My Projects', icon: <AssignmentIcon />, href: addBasePath('/dashboard/rg/projects') },
-    { key: 'namespaces', label: 'My Namespaces', icon: <FolderIcon />, href: addBasePath('/dashboard/rg/namespaces') },
-    { key: 'team', label: 'Team Members', icon: <PeopleIcon />, href: addBasePath('/dashboard/rg/team') },
-    { key: 'activity', label: 'Activity Log', icon: <HistoryIcon />, href: addBasePath('/dashboard/rg/activity') },
+    { key: 'dashboard', label: 'RG Dashboard', icon: <DashboardIcon />, href: '/dashboard/rg', active: true },
+    { key: 'projects', label: 'My Projects', icon: <AssignmentIcon />, href: '/dashboard/rg/projects' },
+    { key: 'namespaces', label: 'My Namespaces', icon: <FolderIcon />, href: '/dashboard/rg/namespaces' },
+    { key: 'team', label: 'Team Members', icon: <PeopleIcon />, href: '/dashboard/rg/team' },
+    { key: 'activity', label: 'Activity Log', icon: <HistoryIcon />, href: '/dashboard/rg/activity' },
   ];
 
   const stats = [

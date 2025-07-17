@@ -1,5 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { auth, getAuthContext, getUserAccessibleResources } from '@/lib/authorization';
+import { promises as fs } from 'fs';
+import path from 'path';
 
 /**
  * GET /api/admin/namespaces
@@ -31,38 +33,42 @@ export async function GET(request: NextRequest) {
       return NextResponse.json({ success: true, data: [] });
     }
 
-    // TODO: Replace with actual database query
-    // This is mock data for demonstration
-    const allNamespaces = [
-      {
-        id: 'ns_isbd',
-        name: 'ISBD Core',
-        reviewGroup: 'rg_isbd',
-        projects: ['proj_isbd_2024'],
-        elementSets: ['es_isbd_core'],
-        vocabularies: ['vocab_content_types'],
-        translations: ['en', 'fr', 'es'],
-        releases: ['v1.0', 'v1.1'],
-        status: 'active',
-        visibility: 'public',
-        createdAt: '2023-01-01T00:00:00Z',
-        updatedAt: '2024-01-01T00:00:00Z',
-      },
-      {
-        id: 'ns_isbdm',
-        name: 'ISBD Monographs',
-        reviewGroup: 'rg_isbd',
-        projects: ['proj_isbd_2024'],
-        elementSets: ['es_isbdm_core'],
-        vocabularies: ['vocab_monograph_types'],
-        translations: ['en', 'fr'],
-        releases: ['v1.0'],
-        status: 'active',
-        visibility: 'public',
-        createdAt: '2023-06-01T00:00:00Z',
-        updatedAt: '2024-01-01T00:00:00Z',
-      },
-    ];
+    // Fetch namespaces from file system
+    const standardsDir = path.join(process.cwd(), 'standards');
+    const allNamespaces = [];
+    
+    try {
+      const dirs = await fs.readdir(standardsDir);
+      
+      for (const dir of dirs) {
+        const namespacePath = path.join(standardsDir, dir);
+        const stat = await fs.stat(namespacePath);
+        
+        if (stat.isDirectory()) {
+          // Check if namespace.json exists
+          const configPath = path.join(namespacePath, 'namespace.json');
+          try {
+            const configData = await fs.readFile(configPath, 'utf8');
+            const config = JSON.parse(configData);
+            allNamespaces.push({
+              id: dir,
+              name: config.name || dir,
+              description: config.description || '',
+              reviewGroup: config.reviewGroup || '',
+              visibility: config.visibility || 'public',
+              status: config.status || 'active',
+              ...config
+            });
+          } catch (err) {
+            // If no namespace.json, skip this directory
+            console.warn(`No namespace.json found for ${dir}`);
+          }
+        }
+      }
+    } catch (err) {
+      console.error('Error reading namespaces from file system:', err);
+      throw new Error('Failed to fetch namespaces from file system');
+    }
 
     // Filter namespaces based on user access
     let namespaces = allNamespaces;

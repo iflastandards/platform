@@ -8,21 +8,100 @@
     "enableBlog": true,
     "enableSearch": true,
     "enableRdfDownloads": true,
-    "enableRedirects": false
+    "enableRedirects": false,
+    "enableMultipleElementSets": true
   },
   "navbar": {
     "includeBlog": true,
     "includeVersionDropdown": true,
     "includeLocaleDropdown": true,
-    "includeSearch": true
+    "includeSearch": true,
+    "includeElementSetSwitcher": true
   },
-  "vocabulary": {
-    "prefix": "isbd",
-    "numberPrefix": "T",
-    "profile": "isbd-values-profile.csv",
-    "elementUri": "https://www.iflastandards.info/ISBD/elements",
-    "elementProfile": "isbd-elements-profile.csv"
-  },
+  "namespace": "isbd",
+  "namespaceTitle": "ISBD - International Standard Bibliographic Description",
+  "elementSets": [
+    {
+      "id": "isbd",
+      "title": "ISBD Elements",
+      "prefix": "isbd",
+      "numberPrefix": "P",
+      "baseIRI": "http://iflastandards.info/ns/isbd/elements/",
+      "categories": ["statements", "notes", "attributes", "relationships"],
+      "elementCount": 185,
+      "profile": "isbd-elements-profile.csv",
+      "description": "Core ISBD elements with domain and range constraints for RDF applications"
+    },
+    {
+      "id": "unconstrained",
+      "title": "ISBD Unconstrained",
+      "prefix": "isbdu",
+      "numberPrefix": "U",
+      "baseIRI": "http://iflastandards.info/ns/isbd/unc/elements/",
+      "categories": ["elements"],
+      "elementCount": 185,
+      "profile": "isbd-unconstrained-profile.csv",
+      "description": "ISBD elements without domain/range constraints for maximum flexibility"
+    }
+  ],
+  "vocabularies": [
+    {
+      "id": "contentform",
+      "title": "Content Form",
+      "prefix": "isbdcf",
+      "baseIRI": "http://iflastandards.info/ns/isbd/terms/contentform/",
+      "termCount": 25,
+      "profile": "isbd-contentform-profile.csv"
+    },
+    {
+      "id": "contentformbase",
+      "title": "Content Form Base",
+      "prefix": "isbdcfb",
+      "baseIRI": "http://iflastandards.info/ns/isbd/terms/contentformbase/",
+      "termCount": 8,
+      "profile": "isbd-contentformbase-profile.csv"
+    },
+    {
+      "id": "mediatype",
+      "title": "Media Type",
+      "prefix": "isbdmt",
+      "baseIRI": "http://iflastandards.info/ns/isbd/terms/mediatype/",
+      "termCount": 12,
+      "profile": "isbd-mediatype-profile.csv"
+    },
+    {
+      "id": "dimensionality",
+      "title": "Dimensionality",
+      "prefix": "isbddim",
+      "baseIRI": "http://iflastandards.info/ns/isbd/terms/contentqualification/dimensionality/",
+      "termCount": 2,
+      "profile": "isbd-dimensionality-profile.csv"
+    },
+    {
+      "id": "motion",
+      "title": "Motion",
+      "prefix": "isbdmot",
+      "baseIRI": "http://iflastandards.info/ns/isbd/terms/contentqualification/motion/",
+      "termCount": 2,
+      "profile": "isbd-motion-profile.csv"
+    },
+    {
+      "id": "sensoryspecification",
+      "title": "Sensory Specification",
+      "prefix": "isbdss",
+      "baseIRI": "http://iflastandards.info/ns/isbd/terms/contentqualification/sensoryspecification/",
+      "termCount": 48,
+      "profile": "isbd-sensoryspecification-profile.csv"
+    },
+    {
+      "id": "type",
+      "title": "Type",
+      "prefix": "isbdtype",
+      "baseIRI": "http://iflastandards.info/ns/isbd/terms/contentqualification/type/",
+      "termCount": 53,
+      "profile": "isbd-type-profile.csv"
+    }
+  ],
   "buildConfig": {
     "onBrokenLinks": "warn",
     "onBrokenMarkdownLinks": "warn",

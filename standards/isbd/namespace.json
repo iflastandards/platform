@@ -1,0 +1,17 @@
+{
+  "name": "ISBD",
+  "description": "International Standard Bibliographic Description",
+  "reviewGroup": "isbd-review-group",
+  "visibility": "public",
+  "status": "active",
+  "languages": ["en", "fr", "es", "de", "it"],
+  "primaryLanguage": "en",
+  "contentTypes": ["element-sets", "concept-schemes"],
+  "dctapProfiles": {
+    "element-sets": "isbd-elements-dctap-v1",
+    "concept-schemes": "isbd-vocabularies-dctap-v1"
+  },
+  "created": "2023-01-01",
+  "updated": "2024-01-15",
+  "version": "1.0"
+}

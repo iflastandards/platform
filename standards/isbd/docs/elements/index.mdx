@@ -1,10 +1,125 @@
 ---
-title: ISBD Elements
+title: ISBD Element Sets
 sidebar_position: 10
 ---
 
-# ISBD Elements
+# ISBD Element Sets
 
-The ISBD element set is a registration of classes and properties from International Standard Bibliographic Description (ISBD), consolidated edition, published by De Gruyter Saur in July 2011 (ISBN 978-3-11-026379-4).
+The ISBD namespace contains two element sets that provide different levels of semantic constraint for bibliographic description.
 
-*This page is under development.*
+## Available Element Sets
+
+<div style={{ display: 'grid', gap: '20px', marginTop: '24px' }}>
+  <div style={{ background: '#fff', border: '2px solid #1976d2', borderRadius: '8px', padding: '24px', boxShadow: '0 2px 4px rgba(0,0,0,0.1)' }}>
+    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'start', marginBottom: '16px' }}>
+      <h3 style={{ margin: 0, color: '#1976d2' }}>ISBD Elements</h3>
+      <span style={{ background: '#1976d2', color: 'white', fontSize: '12px', fontWeight: 'bold', padding: '4px 12px', borderRadius: '16px' }}>185 elements</span>
+    </div>
+    <p style={{ color: '#666', marginBottom: '20px' }}>
+      The constrained ISBD element set is a registration of classes and properties from International Standard Bibliographic Description (ISBD), consolidated edition. These elements are formally defined with specific domains and ranges for use in RDF applications.
+    </p>
+    
+    <h4 style={{ fontSize: '1rem', marginBottom: '12px' }}>Key Features:</h4>
+    <ul style={{ color: '#666', marginBottom: '20px' }}>
+      <li>Domain constraints (typically Resource)</li>
+      <li>Range constraints (Literal, Agent, etc.)</li>
+      <li>Formal RDF semantics</li>
+      <li>Suitable for linked data applications</li>
+    </ul>
+
+    <h4 style={{ fontSize: '1rem', marginBottom: '12px' }}>Categories:</h4>
+    <div style={{ display: 'flex', gap: '8px', flexWrap: 'wrap', marginBottom: '20px' }}>
+      <span style={{ background: '#e3f2fd', color: '#1976d2', fontSize: '0.85rem', padding: '4px 12px', borderRadius: '4px' }}>Statements (45)</span>
+      <span style={{ background: '#e3f2fd', color: '#1976d2', fontSize: '0.85rem', padding: '4px 12px', borderRadius: '4px' }}>Notes (38)</span>
+      <span style={{ background: '#e3f2fd', color: '#1976d2', fontSize: '0.85rem', padding: '4px 12px', borderRadius: '4px' }}>Attributes (52)</span>
+      <span style={{ background: '#e3f2fd', color: '#1976d2', fontSize: '0.85rem', padding: '4px 12px', borderRadius: '4px' }}>Relationships (50)</span>
+    </div>
+
+    <div style={{ display: 'flex', gap: '12px' }}>
+      <a href="/docs/elements/isbd" style={{ background: '#1976d2', color: 'white', padding: '10px 20px', borderRadius: '4px', textDecoration: 'none', display: 'inline-block' }}>
+        Browse ISBD Elements →
+      </a>
+    </div>
+  </div>
+
+  <div style={{ background: '#fff', border: '2px solid #c2185b', borderRadius: '8px', padding: '24px', boxShadow: '0 2px 4px rgba(0,0,0,0.1)' }}>
+    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'start', marginBottom: '16px' }}>
+      <h3 style={{ margin: 0, color: '#c2185b' }}>ISBD Unconstrained</h3>
+      <span style={{ background: '#c2185b', color: 'white', fontSize: '12px', fontWeight: 'bold', padding: '4px 12px', borderRadius: '16px' }}>185 elements</span>
+    </div>
+    <p style={{ color: '#666', marginBottom: '20px' }}>
+      The unconstrained version has the same local URI part, label, and definition as each element in the constrained version, but no domain or range is declared. This provides maximum flexibility for use cases that don't require strict RDF semantics.
+    </p>
+    
+    <h4 style={{ fontSize: '1rem', marginBottom: '12px' }}>Key Features:</h4>
+    <ul style={{ color: '#666', marginBottom: '20px' }}>
+      <li>No domain constraints</li>
+      <li>No range constraints</li>
+      <li>Maximum flexibility</li>
+      <li>Compatible with any RDF resource</li>
+    </ul>
+
+    <h4 style={{ fontSize: '1rem', marginBottom: '12px' }}>Use Cases:</h4>
+    <ul style={{ color: '#666', marginBottom: '20px' }}>
+      <li>Legacy data migration</li>
+      <li>Non-RDF applications</li>
+      <li>Flexible metadata schemas</li>
+      <li>Experimental implementations</li>
+    </ul>
+
+    <div style={{ display: 'flex', gap: '12px' }}>
+      <a href="/docs/elements/unconstrained" style={{ background: '#c2185b', color: 'white', padding: '10px 20px', borderRadius: '4px', textDecoration: 'none', display: 'inline-block' }}>
+        Browse Unconstrained Elements →
+      </a>
+    </div>
+  </div>
+</div>
+
+## Choosing Between Element Sets
+
+<div style={{ background: '#f5f5f5', padding: '20px', borderRadius: '8px', marginTop: '32px' }}>
+  <h3 style={{ marginTop: 0 }}>When to use ISBD Elements (Constrained)</h3>
+  <ul>
+    <li>Building linked data applications</li>
+    <li>Need formal RDF semantics</li>
+    <li>Integrating with other RDF vocabularies</li>
+    <li>Require type safety and validation</li>
+  </ul>
+
+  <h3>When to use ISBD Unconstrained</h3>
+  <ul>
+    <li>Working with legacy systems</li>
+    <li>Need maximum flexibility</li>
+    <li>Experimental or prototype applications</li>
+    <li>Non-RDF metadata applications</li>
+  </ul>
+</div>
+
+## Technical Details
+
+### Namespace URIs
+- **ISBD Elements**: `http://iflastandards.info/ns/isbd/elements/`
+- **ISBD Unconstrained**: `http://iflastandards.info/ns/isbd/unc/elements/`
+
+### Prefixes
+- **ISBD Elements**: `isbd:`
+- **ISBD Unconstrained**: `isbdu:`
+
+### Example Usage
+
+```turtle
+# Constrained element (with domain/range)
+@prefix isbd: <http://iflastandards.info/ns/isbd/elements/> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+
+<http://example.org/resource/1> 
+    isbd:P1001 "The Great Gatsby"@en .
+# P1001 has domain: Resource, range: Literal
+
+# Unconstrained element (no domain/range)
+@prefix isbdu: <http://iflastandards.info/ns/isbd/unc/elements/> .
+
+<http://example.org/anything> 
+    isbdu:U1001 "The Great Gatsby"@en .
+# U1001 can be used with any subject/object
+```

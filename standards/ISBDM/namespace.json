@@ -1,0 +1,16 @@
+{
+  "name": "ISBD Manifestation",
+  "description": "ISBD for Manifestation-level description",
+  "reviewGroup": "isbd-review-group",
+  "visibility": "public",
+  "status": "active",
+  "languages": ["en", "fr"],
+  "primaryLanguage": "en",
+  "contentTypes": ["element-sets"],
+  "dctapProfiles": {
+    "element-sets": "isbdm-elements-dctap-v1"
+  },
+  "created": "2023-06-01",
+  "updated": "2024-01-15",
+  "version": "1.0"
+}

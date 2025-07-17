@@ -478,6 +478,10 @@
       "eslint-plugin-react-hooks>eslint": "9.29.0",
       "react-helmet-async>react": "^19.1.0",
       "react-helmet-async>react-dom": "^19.1.0"
+    },
+    "supportedArchitectures": {
+      "os": ["darwin"],
+      "cpu": ["current"]
     }
   }
 }
