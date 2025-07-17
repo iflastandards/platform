@@ -187,17 +187,32 @@ The following new MUI-based components will be created within `apps/admin/src/co
 
 ## **4. Implementation Plan**
 
-### **Phase 0: Data Bootstrapping (New)**
+### **Phase 0: Data Bootstrapping (Revised)**
 
-*Goal: Convert existing RDF vocabulary files from Docusaurus sites into the canonical MDX-with-front-matter format and corresponding spreadsheets. This populates the system with the current data baseline.*
+*Goal: Convert existing RDF vocabulary files from Docusaurus sites into the canonical MDX-with-front-matter format and corresponding spreadsheets by leveraging and adapting existing tooling.*
 
-1.  **Task 0.1 (Tool Scaffolding):** Create a new command-line tool package, `@ifla/rdf-importer`, within the `packages` directory. This tool will orchestrate the entire bootstrapping process.
-2.  **Task 0.2 (RDF Parsing):** Implement logic within the new tool to recursively find all RDF files (`.ttl`, `.rdf`, etc.) within the `standards` directory. Use the `@ifla/rdf-tools` library (which we'll create in Phase 1) to parse these files into a standardized in-memory graph representation.
-3.  **Task 0.3 (Tabular Conversion):** Develop a "graph-to-tabular" converter. This will traverse the parsed RDF graph and map the subjects, predicates, and objects into a structured array of records suitable for both CSV output and MDX front matter. This is the core transformation logic.
-4.  **Task 0.4 (File Generation):**
-    *   **MDX Generation:** For each vocabulary, the tool will generate the necessary Docusaurus MDX files, embedding the structured data directly into the YAML front matter as defined in the specification. This directly populates the Docusaurus sites.
-    *   **Spreadsheet Generation:** Simultaneously, the tool will serialize the tabular data into CSV files (one per vocabulary) and save them to a designated `output/bootstrapped-spreadsheets` directory.
-5.  **Testing:** Create unit tests for the RDF parsing and graph-to-tabular conversion logic. Add an integration test that runs the tool on a sample RDF file and verifies the output MDX and CSV files are correct.
+1.  **Task 0.1 (Consolidate & Enhance RDF-to-CSV Tool):**
+    *   Move the existing `scripts/rdf-to-csv.ts` script into a new, dedicated and reusable tool package: `@ifla/rdf-importer`.
+    *   Refactor the script so its core logic can be imported and used as a module, not just as a standalone command-line tool.
+    *   Enhance the core logic to return the parsed data as a structured in-memory array of objects, in addition to its existing capability of creating a CSV file.
+
+2.  **Task 0.2 (Create MDX Generation Logic):**
+    *   Within the new `@ifla/rdf-importer` package, create a new module dedicated to generating MDX files.
+    *   This module will export a function that takes the structured data array (from Task 0.1) as input.
+    *   The function will iterate through the data and construct the full content of the required Docusaurus MDX files, embedding the vocabulary data into the YAML front matter according to the specification.
+
+3.  **Task 0.3 (Create Orchestration Script):**
+    *   Create a new, top-level script named `scripts/bootstrap-vocabularies.ts`.
+    *   This script will be the main entry point for the one-time bootstrapping process. It will:
+        a.  Recursively find all target RDF files within the `standards` directory.
+        b.  For each RDF file, invoke the core functions from the `@ifla/rdf-importer` package to get both the structured data and the CSV content.
+        c.  Pass the structured data to the MDX generation logic.
+        d.  Save the newly generated MDX files to the correct locations within the Docusaurus site structure, overwriting existing placeholders.
+        e.  Save the generated CSV files to a designated `output/bootstrapped-spreadsheets` directory for future use and verification.
+
+4.  **Testing:**
+    *   Add unit tests to the `@ifla/rdf-importer` package for the new MDX generation logic.
+    *   Create an integration test that runs the `bootstrap-vocabularies.ts` script on a sample RDF file and verifies that the output MDX and CSV files are generated correctly and match the expected structure.
 
 ### **Phase 1: Core Vocabulary Management Infrastructure**
 
