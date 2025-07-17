@@ -57,3 +57,4 @@ coverage/
 .nxrc
 nx-cloud.env
 /.kiro/settings/mcp.json
+/developer_notes/IFLA link
