@@ -56,3 +56,4 @@ coverage/
 .env.nx
 .nxrc
 nx-cloud.env
+/.kiro/settings/mcp.json
