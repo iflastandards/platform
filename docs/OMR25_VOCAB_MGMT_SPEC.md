@@ -187,9 +187,21 @@ The following new MUI-based components will be created within `apps/admin/src/co
 
 ## **4. Implementation Plan**
 
+### **Phase 0: Data Bootstrapping (New)**
+
+*Goal: Convert existing RDF vocabulary files from Docusaurus sites into the canonical MDX-with-front-matter format and corresponding spreadsheets. This populates the system with the current data baseline.*
+
+1.  **Task 0.1 (Tool Scaffolding):** Create a new command-line tool package, `@ifla/rdf-importer`, within the `packages` directory. This tool will orchestrate the entire bootstrapping process.
+2.  **Task 0.2 (RDF Parsing):** Implement logic within the new tool to recursively find all RDF files (`.ttl`, `.rdf`, etc.) within the `standards` directory. Use the `@ifla/rdf-tools` library (which we'll create in Phase 1) to parse these files into a standardized in-memory graph representation.
+3.  **Task 0.3 (Tabular Conversion):** Develop a "graph-to-tabular" converter. This will traverse the parsed RDF graph and map the subjects, predicates, and objects into a structured array of records suitable for both CSV output and MDX front matter. This is the core transformation logic.
+4.  **Task 0.4 (File Generation):**
+    *   **MDX Generation:** For each vocabulary, the tool will generate the necessary Docusaurus MDX files, embedding the structured data directly into the YAML front matter as defined in the specification. This directly populates the Docusaurus sites.
+    *   **Spreadsheet Generation:** Simultaneously, the tool will serialize the tabular data into CSV files (one per vocabulary) and save them to a designated `output/bootstrapped-spreadsheets` directory.
+5.  **Testing:** Create unit tests for the RDF parsing and graph-to-tabular conversion logic. Add an integration test that runs the tool on a sample RDF file and verifies the output MDX and CSV files are correct.
+
 ### **Phase 1: Core Vocabulary Management Infrastructure**
 
-*Goal: Establish the foundational components for managing vocabularies.*
+*Goal: Establish the foundational components for managing the data created in Phase 0.*
 
 1.  **Task 1.1 (DB Schema):** Implement the Supabase schema extensions (`VocabularyImportJobs`, `ValidationReports`, `EditorialCycles`).
 2.  **Task 1.2 (API Scaffolding):** Create the basic CRUD API endpoints for vocabularies (`/api/v1/vocabularies`). Protect them with Cerbos policies allowing admin access.
