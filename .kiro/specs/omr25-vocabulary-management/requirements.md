@@ -107,3 +107,79 @@ This approach leverages the modern, scalable Nx monorepo architecture while inco
 1. WHEN any vocabulary modification occurs THEN the system SHALL record the change, user, timestamp, and nature of the modification
 2. WHEN administrators review audit logs THEN the system SHALL provide searchable, filterable views of all vocabulary-related activities
 3. WHEN changes need to be reverted THEN the system SHALL provide mechanisms to identify and undo specific modifications
+
+### Requirement 11: GitHub Project-Based Collaboration
+
+**User Story:** As a Review Group Administrator, I want to charter GitHub Projects as working groups, so that I can organize focused standards development initiatives with clear scope and deliverables.
+
+#### Acceptance Criteria
+
+1. WHEN a Review Group Administrator creates a new Project THEN the system SHALL establish a GitHub Project with appropriate team structure and namespace assignments
+2. WHEN external experts are invited to a Project THEN the system SHALL grant them access to only the namespaces assigned to that Project
+3. WHEN Projects are completed THEN the system SHALL archive the Project while preserving all work products and audit trails
+4. WHEN Project teams need coordination THEN the system SHALL provide kanban boards, milestone tracking, and progress reporting
+
+### Requirement 12: Four-Phase Content Lifecycle
+
+**User Story:** As an Editor, I want a structured content lifecycle that separates bulk editing, continuous updates, quality assurance, and publication, so that I can work efficiently with appropriate tools for each phase.
+
+#### Acceptance Criteria
+
+1. WHEN an Editorial Cycle is initiated THEN the system SHALL export current RDF to Google Sheets for bulk editing and validate all changes before import
+2. WHEN continuous editing occurs THEN the system SHALL provide TinaCMS interfaces for both prose documentation and structured RDF metadata
+3. WHEN nightly quality assurance runs THEN the system SHALL validate all changes, generate impact reports, and recommend semantic versioning
+4. WHEN publication is triggered THEN the system SHALL package validated content and deploy to vocabulary servers with complete traceability
+
+### Requirement 13: Multi-Format RDF Support
+
+**User Story:** As a Standards Consumer, I want vocabularies available in multiple RDF formats, so that I can integrate them with different systems and tools.
+
+#### Acceptance Criteria
+
+1. WHEN vocabularies are published THEN the system SHALL generate RDF/XML, Turtle, N-Triples, and JSON-LD formats automatically
+2. WHEN format conversion occurs THEN the system SHALL validate all outputs against W3C standards
+3. WHEN consumers request specific formats THEN the system SHALL provide content negotiation and direct format access
+
+### Requirement 14: GitHub Integration and External Contributions
+
+**User Story:** As an External Expert, I want to contribute to IFLA standards through familiar GitHub workflows, so that I can participate without requiring IFLA membership.
+
+#### Acceptance Criteria
+
+1. WHEN external experts create pull requests THEN the system SHALL route them to appropriate Project teams for review
+2. WHEN pull requests are submitted THEN the system SHALL provide clear diff views and discussion threads for collaborative review
+3. WHEN contributions are accepted THEN the system SHALL properly attribute external contributors in all published materials
+4. WHEN issues are reported THEN the system SHALL use templates to gather necessary information and route to appropriate teams
+
+### Requirement 15: Automated Quality Assurance and Semantic Versioning
+
+**User Story:** As an Administrator, I want automated analysis of content changes with semantic versioning recommendations, so that I can make informed publication decisions.
+
+#### Acceptance Criteria
+
+1. WHEN content changes accumulate THEN the system SHALL analyze impact and recommend major, minor, or patch version increments
+2. WHEN validation runs THEN the system SHALL check DCTAP compliance, RDF validity, and cross-reference consistency
+3. WHEN impact reports are generated THEN the system SHALL highlight breaking changes, additions, and modifications with clear explanations
+4. WHEN publication decisions are needed THEN the system SHALL provide executive summaries of all changes since last publication
+
+### Requirement 16: TinaCMS Visual Editing Integration
+
+**User Story:** As a Content Editor, I want familiar WYSIWYG editing interfaces for both prose and structured data, so that I can focus on content quality without learning technical syntax.
+
+#### Acceptance Criteria
+
+1. WHEN editing prose documentation THEN the system SHALL provide rich-text interfaces similar to WordPress or Google Docs
+2. WHEN editing RDF metadata THEN the system SHALL provide form-based interfaces with validation and controlled vocabularies
+3. WHEN changes are saved THEN the system SHALL automatically commit to Git with proper version control and validation
+4. WHEN validation errors occur THEN the system SHALL provide immediate, contextual feedback to guide corrections
+
+### Requirement 17: Namespace and Review Group Management
+
+**User Story:** As a Review Group Administrator, I want to manage namespace assignments and team permissions, so that I can maintain appropriate access control for my standards.
+
+#### Acceptance Criteria
+
+1. WHEN Review Groups are established THEN the system SHALL create corresponding GitHub teams with appropriate namespace access
+2. WHEN namespaces are assigned to Projects THEN the system SHALL enforce access controls based on Project team membership
+3. WHEN team membership changes THEN the system SHALL immediately update access permissions across all integrated systems
+4. WHEN cross-namespace work is needed THEN the system SHALL support temporary access grants with clear audit trails
