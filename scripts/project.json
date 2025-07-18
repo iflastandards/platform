@@ -1,0 +1,77 @@
+{
+  "$schema": "../node_modules/nx/schemas/project-schema.json",
+  "name": "scripts",
+  "root": "scripts",
+  "sourceRoot": "scripts",
+  "projectType": "library",
+  "tags": ["type:scripts", "scope:tooling"],
+  "namedInputs": {
+    "scriptFiles": [
+      "{projectRoot}/**/*.ts",
+      "{projectRoot}/**/*.js",
+      "!{projectRoot}/**/*.test.ts",
+      "!{projectRoot}/**/*.spec.ts"
+    ],
+    "testFiles": [
+      "{projectRoot}/**/*.test.ts",
+      "{projectRoot}/**/*.spec.ts"
+    ]
+  },
+  "targets": {
+    "test": {
+      "executor": "@nx/vite:test",
+      "outputs": ["{workspaceRoot}/coverage/{projectRoot}"],
+      "options": {
+        "passWithNoTests": true,
+        "config": "scripts/vitest.config.ts",
+        "coverage": false,
+        "watch": false
+      },
+      "configurations": {
+        "watch": {
+          "watch": true
+        },
+        "coverage": {
+          "coverage": true
+        }
+      },
+      "inputs": [
+        "scriptFiles",
+        "testFiles",
+        {
+          "externalDependencies": ["vitest"]
+        }
+      ],
+      "cache": true
+    },
+    "test:specific": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "vitest run {args.file} --config scripts/vitest.config.ts",
+        "cwd": "{workspaceRoot}"
+      },
+      "configurations": {
+        "watch": {
+          "command": "vitest watch {args.file} --config scripts/vitest.config.ts"
+        }
+      }
+    },
+    "lint": {
+      "executor": "@nx/eslint:lint",
+      "options": {
+        "lintFilePatterns": ["scripts/**/*.ts", "scripts/**/*.js"]
+      },
+      "inputs": ["scriptFiles"],
+      "cache": true
+    },
+    "typecheck": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "tsc --noEmit -p scripts/tsconfig.json"
+      },
+      "inputs": ["scriptFiles"],
+      "cache": true
+    }
+  },
+  "implicitDependencies": []
+}

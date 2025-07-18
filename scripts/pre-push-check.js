@@ -8,6 +8,7 @@
 const { execSync } = require('child_process');
 const fs = require('fs');
 const path = require('path');
+const { ensureDaemon } = require('./ensure-nx-daemon');
 
 // Load configuration
 const configPath = path.join(__dirname, '..', '.prepushrc.json');
@@ -31,6 +32,9 @@ if (fs.existsSync(configPath)) {
 console.log('\n🚀 Running pre-push checks (assumes pre-commit passed)...\n');
 console.log('ℹ️  Pre-commit ensures: typecheck ✓, lint ✓, unit tests ✓');
 console.log('ℹ️  Pre-push adds: integration tests, builds, smart e2e validation\n');
+
+// Ensure nx daemon is running for better performance
+ensureDaemon();
 
 // Smart E2E function
 function shouldAutoTriggerE2E() {
@@ -66,14 +70,15 @@ let hasErrors = false;
 if (config.runTests) {
   console.log('📋 Running integration tests...');
   try {
+    // First try to run projects that have test:integration target
     execSync(`nx affected --target=test:integration --parallel=${config.parallelJobs}`, {
       stdio: 'inherit',
       encoding: 'utf8'
     });
     console.log('✅ Integration tests passed\n');
   } catch (error) {
-    // Integration tests might not exist for all projects
-    console.log('⚠️  Integration tests completed (some projects may not have integration tests)\n');
+    // Not all projects have integration tests, this is OK
+    console.log('ℹ️  Integration tests completed (some projects may not have integration tests)\n');
   }
 }
 

@@ -3,11 +3,18 @@
 /**
  * Pre-commit check script that allows warnings but fails on errors
  * This prevents the need to bypass the pre-commit hook for minor issues
+ * 
+ * Note: typecheck and lint are run separately from tests for better performance
+ * and to ensure they don't interfere with vitest execution
  */
 
 const { execSync } = require('child_process');
+const { ensureDaemon } = require('./ensure-nx-daemon');
 
 console.log('\n🔍 Running pre-commit checks (warnings allowed)...\n');
+
+// Ensure nx daemon is running for better performance
+ensureDaemon();
 
 let hasErrors = false;
 
@@ -42,24 +49,15 @@ try {
 // Run unit tests (fast feedback)
 console.log('📋 Running unit tests...');
 try {
-  execSync('nx affected --target=test:unit --parallel=3', {
+  // Use the standard test target with nx affected
+  execSync('nx affected --target=test --parallel=3', {
     stdio: 'inherit',
     encoding: 'utf8'
   });
   console.log('✅ Unit tests passed\n');
 } catch (error) {
-  // Some projects might not have test:unit target, fallback to test
-  console.log('⚠️  Specific unit tests not found, running general tests...');
-  try {
-    execSync('nx affected --target=test --parallel=3', {
-      stdio: 'inherit',
-      encoding: 'utf8'
-    });
-    console.log('✅ Tests passed\n');
-  } catch (fallbackError) {
-    console.log('❌ Tests failed\n');
-    hasErrors = true;
-  }
+  console.log('❌ Tests failed\n');
+  hasErrors = true;
 }
 
 // Summary
