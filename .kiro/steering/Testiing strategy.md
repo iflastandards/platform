@@ -58,6 +58,35 @@ describe('ComponentName', () => {
 });
 ```
 
+### Scripts Testing
+
+**Purpose**: Isolated testing for utility scripts
+**Location**: `scripts/` directory with dedicated Nx project configuration
+**Configuration**: `scripts/vitest.config.ts` - Separate from main test suite
+
+**Key Features**:
+- Only runs tests when scripts themselves change (Nx affected detection)
+- Isolated from main test suite for faster pre-commit hooks
+- Dedicated npm scripts for convenience
+
+**Commands**:
+```bash
+pnpm test:scripts              # Run all script tests
+pnpm test:scripts:affected     # Run only affected script tests
+pnpm test:scripts:file <path>  # Run a specific test file
+pnpm test:scripts:watch        # Run tests in watch mode
+pnpm test:scripts:coverage     # Run tests with coverage
+```
+
+**Usage Pattern**:
+```bash
+# Run a script directly
+pnpm tsx scripts/your-script.ts
+
+# Test a script
+pnpm test:scripts:file scripts/your-script.test.ts
+```
+
 ### Global Mocks
 
 **Location**: Centralized in `packages/theme/src/tests/__mocks__/` directory

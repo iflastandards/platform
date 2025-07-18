@@ -81,6 +81,13 @@ pnpm test:pre-push:flexible  # Production readiness before push
 # Debugging tests
 npx playwright test --headed  # Run E2E tests with browser visible
 npx vitest --ui              # Open Vitest UI for debugging
+
+# Scripts testing
+pnpm test:scripts            # Run all script tests
+pnpm test:scripts:affected   # Run only affected script tests
+pnpm test:scripts:file <path> # Run a specific test file
+pnpm test:scripts:watch      # Run tests in watch mode
+pnpm test:scripts:coverage   # Run tests with coverage
 ```
 
 ### Performance Commands

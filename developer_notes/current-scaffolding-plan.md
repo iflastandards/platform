@@ -1,162 +1,305 @@
-# Current Site Scaffolding System
-**Status: COMPLETED AND OPERATIONAL**
+# Current Scaffolding Plan
 
 ## Overview
-The scaffolding system is a complete site generation framework that creates new IFLA standards sites with:
-- **Comprehensive template structure** matching the current ISBD pattern
-- **Dynamic configuration generation** from template files
-- **Rich content structure** with tabbed overview pages
-- **Consistent UI components** and styling
 
-### Core Components:
-1. **scaffold-site.ts** - Main scaffolding script using the complete template system
-2. **scaffold-template/** - Complete site template with all structure and components
-3. **site-template.ts** - Template generation logic with placeholder replacement
-4. **Individual site configs** - Self-contained configurations for each site
+This document outlines the current implementation of the vocabulary site scaffolding system, which has been enhanced to generate all necessary files referenced by the navigation sidebar. The system ensures that all files referenced in the sidebar exist, preventing "document ids do not exist" build errors.
 
-## Current Scaffold Template Structure
+## Implementation Components
 
-### **Template Files (Generated):**
-- **`docusaurus.config.ts.template`** - Complete Docusaurus configuration with placeholders
-- **`project.json.template`** - Nx project configuration for workspace integration
+### 1. Enhanced Page Template Generator
 
-### **Content Structure:**
-```
-scripts/scaffold-template/
-├── docs/
-│   ├── index.mdx                    # Tabbed overview (Element Sets, Vocabularies, Documentation)
-│   ├── about.mdx                    # Standard background and history
-│   ├── assessment.mdx               # Implementation guidelines
-│   ├── examples.mdx                 # Practical usage examples
-│   ├── glossary.mdx                 # Key terms and definitions
-│   ├── introduction.mdx             # Getting started guide
-│   ├── elements/index.mdx           # Elements overview with DocCardList
-│   └── terms/index.mdx              # Vocabularies overview with DocCardList
-├── src/
-│   ├── pages/
-│   │   ├── index.mdx                # Homepage with IFLA branding
-│   │   ├── manage.mdx               # Management dashboard
-│   │   ├── rdf.tsx                  # RDF downloads page
-│   │   ├── sitemap.module.scss      # Sitemap styling
-│   │   └── sitemap.tsx              # Sitemap component
-│   ├── components/
-│   │   ├── CompactButton.tsx        # Reusable button component
-│   │   └── CompactButton.module.css # Button styling
-│   └── css/custom.scss              # Site-specific styles
-├── blog/
-│   └── authors.yml                  # Blog authors template
-├── rdf/                             # RDF output directories (with .gitkeep files)
-│   ├── jsonld/ ├── nt/ ├── ttl/ └── xml/
-├── static/img/                      # Static assets (with .gitkeep)
-├── tsconfig.json                    # TypeScript configuration
-├── sidebars.ts                      # Navigation structure
-└── site-config.json                # Configuration placeholder
-```
+The `PageTemplateGenerator` class in `scripts/page-template-generator.ts` has been enhanced with new methods to generate individual element set pages, vocabulary pages, and documentation pages:
 
-### **Key Features:**
-
-#### **Tabbed Overview Page:**
-- **Element Sets tab**: Shows constrained and unconstrained elements
-- **Value Vocabularies tab**: Displays primary, supporting, and extension vocabularies  
-- **Documentation tab**: Links to all documentation sections
-- **CompactButton component**: Consistent navigation styling
-
-#### **Template Placeholders:**
-- `{{TITLE}}` - Site title
-- `{{TAGLINE}}` - Site tagline/description
-- `{{SITE_KEY}}` - Site identifier (e.g., 'isbd', 'lrm')
-- `{{SITE_KEY_LOWER}}` - Lowercase site key
-- `{{PORT}}` - Development server port
-- `{{VOCABULARY_PREFIX}}` - Vocabulary URI prefix
-- `{{ELEMENT_URI}}` - Element namespace URI
-- `{{PROJECT_NAME}}` - GitHub project name
-- `{{NAVBAR_TITLE}}` - Navigation bar title
-- `{{SITE_CODE}}` - Short site code
-- `{{LAST_UPDATED}}` - Last modification date
-
-## Scaffolding Workflow
-
-### **Creating a New Site:**
-```bash
-pnpm tsx scripts/scaffold-site.ts \
-  --siteKey=newsite \
-  --title="New Standard" \
-  --tagline="A new IFLA standard"
-```
-
-### **What Happens:**
-1. **Validates site key** (alphanumeric, starts with letter, max 20 chars)
-2. **Creates directory structure** from scaffold-template
-3. **Generates configurations** from .template files with placeholder replacement
-4. **Updates package.json** with site-specific scripts
-5. **Creates blog content** from site configuration
-6. **Sets up Nx integration** with proper dependencies
-
-### **Template Integration:**
-- **Uses ISBD pattern**: Matches current ISBD site structure and styling
-- **Component consistency**: Shared CompactButton and navigation patterns
-- **Theme integration**: Leverages @ifla/theme components and utilities
-- **TypeScript compliant**: Full type safety and IntelliSense support
-
-## Component Documentation
-
-### **CompactButton Component:**
 ```typescript
-interface CompactButtonProps {
-  href: string;
-  children: React.ReactNode;
+class PageTemplateGenerator {
+  // Existing methods
+  async generateSitePageTemplates(namespace: string, config: SiteConfiguration): Promise<void>;
+  private generateLandingPage(config: SiteConfiguration): PageTemplate;
+  private generateElementSetsIndexPage(config: SiteConfiguration): PageTemplate;
+  private generateVocabulariesIndexPage(config: SiteConfiguration): PageTemplate;
+  
+  // New methods
+  private generateIndividualElementSetPages(config: SiteConfiguration): PageTemplate[];
+  private generateIndividualVocabularyPages(config: SiteConfiguration): PageTemplate[];
+  private generateDocumentationPages(config: SiteConfiguration): PageTemplate[];
+  private generateToolsPages(config: SiteConfiguration): PageTemplate[];
 }
 ```
-- **Usage**: Navigation buttons in tabbed overview and documentation pages
-- **Styling**: CSS module with consistent IFLA theme styling
-- **Integration**: Uses @ifla/theme InLink component for site-aware navigation
 
-### **Template Configuration:**
-- **TypeScript compliant**: Full composite project setup with references
-- **Nx integration**: Proper workspace dependencies and caching
-- **SCSS support**: Updated from CSS to SCSS for consistency
-- **Port management**: Automatic port assignment and conflict resolution
+The generator creates the following types of pages:
 
-## Maintenance Guide
+1. **Landing page** - `index.mdx` in the root docs directory
+2. **Element sets index** - `elements/index.mdx`
+3. **Individual element set pages** - `elements/{element-set-id}/index.mdx`
+4. **Vocabularies index** - `vocabularies/index.mdx`
+5. **Individual vocabulary pages** - `vocabularies/{vocabulary-id}.mdx`
+6. **Documentation pages** - `introduction.mdx`, `examples.mdx`, `about.mdx`, etc.
+7. **Tools & Resources pages** - `search.mdx`, `cross-set-browser.mdx`, etc. (for hierarchical navigation)
 
-### **Updating the Scaffold Template:**
-When making changes that should apply to all future sites:
+### 2. File Structure Validator
 
-1. **Update template files** in `scripts/scaffold-template/`
-2. **Test template generation** with scaffold-site script
-3. **Verify TypeScript compilation** and lint checks
-4. **Update documentation** if structure changes
-5. **Consider impact** on existing sites (may need migration)
+The file structure validator in `scripts/validate-sidebar-references.ts` ensures that all files referenced in the sidebar exist:
 
-### **Adding New Template Features:**
-1. **Add to scaffold-template/** with appropriate placeholders
-2. **Update site-template.ts** if new placeholders needed
-3. **Test with actual site generation**
-4. **Document new features** in this file and README
+```typescript
+// Main validation function
+async function validateSidebarReferences(siteDir: string, sidebarPath: string): Promise<void> {
+  // Extract references from sidebar
+  const references = await extractSidebarReferencesFromFile(sidebarPath);
+  
+  // Expand autogenerated references
+  const expandedReferences = await expandAutogeneratedReferences(siteDir, references);
+  
+  // Check if files exist
+  const missingFiles = await checkFilesExist(siteDir, expandedReferences);
+  
+  // Generate report
+  const report = generateMissingFilesReport(missingFiles);
+}
+```
 
-### **Troubleshooting:**
-- **Build failures**: Check TypeScript configuration and theme references
-- **Missing components**: Ensure CompactButton and other dependencies are copied
-- **Port conflicts**: Use robust startup commands or port manager
-- **Broken links**: Verify placeholder replacement and site structure
+The validator consists of three main components:
 
-## Current Status
-- ✅ **Scaffold template**: Complete with ISBD-matching structure
-- ✅ **Component system**: CompactButton and tabbed overview implemented
-- ✅ **Configuration generation**: Self-contained configs with proper isolation
-- ✅ **Nx integration**: Full workspace support with dependencies
-- ✅ **TypeScript compliance**: Composite projects with proper references
-- ✅ **Testing integration**: Pre-commit and build validation
-- ✅ **Documentation**: Rich content structure with professional presentation
+1. **Sidebar Reference Extractor** - Extracts document IDs from the sidebar configuration
+2. **Autogenerated Reference Expander** - Expands autogenerated directory references to include all files
+3. **File Existence Checker** - Checks if files exist for all document IDs
 
-## Active Sites Using Template:
-- **Portal**: Management and landing site
-- **ISBD**: International Standard Bibliographic Description
-- **ISBDM**: ISBD Manifesto
-- **LRM**: Library Reference Model  
-- **FRBR**: Functional Requirements for Bibliographic Records
-- **MulDiCat**: Multilingual Dictionary of Cataloguing
-- **UniMARC**: Universal MARC format
-- **NewTest**: Testing site for new features
+### 3. Main Generator Script
 
-Last Updated: 2025-01-30
+The main generator script has been updated to use the enhanced page template generator and add validation:
+
+```typescript
+async function main() {
+  // Load site configurations
+  const siteConfigs = JSON.parse(fs.readFileSync(configsPath, 'utf-8'));
+
+  // Generate page templates
+  const generator = new PageTemplateGenerator();
+  await generator.generateAllPageTemplates(siteConfigs);
+
+  // Validate file structure
+  for (const namespace of Object.keys(siteConfigs)) {
+    const siteDir = path.join('standards', namespace);
+    const sidebarPath = path.join(siteDir, 'sidebars.ts');
+    await validateSidebarReferences(siteDir, sidebarPath);
+  }
+}
+```
+
+## File Structure Details
+
+### Element Set Pages
+
+For each element set, the generator creates:
+
+1. **Index page** - `elements/{element-set-id}/index.mdx`
+2. **Subcategory pages** - For complex element sets like ISBD, creates subcategory index pages
+
+Example element set index page:
+
+```mdx
+---
+title: ISBD Manifestation
+sidebar_position: 1
+---
+
+# ISBD Manifestation
+
+Element set for describing manifestations in the ISBD standard.
+
+This element set contains 156 elements.
+
+## Overview
+
+The ISBD Manifestation element set provides a structured way to describe ISBD resources.
+
+## Elements
+
+Elements will be listed here when imported.
+
+## Languages
+
+This element set is available in the following languages:
+- English (en)
+- French (fr)
+- Spanish (es)
+```
+
+### Vocabulary Pages
+
+For each vocabulary, the generator creates:
+
+1. **Vocabulary page** - `vocabularies/{vocabulary-id}.mdx`
+2. **Category index pages** - For categorized vocabularies, creates category index pages
+
+Example vocabulary page:
+
+```mdx
+---
+title: Content Forms
+sidebar_position: 1
+---
+
+# Content Forms
+
+Vocabulary of content forms in the ISBD standard.
+
+This vocabulary contains 12 concepts.
+
+## Concepts
+
+Concepts will be listed here when imported.
+
+## Languages
+
+This vocabulary is available in the following languages:
+- English (en)
+- French (fr)
+```
+
+### Documentation Pages
+
+The generator creates standard documentation pages:
+
+1. **Introduction** - `introduction.mdx`
+2. **Examples** - `examples.mdx`
+3. **About** - `about.mdx`
+4. **Assessment** - `assessment.mdx` (if needed)
+5. **Glossary** - `glossary.mdx` (if needed)
+6. **FAQ** - `faq.mdx` (if needed)
+
+Example documentation page:
+
+```mdx
+---
+title: Introduction
+sidebar_position: 1000
+---
+
+# ISBD Introduction
+
+Overview of ISBD principles, scope, and application guidelines.
+
+## Purpose
+
+The ISBD standard provides a framework for ISBD implementation.
+
+## Key Concepts
+
+Key concepts and principles of the ISBD standard.
+
+## How to Use This Documentation
+
+This documentation is organized into sections covering different aspects of the ISBD standard.
+
+*This page is under development.*
+```
+
+### Tools & Resources Pages
+
+For hierarchical navigation, the generator creates tools & resources pages:
+
+1. **Search** - `search.mdx`
+2. **Cross-Set Browser** - `cross-set-browser.mdx`
+3. **Field Guide** - `field-guide.mdx`
+4. **Export Tools** - `export-tools.mdx`
+5. **Visualization** - `visualization.mdx`
+
+Example tools page:
+
+```mdx
+---
+title: Search
+sidebar_position: 900
+---
+
+# ISBD Search
+
+Advanced search functionality for ISBD elements and vocabularies.
+
+import { SearchPage } from '@ifla/theme/components/SearchPage';
+
+<SearchPage namespace="isbd" />
+
+## Search Tips
+
+- Use quotes for exact phrase matching: "title proper"
+- Use wildcards for partial matching: catalog*
+- Use boolean operators: AND, OR, NOT
+- Filter by element set or vocabulary using the dropdown menus
+
+*This page is under development.*
+```
+
+## Navigation Strategies
+
+The system supports three navigation strategies:
+
+1. **Simple** - Flat list of element sets and vocabularies
+2. **Categorized** - Element sets and vocabularies grouped by category
+3. **Hierarchical** - Complex nested structure with categories and subcategories
+
+For hierarchical navigation, the system creates additional pages for tools & resources and organizes element sets and vocabularies into categories.
+
+## Error Handling
+
+The system includes robust error handling:
+
+1. **Missing Directories** - Creates directories if they don't exist
+2. **Existing Files** - Preserves existing files, doesn't overwrite
+3. **Invalid References** - Logs warnings for sidebar references that can't be resolved
+
+## Testing
+
+The system includes comprehensive tests:
+
+1. **Unit Tests** - Tests each template generation function
+2. **Integration Tests** - Tests the complete file generation process
+3. **Validation Tests** - Verifies that all sidebar references have corresponding files
+
+## Usage Examples
+
+### Generating a New Site
+
+```bash
+# Create a new site with the scaffold script
+pnpm tsx scripts/scaffold-site.ts --siteKey=newsite --title="New Standard" --tagline="A new IFLA standard"
+
+# Generate page templates for the site
+pnpm tsx scripts/page-template-generator.ts --namespace=newsite
+```
+
+### Validating File Structure
+
+```bash
+# Validate a specific site
+pnpm tsx scripts/validate-sidebar-references.ts standards/isbd
+
+# Validate all sites
+for site in standards/*; do
+  if [ -d "$site" ]; then
+    pnpm tsx scripts/validate-sidebar-references.ts "$site"
+  fi
+done
+```
+
+### Generating Missing Files
+
+```bash
+# Generate missing files for a specific site
+pnpm tsx scripts/page-template-generator.ts --namespace=isbd --missing-only
+
+# If command line options are not working, apply the fix
+pnpm tsx scripts/fix-page-template-generator.ts
+```
+
+The fix script updates the page template generator to properly handle command line options. See [Vocabulary Site Scaffolding Fix](../docs/vocabulary-site-scaffolding-fix.md) for details.
+
+## Future Enhancements
+
+1. **Template Customization** - Allow customization of generated templates
+2. **Content Import** - Integrate with content import system
+3. **Automatic Updates** - Update files when navigation changes
+
+## Conclusion
+
+The enhanced vocabulary site scaffolding system ensures that all files referenced in the navigation sidebar exist, preventing build errors and providing a complete site structure for IFLA standards. By generating all necessary files with appropriate placeholder content, the system makes it easy to create new standards sites and maintain existing ones.

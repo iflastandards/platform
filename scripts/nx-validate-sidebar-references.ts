@@ -49,20 +49,40 @@ export async function validateSite(siteName: string): Promise<boolean> {
 }
 
 /**
+ * Gets all site names from the standards directory
+ */
+async function getAllSites(): Promise<string[]> {
+  const fs = require('fs').promises;
+  const standardsDir = path.resolve('standards');
+
+  try {
+    const entries = await fs.readdir(standardsDir, { withFileTypes: true });
+    return entries
+      .filter((entry) => entry.isDirectory())
+      .filter((entry) => !entry.name.startsWith('.')) // Skip hidden directories
+      .map((entry) => entry.name);
+  } catch (error) {
+    console.error('Error reading standards directory:', error);
+    return [];
+  }
+}
+
+/**
  * Main function
  */
 async function main(): Promise<void> {
   // Get site names from command line arguments
   const args = process.argv.slice(2);
 
-  if (args.length < 1) {
-    console.error(
-      'Usage: nx-validate-sidebar-references <site-name> [<site-name> ...]',
-    );
+  // If no arguments provided, validate all sites
+  const siteNames = args.length > 0 ? args : await getAllSites();
+
+  if (siteNames.length === 0) {
+    console.error('No sites found to validate');
     process.exit(1);
   }
 
-  const siteNames = args;
+  console.log(`Validating ${siteNames.length} sites: ${siteNames.join(', ')}`);
   let success = true;
 
   for (const siteName of siteNames) {

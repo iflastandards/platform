@@ -185,6 +185,36 @@ The project has optimized GitHub Actions workflows:
 - **Vercel previews**: Automatic preview deployments for each push to preview branch
 - **Nx Cloud integration**: Distributed builds with 6-8 agents depending on environment
 
+## Scripts Project
+
+### Overview
+
+The `scripts/` directory is configured as a dedicated Nx project with its own testing infrastructure:
+
+- **Project Configuration**: `scripts/project.json` defines the Nx project
+- **TypeScript Config**: `scripts/tsconfig.json` provides script-specific settings
+- **Test Configuration**: `scripts/vitest.config.ts` for isolated test execution
+
+### Key Features
+
+- **Isolated Testing**: Script tests only run when the scripts themselves change
+- **Dedicated Commands**: Specialized npm scripts for script testing
+- **Nx Integration**: Leverages Nx affected commands for efficient testing
+
+### Usage
+
+```bash
+# Run a script directly
+pnpm tsx scripts/your-script.ts
+
+# Test scripts
+pnpm test:scripts              # Run all script tests
+pnpm test:scripts:affected     # Run only affected script tests
+pnpm test:scripts:file <path>  # Run a specific test file
+pnpm test:scripts:watch        # Run tests in watch mode
+pnpm test:scripts:coverage     # Run tests with coverage
+```
+
 ## Site Scaffolding
 
 - **Create new site**: `pnpm tsx scripts/scaffold-site.ts --siteKey=newsite --title="New Standard" --tagline="A new IFLA standard"`

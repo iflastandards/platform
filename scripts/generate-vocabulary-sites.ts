@@ -20,6 +20,8 @@ interface GenerationOptions {
   dryRun?: boolean;
   sitesToGenerate?: string[];
   skipValidation?: boolean;
+  validateOnly?: boolean;
+  generateMissingFilesOnly?: boolean;
   verbose?: boolean;
 }
 
@@ -130,12 +132,38 @@ class BatchSiteGenerator {
       const navigationGenerator = new NavigationGenerator(this.standardsDir);
       await navigationGenerator.generateAllNavigation(sitesToProcess);
 
+      // Step 7: Validate file structure
+      console.log('🔍 Step 7: Validating file structure...');
+      const fileValidator = new FileStructureValidator(this.standardsDir);
+
+      for (const namespace of Object.keys(sitesToProcess)) {
+        console.log(`   Validating ${namespace}...`);
+        const validationResult =
+          await fileValidator.validateSidebarReferences(namespace);
+
+        if (!validationResult.isValid) {
+          console.log(
+            `   ⚠️  Found ${validationResult.missingFiles.length} missing files in ${namespace}`,
+          );
+          console.log(validationResult.report);
+
+          // Generate missing files
+          console.log(`   🔧 Generating missing files for ${namespace}...`);
+          await fileValidator.generateMissingFiles(
+            namespace,
+            validationResult.missingFiles,
+          );
+        } else {
+          console.log(`   ✅ All files exist for ${namespace}`);
+        }
+      }
+
       // Process results
       result.sitesProcessed = Object.keys(sitesToProcess);
       result.summary.successfulSites = result.sitesProcessed.length;
 
-      // Step 7: Generate summary report
-      console.log('📋 Step 7: Generating summary report...');
+      // Step 8: Generate summary report
+      console.log('📋 Step 8: Generating summary report...');
       await this.generateSummaryReport(sitesToProcess, result, startTime);
 
       console.log('\n🎉 Batch Site Generation completed successfully!');
@@ -183,6 +211,66 @@ class BatchSiteGenerator {
       return validateSiteConfigurations(siteConfigs);
     } catch (error) {
       console.error('❌ Validation failed:', error);
+      return false;
+    }
+  }
+
+  /**
+   * Validate file structure for all sites
+   */
+  async validateFileStructure(
+    options: GenerationOptions = {},
+  ): Promise<boolean> {
+    console.log('🔍 Validating file structure for all sites...');
+
+    try {
+      const fileValidator = new FileStructureValidator(this.standardsDir);
+
+      // Filter sites if specified
+      let sites: string[] = [];
+
+      if (options.sitesToGenerate) {
+        sites = options.sitesToGenerate;
+      } else {
+        // Get all directories in standards folder
+        const dirs = await fs.promises.readdir(this.standardsDir, {
+          withFileTypes: true,
+        });
+        sites = dirs
+          .filter((dirent) => dirent.isDirectory())
+          .map((dirent) => dirent.name);
+      }
+
+      let allValid = true;
+
+      for (const site of sites) {
+        console.log(`Validating ${site}...`);
+        const validationResult =
+          await fileValidator.validateSidebarReferences(site);
+
+        if (!validationResult.isValid) {
+          console.log(
+            `⚠️  Found ${validationResult.missingFiles.length} missing files in ${site}`,
+          );
+          console.log(validationResult.report);
+          allValid = false;
+
+          // Generate missing files if requested
+          if (options.generateMissingFilesOnly) {
+            console.log(`🔧 Generating missing files for ${site}...`);
+            await fileValidator.generateMissingFiles(
+              site,
+              validationResult.missingFiles,
+            );
+          }
+        } else {
+          console.log(`✅ All files exist for ${site}`);
+        }
+      }
+
+      return allValid;
+    } catch (error) {
+      console.error('❌ File structure validation failed:', error);
       return false;
     }
   }
@@ -316,6 +404,8 @@ async function main() {
   const options: GenerationOptions = {
     dryRun: args.includes('--dry-run'),
     skipValidation: args.includes('--skip-validation'),
+    validateOnly: args.includes('--validate-only'),
+    generateMissingFilesOnly: args.includes('--generate-missing-files'),
     verbose: args.includes('--verbose'),
   };
 
@@ -331,6 +421,16 @@ async function main() {
   if (args.includes('--validate-only')) {
     const isValid = await generator.validateAllSites();
     process.exit(isValid ? 0 : 1);
+  } else if (args.includes('--validate-files')) {
+    const isValid = await generator.validateFileStructure(options);
+    process.exit(isValid ? 0 : 1);
+  } else if (args.includes('--generate-missing-files')) {
+    console.log('🔧 Generating missing files only...');
+    const isValid = await generator.validateFileStructure({
+      ...options,
+      generateMissingFilesOnly: true,
+    });
+    process.exit(isValid ? 0 : 1);
   } else if (args.includes('--help')) {
     console.log(`
 Batch Vocabulary Site Generator
@@ -339,18 +439,22 @@ Usage:
   npx tsx scripts/generate-vocabulary-sites.ts [options]
 
 Options:
-  --dry-run              Show what would be generated without making changes
-  --sites <list>         Generate only specified sites (comma-separated)
-  --skip-validation      Skip configuration validation
-  --validate-only        Only validate configurations, don't generate
-  --verbose              Enable verbose logging
-  --help                 Show this help message
+  --dry-run                Show what would be generated without making changes
+  --sites <list>           Generate only specified sites (comma-separated)
+  --skip-validation        Skip configuration validation
+  --validate-only          Only validate configurations, don't generate
+  --validate-files         Only validate file structure, don't generate
+  --generate-missing-files Only generate missing files referenced in sidebars
+  --verbose                Enable verbose logging
+  --help                   Show this help message
 
 Examples:
   npx tsx scripts/generate-vocabulary-sites.ts
   npx tsx scripts/generate-vocabulary-sites.ts --dry-run
   npx tsx scripts/generate-vocabulary-sites.ts --sites lrm,frbr
   npx tsx scripts/generate-vocabulary-sites.ts --validate-only
+  npx tsx scripts/generate-vocabulary-sites.ts --validate-files
+  npx tsx scripts/generate-vocabulary-sites.ts --generate-missing-files
 `);
     process.exit(0);
   } else {

@@ -18,7 +18,12 @@ standards-dev/
 │   ├── theme/                # Custom Docusaurus theme (@ifla/theme)
 │   ├── ui/                   # Shared UI components
 │   └── standards-cli/        # CLI tools
-├── scripts/                   # Build and utility scripts
+├── scripts/                   # Build and utility scripts (Nx project with isolated tests)
+│   ├── project.json         # Nx project configuration
+│   ├── tsconfig.json        # TypeScript configuration
+│   ├── vitest.config.ts     # Test configuration
+│   ├── *.test.ts           # Script-specific tests
+│   └── utils/              # Shared script utilities
 ├── e2e/                      # End-to-end tests
 ├── developer_notes/          # Comprehensive developer documentation
 ├── docs/                     # Comprehensive specifications
@@ -90,6 +95,7 @@ const environment = mapDocsEnvToEnvironment(process.env.DOCS_ENV);
 - **Integration Tests**: `e2e/` directory with Playwright
 - **Build Regression**: `scripts/test-site-builds.js`
 - **Visual Regression**: `tests/visual-regression.spec.ts`
+- **Scripts Tests**: Co-located with scripts (`scripts/*.test.ts`) with isolated Nx configuration
 
 ## Build Artifacts
 
