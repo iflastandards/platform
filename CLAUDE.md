@@ -13,10 +13,11 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ### Testing Strategy (MANDATORY FOR ALL TESTS)
 1. **Pre-commit target**: < 60 seconds (use `nx affected`)
-2. **Use 5-level strategy**: Selective → Comprehensive → Pre-commit → Pre-push → CI
+2. **Use 5-phase strategy**: On-demand → Pre-commit → Pre-push → Comprehensive → CI
 3. **Always use `nx affected`** for development testing
 4. **Parallel execution**: `--parallel=3` for performance
-5. **Speed targets**: Selective <30s, Pre-commit <60s, Pre-push <180s
+5. **Speed targets**: On-demand <5s, Pre-commit <60s, Pre-push <180s
+6. **Test placement**: Check `@developer_notes/TEST_PLACEMENT_GUIDE.md` before writing tests
 
 ### Before ANY code/test work:
 - [ ] Check if basePath applies (use root-relative paths like `/dashboard`)
@@ -25,7 +26,10 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 - [ ] Use `nx affected` instead of running everything
 
 ### Critical File References
-- **Full Testing Strategy**: `@developer_notes/TESTING_STRATEGY.md`
+- **Complete Testing Strategy**: `@developer_notes/TESTING_STRATEGY.md`
+- **Test Placement Guide**: `@developer_notes/TEST_PLACEMENT_GUIDE.md` (use when writing tests)
+- **Test Templates**: `@developer_notes/TEST_TEMPLATES.md` (copy for new tests)
+- **Nx Test Optimizations**: `@developer_notes/NX_AFFECTED_TEST_OPTIMIZATION.md`
 - **Complete Next.js Standards**: `@developer_notes/NEXTJS_CODING_STANDARDS.MD`
 
 ---

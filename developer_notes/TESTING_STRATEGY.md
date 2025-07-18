@@ -1,14 +1,15 @@
 # IFLA Standards Testing Strategy
 
-## Test Groups Overview
+## Overview
 
-This document outlines the five distinct test groups that organize all testing activities in the IFLA Standards monorepo, optimized for developer efficiency and CI cost management.
+This document outlines the five distinct test phases that organize all testing activities in the IFLA Standards monorepo. Our testing strategy is designed to catch issues at the earliest possible stage while minimizing CI costs, with tests progressively validating more aspects as code moves from development to deployment.
 
-## 1. Selective Tests (On-Demand Development)
+## Phase 1: Selective Tests (On-Demand Development)
 
-**Purpose**: Individual testing for focused development work
+**Purpose**: Individual testing for focused development work and TDD
 **When**: During active development, debugging, feature work
 **Optimization**: Uses `nx affected` heavily, smart caching
+**Speed**: < 5 seconds per test file
 
 ### Unit Tests
 ```bash
@@ -59,11 +60,54 @@ nx run standards-dev:regression:performance
 nx run standards-dev:regression:affected
 ```
 
-## 2. Comprehensive Tests (Test Everything)
+## Phase 2: Pre-Commit Tests (Automated Git Hook)
 
-**Purpose**: Full validation before major releases or when comprehensive coverage needed
-**When**: Release preparation, major refactoring validation, troubleshooting
+**Purpose**: Fast feedback loop preventing broken commits
+**When**: Automatically on every `git commit`
+**Optimization**: Only affected projects, parallel execution
+**Speed**: < 60 seconds for typical changes
+
+### What Runs
+```bash
+# Automatically runs via Husky:
+nx affected --target=typecheck --parallel=3
+nx affected --target=lint --parallel=3       # Warnings allowed
+nx affected --target=test --parallel=3       # Unit tests only
+```
+
+### Key Points
+- Unit tests only (no integration/e2e)
+- Lenient on test file linting, strict on production code
+- All subsequent phases assume these passed
+- Nx cache used aggressively
+
+## Phase 3: Pre-Push Tests (Automated Git Hook)
+
+**Purpose**: Integration tests and deployment readiness validation
+**When**: Automatically on every `git push`
+**Optimization**: Assumes pre-commit passed, no redundant testing
+**Speed**: < 180 seconds
+
+### What Runs
+```bash
+# Automatically runs via Husky:
+nx affected --target=test:integration --parallel=3  # Integration tests
+nx affected --target=build --parallel=3            # Production builds
+nx affected --target=e2e                          # If portal/admin affected
+```
+
+### Key Points
+- No need to re-run typecheck/lint/unit tests
+- Focus on integration and deployment readiness
+- Smart E2E triggers (auto-runs when portal/admin affected)
+- Can manually enable E2E in `.prepushrc.json`
+
+## Phase 4: Comprehensive Tests (Manual)
+
+**Purpose**: Full validation before major releases
+**When**: Release preparation, major refactoring validation
 **Optimization**: Parallelized where possible, uses all available cores
+**Speed**: < 300 seconds
 
 ### Full Test Suite
 ```bash
@@ -88,101 +132,70 @@ nx run standards-dev:e2e &&
 nx run standards-dev:regression:full
 ```
 
-## 3. Pre-Commit Tests (Git Hook)
+## Phase 5: CI Environment Tests (Automated)
 
-**Purpose**: Fast feedback loop preventing broken commits
-**When**: Automatically on `git commit`
-**Optimization**: Only affected projects, parallel execution, under 60 seconds
-
-### What Runs
-```bash
-# Parallel execution of affected projects only
-nx affected --target=typecheck --parallel=3 &
-nx affected --target=lint --parallel=3 &
-nx affected --target=test --parallel=3 &
-wait
-
-# Quick config validation (no builds)
-node scripts/test-site-builds-affected.js --env local --skip-build
-```
-
-### Speed Targets
-- **Target time**: < 60 seconds for typical changes
-- **Fallback**: < 120 seconds for large changes
-- **Uses**: Nx cache aggressively, only affected projects
-
-## 4. Pre-Push Tests (Git Hook - Deployment Focus)
-
-**Purpose**: Deployment-focused validation before code reaches main branches
-**When**: Automatically on `git push`
-**Optimization**: Branch-aware, affected-only for features, comprehensive for protected branches
-
-### Feature Branches (Fast Path)
-```bash
-# Affected validation
-nx affected --target=typecheck --parallel=3
-nx affected --target=lint --parallel=3  
-nx affected --target=test --parallel=3
-
-# Configuration validation only
-node scripts/test-site-builds.js --site all --env local --skip-build
-
-# Representative build test (if portal affected)
-nx run portal:build
-```
-
-### Protected Branches (main/dev - Comprehensive)
-```bash
-# Full affected testing
-nx affected --target=test --parallel=3
-nx affected --target=build --parallel=3
-
-# Complete configuration validation
-node scripts/test-site-builds.js --site all --env local --skip-build
-
-# Critical E2E (if portal affected)
-nx run portal:e2e
-```
-
-### Speed Targets
-- **Feature branches**: < 180 seconds
-- **Protected branches**: < 300 seconds
-
-## 5. CI Tests (Environment/Infrastructure Focus)
-
-**Purpose**: Validate deployment environment, secrets, and infrastructure-specific issues
+**Purpose**: Validate deployment environment, secrets, and infrastructure-specific issues ONLY
 **When**: GitHub Actions CI pipeline
-**Optimization**: Minimal, focused only on deployment environment issues
+**Optimization**: Minimal, focused only on environment-dependent functionality
 
 ### What CI Tests
 ```bash
-# Type checking (build-critical)
-pnpm typecheck
+# Environment-specific tests ONLY
+pnpm test:ci:env
 
-# Deployment-critical component tests only
-pnpm vitest run --config vitest.config.ci.ts
+# This runs:
+# - Environment variable validation
+# - API token verification
+# - External service connectivity checks
+# - CI-specific path and permission validation
+# - Build environment configuration checks
 
-# Environment/secrets validation
-# - Google Sheets API connectivity
-# - GitHub token availability
-# - Configuration validation for production environment
-
-# Production configuration validation
-node scripts/test-site-builds.js --site all --env production --skip-build
-
-# Affected builds for deployment
+# Affected builds for deployment (after env tests pass)
 nx affected --target=build --parallel=6
 ```
 
-### What CI Doesn't Test
-- ❌ Development tool functionality (vocabulary-comparison, language detection)
-- ❌ Comprehensive unit test suites (already validated locally)
-- ❌ Full E2E suites (expensive, redundant with local validation)
-- ❌ Linting (already validated locally)
+### What CI Tests Specifically
+- ✅ Environment variables exist and are valid format
+- ✅ API tokens can authenticate:
+  - GitHub token and OAuth credentials
+  - Google Sheets API key and service account
+  - Supabase URL and anonymous key
+  - Cerbos Hub credentials
+- ✅ External services are reachable from CI environment
+- ✅ File paths and permissions work in CI
+- ✅ NODE_ENV is set to production (for optimized builds)
+- ✅ Correct DOCS_ENV set (preview or production)
+- ✅ Branch matches deployment target (preview→preview, main→production)
+- ✅ Authentication secrets configured (AUTH_SECRET)
+
+### What CI NEVER Tests (Already Validated Locally)
+- ❌ TypeScript type checking (validated in pre-commit)
+- ❌ ESLint (validated in pre-commit)
+- ❌ Unit tests (validated in pre-commit)
+- ❌ Integration tests (validated in pre-push)
+- ❌ Component functionality (validated in pre-commit)
+- ❌ Business logic (validated in pre-commit/pre-push)
+- ❌ Code quality (validated in pre-commit)
+- ❌ E2E tests (validated in pre-push when needed)
 
 ### Speed Targets
 - **Target time**: < 180 seconds total
 - **Focus**: Environment-specific failures only
+
+## Deployment Flow
+
+### Preview Environment
+- **Branch**: `preview`
+- **URL**: https://iflastandards.github.io/platform/
+- **Tests**: Environment tests with `DOCS_ENV=preview`
+- **Triggers**: Every push to preview branch
+
+### Production Environment
+- **Branch**: `main`
+- **URL**: https://www.iflastandards.info/
+- **Tests**: Environment tests with `DOCS_ENV=production`
+- **Triggers**: Only via PR from preview→main
+- **Additional**: Security scans, full validation
 
 ## Script Organization
 
@@ -257,6 +270,34 @@ pnpm test:ci:connectivity             # External service connectivity only
 | Pre-push | < 180s | < 300s | Branch-aware, representative testing |
 | CI | < 180s | < 240s | Environment focus, minimal redundancy |
 
+## Key Configuration Files
+
+- `.husky/pre-commit`: Runs Phase 2 automatically
+- `.husky/pre-push`: Runs Phase 3 automatically
+- `vitest.config.nx.ts`: Optimized for nx affected tests
+- `vitest.config.ci-env.ts`: Only environment-specific tests
+- `.precommitrc.json`: Pre-commit configuration
+- `.prepushrc.json`: Pre-push configuration (can enable E2E)
+
+## Troubleshooting
+
+### Tests running slowly
+```bash
+pnpm nx:daemon:health       # Check daemon status
+pnpm nx:cache:clear        # Clear cache if stale
+```
+
+### CI tests failing but local passing
+- Check environment variables
+- Verify API tokens are set in GitHub secrets
+- Check external service connectivity
+- Review CI-specific paths
+
+### Pre-commit taking too long
+- Ensure nx daemon is running
+- Check if you have uncommitted large changes
+- Use `pnpm test:no-daemon` to diagnose daemon issues
+
 ## Cost Management Strategy
 
 ### Local Testing (Free)
@@ -269,5 +310,15 @@ pnpm test:ci:connectivity             # External service connectivity only
 - Infrastructure connectivity testing
 - Production configuration validation
 - No redundant testing of locally-validated functionality
+
+## Why This Strategy Works
+
+1. **Fast Feedback**: Developers get immediate feedback during development
+2. **No Skipping**: Every commit and push is validated
+3. **Progressive Validation**: Each phase builds on the previous
+4. **No Redundancy**: Tests never repeat between phases
+5. **Cost Efficient**: CI only tests what can't be tested locally
+6. **Reliable**: By the time code reaches CI, it's already been thoroughly tested
+7. **Environment Aware**: CI tests validate the correct deployment environment
 
 This approach ensures high confidence in deployments while minimizing CI compute costs through smart local validation and targeted cloud testing.

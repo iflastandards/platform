@@ -1,0 +1,13 @@
+{
+  "autoStart": true,
+  "ensureRunning": true,
+  "restartOnFailure": true,
+  "healthCheckInterval": 300000,
+  "startupTimeout": 10000,
+  "scripts": {
+    "test": true,
+    "build": true,
+    "lint": true,
+    "typecheck": true
+  }
+}

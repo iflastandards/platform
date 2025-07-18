@@ -31,11 +31,12 @@
     "test": {
       "executor": "@nx/vite:test",
       "options": {
-        "config": "{workspaceRoot}/vite.config.ts",
+        "config": "{workspaceRoot}/vitest.config.nx.ts",
         "testPathPattern": [
           "packages/theme/src/tests",
           "packages/theme/src/components/**/__tests__"
-        ]
+        ],
+        "passWithNoTests": true
       },
       "cache": true,
       "inputs": ["testInputs", "^testInputs"],
@@ -44,8 +45,9 @@
     "test:unit": {
       "executor": "@nx/vite:test",
       "options": {
-        "config": "{workspaceRoot}/vite.config.ts",
-        "exclude": ["**/scripts/**", "**/deployment/**"]
+        "config": "{workspaceRoot}/vitest.config.nx.ts",
+        "exclude": ["**/scripts/**", "**/deployment/**"],
+        "passWithNoTests": true
       },
       "cache": true,
       "inputs": ["testInputs", "sharedGlobals"],

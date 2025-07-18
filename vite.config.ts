@@ -1,13 +1,10 @@
 // vite.config.ts
 import react from '@vitejs/plugin-react';
 import path, { resolve } from 'path';
-import { defineConfig } from 'vite';
+import { defineConfig, UserConfig } from 'vite';
+import tsconfigPaths from 'vite-tsconfig-paths';
 
-export default defineConfig(async () => {
-  // Use dynamic import for vite-tsconfig-paths to fix ESM compatibility issue
-  const tsconfigPathsModule = await import('vite-tsconfig-paths');
-  const tsconfigPaths = tsconfigPathsModule.default;
-  
+export default defineConfig((): UserConfig => {
   return {
     plugins: [
       react(),
@@ -62,7 +59,9 @@ export default defineConfig(async () => {
     test: {
       globals: true,
       environment: 'jsdom',
-      setupFiles: [path.resolve(__dirname, 'packages/theme/src/tests/setup.ts')],
+      setupFiles: [
+        path.resolve(__dirname, 'packages/theme/src/tests/setup.ts'),
+      ],
       include: ['**/*.{test,spec}.{js,mjs,cjs,ts,mts,cts,jsx,tsx}'],
       exclude: [
         '**/node_modules/**',
@@ -77,6 +76,17 @@ export default defineConfig(async () => {
         // Exclude problematic component tests that cause hanging
         '**/VocabularyTable-improved.test.tsx',
         '**/multilingual-vocabulary.test.tsx',
+        // Exclude .next build artifacts
+        '**/.next/**',
+        '**/apps/admin/.next/**',
+        '**/dist/apps/admin/.next/**',
+        // Exclude nx cache directories
+        '**/.nx/**',
+        '.nx/**',
+        // Exclude .docusaurus build artifacts
+        '**/.docusaurus/**',
+        '**/portal/.docusaurus/**',
+        '**/standards/**/.docusaurus/**',
       ],
       // Enhanced CI stability and performance
       testTimeout: process.env.CI ? 60000 : 30000, // Further reduced CI timeout to 60 seconds
@@ -117,11 +127,13 @@ export default defineConfig(async () => {
             '**/tsconfig.json',
           ], // Force rerun on config changes in local dev, empty in CI to avoid iteration issues
       // Enhanced reporting
-      reporters: [
-        'default',
-        ['json', { outputFile: 'test-results/vitest-results.json' }],
-        ['junit', { outputFile: 'test-results/vitest-junit.xml' }],
-      ],
+      reporters: process.env.CI
+        ? ['default']
+        : [
+            'default',
+            ['json', { outputFile: 'test-results/vitest-results.json' }],
+            ['junit', { outputFile: 'test-results/vitest-junit.xml' }],
+          ],
       // Coverage configuration with thresholds
       coverage: {
         reporter: process.env.CI
@@ -137,6 +149,14 @@ export default defineConfig(async () => {
           '**/tests/**',
           '**/__tests__/**',
           '**/__mocks__/**',
+          // Exclude .next build artifacts
+          '**/.next/**',
+          '**/apps/admin/.next/**',
+          // Exclude nx cache directories
+          '**/.nx/**',
+          '.nx/**',
+          // Exclude .docusaurus build artifacts
+          '**/.docusaurus/**',
         ],
         // Disable thresholds in CI to avoid extra processing
         ...(process.env.CI

@@ -1,5 +1,5 @@
 import { defineConfig } from 'vitest/config';
-import baseConfig from './vite.config';
+import { resolve } from 'path';
 
 /**
  * CI-specific Vitest configuration
@@ -7,9 +7,12 @@ import baseConfig from './vite.config';
  * Excludes development tool tests that are already validated locally
  */
 export default defineConfig({
-  ...baseConfig,
   test: {
-    ...(baseConfig.test || {}),
+    globals: true,
+    environment: 'jsdom',
+    setupFiles: [
+      resolve(__dirname, 'packages/theme/src/tests/setup.ts'),
+    ],
     // Only include deployment-critical tests
     include: [
       // Component tests - these ensure UI functionality works in production
@@ -22,7 +25,6 @@ export default defineConfig({
       'packages/theme/src/tests/deployment/**/*.{test,spec}.{js,mjs,cjs,ts,mts,cts,jsx,tsx}',
     ],
     exclude: [
-      ...(baseConfig.test?.exclude || []),
       // Exclude all development tool tests
       'packages/theme/src/tests/scripts/**',
       

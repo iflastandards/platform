@@ -1,291 +1,294 @@
-# IFLA **standards-dev** monorepo
+# IFLA Standards Platform
 
-Source for next-gen documentation, RDF vocabularies and infrastructure.
+A comprehensive documentation and vocabulary management system for the International Federation of Library Associations (IFLA). This platform serves as the authoritative source for library standards including ISBD, LRM, FRBR, UNIMARC, and other cataloguing standards.
 
-## Quick Start
+## 🌟 Features
 
-### Development
-```bash
-# Install dependencies
-pnpm install
+- **Multi-Site Documentation**: Individual Docusaurus sites for each IFLA standard
+- **Vocabulary Management**: RDF vocabulary generation, validation, and distribution
+- **Admin Portal**: Next.js admin interface with GitHub OAuth authentication
+- **Cross-Site Navigation**: Environment-aware linking between standards
+- **Automated Testing**: Comprehensive build regression and E2E testing
+- **Role-Based Access**: Cerbos-powered authorization system
+- **Multi-Environment Support**: Local, preview, development, and production deployments
 
-# Start development server
-pnpm dev
+## 🏗️ Architecture
 
-# Run tests
-pnpm test
-pnpm typecheck
-pnpm lint
-```
+### Technology Stack
 
-### Testing
-```bash
-# Unit/Integration tests
-pnpm test
+- **Build System**: Nx monorepo with pnpm workspace
+- **Frontend**: Docusaurus (documentation) + Next.js (admin portal)
+- **Language**: TypeScript with strict configuration
+- **Testing**: Vitest (unit) + Playwright (E2E)
+- **Authentication**: Clerk with GitHub OAuth
+- **Authorization**: Cerbos RBAC system
+- **Data**: Google Sheets API + Supabase + File system
 
-# Build regression tests
-node scripts/test-site-builds.js --site all --env production
-
-# Portal end-to-end tests  
-./scripts/test-portal-builds.sh
-
-# Admin Portal testing
-nx test admin-portal                    # All admin portal tests
-nx run admin-portal:test:unit          # Unit tests only
-nx run admin-portal:test:integration   # Integration tests only
-nx run admin-portal:e2e                # E2E tests (uses newtest site)
-```
-
-See `TESTING.md` for automated testing overview and `developer_notes/build-regression-testing.md` for comprehensive testing documentation.
-
-## 🚀 Automated Testing
-
-**Testing runs automatically with zero configuration required:**
-- ✅ **Pre-commit:** TypeScript, ESLint, unit tests, config validation
-- ✅ **Pre-push:** Build regression tests (branch-aware)
-- ✅ **CI/CD:** Full test suite on all pull requests
-
-Manual testing available: `pnpm test:full`, `pnpm test:regression`
-
-## 🏗️ Project Structure
+### Project Structure
 
 ```
 standards-dev/
-├── apps/                      # Next.js applications
-│   └── admin-portal/         # Administrative interface (Next.js + GitHub OAuth)
-├── portal/                    # Main portal site
-├── standards/                 # Individual standard sites
-│   ├── ISBDM/                # ISBD Manifestation
-│   ├── LRM/                  # Library Reference Model
-│   ├── FRBR/                 # Functional Requirements
-│   ├── isbd/                 # International Standard Bibliographic Description
-│   ├── muldicat/             # Multilingual Dictionary of Cataloguing Terms
-│   └── unimarc/              # UNIMARC formats
-├── packages/                  # Shared packages
-│   └── theme/                # Custom Docusaurus theme
-├── libs/                     # Shared libraries
-│   └── shared-config/        # Configuration utilities for sites
-└── scripts/                  # Build and utility scripts
+├── apps/
+│   └── admin/                    # Next.js admin portal
+├── portal/                       # Main documentation portal
+├── standards/                    # Individual standard sites
+│   ├── ISBDM/                   # ISBD Manifestation
+│   ├── LRM/                     # Library Reference Model
+│   ├── FRBR/                    # Functional Requirements
+│   ├── isbd/                    # International Standard Bibliographic Description
+│   ├── muldicat/                # Multilingual Dictionary of Cataloguing Terms
+│   └── unimarc/                 # UNIMARC formats
+├── packages/
+│   ├── theme/                   # Shared Docusaurus theme
+│   ├── ui/                      # Shared UI components
+│   └── standards-cli/           # CLI tools
+├── scripts/                     # Build and utility scripts
+├── e2e/                         # End-to-end tests
+└── docs/                        # Project documentation
 ```
 
-## 📁 File Organization Strategy
+## 🚀 Quick Start
 
-The project follows a clear file organization strategy for managing output files:
+### Prerequisites
 
-### Output Files We Wish to Keep → `output/` folder
-- **Purpose**: Files that should be preserved and tracked by git
-- **Organization**: Organized by purpose for easy retrieval
-- **Examples**: Generated spreadsheets, processed vocabularies, validation reports
-- **Git Status**: Tracked and committed to repository
+- Node.js >= 18.0
+- pnpm >= 10.12.4
+- Git
+
+### Installation
 
 ```bash
-output/
-├── ISBDM-spreadsheets/          # ISBDM Excel workbooks
-├── isbd-excel-proper/           # Properly formatted ISBD files
-├── isbd-sheets/                 # ISBD vocabulary CSV files
-└── link-validation/             # Link validation results
+# Clone the repository
+git clone https://github.com/iflastandards/platform.git
+cd platform
+
+# Install dependencies
+pnpm install
+
+# Start Nx daemon for faster builds
+pnpm nx:daemon:start
+
+# Run health check
+pnpm health
 ```
 
-### Output Files We Don't Wish to Keep → `tmp/` folder
-- **Purpose**: Temporary files that don't need preservation
-- **Cleanup**: Auto-cleaned nightly by automated processes
-- **Git Status**: Not tracked by git (excluded in .gitignore)
-- **Manual Cleanup**: Not required - automatic cleanup handles this
+### Development
 
 ```bash
-tmp/
-├── apps/                        # Temporary application files
-├── packages/                    # Temporary package files
-└── *.js                        # Temporary scripts and mock data
+# Start all sites in development mode
+pnpm dev
+
+# Start specific site
+nx start portal          # Main portal
+nx start isbd           # ISBD standard
+nx start admin          # Admin portal
+
+# Start with port cleanup
+nx run portal:start:robust
 ```
 
-### Usage Guidelines
-- **Scripts generating permanent artifacts** → Use `output/` directory
-- **Scripts generating temporary data** → Use `tmp/` directory
-- **Organize by purpose** → Create subdirectories that clearly indicate file purpose
-- **No manual cleanup needed** → The `tmp/` folder is automatically maintained
+### Building
 
-## 🚀 Site Development
-
-### Building Individual Sites
 ```bash
-# Build a specific standard
-pnpm build standards/ISBDM
-pnpm build standards/LRM
-
 # Build all sites
 pnpm build:all
 
-# Build portal
-pnpm build:portal
+# Build specific site
+nx build portal
+nx build isbd
+nx build admin
 
-# Build admin portal (Next.js app)
-pnpm build:admin-portal
+# Test builds
+pnpm test:builds:affected
 ```
 
-### Development Servers
+## 📚 Available Sites
+
+| Site | URL (Production) | URL (Preview) | Port |
+|------|------------------|---------------|------|
+| Portal | [iflastandards.info](https://www.iflastandards.info) | [Preview](https://iflastandards.github.io/platform/) | 3000 |
+| ISBDM | [isbdm.iflastandards.info](https://isbdm.iflastandards.info) | [Preview](https://iflastandards.github.io/platform/isbdm/) | 3001 |
+| LRM | [lrm.iflastandards.info](https://lrm.iflastandards.info) | [Preview](https://iflastandards.github.io/platform/lrm/) | 3002 |
+| FRBR | [frbr.iflastandards.info](https://frbr.iflastandards.info) | [Preview](https://iflastandards.github.io/platform/frbr/) | 3003 |
+| ISBD | [isbd.iflastandards.info](https://isbd.iflastandards.info) | [Preview](https://iflastandards.github.io/platform/isbd/) | 3004 |
+| MulDiCat | [muldicat.iflastandards.info](https://muldicat.iflastandards.info) | [Preview](https://iflastandards.github.io/platform/muldicat/) | 3005 |
+| UNIMARC | [unimarc.iflastandards.info](https://unimarc.iflastandards.info) | [Preview](https://iflastandards.github.io/platform/unimarc/) | 3006 |
+| Admin | [admin.iflastandards.info](https://admin.iflastandards.info) | [Preview](https://iflastandards.github.io/platform/admin/) | 3007 |
+
+## 🧪 Testing
+
+### Test Commands
+
 ```bash
-# Start portal development server
-pnpm start:portal
+# Run affected tests (recommended for development)
+pnpm test
 
-# Start specific standard
-pnpm start:isbdm
-pnpm start:lrm
+# Run comprehensive tests (for releases)
+pnpm test:comprehensive
 
-# Start all sites simultaneously
-pnpm start:all
+# Run E2E tests
+pnpm test:e2e
 
-# Start admin portal (Next.js dev server)
-pnpm dev:admin-portal
+# Run visual regression tests
+pnpm test:visual
+
+# Type checking
+pnpm typecheck
+
+# Linting
+pnpm lint
 ```
 
-### Serving Built Sites
+### Test Strategy
+
+- **Unit Tests**: Vitest with co-located test files
+- **Integration Tests**: Playwright in `e2e/` directory
+- **Build Regression**: Automated site build validation
+- **Visual Regression**: Screenshot comparison testing
+- **Performance**: Nx caching and parallel execution
+
+## 🛠️ Development Workflow
+
+### Adding New Features
+
+1. Create feature branch from `preview`
+2. Write tests first (TDD approach)
+3. Implement feature with TypeScript
+4. Run affected tests: `pnpm test`
+5. Validate builds: `pnpm test:builds:affected`
+6. Create PR to `preview` branch
+
+### Creating New Standard Site
+
 ```bash
-# Serve portal
-pnpm serve:portal
+# Scaffold new site
+pnpm tsx scripts/scaffold-site.ts --siteKey=newsite --title="New Standard" --tagline="A new IFLA standard"
 
-# Serve specific standard
-pnpm serve:isbdm
-
-# Serve all sites
-pnpm serve:all
-
-# Serve admin portal
-pnpm serve:admin-portal
+# Or use the vocabulary site generator
+npx tsx scripts/generate-vocabulary-sites.ts --sites new-namespace
 ```
 
-## 📝 Content Management
+### Performance Optimization
 
-### Creating New Standards
 ```bash
-# Scaffold a new IFLA standard
-pnpm scaffold
+# Optimize Nx configuration
+pnpm nx:optimize
+
+# Clear cache for fresh builds
+pnpm nx:cache:clear
+
+# View dependency graph
+pnpm nx:graph
+
+# Kill development ports
+pnpm ports:kill
 ```
 
-### Vocabulary Management
-```bash
-# Create vocabulary sheets
-pnpm vocabulary:create
+## 🔧 Configuration
 
-# Export to RDF
-pnpm vocab:release
-```
+### Environment Variables
 
-### Content Validation
-```bash
-# Validate site links
-pnpm validate:site-links
+The platform uses TypeScript configuration instead of `.env` files:
 
-# Check navigation URLs
-pnpm validate:navigation
+- **DOCS_ENV**: Environment setting (local|preview|development|production)
+- **NODE_ENV**: Node environment (development|production)
 
-# Validate environment URLs
-pnpm validate:env-urls
-```
+Configuration is centralized in `packages/theme/src/config/siteConfig.ts`.
 
-## 🔧 Development Workflow
+### Authentication Setup
 
-1. **Clone and Install:**
-   ```bash
-   git clone <repository-url>
-   cd standards-dev
-   pnpm install
-   ```
+1. Configure Clerk in the admin portal
+2. Set up GitHub OAuth application
+3. Configure Cerbos policies for authorization
+4. Add test users for development (see testing documentation)
 
-2. **Start Development:**
-   ```bash
-   pnpm start:portal  # or specific site
-   ```
+## 📖 Documentation
 
-3. **Make Changes:**
-   - Edit content in `standards/*/docs/` or `portal/docs/`
-   - Modify theme in `packages/theme/src/`
-   - Update shared configs in `libs/shared-config/`
+- **Developer Notes**: Comprehensive guides in `developer_notes/`
+- **API Documentation**: Generated from TypeScript interfaces
+- **Architecture Decisions**: Documented in `docs/`
+- **Testing Strategy**: See `docs/testing-strategy.md`
+- **Deployment Guide**: See `docs/deployment.md`
 
-4. **Test Changes:**
-   ```bash
-   pnpm test:full      # Full test suite
-   pnpm test:regression # Build regression tests
-   ```
+## 🚢 Deployment
 
-5. **Commit Changes:**
-   - Tests run automatically on commit (pre-commit hook)
-   - Build tests run automatically on push (pre-push hook)
+### Branch Strategy
 
-## 🌍 Multi-Environment Support
+- **Development**: Feature branches
+- **Preview**: `preview` branch → GitHub Pages at `iflastandards.github.io/platform/`
+- **Production**: `main` branch → GitHub Pages at `www.iflastandards.info`
 
-Sites support multiple deployment environments:
-- **local** - Development with local asset references (`http://localhost:300X`)
-- **preview** - Staging environment for testing (`https://iflastandards.github.io/standards-dev/`)
-- **development** - Development branch testing (`https://jonphipps.github.io/standards-dev/`)
-- **production** - Live deployment environment (`https://www.iflastandards.info/`)
+### Deployment URLs
 
-Set environment with `DOCS_ENV`:
-```bash
-DOCS_ENV=production pnpm build:portal
-```
-
-### Site Configuration
-
-The project uses a centralized configuration system that replaced environment files in December 2024. See **[Site Configuration Architecture](developer_notes/site-configuration-architecture.md)** for complete documentation on:
-
-- Centralized configuration matrix in `@ifla/theme/config/siteConfig`
-- Inter-site navigation with the `SiteLink` component  
-- Environment handling (local, preview, development, production)
-- Migration notes and benefits of the new approach
-- Adding new sites and troubleshooting
-
-## 📚 Documentation
-
-- **`TESTING.md`** - Automated testing quick reference
-- **`developer_notes/`** - Comprehensive development guides
-  - `build-regression-testing.md` - Complete testing strategy
-  - `configuration-architecture.md` - System architecture
-  - `testing-vocabulary-pages.md` - Component testing
-  - `new-site-setup.md` - Adding new standards
+- **Preview**: https://iflastandards.github.io/platform/
+- **Production**: https://www.iflastandards.info/
+- **Vercel Previews**: Automatic for preview branch commits
 
 ## 🤝 Contributing
 
 1. Fork the repository
-2. Create a feature branch: `git checkout -b feature/amazing-feature`
-3. Make your changes
-4. Run tests: `pnpm test:full`
-5. Commit your changes: `git commit -m 'Add amazing feature'`
-6. Push to the branch: `git push origin feature/amazing-feature`
-7. Open a Pull Request
+2. Create a feature branch
+3. Follow the development workflow
+4. Ensure all tests pass
+5. Submit a pull request to the `preview` branch
 
-### Code Quality
+### Code Standards
 
-- TypeScript compilation must pass (`pnpm typecheck`)
-- ESLint rules must be followed (`pnpm lint`)
-- All tests must pass (`pnpm test`)
-- Build regression tests must pass
+- Use TypeScript for all new code
+- Follow ESLint and Prettier configurations
+- Write tests for new features
+- Maintain accessibility compliance (WCAG 2.1 AA)
+- Use semantic commit messages
 
-## 📊 Monitoring & Deployment
+## 📊 Monitoring & Analytics
 
-### GitHub Actions
-- **Automated Testing:** Runs on every PR and push
-- **Deploy All Sites:** Manual workflow for production deployment
-- **Deploy Dev:** Automatic deployment for development environment
+- **Build Performance**: Nx Cloud dashboard
+- **Site Performance**: Lighthouse CI reports
+- **Error Tracking**: Integrated error monitoring
+- **Usage Analytics**: Privacy-compliant analytics
 
-### Status Checking
+## 🆘 Troubleshooting
+
+### Common Issues
+
 ```bash
-# Check deployment status
-pnpm deploy:status
+# Slow builds
+pnpm nx:optimize
+pnpm nx:daemon:start
 
-# Trigger deployment
-pnpm deploy
+# Cache issues
+pnpm nx:cache:clear
+
+# Dependency conflicts
+pnpm fresh
+
+# Port conflicts
+pnpm ports:kill
+
+# System health check
+pnpm health
 ```
 
-## 🔗 Related Projects
+### Getting Help
 
-- [Docusaurus](https://docusaurus.io/) - Documentation platform
-- [IFLA](https://www.ifla.org/) - International Federation of Library Associations
+- Check `developer_notes/` for detailed guides
+- Review test output for specific errors
+- Use `pnpm health` to diagnose system issues
+- Check GitHub Issues for known problems
 
 ## 📄 License
 
-This project is licensed under the ISC License.
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+
+## 🙏 Acknowledgments
+
+- International Federation of Library Associations (IFLA)
+- IFLA Standards Committee
+- Library community contributors
+- Open source maintainers
 
 ---
 
-**Built with ❤️ for the global library community**
+**Maintained by**: IFLA Standards Team  
+**Documentation**: [docs.iflastandards.info](https://docs.iflastandards.info)  
+**Support**: [GitHub Issues](https://github.com/iflastandards/platform/issues)
