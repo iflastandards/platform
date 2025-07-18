@@ -1,0 +1,51 @@
+{
+  "generatedAt": "2025-07-18T09:47:09.702Z",
+  "totalSites": 5,
+  "sites": [
+    {
+      "namespace": "frbr",
+      "title": "FRBR - Functional Requirements for Bibliographic Records",
+      "elementSets": 6,
+      "vocabularies": 2,
+      "totalElements": 573,
+      "totalConcepts": 8,
+      "navigationStrategy": "categorized"
+    },
+    {
+      "namespace": "isbd",
+      "title": "ISBD - International Standard Bibliographic Description",
+      "elementSets": 2,
+      "vocabularies": 7,
+      "totalElements": 353,
+      "totalConcepts": 46,
+      "navigationStrategy": "categorized"
+    },
+    {
+      "namespace": "lrm",
+      "title": "LRM - Library Reference Model",
+      "elementSets": 1,
+      "vocabularies": 0,
+      "totalElements": 117,
+      "totalConcepts": 0,
+      "navigationStrategy": "simple"
+    },
+    {
+      "namespace": "unimarc",
+      "title": "UNIMARC - Universal MARC",
+      "elementSets": 49,
+      "vocabularies": 47,
+      "totalElements": 6030,
+      "totalConcepts": 1582,
+      "navigationStrategy": "hierarchical"
+    },
+    {
+      "namespace": "muldicat",
+      "title": "MulDiCat - Multilingual dictionary of cataloguing terms and concepts",
+      "elementSets": 0,
+      "vocabularies": 1,
+      "totalElements": 0,
+      "totalConcepts": 40,
+      "navigationStrategy": "simple"
+    }
+  ]
+}

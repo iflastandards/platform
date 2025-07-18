@@ -1,7 +1,7 @@
 {
   "namespace": "frbr",
-  "namespaceTitle": "FRBR - Functional Requirements for Bibliographic Records",
-  "namespaceDescription": "Functional Requirements for Bibliographic Records namespace",
+  "title": "FRBR - Functional Requirements for Bibliographic Records",
+  "description": "Functional Requirements for Bibliographic Records namespace",
   "statistics": {
     "totalElements": 573,
     "totalConcepts": 8,
@@ -100,16 +100,5 @@
       "url": "https://www.iflastandards.info/fr/frsad/frsadusertask.html"
     }
   ],
-  "features": {
-    "enableMultipleElementSets": true,
-    "enableVocabularyCategories": true,
-    "enableHierarchicalNavigation": false,
-    "enableSearch": true,
-    "enableCrossSetBrowsing": true,
-    "enableLanguageSwitching": false,
-    "enableBlog": true,
-    "enableRdfDownloads": true,
-    "enableRedirects": false
-  },
   "navigationStrategy": "categorized"
 }

@@ -1,7 +1,7 @@
 {
   "namespace": "muldicat",
-  "namespaceTitle": "MulDiCat - Multilingual dictionary of cataloguing terms and concepts",
-  "namespaceDescription": "Multilingual dictionary of cataloguing terms and concepts namespace",
+  "title": "MulDiCat - Multilingual dictionary of cataloguing terms and concepts",
+  "description": "Multilingual dictionary of cataloguing terms and concepts namespace",
   "statistics": {
     "totalElements": 0,
     "totalConcepts": 40,
@@ -47,15 +47,5 @@
       "url": "https://www.iflastandards.info/muldicat/"
     }
   ],
-  "features": {
-    "enableMultipleElementSets": false,
-    "enableVocabularyCategories": false,
-    "enableHierarchicalNavigation": false,
-    "enableSearch": true,
-    "enableCrossSetBrowsing": false,
-    "enableLanguageSwitching": true,
-    "enableBlog": true,
-    "enableRdfDownloads": true
-  },
   "navigationStrategy": "simple"
 }

@@ -1,152 +1,1060 @@
 ---
-id: index
-title: Universal MARC Format
-slug: /
+sidebar_position: 1
+title: UNIMARC - Universal MARC
+sidebar_label: Overview
+description: Universal MARC namespace
 hide_table_of_contents: true
 ---
 
-import { Figure } from '@ifla/theme';
-import { InLink } from '@ifla/theme';
-import { OutLink } from '@ifla/theme';
-import { QuickStart, DownloadPanel } from '@ifla/theme';
+import { NamespaceHub } from '@ifla/theme/components/NamespaceHub';
+import { ElementSetCard } from '@ifla/theme/components/ElementSetCard';
+import { VocabularyCard } from '@ifla/theme/components/VocabularyCard';
+import { CompactButton } from '@ifla/theme/components/CompactButton';
 
-# Universal MARC Format
+# UNIMARC - Universal MARC
 
-<div className="row my-2">
-  <div className="col-md-5">
-    <div className="row gx-0 me-4">
-      <div className="col-md-12">
-        <nav className="d-flex flex-column" aria-label="Navigation for main sections">
-          <div className="d-flex align-items-center">
-            <InLink to="/docs/intro/" className="linkMenuEntry">Introduction</InLink>
-          </div>
+Universal MARC namespace
 
-          <div className="d-flex align-items-center">
-            <InLink to="/docs/elements/" className="linkMenuEntry">UNIMARC Element Sets</InLink>
-          </div>
+## Namespace Statistics
 
-          <div className="d-flex align-items-center">
-            <InLink to="/docs/examples/" className="linkMenuEntry">Value Vocabularies</InLink>
-          </div>
-        </nav>
-      </div>
-    </div>
+<div style={{ display: 'flex', gap: '20px', marginBottom: '40px', flexWrap: 'wrap' }}>
+  <div style={{ background: '#e3f2fd', padding: '20px', borderRadius: '8px', flex: '1', minWidth: '200px' }}>
+    <div style={{ fontSize: '0.9rem', color: '#666' }}>Total Elements</div>
+    <div style={{ fontSize: '2rem', fontWeight: 'bold', color: '#1976d2' }}>6,030</div>
+    <div style={{ fontSize: '0.8rem', color: '#999' }}>Across 49 element sets</div>
   </div>
-
-  <div className="col-md-7 border rounded">
-    <div className="row my-2">
-      <div className="tptit">
-        <p>Universal MARC Format</p>
-      </div>
-
-      <div className="tpsor">
-        <p>Developed by the Permanent UNIMARC Committee (PUC)</p>
-        <p>Approved by the IFLA Committee on Standards</p>
-        <p>Endorsed by the IFLA Professional Committee</p>
-      </div>
-
-      <div className="tppub">
-        <p>Published as an online resource by IFLA: International Federation of Library Associations and Institutions</p>
-        <p>First version: 1977</p>
-        <p>Current version: UNIMARC Bibliographic 3rd edition with updates up to 2016</p>
-      </div>
-    </div>
+  <div style={{ background: '#f3e5f5', padding: '20px', borderRadius: '8px', flex: '1', minWidth: '200px' }}>
+    <div style={{ fontSize: '0.9rem', color: '#666' }}>Total Concepts</div>
+    <div style={{ fontSize: '2rem', fontWeight: 'bold', color: '#7b1fa2' }}>1,582</div>
+    <div style={{ fontSize: '0.8rem', color: '#999' }}>Across 47 vocabularies</div>
   </div>
 </div>
 
-<QuickStart
-  introductionPath="/docs/intro/"
-  elementsPath="/docs/elements/"
-  examplesPath="/docs/examples/"
-/>
+## Element Sets
 
-<DownloadPanel
-  pdfUrl="#"
-  ttlUrl="/unimarc/rdf/ttl/unimarc.ttl"
-  jsonLdUrl="/unimarc/rdf/jsonld/unimarc.jsonld"
-  xmlUrl="/unimarc/rdf/xml/unimarc.xml"
-/>
+This namespace contains 49 element sets with a total of 6,030 elements.
 
-## Overview
+<div style={{ display: 'grid', gap: '20px', marginBottom: '40px' }}>
+  <ElementSetCard 
+    elementSet={{
+      id: 'ub0XX',
+      title: 'UNIMARC/B elements 0XX',
+      description: '',
+      elementCount: 207,
+      languages: ["English"],
+      url: 'https://www.iflastandards.info/unimarc/unimarcb/elements/0XX'
+    }}
+  />
+  <ElementSetCard 
+    elementSet={{
+      id: 'ub1XX',
+      title: 'UNIMARC/B elements 1XX',
+      description: '',
+      elementCount: 610,
+      languages: ["English"],
+      url: 'https://www.iflastandards.info/unimarc/unimarcb/elements/1XX'
+    }}
+  />
+  <ElementSetCard 
+    elementSet={{
+      id: 'ub2XX',
+      title: 'UNIMARC/B elements 2XX',
+      description: '',
+      elementCount: 149,
+      languages: ["English"],
+      url: 'https://www.iflastandards.info/unimarc/unimarcb/elements/2XX'
+    }}
+  />
+  <ElementSetCard 
+    elementSet={{
+      id: 'ub3XX',
+      title: 'UNIMARC/B elements 3XX',
+      description: '',
+      elementCount: 176,
+      languages: ["English"],
+      url: 'https://www.iflastandards.info/unimarc/unimarcb/elements/3XX'
+    }}
+  />
+  <ElementSetCard 
+    elementSet={{
+      id: 'ub41X',
+      title: 'UNIMARC/B elements 41X',
+      description: '',
+      elementCount: 200,
+      languages: ["English"],
+      url: 'https://www.iflastandards.info/unimarc/unimarcb/elements/41X'
+    }}
+  />
+  <ElementSetCard 
+    elementSet={{
+      id: 'ub42X',
+      title: 'UNIMARC/B elements 42X',
+      description: '',
+      elementCount: 250,
+      languages: ["English"],
+      url: 'https://www.iflastandards.info/unimarc/unimarcb/elements/42X'
+    }}
+  />
+  <ElementSetCard 
+    elementSet={{
+      id: 'ub43X',
+      title: 'UNIMARC/B elements 43X',
+      description: '',
+      elementCount: 400,
+      languages: ["English"],
+      url: 'https://www.iflastandards.info/unimarc/unimarcb/elements/43X'
+    }}
+  />
+  <ElementSetCard 
+    elementSet={{
+      id: 'ub44X',
+      title: 'UNIMARC/B elements 44X',
+      description: '',
+      elementCount: 450,
+      languages: ["English"],
+      url: 'https://www.iflastandards.info/unimarc/unimarcb/elements/44X'
+    }}
+  />
+  <ElementSetCard 
+    elementSet={{
+      id: 'ub45X',
+      title: 'UNIMARC/B elements 45X',
+      description: '',
+      elementCount: 300,
+      languages: ["English"],
+      url: 'https://www.iflastandards.info/unimarc/unimarcb/elements/45X'
+    }}
+  />
+  <ElementSetCard 
+    elementSet={{
+      id: 'ub46X',
+      title: 'UNIMARC/B elements 46X',
+      description: '',
+      elementCount: 200,
+      languages: ["English"],
+      url: 'https://www.iflastandards.info/unimarc/unimarcb/elements/46X'
+    }}
+  />
+  <ElementSetCard 
+    elementSet={{
+      id: 'ub47X',
+      title: 'UNIMARC/B elements 47X',
+      description: '',
+      elementCount: 50,
+      languages: ["English"],
+      url: 'https://www.iflastandards.info/unimarc/unimarcb/elements/47X'
+    }}
+  />
+  <ElementSetCard 
+    elementSet={{
+      id: 'ub48X',
+      title: 'UNIMARC/B elements 48X',
+      description: '',
+      elementCount: 150,
+      languages: ["English"],
+      url: 'https://www.iflastandards.info/unimarc/unimarcb/elements/48X'
+    }}
+  />
+  <ElementSetCard 
+    elementSet={{
+      id: 'ub5XX',
+      title: 'UNIMARC/B elements 5XX',
+      description: '',
+      elementCount: 599,
+      languages: ["English"],
+      url: 'https://www.iflastandards.info/unimarc/unimarcb/elements/5XX'
+    }}
+  />
+  <ElementSetCard 
+    elementSet={{
+      id: 'ub60X',
+      title: 'UNIMARC/B elements 60X',
+      description: '',
+      elementCount: 196,
+      languages: ["English"],
+      url: 'https://www.iflastandards.info/unimarc/unimarcb/elements/60X'
+    }}
+  />
+  <ElementSetCard 
+    elementSet={{
+      id: 'ub61X',
+      title: 'UNIMARC/B elements 61X',
+      description: '',
+      elementCount: 33,
+      languages: ["English"],
+      url: 'https://www.iflastandards.info/unimarc/unimarcb/elements/61X'
+    }}
+  />
+  <ElementSetCard 
+    elementSet={{
+      id: 'ub62X',
+      title: 'UNIMARC/B elements 62X',
+      description: '',
+      elementCount: 780,
+      languages: ["English"],
+      url: 'https://www.iflastandards.info/unimarc/unimarcb/elements/62X'
+    }}
+  />
+  <ElementSetCard 
+    elementSet={{
+      id: 'ub66X',
+      title: 'UNIMARC/B elements 66X',
+      description: '',
+      elementCount: 2,
+      languages: ["English"],
+      url: 'https://www.iflastandards.info/unimarc/unimarcb/elements/66X'
+    }}
+  />
+  <ElementSetCard 
+    elementSet={{
+      id: 'ub67X',
+      title: 'UNIMARC/B elements 67X',
+      description: '',
+      elementCount: 12,
+      languages: ["English"],
+      url: 'https://www.iflastandards.info/unimarc/unimarcb/elements/67X'
+    }}
+  />
+  <ElementSetCard 
+    elementSet={{
+      id: 'ub68X',
+      title: 'UNIMARC/B elements 68X',
+      description: '',
+      elementCount: 9,
+      languages: ["English"],
+      url: 'https://www.iflastandards.info/unimarc/unimarcb/elements/68X'
+    }}
+  />
+  <ElementSetCard 
+    elementSet={{
+      id: 'ub7XX',
+      title: 'UNIMARC/B elements 7XX',
+      description: '',
+      elementCount: 493,
+      languages: ["English"],
+      url: 'https://www.iflastandards.info/unimarc/unimarcb/elements/7XX'
+    }}
+  />
+  <ElementSetCard 
+    elementSet={{
+      id: 'ub801',
+      title: 'UNIMARC/B elements 801',
+      description: '',
+      elementCount: 24,
+      languages: ["English"],
+      url: 'https://www.iflastandards.info/unimarc/unimarcb/elements/801'
+    }}
+  />
+  <ElementSetCard 
+    elementSet={{
+      id: 'ub802',
+      title: 'UNIMARC/B elements 802',
+      description: '',
+      elementCount: 1,
+      languages: ["English"],
+      url: 'https://www.iflastandards.info/unimarc/unimarcb/elements/802'
+    }}
+  />
+  <ElementSetCard 
+    elementSet={{
+      id: 'ub830',
+      title: 'UNIMARC/B elements 830',
+      description: '',
+      elementCount: 1,
+      languages: ["English"],
+      url: 'https://www.iflastandards.info/unimarc/unimarcb/elements/830'
+    }}
+  />
+  <ElementSetCard 
+    elementSet={{
+      id: 'ub850',
+      title: 'UNIMARC/B elements 850',
+      description: '',
+      elementCount: 1,
+      languages: ["English"],
+      url: 'https://www.iflastandards.info/unimarc/unimarcb/elements/850'
+    }}
+  />
+  <ElementSetCard 
+    elementSet={{
+      id: 'ub856',
+      title: 'UNIMARC/B elements 856',
+      description: '',
+      elementCount: 728,
+      languages: ["English"],
+      url: 'https://www.iflastandards.info/unimarc/unimarcb/elements/856'
+    }}
+  />
+  <ElementSetCard 
+    elementSet={{
+      id: 'ub886',
+      title: 'UNIMARC/B elements 886',
+      description: '',
+      elementCount: 9,
+      languages: ["English"],
+      url: 'https://www.iflastandards.info/unimarc/unimarcb/elements/886'
+    }}
+  />
+  <ElementSetCard 
+    elementSet={{
+      id: 'altos',
+      title: 'UNIMARC: Cartographic materials: Altitude of sensor',
+      description: 'The altitude of the platform of an aerial photography or remote sensing sensor.',
+      elementCount: 0,
+      languages: ["English"],
+      url: 'https://www.iflastandards.info/unimarc/terms/altos'
+    }}
+  />
+  <ElementSetCard 
+    elementSet={{
+      id: 'altos',
+      title: 'UNIMARC: Cartographic materials: Attitude of sensor',
+      description: 'The attitude of a sensed image resulting from the angle of an aerial photography or remote sensing sensor.',
+      elementCount: 0,
+      languages: ["English"],
+      url: 'https://www.iflastandards.info/unimarc/terms/attos'
+    }}
+  />
+  <ElementSetCard 
+    elementSet={{
+      id: 'satcat',
+      title: 'UNIMARC: Cartographic materials: Category of satellite',
+      description: 'The category of satellite for a remote sensing image.',
+      elementCount: 0,
+      languages: ["English"],
+      url: 'https://www.iflastandards.info/unimarc/terms/satcat'
+    }}
+  />
+  <ElementSetCard 
+    elementSet={{
+      id: 'cartcha',
+      title: 'UNIMARC: Cartographic materials: Character',
+      description: 'The character of a cartographic Image.',
+      elementCount: 0,
+      languages: ["English"],
+      url: 'https://www.iflastandards.info/unimarc/terms/cartcha'
+    }}
+  />
+  <ElementSetCard 
+    elementSet={{
+      id: 'cartcol',
+      title: 'UNIMARC: Cartographic materials: Colour indicator',
+      description: 'Indicator of the use of colour on a cartographic item.',
+      elementCount: 0,
+      languages: ["English"],
+      url: 'https://www.iflastandards.info/unimarc/terms/cartcol'
+    }}
+  />
+  <ElementSetCard 
+    elementSet={{
+      id: 'cartfor',
+      title: 'UNIMARC: Cartographic materials: Form of item',
+      description: 'The form of a cartographic item,',
+      elementCount: 0,
+      languages: ["English"],
+      url: 'https://www.iflastandards.info/unimarc/terms/cartfor'
+    }}
+  />
+  <ElementSetCard 
+    elementSet={{
+      id: 'cartpro',
+      title: 'UNIMARC: Cartographic materials: Map projection',
+      description: 'The type of map projection of a cartographic item.',
+      elementCount: 0,
+      languages: ["English"],
+      url: 'https://www.iflastandards.info/unimarc/terms/cartpro'
+    }}
+  />
+  <ElementSetCard 
+    elementSet={{
+      id: 'altos',
+      title: 'UNIMARC: Cartographic materials: Name of satellite',
+      description: 'The name of the satellite for a remote sensing image.',
+      elementCount: 0,
+      languages: ["English"],
+      url: 'https://www.iflastandards.info/unimarc/terms/satname'
+    }}
+  />
+  <ElementSetCard 
+    elementSet={{
+      id: 'altos',
+      title: 'UNIMARC: Cartographic materials: Planet',
+      description: 'The planet to which cartographic materials apply.',
+      elementCount: 0,
+      languages: ["English"],
+      url: 'https://www.iflastandards.info/unimarc/terms/planet'
+    }}
+  />
+  <ElementSetCard 
+    elementSet={{
+      id: 'altos',
+      title: 'UNIMARC: Cartographic materials: Position of platform',
+      description: 'The position of the platform for a photographic or remote sensing image.',
+      elementCount: 0,
+      languages: ["English"],
+      url: 'https://www.iflastandards.info/unimarc/terms/cartpop'
+    }}
+  />
+  <ElementSetCard 
+    elementSet={{
+      id: 'altos',
+      title: 'UNIMARC: Cartographic materials: Presentation technique',
+      description: 'Presentation technique for a photographic or non-photographic cartographic image.',
+      elementCount: 0,
+      languages: ["English"],
+      url: 'https://www.iflastandards.info/unimarc/terms/cartprt'
+    }}
+  />
+  <ElementSetCard 
+    elementSet={{
+      id: 'cartret',
+      title: 'UNIMARC: Cartographic materials: Recording technique for remote sensing image',
+      description: 'The recording technique for a remote sensing image.',
+      elementCount: 0,
+      languages: ["English"],
+      url: 'https://www.iflastandards.info/unimarc/terms/cartret'
+    }}
+  />
+  <ElementSetCard 
+    elementSet={{
+      id: 'cartrel',
+      title: 'UNIMARC: Cartographic materials: Relief',
+      description: 'The type of relief of a cartographic item.',
+      elementCount: 0,
+      languages: ["English"],
+      url: 'https://www.iflastandards.info/unimarc/terms/cartrel'
+    }}
+  />
+  <ElementSetCard 
+    elementSet={{
+      id: 'carttos',
+      title: 'UNIMARC: Cartographic materials: Type of scale',
+      description: 'The type of scale of a cartographic item.',
+      elementCount: 0,
+      languages: ["English"],
+      url: 'https://www.iflastandards.info/unimarc/terms/carttos'
+    }}
+  />
+  <ElementSetCard 
+    elementSet={{
+      id: 'chm',
+      title: 'UNIMARC: Church mode of musical work',
+      description: 'The "Gregorian" church mode of a musical work.',
+      elementCount: 0,
+      languages: ["English"],
+      url: 'https://www.iflastandards.info/unimarc/terms/chm'
+    }}
+  />
+  <ElementSetCard 
+    elementSet={{
+      id: 'continuingfreq',
+      title: 'UNIMARC: Continuing resources: Frequency of issue',
+      description: 'The frequency of a  serial or continuing resource.',
+      elementCount: 0,
+      languages: ["English"],
+      url: 'https://www.iflastandards.info/unimarc/terms/continuingfreq'
+    }}
+  />
+  <ElementSetCard 
+    elementSet={{
+      id: 'elecsmd',
+      title: 'UNIMARC: Electronic resources: Specific material designation',
+      description: 'The type of data carrier.',
+      elementCount: 0,
+      languages: ["English"],
+      url: 'https://www.iflastandards.info/unimarc/terms/elecsmd'
+    }}
+  />
+  <ElementSetCard 
+    elementSet={{
+      id: 'fom',
+      title: 'UNIMARC: Form of musical work',
+      description: 'The form of a musical work.',
+      elementCount: 0,
+      languages: ["Arabic","Czech","German","Greek","English","Spanish","Basque","French","Hungarian","Italian","Japanese","Latin","Norwegian","Polish","Portuguese","Romanian","Russian","Swedish"],
+      url: 'https://www.iflastandards.info/unimarc/terms/fom'
+    }}
+  />
+  <ElementSetCard 
+    elementSet={{
+      id: 'tos',
+      title: 'UNIMARC: Format of notated music: Type of score',
+      description: 'The type of music score.',
+      elementCount: 0,
+      languages: ["English"],
+      url: 'https://www.iflastandards.info/unimarc/terms/tos'
+    }}
+  />
+  <ElementSetCard 
+    elementSet={{
+      id: 'key',
+      title: 'UNIMARC: Key of musical work',
+      description: 'The key of a musical work.',
+      elementCount: 0,
+      languages: ["English"],
+      url: 'https://www.iflastandards.info/unimarc/terms/key'
+    }}
+  />
+  <ElementSetCard 
+    elementSet={{
+      id: 'mop',
+      title: 'UNIMARC: Medium of performance',
+      description: 'Instruments and/or voices, devices and other performers which make up a musical work.',
+      elementCount: 0,
+      languages: ["Arabic","Catalan","German","Greek","English","Spanish","French","Hungarian","Italian","Japanese","Latin","Dutch","Norwegian","Portuguese","Russian","Swedish"],
+      url: 'https://www.iflastandards.info/unimarc/terms/mop'
+    }}
+  />
+  <ElementSetCard 
+    elementSet={{
+      id: 'tac',
+      title: 'UNIMARC: Target audience',
+      description: 'Type of intended audience.',
+      elementCount: 0,
+      languages: ["English"],
+      url: 'https://www.iflastandards.info/unimarc/terms/tac'
+    }}
+  />
+  <ElementSetCard 
+    elementSet={{
+      id: 'ter',
+      title: 'UNIMARC: Type of electronic resource',
+      description: 'The type of data file.',
+      elementCount: 0,
+      languages: ["English","Italian"],
+      url: 'https://www.iflastandards.info/unimarc/terms/ter'
+    }}
+  />
+</div>
+<div style={{ textAlign: 'center', marginBottom: '40px' }}>
+  <CompactButton to="/elements">Browse All Element Sets</CompactButton>
+</div>
+## Vocabularies
 
-**UNIMARC Standard**
+This namespace contains 47 vocabularies with a total of 1,582 concepts.
 
-The UNIMARC format is a widely used standard for the representation and exchange of bibliographic data in machine-readable form. It defines the codes and conventions (tags, indicators, subfield codes, and coded values) that identify the data elements in UNIMARC bibliographic and authority records. UNIMARC is maintained by an IFLA committee, the Permanent UNIMARC Committee (PUC). Proposals for change usually originate with those creating UNIMARC records or those using UNIMARC records. Changes are made only through the PUC.
+<div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(300px, 1fr))', gap: '16px', marginBottom: '40px' }}>
+  <VocabularyCard 
+    vocabulary={{
+      id: 'altos',
+      title: 'UNIMARC: Cartographic materials: Altitude of sensor',
+      description: 'The altitude of the platform of an aerial photography or remote sensing sensor.',
+      conceptCount: 3,
+      languages: ["English"],
+      category: 'cartographic',
+      url: 'https://www.iflastandards.info/unimarc/terms/altos'
+    }}
+  />
+  <VocabularyCard 
+    vocabulary={{
+      id: 'altos',
+      title: 'UNIMARC: Cartographic materials: Attitude of sensor',
+      description: 'The attitude of a sensed image resulting from the angle of an aerial photography or remote sensing sensor.',
+      conceptCount: 3,
+      languages: ["English"],
+      category: 'cartographic',
+      url: 'https://www.iflastandards.info/unimarc/terms/attos'
+    }}
+  />
+  <VocabularyCard 
+    vocabulary={{
+      id: 'satcat',
+      title: 'UNIMARC: Cartographic materials: Category of satellite',
+      description: 'The category of satellite for a remote sensing image.',
+      conceptCount: 3,
+      languages: ["English"],
+      category: 'cartographic',
+      url: 'https://www.iflastandards.info/unimarc/terms/satcat'
+    }}
+  />
+  <VocabularyCard 
+    vocabulary={{
+      id: 'cartcha',
+      title: 'UNIMARC: Cartographic materials: Character',
+      description: 'The character of a cartographic Image.',
+      conceptCount: 3,
+      languages: ["English"],
+      category: 'cartographic',
+      url: 'https://www.iflastandards.info/unimarc/terms/cartcha'
+    }}
+  />
+  <VocabularyCard 
+    vocabulary={{
+      id: 'cartcol',
+      title: 'UNIMARC: Cartographic materials: Colour indicator',
+      description: 'Indicator of the use of colour on a cartographic item.',
+      conceptCount: 2,
+      languages: ["English"],
+      category: 'cartographic',
+      url: 'https://www.iflastandards.info/unimarc/terms/cartcol'
+    }}
+  />
+  <VocabularyCard 
+    vocabulary={{
+      id: 'cartfor',
+      title: 'UNIMARC: Cartographic materials: Form of item',
+      description: 'The form of a cartographic item,',
+      conceptCount: 11,
+      languages: ["English"],
+      category: 'cartographic',
+      url: 'https://www.iflastandards.info/unimarc/terms/cartfor'
+    }}
+  />
+  <VocabularyCard 
+    vocabulary={{
+      id: 'cartpro',
+      title: 'UNIMARC: Cartographic materials: Map projection',
+      description: 'The type of map projection of a cartographic item.',
+      conceptCount: 47,
+      languages: ["English"],
+      category: 'cartographic',
+      url: 'https://www.iflastandards.info/unimarc/terms/cartpro'
+    }}
+  />
+  <VocabularyCard 
+    vocabulary={{
+      id: 'altos',
+      title: 'UNIMARC: Cartographic materials: Name of satellite',
+      description: 'The name of the satellite for a remote sensing image.',
+      conceptCount: 14,
+      languages: ["English"],
+      category: 'cartographic',
+      url: 'https://www.iflastandards.info/unimarc/terms/satname'
+    }}
+  />
+  <VocabularyCard 
+    vocabulary={{
+      id: 'altos',
+      title: 'UNIMARC: Cartographic materials: Planet',
+      description: 'The planet to which cartographic materials apply.',
+      conceptCount: 10,
+      languages: ["English"],
+      category: 'cartographic',
+      url: 'https://www.iflastandards.info/unimarc/terms/planet'
+    }}
+  />
+  <VocabularyCard 
+    vocabulary={{
+      id: 'altos',
+      title: 'UNIMARC: Cartographic materials: Position of platform',
+      description: 'The position of the platform for a photographic or remote sensing image.',
+      conceptCount: 3,
+      languages: ["English"],
+      category: 'cartographic',
+      url: 'https://www.iflastandards.info/unimarc/terms/cartpop'
+    }}
+  />
+  <VocabularyCard 
+    vocabulary={{
+      id: 'altos',
+      title: 'UNIMARC: Cartographic materials: Presentation technique',
+      description: 'Presentation technique for a photographic or non-photographic cartographic image.',
+      conceptCount: 22,
+      languages: ["English"],
+      category: 'cartographic',
+      url: 'https://www.iflastandards.info/unimarc/terms/cartprt'
+    }}
+  />
+  <VocabularyCard 
+    vocabulary={{
+      id: 'cartret',
+      title: 'UNIMARC: Cartographic materials: Recording technique for remote sensing image',
+      description: 'The recording technique for a remote sensing image.',
+      conceptCount: 10,
+      languages: ["English"],
+      category: 'cartographic',
+      url: 'https://www.iflastandards.info/unimarc/terms/cartret'
+    }}
+  />
+  <VocabularyCard 
+    vocabulary={{
+      id: 'cartrel',
+      title: 'UNIMARC: Cartographic materials: Relief',
+      description: 'The type of relief of a cartographic item.',
+      conceptCount: 13,
+      languages: ["English"],
+      category: 'cartographic',
+      url: 'https://www.iflastandards.info/unimarc/terms/cartrel'
+    }}
+  />
+  <VocabularyCard 
+    vocabulary={{
+      id: 'carttos',
+      title: 'UNIMARC: Cartographic materials: Type of scale',
+      description: 'The type of scale of a cartographic item.',
+      conceptCount: 3,
+      languages: ["English"],
+      category: 'cartographic',
+      url: 'https://www.iflastandards.info/unimarc/terms/carttos'
+    }}
+  />
+  <VocabularyCard 
+    vocabulary={{
+      id: 'graphicsfd',
+      title: 'UNIMARC: Graphics: Functional designation',
+      description: 'The functional form of the graphics item.',
+      conceptCount: 18,
+      languages: ["English"],
+      category: 'graphics',
+      url: 'https://www.iflastandards.info/unimarc/terms/graphicsfd'
+    }}
+  />
+  <VocabularyCard 
+    vocabulary={{
+      id: 'altos',
+      title: 'UNIMARC: Graphics: Primary support material',
+      description: 'The type of material used for the primary support (i.e., the support or base on which an image is printed or executed) of a non-projected graphic.',
+      conceptCount: 7,
+      languages: ["English"],
+      category: 'graphics',
+      url: 'https://www.iflastandards.info/unimarc/terms/graphicspsm'
+    }}
+  />
+  <VocabularyCard 
+    vocabulary={{
+      id: 'graphicssmd',
+      title: 'UNIMARC: Graphics: Specific material designation',
+      description: 'The specific material designation that describes the special class of material (usually  the class of physical object) to which the non-projected graphic item belongs.',
+      conceptCount: 11,
+      languages: ["English"],
+      category: 'graphics',
+      url: 'https://www.iflastandards.info/unimarc/terms/graphicssmd'
+    }}
+  />
+  <VocabularyCard 
+    vocabulary={{
+      id: 'altos',
+      title: 'UNIMARC: Graphics: Technique (prints)',
+      description: 'The technique in which prints are executed.',
+      conceptCount: 29,
+      languages: ["English"],
+      category: 'graphics',
+      url: 'https://www.iflastandards.info/unimarc/terms/graphicstp'
+    }}
+  />
+  <VocabularyCard 
+    vocabulary={{
+      id: 'graphicstd',
+      title: 'UNIMARC: Graphics: Techniques (drawings, paintings)',
+      description: 'The technique in which drawing and paintings are executed.',
+      conceptCount: 30,
+      languages: ["English"],
+      category: 'graphics',
+      url: 'https://www.iflastandards.info/unimarc/terms/graphicstd'
+    }}
+  />
+  <VocabularyCard 
+    vocabulary={{
+      id: 'altos',
+      title: 'UNIMARC: Sound recordings: Accompanying textual material',
+      description: 'The contents of programme notes and other accompanying text of a sound recording.',
+      conceptCount: 15,
+      languages: ["English"],
+      category: 'sound-recordings',
+      url: 'https://www.iflastandards.info/unimarc/terms/soundatm'
+    }}
+  />
+  <VocabularyCard 
+    vocabulary={{
+      id: 'altos',
+      title: 'UNIMARC: Sound recordings: Dimensions',
+      description: 'The diameter of an open reel tape or a disc, or the dimensions of a cassette, cartridge or cylinder form of sound recording.',
+      conceptCount: 14,
+      languages: ["English"],
+      category: 'sound-recordings',
+      url: 'https://www.iflastandards.info/unimarc/terms/sounddim'
+    }}
+  />
+  <VocabularyCard 
+    vocabulary={{
+      id: 'altos',
+      title: 'UNIMARC: Sound recordings: Form of release',
+      description: 'The form of release of a sound recording.',
+      conceptCount: 9,
+      languages: ["English"],
+      category: 'sound-recordings',
+      url: 'https://www.iflastandards.info/unimarc/terms/soundfor'
+    }}
+  />
+  <VocabularyCard 
+    vocabulary={{
+      id: 'altos',
+      title: 'UNIMARC: Sound recordings: Groove width',
+      description: 'The width of the grooves on sound recording discs.',
+      conceptCount: 5,
+      languages: ["English"],
+      category: 'sound-recordings',
+      url: 'https://www.iflastandards.info/unimarc/terms/soundgrw'
+    }}
+  />
+  <VocabularyCard 
+    vocabulary={{
+      id: 'soundcut',
+      title: 'UNIMARC: Sound recordings: Kind of cutting',
+      description: 'The kind of cutting of a sound recording disk or cylinder.',
+      conceptCount: 4,
+      languages: ["English"],
+      category: 'sound-recordings',
+      url: 'https://www.iflastandards.info/unimarc/terms/soundcut'
+    }}
+  />
+  <VocabularyCard 
+    vocabulary={{
+      id: 'soundmod',
+      title: 'UNIMARC: Sound recordings: Kind of sound',
+      description: 'The recording mode of a sound recording,',
+      conceptCount: 5,
+      languages: ["English"],
+      category: 'sound-recordings',
+      url: 'https://www.iflastandards.info/unimarc/terms/soundmod'
+    }}
+  />
+  <VocabularyCard 
+    vocabulary={{
+      id: 'soundtec',
+      title: 'UNIMARC: Sound recordings: Recording technique',
+      description: 'The recording technique of a sound recording.',
+      conceptCount: 5,
+      languages: ["English"],
+      category: 'sound-recordings',
+      url: 'https://www.iflastandards.info/unimarc/terms/soundtec'
+    }}
+  />
+  <VocabularyCard 
+    vocabulary={{
+      id: 'soundrep',
+      title: 'UNIMARC: Sound recordings: Special reproduction characteristics',
+      description: 'The reproduction characteristics of a sound recording.',
+      conceptCount: 11,
+      languages: ["English"],
+      category: 'sound-recordings',
+      url: 'https://www.iflastandards.info/unimarc/terms/soundrep'
+    }}
+  />
+  <VocabularyCard 
+    vocabulary={{
+      id: 'soundspe',
+      title: 'UNIMARC: Sound recordings: Speed',
+      description: 'The speed of a sound recording.',
+      conceptCount: 19,
+      languages: ["English"],
+      category: 'sound-recordings',
+      url: 'https://www.iflastandards.info/unimarc/terms/soundspe'
+    }}
+  />
+  <VocabularyCard 
+    vocabulary={{
+      id: 'soundtac',
+      title: 'UNIMARC: Sound recordings: Tape configuration',
+      description: 'The tape configuration of a sound recording.',
+      conceptCount: 11,
+      languages: ["English"],
+      category: 'sound-recordings',
+      url: 'https://www.iflastandards.info/unimarc/terms/soundtac'
+    }}
+  />
+  <VocabularyCard 
+    vocabulary={{
+      id: 'soundtaw',
+      title: 'UNIMARC: Sound recordings: Tape width',
+      description: 'The width of a tape of a sound recording.',
+      conceptCount: 9,
+      languages: ["English"],
+      category: 'sound-recordings',
+      url: 'https://www.iflastandards.info/unimarc/terms/soundtaw'
+    }}
+  />
+  <VocabularyCard 
+    vocabulary={{
+      id: 'soundtyp',
+      title: 'UNIMARC: Sound recordings: Type of recording',
+      description: 'The type of sound recording disc, cylinder or tape.',
+      conceptCount: 11,
+      languages: ["English"],
+      category: 'sound-recordings',
+      url: 'https://www.iflastandards.info/unimarc/terms/soundtyp'
+    }}
+  />
+  <VocabularyCard 
+    vocabulary={{
+      id: 'chm',
+      title: 'UNIMARC: Church mode of musical work',
+      description: 'The "Gregorian" church mode of a musical work.',
+      conceptCount: 13,
+      languages: ["English"],
+      category: '',
+      url: 'https://www.iflastandards.info/unimarc/terms/chm'
+    }}
+  />
+  <VocabularyCard 
+    vocabulary={{
+      id: 'continuingfreq',
+      title: 'UNIMARC: Continuing resources: Frequency of issue',
+      description: 'The frequency of a  serial or continuing resource.',
+      conceptCount: 19,
+      languages: ["English"],
+      category: '',
+      url: 'https://www.iflastandards.info/unimarc/terms/continuingfreq'
+    }}
+  />
+  <VocabularyCard 
+    vocabulary={{
+      id: 'elecsmd',
+      title: 'UNIMARC: Electronic resources: Specific material designation',
+      description: 'The type of data carrier.',
+      conceptCount: 11,
+      languages: ["English"],
+      category: 'electronic-resources',
+      url: 'https://www.iflastandards.info/unimarc/terms/elecsmd'
+    }}
+  />
+  <VocabularyCard 
+    vocabulary={{
+      id: 'fom',
+      title: 'UNIMARC: Form of musical work',
+      description: 'The form of a musical work.',
+      conceptCount: 607,
+      languages: ["Arabic","Czech","German","Greek","English","Spanish","Basque","French","Hungarian","Italian","Japanese","Latin","Norwegian","Polish","Portuguese","Romanian","Russian","Swedish"],
+      category: '',
+      url: 'https://www.iflastandards.info/unimarc/terms/fom'
+    }}
+  />
+  <VocabularyCard 
+    vocabulary={{
+      id: 'tos',
+      title: 'UNIMARC: Format of notated music: Type of score',
+      description: 'The type of music score.',
+      conceptCount: 19,
+      languages: ["English"],
+      category: '',
+      url: 'https://www.iflastandards.info/unimarc/terms/tos'
+    }}
+  />
+  <VocabularyCard 
+    vocabulary={{
+      id: 'key',
+      title: 'UNIMARC: Key of musical work',
+      description: 'The key of a musical work.',
+      conceptCount: 31,
+      languages: ["English"],
+      category: '',
+      url: 'https://www.iflastandards.info/unimarc/terms/key'
+    }}
+  />
+  <VocabularyCard 
+    vocabulary={{
+      id: 'mop',
+      title: 'UNIMARC: Medium of performance',
+      description: 'Instruments and/or voices, devices and other performers which make up a musical work.',
+      conceptCount: 392,
+      languages: ["Arabic","Catalan","German","Greek","English","Spanish","French","Hungarian","Italian","Japanese","Latin","Dutch","Norwegian","Portuguese","Russian","Swedish"],
+      category: '',
+      url: 'https://www.iflastandards.info/unimarc/terms/mop'
+    }}
+  />
+  <VocabularyCard 
+    vocabulary={{
+      id: 'tac',
+      title: 'UNIMARC: Target audience',
+      description: 'Type of intended audience.',
+      conceptCount: 8,
+      languages: ["English"],
+      category: '',
+      url: 'https://www.iflastandards.info/unimarc/terms/tac'
+    }}
+  />
+  <VocabularyCard 
+    vocabulary={{
+      id: 'ter',
+      title: 'UNIMARC: Type of electronic resource',
+      description: 'The type of data file.',
+      conceptCount: 13,
+      languages: ["English","Italian"],
+      category: 'electronic-resources',
+      url: 'https://www.iflastandards.info/unimarc/terms/ter'
+    }}
+  />
+  <VocabularyCard 
+    vocabulary={{
+      id: '3dmat',
+      title: 'UNIMARC: Three-dimensional artefacts and realia: Material',
+      description: 'The type of material a three-dimensional artefact or realia is made of.',
+      conceptCount: 28,
+      languages: ["English"],
+      category: '3d-materials',
+      url: 'https://www.iflastandards.info/unimarc/terms/3dmat'
+    }}
+  />
+  <VocabularyCard 
+    vocabulary={{
+      id: '3dsmd',
+      title: 'UNIMARC: Three-dimensional artefacts and realia: Specific material designation',
+      description: 'The specific material designation that describes the special class of material (usually the class of physical object) to which the three-dimensional artefact or realis item belongs.',
+      conceptCount: 34,
+      languages: ["English"],
+      category: '3d-materials',
+      url: 'https://www.iflastandards.info/unimarc/terms/3dsmd'
+    }}
+  />
+  <VocabularyCard 
+    vocabulary={{
+      id: 'visacc',
+      title: 'UNIMARC: Visual projections, etc.: Accompanying material',
+      description: 'The types of material that accompany a visual projection, videorecording, or motion picture.',
+      conceptCount: 9,
+      languages: ["English"],
+      category: 'visual-projections',
+      url: 'https://www.iflastandards.info/unimarc/terms/visacc'
+    }}
+  />
+  <VocabularyCard 
+    vocabulary={{
+      id: 'viscol',
+      title: 'UNIMARC: Visual projections, etc.: Colour',
+      description: 'The colour characteristics of a visual projection, videorecording, or motion picture.',
+      conceptCount: 5,
+      languages: ["English"],
+      category: 'visual-projections',
+      url: 'https://www.iflastandards.info/unimarc/terms/viscol'
+    }}
+  />
+  <VocabularyCard 
+    vocabulary={{
+      id: 'visfov',
+      title: 'UNIMARC: Visual projections, etc.: Form of release - videorecording',
+      description: '',
+      conceptCount: 7,
+      languages: ["English"],
+      category: 'visual-projections',
+      url: 'https://www.iflastandards.info/unimarc/terms/visfov'
+    }}
+  />
+  <VocabularyCard 
+    vocabulary={{
+      id: 'visfor',
+      title: 'UNIMARC: Visual projections, etc.: Form of release - visual projection, motion picture',
+      description: 'The form of release of a visual projection or motion picture.',
+      conceptCount: 14,
+      languages: ["English"],
+      category: 'visual-projections',
+      url: 'https://www.iflastandards.info/unimarc/terms/visfor'
+    }}
+  />
+  <VocabularyCard 
+    vocabulary={{
+      id: 'vismfs',
+      title: 'UNIMARC: Visual projections, etc.: Media for sound',
+      description: 'The medium used to carry the sound, when sound is present, of a visual projection, videorecording, or motion picture.',
+      conceptCount: 12,
+      languages: ["English"],
+      category: 'sound-recordings',
+      url: 'https://www.iflastandards.info/unimarc/terms/vismfs'
+    }}
+  />
+</div>
+<div style={{ textAlign: 'center', marginBottom: '40px' }}>
+  <CompactButton to="/vocabularies">Browse All Vocabularies</CompactButton>
+</div>
+## Navigation
 
-The version included here: UNIMARC Bibliographic 3rd edition with updates up to 2016.
-Last updated on this site: June 2020
-
-Newer edition to be added to this site in summer 2023
-
-More information see [UNIMARC Updates](https://www.ifla.org/unimarc-updates/)
-
-## UNIMARC Element Sets
-
-* UNIMARC/B elements 0XX
-* UNIMARC/B elements 1XX
-* UNIMARC/B elements 2XX
-* UNIMARC/B elements 3XX
-* UNIMARC/B elements 41X
-* UNIMARC/B elements 42X
-* UNIMARC/B elements 43X
-* UNIMARC/B elements 44X
-* UNIMARC/B elements 45X
-* UNIMARC/B elements 46X
-* UNIMARC/B elements 47X
-* UNIMARC/B elements 48X
-* UNIMARC/B elements 5XX
-* UNIMARC/B elements 60X
-* UNIMARC/B elements 61X
-* UNIMARC/B elements 62X
-* UNIMARC/B elements 66X
-* UNIMARC/B elements 67X
-* UNIMARC/B elements 68X
-* UNIMARC/B elements 7XX
-* UNIMARC/B elements 801
-* UNIMARC/B elements 802
-* UNIMARC/B elements 830
-* UNIMARC/B elements 850
-* UNIMARC/B elements 856
-* UNIMARC/B elements 886
-
-## UNIMARC Value Vocabularies
-
-### Cartographic materials
-* **Cartographic materials: Altitude of sensor** - The altitude of the platform of an aerial photography or remote sensing sensor.
-* **Cartographic materials: Attitude of sensor** - The attitude of a sensed image resulting from the angle of an aerial photography or remote sensing sensor.
-* **Cartographic materials: Category of satellite** - The category of satellite for a remote sensing image.
-* **Cartographic materials: Character** - The character of a cartographic Image.
-* **Cartographic materials: Colour indicator** - Indicator of the use of colour on a cartographic item.
-* **Cartographic materials: Form of item** - The form of a cartographic item.
-* **Cartographic materials: Map projection** - The type of map projection of a cartographic item.
-* **Cartographic materials: Name of satellite** - The name of the satellite for a remote sensing image.
-* **Cartographic materials: Planet** - The planet to which cartographic materials apply.
-* **Cartographic materials: Position of platform** - The position of the platform for a photographic or remote sensing image.
-* **Cartographic materials: Presentation technique** - Presentation technique for a photographic or non-photographic cartographic image.
-* **Cartographic materials: Recording technique for remote sensing image** - The recording technique for a remote sensing image.
-* **Cartographic materials: Relief** - The type of relief of a cartographic item.
-* **Cartographic materials: Type of scale** - The type of scale of a cartographic item.
-
-### Graphics
-* **Graphics: Functional designation** - The functional form of the graphics item.
-* **Graphics: Primary support material** - The type of material used for the primary support (i.e., the support or base on which an image is printed or executed) of a non-projected graphic.
-* **Graphics: Specific material designation** - The specific material designation that describes the special class of material (usually the class of physical object) to which the non-projected graphic item belongs.
-* **Graphics: Technique (prints)** - The technique in which prints are executed.
-* **Graphics: Techniques (drawings, paintings)** - The technique in which drawing and paintings are executed.
-
-### Sound Recordings
-* **Sound recordings: Accompanying textual material** - The contents of programme notes and other accompanying text of a sound recording.
-* **Sound recordings: Dimensions** - The diameter of an open reel tape or a disc, or the dimensions of a cassette, cartridge or cylinder form of sound recording.
-* **Sound recordings: Form of release** - The form of release of a sound recording.
-* **Sound recordings: Groove width** - The width of the grooves on sound recording discs.
-* **Sound recordings: Kind of cutting** - The kind of cutting of a sound recording disk or cylinder.
-* **Sound recordings: Kind of sound** - The recording mode of a sound recording.
-* **Sound recordings: Recording technique** - The recording technique of a sound recording.
-* **Sound recordings: Special reproduction characteristics** - The reproduction characteristics of a sound recording.
-* **Sound recordings: Speed** - The speed of a sound recording.
-* **Sound recordings: Tape configuration** - The tape configuration of a sound recording.
-* **Sound recordings: Tape width** - The width of a tape of a sound recording.
-* **Sound recordings: Type of recording** - The type of sound recording disc, cylinder or tape.
-
-*Added to this site: July 2020*
-
+This namespace contains a large number of element sets and vocabularies. Use the sidebar navigation to browse by category, or use the search functionality to find specific items.

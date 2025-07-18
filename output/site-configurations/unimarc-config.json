@@ -1,7 +1,7 @@
 {
   "namespace": "unimarc",
-  "namespaceTitle": "UNIMARC - Universal MARC",
-  "namespaceDescription": "Universal MARC namespace",
+  "title": "UNIMARC - Universal MARC",
+  "description": "Universal MARC namespace",
   "statistics": {
     "totalElements": 6030,
     "totalConcepts": 1582,
@@ -1147,15 +1147,5 @@
       "url": "https://www.iflastandards.info/unimarc/terms/vismfs"
     }
   ],
-  "features": {
-    "enableMultipleElementSets": true,
-    "enableVocabularyCategories": true,
-    "enableHierarchicalNavigation": true,
-    "enableSearch": true,
-    "enableCrossSetBrowsing": true,
-    "enableLanguageSwitching": true,
-    "enableBlog": true,
-    "enableRdfDownloads": true
-  },
   "navigationStrategy": "hierarchical"
 }

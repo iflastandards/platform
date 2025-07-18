@@ -1,0 +1,168 @@
+{
+  "namespace": "isbd",
+  "title": "ISBD - International Standard Bibliographic Description",
+  "description": "International Standard Bibliographic Description namespace",
+  "statistics": {
+    "totalElements": 353,
+    "totalConcepts": 46,
+    "elementSets": 2,
+    "vocabularies": 7
+  },
+  "elementSets": [
+    {
+      "id": "isbd",
+      "title": "ISBD elements",
+      "description": "This is a registration of classes and properties from International Standard Bibliographic Description (ISBD), consolidated edition, published by De Gruyter Saur in July 2011 (ISBN 978-3-11-026379-4).",
+      "elementCount": 190,
+      "languages": [
+        "English",
+        "Spanish"
+      ],
+      "prefix": "isbd",
+      "url": "https://www.iflastandards.info/isbd/elements.html"
+    },
+    {
+      "id": "isbdu",
+      "title": "ISBD elements (unconstrained)",
+      "elementCount": 163,
+      "languages": [
+        "English"
+      ],
+      "prefix": "isbdu",
+      "url": "https://www.iflastandards.info/isbd/unc/elements.html"
+    }
+  ],
+  "vocabularies": [
+    {
+      "id": "contentform",
+      "title": "ISBD Content Form",
+      "description": "Content form categories reflect the fundamental form or forms in which the content of a resource is expressed.",
+      "conceptCount": 11,
+      "languages": [
+        "Bulgarian",
+        "English",
+        "French",
+        "Croatian",
+        "Italian",
+        "Latvian",
+        "Russian",
+        "Serbian",
+        "Chinese"
+      ],
+      "prefix": "contentform",
+      "category": "content-form",
+      "url": "https://www.iflastandards.info/isbd/terms/contentform.html"
+    },
+    {
+      "id": "contentformbase",
+      "title": "ISBD Content Form Qualified Base",
+      "description": "Compound terms for qualified ISBD content forms that map to RDA/ONIX Framework for Resource Categorization base content categories.",
+      "conceptCount": 13,
+      "languages": [
+        "English"
+      ],
+      "prefix": "contentformbase",
+      "category": "content-form",
+      "url": "https://www.iflastandards.info/isbd/terms/contentformbase.html"
+    },
+    {
+      "id": "contentqualificationdimensionality",
+      "title": "ISBD Content Qualification of Dimensionality",
+      "description": "Content qualification sub-categories for the number of spatial dimensions in which the image content of a resource is intended to be perceived which expand the content form category of image.",
+      "conceptCount": 2,
+      "languages": [
+        "Bulgarian",
+        "English",
+        "French",
+        "Croatian",
+        "Italian",
+        "Latvian",
+        "Russian",
+        "Serbian",
+        "Chinese"
+      ],
+      "prefix": "contentqualificationdimensionality",
+      "category": "content-form",
+      "url": "https://www.iflastandards.info/isbd/terms/contentqualification/dimensionality.html"
+    },
+    {
+      "id": "contentqualificationmotion",
+      "title": "ISBD Content Qualification of Motion",
+      "description": "Content qualification sub-categories for the perceived presence or absence of movement in the image content of a resource which expand the content form category of image.",
+      "conceptCount": 2,
+      "languages": [
+        "Bulgarian",
+        "English",
+        "French",
+        "Croatian",
+        "Italian",
+        "Latvian",
+        "Russian",
+        "Serbian",
+        "Chinese"
+      ],
+      "prefix": "contentqualificationmotion",
+      "category": "content-form",
+      "url": "https://www.iflastandards.info/isbd/terms/contentqualification/motion.html"
+    },
+    {
+      "id": "contentqualificationsensoryspecfication",
+      "title": "ISBD Content Qualification of Sensory Specification",
+      "description": "Content qualification sub-categories for sensory specification, a human sense through which the content of a resource as published is intended to be perceived, which expand content form categories.",
+      "conceptCount": 5,
+      "languages": [
+        "Bulgarian",
+        "English",
+        "French",
+        "Croatian",
+        "Italian",
+        "Latvian",
+        "Russian",
+        "Chinese"
+      ],
+      "prefix": "contentqualificationsensoryspecfication",
+      "category": "content-form",
+      "url": "https://www.iflastandards.info/isbd/terms/contentqualification/sensoryspecfication.html"
+    },
+    {
+      "id": "contentqualificationtype/",
+      "title": "ISBD Content Qualification of Type",
+      "description": "Content qualification sub-categories for type which expand content form categories.",
+      "conceptCount": 3,
+      "languages": [
+        "Bulgarian",
+        "English",
+        "Spanish",
+        "French",
+        "Croatian",
+        "Italian",
+        "Latvian",
+        "Russian",
+        "Serbian"
+      ],
+      "prefix": "contentqualificationtype/",
+      "category": "content-form",
+      "url": "https://www.iflastandards.info/isbd/terms/contentqualification/type.html"
+    },
+    {
+      "id": "mediatype",
+      "title": "ISBD Media Type",
+      "description": "Media type categories record the type or types of carrier used to convey the content of the resource. Categories generally reflect the format of the storage medium and housing of a carrier in combination with the type of intermediation device required to render, view, run, etc., the content of a resource.",
+      "conceptCount": 10,
+      "languages": [
+        "English",
+        "Spanish",
+        "French",
+        "Croatian",
+        "Italian",
+        "Latvian",
+        "Russian",
+        "Serbian",
+        "Chinese"
+      ],
+      "prefix": "mediatype",
+      "url": "https://www.iflastandards.info/isbd/terms/mediatype.html"
+    }
+  ],
+  "navigationStrategy": "categorized"
+}

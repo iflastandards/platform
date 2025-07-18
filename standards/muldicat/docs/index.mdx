@@ -1,84 +1,49 @@
 ---
-id: index
-title: Multilingual Dictionary of Cataloguing Terms
-slug: /
+sidebar_position: 1
+title: MulDiCat - Multilingual dictionary of cataloguing terms and concepts
+sidebar_label: Overview
+description: Multilingual dictionary of cataloguing terms and concepts namespace
 hide_table_of_contents: true
 ---
 
-import { Figure } from '@ifla/theme';
-import { InLink } from '@ifla/theme';
-import { OutLink } from '@ifla/theme';
-import { QuickStart, DownloadPanel } from '@ifla/theme';
+import { NamespaceHub } from '@ifla/theme/components/NamespaceHub';
+import { ElementSetCard } from '@ifla/theme/components/ElementSetCard';
+import { VocabularyCard } from '@ifla/theme/components/VocabularyCard';
+import { CompactButton } from '@ifla/theme/components/CompactButton';
 
-# Multilingual Dictionary of Cataloguing Terms
+# MulDiCat - Multilingual dictionary of cataloguing terms and concepts
 
-<div className="row my-2">
-  <div className="col-md-5">
-    <div className="row gx-0 me-4">
-      <div className="col-md-12">
-        <nav className="d-flex flex-column" aria-label="Navigation for main sections">
-          <div className="d-flex align-items-center">
-            <InLink to="/docs/intro" className="linkMenuEntry">Introduction</InLink>
-          </div>
+Multilingual dictionary of cataloguing terms and concepts namespace
 
-          <div className="d-flex align-items-center">
-            <InLink to="/docs/intro" className="linkMenuEntry">Dictionary Terms</InLink>
-          </div>
+## Namespace Statistics
 
-          <div className="d-flex align-items-center">
-            <InLink to="/docs/intro" className="linkMenuEntry">Examples</InLink>
-          </div>
-        </nav>
-      </div>
-    </div>
+<div style={{ display: 'flex', gap: '20px', marginBottom: '40px', flexWrap: 'wrap' }}>
+  <div style={{ background: '#e3f2fd', padding: '20px', borderRadius: '8px', flex: '1', minWidth: '200px' }}>
+    <div style={{ fontSize: '0.9rem', color: '#666' }}>Total Elements</div>
+    <div style={{ fontSize: '2rem', fontWeight: 'bold', color: '#1976d2' }}>0</div>
+    <div style={{ fontSize: '0.8rem', color: '#999' }}>Across 0 element sets</div>
   </div>
-
-  <div className="col-md-7 border rounded">
-    <div className="row my-2">
-      <div className="tptit">
-        <p>Multilingual Dictionary of Cataloguing Terms</p>
-      </div>
-
-      <div className="tpsor">
-        <p>Developed by the IFLA Working Groups</p>
-        <p>Approved by the IFLA Committee on Standards</p>
-        <p>Endorsed by the IFLA Professional Committee</p>
-      </div>
-
-      <div className="tppub">
-        <p>Published as an online resource by IFLA: International Federation of Library Associations and Institutions</p>
-        <p>First version: 2020</p>
-        <p>Current version: 2020</p>
-      </div>
-    </div>
+  <div style={{ background: '#f3e5f5', padding: '20px', borderRadius: '8px', flex: '1', minWidth: '200px' }}>
+    <div style={{ fontSize: '0.9rem', color: '#666' }}>Total Concepts</div>
+    <div style={{ fontSize: '2rem', fontWeight: 'bold', color: '#7b1fa2' }}>40</div>
+    <div style={{ fontSize: '0.8rem', color: '#999' }}>Across 1 vocabulary</div>
   </div>
 </div>
 
-<QuickStart
-  introductionPath="/docs/intro"
-  elementsPath="/docs/intro"
-  examplesPath="/docs/intro"
-/>
+## Vocabularies
 
-<DownloadPanel
-  pdfUrl="#"
-  ttlUrl="/muldicat/rdf/ttl/muldicat.ttl"
-  jsonLdUrl="/muldicat/rdf/jsonld/muldicat.jsonld"
-  xmlUrl="/muldicat/rdf/xml/muldicat.xml"
-/>
+This namespace contains one vocabulary with 40 concepts.
 
-*Added to this site: July 2020*
-
-<div className="row my-1 py-1 navISBDMMain text-center">
-  <p className="m-0 p-0">&#10058;<OutLink to="/siteMap" className="linkFooter">Site map</OutLink>&#10058;</p>
-  <div className="m-1 p-0">
-    <OutLink to="https://creativecommons.org/licenses/by/4.0/" className="me-1">
-      <Figure
-        src="img/cc0_by.png"
-        alt="Badge for Creative Commons Attribution 4.0 International license"
-        caption=""
-      />
-    </OutLink>
-    <p className="m-0">IFLA Working Groups (Main design and content editors).</p>
-  </div>
+<div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(300px, 1fr))', gap: '16px', marginBottom: '40px' }}>
+  <VocabularyCard 
+    vocabulary={{
+      id: 'muldicat',
+      title: 'Multilingual dictionary of cataloguing terms and concepts (MulDiCat)',
+      description: 'Terms for cataloguing and classification concepts, reflecting international agreements, intended to be used for authoritative translations of cataloguing standards and related documents of IFLA, the international Federation of Library Associations and Institutions.',
+      conceptCount: 40,
+      languages: ["Arabic","Bulgarian","Catalan","Czech","German","English","Spanish","Finnish","French","Croatian","Italian","Japanese","Korean","Lithuanian","Latvian","Polish","Portuguese","Russian","Slovak","Slovenian","Albanian","Serbian","Swedish","Thai","Vietnamese","Chinese"],
+      category: '',
+      url: 'https://www.iflastandards.info/muldicat/'
+    }}
+  />
 </div>

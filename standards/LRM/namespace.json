@@ -1,16 +1,16 @@
 {
-  "namespace": "lrm",
-  "namespaceTitle": "LRM - Library Reference Model",
-  "namespaceDescription": "Library Reference Model namespace",
-  "statistics": {
-    "totalElements": 117,
-    "totalConcepts": 0,
-    "elementSets": 1,
-    "vocabularies": 0
+  "id": "lrm",
+  "label": {
+    "en": "LRM - Library Reference Model"
   },
-  "elementSets": [
-    {
-      "id": "lrmer",
+  "description": {
+    "en": "Library Reference Model namespace"
+  },
+  "version": "1.0.0",
+  "created": "2025-07-18T09:54:06.469Z",
+  "modified": "2025-07-18T10:36:49.879Z",
+  "elementSets": {
+    "lrmer": {
       "title": "LRMer (IFLA Library Reference Model Entity Relationship)",
       "description": "IFLA LRM is a high-level conceptual reference model developed within an entity-relationship modelling framework. It is the consolidation of the separately developed IFLA conceptual models: FRBR, FRAD, FRSAD.\n\nIFLA LRM was developed to resolve inconsistencies between the three separate models. Every user task, entity, attribute and relationship from the original three models was examined, definitions had to be revised, but also some remodeling was required in order to develop a meaningful consolidation. The result is a single, streamlined, and logically consistent model that covers all aspects of bibliographic data and that at the same time brings the modelling up-to-date with current conceptual modelling practices.\n\nIFLA LRM was designed to be used in linked data environments and to support and promote the use of bibliographic data in linked data environments.",
       "elementCount": 117,
@@ -20,18 +20,5 @@
       "prefix": "lrmer",
       "url": "https://www.iflastandards.info/lrm/lrmer.html"
     }
-  ],
-  "vocabularies": [],
-  "features": {
-    "enableMultipleElementSets": false,
-    "enableVocabularyCategories": false,
-    "enableHierarchicalNavigation": false,
-    "enableSearch": true,
-    "enableCrossSetBrowsing": false,
-    "enableLanguageSwitching": false,
-    "enableBlog": true,
-    "enableRdfDownloads": true,
-    "enableRedirects": false
-  },
-  "navigationStrategy": "simple"
+  }
 }

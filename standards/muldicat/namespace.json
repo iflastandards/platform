@@ -1,17 +1,16 @@
 {
-  "namespace": "muldicat",
-  "namespaceTitle": "MulDiCat - Multilingual dictionary of cataloguing terms and concepts",
-  "namespaceDescription": "Multilingual dictionary of cataloguing terms and concepts namespace",
-  "statistics": {
-    "totalElements": 0,
-    "totalConcepts": 40,
-    "elementSets": 0,
-    "vocabularies": 1
+  "id": "muldicat",
+  "label": {
+    "en": "MulDiCat - Multilingual dictionary of cataloguing terms and concepts"
   },
-  "elementSets": [],
-  "vocabularies": [
-    {
-      "id": "muldicat",
+  "description": {
+    "en": "Multilingual dictionary of cataloguing terms and concepts namespace"
+  },
+  "version": "1.0.0",
+  "created": "2025-07-18T09:54:06.470Z",
+  "modified": "2025-07-18T10:36:49.881Z",
+  "vocabularies": {
+    "muldicat": {
       "title": "Multilingual dictionary of cataloguing terms and concepts (MulDiCat)",
       "description": "Terms for cataloguing and classification concepts, reflecting international agreements, intended to be used for authoritative translations of cataloguing standards and related documents of IFLA, the international Federation of Library Associations and Institutions.",
       "conceptCount": 40,
@@ -46,16 +45,5 @@
       "prefix": "muldicat",
       "url": "https://www.iflastandards.info/muldicat/"
     }
-  ],
-  "features": {
-    "enableMultipleElementSets": false,
-    "enableVocabularyCategories": false,
-    "enableHierarchicalNavigation": false,
-    "enableSearch": true,
-    "enableCrossSetBrowsing": false,
-    "enableLanguageSwitching": true,
-    "enableBlog": true,
-    "enableRdfDownloads": true
-  },
-  "navigationStrategy": "simple"
+  }
 }

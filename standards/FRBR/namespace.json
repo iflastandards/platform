@@ -1,16 +1,16 @@
 {
-  "namespace": "frbr",
-  "namespaceTitle": "FRBR - Functional Requirements for Bibliographic Records",
-  "namespaceDescription": "Functional Requirements for Bibliographic Records namespace",
-  "statistics": {
-    "totalElements": 573,
-    "totalConcepts": 8,
-    "elementSets": 6,
-    "vocabularies": 2
+  "id": "frbr",
+  "label": {
+    "en": "FRBR - Functional Requirements for Bibliographic Records"
   },
-  "elementSets": [
-    {
-      "id": "frad",
+  "description": {
+    "en": "Functional Requirements for Bibliographic Records namespace"
+  },
+  "version": "1.0.0",
+  "created": "2025-07-18T09:54:06.465Z",
+  "modified": "2025-07-18T10:36:49.876Z",
+  "elementSets": {
+    "frad": {
       "title": "FRAD model",
       "description": "This is the element set of native RDF classes and properties described in the Functional Requirements for Authority Data model. The model also uses elements previously described in the Functional Requirements for Bibliographic Records (FRBR) entity-relationship model.",
       "elementCount": 150,
@@ -20,8 +20,7 @@
       "prefix": "frad",
       "url": "https://www.iflastandards.info/fr/frad.html"
     },
-    {
-      "id": "frbrer",
+    "frbrer": {
       "title": "FRBRer model",
       "description": "This is the element set of native RDF classes and properties described in the current text (Feb 2009) of the Functional Requirements for Bibliographic Records (FRBR) entity-relationship model.",
       "elementCount": 216,
@@ -31,8 +30,7 @@
       "prefix": "frbrer",
       "url": "https://www.iflastandards.info/fr/frbr/frbrer.html"
     },
-    {
-      "id": "frbroo",
+    "frbroo": {
       "title": "FRBRoo model",
       "description": "Element set of the Functional Requirements for Bibliographic Records object-oriented extension to the the CIDOC Conceptual Reference Model (CRM)",
       "elementCount": 188,
@@ -42,8 +40,7 @@
       "prefix": "frbroo",
       "url": "https://www.iflastandards.info/fr/frbr/frbroo.html"
     },
-    {
-      "id": "frbsad",
+    "frbsad": {
       "title": "FRSAD model",
       "description": "This is the element set of native RDF classes and properties described in the Functional Requirements for Subject Authority Data model. The model also uses elements previously described in the Functional Requirements for Bibliographic Records (FRBR) entity-relationship model.",
       "elementCount": 19,
@@ -53,8 +50,7 @@
       "prefix": "frbsad",
       "url": "https://www.iflastandards.info/fr/frsad.html"
     },
-    {
-      "id": "frbrerusertask",
+    "frbrerusertask": {
       "title": "FRBRer User Tasks",
       "description": "Based on the current text, Feb 2009.",
       "elementCount": 0,
@@ -64,8 +60,7 @@
       "prefix": "frbrerusertask",
       "url": "https://www.iflastandards.info/fr/frbr/frbrer/frbrerusertask.html"
     },
-    {
-      "id": "frsadusertask",
+    "frsadusertask": {
       "title": "FRSAD User Tasks",
       "elementCount": 0,
       "languages": [
@@ -74,42 +69,28 @@
       "prefix": "frsadusertask",
       "url": "https://www.iflastandards.info/fr/frsad/frsadusertask.html"
     }
-  ],
-  "vocabularies": [
-    {
-      "id": "frbrerusertask",
-      "title": "FRBRer User Tasks",
-      "description": "Based on the current text, Feb 2009.",
-      "conceptCount": 4,
-      "languages": [
-        "English"
-      ],
-      "prefix": "frbrerusertask",
-      "category": "user-tasks",
-      "url": "https://www.iflastandards.info/fr/frbr/frbrer/frbrerusertask.html"
-    },
-    {
-      "id": "frsadusertask",
-      "title": "FRSAD User Tasks",
-      "conceptCount": 4,
-      "languages": [
-        "English"
-      ],
-      "prefix": "frsadusertask",
-      "category": "user-tasks",
-      "url": "https://www.iflastandards.info/fr/frsad/frsadusertask.html"
-    }
-  ],
-  "features": {
-    "enableMultipleElementSets": true,
-    "enableVocabularyCategories": true,
-    "enableHierarchicalNavigation": false,
-    "enableSearch": true,
-    "enableCrossSetBrowsing": true,
-    "enableLanguageSwitching": false,
-    "enableBlog": true,
-    "enableRdfDownloads": true,
-    "enableRedirects": false
   },
-  "navigationStrategy": "categorized"
+  "vocabularies": {
+    "frbrerusertask": {
+      "title": "FRBRer User Tasks",
+      "description": "Based on the current text, Feb 2009.",
+      "conceptCount": 4,
+      "languages": [
+        "English"
+      ],
+      "prefix": "frbrerusertask",
+      "category": "user-tasks",
+      "url": "https://www.iflastandards.info/fr/frbr/frbrer/frbrerusertask.html"
+    },
+    "frsadusertask": {
+      "title": "FRSAD User Tasks",
+      "conceptCount": 4,
+      "languages": [
+        "English"
+      ],
+      "prefix": "frsadusertask",
+      "category": "user-tasks",
+      "url": "https://www.iflastandards.info/fr/frsad/frsadusertask.html"
+    }
+  }
 }

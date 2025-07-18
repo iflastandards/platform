@@ -1,7 +1,7 @@
 {
   "namespace": "lrm",
-  "namespaceTitle": "LRM - Library Reference Model",
-  "namespaceDescription": "Library Reference Model namespace",
+  "title": "LRM - Library Reference Model",
+  "description": "Library Reference Model namespace",
   "statistics": {
     "totalElements": 117,
     "totalConcepts": 0,
@@ -22,16 +22,5 @@
     }
   ],
   "vocabularies": [],
-  "features": {
-    "enableMultipleElementSets": false,
-    "enableVocabularyCategories": false,
-    "enableHierarchicalNavigation": false,
-    "enableSearch": true,
-    "enableCrossSetBrowsing": false,
-    "enableLanguageSwitching": false,
-    "enableBlog": true,
-    "enableRdfDownloads": true,
-    "enableRedirects": false
-  },
   "navigationStrategy": "simple"
 }

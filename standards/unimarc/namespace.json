@@ -1,16 +1,16 @@
 {
-  "namespace": "unimarc",
-  "namespaceTitle": "UNIMARC - Universal MARC",
-  "namespaceDescription": "Universal MARC namespace",
-  "statistics": {
-    "totalElements": 6030,
-    "totalConcepts": 1582,
-    "elementSets": 49,
-    "vocabularies": 47
+  "id": "unimarc",
+  "label": {
+    "en": "UNIMARC - Universal MARC"
   },
-  "elementSets": [
-    {
-      "id": "ub0XX",
+  "description": {
+    "en": "Universal MARC namespace"
+  },
+  "version": "1.0.0",
+  "created": "2025-07-18T09:54:06.469Z",
+  "modified": "2025-07-18T10:36:49.880Z",
+  "elementSets": {
+    "ub0XX": {
       "title": "UNIMARC/B elements 0XX",
       "elementCount": 207,
       "languages": [
@@ -19,8 +19,7 @@
       "prefix": "ub0XX",
       "url": "https://www.iflastandards.info/unimarc/unimarcb/elements/0XX"
     },
-    {
-      "id": "ub1XX",
+    "ub1XX": {
       "title": "UNIMARC/B elements 1XX",
       "elementCount": 610,
       "languages": [
@@ -29,8 +28,7 @@
       "prefix": "ub1XX",
       "url": "https://www.iflastandards.info/unimarc/unimarcb/elements/1XX"
     },
-    {
-      "id": "ub2XX",
+    "ub2XX": {
       "title": "UNIMARC/B elements 2XX",
       "elementCount": 149,
       "languages": [
@@ -39,8 +37,7 @@
       "prefix": "ub2XX",
       "url": "https://www.iflastandards.info/unimarc/unimarcb/elements/2XX"
     },
-    {
-      "id": "ub3XX",
+    "ub3XX": {
       "title": "UNIMARC/B elements 3XX",
       "elementCount": 176,
       "languages": [
@@ -49,8 +46,7 @@
       "prefix": "ub3XX",
       "url": "https://www.iflastandards.info/unimarc/unimarcb/elements/3XX"
     },
-    {
-      "id": "ub41X",
+    "ub41X": {
       "title": "UNIMARC/B elements 41X",
       "elementCount": 200,
       "languages": [
@@ -59,8 +55,7 @@
       "prefix": "ub41X",
       "url": "https://www.iflastandards.info/unimarc/unimarcb/elements/41X"
     },
-    {
-      "id": "ub42X",
+    "ub42X": {
       "title": "UNIMARC/B elements 42X",
       "elementCount": 250,
       "languages": [
@@ -69,8 +64,7 @@
       "prefix": "ub42X",
       "url": "https://www.iflastandards.info/unimarc/unimarcb/elements/42X"
     },
-    {
-      "id": "ub43X",
+    "ub43X": {
       "title": "UNIMARC/B elements 43X",
       "elementCount": 400,
       "languages": [
@@ -79,8 +73,7 @@
       "prefix": "ub43X",
       "url": "https://www.iflastandards.info/unimarc/unimarcb/elements/43X"
     },
-    {
-      "id": "ub44X",
+    "ub44X": {
       "title": "UNIMARC/B elements 44X",
       "elementCount": 450,
       "languages": [
@@ -89,8 +82,7 @@
       "prefix": "ub44X",
       "url": "https://www.iflastandards.info/unimarc/unimarcb/elements/44X"
     },
-    {
-      "id": "ub45X",
+    "ub45X": {
       "title": "UNIMARC/B elements 45X",
       "elementCount": 300,
       "languages": [
@@ -99,8 +91,7 @@
       "prefix": "ub45X",
       "url": "https://www.iflastandards.info/unimarc/unimarcb/elements/45X"
     },
-    {
-      "id": "ub46X",
+    "ub46X": {
       "title": "UNIMARC/B elements 46X",
       "elementCount": 200,
       "languages": [
@@ -109,8 +100,7 @@
       "prefix": "ub46X",
       "url": "https://www.iflastandards.info/unimarc/unimarcb/elements/46X"
     },
-    {
-      "id": "ub47X",
+    "ub47X": {
       "title": "UNIMARC/B elements 47X",
       "elementCount": 50,
       "languages": [
@@ -119,8 +109,7 @@
       "prefix": "ub47X",
       "url": "https://www.iflastandards.info/unimarc/unimarcb/elements/47X"
     },
-    {
-      "id": "ub48X",
+    "ub48X": {
       "title": "UNIMARC/B elements 48X",
       "elementCount": 150,
       "languages": [
@@ -129,8 +118,7 @@
       "prefix": "ub48X",
       "url": "https://www.iflastandards.info/unimarc/unimarcb/elements/48X"
     },
-    {
-      "id": "ub5XX",
+    "ub5XX": {
       "title": "UNIMARC/B elements 5XX",
       "elementCount": 599,
       "languages": [
@@ -139,8 +127,7 @@
       "prefix": "ub5XX",
       "url": "https://www.iflastandards.info/unimarc/unimarcb/elements/5XX"
     },
-    {
-      "id": "ub60X",
+    "ub60X": {
       "title": "UNIMARC/B elements 60X",
       "elementCount": 196,
       "languages": [
@@ -149,8 +136,7 @@
       "prefix": "ub60X",
       "url": "https://www.iflastandards.info/unimarc/unimarcb/elements/60X"
     },
-    {
-      "id": "ub61X",
+    "ub61X": {
       "title": "UNIMARC/B elements 61X",
       "elementCount": 33,
       "languages": [
@@ -159,8 +145,7 @@
       "prefix": "ub61X",
       "url": "https://www.iflastandards.info/unimarc/unimarcb/elements/61X"
     },
-    {
-      "id": "ub62X",
+    "ub62X": {
       "title": "UNIMARC/B elements 62X",
       "elementCount": 780,
       "languages": [
@@ -169,8 +154,7 @@
       "prefix": "ub62X",
       "url": "https://www.iflastandards.info/unimarc/unimarcb/elements/62X"
     },
-    {
-      "id": "ub66X",
+    "ub66X": {
       "title": "UNIMARC/B elements 66X",
       "elementCount": 2,
       "languages": [
@@ -179,8 +163,7 @@
       "prefix": "ub66X",
       "url": "https://www.iflastandards.info/unimarc/unimarcb/elements/66X"
     },
-    {
-      "id": "ub67X",
+    "ub67X": {
       "title": "UNIMARC/B elements 67X",
       "elementCount": 12,
       "languages": [
@@ -189,8 +172,7 @@
       "prefix": "ub67X",
       "url": "https://www.iflastandards.info/unimarc/unimarcb/elements/67X"
     },
-    {
-      "id": "ub68X",
+    "ub68X": {
       "title": "UNIMARC/B elements 68X",
       "elementCount": 9,
       "languages": [
@@ -199,8 +181,7 @@
       "prefix": "ub68X",
       "url": "https://www.iflastandards.info/unimarc/unimarcb/elements/68X"
     },
-    {
-      "id": "ub7XX",
+    "ub7XX": {
       "title": "UNIMARC/B elements 7XX",
       "elementCount": 493,
       "languages": [
@@ -209,8 +190,7 @@
       "prefix": "ub7XX",
       "url": "https://www.iflastandards.info/unimarc/unimarcb/elements/7XX"
     },
-    {
-      "id": "ub801",
+    "ub801": {
       "title": "UNIMARC/B elements 801",
       "elementCount": 24,
       "languages": [
@@ -219,8 +199,7 @@
       "prefix": "ub801",
       "url": "https://www.iflastandards.info/unimarc/unimarcb/elements/801"
     },
-    {
-      "id": "ub802",
+    "ub802": {
       "title": "UNIMARC/B elements 802",
       "elementCount": 1,
       "languages": [
@@ -229,8 +208,7 @@
       "prefix": "ub802",
       "url": "https://www.iflastandards.info/unimarc/unimarcb/elements/802"
     },
-    {
-      "id": "ub830",
+    "ub830": {
       "title": "UNIMARC/B elements 830",
       "elementCount": 1,
       "languages": [
@@ -239,8 +217,7 @@
       "prefix": "ub830",
       "url": "https://www.iflastandards.info/unimarc/unimarcb/elements/830"
     },
-    {
-      "id": "ub850",
+    "ub850": {
       "title": "UNIMARC/B elements 850",
       "elementCount": 1,
       "languages": [
@@ -249,8 +226,7 @@
       "prefix": "ub850",
       "url": "https://www.iflastandards.info/unimarc/unimarcb/elements/850"
     },
-    {
-      "id": "ub856",
+    "ub856": {
       "title": "UNIMARC/B elements 856",
       "elementCount": 728,
       "languages": [
@@ -259,8 +235,7 @@
       "prefix": "ub856",
       "url": "https://www.iflastandards.info/unimarc/unimarcb/elements/856"
     },
-    {
-      "id": "ub886",
+    "ub886": {
       "title": "UNIMARC/B elements 886",
       "elementCount": 9,
       "languages": [
@@ -269,118 +244,7 @@
       "prefix": "ub886",
       "url": "https://www.iflastandards.info/unimarc/unimarcb/elements/886"
     },
-    {
-      "id": "altos",
-      "title": "UNIMARC: Cartographic materials: Altitude of sensor",
-      "description": "The altitude of the platform of an aerial photography or remote sensing sensor.",
-      "elementCount": 0,
-      "languages": [
-        "English"
-      ],
-      "prefix": "altos",
-      "url": "https://www.iflastandards.info/unimarc/terms/altos"
-    },
-    {
-      "id": "altos",
-      "title": "UNIMARC: Cartographic materials: Attitude of sensor",
-      "description": "The attitude of a sensed image resulting from the angle of an aerial photography or remote sensing sensor.",
-      "elementCount": 0,
-      "languages": [
-        "English"
-      ],
-      "prefix": "altos",
-      "url": "https://www.iflastandards.info/unimarc/terms/attos"
-    },
-    {
-      "id": "satcat",
-      "title": "UNIMARC: Cartographic materials: Category of satellite",
-      "description": "The category of satellite for a remote sensing image.",
-      "elementCount": 0,
-      "languages": [
-        "English"
-      ],
-      "prefix": "satcat",
-      "url": "https://www.iflastandards.info/unimarc/terms/satcat"
-    },
-    {
-      "id": "cartcha",
-      "title": "UNIMARC: Cartographic materials: Character",
-      "description": "The character of a cartographic Image.",
-      "elementCount": 0,
-      "languages": [
-        "English"
-      ],
-      "prefix": "cartcha",
-      "url": "https://www.iflastandards.info/unimarc/terms/cartcha"
-    },
-    {
-      "id": "cartcol",
-      "title": "UNIMARC: Cartographic materials: Colour indicator",
-      "description": "Indicator of the use of colour on a cartographic item.",
-      "elementCount": 0,
-      "languages": [
-        "English"
-      ],
-      "prefix": "cartcol",
-      "url": "https://www.iflastandards.info/unimarc/terms/cartcol"
-    },
-    {
-      "id": "cartfor",
-      "title": "UNIMARC: Cartographic materials: Form of item",
-      "description": "The form of a cartographic item,",
-      "elementCount": 0,
-      "languages": [
-        "English"
-      ],
-      "prefix": "cartfor",
-      "url": "https://www.iflastandards.info/unimarc/terms/cartfor"
-    },
-    {
-      "id": "cartpro",
-      "title": "UNIMARC: Cartographic materials: Map projection",
-      "description": "The type of map projection of a cartographic item.",
-      "elementCount": 0,
-      "languages": [
-        "English"
-      ],
-      "prefix": "cartpro",
-      "url": "https://www.iflastandards.info/unimarc/terms/cartpro"
-    },
-    {
-      "id": "altos",
-      "title": "UNIMARC: Cartographic materials: Name of satellite",
-      "description": "The name of the satellite for a remote sensing image.",
-      "elementCount": 0,
-      "languages": [
-        "English"
-      ],
-      "prefix": "altos",
-      "url": "https://www.iflastandards.info/unimarc/terms/satname"
-    },
-    {
-      "id": "altos",
-      "title": "UNIMARC: Cartographic materials: Planet",
-      "description": "The planet to which cartographic materials apply.",
-      "elementCount": 0,
-      "languages": [
-        "English"
-      ],
-      "prefix": "altos",
-      "url": "https://www.iflastandards.info/unimarc/terms/planet"
-    },
-    {
-      "id": "altos",
-      "title": "UNIMARC: Cartographic materials: Position of platform",
-      "description": "The position of the platform for a photographic or remote sensing image.",
-      "elementCount": 0,
-      "languages": [
-        "English"
-      ],
-      "prefix": "altos",
-      "url": "https://www.iflastandards.info/unimarc/terms/cartpop"
-    },
-    {
-      "id": "altos",
+    "altos": {
       "title": "UNIMARC: Cartographic materials: Presentation technique",
       "description": "Presentation technique for a photographic or non-photographic cartographic image.",
       "elementCount": 0,
@@ -390,8 +254,57 @@
       "prefix": "altos",
       "url": "https://www.iflastandards.info/unimarc/terms/cartprt"
     },
-    {
-      "id": "cartret",
+    "satcat": {
+      "title": "UNIMARC: Cartographic materials: Category of satellite",
+      "description": "The category of satellite for a remote sensing image.",
+      "elementCount": 0,
+      "languages": [
+        "English"
+      ],
+      "prefix": "satcat",
+      "url": "https://www.iflastandards.info/unimarc/terms/satcat"
+    },
+    "cartcha": {
+      "title": "UNIMARC: Cartographic materials: Character",
+      "description": "The character of a cartographic Image.",
+      "elementCount": 0,
+      "languages": [
+        "English"
+      ],
+      "prefix": "cartcha",
+      "url": "https://www.iflastandards.info/unimarc/terms/cartcha"
+    },
+    "cartcol": {
+      "title": "UNIMARC: Cartographic materials: Colour indicator",
+      "description": "Indicator of the use of colour on a cartographic item.",
+      "elementCount": 0,
+      "languages": [
+        "English"
+      ],
+      "prefix": "cartcol",
+      "url": "https://www.iflastandards.info/unimarc/terms/cartcol"
+    },
+    "cartfor": {
+      "title": "UNIMARC: Cartographic materials: Form of item",
+      "description": "The form of a cartographic item,",
+      "elementCount": 0,
+      "languages": [
+        "English"
+      ],
+      "prefix": "cartfor",
+      "url": "https://www.iflastandards.info/unimarc/terms/cartfor"
+    },
+    "cartpro": {
+      "title": "UNIMARC: Cartographic materials: Map projection",
+      "description": "The type of map projection of a cartographic item.",
+      "elementCount": 0,
+      "languages": [
+        "English"
+      ],
+      "prefix": "cartpro",
+      "url": "https://www.iflastandards.info/unimarc/terms/cartpro"
+    },
+    "cartret": {
       "title": "UNIMARC: Cartographic materials: Recording technique for remote sensing image",
       "description": "The recording technique for a remote sensing image.",
       "elementCount": 0,
@@ -401,8 +314,7 @@
       "prefix": "cartret",
       "url": "https://www.iflastandards.info/unimarc/terms/cartret"
     },
-    {
-      "id": "cartrel",
+    "cartrel": {
       "title": "UNIMARC: Cartographic materials: Relief",
       "description": "The type of relief of a cartographic item.",
       "elementCount": 0,
@@ -412,8 +324,7 @@
       "prefix": "cartrel",
       "url": "https://www.iflastandards.info/unimarc/terms/cartrel"
     },
-    {
-      "id": "carttos",
+    "carttos": {
       "title": "UNIMARC: Cartographic materials: Type of scale",
       "description": "The type of scale of a cartographic item.",
       "elementCount": 0,
@@ -423,8 +334,7 @@
       "prefix": "carttos",
       "url": "https://www.iflastandards.info/unimarc/terms/carttos"
     },
-    {
-      "id": "chm",
+    "chm": {
       "title": "UNIMARC: Church mode of musical work",
       "description": "The \"Gregorian\" church mode of a musical work.",
       "elementCount": 0,
@@ -434,8 +344,7 @@
       "prefix": "chm",
       "url": "https://www.iflastandards.info/unimarc/terms/chm"
     },
-    {
-      "id": "continuingfreq",
+    "continuingfreq": {
       "title": "UNIMARC: Continuing resources: Frequency of issue",
       "description": "The frequency of a  serial or continuing resource.",
       "elementCount": 0,
@@ -445,8 +354,7 @@
       "prefix": "continuingfreq",
       "url": "https://www.iflastandards.info/unimarc/terms/continuingfreq"
     },
-    {
-      "id": "elecsmd",
+    "elecsmd": {
       "title": "UNIMARC: Electronic resources: Specific material designation",
       "description": "The type of data carrier.",
       "elementCount": 0,
@@ -456,8 +364,7 @@
       "prefix": "elecsmd",
       "url": "https://www.iflastandards.info/unimarc/terms/elecsmd"
     },
-    {
-      "id": "fom",
+    "fom": {
       "title": "UNIMARC: Form of musical work",
       "description": "The form of a musical work.",
       "elementCount": 0,
@@ -484,8 +391,7 @@
       "prefix": "fom",
       "url": "https://www.iflastandards.info/unimarc/terms/fom"
     },
-    {
-      "id": "tos",
+    "tos": {
       "title": "UNIMARC: Format of notated music: Type of score",
       "description": "The type of music score.",
       "elementCount": 0,
@@ -495,8 +401,7 @@
       "prefix": "tos",
       "url": "https://www.iflastandards.info/unimarc/terms/tos"
     },
-    {
-      "id": "key",
+    "key": {
       "title": "UNIMARC: Key of musical work",
       "description": "The key of a musical work.",
       "elementCount": 0,
@@ -506,8 +411,7 @@
       "prefix": "key",
       "url": "https://www.iflastandards.info/unimarc/terms/key"
     },
-    {
-      "id": "mop",
+    "mop": {
       "title": "UNIMARC: Medium of performance",
       "description": "Instruments and/or voices, devices and other performers which make up a musical work.",
       "elementCount": 0,
@@ -532,8 +436,7 @@
       "prefix": "mop",
       "url": "https://www.iflastandards.info/unimarc/terms/mop"
     },
-    {
-      "id": "tac",
+    "tac": {
       "title": "UNIMARC: Target audience",
       "description": "Type of intended audience.",
       "elementCount": 0,
@@ -543,8 +446,7 @@
       "prefix": "tac",
       "url": "https://www.iflastandards.info/unimarc/terms/tac"
     },
-    {
-      "id": "ter",
+    "ter": {
       "title": "UNIMARC: Type of electronic resource",
       "description": "The type of data file.",
       "elementCount": 0,
@@ -555,274 +457,9 @@
       "prefix": "ter",
       "url": "https://www.iflastandards.info/unimarc/terms/ter"
     }
-  ],
-  "vocabularies": [
-    {
-      "id": "altos",
-      "title": "UNIMARC: Cartographic materials: Altitude of sensor",
-      "description": "The altitude of the platform of an aerial photography or remote sensing sensor.",
-      "conceptCount": 3,
-      "languages": [
-        "English"
-      ],
-      "prefix": "altos",
-      "category": "cartographic",
-      "url": "https://www.iflastandards.info/unimarc/terms/altos"
-    },
-    {
-      "id": "altos",
-      "title": "UNIMARC: Cartographic materials: Attitude of sensor",
-      "description": "The attitude of a sensed image resulting from the angle of an aerial photography or remote sensing sensor.",
-      "conceptCount": 3,
-      "languages": [
-        "English"
-      ],
-      "prefix": "altos",
-      "category": "cartographic",
-      "url": "https://www.iflastandards.info/unimarc/terms/attos"
-    },
-    {
-      "id": "satcat",
-      "title": "UNIMARC: Cartographic materials: Category of satellite",
-      "description": "The category of satellite for a remote sensing image.",
-      "conceptCount": 3,
-      "languages": [
-        "English"
-      ],
-      "prefix": "satcat",
-      "category": "cartographic",
-      "url": "https://www.iflastandards.info/unimarc/terms/satcat"
-    },
-    {
-      "id": "cartcha",
-      "title": "UNIMARC: Cartographic materials: Character",
-      "description": "The character of a cartographic Image.",
-      "conceptCount": 3,
-      "languages": [
-        "English"
-      ],
-      "prefix": "cartcha",
-      "category": "cartographic",
-      "url": "https://www.iflastandards.info/unimarc/terms/cartcha"
-    },
-    {
-      "id": "cartcol",
-      "title": "UNIMARC: Cartographic materials: Colour indicator",
-      "description": "Indicator of the use of colour on a cartographic item.",
-      "conceptCount": 2,
-      "languages": [
-        "English"
-      ],
-      "prefix": "cartcol",
-      "category": "cartographic",
-      "url": "https://www.iflastandards.info/unimarc/terms/cartcol"
-    },
-    {
-      "id": "cartfor",
-      "title": "UNIMARC: Cartographic materials: Form of item",
-      "description": "The form of a cartographic item,",
-      "conceptCount": 11,
-      "languages": [
-        "English"
-      ],
-      "prefix": "cartfor",
-      "category": "cartographic",
-      "url": "https://www.iflastandards.info/unimarc/terms/cartfor"
-    },
-    {
-      "id": "cartpro",
-      "title": "UNIMARC: Cartographic materials: Map projection",
-      "description": "The type of map projection of a cartographic item.",
-      "conceptCount": 47,
-      "languages": [
-        "English"
-      ],
-      "prefix": "cartpro",
-      "category": "cartographic",
-      "url": "https://www.iflastandards.info/unimarc/terms/cartpro"
-    },
-    {
-      "id": "altos",
-      "title": "UNIMARC: Cartographic materials: Name of satellite",
-      "description": "The name of the satellite for a remote sensing image.",
-      "conceptCount": 14,
-      "languages": [
-        "English"
-      ],
-      "prefix": "altos",
-      "category": "cartographic",
-      "url": "https://www.iflastandards.info/unimarc/terms/satname"
-    },
-    {
-      "id": "altos",
-      "title": "UNIMARC: Cartographic materials: Planet",
-      "description": "The planet to which cartographic materials apply.",
-      "conceptCount": 10,
-      "languages": [
-        "English"
-      ],
-      "prefix": "altos",
-      "category": "cartographic",
-      "url": "https://www.iflastandards.info/unimarc/terms/planet"
-    },
-    {
-      "id": "altos",
-      "title": "UNIMARC: Cartographic materials: Position of platform",
-      "description": "The position of the platform for a photographic or remote sensing image.",
-      "conceptCount": 3,
-      "languages": [
-        "English"
-      ],
-      "prefix": "altos",
-      "category": "cartographic",
-      "url": "https://www.iflastandards.info/unimarc/terms/cartpop"
-    },
-    {
-      "id": "altos",
-      "title": "UNIMARC: Cartographic materials: Presentation technique",
-      "description": "Presentation technique for a photographic or non-photographic cartographic image.",
-      "conceptCount": 22,
-      "languages": [
-        "English"
-      ],
-      "prefix": "altos",
-      "category": "cartographic",
-      "url": "https://www.iflastandards.info/unimarc/terms/cartprt"
-    },
-    {
-      "id": "cartret",
-      "title": "UNIMARC: Cartographic materials: Recording technique for remote sensing image",
-      "description": "The recording technique for a remote sensing image.",
-      "conceptCount": 10,
-      "languages": [
-        "English"
-      ],
-      "prefix": "cartret",
-      "category": "cartographic",
-      "url": "https://www.iflastandards.info/unimarc/terms/cartret"
-    },
-    {
-      "id": "cartrel",
-      "title": "UNIMARC: Cartographic materials: Relief",
-      "description": "The type of relief of a cartographic item.",
-      "conceptCount": 13,
-      "languages": [
-        "English"
-      ],
-      "prefix": "cartrel",
-      "category": "cartographic",
-      "url": "https://www.iflastandards.info/unimarc/terms/cartrel"
-    },
-    {
-      "id": "carttos",
-      "title": "UNIMARC: Cartographic materials: Type of scale",
-      "description": "The type of scale of a cartographic item.",
-      "conceptCount": 3,
-      "languages": [
-        "English"
-      ],
-      "prefix": "carttos",
-      "category": "cartographic",
-      "url": "https://www.iflastandards.info/unimarc/terms/carttos"
-    },
-    {
-      "id": "graphicsfd",
-      "title": "UNIMARC: Graphics: Functional designation",
-      "description": "The functional form of the graphics item.",
-      "conceptCount": 18,
-      "languages": [
-        "English"
-      ],
-      "prefix": "graphicsfd",
-      "category": "graphics",
-      "url": "https://www.iflastandards.info/unimarc/terms/graphicsfd"
-    },
-    {
-      "id": "altos",
-      "title": "UNIMARC: Graphics: Primary support material",
-      "description": "The type of material used for the primary support (i.e., the support or base on which an image is printed or executed) of a non-projected graphic.",
-      "conceptCount": 7,
-      "languages": [
-        "English"
-      ],
-      "prefix": "altos",
-      "category": "graphics",
-      "url": "https://www.iflastandards.info/unimarc/terms/graphicspsm"
-    },
-    {
-      "id": "graphicssmd",
-      "title": "UNIMARC: Graphics: Specific material designation",
-      "description": "The specific material designation that describes the special class of material (usually  the class of physical object) to which the non-projected graphic item belongs.",
-      "conceptCount": 11,
-      "languages": [
-        "English"
-      ],
-      "prefix": "graphicssmd",
-      "category": "graphics",
-      "url": "https://www.iflastandards.info/unimarc/terms/graphicssmd"
-    },
-    {
-      "id": "altos",
-      "title": "UNIMARC: Graphics: Technique (prints)",
-      "description": "The technique in which prints are executed.",
-      "conceptCount": 29,
-      "languages": [
-        "English"
-      ],
-      "prefix": "altos",
-      "category": "graphics",
-      "url": "https://www.iflastandards.info/unimarc/terms/graphicstp"
-    },
-    {
-      "id": "graphicstd",
-      "title": "UNIMARC: Graphics: Techniques (drawings, paintings)",
-      "description": "The technique in which drawing and paintings are executed.",
-      "conceptCount": 30,
-      "languages": [
-        "English"
-      ],
-      "prefix": "graphicstd",
-      "category": "graphics",
-      "url": "https://www.iflastandards.info/unimarc/terms/graphicstd"
-    },
-    {
-      "id": "altos",
-      "title": "UNIMARC: Sound recordings: Accompanying textual material",
-      "description": "The contents of programme notes and other accompanying text of a sound recording.",
-      "conceptCount": 15,
-      "languages": [
-        "English"
-      ],
-      "prefix": "altos",
-      "category": "sound-recordings",
-      "url": "https://www.iflastandards.info/unimarc/terms/soundatm"
-    },
-    {
-      "id": "altos",
-      "title": "UNIMARC: Sound recordings: Dimensions",
-      "description": "The diameter of an open reel tape or a disc, or the dimensions of a cassette, cartridge or cylinder form of sound recording.",
-      "conceptCount": 14,
-      "languages": [
-        "English"
-      ],
-      "prefix": "altos",
-      "category": "sound-recordings",
-      "url": "https://www.iflastandards.info/unimarc/terms/sounddim"
-    },
-    {
-      "id": "altos",
-      "title": "UNIMARC: Sound recordings: Form of release",
-      "description": "The form of release of a sound recording.",
-      "conceptCount": 9,
-      "languages": [
-        "English"
-      ],
-      "prefix": "altos",
-      "category": "sound-recordings",
-      "url": "https://www.iflastandards.info/unimarc/terms/soundfor"
-    },
-    {
-      "id": "altos",
+  },
+  "vocabularies": {
+    "altos": {
       "title": "UNIMARC: Sound recordings: Groove width",
       "description": "The width of the grooves on sound recording discs.",
       "conceptCount": 5,
@@ -833,8 +470,128 @@
       "category": "sound-recordings",
       "url": "https://www.iflastandards.info/unimarc/terms/soundgrw"
     },
-    {
-      "id": "soundcut",
+    "satcat": {
+      "title": "UNIMARC: Cartographic materials: Category of satellite",
+      "description": "The category of satellite for a remote sensing image.",
+      "conceptCount": 3,
+      "languages": [
+        "English"
+      ],
+      "prefix": "satcat",
+      "category": "cartographic",
+      "url": "https://www.iflastandards.info/unimarc/terms/satcat"
+    },
+    "cartcha": {
+      "title": "UNIMARC: Cartographic materials: Character",
+      "description": "The character of a cartographic Image.",
+      "conceptCount": 3,
+      "languages": [
+        "English"
+      ],
+      "prefix": "cartcha",
+      "category": "cartographic",
+      "url": "https://www.iflastandards.info/unimarc/terms/cartcha"
+    },
+    "cartcol": {
+      "title": "UNIMARC: Cartographic materials: Colour indicator",
+      "description": "Indicator of the use of colour on a cartographic item.",
+      "conceptCount": 2,
+      "languages": [
+        "English"
+      ],
+      "prefix": "cartcol",
+      "category": "cartographic",
+      "url": "https://www.iflastandards.info/unimarc/terms/cartcol"
+    },
+    "cartfor": {
+      "title": "UNIMARC: Cartographic materials: Form of item",
+      "description": "The form of a cartographic item,",
+      "conceptCount": 11,
+      "languages": [
+        "English"
+      ],
+      "prefix": "cartfor",
+      "category": "cartographic",
+      "url": "https://www.iflastandards.info/unimarc/terms/cartfor"
+    },
+    "cartpro": {
+      "title": "UNIMARC: Cartographic materials: Map projection",
+      "description": "The type of map projection of a cartographic item.",
+      "conceptCount": 47,
+      "languages": [
+        "English"
+      ],
+      "prefix": "cartpro",
+      "category": "cartographic",
+      "url": "https://www.iflastandards.info/unimarc/terms/cartpro"
+    },
+    "cartret": {
+      "title": "UNIMARC: Cartographic materials: Recording technique for remote sensing image",
+      "description": "The recording technique for a remote sensing image.",
+      "conceptCount": 10,
+      "languages": [
+        "English"
+      ],
+      "prefix": "cartret",
+      "category": "cartographic",
+      "url": "https://www.iflastandards.info/unimarc/terms/cartret"
+    },
+    "cartrel": {
+      "title": "UNIMARC: Cartographic materials: Relief",
+      "description": "The type of relief of a cartographic item.",
+      "conceptCount": 13,
+      "languages": [
+        "English"
+      ],
+      "prefix": "cartrel",
+      "category": "cartographic",
+      "url": "https://www.iflastandards.info/unimarc/terms/cartrel"
+    },
+    "carttos": {
+      "title": "UNIMARC: Cartographic materials: Type of scale",
+      "description": "The type of scale of a cartographic item.",
+      "conceptCount": 3,
+      "languages": [
+        "English"
+      ],
+      "prefix": "carttos",
+      "category": "cartographic",
+      "url": "https://www.iflastandards.info/unimarc/terms/carttos"
+    },
+    "graphicsfd": {
+      "title": "UNIMARC: Graphics: Functional designation",
+      "description": "The functional form of the graphics item.",
+      "conceptCount": 18,
+      "languages": [
+        "English"
+      ],
+      "prefix": "graphicsfd",
+      "category": "graphics",
+      "url": "https://www.iflastandards.info/unimarc/terms/graphicsfd"
+    },
+    "graphicssmd": {
+      "title": "UNIMARC: Graphics: Specific material designation",
+      "description": "The specific material designation that describes the special class of material (usually  the class of physical object) to which the non-projected graphic item belongs.",
+      "conceptCount": 11,
+      "languages": [
+        "English"
+      ],
+      "prefix": "graphicssmd",
+      "category": "graphics",
+      "url": "https://www.iflastandards.info/unimarc/terms/graphicssmd"
+    },
+    "graphicstd": {
+      "title": "UNIMARC: Graphics: Techniques (drawings, paintings)",
+      "description": "The technique in which drawing and paintings are executed.",
+      "conceptCount": 30,
+      "languages": [
+        "English"
+      ],
+      "prefix": "graphicstd",
+      "category": "graphics",
+      "url": "https://www.iflastandards.info/unimarc/terms/graphicstd"
+    },
+    "soundcut": {
       "title": "UNIMARC: Sound recordings: Kind of cutting",
       "description": "The kind of cutting of a sound recording disk or cylinder.",
       "conceptCount": 4,
@@ -845,8 +602,7 @@
       "category": "sound-recordings",
       "url": "https://www.iflastandards.info/unimarc/terms/soundcut"
     },
-    {
-      "id": "soundmod",
+    "soundmod": {
       "title": "UNIMARC: Sound recordings: Kind of sound",
       "description": "The recording mode of a sound recording,",
       "conceptCount": 5,
@@ -857,8 +613,7 @@
       "category": "sound-recordings",
       "url": "https://www.iflastandards.info/unimarc/terms/soundmod"
     },
-    {
-      "id": "soundtec",
+    "soundtec": {
       "title": "UNIMARC: Sound recordings: Recording technique",
       "description": "The recording technique of a sound recording.",
       "conceptCount": 5,
@@ -869,8 +624,7 @@
       "category": "sound-recordings",
       "url": "https://www.iflastandards.info/unimarc/terms/soundtec"
     },
-    {
-      "id": "soundrep",
+    "soundrep": {
       "title": "UNIMARC: Sound recordings: Special reproduction characteristics",
       "description": "The reproduction characteristics of a sound recording.",
       "conceptCount": 11,
@@ -881,8 +635,7 @@
       "category": "sound-recordings",
       "url": "https://www.iflastandards.info/unimarc/terms/soundrep"
     },
-    {
-      "id": "soundspe",
+    "soundspe": {
       "title": "UNIMARC: Sound recordings: Speed",
       "description": "The speed of a sound recording.",
       "conceptCount": 19,
@@ -893,8 +646,7 @@
       "category": "sound-recordings",
       "url": "https://www.iflastandards.info/unimarc/terms/soundspe"
     },
-    {
-      "id": "soundtac",
+    "soundtac": {
       "title": "UNIMARC: Sound recordings: Tape configuration",
       "description": "The tape configuration of a sound recording.",
       "conceptCount": 11,
@@ -905,8 +657,7 @@
       "category": "sound-recordings",
       "url": "https://www.iflastandards.info/unimarc/terms/soundtac"
     },
-    {
-      "id": "soundtaw",
+    "soundtaw": {
       "title": "UNIMARC: Sound recordings: Tape width",
       "description": "The width of a tape of a sound recording.",
       "conceptCount": 9,
@@ -917,8 +668,7 @@
       "category": "sound-recordings",
       "url": "https://www.iflastandards.info/unimarc/terms/soundtaw"
     },
-    {
-      "id": "soundtyp",
+    "soundtyp": {
       "title": "UNIMARC: Sound recordings: Type of recording",
       "description": "The type of sound recording disc, cylinder or tape.",
       "conceptCount": 11,
@@ -929,8 +679,7 @@
       "category": "sound-recordings",
       "url": "https://www.iflastandards.info/unimarc/terms/soundtyp"
     },
-    {
-      "id": "chm",
+    "chm": {
       "title": "UNIMARC: Church mode of musical work",
       "description": "The \"Gregorian\" church mode of a musical work.",
       "conceptCount": 13,
@@ -940,8 +689,7 @@
       "prefix": "chm",
       "url": "https://www.iflastandards.info/unimarc/terms/chm"
     },
-    {
-      "id": "continuingfreq",
+    "continuingfreq": {
       "title": "UNIMARC: Continuing resources: Frequency of issue",
       "description": "The frequency of a  serial or continuing resource.",
       "conceptCount": 19,
@@ -951,8 +699,7 @@
       "prefix": "continuingfreq",
       "url": "https://www.iflastandards.info/unimarc/terms/continuingfreq"
     },
-    {
-      "id": "elecsmd",
+    "elecsmd": {
       "title": "UNIMARC: Electronic resources: Specific material designation",
       "description": "The type of data carrier.",
       "conceptCount": 11,
@@ -963,8 +710,7 @@
       "category": "electronic-resources",
       "url": "https://www.iflastandards.info/unimarc/terms/elecsmd"
     },
-    {
-      "id": "fom",
+    "fom": {
       "title": "UNIMARC: Form of musical work",
       "description": "The form of a musical work.",
       "conceptCount": 607,
@@ -991,8 +737,7 @@
       "prefix": "fom",
       "url": "https://www.iflastandards.info/unimarc/terms/fom"
     },
-    {
-      "id": "tos",
+    "tos": {
       "title": "UNIMARC: Format of notated music: Type of score",
       "description": "The type of music score.",
       "conceptCount": 19,
@@ -1002,8 +747,7 @@
       "prefix": "tos",
       "url": "https://www.iflastandards.info/unimarc/terms/tos"
     },
-    {
-      "id": "key",
+    "key": {
       "title": "UNIMARC: Key of musical work",
       "description": "The key of a musical work.",
       "conceptCount": 31,
@@ -1013,8 +757,7 @@
       "prefix": "key",
       "url": "https://www.iflastandards.info/unimarc/terms/key"
     },
-    {
-      "id": "mop",
+    "mop": {
       "title": "UNIMARC: Medium of performance",
       "description": "Instruments and/or voices, devices and other performers which make up a musical work.",
       "conceptCount": 392,
@@ -1039,8 +782,7 @@
       "prefix": "mop",
       "url": "https://www.iflastandards.info/unimarc/terms/mop"
     },
-    {
-      "id": "tac",
+    "tac": {
       "title": "UNIMARC: Target audience",
       "description": "Type of intended audience.",
       "conceptCount": 8,
@@ -1050,8 +792,7 @@
       "prefix": "tac",
       "url": "https://www.iflastandards.info/unimarc/terms/tac"
     },
-    {
-      "id": "ter",
+    "ter": {
       "title": "UNIMARC: Type of electronic resource",
       "description": "The type of data file.",
       "conceptCount": 13,
@@ -1063,8 +804,7 @@
       "category": "electronic-resources",
       "url": "https://www.iflastandards.info/unimarc/terms/ter"
     },
-    {
-      "id": "3dmat",
+    "3dmat": {
       "title": "UNIMARC: Three-dimensional artefacts and realia: Material",
       "description": "The type of material a three-dimensional artefact or realia is made of.",
       "conceptCount": 28,
@@ -1075,8 +815,7 @@
       "category": "3d-materials",
       "url": "https://www.iflastandards.info/unimarc/terms/3dmat"
     },
-    {
-      "id": "3dsmd",
+    "3dsmd": {
       "title": "UNIMARC: Three-dimensional artefacts and realia: Specific material designation",
       "description": "The specific material designation that describes the special class of material (usually the class of physical object) to which the three-dimensional artefact or realis item belongs.",
       "conceptCount": 34,
@@ -1087,8 +826,7 @@
       "category": "3d-materials",
       "url": "https://www.iflastandards.info/unimarc/terms/3dsmd"
     },
-    {
-      "id": "visacc",
+    "visacc": {
       "title": "UNIMARC: Visual projections, etc.: Accompanying material",
       "description": "The types of material that accompany a visual projection, videorecording, or motion picture.",
       "conceptCount": 9,
@@ -1099,8 +837,7 @@
       "category": "visual-projections",
       "url": "https://www.iflastandards.info/unimarc/terms/visacc"
     },
-    {
-      "id": "viscol",
+    "viscol": {
       "title": "UNIMARC: Visual projections, etc.: Colour",
       "description": "The colour characteristics of a visual projection, videorecording, or motion picture.",
       "conceptCount": 5,
@@ -1111,8 +848,7 @@
       "category": "visual-projections",
       "url": "https://www.iflastandards.info/unimarc/terms/viscol"
     },
-    {
-      "id": "visfov",
+    "visfov": {
       "title": "UNIMARC: Visual projections, etc.: Form of release - videorecording",
       "conceptCount": 7,
       "languages": [
@@ -1122,8 +858,7 @@
       "category": "visual-projections",
       "url": "https://www.iflastandards.info/unimarc/terms/visfov"
     },
-    {
-      "id": "visfor",
+    "visfor": {
       "title": "UNIMARC: Visual projections, etc.: Form of release - visual projection, motion picture",
       "description": "The form of release of a visual projection or motion picture.",
       "conceptCount": 14,
@@ -1134,8 +869,7 @@
       "category": "visual-projections",
       "url": "https://www.iflastandards.info/unimarc/terms/visfor"
     },
-    {
-      "id": "vismfs",
+    "vismfs": {
       "title": "UNIMARC: Visual projections, etc.: Media for sound",
       "description": "The medium used to carry the sound, when sound is present, of a visual projection, videorecording, or motion picture.",
       "conceptCount": 12,
@@ -1146,16 +880,5 @@
       "category": "sound-recordings",
       "url": "https://www.iflastandards.info/unimarc/terms/vismfs"
     }
-  ],
-  "features": {
-    "enableMultipleElementSets": true,
-    "enableVocabularyCategories": true,
-    "enableHierarchicalNavigation": true,
-    "enableSearch": true,
-    "enableCrossSetBrowsing": true,
-    "enableLanguageSwitching": true,
-    "enableBlog": true,
-    "enableRdfDownloads": true
-  },
-  "navigationStrategy": "hierarchical"
+  }
 }

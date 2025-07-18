@@ -1,0 +1,73 @@
+{
+  "generatedAt": "2025-07-18T10:36:49.899Z",
+  "generationTime": 26,
+  "summary": {
+    "totalSites": 5,
+    "successfulSites": 5,
+    "failedSites": 0,
+    "skippedSites": 0
+  },
+  "sites": [
+    {
+      "namespace": "frbr",
+      "title": "FRBR - Functional Requirements for Bibliographic Records",
+      "statistics": {
+        "totalElements": 573,
+        "totalConcepts": 8,
+        "elementSets": 6,
+        "vocabularies": 2
+      },
+      "navigationStrategy": "categorized",
+      "status": "success"
+    },
+    {
+      "namespace": "isbd",
+      "title": "ISBD - International Standard Bibliographic Description",
+      "statistics": {
+        "totalElements": 353,
+        "totalConcepts": 46,
+        "elementSets": 2,
+        "vocabularies": 7
+      },
+      "navigationStrategy": "categorized",
+      "status": "success"
+    },
+    {
+      "namespace": "lrm",
+      "title": "LRM - Library Reference Model",
+      "statistics": {
+        "totalElements": 117,
+        "totalConcepts": 0,
+        "elementSets": 1,
+        "vocabularies": 0
+      },
+      "navigationStrategy": "simple",
+      "status": "success"
+    },
+    {
+      "namespace": "unimarc",
+      "title": "UNIMARC - Universal MARC",
+      "statistics": {
+        "totalElements": 6030,
+        "totalConcepts": 1582,
+        "elementSets": 49,
+        "vocabularies": 47
+      },
+      "navigationStrategy": "hierarchical",
+      "status": "success"
+    },
+    {
+      "namespace": "muldicat",
+      "title": "MulDiCat - Multilingual dictionary of cataloguing terms and concepts",
+      "statistics": {
+        "totalElements": 0,
+        "totalConcepts": 40,
+        "elementSets": 0,
+        "vocabularies": 1
+      },
+      "navigationStrategy": "simple",
+      "status": "success"
+    }
+  ],
+  "errors": []
+}

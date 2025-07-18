@@ -1,7 +1,7 @@
 {
   "namespace": "unimarc",
-  "namespaceTitle": "UNIMARC - Universal MARC",
-  "namespaceDescription": "Universal MARC namespace",
+  "title": "UNIMARC - Universal MARC",
+  "description": "Universal MARC namespace",
   "statistics": {
     "totalElements": 6030,
     "totalConcepts": 1582,
@@ -938,6 +938,7 @@
         "English"
       ],
       "prefix": "chm",
+      "category": "music",
       "url": "https://www.iflastandards.info/unimarc/terms/chm"
     },
     {
@@ -949,6 +950,7 @@
         "English"
       ],
       "prefix": "continuingfreq",
+      "category": "continuing-resources",
       "url": "https://www.iflastandards.info/unimarc/terms/continuingfreq"
     },
     {
@@ -989,6 +991,7 @@
         "Swedish"
       ],
       "prefix": "fom",
+      "category": "music",
       "url": "https://www.iflastandards.info/unimarc/terms/fom"
     },
     {
@@ -1000,6 +1003,7 @@
         "English"
       ],
       "prefix": "tos",
+      "category": "music",
       "url": "https://www.iflastandards.info/unimarc/terms/tos"
     },
     {
@@ -1011,6 +1015,7 @@
         "English"
       ],
       "prefix": "key",
+      "category": "music",
       "url": "https://www.iflastandards.info/unimarc/terms/key"
     },
     {
@@ -1072,7 +1077,7 @@
         "English"
       ],
       "prefix": "3dmat",
-      "category": "3d-materials",
+      "category": "three-dimensional",
       "url": "https://www.iflastandards.info/unimarc/terms/3dmat"
     },
     {
@@ -1084,7 +1089,7 @@
         "English"
       ],
       "prefix": "3dsmd",
-      "category": "3d-materials",
+      "category": "three-dimensional",
       "url": "https://www.iflastandards.info/unimarc/terms/3dsmd"
     },
     {
@@ -1147,15 +1152,5 @@
       "url": "https://www.iflastandards.info/unimarc/terms/vismfs"
     }
   ],
-  "features": {
-    "enableMultipleElementSets": true,
-    "enableVocabularyCategories": true,
-    "enableHierarchicalNavigation": true,
-    "enableSearch": true,
-    "enableCrossSetBrowsing": true,
-    "enableLanguageSwitching": true,
-    "enableBlog": true,
-    "enableRdfDownloads": true
-  },
   "navigationStrategy": "hierarchical"
 }
