@@ -73,11 +73,11 @@ const sidebars: SidebarsConfig = {
       "items": [
         {
           "type": "doc",
-          "id": "vocabularies/frbrerusertask/index"
+          "id": "vocabularies/frbrerusertask"
         },
         {
           "type": "doc",
-          "id": "vocabularies/frsadusertask/index"
+          "id": "vocabularies/frsadusertask"
         }
       ]
     },

@@ -273,59 +273,59 @@ const sidebars: SidebarsConfig = {
           "items": [
             {
               "type": "doc",
-              "id": "vocabularies/altos/index"
+              "id": "vocabularies/altos"
             },
             {
               "type": "doc",
-              "id": "vocabularies/altos/index"
+              "id": "vocabularies/altos"
             },
             {
               "type": "doc",
-              "id": "vocabularies/satcat/index"
+              "id": "vocabularies/satcat"
             },
             {
               "type": "doc",
-              "id": "vocabularies/cartcha/index"
+              "id": "vocabularies/cartcha"
             },
             {
               "type": "doc",
-              "id": "vocabularies/cartcol/index"
+              "id": "vocabularies/cartcol"
             },
             {
               "type": "doc",
-              "id": "vocabularies/cartfor/index"
+              "id": "vocabularies/cartfor"
             },
             {
               "type": "doc",
-              "id": "vocabularies/cartpro/index"
+              "id": "vocabularies/cartpro"
             },
             {
               "type": "doc",
-              "id": "vocabularies/altos/index"
+              "id": "vocabularies/altos"
             },
             {
               "type": "doc",
-              "id": "vocabularies/altos/index"
+              "id": "vocabularies/altos"
             },
             {
               "type": "doc",
-              "id": "vocabularies/altos/index"
+              "id": "vocabularies/altos"
             },
             {
               "type": "doc",
-              "id": "vocabularies/altos/index"
+              "id": "vocabularies/altos"
             },
             {
               "type": "doc",
-              "id": "vocabularies/cartret/index"
+              "id": "vocabularies/cartret"
             },
             {
               "type": "doc",
-              "id": "vocabularies/cartrel/index"
+              "id": "vocabularies/cartrel"
             },
             {
               "type": "doc",
-              "id": "vocabularies/carttos/index"
+              "id": "vocabularies/carttos"
             }
           ]
         },
@@ -335,23 +335,23 @@ const sidebars: SidebarsConfig = {
           "items": [
             {
               "type": "doc",
-              "id": "vocabularies/graphicsfd/index"
+              "id": "vocabularies/graphicsfd"
             },
             {
               "type": "doc",
-              "id": "vocabularies/altos/index"
+              "id": "vocabularies/altos"
             },
             {
               "type": "doc",
-              "id": "vocabularies/graphicssmd/index"
+              "id": "vocabularies/graphicssmd"
             },
             {
               "type": "doc",
-              "id": "vocabularies/altos/index"
+              "id": "vocabularies/altos"
             },
             {
               "type": "doc",
-              "id": "vocabularies/graphicstd/index"
+              "id": "vocabularies/graphicstd"
             }
           ]
         },
@@ -361,55 +361,55 @@ const sidebars: SidebarsConfig = {
           "items": [
             {
               "type": "doc",
-              "id": "vocabularies/altos/index"
+              "id": "vocabularies/altos"
             },
             {
               "type": "doc",
-              "id": "vocabularies/altos/index"
+              "id": "vocabularies/altos"
             },
             {
               "type": "doc",
-              "id": "vocabularies/altos/index"
+              "id": "vocabularies/altos"
             },
             {
               "type": "doc",
-              "id": "vocabularies/altos/index"
+              "id": "vocabularies/altos"
             },
             {
               "type": "doc",
-              "id": "vocabularies/soundcut/index"
+              "id": "vocabularies/soundcut"
             },
             {
               "type": "doc",
-              "id": "vocabularies/soundmod/index"
+              "id": "vocabularies/soundmod"
             },
             {
               "type": "doc",
-              "id": "vocabularies/soundtec/index"
+              "id": "vocabularies/soundtec"
             },
             {
               "type": "doc",
-              "id": "vocabularies/soundrep/index"
+              "id": "vocabularies/soundrep"
             },
             {
               "type": "doc",
-              "id": "vocabularies/soundspe/index"
+              "id": "vocabularies/soundspe"
             },
             {
               "type": "doc",
-              "id": "vocabularies/soundtac/index"
+              "id": "vocabularies/soundtac"
             },
             {
               "type": "doc",
-              "id": "vocabularies/soundtaw/index"
+              "id": "vocabularies/soundtaw"
             },
             {
               "type": "doc",
-              "id": "vocabularies/soundtyp/index"
+              "id": "vocabularies/soundtyp"
             },
             {
               "type": "doc",
-              "id": "vocabularies/vismfs/index"
+              "id": "vocabularies/vismfs"
             }
           ]
         },
@@ -419,31 +419,31 @@ const sidebars: SidebarsConfig = {
           "items": [
             {
               "type": "doc",
-              "id": "vocabularies/chm/index"
+              "id": "vocabularies/chm"
             },
             {
               "type": "doc",
-              "id": "vocabularies/continuingfreq/index"
+              "id": "vocabularies/continuingfreq"
             },
             {
               "type": "doc",
-              "id": "vocabularies/fom/index"
+              "id": "vocabularies/fom"
             },
             {
               "type": "doc",
-              "id": "vocabularies/tos/index"
+              "id": "vocabularies/tos"
             },
             {
               "type": "doc",
-              "id": "vocabularies/key/index"
+              "id": "vocabularies/key"
             },
             {
               "type": "doc",
-              "id": "vocabularies/mop/index"
+              "id": "vocabularies/mop"
             },
             {
               "type": "doc",
-              "id": "vocabularies/tac/index"
+              "id": "vocabularies/tac"
             }
           ]
         },
@@ -453,11 +453,11 @@ const sidebars: SidebarsConfig = {
           "items": [
             {
               "type": "doc",
-              "id": "vocabularies/elecsmd/index"
+              "id": "vocabularies/elecsmd"
             },
             {
               "type": "doc",
-              "id": "vocabularies/ter/index"
+              "id": "vocabularies/ter"
             }
           ]
         },
@@ -467,11 +467,11 @@ const sidebars: SidebarsConfig = {
           "items": [
             {
               "type": "doc",
-              "id": "vocabularies/3dmat/index"
+              "id": "vocabularies/3dmat"
             },
             {
               "type": "doc",
-              "id": "vocabularies/3dsmd/index"
+              "id": "vocabularies/3dsmd"
             }
           ]
         },
@@ -481,39 +481,21 @@ const sidebars: SidebarsConfig = {
           "items": [
             {
               "type": "doc",
-              "id": "vocabularies/visacc/index"
+              "id": "vocabularies/visacc"
             },
             {
               "type": "doc",
-              "id": "vocabularies/viscol/index"
+              "id": "vocabularies/viscol"
             },
             {
               "type": "doc",
-              "id": "vocabularies/visfov/index"
+              "id": "vocabularies/visfov"
             },
             {
               "type": "doc",
-              "id": "vocabularies/visfor/index"
+              "id": "vocabularies/visfor"
             }
           ]
-        }
-      ]
-    },
-    {
-      "type": "category",
-      "label": "Tools & Resources",
-      "items": [
-        {
-          "type": "doc",
-          "id": "search"
-        },
-        {
-          "type": "doc",
-          "id": "cross-set-browser"
-        },
-        {
-          "type": "doc",
-          "id": "field-guide"
         }
       ]
     },

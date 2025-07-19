@@ -9,6 +9,10 @@ export default defineConfig({
     'components/ElementReference': 'src/components/ElementReference/index.tsx',
     'components/SiteManagementLink':
       'src/components/SiteManagementLink/index.tsx',
+    'components/CompactButton/index': 'src/components/CompactButton/index.tsx',
+    'components/VocabularyCard/index': 'src/components/VocabularyCard/index.tsx',
+    'components/NamespaceHub/index': 'src/components/NamespaceHub/index.tsx',
+    'components/ElementSetCard/index': 'src/components/ElementSetCard/index.tsx',
     'hooks/usePrevious': 'src/hooks/usePrevious.ts',
     'utils/index': 'src/utils/index.ts',
     'config/index': 'src/config/index.ts',
@@ -40,6 +44,9 @@ export default defineConfig({
     /^@theme\/.*/,
     'clsx',
     'prism-react-renderer',
+    '@mui/material',
+    '@mui/icons-material',
+    /^@mui\/.*/,
   ],
   esbuildPlugins: [
     // Properly type the sass plugin

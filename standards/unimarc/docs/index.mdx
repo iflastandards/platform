@@ -6,10 +6,8 @@ description: Universal MARC namespace
 hide_table_of_contents: true
 ---
 
-import { NamespaceHub } from '@ifla/theme/components/NamespaceHub';
-import { ElementSetCard } from '@ifla/theme/components/ElementSetCard';
-import { VocabularyCard } from '@ifla/theme/components/VocabularyCard';
-import { CompactButton } from '@ifla/theme/components/CompactButton';
+import { Button } from '@mui/material';
+import { ElementSetCard, VocabularyCard, NamespaceHub } from '@ifla/theme';
 
 # UNIMARC - Universal MARC
 
@@ -527,7 +525,7 @@ This namespace contains 49 element sets with a total of 6,030 elements.
   />
 </div>
 <div style={{ textAlign: 'center', marginBottom: '40px' }}>
-  <CompactButton to="/elements">Browse All Element Sets</CompactButton>
+  <Button variant="contained" href="/elements" size="small">Browse All Element Sets</Button>
 </div>
 ## Vocabularies
 
@@ -1053,7 +1051,7 @@ This namespace contains 47 vocabularies with a total of 1,582 concepts.
   />
 </div>
 <div style={{ textAlign: 'center', marginBottom: '40px' }}>
-  <CompactButton to="/vocabularies">Browse All Vocabularies</CompactButton>
+  <Button variant="contained" href="/vocabularies" size="small">Browse All Vocabularies</Button>
 </div>
 ## Navigation
 

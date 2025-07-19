@@ -66,6 +66,26 @@
       "types": "./dist/theme/NavbarItem/AuthDropdownNavbarItem.d.ts",
       "import": "./dist/theme/NavbarItem/AuthDropdownNavbarItem.mjs",
       "require": "./dist/theme/NavbarItem/AuthDropdownNavbarItem.js"
+    },
+    "./components/CompactButton": {
+      "types": "./dist/components/CompactButton/index.d.ts",
+      "import": "./dist/components/CompactButton/index.mjs",
+      "require": "./dist/components/CompactButton/index.js"
+    },
+    "./components/VocabularyCard": {
+      "types": "./dist/components/VocabularyCard/index.d.ts",
+      "import": "./dist/components/VocabularyCard/index.mjs",
+      "require": "./dist/components/VocabularyCard/index.js"
+    },
+    "./components/NamespaceHub": {
+      "types": "./dist/components/NamespaceHub/index.d.ts",
+      "import": "./dist/components/NamespaceHub/index.mjs",
+      "require": "./dist/components/NamespaceHub/index.js"
+    },
+    "./components/ElementSetCard": {
+      "types": "./dist/components/ElementSetCard/index.d.ts",
+      "import": "./dist/components/ElementSetCard/index.mjs",
+      "require": "./dist/components/ElementSetCard/index.js"
     }
   },
   "gitHead": "04e45d41a75574005543a45032997cb9a32c645e",
@@ -76,6 +96,8 @@
     "@docusaurus/plugin-content-docs": "^3.8.1",
     "@docusaurus/theme-classic": "^3.8.1",
     "@docusaurus/theme-common": "^3.8.1",
+    "@mui/material": "^7.0.0",
+    "@mui/icons-material": "^7.0.0",
     "react": "^18.0.0 || ^19.0.0",
     "react-dom": "^18.0.0 || ^19.0.0"
   }

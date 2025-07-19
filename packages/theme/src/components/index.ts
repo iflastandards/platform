@@ -28,6 +28,10 @@ export { default as Mandatory } from './Mandatory';
 export { default as Unique } from './Unique';
 export { default as Figure } from './Figure';
 export { ExampleTable } from './ExampleTable';
+export { ElementSetCard } from './ElementSetCard';
+export { VocabularyCard } from './VocabularyCard';
+export { NamespaceHub } from './NamespaceHub';
+export { CompactButton } from './CompactButton';
 
 // Auth components - removed (authentication now handled by admin app)
 

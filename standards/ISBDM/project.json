@@ -46,14 +46,14 @@
     "test": {
       "executor": "@nx/vite:test",
       "options": {
-        "config": "{workspaceRoot}/vite.config.ts",
+        "config": "{workspaceRoot}/vitest.config.nx.ts",
         "testPathPattern": ["{projectRoot}/src/**/*.{test,spec}.{js,ts,jsx,tsx}"]
       }
     },
     "test:unit": {
       "executor": "@nx/vite:test",
       "options": {
-        "config": "{workspaceRoot}/vite.config.ts",
+        "config": "{workspaceRoot}/vitest.config.nx.ts",
         "exclude": [
           "**/scripts/**",
           "**/deployment/**"
@@ -63,7 +63,7 @@
     "test:integration": {
       "executor": "@nx/vite:test", 
       "options": {
-        "config": "{workspaceRoot}/vite.config.ts",
+        "config": "{workspaceRoot}/vitest.config.nx.ts",
         "include": [
           "**/scripts/**",
           "**/deployment/**"

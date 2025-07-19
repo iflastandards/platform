@@ -56,7 +56,7 @@
     "test:integration": {
       "executor": "@nx/vite:test",
       "options": {
-        "config": "{workspaceRoot}/vite.config.ts",
+        "config": "{workspaceRoot}/vitest.config.nx.ts",
         "include": ["**/scripts/**", "**/deployment/**"]
       },
       "cache": true,
