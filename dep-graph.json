@@ -887,7 +887,7 @@
             "test": {
               "executor": "@nx/vite:test",
               "options": {
-                "config": "vite.config.ts",
+                "config": "vitest.config.nx.ts",
                 "testPathPattern": [
                   "standards/ISBDM/src/**/*.{test,spec}.{js,ts,jsx,tsx}"
                 ]
@@ -913,7 +913,7 @@
             "test:unit": {
               "executor": "@nx/vite:test",
               "options": {
-                "config": "vite.config.ts",
+                "config": "vitest.config.nx.ts",
                 "exclude": [
                   "**/scripts/**",
                   "**/deployment/**"
@@ -934,7 +934,7 @@
             "test:integration": {
               "executor": "@nx/vite:test",
               "options": {
-                "config": "vite.config.ts",
+                "config": "vitest.config.nx.ts",
                 "include": [
                   "**/scripts/**",
                   "**/deployment/**"
@@ -1139,7 +1139,7 @@
             "test:integration": {
               "executor": "@nx/vite:test",
               "options": {
-                "config": "vite.config.ts",
+                "config": "vitest.config.nx.ts",
                 "include": [
                   "**/scripts/**",
                   "**/deployment/**"
@@ -1239,6 +1239,26 @@
                   "types": "./dist/theme/NavbarItem/AuthDropdownNavbarItem.d.ts",
                   "import": "./dist/theme/NavbarItem/AuthDropdownNavbarItem.mjs",
                   "require": "./dist/theme/NavbarItem/AuthDropdownNavbarItem.js"
+                },
+                "./components/CompactButton": {
+                  "types": "./dist/components/CompactButton/index.d.ts",
+                  "import": "./dist/components/CompactButton/index.mjs",
+                  "require": "./dist/components/CompactButton/index.js"
+                },
+                "./components/VocabularyCard": {
+                  "types": "./dist/components/VocabularyCard/index.d.ts",
+                  "import": "./dist/components/VocabularyCard/index.mjs",
+                  "require": "./dist/components/VocabularyCard/index.js"
+                },
+                "./components/NamespaceHub": {
+                  "types": "./dist/components/NamespaceHub/index.d.ts",
+                  "import": "./dist/components/NamespaceHub/index.mjs",
+                  "require": "./dist/components/NamespaceHub/index.js"
+                },
+                "./components/ElementSetCard": {
+                  "types": "./dist/components/ElementSetCard/index.d.ts",
+                  "import": "./dist/components/ElementSetCard/index.mjs",
+                  "require": "./dist/components/ElementSetCard/index.js"
                 }
               },
               "packageMain": "dist/index.js",
@@ -2435,6 +2455,9 @@
                 "start",
                 "start:admin",
                 "start:all",
+                "start:all:with-build",
+                "start:all:direct",
+                "start:all:bypass",
                 "start:frbr",
                 "start:isbd",
                 "start:isbdm",
@@ -2505,6 +2528,8 @@
                 "test:post-build:preview",
                 "test:post-build:production",
                 "test:pre-commit",
+                "test:pre-commit:fast",
+                "test:pre-commit:original",
                 "test:pre-commit:strict",
                 "test:pre-push",
                 "test:pre-push:fast",
@@ -2558,7 +2583,7 @@
             "test": {
               "executor": "@nx/vite:test",
               "options": {
-                "config": "./vite.config.ts"
+                "config": "./vitest.config.nx.ts"
               },
               "configurations": {},
               "parallelism": true,
@@ -4092,8 +4117,44 @@
                 "script": "start:all"
               },
               "metadata": {
-                "scriptContent": "pnpm stop:all && pnpm build:theme && concurrently \"DOCS_ENV=local docusaurus start portal --port 3000\" \"DOCS_ENV=local docusaurus start standards/ISBDM --port 3001\" \"DOCS_ENV=local docusaurus start standards/LRM --port 3002\" \"DOCS_ENV=local docusaurus start standards/FRBR --port 3003\" \"DOCS_ENV=local docusaurus start standards/isbd --port 3004\" \"DOCS_ENV=local docusaurus start standards/muldicat --port 3005\" \"DOCS_ENV=local docusaurus start standards/unimarc --port 3006\" \"nx dev admin\"",
+                "scriptContent": "pnpm stop:all && ./node_modules/.bin/concurrently \"DOCS_ENV=local docusaurus start portal --port 3000\" \"DOCS_ENV=local docusaurus start standards/ISBDM --port 3001\" \"DOCS_ENV=local docusaurus start standards/LRM --port 3002\" \"DOCS_ENV=local docusaurus start standards/FRBR --port 3003\" \"DOCS_ENV=local docusaurus start standards/isbd --port 3004\" \"DOCS_ENV=local docusaurus start standards/muldicat --port 3005\" \"DOCS_ENV=local docusaurus start standards/unimarc --port 3006\" \"nx dev admin\"",
                 "runCommand": "pnpm run start:all"
+              },
+              "configurations": {},
+              "parallelism": true
+            },
+            "start:all:with-build": {
+              "executor": "nx:run-script",
+              "options": {
+                "script": "start:all:with-build"
+              },
+              "metadata": {
+                "scriptContent": "pnpm stop:all && pnpm build:theme && concurrently \"DOCS_ENV=local docusaurus start portal --port 3000\" \"DOCS_ENV=local docusaurus start standards/ISBDM --port 3001\" \"DOCS_ENV=local docusaurus start standards/LRM --port 3002\" \"DOCS_ENV=local docusaurus start standards/FRBR --port 3003\" \"DOCS_ENV=local docusaurus start standards/isbd --port 3004\" \"DOCS_ENV=local docusaurus start standards/muldicat --port 3005\" \"DOCS_ENV=local docusaurus start standards/unimarc --port 3006\" \"nx dev admin\"",
+                "runCommand": "pnpm run start:all:with-build"
+              },
+              "configurations": {},
+              "parallelism": true
+            },
+            "start:all:direct": {
+              "executor": "nx:run-script",
+              "options": {
+                "script": "start:all:direct"
+              },
+              "metadata": {
+                "scriptContent": "node scripts/start-all-direct.js",
+                "runCommand": "pnpm run start:all:direct"
+              },
+              "configurations": {},
+              "parallelism": true
+            },
+            "start:all:bypass": {
+              "executor": "nx:run-script",
+              "options": {
+                "script": "start:all:bypass"
+              },
+              "metadata": {
+                "scriptContent": "/bin/sh -c 'pnpm stop:all && pnpm build:theme && concurrently \"DOCS_ENV=local docusaurus start portal --port 3000\" \"DOCS_ENV=local docusaurus start standards/ISBDM --port 3001\" \"DOCS_ENV=local docusaurus start standards/LRM --port 3002\" \"DOCS_ENV=local docusaurus start standards/FRBR --port 3003\" \"DOCS_ENV=local docusaurus start standards/isbd --port 3004\" \"DOCS_ENV=local docusaurus start standards/muldicat --port 3005\" \"DOCS_ENV=local docusaurus start standards/unimarc --port 3006\" \"nx dev admin\"'",
+                "runCommand": "pnpm run start:all:bypass"
               },
               "configurations": {},
               "parallelism": true
@@ -4932,8 +4993,32 @@
                 "script": "test:pre-commit"
               },
               "metadata": {
-                "scriptContent": "node scripts/pre-commit-check.js",
+                "scriptContent": "node scripts/pre-commit-check-smart.js",
                 "runCommand": "pnpm run test:pre-commit"
+              },
+              "configurations": {},
+              "parallelism": true
+            },
+            "test:pre-commit:fast": {
+              "executor": "nx:run-script",
+              "options": {
+                "script": "test:pre-commit:fast"
+              },
+              "metadata": {
+                "scriptContent": "node scripts/pre-commit-check-fast.js",
+                "runCommand": "pnpm run test:pre-commit:fast"
+              },
+              "configurations": {},
+              "parallelism": true
+            },
+            "test:pre-commit:original": {
+              "executor": "nx:run-script",
+              "options": {
+                "script": "test:pre-commit:original"
+              },
+              "metadata": {
+                "scriptContent": "node scripts/pre-commit-check.js",
+                "runCommand": "pnpm run test:pre-commit:original"
               },
               "configurations": {},
               "parallelism": true
@@ -5615,7 +5700,12 @@
             "start-all": {
               "executor": "nx:run-commands",
               "options": {
-                "command": "pnpm start:all"
+                "commands": [
+                  "pnpm stop:all",
+                  "pnpm build:theme",
+                  "concurrently \"DOCS_ENV=local docusaurus start portal --port 3000\" \"DOCS_ENV=local docusaurus start standards/ISBDM --port 3001\" \"DOCS_ENV=local docusaurus start standards/LRM --port 3002\" \"DOCS_ENV=local docusaurus start standards/FRBR --port 3003\" \"DOCS_ENV=local docusaurus start standards/isbd --port 3004\" \"DOCS_ENV=local docusaurus start standards/muldicat --port 3005\" \"DOCS_ENV=local docusaurus start standards/unimarc --port 3006\" \"nx dev admin\""
+                ],
+                "parallel": false
               },
               "configurations": {},
               "parallelism": true

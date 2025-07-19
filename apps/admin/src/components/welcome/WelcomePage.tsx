@@ -28,7 +28,7 @@ import {
   getNamespaceStats,
 } from '@/lib/mock-data/namespaces-extended';
 import RequestInviteButton from '@/components/welcome/RequestInviteButton';
-import { SignInButton } from '@clerk/nextjs';
+import SafeSignInButton from '@/components/auth/SafeSignInButton';
 
 interface NamespaceStatusCardProps {
   name: string;
@@ -214,7 +214,7 @@ export default function WelcomePage() {
 
             {/* Clerk Sign-In and Invitation CTA */}
             <Stack direction="row" spacing={2} justifyContent="center">
-              <SignInButton mode="modal">
+              <SafeSignInButton>
                 <Button
                   variant="contained"
                   color="secondary"
@@ -228,7 +228,7 @@ export default function WelcomePage() {
                 >
                   Sign In
                 </Button>
-              </SignInButton>
+              </SafeSignInButton>
               <RequestInviteButton />
             </Stack>
           </Box>

@@ -8,13 +8,15 @@ This project uses Vitest for testing with Nx for orchestration. The configuratio
 
 ### Main Configuration: `vite.config.ts`
 - Base Vite configuration used for development
-- Includes test configuration but can be slow with many files
+- **NOT USED FOR NX TESTS** - This config has settings that cause hanging in CI/nx environments
 
-### Nx-Optimized Configuration: `vitest.config.nx.ts`
+### Nx-Optimized Configuration: `vitest.config.nx.ts` (PRIMARY CONFIG)
+- **THIS IS THE DEFAULT CONFIG FOR ALL NX PROJECTS**
 - Optimized for use with `nx affected` commands
 - Properly excludes all build artifacts (.next, .nx, .docusaurus)
 - Uses single thread for predictable behavior with Nx
 - Enables `passWithNoTests` for projects without tests
+- No `forceRerunTriggers` to prevent hanging in CI
 
 ### CI Configuration: `vitest.config.ci.ts`
 - Focused on deployment-critical tests only
@@ -86,6 +88,14 @@ This separation ensures that:
 - Use `vitest.config.ci.ts` for critical tests only
 - Enable Nx Cloud for distributed caching
 - Run with process forking for better isolation
+
+## Known Issues
+
+### Vitest Hanging in CI/NX
+**Root Cause**: Using `vite.config.ts` instead of `vitest.config.nx.ts`
+- The `vite.config.ts` has `forceRerunTriggers` that cause hanging in CI
+- Always ensure project.json files use `vitest.config.nx.ts` for test targets
+- Run `grep -r "vite.config.ts" --include="project.json" .` to find misconfigured projects
 
 ## Troubleshooting
 

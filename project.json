@@ -8,7 +8,7 @@
     "test": {
       "executor": "@nx/vite:test",
       "options": {
-        "config": "./vite.config.ts"
+        "config": "./vitest.config.nx.ts"
       }
     },
     "lint": {
@@ -147,7 +147,12 @@
     "start-all": {
       "executor": "nx:run-commands",
       "options": {
-        "command": "pnpm start:all"
+        "commands": [
+          "pnpm stop:all",
+          "pnpm build:theme",
+          "concurrently \"DOCS_ENV=local docusaurus start portal --port 3000\" \"DOCS_ENV=local docusaurus start standards/ISBDM --port 3001\" \"DOCS_ENV=local docusaurus start standards/LRM --port 3002\" \"DOCS_ENV=local docusaurus start standards/FRBR --port 3003\" \"DOCS_ENV=local docusaurus start standards/isbd --port 3004\" \"DOCS_ENV=local docusaurus start standards/muldicat --port 3005\" \"DOCS_ENV=local docusaurus start standards/unimarc --port 3006\" \"nx dev admin\""
+        ],
+        "parallel": false
       }
     },
     "start-all:robust": {

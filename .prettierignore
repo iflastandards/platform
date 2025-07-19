@@ -13,3 +13,5 @@ docs/**/*.md
 docs/**/*.mdx
 src/.generated/
 .yarn
+/.nx/cache
+/.nx/workspace-data

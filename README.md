@@ -164,9 +164,17 @@ pnpm lint
 # Scaffold new site
 pnpm tsx scripts/scaffold-site.ts --siteKey=newsite --title="New Standard" --tagline="A new IFLA standard"
 
+# Generate complete site structure with all necessary files
+pnpm tsx scripts/page-template-generator.ts --namespace=newsite
+
 # Or use the vocabulary site generator
 npx tsx scripts/generate-vocabulary-sites.ts --sites new-namespace
+
+# Validate file structure
+pnpm tsx scripts/validate-sidebar-references.ts standards/newsite
 ```
+
+The enhanced vocabulary site scaffolding system ensures that all files referenced in the navigation sidebar exist, preventing "document ids do not exist" build errors. See [Vocabulary Site Scaffolding Guide](docs/vocabulary-site-scaffolding-guide.md) for details.
 
 ### Performance Optimization
 
@@ -209,6 +217,9 @@ Configuration is centralized in `packages/theme/src/config/siteConfig.ts`.
 - **Architecture Decisions**: Documented in `docs/`
 - **Testing Strategy**: See `docs/testing-strategy.md`
 - **Deployment Guide**: See `docs/deployment.md`
+- **Vocabulary Site Scaffolding**: See `docs/vocabulary-site-scaffolding-guide.md`
+- **Quick Reference**: See `docs/vocabulary-site-scaffolding-quick-reference.md`
+- **Current Scaffolding Plan**: See `developer_notes/current-scaffolding-plan.md`
 
 ## 🚢 Deployment
 
