@@ -1,0 +1,101 @@
+{
+  "templates": {
+    "element": {
+      "path": "element.mdx",
+      "description": "Template for RDF element documentation pages",
+      "csvSource": "../csv/ns/isbd/elements.csv",
+      "csvMapping": {
+        "id": {
+          "source": "uri",
+          "transform": "extractId"
+        },
+        "title": {
+          "source": "rdfs:label@en",
+          "fallback": "dc:title@en"
+        },
+        "sidebar_label": {
+          "source": "rdfs:label@en",
+          "fallback": "dc:title@en"
+        },
+        "RDF.definition": {
+          "source": "skos:definition@en[0]",
+          "fallback": "skos:definition@en"
+        },
+        "RDF.domain": {
+          "source": "rdfs:domain"
+        },
+        "RDF.range": {
+          "source": "rdfs:range"
+        },
+        "RDF.type": {
+          "source": "rdf:type",
+          "transform": "extractLocalName"
+        },
+        "RDF.scopeNote": {
+          "source": "skos:scopeNote@en[0]",
+          "fallback": ""
+        },
+        "RDF.elementSubType": {
+          "source": "reg:hasSubproperty",
+          "transform": "parseRelatedElements"
+        },
+        "RDF.elementSuperType": {
+          "source": "rdfs:subPropertyOf",
+          "transform": "parseRelatedElements"
+        },
+        "deprecated": {
+          "source": "owl:deprecated",
+          "default": null
+        }
+      },
+      "outputPath": "../docs/elements/{id}.mdx"
+    },
+    "vocabulary": {
+      "path": "vocabulary.mdx",
+      "description": "Template for vocabulary documentation pages",
+      "csvSource": "../csv/vocabularies/",
+      "outputPath": "../docs/vocabularies/{vocabularyId}.mdx"
+    },
+    "element-index": {
+      "path": "element-index.mdx",
+      "description": "Template for element category index pages",
+      "outputPath": "../docs/{category}/index.mdx"
+    }
+  },
+  "transforms": {
+    "extractId": {
+      "description": "Extract element ID from full URI",
+      "pattern": "/([^/]+)$"
+    },
+    "extractLocalName": {
+      "description": "Extract local name from URI",
+      "pattern": "([^#/:]+)$"
+    },
+    "parseRelatedElements": {
+      "description": "Parse related elements into array format",
+      "type": "complex"
+    }
+  },
+  "categories": {
+    "relationships": {
+      "label": "Relationship elements",
+      "pattern": "^P\\d+"
+    },
+    "attributes": {
+      "label": "Attribute elements",
+      "pattern": "^A\\d+"
+    },
+    "statements": {
+      "label": "Statement elements",
+      "pattern": "^S\\d+"
+    },
+    "notes": {
+      "label": "Note elements",
+      "pattern": "^N\\d+"
+    },
+    "classes": {
+      "label": "Classes",
+      "pattern": "^C\\d+"
+    }
+  }
+}

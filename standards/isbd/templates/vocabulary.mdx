@@ -1,0 +1,35 @@
+---
+# Navigation
+sidebar_class_name: menu-item-html-level-1 sidebar-level-1
+sidebar_label: ''  # Populated from CSV or metadata
+sidebar_level: 1
+sidebar_position: 1
+
+# Vocabulary identification
+vocabularyId: ''  # Populated from CSV
+title: ''  # Populated from CSV
+uri: ''  # Full URI of the vocabulary
+description: ''  # Description of the vocabulary
+isDefinedBy: ''  # URI where vocabulary is defined
+scopeNote: ''  # Scope note for the vocabulary
+
+# Vocabulary concepts - populated from CSV
+concepts: []
+# Each concept will have:
+# - value: term/label
+# - definition: definition text
+# - scopeNote: optional scope note
+---
+import { VocabularyTable } from '@ifla/theme';
+
+# {frontMatter.title}
+
+For use with element: [element name](/docs/[type]/[id])
+
+<VocabularyTable 
+  {...frontMatter} 
+  showTitle={false}
+  filterPlaceholder="Filter vocabulary terms..."
+/>
+
+export const toc = VocabularyTable.generateTOC(frontMatter);

@@ -63,7 +63,7 @@ function convertFile(inputFile: string, outputFile: string, dctapProfile?: strin
     }
     
     // Execute conversion - capture stderr where the resource count is logged
-    const output = execSync(command, { 
+    const _output = execSync(command, { 
       encoding: 'utf8',
       stdio: ['pipe', 'pipe', 'pipe']
     });
@@ -78,12 +78,12 @@ function convertFile(inputFile: string, outputFile: string, dctapProfile?: strin
       outputFile,
       resourceCount
     };
-  } catch (error: any) {
+  } catch (error) {
     return {
       success: false,
       inputFile,
       outputFile,
-      error: error.message || 'Unknown error'
+      error: error instanceof Error ? error.message : 'Unknown error'
     };
   }
 }
@@ -178,8 +178,8 @@ async function processDirectory(
       console.log(chalk.gray(`\nTotal resources processed: ${totalResources}`));
     }
     
-  } catch (error: any) {
-    spinner.fail(chalk.red(`Error: ${error.message}`));
+  } catch (error) {
+    spinner.fail(chalk.red(`Error: ${error instanceof Error ? error.message : 'Unknown error'}`));
     process.exit(1);
   }
 }

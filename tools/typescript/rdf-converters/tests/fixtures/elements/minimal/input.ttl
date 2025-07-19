@@ -1,0 +1,12 @@
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix isbd: <http://iflastandards.info/ns/isbd/elements/> .
+
+isbd:P1001
+    a rdf:Property ;
+    rdfs:label "has content form"@en ;
+    rdfs:label "tiene forma del contenido"@es ;
+    rdfs:label "a pour forme de contenu"@fr ;
+    rdfs:comment "Relates a resource to its content form."@en ;
+    rdfs:domain isbd:C2001 ;
+    rdfs:range rdfs:Literal .

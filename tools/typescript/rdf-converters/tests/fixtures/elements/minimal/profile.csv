@@ -1,0 +1,9 @@
+shapeID,shapeLabel,propertyID,propertyLabel,mandatory,repeatable,valueNodeType,valueDataType,valueConstraint,valueConstraintType,valueShape,note
+Property,RDF Property,uri,Property URI,TRUE,FALSE,IRI,,http://iflastandards.info/ns/isbd/elements/,IRIstem,,URI of the property
+Property,RDF Property,rdf:type,RDF Type,TRUE,FALSE,IRI,,http://www.w3.org/1999/02/22-rdf-syntax-ns#Property,,,RDF type
+Property,RDF Property,*rdfs:label@en,Label (English),TRUE,FALSE,literal,langString,,,,"English label"
+Property,RDF Property,rdfs:label@es,Label (Spanish),FALSE,FALSE,literal,langString,,,,"Spanish label"
+Property,RDF Property,rdfs:label@fr,Label (French),FALSE,FALSE,literal,langString,,,,"French label"
+Property,RDF Property,rdfs:comment@en,Comment (English),FALSE,FALSE,literal,langString,,,,"English comment"
+Property,RDF Property,rdfs:domain,Domain,FALSE,FALSE,IRI,,,,,Domain class
+Property,RDF Property,rdfs:range,Range,FALSE,FALSE,IRI,,,,,Range class or datatype
