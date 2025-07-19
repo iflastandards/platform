@@ -15,7 +15,7 @@
     "build": {
       "executor": "nx:run-commands",
       "options": {
-        "commands": ["pnpm exec tsup", "nx run @ifla/theme:build:tsc"],
+        "commands": ["pnpm exec tsup", "npx tsc --project tsconfig.declarations.json"],
         "cwd": "packages/theme",
         "parallel": false
       },

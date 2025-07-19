@@ -34,19 +34,31 @@ function checkNxConfig() {
   }
 }
 
-// Optimize Nx cache
-function optimizeCache() {
-  console.log('\n🗑️  Optimizing Nx Cache:');
+// Check Nx cache status
+function checkCacheStatus() {
+  console.log('\n📊 Checking Nx Cache Status:');
   
   try {
-    // Clean old cache entries
-    console.log('- Cleaning old cache entries...');
-    execSync('npx nx reset', { stdio: 'inherit' });
-    
-    // Set optimal cache size
-    console.log('- Cache optimized');
+    // Check cache size
+    const cacheDir = path.join(process.cwd(), '.nx/cache');
+    if (fs.existsSync(cacheDir)) {
+      const cacheSize = execSync(`du -sh ${cacheDir} 2>/dev/null | cut -f1`, { encoding: 'utf8' }).trim();
+      console.log(`✓ Current cache size: ${cacheSize}`);
+      
+      // Only suggest clearing if cache is too large (>5GB)
+      const cacheSizeBytes = execSync(`du -sb ${cacheDir} 2>/dev/null | cut -f1`, { encoding: 'utf8' }).trim();
+      const cacheSizeGB = parseInt(cacheSizeBytes) / (1024 * 1024 * 1024);
+      
+      if (cacheSizeGB > 5) {
+        console.log('⚠️  Cache is large. Consider running "nx reset" if builds are slow');
+      } else {
+        console.log('✓ Cache size is optimal');
+      }
+    } else {
+      console.log('ℹ️  No cache directory found (this is normal for fresh installations)');
+    }
   } catch (error) {
-    console.error('Error optimizing cache:', error.message);
+    console.error('Error checking cache:', error.message);
   }
 }
 
@@ -82,7 +94,7 @@ function generatePerformanceReport() {
   
   try {
     // Analyze affected projects
-    const affected = execSync('npx nx affected:graph --base=HEAD~1 --head=HEAD --plain', { encoding: 'utf8' });
+    const affected = execSync('npx nx show projects --affected --base=HEAD~1 --head=HEAD', { encoding: 'utf8' });
     const affectedCount = (affected.match(/\n/g) || []).length;
     console.log(`✓ Affected projects in last commit: ${affectedCount}`);
     
@@ -121,13 +133,16 @@ function showRecommendations() {
 // Main execution
 async function main() {
   checkNxConfig();
-  optimizeCache();
+  checkCacheStatus();
   enablePerformanceFeatures();
   generatePerformanceReport();
   showRecommendations();
   
-  console.log('\n✅ Nx optimization complete!\n');
-  console.log('Run "source .env.nx" to apply environment optimizations');
+  console.log('\n✅ Nx performance check complete!\n');
+  console.log('💡 Tips:');
+  console.log('   - Keep the Nx daemon running for best performance');
+  console.log('   - Cache is preserved to speed up builds');
+  console.log('   - Only run "nx reset" if you experience issues');
 }
 
 main().catch(console.error);
