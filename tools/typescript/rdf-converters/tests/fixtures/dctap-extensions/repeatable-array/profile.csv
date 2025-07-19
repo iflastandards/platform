@@ -1,0 +1,9 @@
+shapeID,shapeLabel,propertyID,propertyLabel,mandatory,repeatable,valueNodeType,valueDataType,valueConstraint,valueConstraintType,valueShape,note
+default,Default Shape,skos:prefLabel,Preferred Label,true,false,literal,,,,,"Single value property"
+default,Default Shape,skos:altLabel[0],Alternative Label 1,false,true,literal,,,,,"First alternative label"
+default,Default Shape,skos:altLabel[1],Alternative Label 2,false,true,literal,,,,,"Second alternative label"
+default,Default Shape,skos:altLabel[2],Alternative Label 3,false,true,literal,,,,,"Third alternative label"
+default,Default Shape,skos:broader[0],Broader Concept 1,false,true,IRI,,,,,"First broader concept"
+default,Default Shape,skos:broader[1],Broader Concept 2,false,true,IRI,,,,,"Second broader concept"
+default,Default Shape,skos:note@en[0],Note (English) 1,false,true,literal,,,,,"First English note"
+default,Default Shape,skos:note@en[1],Note (English) 2,false,true,literal,,,,,"Second English note"

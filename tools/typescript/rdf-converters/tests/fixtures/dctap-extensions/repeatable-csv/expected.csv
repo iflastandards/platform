@@ -1,0 +1,4 @@
+uri,skos:altLabel[csv],skos:broader[csv],skos:note@en[csv],skos:note@fr[csv],skos:prefLabel@en,skos:related[csv]
+ex:concept1,IR;Information Search;Document Retrieval,ex:informationScience;ex:computerScience;ex:libraryScience,The process of obtaining information;Includes search algorithms and indexing,A fundamental library service;Un service bibliothécaire fondamental,Information Retrieval,ex:searchEngines;ex:databases;ex:indexing
+ex:concept2,"Controlled Vocabulary; Thesauri;Authority Control",ex:knowledgeOrganization,"Used for organization; classification;Contains special chars: ; and ,",,Subject Headings,
+ex:concept3,Machine-Readable Cataloging,ex:catalogingStandards,A bibliographic data format,,MARC,

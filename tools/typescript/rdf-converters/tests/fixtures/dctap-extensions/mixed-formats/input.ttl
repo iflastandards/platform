@@ -1,0 +1,40 @@
+@prefix skos: <http://www.w3.org/2004/02/skos/core#> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix ex: <http://example.org/> .
+
+# Concept demonstrating mixed format handling
+ex:concept1
+    rdf:type skos:Concept ;
+    skos:prefLabel "Digital Preservation"@en ;
+    skos:prefLabel "Préservation numérique"@fr ;
+    skos:altLabel "DP"@en ;
+    skos:altLabel "Digital Archiving"@en ;
+    skos:altLabel "Electronic Preservation"@en ;
+    skos:altLabel "Long-term Digital Storage"@en ;
+    skos:note "The process of maintaining digital information"@en ;
+    skos:note "Includes format migration and emulation"@en ;
+    skos:note "Critical for cultural heritage"@en ;
+    skos:note "Processus de maintien de l'information numérique"@fr ;
+    skos:note "Inclut la migration de format"@fr ;
+    skos:note "Essentiel pour le patrimoine culturel"@fr ;
+    skos:broader ex:preservation ;
+    skos:broader ex:digitalLibraries ;
+    skos:broader ex:informationManagement .
+
+# Concept with sparse data to test Postel's Law
+ex:concept2
+    rdf:type skos:Concept ;
+    skos:prefLabel "Metadata"@en ;
+    # Missing French label (but not mandatory)
+    skos:altLabel "Descriptive Data"@en ;
+    # Only one altLabel
+    skos:note "Data about data"@en ;
+    # Only one English note, no French notes
+    skos:broader ex:cataloging .
+
+# Invalid concept missing mandatory fields
+ex:concept3
+    # Missing mandatory rdf:type
+    # Missing mandatory skos:prefLabel@en
+    skos:prefLabel "Métadonnées"@fr ;
+    skos:altLabel "Meta-information"@en .

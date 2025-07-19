@@ -1,0 +1,8 @@
+shapeID,shapeLabel,propertyID,propertyLabel,mandatory,repeatable,valueNodeType,valueDataType,valueConstraint,valueConstraintType,valueShape,note
+@mandatoryLanguages,,,en;fr,,,,,,,,"Mandatory languages for this profile"
+default,Default Shape,skos:prefLabel@en,Preferred Label (English),true,false,literal,,maxPerLanguage:1,,,"English label is mandatory"
+default,Default Shape,skos:prefLabel@fr,Preferred Label (French),true,false,literal,,maxPerLanguage:1,,,"French label is mandatory"
+default,Default Shape,skos:prefLabel@es,Preferred Label (Spanish),false,false,literal,,maxPerLanguage:1,,,"Spanish label is optional"
+default,Default Shape,skos:definition@en,Definition (English),false,true,literal,,,,,"English definition"
+default,Default Shape,skos:definition@fr,Definition (French),false,true,literal,,,,,"French definition"
+default,Default Shape,skos:altLabel,Alternative Label,false,true,literal,,,,,"Language-neutral property"

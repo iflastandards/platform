@@ -1,0 +1,2 @@
+uri,rdf:type,skos:altLabel@en[0],skos:altLabel@en[1],skos:definition@en[0],skos:definition@en[1],skos:prefLabel@en
+ex:concept1,skos:Concept,Concept 1,,A complete concept with all required fields,,First Concept

@@ -56,7 +56,7 @@ function convertFile(inputFile: string, outputFile: string, dctapProfile?: strin
   try {
     // Build command - use the compiled version
     const scriptPath = path.join(__dirname, 'rdf-to-csv.js');
-    let command = `node "${scriptPath}" "${inputFile}" -o "${outputFile}"`;
+    let command = `node "${scriptPath}" -i "${inputFile}" -o "${outputFile}"`;
     
     if (dctapProfile) {
       command += ` -p "${dctapProfile}"`;
@@ -197,29 +197,16 @@ program
   .name('rdf-folder-to-csv')
   .description('Recursively convert RDF files to CSV format preserving folder structure')
   .version('1.0.0')
-  .argument('<source-dir>', 'Source directory containing RDF files')
-  .argument('[output-dir]', 'Output directory for CSV files (default: replaces /ttl with /csv or adds _csv suffix)')
+  .requiredOption('-s, --source <source-dir>', 'Source directory containing RDF files')
+  .requiredOption('-o, --output <output-dir>', 'Output directory for CSV files')
   .option('-p, --profile <dctap-file>', 'Path to DCTAP profile CSV file')
   .option('-d, --dry-run', 'Show what would be converted without actually converting')
   .option('-v, --verbose', 'Show detailed progress information')
   .option('-e, --extensions <exts>', 'Comma-separated list of file extensions to process', RDF_EXTENSIONS.join(','))
-  .action(async (sourceDir: string, outputDir: string | undefined, options) => {
+  .action(async (options) => {
     // Resolve paths
-    const resolvedSourceDir = path.resolve(sourceDir);
-    
-    // Default output directory logic:
-    // If source ends with /ttl, replace with /csv
-    // Otherwise, add _csv suffix
-    let defaultOutputDir: string;
-    if (resolvedSourceDir.endsWith('/ttl')) {
-      defaultOutputDir = resolvedSourceDir.replace(/\/ttl$/, '/csv');
-    } else {
-      defaultOutputDir = resolvedSourceDir + '_csv';
-    }
-    
-    const resolvedOutputDir = outputDir 
-      ? path.resolve(outputDir) 
-      : defaultOutputDir;
+    const resolvedSourceDir = path.resolve(options.source);
+    const resolvedOutputDir = path.resolve(options.output);
     
     // Update extensions if provided
     if (options.extensions) {

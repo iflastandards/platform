@@ -1,0 +1,5 @@
+shapeID,shapeLabel,propertyID,propertyLabel,mandatory,repeatable,valueNodeType,valueDataType,valueConstraint,valueConstraintType,valueShape,note
+default,Default Shape,*skos:prefLabel,Preferred Label,true,false,literal,,,,,"Mandatory field marked with *"
+default,Default Shape,skos:definition,Definition,false,true,literal,,,,,"Optional field"
+default,Default Shape,*rdf:type,Type,true,false,IRI,,,,,"Mandatory IRI field"
+default,Default Shape,skos:altLabel,Alternative Label,false,true,literal,,,,,"Optional repeatable field"

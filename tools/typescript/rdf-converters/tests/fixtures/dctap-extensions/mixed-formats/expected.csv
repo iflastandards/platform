@@ -1,0 +1,3 @@
+uri,rdf:type,skos:altLabel[0],skos:altLabel[1],skos:altLabel[csv],skos:broader[csv],skos:note@en[0],skos:note@en[1],skos:note@fr[csv],skos:prefLabel@en,skos:prefLabel@fr
+ex:concept1,skos:Concept,DP,Digital Archiving,DP;Digital Archiving;Electronic Preservation;Long-term Digital Storage,ex:preservation;ex:digitalLibraries;ex:informationManagement,The process of maintaining digital information,Includes format migration and emulation,Processus de maintien de l'information numérique;Inclut la migration de format;Essentiel pour le patrimoine culturel,Digital Preservation,Préservation numérique
+ex:concept2,skos:Concept,Descriptive Data,,Descriptive Data,ex:cataloging,Data about data,,,Metadata,

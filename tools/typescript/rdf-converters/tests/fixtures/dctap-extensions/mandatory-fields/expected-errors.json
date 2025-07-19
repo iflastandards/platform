@@ -1,0 +1,16 @@
+{
+  "errors": [
+    {
+      "severity": "error",
+      "resourceUri": "http://example.org/concept2",
+      "propertyID": "skos:prefLabel",
+      "message": "Mandatory property 'skos:prefLabel' is missing"
+    },
+    {
+      "severity": "error",
+      "resourceUri": "http://example.org/concept3",
+      "propertyID": "rdf:type",
+      "message": "Mandatory property 'rdf:type' is missing"
+    }
+  ]
+}

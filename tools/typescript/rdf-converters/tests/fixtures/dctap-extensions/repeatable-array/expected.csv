@@ -1,0 +1,4 @@
+uri,skos:altLabel[0],skos:altLabel[1],skos:altLabel[2],skos:broader[0],skos:broader[1],skos:note@en[0],skos:note@en[1],skos:prefLabel@en
+ex:concept1,Info Science,Library and Information Science,LIS,ex:science,ex:socialScience,A field of study,Interdisciplinary in nature,Information Science
+ex:concept2,Electronic Libraries,,Virtual Libraries,ex:libraries,,Modern library systems,,Digital Libraries
+ex:concept3,,,,,,,,,Cataloging

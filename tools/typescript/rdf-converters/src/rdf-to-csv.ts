@@ -17,11 +17,12 @@ async function main() {
     .name('rdf-to-csv')
     .description('Convert RDF files to CSV format using DCTAP profile')
     .version('1.0.0')
-    .argument('<rdf-file>', 'Path to the RDF file (supports .ttl, .nt, .jsonld, .rdf, .xml)')
+    .requiredOption('-i, --input <rdf-file>', 'Path to the RDF file (supports .ttl, .nt, .jsonld, .rdf, .xml)')
     .option('-p, --profile <dctap-file>', 'Path to DCTAP profile CSV file')
     .option('-o, --output <output-file>', 'Output CSV file (default: stdout)')
     .option('-f, --format <format>', 'Force RDF format (auto-detected by default)')
-    .action(async (rdfFile: string, options) => {
+    .action(async (options) => {
+      const rdfFile = options.input;
       try {
         // Initialize parser
         const parser = new RdfParser();

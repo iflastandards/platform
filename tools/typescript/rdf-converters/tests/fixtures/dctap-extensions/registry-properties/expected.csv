@@ -1,0 +1,4 @@
+uri,dct:contributor[0],dct:contributor[1],dct:created,dct:creator,dct:modified,reg:identifier,reg:status,skos:prefLabel@en,skos:prefLabel@fr
+ex:element001,http://example.org/agent/editor1,http://example.org/agent/editor2,2020-01-15,http://iflastandards.info/ns/isbd/agent/IFLAISBDReviewGroup,2023-11-20,isbd:P1001,http://metadataregistry.org/uri/RegStatus/1001,Title Proper,Titre propre
+ex:element002,,,2019-05-10,,,,,http://metadataregistry.org/uri/RegStatus/1008,Statement of Responsibility,
+ex:element003,,,,,,,,,Edition Statement,Mention d'édition

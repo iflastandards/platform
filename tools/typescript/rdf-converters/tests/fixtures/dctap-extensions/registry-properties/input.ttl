@@ -1,0 +1,28 @@
+@prefix skos: <http://www.w3.org/2004/02/skos/core#> .
+@prefix reg: <http://metadataregistry.org/uri/profile/regap/> .
+@prefix dct: <http://purl.org/dc/terms/> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix ex: <http://example.org/> .
+
+# Complete registry entry
+ex:element001
+    skos:prefLabel "Title Proper"@en ;
+    skos:prefLabel "Titre propre"@fr ;
+    reg:status <http://metadataregistry.org/uri/RegStatus/1001> ;  # Published
+    reg:identifier "isbd:P1001" ;
+    dct:created "2020-01-15"^^xsd:date ;
+    dct:modified "2023-11-20"^^xsd:date ;
+    dct:creator <http://iflastandards.info/ns/isbd/agent/IFLAISBDReviewGroup> ;
+    dct:contributor <http://example.org/agent/editor1> ;
+    dct:contributor <http://example.org/agent/editor2> .
+
+# Minimal registry entry
+ex:element002
+    skos:prefLabel "Statement of Responsibility"@en ;
+    reg:status <http://metadataregistry.org/uri/RegStatus/1008> ;  # Deprecated
+    dct:created "2019-05-10"^^xsd:date .
+
+# Entry without registry properties
+ex:element003
+    skos:prefLabel "Edition Statement"@en ;
+    skos:prefLabel "Mention d'édition"@fr .

@@ -1,0 +1,26 @@
+@prefix skos: <http://www.w3.org/2004/02/skos/core#> .
+@prefix ex: <http://example.org/> .
+
+# Concept with all mandatory languages
+ex:concept1
+    skos:prefLabel "Library"@en ;
+    skos:prefLabel "Bibliothèque"@fr ;
+    skos:prefLabel "Biblioteca"@es ;
+    skos:definition "A collection of books and other materials"@en ;
+    skos:definition "Une collection de livres et d'autres matériaux"@fr ;
+    skos:altLabel "Book collection"@en ;
+    skos:altLabel "Collection de livres"@fr .
+
+# Concept missing mandatory French label
+ex:concept2
+    skos:prefLabel "Archive"@en ;
+    skos:prefLabel "Archivo"@es ;
+    skos:definition "A place where historical records are kept"@en ;
+    skos:altLabel "Records repository"@en .
+
+# Concept with multiple values per language (testing maxPerLanguage constraint)
+ex:concept3
+    skos:prefLabel "Museum"@en ;
+    skos:prefLabel "Gallery"@en ;  # This violates maxPerLanguage:1
+    skos:prefLabel "Musée"@fr ;
+    skos:definition "An institution that cares for a collection"@en .

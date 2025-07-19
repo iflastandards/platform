@@ -1,0 +1,7 @@
+shapeID,shapeLabel,propertyID,propertyLabel,mandatory,repeatable,valueNodeType,valueDataType,valueConstraint,valueConstraintType,valueShape,note
+default,Default Shape,skos:prefLabel,Preferred Label,true,false,literal,,,,,"Single value property"
+default,Default Shape,skos:altLabel[csv],Alternative Labels,false,true,literal,,,,,"Multiple values in semicolon-delimited format"
+default,Default Shape,skos:broader[csv],Broader Concepts,false,true,IRI,,,,,"Multiple IRIs in semicolon-delimited format"
+default,Default Shape,skos:note@en[csv],Notes (English),false,true,literal,,,,,"Multiple English notes semicolon-delimited"
+default,Default Shape,skos:note@fr[csv],Notes (French),false,true,literal,,,,,"Multiple French notes semicolon-delimited"
+default,Default Shape,skos:related[csv],Related Concepts,false,true,IRI,,,,,"Related concepts semicolon-delimited"

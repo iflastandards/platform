@@ -1,0 +1,8 @@
+shapeID,shapeLabel,propertyID,propertyLabel,mandatory,repeatable,valueNodeType,valueDataType,valueConstraint,valueConstraintType,valueShape,note
+default,Default Shape,skos:prefLabel,Preferred Label,true,true,literal,,maxPerLanguage:1,,,"Standard SKOS property"
+default,Default Shape,reg:status,Registry Status,false,false,IRI,,,,,"Registry status property"
+default,Default Shape,reg:identifier,Registry Identifier,false,false,literal,,,,,"Registry identifier"
+default,Default Shape,dct:created,Date Created,false,false,literal,xsd:date,,,,"Creation date"
+default,Default Shape,dct:modified,Date Modified,false,false,literal,xsd:date,,,,"Modification date"
+default,Default Shape,dct:creator,Creator,false,true,IRI,,,,,"Creator agent"
+default,Default Shape,dct:contributor,Contributor,false,true,IRI,,,,,"Contributor agents"

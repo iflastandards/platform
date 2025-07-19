@@ -1,0 +1,21 @@
+@prefix skos: <http://www.w3.org/2004/02/skos/core#> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix ex: <http://example.org/> .
+
+# Valid resource with all mandatory fields
+ex:concept1
+    rdf:type skos:Concept ;
+    skos:prefLabel "First Concept"@en ;
+    skos:definition "A complete concept with all required fields"@en ;
+    skos:altLabel "Concept 1"@en .
+
+# Invalid resource missing mandatory skos:prefLabel
+ex:concept2
+    rdf:type skos:Concept ;
+    skos:definition "An incomplete concept missing required label"@en ;
+    skos:altLabel "Concept Two"@en .
+
+# Invalid resource missing mandatory rdf:type
+ex:concept3
+    skos:prefLabel "Third Concept"@en ;
+    skos:definition "Missing type declaration"@en .

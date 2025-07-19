@@ -1,0 +1,12 @@
+shapeID,shapeLabel,propertyID,propertyLabel,mandatory,repeatable,valueNodeType,valueDataType,valueConstraint,valueConstraintType,valueShape,note
+@mandatoryLanguages,,,en,,,,,,,,"English is mandatory"
+default,Default Shape,*skos:prefLabel@en,Preferred Label (English),true,false,literal,,maxPerLanguage:1,,,"Mandatory English label"
+default,Default Shape,skos:prefLabel@fr,Preferred Label (French),false,false,literal,,maxPerLanguage:1,,,"Optional French label"
+default,Default Shape,skos:altLabel[0],Alternative Label 1,false,true,literal,,,,,"First alt label (array format)"
+default,Default Shape,skos:altLabel[1],Alternative Label 2,false,true,literal,,,,,"Second alt label (array format)"
+default,Default Shape,skos:altLabel[csv],All Alternative Labels,false,true,literal,,,,,"All alt labels (CSV format)"
+default,Default Shape,skos:note@en[0],First English Note,false,true,literal,,,,,"First note in array"
+default,Default Shape,skos:note@en[1],Second English Note,false,true,literal,,,,,"Second note in array"
+default,Default Shape,skos:note@fr[csv],French Notes,false,true,literal,,,,,"All French notes as CSV"
+default,Default Shape,*rdf:type,Type,true,false,IRI,,,,,"Mandatory type"
+default,Default Shape,skos:broader[csv],Broader Concepts,false,true,IRI,,,,,"Broader concepts as CSV"

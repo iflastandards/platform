@@ -1,0 +1,28 @@
+@prefix skos: <http://www.w3.org/2004/02/skos/core#> .
+@prefix ex: <http://example.org/> .
+
+# Concept with multiple repeatable values
+ex:concept1
+    skos:prefLabel "Information Science"@en ;
+    skos:altLabel "Info Science"@en ;
+    skos:altLabel "Library and Information Science"@en ;
+    skos:altLabel "LIS"@en ;
+    skos:altLabel "Information Studies"@en ;  # This exceeds the defined array slots
+    skos:broader ex:science ;
+    skos:broader ex:socialScience ;
+    skos:note "A field of study"@en ;
+    skos:note "Interdisciplinary in nature"@en ;
+    skos:note "Combines technology and social aspects"@en .  # Exceeds defined slots
+
+# Concept with sparse array values
+ex:concept2
+    skos:prefLabel "Digital Libraries"@en ;
+    skos:altLabel "Electronic Libraries"@en ;
+    # No second altLabel
+    skos:altLabel "Virtual Libraries"@en ;  # This should go to slot [2]
+    skos:broader ex:libraries ;
+    skos:note "Modern library systems"@en .
+
+# Concept with no repeatable values
+ex:concept3
+    skos:prefLabel "Cataloging"@en .

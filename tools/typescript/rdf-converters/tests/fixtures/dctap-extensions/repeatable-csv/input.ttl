@@ -1,0 +1,35 @@
+@prefix skos: <http://www.w3.org/2004/02/skos/core#> .
+@prefix ex: <http://example.org/> .
+
+# Concept with multiple repeatable values to be CSV-formatted
+ex:concept1
+    skos:prefLabel "Information Retrieval"@en ;
+    skos:altLabel "IR"@en ;
+    skos:altLabel "Information Search"@en ;
+    skos:altLabel "Document Retrieval"@en ;
+    skos:broader ex:informationScience ;
+    skos:broader ex:computerScience ;
+    skos:broader ex:libraryScience ;
+    skos:note "The process of obtaining information"@en ;
+    skos:note "Includes search algorithms and indexing"@en ;
+    skos:note "A fundamental library service"@fr ;
+    skos:note "Un service bibliothécaire fondamental"@fr ;
+    skos:related ex:searchEngines ;
+    skos:related ex:databases ;
+    skos:related ex:indexing .
+
+# Concept with values containing semicolons (edge case)
+ex:concept2
+    skos:prefLabel "Subject Headings"@en ;
+    skos:altLabel "Controlled Vocabulary; Thesauri"@en ;
+    skos:altLabel "Authority Control"@en ;
+    skos:note "Used for organization; classification"@en ;
+    skos:note "Contains special chars: ; and ,"@en ;
+    skos:broader ex:knowledgeOrganization .
+
+# Concept with single values for repeatable properties
+ex:concept3
+    skos:prefLabel "MARC"@en ;
+    skos:altLabel "Machine-Readable Cataloging"@en ;
+    skos:broader ex:catalogingStandards ;
+    skos:note "A bibliographic data format"@en .
