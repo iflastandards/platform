@@ -54,23 +54,29 @@ async function ensureDirectory(filePath: string): Promise<void> {
 
 function convertFile(inputFile: string, outputFile: string, dctapProfile?: string): ConversionResult {
   try {
-    // Build command
-    const scriptPath = path.join(__dirname, 'rdf-to-csv.ts');
-    let command = `tsx "${scriptPath}" "${inputFile}" -o "${outputFile}"`;
+    // Build command - use the compiled version
+    const scriptPath = path.join(__dirname, 'rdf-to-csv.js');
+    let command = `node "${scriptPath}" "${inputFile}" -o "${outputFile}"`;
     
     if (dctapProfile) {
       command += ` -p "${dctapProfile}"`;
     }
     
     // Execute conversion - capture stderr where the resource count is logged
-    const _output = execSync(command, { 
+    const result = execSync(command, { 
       encoding: 'utf8',
       stdio: ['pipe', 'pipe', 'pipe']
     });
     
-    // The resource count is in stderr, not stdout
-    // For now, we'll skip resource counting in batch mode
-    const resourceCount = undefined;
+    // Try to extract resource count from stderr if available
+    // Look for pattern like "After filtering: 123 resources"
+    let resourceCount: number | undefined;
+    if (result && typeof result === 'string') {
+      const match = result.match(/After filtering: (\d+) resources/);
+      if (match) {
+        resourceCount = parseInt(match[1]);
+      }
+    }
     
     return {
       success: true,
