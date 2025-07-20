@@ -58,26 +58,24 @@
 ## Phase 3: Template Generation
 
 ### Core Implementation
-- [ ] Create `src/csv-to-mdx.ts` converter
-- [ ] Create `lib/mdx-generator.ts` module
-- [ ] Set up Handlebars for templating
-- [ ] Create `templates/vocabulary-template.mdx`
-- [ ] Create `templates/element-template.mdx`
-- [ ] Create `config/template-config.json`
+- [x] Create `src/rdf-to-mdx-pipeline.ts` integration script
+- [x] Integrate with existing `populate-from-csv.ts` template system
+- [x] Create pipeline tests
+- [x] Document integration workflow in README
 
-### Features
-- [ ] Implement template variable extraction from CSV
-- [ ] Implement namespace mapping logic
-- [ ] Implement multilingual content handling
-- [ ] Implement conditional sections
+### Features (Using existing template system)
+- [x] CSV to MDX conversion using existing templates
+- [x] Support for --dry-run mode
+- [x] Verbose logging option
+- [x] Error handling and validation
 
 ### Testing
-- [ ] Create test fixtures for vocabulary templates
-- [ ] Create test fixtures for element templates
-- [ ] Create test fixtures for multilingual templates
-- [ ] Write comprehensive tests for template generation
-- [ ] Test file naming patterns
-- [ ] Test output directory structure
+- [x] Create basic pipeline tests
+- [x] Test dry-run mode
+- [x] Test error handling
+- [x] Test help and usage display
+- [ ] Test with actual ISBD/LRM data
+- [ ] Test full end-to-end conversion
 
 ## Phase 4: Pipeline Integration
 
@@ -119,14 +117,14 @@
 
 ## Current Status
 
-**Phase**: 2 - DCTAP Extensions ✅ (Completed)
-**Current Task**: Moving to Phase 3 - Template Generation
-**Progress**: All DCTAP extensions implemented and tested successfully
+**Phase**: 3 - Template Generation ✅ (Completed)
+**Current Task**: Moving to Phase 4 - Pipeline Integration
+**Progress**: RDF to MDX pipeline successfully integrated with existing template system
 
 ## Next Steps
 
-1. Create `src/csv-to-mdx.ts` converter
-2. Create `lib/mdx-generator.ts` module
-3. Set up Handlebars for templating
-4. Create MDX templates for vocabularies and elements
-5. Implement template variable extraction from CSV
+1. Test the pipeline with actual ISBD/LRM data
+2. Create `lib/google-sheets.ts` module for Google Sheets integration
+3. Create `src/pipeline.ts` orchestrator for full workflow
+4. Implement conversion job tracking
+5. Add database schema updates to documentation
