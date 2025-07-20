@@ -1,2 +1,4 @@
-uri,skos:altLabel@en[0],skos:altLabel@en[1],skos:altLabel@fr[0],skos:altLabel@fr[1],skos:definition@en[0],skos:definition@en[1],skos:definition@fr[0],skos:definition@fr[1],skos:prefLabel@en,skos:prefLabel@es,skos:prefLabel@fr
-ex:concept1,Book collection,,Collection de livres,,A collection of books and other materials,,Une collection de livres et d'autres matériaux,,Library,Biblioteca,Bibliothèque
+uri,skos:prefLabel@en,skos:prefLabel@fr,skos:prefLabel@es,skos:definition@en,skos:definition@fr,skos:altLabel@en[0],skos:altLabel@fr[0]
+ex:concept1,Library,Bibliothèque,Biblioteca,A collection of books and other materials,Une collection de livres et d'autres matériaux,Book collection,Collection de livres
+ex:concept2,Archive,,Archivo,A place where historical records are kept,,Records repository,
+ex:concept3,Museum,Musée,,An institution that cares for a collection,,,

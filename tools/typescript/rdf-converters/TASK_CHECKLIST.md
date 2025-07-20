@@ -33,26 +33,26 @@
 ## Phase 2: DCTAP Extensions
 
 ### Implementation
-- [ ] Create `lib/dctap-extensions.ts` module
-- [ ] Implement mandatory field validation (`*` prefix)
-- [ ] Implement language-tagged property support
-- [ ] Implement `skos:prefLabel` one-per-language constraint
-- [ ] Implement array format for repeatable values
-- [ ] Implement CSV format for repeatable values
-- [ ] Implement Postel's Law for import
-- [ ] Implement registry property support
+- [x] Create `lib/dctap-extensions.ts` module (integrated into dctap.ts and generator.ts)
+- [x] Implement mandatory field validation (`*` prefix)
+- [x] Implement language-tagged property support
+- [x] Implement `skos:prefLabel` one-per-language constraint
+- [x] Implement array format for repeatable values
+- [x] Implement CSV format for repeatable values
+- [x] Implement Postel's Law for import
+- [x] Implement registry property support
 
 ### Testing
-- [ ] Create test fixtures for mandatory fields
-- [ ] Create test fixtures for language tags
-- [ ] Create test fixtures for repeatable formats
-- [ ] Create test fixtures for mixed formats
-- [ ] Create test fixtures for registry properties
-- [ ] Write tests for all DCTAP extension features
+- [x] Create test fixtures for mandatory fields
+- [x] Create test fixtures for language tags
+- [x] Create test fixtures for repeatable formats
+- [x] Create test fixtures for mixed formats
+- [x] Create test fixtures for registry properties
+- [x] Write tests for all DCTAP extension features
 - [ ] Create error case fixtures and tests
 
 ### Integration
-- [ ] Update main converters to use DCTAP extensions
+- [x] Update main converters to use DCTAP extensions
 - [ ] Add validation error reporting
 
 ## Phase 3: Template Generation
@@ -119,14 +119,14 @@
 
 ## Current Status
 
-**Phase**: 1 - Core Migration & Basic Tests
-**Current Task**: Extracting core logic into modules
-**Progress**: Scripts moved, package configured, basic tests created
+**Phase**: 2 - DCTAP Extensions ✅ (Completed)
+**Current Task**: Moving to Phase 3 - Template Generation
+**Progress**: All DCTAP extensions implemented and tested successfully
 
 ## Next Steps
 
-1. Extract RDF parsing logic into `lib/rdf-parser.ts`
-2. Extract CSV generation logic into `lib/csv-generator.ts`
-3. Extract DCTAP loading logic into `lib/dctap-loader.ts`
-4. Create more test fixtures for different scenarios
-5. Test that existing functionality still works
+1. Create `src/csv-to-mdx.ts` converter
+2. Create `lib/mdx-generator.ts` module
+3. Set up Handlebars for templating
+4. Create MDX templates for vocabularies and elements
+5. Implement template variable extraction from CSV

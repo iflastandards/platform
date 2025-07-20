@@ -1,2 +1,4 @@
-uri,rdf:type,skos:altLabel@en[0],skos:altLabel@en[1],skos:definition@en[0],skos:definition@en[1],skos:prefLabel@en
-ex:concept1,skos:Concept,Concept 1,,A complete concept with all required fields,,First Concept
+uri,skos:prefLabel@en,skos:definition@en[0],rdf:type,skos:altLabel@en[0]
+ex:concept1,First Concept,A complete concept with all required fields,skos:Concept,Concept 1
+ex:concept2,,An incomplete concept missing required label,skos:Concept,Concept Two
+ex:concept3,Third Concept,Missing type declaration,,

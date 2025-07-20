@@ -1,3 +1,4 @@
-uri,rdf:type,skos:altLabel[0],skos:altLabel[1],skos:altLabel[csv],skos:broader[csv],skos:note@en[0],skos:note@en[1],skos:note@fr[csv],skos:prefLabel@en,skos:prefLabel@fr
-ex:concept1,skos:Concept,DP,Digital Archiving,DP;Digital Archiving;Electronic Preservation;Long-term Digital Storage,ex:preservation;ex:digitalLibraries;ex:informationManagement,The process of maintaining digital information,Includes format migration and emulation,Processus de maintien de l'information numérique;Inclut la migration de format;Essentiel pour le patrimoine culturel,Digital Preservation,Préservation numérique
-ex:concept2,skos:Concept,Descriptive Data,,Descriptive Data,ex:cataloging,Data about data,,,Metadata,
+uri,skos:prefLabel@en,skos:prefLabel@fr,skos:altLabel[0],skos:altLabel[1],skos:altLabel[csv],skos:note@en[0],skos:note@en[1],skos:note@fr[csv],rdf:type,skos:broader[csv]
+ex:concept1,Digital Preservation,Préservation numérique,DP,Digital Archiving,DP;Digital Archiving;Electronic Preservation;Long-term Digital Storage,The process of maintaining digital information,Includes format migration and emulation,Processus de maintien de l'information numérique;Inclut la migration de format;Essentiel pour le patrimoine culturel,skos:Concept,ex:preservation;ex:digitalLibraries;ex:informationManagement
+ex:concept2,Metadata,,Descriptive Data,,Descriptive Data,Data about data,,,skos:Concept,ex:cataloging
+ex:concept3,,Métadonnées,Meta-information,,Meta-information,,,,,

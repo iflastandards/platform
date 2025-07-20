@@ -73,34 +73,33 @@ export class DctapProfileParser {
     let isCsv = false;
     let arrayIndex: number | undefined;
 
-    // Check for IFLA extensions
+    // Check for IFLA extensions in correct order
 
-    // 1. Mandatory marker (*)
+    // 1. Mandatory marker (*) - always comes first
     if (processedID.startsWith('*')) {
       isMandatory = true;
       processedID = processedID.substring(1);
     }
 
-    // 2. Language tag (@lang)
-    const langMatch = processedID.match(/^(.+)@(\w+)$/);
-    if (langMatch) {
-      processedID = langMatch[1];
-      language = langMatch[2];
-    }
-
-    // 3. Array index ([0], [1], etc.)
+    // 2. Check for array or CSV format first (before language)
+    // This handles cases like propertyID[0] or propertyID[csv]
     const arrayMatch = processedID.match(/^(.+)\[(\d+)\]$/);
+    const csvMatch = processedID.match(/^(.+)\[csv\]$/);
+    
     if (arrayMatch) {
       processedID = arrayMatch[1];
       isArray = true;
       arrayIndex = parseInt(arrayMatch[2]);
-    }
-
-    // 4. CSV format ([csv])
-    const csvMatch = processedID.match(/^(.+)\[csv\]$/);
-    if (csvMatch) {
+    } else if (csvMatch) {
       processedID = csvMatch[1];
       isCsv = true;
+    }
+
+    // 3. Language tag (@lang) - comes after property but before array/csv
+    const langMatch = processedID.match(/^(.+)@(\w+)$/);
+    if (langMatch) {
+      processedID = langMatch[1];
+      language = langMatch[2];
     }
 
     // Parse standard DCTAP fields

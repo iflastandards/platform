@@ -1,2 +1,2 @@
-uri,rdf:type,rdfs:label@en,rdfs:label@es,rdfs:label@fr,rdfs:comment@en,rdfs:domain,rdfs:range
-http://iflastandards.info/ns/isbd/elements/P1001,http://www.w3.org/1999/02/22-rdf-syntax-ns#Property,has content form,tiene forma del contenido,a pour forme de contenu,Relates a resource to its content form.,http://iflastandards.info/ns/isbd/elements/C2001,http://www.w3.org/2000/01/rdf-schema#Literal
+uri,rdf:type,rdfs:comment@en,rdfs:domain,rdfs:label@en[0],rdfs:label@es[0],rdfs:label@fr[0],rdfs:range
+isbd:P1001,rdf:Property,Relates a resource to its content form.,isbd:C2001,has content form,tiene forma del contenido,a pour forme de contenu,rdfs:Literal

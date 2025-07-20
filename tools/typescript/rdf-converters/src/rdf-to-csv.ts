@@ -28,10 +28,11 @@ async function main() {
         const parser = new RdfParser();
 
         // Load DCTAP profile if provided
+        let profile;
         let profileData;
         if (options.profile) {
           const profileParser = new DctapProfileParser();
-          const profile = await profileParser.loadProfile(options.profile);
+          profile = await profileParser.loadProfile(options.profile);
           profileData = profileParser.getProfileData(profile);
         } else {
           profileData = createDefaultProfileData((curie) => parser.expandCurie(curie));
@@ -65,12 +66,19 @@ async function main() {
           (uri) => parser.toCurie(uri)
         );
 
-        const csvString = generator.generateCsv(
-          resources,
-          profileData.repeatableProperties,
-          profileData.maxPerLanguageProperties,
-          profileData.urlLiteralProperties
-        );
+        let csvString;
+        if (profile) {
+          // Use new profile-based generation with DCTAP extensions
+          csvString = generator.generateCsvWithProfile(resources, profile);
+        } else {
+          // Use legacy generation for backward compatibility
+          csvString = generator.generateCsv(
+            resources,
+            profileData.repeatableProperties,
+            profileData.maxPerLanguageProperties,
+            profileData.urlLiteralProperties
+          );
+        }
 
         // Write output
         if (options.output) {
