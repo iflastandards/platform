@@ -109,44 +109,55 @@ class PageTemplateGenerator {
   }
 
   /**
+   * Get the base landing page template as a string to avoid JSX parsing issues
+   */
+  private getLandingPageBaseTemplate(config: SiteConfiguration): string {
+    const templateString = [
+      '---',
+      'sidebar_position: 1',
+      `title: ${config.title}`,
+      'sidebar_label: Overview',
+      `description: ${config.description}`,
+      'hide_table_of_contents: true',
+      '---',
+      '',
+      'import { NamespaceHub } from \'@ifla/theme/components/NamespaceHub\';',
+      'import { ElementSetCard } from \'@ifla/theme/components/ElementSetCard\';',
+      'import { VocabularyCard } from \'@ifla/theme/components/VocabularyCard\';',
+      'import { CompactButton } from \'@ifla/theme/components/CompactButton\';',
+      '',
+      `# ${config.title}`,
+      '',
+      config.description,
+      '',
+      '## Namespace Statistics',
+      '',
+      '<div style=\{{ display: \'flex\', gap: \'20px\', marginBottom: \'40px\', flexWrap: \'wrap\' }}>',
+      '  <div style=\{{ background: \'#e3f2fd\', padding: \'20px\', borderRadius: \'8px\', flex: \'1\', minWidth: \'200px\' }}>',
+      '    <div style=\{{ fontSize: \'0.9rem\', color: \'#666\' }}>Total Elements</div>',
+      `    <div style=\{{ fontSize: '2rem', fontWeight: 'bold', color: '#1976d2' }}>${config.statistics.totalElements.toLocaleString()}</div>`,
+      `    <div style=\{{ fontSize: '0.8rem', color: '#999' }}>Across ${config.statistics.elementSets} element set${config.statistics.elementSets !== 1 ? 's' : ''}</div>`,
+      '  </div>'
+    ].join('\n');
+    
+    return templateString;
+  }
+
+  /**
    * Generate landing page template
    */
   private generateLandingPage(config: SiteConfiguration): PageTemplate {
     const hasElementSets = config.elementSets.length > 0;
     const hasVocabularies = config.vocabularies.length > 0;
 
-    let content = `---
-sidebar_position: 1
-title: ${config.title}
-sidebar_label: Overview
-description: ${config.description}
-hide_table_of_contents: true
----
-
-import { NamespaceHub } from '@ifla/theme/components/NamespaceHub';
-import { ElementSetCard } from '@ifla/theme/components/ElementSetCard';
-import { VocabularyCard } from '@ifla/theme/components/VocabularyCard';
-import { CompactButton } from '@ifla/theme/components/CompactButton';
-
-# ${config.title}
-
-${config.description}
-
-## Namespace Statistics
-
-<div style={{ display: 'flex', gap: '20px', marginBottom: '40px', flexWrap: 'wrap' }}>
-  <div style={{ background: '#e3f2fd', padding: '20px', borderRadius: '8px', flex: '1', minWidth: '200px' }}>
-    <div style={{ fontSize: '0.9rem', color: '#666' }}>Total Elements</div>
-    <div style={{ fontSize: '2rem', fontWeight: 'bold', color: '#1976d2' }}>${config.statistics.totalElements.toLocaleString()}</div>
-    <div style={{ fontSize: '0.8rem', color: '#999' }}>Across ${config.statistics.elementSets} element set${config.statistics.elementSets !== 1 ? 's' : ''}</div>
-  </div>`;
+    let content = this.getLandingPageBaseTemplate(config);
 
     if (config.statistics.totalConcepts > 0) {
       content += `
-  <div style={{ background: '#f3e5f5', padding: '20px', borderRadius: '8px', flex: '1', minWidth: '200px' }}>
-    <div style={{ fontSize: '0.9rem', color: '#666' }}>Total Concepts</div>
-    <div style={{ fontSize: '2rem', fontWeight: 'bold', color: '#7b1fa2' }}>${config.statistics.totalConcepts.toLocaleString()}</div>
-    <div style={{ fontSize: '0.8rem', color: '#999' }}>Across ${config.statistics.vocabularies} vocabular${config.statistics.vocabularies !== 1 ? 'ies' : 'y'}</div>
+  <div style=\{{ background: '#f3e5f5', padding: '20px', borderRadius: '8px', flex: '1', minWidth: '200px' }}>
+    <div style=\{{ fontSize: '0.9rem', color: '#666' }}>Total Concepts</div>
+    <div style=\{{ fontSize: '2rem', fontWeight: 'bold', color: '#7b1fa2' }}>${config.statistics.totalConcepts.toLocaleString()}</div>
+    <div style=\{{ fontSize: '0.8rem', color: '#999' }}>Across ${config.statistics.vocabularies} vocabular${config.statistics.vocabularies !== 1 ? 'ies' : 'y'}</div>
   </div>`;
     }
 
@@ -161,12 +172,12 @@ ${config.description}
 
 ${this.getElementSetsDescription(config)}
 
-<div style={{ display: 'grid', gap: '20px', marginBottom: '40px' }}>`;
+<div style=\{{ display: 'grid', gap: '20px', marginBottom: '40px' }}>`;
 
       for (const elementSet of config.elementSets) {
         content += `
   <ElementSetCard 
-    elementSet={{
+    elementSet=\{{
       id: '${elementSet.id}',
       title: '${elementSet.title}',
       description: '${elementSet.description || ''}',
@@ -182,7 +193,7 @@ ${this.getElementSetsDescription(config)}
 
       if (config.elementSets.length > 1) {
         content += `
-<div style={{ textAlign: 'center', marginBottom: '40px' }}>
+<div style=\{{ textAlign: 'center', marginBottom: '40px' }}>
   <CompactButton to="/elements">Browse All Element Sets</CompactButton>
 </div>`;
       }
@@ -195,12 +206,12 @@ ${this.getElementSetsDescription(config)}
 
 ${this.getVocabulariesDescription(config)}
 
-<div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(300px, 1fr))', gap: '16px', marginBottom: '40px' }}>`;
+<div style=\{{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(300px, 1fr))', gap: '16px', marginBottom: '40px' }}>`;
 
       for (const vocabulary of config.vocabularies) {
         content += `
   <VocabularyCard 
-    vocabulary={{
+    vocabulary=\{{
       id: '${vocabulary.id}',
       title: '${vocabulary.title}',
       description: '${vocabulary.description || ''}',
@@ -217,7 +228,7 @@ ${this.getVocabulariesDescription(config)}
 
       if (config.vocabularies.length > 1) {
         content += `
-<div style={{ textAlign: 'center', marginBottom: '40px' }}>
+<div style=\{{ textAlign: 'center', marginBottom: '40px' }}>
   <CompactButton to="/vocabularies">Browse All Vocabularies</CompactButton>
 </div>`;
       }
@@ -238,23 +249,34 @@ This namespace contains a large number of element sets and vocabularies. Use the
   }
 
   /**
+   * Get element sets index page template as string to avoid JSX parsing issues
+   */
+  private getElementSetsIndexTemplate(config: SiteConfiguration): string {
+    const templateString = [
+      '---',
+      `title: ${config.title} Element Sets`,
+      'sidebar_position: 10',
+      '---',
+      '',
+      `# ${config.title} Element Sets`,
+      '',
+      this.getElementSetsDescription(config),
+      '',
+      '## Available Element Sets',
+      '',
+      '<div style=\{{ display: \'grid\', gap: \'20px\', marginTop: \'24px\' }}>'
+    ].join('\n');
+    
+    return templateString;
+  }
+
+  /**
    * Generate element sets index page
    */
   private generateElementSetsIndexPage(
     config: SiteConfiguration,
   ): PageTemplate {
-    let content = `---
-title: ${config.title} Element Sets
-sidebar_position: 10
----
-
-# ${config.title} Element Sets
-
-${this.getElementSetsDescription(config)}
-
-## Available Element Sets
-
-<div style={{ display: 'grid', gap: '20px', marginTop: '24px' }}>`;
+    let content = this.getElementSetsIndexTemplate(config);
 
     // Group element sets by category if hierarchical navigation
     if (config.navigationStrategy === 'hierarchical') {
@@ -264,7 +286,7 @@ ${this.getElementSetsDescription(config)}
         content += `
 ### ${this.formatCategoryName(category)}
 
-<div style={{ display: 'grid', gap: '16px', marginBottom: '32px' }}>`;
+<div style=\{{ display: 'grid', gap: '16px', marginBottom: '32px' }}>`;
 
         for (const elementSet of elementSets) {
           content += this.generateElementSetCard(elementSet);
@@ -447,7 +469,7 @@ ${this.getVocabulariesDescription(config)}
 
 ### ${this.formatCategoryName(category)}
 
-<div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(300px, 1fr))', gap: '16px', marginBottom: '32px' }}>`;
+<div style=\{{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(300px, 1fr))', gap: '16px', marginBottom: '32px' }}>`;
 
         for (const vocabulary of vocabularies) {
           content += this.generateVocabularyCard(vocabulary);
@@ -459,7 +481,7 @@ ${this.getVocabulariesDescription(config)}
     } else {
       content += `
 
-<div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(300px, 1fr))', gap: '16px', marginTop: '24px' }}>`;
+<div style=\{{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(300px, 1fr))', gap: '16px', marginTop: '24px' }}>`;
 
       for (const vocabulary of config.vocabularies) {
         content += this.generateVocabularyCard(vocabulary);
@@ -509,7 +531,7 @@ ${this.getVocabulariesDescription(config)}
   private generateElementSetCard(elementSet: ElementSet): string {
     return `
   <ElementSetCard 
-    elementSet={{
+    elementSet=\{{
       id: '${elementSet.id}',
       title: '${elementSet.title}',
       description: '${elementSet.description || ''}',
@@ -526,7 +548,7 @@ ${this.getVocabulariesDescription(config)}
   private generateVocabularyCard(vocabulary: Vocabulary): string {
     return `
   <VocabularyCard 
-    vocabulary={{
+    vocabulary=\{{
       id: '${vocabulary.id}',
       title: '${vocabulary.title}',
       description: '${vocabulary.description || ''}',

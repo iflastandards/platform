@@ -13,16 +13,16 @@ This document defines the Minimum Viable Product (MVP) and critical path impleme
 ### Core Requirements
 
 The MVP must support:
-1. **Legacy URL Compatibility**: All existing vocabulary URIs must continue to work
+1. **Import/Export Workflows**: Google Sheets import for bootstrapping
 2. **Basic Admin Functions**: User management, namespace administration
-3. **Import/Export Workflows**: Google Sheets import for bootstrapping
-4. **GitHub Integration**: Basic project and issue tracking
-5. **Publishing Pipeline**: Ability to publish vocabularies with proper redirects
+3. **GitHub Integration**: Basic project and issue tracking
+4. **TinaCMS integration
+5. **Legacy URL Compatibility**: All existing vocabulary URIs must continue to work
+6. **Publishing Pipeline**: Ability to publish vocabularies with proper redirects
 
 ### Out of Scope for MVP
 
 These features will be implemented post-MVP:
-- TinaCMS integration (complex, can wait)
 - Advanced translation workflows
 - AI-powered features
 - Comprehensive analytics
