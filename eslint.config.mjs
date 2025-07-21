@@ -101,10 +101,15 @@ export default [
       '**/playwright.*.{js,ts}',
       '**/test-*.{js,jsx,ts,tsx}',
       '**/scripts/test-*.{js,jsx,ts,tsx}',
+      '**/*test*.{js,jsx,ts,tsx}',  // Catch test-server-manager.ts and similar
+      '**/__mocks__/**/*.{js,jsx,ts,tsx}',  // Mock files should have relaxed rules
     ],
     rules: {
       // Allow any types in tests for mocking
       '@typescript-eslint/no-explicit-any': 'off',
+      
+      // Turn unused imports into warnings for test files
+      'unused-imports/no-unused-imports': 'warn',
       
       // Allow unused vars with _ prefix (common in test setups)
       'unused-imports/no-unused-vars': [
