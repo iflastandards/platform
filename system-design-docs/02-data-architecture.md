@@ -223,6 +223,63 @@ interface LocalizedString {
 }
 ```
 
+### Multi-Element Set Architecture
+**Namespace with Multiple Element Sets**:
+```typescript
+interface NamespaceConfiguration {
+  id: string;
+  title: string;
+  description: string;
+  elementSets: ElementSetInfo[];
+  vocabularies: VocabularyInfo[];
+  navigationStrategy: 'simple' | 'categorized' | 'hierarchical';
+}
+
+interface ElementSetInfo {
+  id: string;
+  title: string;
+  description: string;
+  elementCount: number;
+  lastUpdated: string;
+  path: string;
+  categories: string[];
+  prefix: string;
+  baseIRI: string;
+}
+
+interface VocabularyInfo {
+  id: string;
+  title: string;
+  description?: string;
+  conceptCount: number;
+  path: string;
+  lastUpdated?: string;
+  category?: string;
+}
+```
+
+**Examples**:
+- **ISBD**: 2 element sets (ISBD, ISBD Unconstrained) + 7 vocabularies
+- **UNIMARC**: ~24 element sets organized by field groups + many vocabularies
+
+**Directory Structure**:
+```
+/standards/{namespace}/
+├── docs/
+│   ├── index.mdx                    # Namespace overview
+│   ├── elements/                    # Element Sets section
+│   │   ├── index.mdx               # Element sets overview
+│   │   ├── {element-set-1}/        # First element set
+│   │   │   ├── index.mdx          
+│   │   │   └── {categories}/      
+│   │   └── {element-set-2}/        # Second element set
+│   │       ├── index.mdx          
+│   │       └── {categories}/      
+│   └── vocabularies/               # Concept Schemes section
+│       ├── index.mdx              # Vocabularies overview
+│       └── {vocabulary-name}/     
+```
+
 ### DCTAP Profile Model
 ```typescript
 interface DCTAPProfile {
@@ -475,19 +532,130 @@ Cache Invalidation:
 - Timestamp precision
 - Immutable audit trail
 
+## Vocabulary Server Architecture
+
+### Content Negotiation System
+**Purpose**: Handle HTTP content negotiation for RDF resources and legacy URL compatibility
+
+**Requirements**:
+```yaml
+Core Features:
+  - Arbitrary redirect mapping (URI to documentation URL)
+  - Lexical alias support (human-readable URIs)
+  - Version-aware routing
+  - Performance: <10ms redirect latency
+  - Scale: Support 10K+ mappings per namespace
+```
+
+**Pathmap Data Structure**:
+```json
+{
+  "namespace": "isbd",
+  "version": "2.0",
+  "base_url": "https://www.iflastandards.info/isbd",
+  "mappings": [
+    {
+      "uri": "http://iflastandards.info/ns/isbd/terms/1001",
+      "path": "/docs/vocabularies/contentTypes/Text",
+      "aliases": {
+        "en": "Text",
+        "fr": "Texte",
+        "es": "Texto"
+      }
+    }
+  ],
+  "slug_rules": {
+    "case": "lowercase",
+    "separator": "-",
+    "normalize_unicode": true,
+    "max_length": 50
+  }
+}
+```
+
+**Implementation Options**:
+1. **Enhanced Nginx**: Native performance, limited flexibility
+2. **Nginx + Lua**: Dynamic resolution, hot reload capability
+3. **Edge Functions**: Full programmatic control, easy platform integration
+
+## MDX Generation Safety Patterns
+
+### Dry-Run System
+**Purpose**: Preview MDX generation changes before application
+
+**Architecture**:
+```typescript
+interface DryRunConfig {
+  namespace: string;
+  version: string;
+  source: SpreadsheetSource;
+  outputFormat: 'diff' | 'side-by-side' | 'summary';
+  includeMetrics: boolean;
+}
+
+interface DryRunResult {
+  summary: ChangeSummary;
+  changes: FileChange[];
+  warnings: ValidationWarning[];
+  breakingChanges: BreakingChange[];
+  preview: string;
+}
+```
+
+### Rollback Mechanism
+**Backup Strategy**:
+```typescript
+interface BackupStrategy {
+  type: 'git' | 'filesystem' | 'hybrid';
+  retention: {
+    count: 10;
+    duration: { days: 30 };
+  };
+  compression: boolean;
+}
+
+interface RestorePoint {
+  id: string;
+  namespace: string;
+  timestamp: Date;
+  files: FileInventory;
+  metadata: GenerationMetadata;
+}
+```
+
+**Atomic Operations**:
+- Write to temporary directory
+- Validate completeness
+- Create backup of current state
+- Atomic move to target
+- Verify successful write
+- Clean up on success or restore on failure
+
+### Validation Gates
+```typescript
+const GENERATION_GATES: ValidationGate[] = [
+  { name: 'Schema Validation', critical: true },
+  { name: 'Breaking Change Detection', critical: true },
+  { name: 'URI Consistency', critical: true },
+  { name: 'Translation Completeness', critical: false }
+];
+```
+
 ## Disaster Recovery
 
 ### Backup Strategy
-- Git: Distributed by nature
+- Git: Distributed by nature + tagged MDX generations
 - Supabase: Daily automated backups
 - Google Sheets: Version history
 - Clerk: Managed service backups
+- MDX: Git tags + filesystem snapshots for rollback
 
 ### Recovery Procedures
 1. **Data Loss**: Restore from Git history
 2. **Service Outage**: Failover to cached data
 3. **Corruption**: Validation and repair scripts
 4. **Complete Failure**: Rebuild from Git
+5. **Bad MDX Generation**: Rollback to tagged version
 
 ## Future Considerations
 
@@ -496,11 +664,13 @@ Cache Invalidation:
 - Read replica configuration
 - Sharding for geographic distribution
 - Event streaming for real-time updates
+- Multi-element set optimization for large namespaces
 
 ### Technology Evolution
 - GraphQL API layer
 - Event sourcing for audit trail
 - CRDT for collaborative editing
 - Blockchain for immutable provenance
+- Enhanced vocabulary server with ML-based routing
 
 This data architecture provides a robust, scalable foundation that maintains data integrity while enabling collaborative workflows and high-performance access patterns.

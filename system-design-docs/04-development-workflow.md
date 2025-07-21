@@ -543,4 +543,265 @@ nx docs:check-links
 - Training programs
 - Documentation updates
 
-This development workflow provides a structured, quality-focused approach to standards development while maintaining flexibility for different types of changes and team preferences.
+## Edit Permissions and Workflow Governance
+
+### Granular Permission System
+
+The platform implements a sophisticated role-based access control system integrated with TinaCMS and GitHub:
+
+#### Permission Matrix by User Type
+
+| User Type | GitHub Org Member | Can Use TinaCMS | Can Direct Edit | Can Create PR | Can Fork |
+|-----------|-------------------|-----------------|-----------------|---------------|----------|
+| Anonymous | No | No | No | No | Yes |
+| GitHub User | No | No | No | Yes | Yes |
+| Org Member | Yes | Yes | Draft only | Yes | Yes |
+| Namespace Editor | Yes | Yes | Draft only | Yes | Yes |
+| Review Group Admin | Yes | Yes | Draft + Unlock | Yes | Yes |
+| Superadmin | Yes | Yes | All | Yes | Yes |
+
+#### TinaCMS Integration Workflow
+
+**Authentication Flow**:
+1. User clicks "Edit this page" on Docusaurus site
+2. System checks GitHub organization membership
+3. Org members → TinaCMS editor loads
+4. Non-members → Redirect to fork workflow
+
+**Version Locking System**:
+- Released versions are locked by default
+- Review Group Admins can temporarily unlock (24h)
+- All edits to released content require PR review
+- Draft versions allow direct TinaCMS editing
+
+**Key Implementation Details**:
+```typescript
+// Permission check logic
+export function checkEditPermissions(
+  user: User | null,
+  namespace: string,
+  version: string,
+  isReleased: boolean
+): EditPermissions {
+  // Released version logic
+  if (isReleased) {
+    if (user.role === 'superadmin' || isReviewGroupAdmin(user, namespace)) {
+      return { canUseTina: true, editMode: 'unlock-required' };
+    }
+    return { canUseTina: false, editMode: 'pr-only' };
+  }
+  // Draft version - full TinaCMS access
+  return { canUseTina: true, editMode: 'direct' };
+}
+```
+
+### Branch Management Strategy
+
+**Feature Branches**:
+- Released content → Create feature branch
+- Draft content → Use draft/{namespace} branch
+- Automatic PR creation for released content changes
+
+## Translation Management Procedures
+
+### Version-Based Translation Architecture
+
+The platform employs a sophisticated version-based approach to manage translations across multiple workflows:
+
+#### Core Translation Principle: Clear Source of Truth Transitions
+
+At any given time, there is ONE clear source of truth for each content type. The source of truth transitions at version boundaries:
+
+```mermaid
+stateDiagram-v2
+    [*] --> Published_v1: Initial Release
+    Published_v1 --> Export_to_Sheets: Start v2
+    Export_to_Sheets --> Sheets_Unlocked: MDX → Sheets
+    Sheets_Unlocked --> Translation_Work: Translators work
+    Translation_Work --> Review_Changes: English modifications?
+    Review_Changes --> Import_to_MDX: One-time import
+    Import_to_MDX --> Sheets_Locked: Lock sheets
+    Sheets_Locked --> MDX_Editing: TinaCMS/Git editing
+    MDX_Editing --> Published_v2: Release v2
+```
+
+#### Three Translation Workflows
+
+1. **Vocabulary Translations (Spreadsheet-Native)**
+   - Source: English terms in Google Sheets
+   - Process: Human translators work directly in sheets
+   - Storage: Single MDX file with all languages
+   - Version control through sheets during development
+
+2. **Documentation Translations (Docusaurus-Native)**
+   - Source: English MDX files in /docs
+   - Process: Export to Crowdin → Translation → Import
+   - Storage: Separate files per language (i18n directories)
+   - Continuous synchronization via Git
+
+3. **RDF Documentation (Hybrid)**
+   - Source: English in spreadsheet (with vocabulary)
+   - Process: Initial translation in sheets → Enhancement in Crowdin
+   - Storage: Mixed approach with potential for drift
+
+#### English Modification Handling
+
+When translators suggest English content changes during translation:
+
+```typescript
+interface EnglishModificationDialog {
+  options: {
+    importAll: "Import all changes and create PR";
+    importSelective: "Review each change";
+    skipAll: "Keep original English, import only translations";
+    defer: "Create issues for later review";
+  };
+}
+```
+
+**Review Process**:
+1. System detects English modifications in "locked" content
+2. Presents changes to Review Group Admin
+3. Admin decides per-change or batch action
+4. Creates GitHub issues or PRs as appropriate
+5. Maintains full audit trail
+
+#### Key Implementation Details
+
+**Version State Tracking**:
+```typescript
+class VersionBasedSyncEngine {
+  // One-way export: MDX → Spreadsheets (at version start)
+  async exportToSheetsForNewVersion(namespace: string, newVersion: string) {
+    const currentMDX = await this.mdx.getAllContent(namespace);
+    await this.sheets.createVersionedExport({
+      namespace,
+      version: newVersion,
+      content: currentMDX,
+      status: 'unlocked'
+    });
+  }
+  
+  // One-way import: Spreadsheets → MDX (once per version)
+  async importFromSheets(namespace: string, version: string) {
+    // Check for English modifications
+    const englishChanges = this.detectEnglishModifications(sheetData);
+    if (englishChanges.length > 0) {
+      await this.handleEnglishModifications(englishChanges);
+    }
+    // Import and lock
+    await this.mdx.importContent(sheetData, version);
+    await this.sheets.lockVersion(namespace, version);
+  }
+}
+```
+
+## CSV to MDX Conversion Workflow Example
+
+### ISBD Implementation Case Study
+
+The ISBD CSV to MDX conversion demonstrates a complete vocabulary import workflow:
+
+#### Phase 4.0 Implementation Overview
+
+**Current Infrastructure**:
+- `populate-from-csv.ts` script for MDX generation
+- Templates in `/standards/isbd/templates/`
+- CSV data in `/standards/isbd/csv/ns/isbd/`
+
+**CSV Format Structure**:
+```csv
+uri,reg:identifier,reg:status,rdf:type,skos:definition@en,skos:definition@fr,skos:prefLabel@en,skos:prefLabel@fr,...
+```
+
+#### Step-by-Step Conversion Process
+
+1. **Template Configuration Extension**
+   ```json
+   {
+     "templates": {
+       "vocabulary": {
+         "path": "vocabulary.mdx",
+         "csvSource": "../csv/ns/isbd/terms/{vocabularyId}.csv",
+         "csvMapping": {
+           "id": { "source": "uri", "transform": "extractId" },
+           "title": { "source": "skos:prefLabel@en" },
+           "definition": { "source": "skos:definition@en" }
+         },
+         "outputPath": "../docs/vocabularies/{vocabularyId}/{conceptId}.mdx"
+       }
+     }
+   }
+   ```
+
+2. **Execution Commands**
+   ```bash
+   # Process elements
+   pnpm tsx scripts/populate-from-csv.ts --standard=isbd --type=element
+   
+   # Process vocabularies
+   pnpm tsx scripts/populate-from-csv.ts --standard=isbd --type=vocabulary --vocab=contentform
+   pnpm tsx scripts/populate-from-csv.ts --standard=isbd --type=vocabulary --vocab=mediatype
+   ```
+
+3. **Vocabulary Index Creation**
+   ```mdx
+   ---
+   sidebar_position: 1
+   title: ISBD Vocabularies
+   ---
+   
+   # ISBD Vocabularies
+   
+   <VocabularyTable 
+     csv="/data/contentform.csv"
+     namespace="isbd"
+     languages={['en', 'fr', 'es', 'it', 'lv', 'ru', 'sr', 'zh']}
+     defaultLanguage="en"
+     showFilter={true}
+     showURIs={true}
+   />
+   ```
+
+4. **Google Sheets Integration**
+   - Identify orphan sheets
+   - Create namespace_sheets database record
+   - Implement change detection via API polling
+   - Design update workflow with validation
+
+#### Technical Implementation Details
+
+**Using Existing Infrastructure**:
+- `populate-from-csv.ts` handles CSV parsing with language tags
+- `VocabularyTable` component provides multilingual display
+- Docusaurus search handles full-text indexing
+
+**Required Extensions**:
+```typescript
+// Add vocabulary processing to populate-from-csv.ts
+if (templateType === 'vocabulary') {
+  // Handle multiple vocabulary files
+  // Generate index pages
+  // Create concept detail pages
+}
+```
+
+**Success Criteria**:
+- ISBD vocabularies viewable as MDX pages
+- All languages preserved and accessible
+- Search functionality operational
+- Google Sheet changes detectable
+- Simple UI for non-technical users
+
+## Integration with Core Workflow
+
+These specialized workflows integrate seamlessly with the 8-phase standards development lifecycle:
+
+- **Phase 1-3**: Edit permissions control who can create and modify content
+- **Phase 4-5**: Version locking ensures review integrity
+- **Phase 7**: Translation management handles multilingual requirements
+- **Phase 8**: Ongoing maintenance uses permission system for updates
+
+The CSV to MDX conversion workflow provides a concrete example of how external data sources integrate into the platform's content management system.
+
+This development workflow provides a structured, quality-focused approach to standards development while maintaining flexibility for different types of changes and team preferences. The integration of edit permissions, translation management, and practical conversion workflows ensures comprehensive support for all aspects of standards development.

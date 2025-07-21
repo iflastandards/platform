@@ -62,6 +62,20 @@ CI/CD: GitHub Actions
 Version Control: Git + GitHub
 ```
 
+### Technology Evolution from OMR25
+
+| Component | OMR25 (March 2025) | Current (July 2025) | Rationale for Change |
+|-----------|-------------------|---------------------|---------------------|
+| **Language** | PHP 8.4 | TypeScript/JavaScript | Modern ecosystem, better tooling |
+| **Backend** | Laravel 11 | Next.js + Vercel Functions | Serverless, edge computing |
+| **Database** | MariaDB | Git + Supabase (temp only) | Version control as primary storage |
+| **Frontend** | Filament/Livewire | React 19 + Docusaurus | Component ecosystem, static generation |
+| **Testing** | Pest | Vitest/Playwright | JavaScript ecosystem alignment |
+| **Build** | Webpack/Mix | Nx monorepo | Better monorepo management |
+| **CI/CD** | GitHub Actions | GitHub Actions + Nx Cloud | Distributed builds, caching |
+
+The shift from the original OMR25 monolithic Laravel architecture to the current JAMstack approach represents a fundamental rethinking prioritizing static generation for performance, Git as source of truth, edge computing over traditional servers, and the modern React ecosystem over PHP.
+
 ## Organizational Structure
 
 ### IFLA Governance Alignment
@@ -275,6 +289,68 @@ Production Environment:
 - Multiple services for specialized functionality
 - Static generation limitations for real-time features
 
+## Implementation Roadmap
+
+### MVP Critical Path (12 Weeks)
+
+#### Weeks 1-3: Vocabulary Server 🔴 CRITICAL
+**Why First**: Without this, we cannot migrate any namespaces from legacy systems.
+
+**Deliverables**:
+- Nginx redirect configuration system
+- Pathmap data structure and storage
+- Content negotiation logic
+- Lexical alias generation system
+- Version-aware routing
+- Load testing and monitoring setup
+
+#### Weeks 4-7: Core Admin Portal 🟡 HIGH PRIORITY
+**Why Second**: Needed for user management and basic operations.
+
+**Deliverables**:
+- Next.js admin app setup with Clerk auth
+- User CRUD operations and role assignment
+- Review Group management
+- Namespace listing and activity logging
+- Basic system status dashboard
+
+#### Weeks 8-10: GitHub Integration 🟢 IMPORTANT
+**Why Third**: Enables project-based collaboration model.
+
+**Deliverables**:
+- GitHub App setup and authentication
+- Project/Issue/PR synchronization
+- Team membership sync
+- Project dashboards and notifications
+
+#### Weeks 11-12: Import/Publishing Pipeline 🔵 NECESSARY
+**Why Fourth**: Enables actual vocabulary management.
+
+**Deliverables**:
+- Google Sheets authentication and import UI
+- Build triggers and validation pipeline
+- Pathmap generation and deployment automation
+
+### Post-MVP Phases
+
+#### Phase 1 (Months 4-5)
+- TinaCMS integration
+- Advanced project management
+- Translation workflow basics
+- Performance optimization
+
+#### Phase 2 (Months 6-7)
+- Crowdin integration
+- AI-powered features
+- Advanced analytics
+- Bulk operations
+
+#### Phase 3 (Months 8-9)
+- Full migration of all namespaces
+- Legacy system decommission
+- Advanced collaboration features
+- Public API launch
+
 ## Success Metrics
 
 ### Technical Metrics
@@ -288,5 +364,11 @@ Production Environment:
 - Type coverage: 100% for core modules
 - Accessibility: WCAG 2.1 AA compliant
 - Documentation: 100% API coverage
+
+### MVP Success Criteria
+- Week 3: Vocabulary server handling 100% of test traffic
+- Week 7: Admin portal functional for core operations
+- Week 10: GitHub Projects synchronized
+- Week 12: One namespace fully migrated with end-to-end workflow tested
 
 This architecture provides a robust, scalable foundation for managing international library standards while maintaining excellent developer experience and platform performance.

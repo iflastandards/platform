@@ -279,6 +279,33 @@ const data = await response.json();
 
 ## Environment Management
 
+### Finalized 3-Environment Strategy
+
+The platform uses a definitive 3-environment approach, simplified from earlier 4-environment proposals:
+
+```
+┌─────────────────────────────────────────────────────────────────┐
+│                    3-ENVIRONMENT STRATEGY                        │
+├─────────────────────────────────────────────────────────────────┤
+│                                                                  │
+│  1. LOCAL DEVELOPMENT                                           │
+│     └─> Developer machines                                      │
+│     └─> http://localhost:3000-3008                            │
+│     └─> Full feature development                               │
+│                                                                  │
+│  2. PREVIEW (STAGING)                                           │
+│     └─> iflastandards/platform:preview                         │
+│     └─> https://iflastandards.github.io/platform/             │
+│     └─> Client review & integration testing                    │
+│                                                                  │
+│  3. PRODUCTION                                                  │
+│     └─> iflastandards/platform:main                           │
+│     └─> https://www.iflastandards.info/                       │
+│     └─> Live platform (PR-only updates)                        │
+│                                                                  │
+└─────────────────────────────────────────────────────────────────┘
+```
+
 ### Environment Detection
 ```bash
 # Local development (default)
@@ -292,11 +319,11 @@ DOCS_ENV=production pnpm build
 ```
 
 ### Environment Characteristics
-| Environment | URL Pattern | Purpose | Deployment |
-|------------|-------------|---------|------------|
-| local | http://localhost:300X | Development | Local machine |
-| preview | https://iflastandards.github.io/platform/ | Staging/Review | GitHub Pages |
-| production | https://www.iflastandards.info/ | Live platform | GitHub Pages |
+| Environment | URL Pattern | Purpose | Deployment | Branch |
+|------------|-------------|---------|------------|--------|
+| local | http://localhost:300X | Development | Local machine | any |
+| preview | https://iflastandards.github.io/platform/ | Staging/Review | GitHub Pages | preview |
+| production | https://www.iflastandards.info/ | Live platform | GitHub Pages | main |
 
 ### Build Scripts Integration
 ```json
@@ -458,9 +485,39 @@ console.log('Site Config:', getSiteConfig('portal', 'local'));
 console.log('Generated URL:', getSiteUrl('ISBDM', '/docs', 'preview'));
 ```
 
+## Repository Organization
+
+### Current Structure
+**Remote Repository**: `iflastandards/platform` (GitHub)  
+**Local Directory**: `standards-dev` (developer machines)
+
+**Important**: The local directory name differs from the remote repository name by design. This is intentional and provides backward compatibility with existing developer setups.
+
+### Git Configuration
+```bash
+# Remote setup (already configured)
+git remote -v
+# origin  git@github.com:iflastandards/platform.git (fetch)
+# origin  git@github.com:iflastandards/platform.git (push)
+
+# Branch strategy
+main → origin/main (protected, pull only)
+preview → origin/preview (primary working branch)
+feature/* → local development branches
+```
+
+### Deployment Workflow
+```mermaid
+graph LR
+    A[Local: standards-dev] -->|git push origin preview| B[Remote: platform:preview]
+    B -->|GitHub Pages| C[Preview Site]
+    B -->|PR to main| D[Remote: platform:main]
+    D -->|GitHub Pages| E[Production Site]
+```
+
 ## Migration Notes
 
-### What Changed (December 2024)
+### Configuration Migration (December 2024)
 - **Removed**: 36+ `.env.site*` files
 - **Removed**: Complex factory functions
 - **Removed**: Environment variable dependencies
@@ -468,21 +525,46 @@ console.log('Generated URL:', getSiteUrl('ISBDM', '/docs', 'preview'));
 - **Added**: Type-safe utility functions
 - **Added**: Simplified debugging
 
+### Environment Strategy Migration (January 2025)
+- **Removed**: 4-environment strategy (local/development/preview/production)
+- **Removed**: Development environment (redundant with preview)
+- **Simplified**: 3-environment strategy (local/preview/production)
+- **Deprecated**: Personal fork workflow
+- **Standardized**: Direct feature branches on main repository
+
 ### Benefits Achieved
 - 90% reduction in configuration files
 - Eliminated cross-contamination issues
 - Improved developer experience
 - Better performance (no env loading)
 - Easier maintenance and updates
+- Simpler deployment pipeline
+
+## Migration Guide Summary
+
+### Key Updates Required
+1. **Configuration Files**: Remove `development` environment from all matrices
+2. **Type Definitions**: Update `Environment` type to exclude `development`
+3. **CI/CD Workflows**: Remove development-specific deployment triggers
+4. **Documentation**: Update all references to reflect 3-environment strategy
+5. **Build Scripts**: Remove development-specific npm scripts
+
+### Verification Checklist
+- [ ] No "development" references in configuration files
+- [ ] All CI/CD workflows updated for 3 environments
+- [ ] Documentation reflects current strategy
+- [ ] Preview deployments work correctly
+- [ ] Production deployments require PR approval
+- [ ] Team informed of changes
 
 ## Future Considerations
 
 ### Potential Enhancements
-1. **Dynamic Site Registration**: Runtime site addition
-2. **Environment Expansion**: Support for staging/QA
-3. **Configuration Validation**: Runtime checks
-4. **Feature Flags**: Environment-specific features
-5. **A/B Testing**: Multiple production configs
+1. **Vercel Integration**: Evaluate for PR preview deployments (Q2 2025)
+2. **Regional Deployments**: Consider geographic distribution based on user analysis
+3. **Configuration Validation**: Runtime checks for configuration integrity
+4. **Feature Flags**: Environment-specific feature toggles
+5. **A/B Testing**: Multiple production configurations
 
 ### Maintaining Simplicity
 - Resist adding complexity without clear benefits
@@ -490,5 +572,6 @@ console.log('Generated URL:', getSiteUrl('ISBDM', '/docs', 'preview'));
 - Maintain type safety
 - Document all changes
 - Regular configuration audits
+- Preserve the 3-environment simplicity
 
 This configuration architecture provides a robust, type-safe foundation for managing multi-site deployments across multiple environments while maintaining simplicity and developer experience.

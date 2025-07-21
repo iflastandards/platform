@@ -509,6 +509,143 @@ Year 3 Expansion:
   - Machine learning features
 ```
 
+## Open Questions and Discussion Points
+*Source: Previously documented in Doc 11 - Discussion Points*
+
+### Outstanding Items Requiring Team Decision
+
+While most architectural and implementation details have been resolved, several key areas require team discussion and formal decisions:
+
+#### 1. TinaCMS Integration Details
+**Status**: Partially Resolved - POC Planned
+
+**What's Clear**: TinaCMS will provide WYSIWYG editing for prose documentation and form-based editing for RDF metadata, with automatic Git commits and real-time validation.
+
+**Remaining Questions**:
+1. **Implementation Timeline**: When will TinaCMS be integrated?
+2. **Technical Integration**: Specific integration approach with existing MDX files
+3. **Cost Structure**: Licensing and scaling costs
+4. **Performance Impact**: Effect on build times and runtime performance
+
+**Requirements Still Needed**:
+- Detailed technical integration plan
+- Cost analysis for different usage tiers
+- Performance benchmarking
+
+#### 2. Translation Workflow Tool Selection
+**Status**: Partially Resolved - Version-based approach simplifies
+
+**What's Resolved**:
+- Version-based sync eliminates continuous synchronization complexity
+- Clear transitions at version boundaries
+- English modification process defined
+
+**Still Needs Decision**:
+1. **TinaCMS Integration**: How it handles version states and locked content
+2. **Crowdin Role**: Integration with version-based workflow for pure documentation
+3. **AI Translation Placement**: Where and when AI assistance is offered
+4. **Tool Selection**: Final platform choices for each workflow type
+
+**Recommended Actions**:
+1. Include version-state awareness in TinaCMS POC
+2. Design English modification review UI
+3. Test import/export tools with translators
+4. Document version lifecycle for users
+
+#### 3. Performance Targets Validation
+**Status**: Unresolved
+
+**Targets Needing Clarification**:
+- **Build Time**: <5 minutes (with or without cache?)
+- **Page Load**: <3 seconds (which percentile?)
+- **API Response**: <200ms (for which operations?)
+- **Test Execution**: Various targets (in which environment?)
+
+**Monitoring Questions**:
+1. How are these metrics measured?
+2. What happens when targets are missed?
+3. Who is responsible for performance?
+4. What tools are used for monitoring?
+
+#### 4. Edge Function Implementation
+**Status**: Partially Resolved - Strategy Defined
+
+**What's Clear**:
+- Batch calculation strategy for long-running operations
+- Regional deployment priorities (Western Europe primary)
+- Volume-based splitting approach
+
+**Still Needs Implementation**:
+- Actual batch size calculation algorithms
+- Development-time detection tooling
+- Performance profiling of operations
+- Regional deployment configuration
+
+#### 5. Vocabulary Server Enhancement
+**Status**: Critical Gap Identified
+
+**Current State**:
+- Simple URI rewrite to www.iflastandards.info
+- No flexible redirect support
+
+**Critical Requirements**:
+```yaml
+Vocabulary Content Negotiation Server:
+  Requirements:
+    - Arbitrary HTML redirect mappings
+    - Pathmap export on vocabulary publish
+    - Lexical alias support (language-specific slugs)
+    - Namespace-configurable slug formation
+    - Integration with publishing workflow
+```
+
+**Action Items**:
+1. **Vocabulary Server Rewrite**: Critical path item
+   - Full requirements documented in Document 02 - Data Architecture (Vocabulary Server Architecture section)
+   - Recommended approach: Nginx + Lua for dynamic pathmap resolution
+   - 6-8 week implementation timeline
+2. **Onboarding Process Design**: User experience gap
+3. **Slug Formation Rules**: Per-namespace configuration
+
+### Decision Framework
+
+For each open question, the team should consider:
+
+1. **Impact Assessment**
+   - Technical complexity
+   - User experience impact
+   - Cost implications
+   - Timeline effects
+
+2. **Risk Analysis**
+   - Implementation risks
+   - Operational risks
+   - Strategic risks
+   - Mitigation strategies
+
+3. **Success Criteria**
+   - Clear definition of done
+   - Measurable outcomes
+   - Validation methods
+   - Rollback procedures
+
+### Recommended Decision Process
+
+1. **Prioritization Meeting** (Week 1)
+   - Review all open questions
+   - Assess criticality and dependencies
+   - Create decision timeline
+
+2. **Technical Deep-Dives** (Weeks 2-3)
+   - POC for TinaCMS integration
+   - Performance benchmarking setup
+   - Vocabulary server architecture review
+
+3. **Decision Documentation** (Week 4)
+   - Create Architecture Decision Records (ADRs)
+   - Update implementation timeline
+   - Communicate to all stakeholders
+
 ## Conclusion
 
 This implementation strategy provides a comprehensive roadmap for transforming IFLA's standards development platform. By following this phased approach with careful attention to change management, risk mitigation, and success metrics, IFLA can achieve the technical transformation while maintaining operational continuity and stakeholder satisfaction.

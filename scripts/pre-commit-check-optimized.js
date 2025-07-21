@@ -41,18 +41,42 @@ try {
 
 // Run lint separately to handle warnings gracefully
 console.log('📋 Running ESLint...');
+let lintExitCode = 0;
 try {
-  execSync(
-    'nx affected --target=lint --parallel=10',
+  // Run the lint command and capture the output
+  const lintOutput = execSync(
+    'nx affected --target=lint --parallel=10 2>&1 || true',
     {
-      stdio: 'inherit',
-      encoding: 'utf8'
+      encoding: 'utf8',
+      env: {
+        ...process.env,
+        NODE_OPTIONS: '--max-old-space-size=4096',
+        NX_SKIP_NX_CACHE: 'false',
+        NX_DAEMON: 'true'
+      }
     }
   );
-  console.log('✅ ESLint passed (no issues)\n');
+  
+  // Parse the output to check for actual errors
+  if (lintOutput.includes(' error ') || lintOutput.includes(' errors)')) {
+    // Extract error count from the summary line
+    const errorMatch = lintOutput.match(/(\d+) errors?/);
+    const errorCount = errorMatch ? parseInt(errorMatch[1]) : 0;
+    
+    if (errorCount > 0) {
+      console.log(lintOutput);
+      console.log(`❌ ESLint found ${errorCount} error(s) that must be fixed\n`);
+      hasErrors = true;
+    } else {
+      console.log('✅ ESLint passed (warnings are allowed in pre-commit)\n');
+    }
+  } else {
+    console.log('✅ ESLint passed (no issues)\n');
+  }
 } catch (error) {
-  // ESLint exits with 1 for warnings, which is OK for pre-commit
-  console.log('⚠️  ESLint completed with warnings (this is OK for pre-commit)\n');
+  // This shouldn't happen with || true, but just in case
+  console.log('❌ ESLint command failed unexpectedly\n');
+  hasErrors = true;
 }
 
 // Summary

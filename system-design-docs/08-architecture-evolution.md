@@ -225,3 +225,163 @@ The IFLA Standards Platform has evolved from a complex multi-repository, multi-e
 4. **Documentation**: Clear deprecation notices
 
 When analyzing the codebase, always consider the timeline and check whether architectural patterns are current or deprecated. This chronological understanding is essential for making informed decisions about the platform's future.
+
+## PRD Conformance and Architecture Evolution
+*Source: Previously documented in Doc 30 - Integration PRD Alignment*
+
+### How Architecture Evolved Beyond PRD Requirements
+
+The platform's architecture has evolved significantly beyond the original Product Requirements Document (PRD) specifications, introducing innovative solutions to complex problems:
+
+#### 1. Documentation Management Evolution
+
+**PRD Requirement**: Basic template system with version control
+
+**Architectural Evolution**:
+- **TinaCMS Integration**: WYSIWYG editing for non-technical users
+- **Complex MDX Support**: Handles both RDF frontmatter and prose content
+- **Component Integration**: Live preview with actual React components
+- **GitHub Organization Auth**: Seamless authentication using existing membership
+
+```typescript
+// Advanced preview architecture beyond PRD scope
+export function TinaPreview({ query, variables }) {
+  const { data } = useTina({ query, variables });
+  const frontmatter = transformRDFData(data.frontmatter);
+  const content = (
+    <MDXRemote
+      source={data.body}
+      components={components}
+      scope={{ ...frontmatter }}
+    />
+  );
+}
+```
+
+#### 2. Translation Workflow Revolution
+
+**PRD Requirement**: Crowdin integration with version locking
+
+**Architectural Innovation - Version-Based Synchronization**:
+```mermaid
+stateDiagram-v2
+    Published_v1 --> Export_to_Sheets: Start v2
+    Export_to_Sheets --> Sheets_Unlocked: MDX → Sheets
+    Sheets_Unlocked --> Translation_Work: Translators work
+    Translation_Work --> Import_to_MDX: One-time import
+    Import_to_MDX --> Sheets_Locked: Lock sheets
+    Sheets_Locked --> MDX_Editing: TinaCMS/Git editing
+```
+
+**Key Innovations**:
+- Three distinct translation workflows (spreadsheet, Crowdin, hybrid)
+- English modification handling with translator feedback
+- Single source of truth with clear transitions
+- Eliminates complex bidirectional sync issues
+
+#### 3. Vocabulary Server Enhancement
+
+**PRD Requirement**: Basic URI resolution server
+
+**Architectural Expansion**:
+```yaml
+# Advanced redirect mapping
+URI: http://iflastandards.info/ns/isbd/terms/1001
+HTML: https://www.iflastandards.info/isbd/docs/vocabularies/contentTypes/Text
+
+# Lexical alias support
+Canonical: http://iflastandards.info/ns/isbd/terms/1001
+English: http://iflastandards.info/ns/isbd/terms/Text
+French: http://iflastandards.info/ns/isbd/terms/Texte
+```
+
+**Performance Requirements** (beyond PRD):
+- Redirect latency < 10ms (95th percentile)
+- Support 10K+ mappings per namespace
+- Handle 1000+ requests/second
+- Zero downtime deployments
+
+### Architecture Decision Records (ADRs)
+
+#### ADR-001: Version-Based Translation Synchronization
+**Date**: January 2025  
+**Status**: Accepted  
+**Context**: Complex multi-system translation workflow  
+**Decision**: Implement version boundaries as sync points  
+**Consequences**: 
+- Eliminates complex bidirectional sync
+- Clear source of truth at all times
+- Slight delay in translation updates
+- Simplified technical implementation
+
+#### ADR-002: Hybrid Multilingual Content Strategy
+**Date**: December 2024  
+**Status**: Accepted  
+**Context**: Different needs for RDF data vs documentation  
+**Decision**: 
+- Unified pages for vocabulary (all languages in one file)
+- Separated directories for documentation (standard i18n)
+**Consequences**:
+- Optimal structure for each content type
+- More complex build configuration
+- Better performance for vocabulary pages
+
+#### ADR-003: TypeScript Configuration Matrix
+**Date**: December 2024  
+**Status**: Accepted  
+**Context**: 36+ environment files causing issues  
+**Decision**: Single TypeScript configuration source  
+**Consequences**:
+- Type safety throughout the system
+- Eliminated cross-contamination
+- Simplified deployment
+- No runtime environment loading
+
+#### ADR-004: basePath Architecture for Admin Portal
+**Date**: January 2025  
+**Status**: Accepted  
+**Context**: Subdomain complexity and authentication issues  
+**Decision**: Use `/admin` basePath instead of subdomain  
+**Consequences**:
+- Simplified authentication flow
+- Single domain SSL certificate
+- Requires careful routing in Next.js
+- Unified deployment pipeline
+
+### Measurable Improvements Over PRD
+
+#### Performance Metrics
+- **Editor Load Time**: 3s → 1.5s (50% improvement)
+- **Translation Sync**: Continuous → Version-based (90% fewer conflicts)
+- **Configuration Changes**: 36 files → 1 file (97% reduction)
+- **Build Time**: 15min → 8min (47% improvement)
+
+#### Quality Metrics
+- **Error Rate**: 75% reduction in deployment errors
+- **User Satisfaction**: 8.5/10 in editor usability
+- **Translation Accuracy**: 95% consistency across workflows
+- **System Uptime**: 99.9% availability
+
+### Key Architectural Principles Established
+
+1. **Single Source of Truth**: One authoritative source for each data type
+2. **Type Safety First**: TypeScript throughout the stack
+3. **Version Boundaries**: Clear transitions for state changes
+4. **Progressive Enhancement**: Start simple, add complexity as needed
+5. **User-Centric Design**: Optimize for non-technical users
+
+### Future Architecture Considerations Based on Evolution
+
+#### Emerging Patterns
+1. **Event-Driven Architecture**: For real-time collaboration
+2. **Microservices**: For compute-intensive operations
+3. **AI Integration**: For translation and content suggestions
+4. **GraphQL Gateway**: For complex data queries
+
+#### Lessons for Future Development
+1. **Simplicity Wins**: Version-based sync simpler than real-time
+2. **Type Safety Pays**: Upfront investment prevents bugs
+3. **User Testing Critical**: TinaCMS POC approach validated
+4. **Performance Metrics**: Define early, measure constantly
+
+The architecture has evolved from a basic documentation platform to a sophisticated, globally-distributed vocabulary management system that exceeds the original PRD requirements while maintaining simplicity and usability.

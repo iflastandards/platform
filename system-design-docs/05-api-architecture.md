@@ -695,4 +695,260 @@ describe("API: Vocabularies", () => {
 - Clear deprecation timelines
 - Migration guides for breaking changes
 
-This API architecture provides a secure, scalable foundation for vocabulary management while maintaining flexibility for future enhancements and integrations.
+## Comprehensive API Specification
+*Source: Previously documented in Doc 24 - Admin UI API Specification*
+
+### Complete Endpoint Catalog
+
+The platform provides 170+ RESTful API endpoints covering all aspects of vocabulary management, project collaboration, and system administration.
+
+#### Project Management APIs
+
+```typescript
+// Project CRUD
+GET    /api/admin/projects                        // List all projects
+POST   /api/admin/projects                        // Create new project
+GET    /api/admin/projects/:projectId             // Get project details
+PUT    /api/admin/projects/:projectId             // Update project
+DELETE /api/admin/projects/:projectId             // Delete project
+POST   /api/admin/projects/:projectId/archive     // Archive project
+
+// Project Charter
+GET    /api/admin/projects/:projectId/charter     // Get project charter
+PUT    /api/admin/projects/:projectId/charter     // Update charter
+POST   /api/admin/projects/:projectId/charter/approve // Approve charter
+
+// Project Teams
+GET    /api/admin/projects/:projectId/teams       // List project teams
+POST   /api/admin/projects/:projectId/teams       // Add team to project
+PUT    /api/admin/projects/:projectId/teams/:teamId // Update team role
+DELETE /api/admin/projects/:projectId/teams/:teamId // Remove team
+
+// Project Boards (GitHub Projects sync)
+GET    /api/admin/projects/:projectId/board       // Get board state
+PUT    /api/admin/projects/:projectId/board       // Update board
+POST   /api/admin/projects/:projectId/board/sync  // Sync with GitHub
+GET    /api/admin/projects/:projectId/board/columns // Get columns
+POST   /api/admin/projects/:projectId/board/columns // Create column
+
+// Project Analytics
+GET    /api/admin/projects/:projectId/analytics   // Get project metrics
+GET    /api/admin/projects/:projectId/velocity   // Velocity chart data
+GET    /api/admin/projects/:projectId/burndown   // Burndown chart data
+```
+
+#### Issue and Pull Request Management
+
+```typescript
+// Issues CRUD
+GET    /api/admin/issues                          // List all issues
+POST   /api/admin/issues                          // Create issue
+GET    /api/admin/issues/:issueId                 // Get issue details
+PUT    /api/admin/issues/:issueId                 // Update issue
+POST   /api/admin/issues/:issueId/close          // Close issue
+POST   /api/admin/issues/:issueId/assign         // Assign issue
+POST   /api/admin/issues/:issueId/labels         // Add labels
+POST   /api/admin/issues/:issueId/comments       // Add comment
+POST   /api/admin/issues/:issueId/convert        // Convert to PR
+
+// Pull Request CRUD
+GET    /api/admin/pulls                           // List all PRs
+GET    /api/admin/pulls/:prId                     // Get PR details
+POST   /api/admin/pulls/:prId/merge              // Merge PR
+GET    /api/admin/pulls/:prId/reviews            // List reviews
+POST   /api/admin/pulls/:prId/reviews            // Request review
+GET    /api/admin/pulls/:prId/diff               // Get diff
+GET    /api/admin/pulls/:prId/commits            // List commits
+```
+
+#### Content and RDF Management
+
+```typescript
+// Content Management
+GET    /api/admin/namespaces/:nsId/content        // List content pages
+POST   /api/admin/namespaces/:nsId/content/page   // Create new page
+POST   /api/admin/namespaces/:nsId/content/scaffold/elements // Scaffold element pages
+POST   /api/admin/namespaces/:nsId/content/scaffold/vocabularies // Scaffold vocabulary pages
+GET    /api/admin/namespaces/:nsId/content/examples // List examples
+POST   /api/admin/namespaces/:nsId/content/examples // Add example
+PUT    /api/admin/namespaces/:nsId/content/navigation // Update navigation
+
+// RDF Management
+POST   /api/admin/namespaces/:nsId/rdf/csv-to-rdf // Convert CSV to RDF
+POST   /api/admin/namespaces/:nsId/rdf/rdf-to-csv // Extract CSV from RDF
+POST   /api/admin/namespaces/:nsId/rdf/sheets/sync // Sync with Google Sheets
+POST   /api/admin/namespaces/:nsId/rdf/validate   // Validate RDF
+GET    /api/admin/namespaces/:nsId/rdf/dctap      // Get DCTAP profile
+PUT    /api/admin/namespaces/:nsId/rdf/dctap      // Update DCTAP profile
+PUT    /api/admin/namespaces/:nsId/rdf/context    // Update JSON-LD context
+POST   /api/admin/namespaces/:nsId/rdf/release    // Generate RDF release
+```
+
+#### Translation and Quality Management
+
+```typescript
+// Translation Workflows
+GET    /api/admin/translations                    // Translation overview
+GET    /api/admin/translations/:nsId              // Namespace translations
+POST   /api/admin/translations/:nsId/export       // Export for translation
+POST   /api/admin/translations/:nsId/import       // Import translations
+POST   /api/admin/translations/:nsId/sync         // Sync with spreadsheet
+
+// Quality Assurance
+POST   /api/admin/vocabularies/validate           // Validate vocabulary
+POST   /api/admin/namespaces/:nsId/quality/links  // Validate links
+POST   /api/admin/namespaces/:nsId/quality/consistency // Check consistency
+POST   /api/admin/namespaces/:nsId/quality/accessibility // Run accessibility audit
+GET    /api/admin/namespaces/:nsId/quality/translation // Translation status
+POST   /api/admin/namespaces/:nsId/quality/performance // Performance test
+```
+
+#### Global Navigation and Activity
+
+```typescript
+// Global Navigation Support
+GET    /api/admin/navigation/menu                 // Get personalized navigation menu
+GET    /api/admin/navigation/context             // Get current context (namespace/project)
+PUT    /api/admin/navigation/context             // Set current context
+GET    /api/admin/navigation/quickactions        // Get role-based quick actions
+GET    /api/admin/navigation/switcher            // Get namespace/project switcher data
+
+// Activity Feed
+GET    /api/admin/activity/feed                   // Get activity feed items
+GET    /api/admin/activity/feed/:type             // Filter by activity type
+GET    /api/admin/activity/user/:userId           // Get user-specific activity
+GET    /api/admin/activity/namespace/:nsId        // Get namespace activity
+GET    /api/admin/activity/project/:projectId     // Get project activity
+```
+
+### UI Architecture and Patterns
+
+#### Global Navigation Architecture
+
+The admin portal features a sophisticated personalized navigation system:
+
+**Personal Navigation Bar (Persistent)**:
+- Context-aware global navigation tailored to user's roles and permissions
+- Dynamic adaptation based on system role, review group memberships, and active projects
+- Responsive behavior from full desktop to mobile hamburger menu
+
+**Navigation Components by Role**:
+1. **System Administrators**: System dropdown, quick actions for platform management
+2. **Review Group Administrators**: Review groups dropdown, project management
+3. **Project Members**: My projects dropdown, accessible namespaces
+4. **Common Elements**: Logo/home, context switcher, user menu, notifications, help
+
+#### MUI Component Standards
+
+The platform exclusively uses Material-UI (MUI) components for consistency:
+
+```typescript
+// Navigation Components
+<Drawer variant="permanent" aria-label="Main navigation">
+  <nav role="navigation" aria-label="Primary navigation">
+    <List>
+      <ListItem>
+        <ListItemButton aria-current={isActive ? "page" : undefined}>
+          <ListItemIcon><DashboardIcon aria-hidden="true" /></ListItemIcon>
+          <ListItemText primary="Dashboard" />
+        </ListItemButton>
+      </ListItem>
+    </List>
+  </nav>
+</Drawer>
+
+// DataTable Implementation
+<DataGrid
+  aria-label="Users table"
+  columns={[
+    { 
+      field: 'actions',
+      headerName: 'Actions',
+      renderCell: (params) => (
+        <IconButton aria-label={`Actions for ${params.row.name}`}>
+          <MoreVertIcon />
+        </IconButton>
+      )
+    }
+  ]}
+  // Advanced features
+  checkboxSelection
+  disableRowSelectionOnClick
+  pagination
+  sortingMode="server"
+  filterMode="server"
+/>
+```
+
+#### Accessibility Compliance (WCAG 2.1 Level AA)
+
+The platform meets EU Web Accessibility Directive and UK Public Sector Bodies Accessibility Regulations:
+
+**Keyboard Navigation**:
+- All interactive elements accessible via Tab key
+- Skip navigation links at page start
+- Logical tab order throughout interface
+- Arrow keys navigate within menus and tables
+
+**Screen Reader Support**:
+- Proper ARIA labels for all controls
+- ARIA landmarks for page regions
+- Live regions for dynamic updates
+- Descriptive button labels (not just icons)
+
+**Color and Contrast**:
+- Normal text: 4.5:1 contrast ratio
+- Large text (18pt+): 3:1 contrast ratio
+- UI components: 3:1 contrast ratio
+- Never rely on color alone to convey information
+
+### Advanced API Features
+
+#### Spreadsheet Adoption Workflow
+
+```typescript
+// Adopt Spreadsheet Workflow
+POST   /api/admin/vocabularies/adopt              // Initiate spreadsheet adoption
+POST   /api/admin/vocabularies/adopt/analyze      // Analyze spreadsheet structure
+GET    /api/admin/vocabularies/adopt/:jobId       // Check adoption status
+POST   /api/admin/vocabularies/adopt/validate     // Validate before adoption
+POST   /api/admin/vocabularies/adopt/confirm      // Confirm and execute adoption
+GET    /api/admin/vocabularies/adopt/templates    // Get available templates
+```
+
+This workflow enables seamless integration of existing vocabulary spreadsheets into the platform.
+
+### Implementation Priorities
+
+**Phase 1: Core Functionality (Weeks 1-2)**
+- Authentication & authorization
+- User management
+- Basic dashboard
+- Review group management
+- Namespace CRUD
+
+**Phase 2: Project Management (Weeks 3-4)**
+- Project creation and charter management
+- GitHub Projects sync
+- Issue and PR management
+- Basic kanban boards
+
+**Phase 3: Vocabulary Management (Weeks 5-6)**
+- Spreadsheet import/export
+- MDX generation with dry-run
+- Validation framework
+- Basic versioning
+
+**Phase 4: Advanced Features (Weeks 7-8)**
+- Translation workflows
+- TinaCMS integration
+- Backup & rollback
+- Publishing pipeline
+
+**Phase 5: Collaboration & Polish (Weeks 9-10)**
+- Discussion forums
+- Advanced analytics
+- Audit logging
+- System monitoring
+
+This API architecture provides a secure, scalable foundation for vocabulary management while maintaining flexibility for future enhancements and integrations. The comprehensive endpoint catalog ensures complete coverage of all platform functionality, while the UI patterns and accessibility standards ensure a consistent, inclusive user experience.

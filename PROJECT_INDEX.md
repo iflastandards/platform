@@ -80,26 +80,19 @@ Comprehensive architectural documentation for the platform:
 9. **`08-architecture-evolution.md`** - Architecture history and decisions
 10. **`09-collaboration-architecture.md`** - Team collaboration patterns
 11. **`10-implementation-strategy.md`** - Implementation roadmap
+12. **`11-design-system-ui-patterns.md`** - Complete design system and UI patterns
 
-#### **Environment & Migration**
-- **`12-environment-strategy-final.md`** - Environment management strategy
-- **`13-environment-migration-guide.md`** - Migration from env files to TypeScript
-- **`14-repository-structure-current.md`** - Current repository organization
-
-#### **Integration & Features**
-- **`15-tinacms-integration-design.md`** - TinaCMS integration architecture
-- **`18-multilingual-strategy-design.md`** - Multilingual support design
-- **`19-edit-permissions-workflow.md`** - Permission management workflow
-- **`20-translation-workflow-integration.md`** - Translation system integration
-- **`21-vocabulary-server-requirements.md`** - Vocabulary server specifications
-
-#### **UI & Implementation**
-- **`24-admin-ui-api-specification.md`** - Admin UI API specs
-- **`25-design-system-specification.md`** - Design system documentation
-- **`26-ui-component-patterns.md`** - UI component guidelines
-- **`27-mvp-critical-path.md`** - MVP implementation priorities
-- **`28-isbd-csv-to-mdx-plan.md`** - Data conversion workflows
-- **`29-admin-dashboard-mockup-reference.md`** - Dashboard design references
+#### **Supplementary Documents (Archived)**
+- Additional documentation has been consolidated into the core documents above
+- Archived documents can be found in `archive-supplementary-docs/`
+- Topics covered include:
+  - TinaCMS integration (see Document 09)
+  - Translation workflows (see Document 04)
+  - Vocabulary server requirements (see Document 02)
+  - API specifications (see Document 05)
+  - Design system and UI patterns (see Document 11)
+  - MVP timeline and planning (see Document 01)
+  - Implementation examples (see Document 04)
 
 ### Shared Packages (`packages/`)
 
