@@ -1,6 +1,6 @@
 'use client';
 
-import React, { Suspense, lazy } from 'react';
+import React from 'react';
 import { Button } from '@mui/material';
 import dynamic from 'next/dynamic';
 

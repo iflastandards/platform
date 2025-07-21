@@ -1,5 +1,5 @@
 import React from 'react';
-import { Grid, Typography, Box, Chip } from '@mui/material';
+import { Grid, Typography, Box } from '@mui/material';
 import { ElementSetCard } from '../ElementSetCard';
 import { VocabularyCard } from '../VocabularyCard';
 import styles from './NamespaceHub.module.scss';

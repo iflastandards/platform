@@ -31,7 +31,6 @@ import {
   Stack,
   IconButton,
   Checkbox,
-  FormGroup,
   Divider,
 } from '@mui/material';
 import {
