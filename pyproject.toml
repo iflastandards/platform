@@ -1,0 +1,13 @@
+[project]
+name = "standards-dev"
+version = "0.1.0"
+description = "Add your description here"
+requires-python = ">=3.13"
+dependencies = [
+    "generativeai>=0.0.1",
+    "google-genai==1.26.0",
+    "protobuf>=6.31.1",
+    "python-dotenv>=1.1.1",
+    "pyyaml>=6.0.2",
+    "rdflib>=7.1.4",
+]
