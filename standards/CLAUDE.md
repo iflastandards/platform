@@ -6,6 +6,10 @@ This file provides guidance for Claude Code when working in the standards direct
 
 You are working with **Docusaurus documentation sites** for IFLA standards. Each subdirectory is a complete Docusaurus v3.8 site.
 
+## IMPORTANT CRITICAL RULE!!
+
+For all shell, CI, and build/test/lint/script commands, ALWAYS execute from the repository root (`~/Code/IFLA/standards-dev`) regardless of the current working directory.
+
 ### 🎯 Directory Purpose
 
 This directory contains:
@@ -22,14 +26,28 @@ Each site follows this structure:
 ```
 standards/{sitename}/
 ├── docs/                          # MDX documentation files
+│   ├── index.mdx                 # Main landing/hub page (namespace overview)
 │   ├── intro.mdx                 # Introduction page
 │   ├── about.mdx                 # About the standard
 │   ├── elements/                 # Element documentation
-│   │   ├── index.mdx            # Elements overview
-│   │   └── {namespace}/         # Namespaced elements
+│   │   ├── index.mdx            # Elements overview (REQUIRED for category)
+│   │   ├── {element-set}/       # Element set (e.g., isbd, unconstrained)
+│   │   │   ├── index.mdx        # Element set overview (REQUIRED)
+│   │   │   ├── area0/           # Area-based organization (ISBD pattern)
+│   │   │   │   ├── index.mdx    # Area overview (REQUIRED)
+│   │   │   │   └── P*.mdx      # Individual element files
+│   │   │   ├── area1/           # Each area gets its own directory
+│   │   │   │   └── index.mdx    # With required index file
+│   │   │   └── ...area8/        # Areas 0-8 for ISBD
+│   │   └── unconstrained/       # Alternative element set
+│   │       ├── index.mdx        # Overview (REQUIRED)
+│   │       └── elements/        # All elements in one directory
 │   ├── vocabularies/            # Vocabulary documentation
-│   │   ├── index.mdx           # Vocabularies overview
-│   │   └── {vocab}.mdx         # Individual vocabularies
+│   │   ├── index.mdx           # Vocabularies overview (REQUIRED for category)
+│   │   ├── {vocab}.mdx         # Individual vocabularies
+│   │   └── contentqualification/ # Grouped vocabularies
+│   │       ├── index.mdx       # Group overview (REQUIRED)
+│   │       └── {subvocab}.mdx  # Sub-vocabularies
 │   └── examples.mdx            # Usage examples
 ├── src/
 │   ├── components/              # Site-specific components
@@ -51,9 +69,77 @@ standards/{sitename}/
 
 ## 📝 MDX Documentation Standards
 
+### Front Matter Structures
+
+#### Element Pages
+```mdx
+---
+# Docusaurus fields
+id: "P1025"
+sidebar_position: 4
+sidebar_label: "has manifestation statement"
+
+# RDF metadata
+RDF:
+  # Required
+  definition: "Relates a manifestation to a statement..."
+  domain: "Manifestation"
+  type: "DatatypeProperty"  # or "ObjectProperty"
+  
+  # Optional
+  range: "Literal"  # Can be empty string
+  scopeNote: "Additional information..."
+  
+  # Relationships (optional)
+  elementSubType:
+    - uri: "http://iflastandards.info/ns/isbdm/elements/P1029"
+      url: "/docs/statements/1029"
+      label: "has manifestation statement of edition"
+  elementSuperType: []  # Parent elements
+  equivalentProperty: []
+  inverseOf: []
+  
+  # Deprecation (optional)
+  deprecated: true
+  deprecatedInVersion: "1.2.0"
+  willBeRemovedInVersion: "2.0.0"
+---
+
+# {frontMatter.title}
+
+<ElementReference frontMatter={frontMatter} />
+```
+
+#### Vocabulary Pages
+```mdx
+---
+vocabularyId: "1275"
+title: "Extent of Unitary Structure"
+description: "This vocabulary provides values..."
+
+# Method 1: Concepts array (recommended)
+concepts:
+  - value: "term one"
+    definition: "Definition of first term"
+    scopeNote: "Additional context"
+    notation: "T1"
+    example: "Example usage"
+
+# Method 2: RDF format (legacy)
+RDF:
+  values:
+    - value: "term one"
+      definition: "Definition of first term"
+---
+
+# {frontMatter.title}
+
+<VocabularyTable {...frontMatter} />
+```
+
 ### Using Global Components
 
-All components from `@ifla/theme` are globally available:
+All components from `@ifla/theme` are globally available for JSX:
 ```mdx
 ---
 sidebar_position: 1
@@ -77,6 +163,14 @@ sidebar_position: 1
     { href: "/examples", label: "Examples" }
   ]} 
 />
+```
+
+### Importing for Static Methods
+```mdx
+import { VocabularyTable } from '@ifla/theme';
+
+// For generating table of contents
+export const toc = VocabularyTable.generateTOC(frontMatter);
 ```
 
 ### Component Availability
@@ -143,6 +237,11 @@ import type { SidebarsConfig } from '@docusaurus/plugin-content-docs';
 
 const sidebars: SidebarsConfig = {
   docs: [
+    {
+      type: 'doc',
+      id: 'index',  // Points to docs/index.mdx
+      label: 'Overview'
+    },
     'intro',
     'about',
     {
@@ -150,22 +249,157 @@ const sidebars: SidebarsConfig = {
       label: 'Elements',
       link: {
         type: 'doc',
-        id: 'elements/index',
+        id: 'elements/index',  // REQUIRED: Category must have index.mdx
       },
       items: [
-        'elements/namespace/element1',
-        'elements/namespace/element2',
+        {
+          type: 'category',
+          label: 'ISBD Elements',
+          link: {
+            type: 'doc',
+            id: 'elements/isbd/index',  // Element set overview
+          },
+          items: [
+            // Area-based organization for ISBD
+            {
+              type: 'category',
+              label: 'Area 0',
+              link: { type: 'doc', id: 'elements/isbd/area0/index' },
+              items: [{ type: 'autogenerated', dirName: 'elements/isbd/area0' }]
+            },
+            {
+              type: 'category',
+              label: 'Area 1',
+              link: { type: 'doc', id: 'elements/isbd/area1/index' },
+              items: [{ type: 'autogenerated', dirName: 'elements/isbd/area1' }]
+            },
+            // ... Areas 2-8
+          ]
+        },
+        {
+          type: 'category',
+          label: 'ISBD Unconstrained',
+          link: {
+            type: 'doc',
+            id: 'elements/unconstrained/index',
+          },
+          items: [
+            {
+              type: 'category',
+              label: 'All Elements',
+              link: { type: 'doc', id: 'elements/unconstrained/elements/index' },
+              items: [{ type: 'autogenerated', dirName: 'elements/unconstrained/elements' }]
+            }
+          ]
+        }
       ],
     },
     {
       type: 'category',
       label: 'Vocabularies',
-      items: ['vocabularies/index', 'vocabularies/vocab1'],
+      link: {
+        type: 'doc',
+        id: 'vocabularies/index',  // REQUIRED: Category must have index.mdx
+      },
+      items: [
+        'vocabularies/contentform',
+        'vocabularies/mediatype',
+        {
+          type: 'category',
+          label: 'Content Qualification',
+          items: [
+            'vocabularies/contentqualification/dimensionality',
+            'vocabularies/contentqualification/motion',
+            'vocabularies/contentqualification/sensoryspecification',
+            'vocabularies/contentqualification/type'
+          ]
+        }
+      ],
     },
   ],
 };
 
 export default sidebars;
+```
+
+---
+
+## 🔗 Link Handling Guidelines
+
+### Internal Navigation (No basePath Complexity!)
+Unlike the admin app, Docusaurus sites use standard routing:
+
+```mdx
+<!-- ✅ CORRECT - Use relative paths -->
+<CompactButton href="/elements">View Elements</CompactButton>
+<CompactButton href="/vocabularies">Browse Vocabularies</CompactButton>
+<InLink href="/intro">Introduction</InLink>
+
+<!-- ✅ CORRECT - Standard Markdown links -->
+[View Elements](/elements)
+[Introduction](/intro)
+
+<!-- ❌ WRONG - Don't hardcode site prefixes -->
+<CompactButton href="/isbd/elements">View Elements</CompactButton>
+```
+
+### Global Components for Navigation
+All navigation components from `@ifla/theme` are globally available:
+- `CompactButton` - Primary navigation buttons
+- `InLink` - Internal documentation links
+- `OutLink` - External links (opens in new tab)
+- `SeeAlso` - Related links section
+
+### Cross-Site Navigation
+For links between IFLA sites, use environment-aware URLs:
+```tsx
+import { getSiteConfig } from '@ifla/theme/config/siteConfig';
+const sites = getSiteConfig();
+
+// Links automatically adapt to environment
+<OutLink href={`${sites.isbdm.url}/vocabularies`}>
+  View ISBDM Vocabularies
+</OutLink>
+```
+
+---
+
+## 📁 Index File Requirements
+
+### Every Category MUST Have index.mdx
+Docusaurus categories require index files for proper navigation:
+
+1. **Main index**: `docs/index.mdx` - Site overview/hub page
+2. **Category indexes**: Required for all directories that appear in sidebar
+   - `elements/index.mdx` - Elements overview
+   - `elements/{namespace}/index.mdx` - Namespace overview
+   - `vocabularies/index.mdx` - Vocabularies overview
+
+### Index File Purpose
+- Provides landing page when clicking category in sidebar
+- Offers context and overview for the category
+- Enables proper breadcrumb navigation
+- Required for `link: { type: 'doc', id: 'path/index' }` in sidebars
+
+### Example Index File Structure
+```mdx
+---
+title: Elements Overview
+sidebar_position: 1
+---
+
+# ISBD Elements
+
+Overview of element sets available in the ISBD standard.
+
+## Available Element Sets
+
+- **ISBD Constrained**: Elements with domain/range restrictions
+- **ISBD Unconstrained**: Flexible elements for broader use
+
+<CompactButton href="/elements/isbd">
+  Browse ISBD Elements
+</CompactButton>
 ```
 
 ---
@@ -254,12 +488,27 @@ Store in `static/data/`:
 ```csv
 Concept ID,Label (English),Label (French),Definition (English),Definition (French)
 P1001,Title,Titre,The name of the resource,Le nom de la ressource
+T1000,printed text,texte imprimé,Content expressed through written words,Contenu exprimé par des mots écrits
 ```
 
-### Using in MDX
+### CSV File Organization
+```
+static/
+└── data/
+    ├── vocabularies/        # Vocabulary CSV files
+    │   ├── contentform.csv
+    │   ├── mediatype.csv
+    │   └── contentqualification/
+    │       ├── dimensionality.csv
+    │       └── motion.csv
+    └── elements/           # Element CSV files (if used)
+        └── isbd-elements.csv
+```
+
+### Using CSV in MDX
 ```mdx
 <VocabularyTable 
-  csv="/data/vocabulary.csv"
+  csv="/data/vocabularies/contentform.csv"
   namespace="isbd"
   prefix="isbd"
   languages={['en', 'fr']}
@@ -277,11 +526,19 @@ For validation and export:
     version: "1.0",
     columns: {
       "Concept ID": { required: true },
-      "Label (English)": { required: true }
+      "Label (English)": { required: true },
+      "Definition (English)": { required: true }
     }
   }}
 />
 ```
+
+### CSV Column Mapping
+- `Concept ID` → URI fragment (e.g., T1000)
+- `Label (*)` → skos:prefLabel by language
+- `Definition (*)` → skos:definition by language
+- `Scope Note (*)` → skos:scopeNote by language
+- Additional columns → Custom properties
 
 ---
 
@@ -312,18 +569,50 @@ Sites automatically adapt to environment:
 
 ### Creating New Sites
 ```bash
+# Step 1: Create basic site structure
 pnpm tsx scripts/scaffold-site.ts \
   --siteKey=newsite \
   --title="New Standard" \
   --tagline="A new IFLA standard"
+
+# Step 2: Generate all page templates
+pnpm tsx scripts/page-template-generator.ts --namespace=newsite
+
+# Step 3: Validate file structure
+pnpm tsx scripts/validate-sidebar-references.ts standards/newsite
 ```
 
-This creates:
-- Complete Docusaurus structure
-- Pre-configured with theme
-- Example content
-- Nx integration
-- Port assignment
+### Generating Missing Files
+When sidebar references files that don't exist:
+```bash
+# Generate only missing files
+pnpm tsx scripts/page-template-generator.ts --namespace=isbd --missing-only
+
+# Validate after generation
+pnpm tsx scripts/validate-sidebar-references.ts standards/isbd
+```
+
+### File Structure Validation
+Check that all sidebar references have files:
+```bash
+# Single site
+pnpm tsx scripts/validate-sidebar-references.ts standards/isbd
+
+# All sites
+for site in standards/*; do
+  if [ -d "$site" ]; then
+    pnpm tsx scripts/validate-sidebar-references.ts "$site"
+  fi
+done
+```
+
+### What Gets Generated
+1. **Landing page** - `docs/index.mdx`
+2. **Element set pages** - `elements/{set}/index.mdx`
+3. **Area pages** - `elements/{set}/area{n}/index.mdx`
+4. **Vocabulary pages** - `vocabularies/{vocab}.mdx`
+5. **Documentation** - `introduction.mdx`, `examples.mdx`, `about.mdx`
+6. **Tools pages** - `search.mdx`, `cross-set-browser.mdx` (if hierarchical)
 
 ---
 
@@ -583,10 +872,47 @@ pa11y http://localhost:3004 http://localhost:3004/elements http://localhost:3004
 
 ---
 
+## 📋 Quick Reference for Standards Development
+
+### File Naming Patterns
+- **Elements**: `P{number}.mdx` (e.g., P1025.mdx)
+- **Vocabularies**: `{vocab-name}.mdx` (kebab-case)
+- **Index files**: ALWAYS `index.mdx` for categories
+
+### Required Index Files
+Every category MUST have `index.mdx`:
+- `docs/index.mdx` - Main hub
+- `elements/index.mdx` - Elements overview  
+- `elements/{set}/index.mdx` - Set overview
+- `elements/{set}/area{n}/index.mdx` - Area overview
+- `vocabularies/index.mdx` - Vocabularies overview
+- `vocabularies/{category}/index.mdx` - Category overview
+
+### Component Usage
+- **No imports for JSX**: `<VocabularyTable />`, `<ElementReference />`
+- **Import for methods**: `import { VocabularyTable } from '@ifla/theme'`
+- **CSV loading**: Files in `/static/data/`, reference as `/data/file.csv`
+
+### Common Commands
+```bash
+# Generate missing files
+pnpm tsx scripts/page-template-generator.ts --namespace=isbd --missing-only
+
+# Validate structure
+pnpm tsx scripts/validate-sidebar-references.ts standards/isbd
+
+# Start dev server
+nx start isbd
+```
+
+---
+
 ## 🚨 BEFORE YOU CODE
 
 Ask yourself:
 - [ ] Am I in the repository root for commands?
+- [ ] Do all my categories have index.mdx files?
+- [ ] Am I using the correct front matter structure?
 - [ ] Is this component already in theme package?
 - [ ] Am I using standard Docusaurus patterns?
 - [ ] Have I checked the site's specific configuration?
