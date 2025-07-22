@@ -286,21 +286,10 @@ const config: Config = {
           className: 'navbar__item--management',
         },
         {
-          type: 'dropdown',
+          type: 'doc',
+          docId: 'about',
           label: 'About',
           position: 'right',
-          items: [
-            {
-              type: 'doc',
-              docId: 'about/index',
-              label: 'About ISBDM',
-            },
-            {
-              type: 'doc',
-              docId: 'about/docusaurus-for-ifla',
-              label: 'Modern Documentation Platform',
-            },
-          ],
         },
         {to: '/blog', label: 'Blog', position: 'right'},
         {

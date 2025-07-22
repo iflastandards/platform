@@ -1,0 +1,152 @@
+---
+id: components-index
+title: Component Usage Guides
+description: Learn how to use the components available for IFLA standards documentation
+sidebar_label: Component Guides
+---
+
+# Component Usage Guides
+
+These guides explain how to use the various components available for creating rich, interactive content in IFLA standards documentation.
+
+## 📊 Data Display Components
+
+### [VocabularyTable](/docs/guides/components/vocabulary-table)
+Display controlled vocabularies with advanced features including:
+- Multi-language support
+- Search and filtering
+- CSV import capability
+- Customizable display options
+
+### [ExampleTable](/docs/guides/components/example-table)
+Present examples in a structured, searchable format:
+- Consistent example formatting
+- Metadata support
+- Easy comparison between examples
+
+### [Figure](/docs/guides/components/figure)
+Add images and diagrams with proper formatting:
+- Automatic captions
+- Accessibility features
+- Responsive sizing
+- Dark mode support
+
+## 🔗 Navigation Components
+
+### [ElementReference](/docs/guides/components/element-reference)
+Create semantic references to standard elements:
+- Auto-generated links
+- Consistent formatting
+- Tooltip previews
+
+### [InLink](/docs/guides/components/inlink)
+Internal navigation within your documentation:
+- Smart path resolution
+- Active state indicators
+- Breadcrumb support
+
+### [OutLink](/docs/guides/components/outlink)
+External links with security and accessibility:
+- Automatic security attributes
+- Visual indicators for external links
+- WCAG compliance
+
+### [SeeAlso](/docs/guides/components/see-also)
+Cross-references and related content:
+- Organized reference lists
+- Multiple reference types
+- Consistent formatting
+
+## 📋 Constraint Components
+
+### [MandatoryUnique](/docs/guides/components/mandatory-unique)
+Document field constraints clearly:
+- Visual indicators for mandatory fields
+- Uniqueness constraint notation
+- Accessibility support
+
+## 🎯 Best Practices
+
+### Component Selection
+- Use **VocabularyTable** for any controlled list of terms
+- Use **ExampleTable** when showing multiple related examples
+- Use **Figure** for all images to ensure accessibility
+- Use **ElementReference** when referring to other parts of the standard
+
+### Accessibility
+All components are designed with accessibility in mind:
+- Proper ARIA labels
+- Keyboard navigation support
+- Screen reader compatibility
+- High contrast support
+
+### Internationalization
+Components support multiple languages:
+- RTL language support
+- Translatable UI elements
+- Multi-language content display
+
+## 💻 Quick Start
+
+To use any component in your MDX file:
+
+```mdx
+---
+title: My Document
+---
+
+import { VocabularyTable, Figure, OutLink } from '@ifla/theme';
+
+# My Document
+
+<VocabularyTable 
+  vocabularyId="my-vocab"
+  concepts={[
+    { value: "term1", definition: "Definition 1" },
+    { value: "term2", definition: "Definition 2" }
+  ]}
+/>
+
+<Figure 
+  src="/img/diagram.png" 
+  alt="Architecture diagram"
+  caption="System architecture overview"
+/>
+
+<OutLink href="https://ifla.org">IFLA Website</OutLink>
+```
+
+## 🚀 Advanced Usage
+
+### Custom Styling
+Most components accept a `className` prop for custom styling:
+
+```jsx
+<VocabularyTable 
+  className="my-custom-vocabulary"
+  {...props}
+/>
+```
+
+### Component Composition
+Components can be combined for complex layouts:
+
+```jsx
+<Figure src="/img/vocab-diagram.png">
+  <VocabularyTable 
+    vocabularyId="diagram-terms"
+    concepts={diagramVocabulary}
+  />
+</Figure>
+```
+
+## 📚 Learning Path
+
+1. Start with **[VocabularyTable](/docs/guides/components/vocabulary-table)** - Most commonly used
+2. Learn **[Figure](/docs/guides/components/figure)** - Essential for visual content
+3. Master navigation with **[InLink](/docs/guides/components/inlink)** and **[OutLink](/docs/guides/components/outlink)**
+4. Add rich features with remaining components
+
+---
+
+*Need help with a specific component? Each guide includes detailed examples and troubleshooting tips.*

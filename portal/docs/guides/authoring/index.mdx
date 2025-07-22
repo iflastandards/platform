@@ -1,0 +1,176 @@
+---
+id: authoring-index
+title: Content Creation Guides
+description: Step-by-step guides for creating IFLA standards content
+sidebar_label: Authoring Guides
+---
+
+# Content Creation Guides
+
+These guides walk you through the process of creating different types of content for IFLA standards documentation.
+
+## 📚 Available Guides
+
+### [How to Create Vocabularies: SME Guide](/docs/guides/authoring/vocabulary-creation)
+A practical, non-technical guide designed for librarians, catalogers, and domain experts who need to create controlled vocabularies.
+
+**You'll learn:**
+- What controlled vocabularies are and why they matter
+- Two methods for creating vocabularies (text vs. spreadsheet)
+- Best practices for writing definitions
+- How to add multiple languages
+- Real-world examples and templates
+
+**Best for:** Subject matter experts without technical background
+
+### [Vocabulary Creation Guide (Technical)](/docs/guides/authoring/vocabulary-creation-technical)
+Technical implementation guide for automated vocabulary creation using Google Sheets integration.
+
+**You'll learn:**
+- Setting up Google Cloud service accounts
+- Using the automated creation workflow
+- GitHub Actions integration
+- API endpoint usage
+- Troubleshooting common issues
+
+**Best for:** Technical implementers and system administrators
+
+### [How to Document a Vocabulary: Complete Guide](/docs/guides/authoring/vocabulary-table-usage)
+Comprehensive guide to using the VocabularyTable component for documenting vocabularies.
+
+**You'll learn:**
+- YAML front matter method for small vocabularies
+- CSV method for large vocabularies
+- Adding multiple languages
+- Customizing display options
+- Migration from legacy formats
+
+**Best for:** Anyone creating vocabulary documentation
+
+## 🎯 Choosing the Right Approach
+
+### For Small Vocabularies (< 20 terms)
+Use the **text/YAML method**:
+- Everything in one file
+- Easy to edit directly
+- No external dependencies
+- Quick to set up
+
+### For Large Vocabularies (20+ terms)
+Use the **CSV/spreadsheet method**:
+- Manage in Excel or Google Sheets
+- Easy collaboration
+- Bulk editing capabilities
+- Import/export support
+
+### For Automated Workflows
+Use the **Google Sheets integration**:
+- Automated vocabulary creation
+- Version control
+- Team collaboration
+- API access
+
+## 💡 Quick Start Templates
+
+### Minimal Vocabulary (YAML)
+```yaml
+---
+vocabularyId: "my-vocab"
+title: "My Vocabulary"
+concepts:
+  - value: "term1"
+    definition: "Definition of term 1"
+  - value: "term2"
+    definition: "Definition of term 2"
+---
+
+# My Vocabulary
+
+<VocabularyTable {...frontMatter} />
+```
+
+### Vocabulary with CSV
+```yaml
+---
+vocabularyId: "my-vocab"
+title: "My Vocabulary"
+description: "A vocabulary loaded from CSV"
+---
+
+# My Vocabulary
+
+<VocabularyTable 
+  {...frontMatter}
+  csvFile="vocabularies/my-vocab.csv" 
+/>
+```
+
+## 🌐 Multilingual Support
+
+All vocabulary creation methods support multiple languages:
+
+- **YAML**: Use language codes as object keys
+- **CSV**: Add columns with language suffixes (@en, @fr, @es)
+- **Display**: Automatic language switcher in the UI
+
+Example with multiple languages:
+```yaml
+concepts:
+  - value:
+      en: "book"
+      fr: "livre"
+      es: "libro"
+    definition:
+      en: "A written work published as bound pages"
+      fr: "Une œuvre écrite publiée sous forme de pages reliées"
+      es: "Una obra escrita publicada como páginas encuadernadas"
+```
+
+## 📋 Best Practices
+
+### Writing Definitions
+- Use clear, simple language
+- Be specific and precise
+- Avoid circular definitions
+- Include distinguishing features
+
+### Using Scope Notes
+- Clarify edge cases
+- Provide usage examples
+- Explain relationships to other terms
+- Note inclusions and exclusions
+
+### Organizing Terms
+- Use consistent naming patterns
+- Consider alphabetical ordering
+- Group related concepts
+- Plan for future growth
+
+## 🛠️ Tools and Resources
+
+### Templates
+- [Basic vocabulary template](https://github.com/ifla/standards/templates)
+- [Multilingual vocabulary template](https://github.com/ifla/standards/templates)
+- [CSV import template](https://github.com/ifla/standards/templates)
+
+### Validation Tools
+- Vocabulary syntax checker
+- Definition quality analyzer
+- Multilingual consistency checker
+
+### Support
+- Technical documentation wiki
+- Community forums
+- Direct support contact
+
+## 🚀 Next Steps
+
+1. **Choose your method**: Text/YAML for small vocabularies, CSV for large ones
+2. **Review the examples**: See how other standards create vocabularies
+3. **Start small**: Begin with a few terms to test the process
+4. **Get feedback**: Have colleagues review your definitions
+5. **Iterate**: Vocabularies evolve - plan for updates
+
+---
+
+*Remember: The goal is creating useful vocabularies for your community. The tools are designed to support your content, not constrain it.*

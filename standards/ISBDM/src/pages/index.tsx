@@ -28,8 +28,8 @@ function HomepageHeader() {
           </Link>
           <Link
             className="button button--outline button--secondary button--lg"
-            to="/docs/about/docusaurus-for-ifla">
-            Learn About This Platform
+            to="/docs/about">
+            About ISBDM
           </Link>
         </div>
       </div>
