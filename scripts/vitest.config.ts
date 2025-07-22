@@ -15,7 +15,11 @@ export default defineConfig({
       '**/node_modules/**',
       '**/dist/**',
       '**/build/**',
-      '**/.nx/**'
+      '**/.nx/**',
+      '**/server-dependent/**',
+      '**/test/integration/**',
+      '**/tests/integration/**',
+      '**/*.integration.test.{ts,tsx,js,jsx}'
     ],
     // Don't run all tests by default - let Nx affected handle this
     passWithNoTests: true,

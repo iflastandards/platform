@@ -23,6 +23,7 @@ export class DctapProfileParser {
       skip_empty_lines: true,
       trim: true,
       comment: '#',
+      relax_column_count: true,
     }) as Record<string, string>[];
 
     const shapes = new Map<string, DctapShape>();

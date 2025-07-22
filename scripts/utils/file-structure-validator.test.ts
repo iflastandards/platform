@@ -7,22 +7,32 @@ import * as sidebarReferenceExtractor from './sidebar-reference-extractor';
 
 // Mock fs/promises module
 vi.mock('fs/promises', () => {
+  const mockAccess = vi.fn();
+  const mockReaddir = vi.fn();
+  const mockMkdir = vi.fn();
+  const mockWriteFile = vi.fn();
+  
   return {
-    access: vi.fn(),
-    readdir: vi.fn(),
-    mkdir: vi.fn(),
-    writeFile: vi.fn(),
     default: {
-      access: vi.fn(),
-      readdir: vi.fn(),
-      mkdir: vi.fn(),
-      writeFile: vi.fn(),
+      access: mockAccess,
+      readdir: mockReaddir,
+      mkdir: mockMkdir,
+      writeFile: mockWriteFile,
     },
+    access: mockAccess,
+    readdir: mockReaddir,
+    mkdir: mockMkdir,
+    writeFile: mockWriteFile,
   };
 });
 
 // Mock path module
 vi.mock('path', () => ({
+  default: {
+    join: vi.fn((...args) => args.join('/')),
+    dirname: vi.fn((p) => p.split('/').slice(0, -1).join('/')),
+    basename: vi.fn((p) => p.split('/').pop()),
+  },
   join: vi.fn((...args) => args.join('/')),
   dirname: vi.fn((p) => p.split('/').slice(0, -1).join('/')),
   basename: vi.fn((p) => p.split('/').pop()),
@@ -251,12 +261,12 @@ describe('FileStructureValidator', () => {
       // Execute
       await validator.generateMissingFiles(namespace, missingFiles);
 
-      // Verify
-      expect(fs.mkdir).toHaveBeenCalledWith('standards/test/docs/doc1.mdx', {
+      // Verify - mkdir is called with the directory path, not the file path
+      expect(fs.mkdir).toHaveBeenCalledWith('standards/test/docs', {
         recursive: true,
       });
       expect(fs.mkdir).toHaveBeenCalledWith(
-        'standards/test/docs/elements/set1',
+        'standards/test/docs/elements',
         { recursive: true },
       );
 
@@ -289,8 +299,8 @@ describe('FileStructureValidator', () => {
       // Execute
       await validator.generateMissingFiles(namespace, missingFiles);
 
-      // Verify
-      expect(fs.mkdir).toHaveBeenCalledWith('standards/test/docs/doc1.mdx', {
+      // Verify - mkdir is called with the directory path, not the file path
+      expect(fs.mkdir).toHaveBeenCalledWith('standards/test/docs', {
         recursive: true,
       });
       expect(fs.writeFile).not.toHaveBeenCalled(); // Should not write the file
@@ -324,13 +334,13 @@ describe('FileStructureValidator', () => {
       // Execute
       await validator.generateMissingFiles(namespace, missingFiles);
 
-      // Verify
-      expect(fs.mkdir).toHaveBeenCalledWith('standards/test/docs/doc1.mdx', {
+      // Verify - mkdir is called with the directory path, not the file path
+      expect(fs.mkdir).toHaveBeenCalledWith('standards/test/docs', {
         recursive: true,
       });
       expect(fs.writeFile).not.toHaveBeenCalled(); // Should not write the file
       expect(consoleErrorSpy).toHaveBeenCalledWith(
-        'Error creating directory standards/test/docs/doc1.mdx:',
+        'Error creating directory standards/test/docs:',
         expect.any(Error),
       );
 

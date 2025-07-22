@@ -69,8 +69,6 @@ export default defineConfig((): UserConfig => {
         '**/build/**',
         '**/e2e/**',
         '**/tests/visual-regression.spec.ts',
-        // Exclude ALL script tests - they make external API calls or file operations
-        '**/scripts/**/*.test.ts',
         // Exclude integration tests that run builds or external commands
         '**/navbarComponentIntegration.test.ts',
         // Exclude problematic component tests that cause hanging

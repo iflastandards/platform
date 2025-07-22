@@ -7,6 +7,29 @@ import path from 'path';
  * and exclude build artifacts properly.
  */
 export default defineConfig({
+  resolve: {
+    alias: {
+      // Map @ifla/theme to source during tests
+      '@ifla/theme/components': path.resolve(__dirname, 'packages/theme/src/components'),
+      '@ifla/theme/utils': path.resolve(__dirname, 'packages/theme/src/utils'),
+      '@ifla/theme/config': path.resolve(__dirname, 'packages/theme/src/config'),
+      '@ifla/theme/hooks': path.resolve(__dirname, 'packages/theme/src/hooks'),
+      '@ifla/theme': path.resolve(__dirname, 'packages/theme/src'),
+      // Docusaurus mocks for theme package
+      '@docusaurus/Link': path.resolve(__dirname, 'packages/theme/src/tests/__mocks__/DocusaurusLinkMock.tsx'),
+      '@docusaurus/useDocusaurusContext': path.resolve(__dirname, 'packages/theme/src/tests/__mocks__/useDocusaurusContext.ts'),
+      '@docusaurus/useBaseUrl': path.resolve(__dirname, 'packages/theme/src/tests/__mocks__/useBaseUrl.ts'),
+      '@docusaurus/theme-common': path.resolve(__dirname, 'packages/theme/src/tests/__mocks__/theme-common.ts'),
+      '@theme/Tabs': path.resolve(__dirname, 'packages/theme/src/tests/__mocks__/tabs.tsx'),
+      '@theme/TabItem': path.resolve(__dirname, 'packages/theme/src/tests/__mocks__/TabItem.tsx'),
+      '@theme/CodeBlock': path.resolve(__dirname, 'packages/theme/src/tests/__mocks__/CodeBlock.tsx'),
+      '@theme/Heading': path.resolve(__dirname, 'packages/theme/src/tests/__mocks__/Heading.tsx'),
+      '@docusaurus/router': path.resolve(__dirname, 'packages/theme/src/tests/__mocks__/router.ts'),
+      '@docusaurus/BrowserOnly': path.resolve(__dirname, 'packages/theme/src/tests/__mocks__/BrowserOnly.tsx'),
+      // Admin app alias
+      '@': path.resolve(__dirname, 'apps/admin/src'),
+    },
+  },
   test: {
     // Override with Nx-optimized settings
     globals: true,
@@ -17,6 +40,7 @@ export default defineConfig({
     // Use glob patterns that work well with nx affected
     include: [
       '{packages,apps,standards}/**/*.{test,spec}.{js,mjs,cjs,ts,mts,cts,jsx,tsx}',
+      'packages/theme/src/tests/**/*.{test,spec}.{js,mjs,cjs,ts,mts,cts,jsx,tsx}',
     ],
     exclude: [
       '**/node_modules/**',
@@ -24,13 +48,15 @@ export default defineConfig({
       '**/build/**',
       '**/e2e/**',
       '**/tests/visual-regression.spec.ts',
-      '**/scripts/**/*.test.ts',
       '**/navbarComponentIntegration.test.ts',
       '**/VocabularyTable-improved.test.tsx',
       '**/multilingual-vocabulary.test.tsx',
       // CRITICAL: Exclude integration tests for pre-commit phase
       '**/*.integration.test.{ts,tsx,js,jsx}',
       '**/tests/integration/**',
+      '**/test/integration/**',
+      // Exclude server-dependent tests
+      '**/server-dependent/**',
       // Exclude environment tests (CI only)
       '**/tests/deployment/**',
       // Comprehensive exclusion of build artifacts

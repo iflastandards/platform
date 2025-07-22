@@ -5,7 +5,7 @@ import * as path from 'path';
 
 describe('DCTAP Extensions', () => {
   const fixturesDir = path.join(__dirname, 'fixtures', 'dctap-extensions');
-  const tempDir = path.join(__dirname, 'temp');
+  const tempDir = '/tmp/rdf-converters-tests';
   const scriptPath = path.join(__dirname, '..', 'src', 'rdf-to-csv.ts');
 
   // Ensure temp directory exists before all tests

@@ -6,7 +6,7 @@ import * as path from 'path';
 describe('RDF to MDX Pipeline', () => {
   const scriptPath = path.join(__dirname, '..', 'src', 'rdf-to-mdx-pipeline.ts');
   const fixturesDir = path.join(__dirname, 'fixtures');
-  const tempDir = path.join(__dirname, 'temp');
+  const tempDir = '/tmp/rdf-to-mdx-pipeline-tests';
 
   beforeAll(() => {
     if (!fs.existsSync(tempDir)) {

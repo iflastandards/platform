@@ -5,7 +5,7 @@ import * as path from 'path';
 
 describe('rdf-folder-to-csv CLI', () => {
   const fixturesDir = path.join(__dirname, 'fixtures', 'batch');
-  const tempDir = path.join(__dirname, 'temp-batch');
+  const tempDir = '/tmp/rdf-folder-to-csv-tests';
   const scriptPath = path.join(__dirname, '..', 'src', 'rdf-folder-to-csv.ts');
 
   beforeEach(() => {
@@ -102,8 +102,8 @@ describe('rdf-folder-to-csv CLI', () => {
         return;
       }
 
-      const command = `tsx ${scriptPath} -s ${sourceDir} -o ${outputDir} --dry-run`;
-      const output = execSync(command, { encoding: 'utf-8' });
+      const command = `tsx ${scriptPath} -s ${sourceDir} -o ${outputDir} --dry-run 2>&1`;
+      const output = execSync(command, { encoding: 'utf-8', shell: true });
 
       // Should show what would be done
       expect(output).toMatch(/would convert/i);
@@ -120,7 +120,9 @@ describe('rdf-folder-to-csv CLI', () => {
       const outputDir = tempDir;
 
       expect(() => {
-        execSync(`tsx ${scriptPath} -s ${sourceDir} -o ${outputDir}`);
+        execSync(`tsx ${scriptPath} -s ${sourceDir} -o ${outputDir}`, {
+          stdio: 'pipe'
+        });
       }).toThrow();
     });
 
@@ -130,8 +132,8 @@ describe('rdf-folder-to-csv CLI', () => {
       fs.mkdirSync(emptyDir, { recursive: true });
 
       const output = execSync(
-        `tsx ${scriptPath} -s ${emptyDir} -o ${tempDir}`,
-        { encoding: 'utf-8' }
+        `tsx ${scriptPath} -s ${emptyDir} -o ${tempDir} 2>&1`,
+        { encoding: 'utf-8', shell: true }
       );
 
       expect(output).toMatch(/no rdf files found/i);

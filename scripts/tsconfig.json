@@ -1,9 +1,10 @@
 {
   "extends": "../tsconfig.json",
   "compilerOptions": {
-    "module": "commonjs",
-    "target": "es2021",
-    "lib": ["es2021"],
+    "module": "esnext",
+    "target": "es2022",
+    "lib": ["es2022"],
+    "moduleResolution": "node",
     "types": ["node", "vitest/globals"],
     "allowJs": true,
     "checkJs": false,
@@ -29,6 +30,8 @@
     "node_modules",
     "dist",
     "build",
-    "scaffold-template"
+    "scaffold-template",
+    "**/*.test.ts",
+    "**/*.spec.ts"
   ]
 }

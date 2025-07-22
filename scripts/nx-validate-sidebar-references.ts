@@ -58,9 +58,9 @@ async function getAllSites(): Promise<string[]> {
   try {
     const entries = await fs.readdir(standardsDir, { withFileTypes: true });
     return entries
-      .filter((entry) => entry.isDirectory())
-      .filter((entry) => !entry.name.startsWith('.')) // Skip hidden directories
-      .map((entry) => entry.name);
+      .filter((entry: any) => entry.isDirectory())
+      .filter((entry: any) => !entry.name.startsWith('.')) // Skip hidden directories
+      .map((entry: any) => entry.name);
   } catch (error) {
     console.error('Error reading standards directory:', error);
     return [];

@@ -10,6 +10,7 @@ import {
   validateSiteConfigurations,
 } from './parse-ifla-report';
 import { SiteConfigurationGenerator } from './site-configuration-generator';
+import { FileStructureValidator } from './utils/file-structure-validator';
 
 /**
  * Batch Site Generator

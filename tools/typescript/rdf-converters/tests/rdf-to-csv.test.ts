@@ -5,7 +5,7 @@ import * as path from 'path';
 
 describe('rdf-to-csv CLI', () => {
   const fixturesDir = path.join(__dirname, 'fixtures');
-  const tempDir = path.join(__dirname, 'temp');
+  const tempDir = '/tmp/rdf-to-csv-tests';
   const scriptPath = path.join(__dirname, '..', 'src', 'rdf-to-csv.ts');
 
   beforeEach(() => {

@@ -54,9 +54,9 @@ async function ensureDirectory(filePath: string): Promise<void> {
 
 function convertFile(inputFile: string, outputFile: string, dctapProfile?: string): ConversionResult {
   try {
-    // Build command - use the compiled version
-    const scriptPath = path.join(__dirname, 'rdf-to-csv.js');
-    let command = `node "${scriptPath}" -i "${inputFile}" -o "${outputFile}"`;
+    // Build command - use tsx to run TypeScript directly in development/test
+    const scriptPath = path.join(__dirname, 'rdf-to-csv.ts');
+    let command = `tsx "${scriptPath}" -i "${inputFile}" -o "${outputFile}"`;
     
     if (dctapProfile) {
       command += ` -p "${dctapProfile}"`;
@@ -207,6 +207,12 @@ program
     // Resolve paths
     const resolvedSourceDir = path.resolve(options.source);
     const resolvedOutputDir = path.resolve(options.output);
+    
+    // Check if source directory exists
+    if (!fs.existsSync(resolvedSourceDir)) {
+      console.error(chalk.red(`❌ Source directory not found: ${resolvedSourceDir}`));
+      process.exit(1);
+    }
     
     // Update extensions if provided
     if (options.extensions) {

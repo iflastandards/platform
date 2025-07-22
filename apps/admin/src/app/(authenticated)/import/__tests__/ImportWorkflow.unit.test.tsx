@@ -4,6 +4,7 @@
  * These are fast tests that run in pre-commit
  */
 
+import React from 'react';
 import { describe, it, expect, vi } from 'vitest';
 import { render, screen } from '@testing-library/react';
 import ImportWorkflow from '../ImportWorkflow';
