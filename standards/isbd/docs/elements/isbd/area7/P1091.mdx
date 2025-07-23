@@ -1,0 +1,91 @@
+---
+id: P1091
+title: has note on use or audience
+description: ISBD element documentation for has note on use or audience
+uri: "isbd:elements/P1091"
+area: area7
+RDF:
+  definition: "Relates a resource to a note providing non-evaluative information as to the potential or recommended use of the resource and/or the intended audience."
+  domain: "isbd:elements/C2001"
+  type: "rdf:Property"
+  scopeNote: "Normally taken from statements on or in the resource. Includes specification of restrictions on use."
+  elementSubType: "isbd:elements/P1045"
+reg:hasUnconstrained: "isbd:unc/elements/P1091"
+reg:name: hasNoteOnUseOrAudience
+reg:status: "RegStatus:1001"
+rdf:type: "rdf:Property"
+rdfs:domain: "isbd:elements/C2001"
+rdfs:isDefinedBy: "isbd:elements/"
+rdfs:label: has note on use or audience
+rdfs:label@es: "tiene nota de uso o destinatario"
+rdfs:subPropertyOf: "isbd:elements/P1045"
+skos:definition: "Relates a resource to a note providing non-evaluative information as to the potential or recommended use of the resource and/or the intended audience."
+skos:definition@es: "Relaciona un recurso con una nota que proporciona información no evaluativa sobre el uso potencial o recomendado del recurso y/o sobre los destinatarios a los que está dirigido."
+skos:scopeNote: "Normally taken from statements on or in the resource. Includes specification of restrictions on use."
+skos:scopeNote@es: "Normalmente se obtienen de menciones de dentro o fuera del recurso. Incluye especificaciones de restricciones en el uso."
+---
+# has note on use or audience
+
+The ISBD element "note on use or audience" is described in the provided PDF as "Notes relating to use or audience".  It's covered under section 7.10.3 "Notes relating to use or audience".
+
+## Element Reference
+
+- **Definition:** Notes relating to use or audience, normally taken from statements on or in the resource, provide non-evaluative information as to the potential or recommended use of the resource and/or the intended audience. These notes may also specify restrictions on use of the resource.  (Paraphrased from the PDF).
+- **Domain:**  Bibliographic resources (specifically within the Note Area).
+- **Range:** Textual strings describing intended use or audience.
+- **Element Type:** Descriptive.
+
+
+## Additional Information
+
+- **Scope and Purpose:** To provide information about the intended use or target audience for the resource. This can be helpful for users to determine the resource's suitability for their needs. The note can also communicate any restrictions on the resource's use.
+- **User Tasks Supported:** Resource discovery and selection, understanding resource applicability.
+
+
+## Element Values
+
+- **Rules and Guidelines:** The note should be based on statements found on or in the resource itself. It should be descriptive and non-evaluative. Restrictions on use should be clearly stated.
+- **Value Constraints and Formats:**  No specific format is prescribed, but brevity and clarity are encouraged.
+- **String Encoding:** No specific encoding scheme is mentioned, but the general rules for language and script of the description apply (see section A.5 in the PDF).
+
+
+## Examples
+
+```
+Note: For ages 3-6
+```
+
+```
+Note: Restricted to municipal law enforcement personnel.
+```
+
+```
+Note: Designed for those with a professional interest in analyzing spatial data (geographers, planners, meteorologists, etc.)
+```
+
+```
+Note: Intended for senior high school students with knowledge of algebra.
+```
+
+```
+Note: Resource closed until Jan. 2010.  For use by library staff only.
+```
+
+
+## Relationships
+
+- **Relationship to other ISBD elements:** This element is part of the Note Area (Area 7) and is therefore related to all other areas of the description.  It can be used to provide additional information or clarification related to any other area.  It's particularly relevant when the intended use or audience restricts or defines the scope of other areas, like Title or Material Description.
+- **Super-types and sub-types:**  Not explicitly mentioned in the document. However, based on its definition, it can be considered a sub-type of a general "Note" element.
+- **Inverse relationships:**  None explicitly stated.
+
+
+## Stipulations
+
+- **Special Considerations:** The note is optional.  It should only be included if the information is considered significant and cannot be easily inferred from other elements of the description.
+- **Exceptions:** No specific exceptions mentioned.
+- **Best practices:**  Be concise and clear in the wording of the note.  Use terminology that is readily understood by the target audience for the bibliographic records. Only include information that is readily available on or in the resource.  Do not include evaluative statements or personal opinions.
+
+
+---
+
+*This content was automatically generated from the ISBD PDF documentation using Gemini AI analysis.*

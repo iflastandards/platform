@@ -1,0 +1,84 @@
+---
+id: P1183
+title: has dependent title of parallel title
+description: ISBD element documentation for has dependent title of parallel title
+uri: "isbd:elements/P1183"
+area: area1
+RDF:
+  definition: "Relates a resource to a title that by itself is insufficient to identify the resource and that requires the addition of the common title, or the title of the main resource or the title of the main series, presented on the preferred source of information for the resource as an equivalent in another language or script."
+  domain: "isbd:elements/C2001"
+  type: "rdf:Property"
+reg:hasUnconstrained: "isbd:unc/elements/P1183"
+reg:name: hasDependentTitleOfParallelTitle
+reg:status: "RegStatus:1001"
+rdf:type: "rdf:Property"
+rdfs:domain: "isbd:elements/C2001"
+rdfs:isDefinedBy: "isbd:elements/"
+rdfs:label: has dependent title of parallel title
+rdfs:label@es: "tiene título dependiente de título paralelo"
+skos:definition: "Relates a resource to a title that by itself is insufficient to identify the resource and that requires the addition of the common title, or the title of the main resource or the title of the main series, presented on the preferred source of information for the resource as an equivalent in another language or script."
+skos:definition@es: "Relaciona un recurso con un título que por sí mismo es insuficiente para identificar el recurso y que requiere de la adición el título común, o del título del recurso principal o del título de la serie principal, presentado como equivalente en otra lengua o escritura en la fuente de información preferida del recurso."
+---
+# has dependent title of parallel title
+
+The ISBD element "dependent title of parallel title" (isbd:elements/P1183) is not explicitly defined as a separate element in the provided ISBD documentation.  Instead, the concept of dependent titles is addressed within the context of the title proper (1.1.3.7, 1.1.4.6.1) and series titles (6).  When a parallel title also has a dependent title structure, the rules for dependent titles are applied to the parallel title as well. This is shown implicitly in the punctuation pattern examples provided in section 1 for the Title and Statement of Responsibility Area.
+
+Therefore, while the concept exists by extension of the dependent title rules, a separate definition for "dependent title of parallel title" isn't provided.  This information is inferred from the overall ISBD structure and the examples given.
+
+
+## Element Reference
+
+- **Definition (Inferred):** A title that, by itself, is insufficient to identify a resource and that requires the addition of a common title within a parallel title statement. This structure mimics the concept of dependent titles used with the title proper and series.
+- **Domain (Inferred):** Parallel Title (1.2)
+- **Range (Inferred):** String
+- **Element Type (Inferred):**  Sub-element of Parallel Title
+
+
+## Additional Information
+
+- **Scope and Purpose:** To provide further title information for a resource in another language or script, specifically when that title has a dependent structure reliant on a common title element within the parallel title statement.  This supports more complete descriptions for resources published with complex titles in multiple languages.
+- **User Tasks Supported:**  Improved resource identification and disambiguation in multilingual catalogs. Facilitates searching and retrieval across language barriers.
+
+
+## Element Values
+
+- **Rules and Guidelines:**  The dependent title of the parallel title follows the same transcription rules as the dependent title of the title proper (1.1.5.3).  It is transcribed exactly as it appears on the resource, linked to its common title element within the parallel title.
+- **Value Constraints or Formats:** No specific constraints other than adhering to the general transcription rules for titles.
+- **String Encoding Schemes:**  UTF-8 is recommended for encoding.
+
+
+## Examples
+
+
+```
+Title Proper: Report of the Royal Society of London. Biology. Genetics
+= Parallel Title: Rapport de la Société Royale de Londres. Biologie. Génétique
+```
+
+```
+Title Proper:  Acta Universitaria. Philology. Linguistics
+= Parallel Title:  Actes Universitaires. Philologie. Linguistique
+```
+
+```
+Title Proper:  Monumenta Germaniae Historica. Scriptores.  Rerum Merovingicarum
+= Parallel Title: Denkmäler deutscher Geschichte. Verfasser. Merowingische Geschichte
+```
+
+
+## Relationships
+
+- **Relationship to other ISBD Elements:** Sub-element of Parallel Title (1.2). Follows similar rules to Dependent Title (as applied to Title Proper and Series).
+- **Super-types and Sub-types:** No sub-types defined.
+- **Inverse Relationships:** None defined.
+
+
+## Stipulations
+
+- **Special Considerations:** The common title element of the parallel title should also appear in the corresponding parallel title position.  This establishes the dependent relationship.
+- **Best Practices:**  Include parallel dependent titles whenever they are present on the resource and contribute to better identification or disambiguation, especially in multilingual cataloging environments.  Use consistent capitalization and punctuation according to the language of the parallel title.
+
+
+---
+
+*This content was automatically generated from the ISBD PDF documentation using Gemini AI analysis.*

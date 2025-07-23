@@ -1,0 +1,82 @@
+---
+id: P1017
+title: has name of publisher, producer, distributor
+description: ISBD element documentation for has name of publisher, producer, distributor
+uri: "isbd:elements/P1017"
+area: area4
+RDF:
+  definition: "Relates a resource to the name of the person or corporate body appearing on the resource that effects respectively the publication, production and/or distribution or release activities for the resource."
+  domain: "isbd:elements/C2001"
+  type: "rdf:Property"
+reg:hasUnconstrained: "isbd:unc/elements/P1017"
+reg:name: hasNameOfPublisherProducerDistributor
+reg:status: "RegStatus:1001"
+rdf:type: "rdf:Property"
+rdfs:domain: "isbd:elements/C2001"
+rdfs:isDefinedBy: "isbd:elements/"
+rdfs:label: has name of publisher, producer, distributor
+rdfs:label@es: "tiene nombre de editor, productor, distribuidor"
+skos:definition: "Relates a resource to the name of the person or corporate body appearing on the resource that effects respectively the publication, production and/or distribution or release activities for the resource."
+skos:definition@es: "Relaciona un recurso con el nombre de la persona o entidad corporativa que aparece en el recurso que lleva a cabo, respectivamente, la publicación, producción y/o distribución o las actividades de difusión del recurso."
+---
+# has name of publisher, producer, distributor
+
+The ISBD element "Name of publisher, producer and/or distributor" is described in section 4.2 of the provided document.
+
+## Element Reference
+
+- **Official ISBD Definition:** The name of the publisher, producer and/or distributor corresponds to the person or corporate body that effects the publication, production and/or distribution or release activities for the resource.
+- **Domain:**  Monographic resources, Serials, Cartographic resources, Multimedia resources, etc. (Essentially all resource types)
+- **Range:**  Personal name or corporate body name.
+- **Element Type:**  Literal.
+
+## Additional Information
+
+- **Scope and Purpose:** This element identifies the entity responsible for making the resource available. It is crucial for establishing the origin of the resource and can be helpful in determining its authority, authenticity, and quality. It's also important for contacting the publisher for acquisition or permissions.
+- **User Tasks Supported:** Finding and identifying resources based on publisher; Understanding the origin and potential biases of a resource; Contacting the publisher for purchasing, permissions, or other inquiries.
+
+## Element Values
+
+- **Rules/Guidelines:** The name should be given in the fullest form appearing on the prescribed source of information (usually the title page for books). Abbreviations are allowed if unambiguous. For older resources with multiple or complex publisher statements, the standard permits various levels of detail, including abbreviations and omissions.  The functions performed by the entity (other than solely publishing, such as distributing), should also be specified if mentioned on the source.
+- **Value Constraints/Formats:** There is no prescribed format, but clarity and consistency are encouraged.  If the name is transcribed from outside the prescribed source of information, it should be enclosed in square brackets.
+- **String Encoding Schemes:**  While not explicitly mentioned in this section, the document generally recommends Unicode for representation of all characters, to cover multiple scripts and languages.
+
+
+## Examples
+
+```
+: Methuen
+```
+
+```
+: Library Association
+```
+
+```
+: Wiley; Chichester : John Wiley
+```
+
+```
+: East European Monographs ; New York : Columbia University Press [distributor]
+```
+
+```
+: Springer-Verlag Berlin Heidelberg
+```
+
+## Relationships
+
+- **Relationship to other ISBD elements:** Directly related to "Place of publication, production, and/or distribution" (4.1). The place associated with each publisher is given immediately before the publisher's name. Also related to the "Statement of responsibility" (1.4), which names those with intellectual or artistic responsibility for the *content* of the resource. In some cases (especially with older materials), the publisher may also be the author or creator and named in the statement of responsibility.  Related to the "Date of publication, production, and/or distribution" (4.3). The date of publication, etc., is given after the publisher's name.
+- **Super-types and sub-types:** None explicitly defined in this version of ISBD.
+- **Inverse Relationships:** None explicitly defined.
+
+## Stipulations
+
+- **Special Considerations:** If no publisher is named, the abbreviation `[s.n.]` is used.  When the name is taken from outside prescribed sources, it is enclosed in square brackets. If the source lists multiple publishers, these may be recorded in order of prominence, or at the cataloger's discretion if no prominence is evident. If multiple publishers have different places, both are recorded. The standard accommodates complexities in older materials, such as combined publisher/printer roles.
+- **Exceptions/Usage Notes:** Label names (for sound recordings, etc.) are not recorded here.  Statements that do not specifically name a publisher, but only refer to places or businesses (e.g., "sold at the pamphlet-shops") are treated as places of publication. In some cases, the printer's name is used as a substitute if the publisher is unknown (particularly with older monographic resources).
+- **Best Practices:**  Use the fullest form of the name.  Be consistent in abbreviation practice.  Clearly indicate the source of the information if it's not from the prescribed sources.  Provide notes (in area 7) for any omissions or ambiguities in the publisher statement. Use controlled vocabularies for publisher names when possible (e.g., authority files).
+
+
+---
+
+*This content was automatically generated from the ISBD PDF documentation using Gemini AI analysis.*

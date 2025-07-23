@@ -1,0 +1,66 @@
+---
+id: P1119
+title: has parallel music format statement
+description: ISBD element documentation for has parallel music format statement
+uri: "isbd:elements/P1119"
+area: area3
+RDF:
+  definition: "Relates a resource that is notated music to an equivalent of a music format statement (a term or phrase representing the physical form in which it is presented) in another language or script and presented as equivalent."
+  domain: "isbd:elements/C2001"
+  type: "rdf:Property"
+reg:hasUnconstrained: "isbd:unc/elements/P1119"
+reg:name: hasParallelMusicFormatStatement
+reg:status: "RegStatus:1001"
+rdf:type: "rdf:Property"
+rdfs:domain: "isbd:elements/C2001"
+rdfs:isDefinedBy: "isbd:elements/"
+rdfs:label: has parallel music format statement
+rdfs:label@es: "tiene mención de formato musical paralela"
+skos:definition: "Relates a resource that is notated music to an equivalent of a music format statement (a term or phrase representing the physical form in which it is presented) in another language or script and presented as equivalent."
+skos:definition@es: "Relaciona un recurso que es música notada con un equivalente en otra lengua lengua o escritura de la mención de formato musical (un término o frase que representa la forma física en la que se presenta)."
+---
+# has parallel music format statement
+
+## Element Reference
+
+- **Official ISBD Definition:** A parallel music format statement is an equivalent of the music format statement in another language or script.  (ISBD: International Standard Bibliographic Description, 2011 Consolidated Edition as updated in 2021)
+- **Domain:** Notated Music Resources
+- **Range:** String literal representing the music format in a parallel language/script.
+- **Element type:** Descriptive
+
+## Additional Information
+
+- **Scope and Purpose:** This element provides the music format of the resource in a language and/or script other than that used for the primary music format statement. This aids in international understanding and retrieval, especially where the primary language is not widely understood.
+- **User Tasks Supported:** Facilitates searching and filtering of notated music resources based on their format in multiple languages. Improves discoverability for users who search in different languages.  Aids in understanding the format of the resource when the primary language is unfamiliar.
+
+## Element Values
+
+- **Rules and Guidelines:** The parallel music format statement is transcribed from the resource exactly as it appears, following the conventions of the language/script it's in. Capitalization and punctuation should follow the conventions of the parallel language.  Abbreviations standard for the parallel language may be used.
+- **Value Constraints or Formats:** No specific format is prescribed other than adherence to the language's standard bibliographic practices and, where applicable, the guidelines given in section 3.2.1.1 of the ISBD.
+- **String Encoding Scheme:**  UTF-8 is recommended.
+
+## Examples
+
+```
+- Scores = Partituren
+- Full score = Partitura completa
+- Score and set of parts = Partition et parties
+- Miniature score = Partitura de bolsillo
+- Stimmenauszug = Part extract
+```
+
+## Relationships
+
+- **Relationship to Other Elements:**  This element is directly related to the `music format statement` (isbd:elements/P1118). It is a parallel version of that element.  It is part of Area 3, the Material or Type of Resource Specific Area, situated between the edition area and the publication area.
+- **Super-types/Sub-types:**  None explicitly stated in the ISBD.
+- **Inverse Relationships:**  None explicitly stated in the ISBD.
+
+## Stipulations
+
+- **Special Considerations:** This element is recorded only when the resource provides a music format statement in more than one language/script.  The first statement encountered on the resource in the preferred order of sources is the primary `music format statement` and subsequent statements become `parallel music format statements`. The preferred order of sources is the title page, first page of music, other preliminaries, cover, colophon, and lastly, the rest of the resource.
+- **Best Practices:** If the resource itself offers parallel music format statements, record them as they appear.  If the cataloguer supplies a translation, indicate this in a note (area 7). When a translation is needed and supplied by the cataloger, it should be enclosed in square brackets. Ensure consistency in the use of abbreviations across parallel statements. Use standard abbreviations appropriate for the respective language where possible.
+
+
+---
+
+*This content was automatically generated from the ISBD PDF documentation using Gemini AI analysis.*

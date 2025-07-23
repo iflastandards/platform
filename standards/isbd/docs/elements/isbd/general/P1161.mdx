@@ -1,0 +1,84 @@
+---
+id: P1161
+title: has material or type of resource specific area
+description: ISBD element documentation for has material or type of resource specific area
+uri: "isbd:elements/P1161"
+area: general
+RDF:
+  definition: "Relates a resource to a statement including data that are unique to a particular class of material or type of resource."
+  domain: "isbd:elements/C2001"
+  range: "isbd:elements/C2005"
+  type: "rdf:Property"
+reg:hasUnconstrained: "isbd:unc/elements/P1161"
+reg:name: hasMaterialOrTypeOfResourceSpecificArea
+reg:status: "RegStatus:1001"
+rdf:type: "rdf:Property"
+rdfs:domain: "isbd:elements/C2001"
+rdfs:isDefinedBy: "isbd:elements/"
+rdfs:label: has material or type of resource specific area
+rdfs:label@es: "tiene área específica de material o tipo de recurso"
+rdfs:range: "isbd:elements/C2005"
+skos:definition: "Relates a resource to a statement including data that are unique to a particular class of material or type of resource."
+skos:definition@es: "Relaciona un recurso con una mención que incluye datos que son exclusivos de una clase particular de material o tipo de recurso."
+---
+# has material or type of resource specific area
+
+The ISBD element "material or type of resource specific area" (isbd:elements/P1161) is found within Area 3 of the ISBD.
+
+## Element Reference
+
+- **Official ISBD Definition:** Area 3 contains data that are unique to a particular class of material or type of resource. Where information exists for another type of resource, the information that can be assigned to any other area of description is so assigned.  This area may include elements for mathematical data (cartographic resources), music format statements (notated music), numbering (serials), production statements (unpublished resources) and an unpublished statement.
+- **Domain:**  Monographic resources, Cartographic resources, Notated music, Serials, Unpublished resources. Essentially any resource where additional data unique to the resource type is needed.
+- **Range:** String values representing mathematical data, music format statements, numbering, production statements, or unpublished statements.
+- **Element Type:** Complex, as it can contain a variety of different data subtypes depending on the resource type.
+
+## Additional Information
+
+- **Scope and Purpose:**  The purpose of Area 3 is to provide information specific to certain resource types that doesn't fit neatly into other descriptive areas. This helps in identifying and selecting resources based on format-specific characteristics. It also allows for specialized information to be recorded consistently across different cataloging agencies.
+- **User Tasks Supported:**  Facilitates searching and retrieval based on resource type-specific characteristics (e.g., scale of a map, music format). Enables users to differentiate between resources that might otherwise appear similar based on general description.
+
+## Element Values
+
+- **Specific Rules/Guidelines:** The specific elements, their order, language, and prescribed punctuation within Area 3 are defined within the individual sections of the ISBD related to each resource type (3.1 for Cartographic, 3.2 for Notated Music, 3.3 for Serials, and 3.4 for Unpublished resources).
+- **Value Constraints/Formats:**  Varies depending on the specific element.  For example, scale is represented as a representative fraction (1:x).  Numbering follows specific patterns outlined in 3.3. Music format statements are textual. Unpublished statements are textual.
+- **String Encoding Schemes:**  No specific encoding schemes are mandated, but Unicode is generally recommended for multilingual data.
+
+## Examples
+
+```
+Scale 1:250 000; universal transverse Mercator proj. - No. 1 (1970)-
+```
+
+```
+Scores and parts. - No. 1-
+```
+
+```
+15 Jan. 1970-Mai 1972
+```
+
+```
+Master tape
+```
+
+```
+[Manuscript]
+```
+
+## Relationships
+
+- **Relationships to other ISBD elements:** Area 3 is directly related to the resource being described. Its values are dependent on the content and format of the resource. For instance, a serial will have numbering in Area 3, whereas a cartographic resource will have mathematical data.
+- **Super-types and Sub-types:** This area itself doesn't have subtypes in the formal ISBD object model, though the different data types it *contains* (mathematical data, numbering, etc.) could be considered subtypes of a broader "resource-specific information" type.
+- **Inverse relationships:** None specified in the standard.
+
+
+## Stipulations
+
+- **Special Considerations:**  When a resource is a combination of materials or types of resources that utilize Area 3, the content-related Area 3 information is given first, followed by numbering or production process/media type.
+- **Exceptions:** None explicitly stated, though the specific stipulations for different materials may have their own exceptions.
+- **Best Practices:** Follow the detailed guidelines for each material type as described in their respective sections of the ISBD to ensure consistency and interoperability. When no specific rules exist for a particular unpublished resource type, use terms and formats that are consistent with the principles of the ISBD and clear to users.  Use notes in area 7 for further clarification when necessary.
+
+
+---
+
+*This content was automatically generated from the ISBD PDF documentation using Gemini AI analysis.*

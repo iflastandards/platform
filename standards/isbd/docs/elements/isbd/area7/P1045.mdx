@@ -1,0 +1,78 @@
+---
+id: P1045
+title: has note
+description: ISBD element documentation for has note
+uri: "isbd:elements/P1045"
+area: area7
+RDF:
+  definition: "Relates a resource to a note of descriptive information that has not been given in other areas of the description but that is considered to be important to users of bibliographic records."
+  domain: "isbd:elements/C2001"
+  type: "rdf:Property"
+  scopeNote: "Notes qualify and amplify the description in the other areas and can deal with any aspect of a resource. Notes may also give the bibliographic history of the resource and indicate relationships to other resources. In making reference to another resource in a note, enough information must be given to identify theresource. This may vary depending on the resource and the context of the note. For continuing resources, the citation may consist of the key title and ISSN. In other cases, it may consist of the title proper along with a statement of responsibility or other bibliographic details. Two or more notes may be combined into a single note when considered appropriate by the cataloguing agency."
+  elementSuperType: "isbd:elements/P1037"
+reg:hasSubproperty: "isbd:elements/P1037"
+reg:hasUnconstrained: "isbd:unc/elements/P1045"
+reg:name: hasNote
+reg:status: "RegStatus:1001"
+rdf:type: "rdf:Property"
+rdfs:domain: "isbd:elements/C2001"
+rdfs:isDefinedBy: "isbd:elements/"
+rdfs:label: has note
+rdfs:label@es: "tiene nota"
+skos:definition: "Relates a resource to a note of descriptive information that has not been given in other areas of the description but that is considered to be important to users of bibliographic records."
+skos:definition@es: "Relaciona un recurso con una nota de información descriptiva que no se ha dado en otras áreas de descripción pero que se considera importante para los usuarios de registros bibliográficos."
+skos:scopeNote: "Notes qualify and amplify the description in the other areas and can deal with any aspect of a resource. Notes may also give the bibliographic history of the resource and indicate relationships to other resources. In making reference to another resource in a note, enough information must be given to identify theresource. This may vary depending on the resource and the context of the note. For continuing resources, the citation may consist of the key title and ISSN. In other cases, it may consist of the title proper along with a statement of responsibility or other bibliographic details. Two or more notes may be combined into a single note when considered appropriate by the cataloguing agency."
+skos:scopeNote@es: "Las notas califican y amplian la descripción de las otras áreas y pueden relacionarse con cualquier aspecto del recurso. Las notas pueden referirse también a la historia bibliográfica del recurso e indicar relaciones con otros recursos. Al hacer referencia a otros recursos en una nota, debe darse suficiente información para identificar el recurso. Esto puede variar dependiendo del recurso y el contexto de la nota. Para recursos continuados, la cita puede consistir en el título clave y el ISSN. En otros casos, puede consistir en el título propiamente dicho junto con una mención de responsabilidad u otros detalles bibliográficos. Se puede combinar dos o más notas en una nota común cuando se considere apropiado por la agencia de catalogación."
+---
+# has note
+
+The ISBD element "note" (isbd:elements/P1045) is found within the ISBD documentation and is referred to as the "Note Area".
+
+## Element Reference
+
+- **Official ISBD Definition:** The note area contains any descriptive information that has not been given in other areas of the description but that is considered to be important to users of bibliographic records. Notes qualify and amplify the description in the other areas and can deal with any aspect of a resource. Notes may also give the bibliographic history of the resource and indicate relationships to other resources. (Section 7, Introductory note)
+- **Domain:**  A bibliographic resource.
+- **Range:**  Text string(s).
+- **Element Type:** Descriptive.
+
+## Additional Information
+
+- **Scope and Purpose:**  To provide additional information about the resource that doesn't fit into the prescribed areas of the description. This can include details about the physical resource, its content, publication history, relationships to other resources, and any peculiarities or imperfections. It helps to clarify and augment the information provided in other areas, providing a more complete and nuanced understanding of the resource.
+- **User Tasks Supported:**  Aiding in resource identification and selection; clarifying ambiguities in the description; providing context and background information; understanding the resource's history and relationships.
+
+## Element Values
+
+- **Specific Rules/Guidelines:** Notes should be concise and factual. Where appropriate, they should follow the prescribed punctuation of Areas 1-6.  When making references to other resources in a note, sufficient bibliographic detail should be provided for identification. Notes should be given in the language and script of the agency creating the description, except when quoting titles, variant titles, or key titles.
+- **Value Constraints/Formats:**  While the content of notes is flexible, there are suggested categories of notes based on the area of the ISBD to which they relate (7.0-7.11). These categories offer guidance but are not exhaustive. 
+- **String Encoding Schemes:**  Not specifically addressed, but would follow general cataloging practices (e.g., UTF-8).
+
+## Examples
+
+```
+. - Note: "Map based on uncontrolled aerial photography flown 1972. Map field checked 1973"
+
+. - Note: Original title: Dissertatio physica de natura et remediis fulminum
+
+. - Note: Imperfect copy: missing cover and title page. Number 11 of 50 signed and numbered copies. Bound with: The Boston Ebenezer. Boston: printed by B. Green & J. Allen, for Samuel Phillips, 1698
+
+. - Note: Absorbed: Quarterly review of marketing = ISSN 0307-7667. Title proper: Marketing forum
+
+. - Note: Resource copied Oct. 1996 from local area network. Local data set name: RBBIT.1
+```
+
+
+## Relationships
+
+- **Relationships to Other ISBD Elements:** Notes are supplementary to all other ISBD areas (0-8). They can clarify or expand upon information given in any area.
+- **Sub-types:**  The ISBD suggests categories of notes, such as notes on the title, edition, publication, etc. (7.0 - 7.11). These can be considered sub-types of the general "note" element.
+
+
+## Stipulations
+
+- **Special Considerations:**  The order of notes is generally optional, although specific stipulations may suggest placing certain types of notes first (e.g., system requirements for electronic resources).  Two or more notes may be combined when appropriate.  Some notes are mandatory if applicable and/or available, as outlined in section 7 of the ISBD.
+- **Best Practices:**  Use notes judiciously. Include only information that is truly important for users and cannot be accommodated in other areas.  Keep notes concise and avoid redundancy.  Follow the suggested categories for organization and clarity.  Be consistent in applying guidelines for language, script, and punctuation.
+
+
+---
+
+*This content was automatically generated from the ISBD PDF documentation using Gemini AI analysis.*

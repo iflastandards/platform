@@ -1,0 +1,73 @@
+---
+id: P1146
+title: has specific material designation
+description: ISBD element documentation for has specific material designation
+uri: "isbd:elements/P1146"
+area: general
+RDF:
+  definition: "Relates a resource to a term indicating the specific class of material (usually the class of physical object) to which it belongs, and the number of units."
+  domain: "isbd:elements/C2001"
+  type: "rdf:Property"
+reg:hasUnconstrained: "isbd:unc/elements/P1146"
+reg:name: hasSpecificMaterialDesignation
+reg:status: "RegStatus:1001"
+rdf:type: "rdf:Property"
+rdfs:domain: "isbd:elements/C2001"
+rdfs:isDefinedBy: "isbd:elements/"
+rdfs:label: has specific material designation
+rdfs:label@es: "tiene designación específica del material"
+skos:definition: "Relates a resource to a term indicating the specific class of material (usually the class of physical object) to which it belongs, and the number of units."
+skos:definition@es: "Relaciona un recurso con un término que indica la clase específica de material (generalmente la clase de objeto físico) al que pertenece, y el número de unidades."
+---
+# has specific material designation
+
+The ISBD element "specific material designation" (isbd:elements/P1146) is found within the Material Description Area (Area 5) of the ISBD.
+
+## Element Reference
+
+- **Definition:** The number of physical units constituting a resource given with the name of the unit (e.g., volume, score, disc, website, file, map).
+- **Domain:**  Bibliographic resources.  Specifically found within Area 5 (Material Description Area).
+- **Range:** Integer paired with a term from an uncontrolled vocabulary that designates the type of unit.
+- **Element type:**  Descriptive.
+
+
+## Additional Information
+
+- **Scope and Purpose:** To identify the type and number of physical units that comprise the resource being described. This aids in understanding the physical makeup of the resource and differentiating it from similar resources. It provides a basic level of quantification of the resource's physical extent.
+- **User Tasks Supported:**  Discovery, identification, selection, and acquisition of resources.  Facilitates distinguishing between different formats of the same work (e.g., print vs. electronic, single volume vs. multi-volume).
+
+
+## Element Values
+
+- **Rules and Guidelines:** Use Arabic numerals for the count of units. The specific material designation terms are *not prescribed* and should be appropriate to the resource being described and the language of the description. Terms may be abbreviated. If the resource is still being issued or the number of units is unknown, the number of physical units is not given.
+- **Value Constraints and Formats:**  The number must be a positive integer. There's no controlled vocabulary for the unit type; catalogers are expected to use terms that are common and understandable in their context.
+- **String Encoding Schemes:** Not applicable (although the overall bibliographic record might use a specific character encoding like UTF-8).
+
+
+## Examples
+
+```
+1 score (37 p.) + 4 parts on 1 CD-ROM
+2 electronic tape cassettes
+120 no. 
+271 p. : ill. ; 21 cm + 3 microfiches (diazo; 11 x 11 cm)
+1 website
+3 maps (600 kilobytes)
+```
+
+## Relationships
+
+- **Relationships to Other ISBD Elements:** This element is directly related to the "extent" element (5.1) and is the first component of the Material Description Area.  It is followed by other physical details (5.2), dimensions (5.3), and the accompanying material statement (5.4).  For continuing resources, numbering information in area 3 (3.3) can relate to the specific units identified in the specific material designation.
+- **Super-types and Sub-types:**  No formal super- or sub-types within ISBD, although broader concepts like "extent" could be considered a super-type.
+- **Inverse Relationships:** None.
+
+
+## Stipulations
+
+- **Special Considerations:** For printed texts and certain notated music in *one* volume, the specific material designation *may be omitted*. The extent statement then consists of the pagination of the volume. If the number of physical units does not equal the number of bibliographic units, an explanation may be given in area 7 (notes), unless the numbering of the physically separate units is given on the second level of a multilevel description or in a contents note.
+- **Best Practices:** Use commonly understood terms for the units.  Be consistent within a cataloging context.  When in doubt, err on the side of providing more detail (e.g., "1 score + 1 set of parts" rather than just "1 resource"). For resources with complex structures (like multimedia), consider using multilevel description to give more detailed information about each component.  Consider the needs of the users of the catalog when choosing the level of detail.
+
+
+---
+
+*This content was automatically generated from the ISBD PDF documentation using Gemini AI analysis.*

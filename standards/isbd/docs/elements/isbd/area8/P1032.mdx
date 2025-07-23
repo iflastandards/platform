@@ -1,0 +1,74 @@
+---
+id: P1032
+title: has resource identifier
+description: ISBD element documentation for has resource identifier
+uri: "isbd:elements/P1032"
+area: area8
+RDF:
+  definition: Relates a resource to an identifier.
+  domain: "isbd:elements/C2001"
+  type: "rdf:Property"
+  scopeNote: "Includes any number or alphanumeric designation associated with and identifying a resource according to an international standard, such as an International Standard Book Number or an International Standard Serial Number, or a designation assigned by a publisher. Includes notes considered important to users of the catalogue."
+  elementSuperType: "isbd:elements/P1075"
+reg:hasSubproperty: "isbd:elements/P1075"
+reg:hasUnconstrained: "isbd:unc/elements/P1032"
+reg:name: hasResourceIdentifier
+reg:status: "RegStatus:1001"
+rdf:type: "rdf:Property"
+rdfs:domain: "isbd:elements/C2001"
+rdfs:isDefinedBy: "isbd:elements/"
+rdfs:label: has resource identifier
+rdfs:label@es: "tiene identificador del recurso"
+skos:definition: Relates a resource to an identifier.
+skos:scopeNote: "Includes any number or alphanumeric designation associated with and identifying a resource according to an international standard, such as an International Standard Book Number or an International Standard Serial Number, or a designation assigned by a publisher. Includes notes considered important to users of the catalogue."
+skos:scopeNote@es: "Incluye cualquier número o designación alfanumérica asociada que identifica un recurso de acuerdo a una norma internacional, como el International Standard Book Number o el International Standard Serial Number, o una denominación asignada por un editor. Incluye notas consideradas importantes para los usuarios del catálogo."
+---
+# has resource identifier
+
+The ISBD element "resource identifier" (isbd:elements/P1032) is discussed within the larger context of "Resource Identifier and Terms of Availability Area" (Area 8) in the ISBD documentation. It's not treated as a standalone element in the way some other elements are.
+
+## Element Reference
+
+- **Official ISBD definition:** "A resource identifier is any number or alphanumeric designation associated with and identifying a resource according to an international standard, such as an International Standard Book Number or an International Standard Serial Number, or a designation assigned by a publisher." (Section 8, Introductory Note)
+- **Domain and range information:** Not explicitly defined in a linked data context within the ISBD standard. In practice, the domain would be the resource being described and the range would be the identifier itself (e.g., an ISBN, ISSN, ISMN, etc.).
+- **Element type information:**  Within ISBD, it is a textual element, although in a linked data implementation, it would be a property linking a resource to its identifier.
+
+
+## Additional Information
+
+- **Scope and purpose:**  To provide a standardized way to uniquely identify a resource, facilitating its retrieval and management within library catalogs and other systems. Also important for interoperability and exchange of bibliographic information between institutions.
+- **User tasks supported:**  Finding and identifying a specific resource, disambiguating similar resources, ordering/purchasing resources, linking to electronic versions, and supporting automated processes in library systems.
+
+## Element Values
+
+- **Specific rules or guidelines:** Use standardized identifiers whenever possible (ISBN, ISSN, ISMN, etc.). Follow the format specified by the relevant standard for each identifier type.  If no standard identifier exists, a publisher-assigned number may be used. If the resource has multiple identifiers, include them all.
+- **Value constraints or formats:**  Specific formats depend on the identifier type (e.g., 13 digits for ISBN, 8 digits for ISSN).  Punctuation should follow the prescribed ISBD patterns.
+- **String encoding schemes:** Not specifically prescribed by ISBD, but UTF-8 is generally recommended for modern systems.
+
+## Examples
+
+```
+. - ISBN 978-0-330-23591-4 
+. - ISSN 0075-2363 = American literature
+. - ISMN 979-0-3217-6543-6
+. - URN:NBN:se:uu:diva-4321
+. - doi:10.1000/18446744131
+```
+
+
+## Relationships
+
+- **Relationships to other ISBD elements:**  Part of Area 8 (Resource Identifier and Terms of Availability Area). Can be associated with a qualification providing further information about the identifier (e.g., the binding type for an ISBN).  Related to the Key Title (8.2) for serials.
+- **Super-types and sub-types:**  No explicit super- or sub-types within the ISBD standard, although individual identifier types (ISBN, ISSN, etc.) could be considered sub-types of a more generic "identifier" concept.
+- **Inverse relationships:** Not explicitly defined within ISBD.
+
+
+## Stipulations
+
+- **Special considerations:**  For older resources, a "fingerprint" can be used as a substitute for a standard number. Music manuscripts might use a "music incipit."  For unpublished resources, no standard identifiers typically exist, so a local identifier or description might be used.
+- **Best practices:** Always include the identifier's label (ISBN, ISSN, etc.). Use the corrected identifier if a printing error is detected on the resource. Give preference to internationally recognized standards.  For resources with multiple identifiers, give the one that specifically identifies the resource being described *first*.
+- **Missing identifier:** If no identifier is available, then include the relevant qualification for the format/binding of the resource, e.g., "(Paperback)". Use "[s.n.]" (sine nomine) if the publisher is unknown (section 4.2.12). Use "[s.l.]" (sine loco) if the place of publication is unknown (section 4.1.14).  If a date is missing, use various approximations or substitutions as outlined in section 4.3.7-4.3.9. For multipart resources, see section 1.4.5.11 for how to structure the Statements of Responsibility.
+
+---
+
+*This content was automatically generated from the ISBD PDF documentation using Gemini AI analysis.*

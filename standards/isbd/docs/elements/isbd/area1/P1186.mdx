@@ -1,0 +1,83 @@
+---
+id: P1186
+title: has title proper (compound) of series
+description: ISBD element documentation for has title proper (compound) of series
+uri: "isbd:elements/P1186"
+area: area1
+RDF:
+  definition: "Relates a resource that is a series or multipart monographic resource to the title proper consisting of a common title and a dependent title, with or without a dependent title designation."
+  domain: "isbd:elements/C2001"
+  range: "isbd:elements/C2022"
+  type: "rdf:Property"
+reg:hasUnconstrained: "isbd:unc/elements/P1186"
+reg:name: hasTitleProperCompoundOfSeries
+reg:status: "RegStatus:1001"
+rdf:type: "rdf:Property"
+rdfs:domain: "isbd:elements/C2001"
+rdfs:isDefinedBy: "isbd:elements/"
+rdfs:label: has title proper (compound) of series
+rdfs:range: "isbd:elements/C2022"
+skos:definition: "Relates a resource that is a series or multipart monographic resource to the title proper consisting of a common title and a dependent title, with or without a dependent title designation."
+---
+# has title proper (compound) of series
+
+The provided PDF document, "2021 Update to the 2011 Consolidated Edition," does not explicitly define an element called "title proper (compound) of series".  However, it does describe concepts and stipulations related to compound titles and series, which when taken together, effectively define the meaning and usage of such an element.
+
+## Element Reference
+
+- **Implied Definition:** A title proper (compound) of series is the chief name of a series presented as a combination of a common title and a dependent title, where the dependent title lacks sufficient information to stand alone and requires the common title for its full understanding and bibliographic identification. This compound structure distinguishes it from a simple series title that stands alone.
+
+- **Domain (implied):** Series and Multipart Monographic Resource Area (ISBD Area 6)
+
+- **Range (implied):**  String representing the combined common and dependent titles of the series.
+
+- **Element type (implied):** Literal
+
+
+## Additional Information
+
+- **Scope and Purpose:** To identify the series to which a resource belongs precisely, especially when the series is structured hierarchically or when a series includes several distinct subseries. The compound title ensures disambiguation and clarity in cataloging.
+
+- **User Tasks Supported:** Identifying the specific series of a resource, distinguishing it from other series with similar or identical dependent titles, retrieving resources belonging to a particular series, and understanding the hierarchical relationships between series and subseries.
+
+
+## Element Values
+
+- **Rules and Guidelines:** The common title is transcribed first, followed by the dependent title designation and/or the dependent title (1.1.4.6.1). The dependent title is linked directly to its common title. A dependent title appearing on the resource, but not on the preferred source of information, is given in square brackets (1.1.5.3.1).  For example: `(Advanced calculus. Student handbook)`
+
+- **Value Constraints and Formats:**  Follows the general transcription rules for title proper (1.1.5).  Avoid abbreviations unless unavoidable and indicated by ellipses (A.6.1). Capitalization follows language-specific rules (A.7).
+
+- **String Encoding Schemes:**  UTF-8 is recommended for encoding, as per general modern practice.
+
+
+## Examples
+
+```
+(Geological research reports. Map series)
+(Publications of the University of Manchester. Administration series)
+(The German pre-classics. Series A, George Philipp Telemann)
+(企业管理基础.教师手册)  (Enterprise management basis. Teacher's manual)
+```
+
+## Relationships
+
+- **Relationship to other ISBD elements:**  Appears in Area 6 (Series and Multi-part Monographic Resource Area). Related to the Title Proper (Area 1) in that it serves a similar function but for the series rather than the resource itself. May require a note in Area 7 if the common title also appears elsewhere, like in Area 1 (1.1.4.6.1).
+
+
+- **Super-types/Sub-types:** "Title proper of series" would be the super-type. The "title proper (compound) of series" is a specific kind of series title.
+
+- **Inverse Relationships:**  None explicitly defined in ISBD.
+
+
+## Stipulations
+
+- **Special Considerations:** When a continuing resource or multipart resource is part of a larger series (1.1.4.6, 6), careful attention should be paid to properly transcribing the common and dependent titles.
+
+- **Exceptions:**  As with title proper, abbreviations should be avoided unless necessary and clearly indicated.
+
+- **Best Practices:**  Consistency is key. Always transcribe the common title followed by the dependent title, using standard punctuation and capitalization practices as described in the relevant sections of the ISBD standard.  Provide additional explanatory notes in Area 7 if any clarification is needed for users.
+
+
+---
+
+*This content was automatically generated from the ISBD PDF documentation using Gemini AI analysis.*

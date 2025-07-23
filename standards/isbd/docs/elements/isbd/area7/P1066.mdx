@@ -1,0 +1,85 @@
+---
+id: P1066
+title: has note on system requirements
+description: ISBD element documentation for has note on system requirements
+uri: "isbd:elements/P1066"
+area: area7
+RDF:
+  definition: "Relates a resource that is a direct access electronic resource to a note on system requirements for use of the resource."
+  domain: "isbd:elements/C2001"
+  type: "rdf:Property"
+  scopeNote: "Includes one or more technical specifications, usually given in the following order, and preceded by the phrase  \"System requirements:\" (or its equivalent in another language): name, model and, or, number of machine or machines; amount of memory; name of the operating system or systems; software requirements (including programming language); peripherals; hardware (internal) modifications; character code. Separate system requirements notes may be made to highlight distinctive system features associated with each physical carrier, when the resource consists of two or more different physical carriers (e.g. a multimedia resource consisting of an electronic disk and a videodisc). Alternatively, a single system requirements note for both physical carriers may be made."
+  elementSubType: "isbd:elements/P1045"
+reg:hasUnconstrained: "isbd:unc/elements/P1066"
+reg:name: hasNoteOnSystemRequirements
+reg:status: "RegStatus:1001"
+rdf:type: "rdf:Property"
+rdfs:domain: "isbd:elements/C2001"
+rdfs:isDefinedBy: "isbd:elements/"
+rdfs:label: has note on system requirements
+rdfs:label@es: "tiene nota de requisitos mínimos del sistema"
+rdfs:subPropertyOf: "isbd:elements/P1045"
+skos:definition: "Relates a resource that is a direct access electronic resource to a note on system requirements for use of the resource."
+skos:definition@es: "Relaciona un recurso electrónico de acceso directo con una nota sobre los requisitos del sistema para el uso del recurso."
+skos:scopeNote: "Includes one or more technical specifications, usually given in the following order, and preceded by the phrase  \"System requirements:\" (or its equivalent in another language): name, model and, or, number of machine or machines; amount of memory; name of the operating system or systems; software requirements (including programming language); peripherals; hardware (internal) modifications; character code. Separate system requirements notes may be made to highlight distinctive system features associated with each physical carrier, when the resource consists of two or more different physical carriers (e.g. a multimedia resource consisting of an electronic disk and a videodisc). Alternatively, a single system requirements note for both physical carriers may be made."
+skos:scopeNote@es: "Incluye una o m\u00e1s especificaciones t\u00e9cnicas, normalmente dadas en el siguiente orden y precedidas de la frase \u201cRequisitos del sistema\u201d: (o su equivalente en otra lengua): marca, modelo y/o n\u00famero de serie del equipo o equipos; cantidad de memoria, nombre del sistema o sistemas operativos; requisitos de software (incluido el lenguaje de programaci\u00f3n); perif\u00e9ricos; modificaciones (internas) de hardware; c\u00f3digos de caracteres. Si el recurso est\u00e1 formado por dos o m\u00e1s soportes f\u00edsicos diferentes (ej. un recurso multimedia formado por un disco electr\u00f3nico y un videodisco), se puede redactar una nota sobre requisitos del sistema para cada uno, en la que se resalten las caracter\u00edsticas distintivas del sistema asociado a cada soporte f\u00edsico. Como alternativa, se puede hacer una \u00fanica nota de requisitos del sistema para ambos soportes f\u00edsicos."
+---
+# has note on system requirements
+
+The ISBD element "note on system requirements" is found within Section 7.0.3, "System Requirements" of the provided PDF.  It is not explicitly defined as a separate element in the way that "title" or "edition" are, but rather is a type of note within the broader Note Area (Area 7).
+
+## Element Reference
+
+- **Official ISBD Definition:** While not explicitly defined, the element can be understood as a note providing information about the technical requirements necessary to access and use, particularly with respect to electronic resources.
+- **Domain and Range:**  The domain would be the resource being described, and the range would be a textual statement outlining the system requirements.
+- **Element Type:** Note (within Area 7)
+
+## Additional Information
+
+- **Scope and Purpose:** The element clarifies the technical specifications necessary to access and utilize an electronic resource, aiding users in determining compatibility with their available hardware and software. This is crucial for digital resources where access is dependent on specific technical configurations.
+- **User Tasks Supported:** Helps users assess the resource's accessibility, aiding in resource discovery and selection. Allows users to filter resources based on their technical capabilities.  Informs resource management decisions regarding software and hardware requirements within libraries and archives.
+
+## Element Values
+
+- **Rules and Guidelines:**  The note should include, as applicable and in order: Name and model/number of machine(s); Amount of memory; Operating System(s); Software requirements (including programming language); Peripherals; Hardware modifications; Character code. Each requirement after the first is preceded by a semicolon.
+- **Value Constraints and Formats:** Should be factual and descriptive, avoiding evaluative language.  Uses standard abbreviations when possible (see Appendix D).
+- **String Encoding Schemes:** Not specified in the context of this note, but overall character encoding might be mentioned as part of the system requirements themselves.
+
+
+## Examples
+
+```
+Note: System requirements: Macintosh; at least 1 MB; System 6.0.5 or later; HyperCard version 1.0 or later; hard disk drive; videodisc player (Pioneer 2200, 4200, 6000A, 6010A, 8000); RS232 cable connector (from Macintosh to videodisc player)
+```
+
+```
+Note: System requirements: 386SX processor or higher; 2 MB RAM (4 MB recommended); Windows 3.0 or higher; hard disk with 8 MB free space; VGA adapter; color monitor; mouse
+```
+
+```
+Note: System requirements: Philips Interactive compact disc (CD-I) player with monitor
+```
+
+```
+Note: System Requirements: Minimum 4GB RAM; Android OS 7.0 or higher
+```
+
+```
+Note: System requirements: Internet connection; Adobe Flash Player
+```
+
+## Relationships
+
+- **Relationships to other ISBD Elements:** Relates to the resource described as a whole.  Can be linked to Area 0 (Content Form, Production Process and Media Type Area) and Area 5 (Material Description Area), which might provide contextual information about the format or physical carrier of the electronic resource. Specifically related to Mode of Access (7.0.4), which often follows system requirements.
+- **Super-types and Sub-types:**  This element can be considered a sub-type of "Note" (Area 7).  It doesn't have further sub-types specified in the ISBD.
+- **Inverse Relationships:** None specified.
+
+## Stipulations
+
+- **Special Considerations:** When the resource consists of multiple physical carriers, a separate system requirements note can be created for each carrier, or a single note can cover all if appropriate.  If no information is available, the note should state "System requirements: No information available".
+- **Best Practices:** Be as specific as possible with system requirements to ensure clarity and aid users in determining accessibility.  Use standard terminology and abbreviations for consistency. Where possible, provide the minimum requirements as well as recommended specifications. Keep the note concise and factual. It is important to remember this applies specifically to *direct access* electronic resources.  For *remote access* electronic resources, this information is not relevant.
+
+
+---
+
+*This content was automatically generated from the ISBD PDF documentation using Gemini AI analysis.*

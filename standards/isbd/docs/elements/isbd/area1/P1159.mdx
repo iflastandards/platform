@@ -1,0 +1,98 @@
+---
+id: P1159
+title: has title and statement of responsibility area
+description: ISBD element documentation for has title and statement of responsibility area
+uri: "isbd:elements/P1159"
+area: area1
+RDF:
+  definition: "Relates a resource to a statement including the title proper, parallel titles, other title information, and statements of responsibility."
+  domain: "isbd:elements/C2001"
+  range: "isbd:elements/C2004"
+  type: "rdf:Property"
+reg:hasUnconstrained: "isbd:unc/elements/P1159"
+reg:name: hasTitleAndStatementOfResponsibilityArea
+reg:status: "RegStatus:1001"
+rdf:type: "rdf:Property"
+rdfs:domain: "isbd:elements/C2001"
+rdfs:isDefinedBy: "isbd:elements/"
+rdfs:label: has title and statement of responsibility area
+rdfs:label@es: "tiene área de título y mención de responsabilidad"
+rdfs:range: "isbd:elements/C2004"
+skos:definition: "Relates a resource to a statement including the title proper, parallel titles, other title information, and statements of responsibility."
+skos:definition@es: "Relaciona un recurso con una mención que incluye el título propiamente dicho, títulos paralelos, información complementaria del título y menciones de responsabilidad."
+---
+# has title and statement of responsibility area
+
+The ISBD element "title and statement of responsibility area" (isbd:elements/P1159) is described in the provided PDF document.
+
+## Element Reference
+
+- **Definition:** The title and statement of responsibility area includes the title proper, parallel titles, other title information, and statements of responsibility.  
+- **Domain:**  Applies to all types of resources described using ISBD.  Could be considered to have a domain of `isbd:Monographic`, `isbd:Serial`, `isbd:IntegratingResource`, etc.
+- **Range:** A string or set of strings containing the transcribed elements within this area.
+- **Element Type:** Complex. It comprises several sub-elements.
+
+## Additional Information
+
+- **Scope and Purpose:**  This area serves to identify the resource and establish the primary intellectual or artistic creators or contributors.  It provides the fundamental name information for the resource and those chiefly responsible for its content.
+- **User Tasks Supported:** This element supports users in:
+    - Identifying a specific resource.
+    - Distinguishing between similar resources.
+    - Understanding the origin and authorship of the resource's content.
+    - Finding works by a particular creator.
+
+## Element Values
+
+- **Rules and Guidelines:** The elements are transcribed following strict transcription rules from the prescribed source (often the title page), including punctuation and capitalization as found on the resource (see stipulations for exceptions and abridgements).
+- **Value Constraints and Formats:** The order of elements within the area is fixed: Title Proper, Parallel Title, Other Title Information, Statement of Responsibility. Each sub-element has its own specific rules for transcription and formatting (see Section 1 of the ISBD document).
+- **String Encoding Schemes:** Not specifically defined in the ISBD itself but typically would use Unicode for encoding.
+
+
+## Examples
+
+```
+Title Proper: The Lord of the Rings : The Fellowship of the Ring
+Parallel Title: = 반지의 제왕 : 반지 원정대
+Other Title Information: : being the first part of The Lord of the Rings
+Statement of Responsibility: / J.R.R. Tolkien
+```
+
+```
+Title Proper:  Symphony no. 40 in G minor, K. 550
+Statement of Responsibility: / W.A. Mozart
+```
+
+```
+Title Proper:  [Carte géologique de la France à 1:50 000]
+Other Title Information:  : feuille XXX
+```
+
+```
+Title Proper:  Quantum Mechanics for Mathematicians
+Statement of Responsibility:  / J.V. Jose and E.J. Saletan
+```
+
+```
+Title Proper:  The Cat in the Hat
+Statement of Responsibility: / by Dr. Seuss
+```
+
+## Relationships
+
+- **Relationships to other ISBD Elements:** The title and statement of responsibility area (Area 1) is the first area after the Area 0 (content form and media type area) in an ISBD description. It informs many other areas and is essential for identification.  
+- **Sub-elements:**  The primary sub-elements are Title Proper, Parallel Title, Other Title Information, and Statement of Responsibility. These sub-elements are further broken down (e.g., Title Proper can include Common Title and Dependent Title).
+
+
+
+## Stipulations
+
+- **Special Considerations:**
+  - Abridgements are allowed in certain cases for very long titles, but only in the middle or at the end, never at the beginning. The first five words must always be transcribed. Omissions are indicated with an ellipsis. (1.1.5.1)
+  - For older resources and manuscripts, specific rules for handling abbreviations, misprints, and title page information apply. (Various subsections within Section 1)
+  - Specific transcription and punctuation rules are provided for each sub-element.
+- **Best Practices:** Transcribe exactly as found in the prescribed source, applying the detailed guidelines provided in Section 1 for handling specific situations (e.g. multiple titles, incomplete titles, different language titles). Consult the full text of the ISBD standard for all applicable rules and exceptions.  Pay particular attention to the prescribed punctuation as this is crucial for parsing and interoperability.
+
+
+---
+
+*This content was automatically generated from the ISBD PDF documentation using Gemini AI analysis.*

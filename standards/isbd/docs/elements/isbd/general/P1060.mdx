@@ -1,0 +1,98 @@
+---
+id: P1060
+title: has presence of colour
+description: ISBD element documentation for has presence of colour
+uri: "isbd:elements/P1060"
+area: general
+RDF:
+  definition: "Relates a resource that has coloured illustrations, or is visual, to a statement indicating the presence of coloured illustrations or colour characteristics, using the abbreviations \"col.\" or \"b&w\" (or their equivalents in another language)."
+  domain: "isbd:elements/C2001"
+  type: "rdf:Property"
+reg:hasUnconstrained: "isbd:unc/elements/P1060"
+reg:name: hasPresenceOfColour
+reg:status: "RegStatus:1001"
+rdf:type: "rdf:Property"
+rdfs:domain: "isbd:elements/C2001"
+rdfs:isDefinedBy: "isbd:elements/"
+rdfs:label: has presence of colour
+rdfs:label@es: "tiene presencia de color"
+skos:definition: "Relates a resource that has coloured illustrations, or is visual, to a statement indicating the presence of coloured illustrations or colour characteristics, using the abbreviations \"col.\" or \"b&w\" (or their equivalents in another language)."
+skos:definition@es: "Relaciona un recurso que tiene ilustraciones en color, o es visual, con una mención que indica la presencia de ilustraciones en color o características de color, utilizando las abreviaturas “col.” o “bl. y n.” (o sus equivalentes en otra lengua)."
+---
+# has presence of colour
+
+## Element Reference
+
+- **Definition:** The "presence of colour" element describes the colour characteristics of a resource, primarily focusing on visual resources like images, maps, filmstrips, etc.  It also addresses colour in illustrations within textual resources and electronic resources capable of colour display. It's implied for resources where colour is inherent (e.g., sound recordings) and thus omitted in those cases.
+
+- **Domain:** This element applies to the Material Description Area (Area 5) of an ISBD record.  More specifically, it's part of the "other physical details" (5.2) element within Area 5.
+
+- **Range:**  The value of this element will be a controlled term indicating color characteristics or, in limited cases, a short list of up to three specific colors.  Additional descriptive phrases clarifying the colour aspect may be enclosed within parentheses.
+
+- **Element Type:** Descriptive.
+
+
+## Additional Information
+- **Scope and Purpose:** This element helps users quickly assess whether a resource is in colour, black and white, or a combination. This is crucial for identification, selection, and retrieval of resources, especially for visual materials where colour may be a significant content characteristic. It distinguishes different versions or editions of a resource.  
+
+- **User Tasks:** This element supports user tasks related to:
+    -  Searching and filtering resources based on colour.
+    -  Identifying the correct edition or version of a resource.
+    - Understanding the physical characteristics of a resource.
+
+
+## Element Values
+
+- **Rules and Guidelines:**  The ISBD prescribes the use of standard abbreviations:  `col.` (for colour) or `b&w` (for black and white).  When neither of these entirely captures the resource's colour attributes (e.g., a resource containing both colour and black and white sections), a descriptive statement combining these is allowed.  Up to three specific colour names may also be used, if generic terms are insufficient.  Qualifying phrases are added in parentheses. Examples include "(Ektachrome)", "(PAL)" or "(some col.)".
+
+
+- **Value Constraints:**  When mentioning specific colours, a maximum of three is recommended.  The intent is brevity and clarity, not an exhaustive colour description.
+
+- **String Encoding:**  No specific string encoding schemes are mentioned beyond general transcription guidelines (see A.5 of the document).
+
+
+## Examples
+
+```
+: col.
+```
+
+```
+: b&w
+```
+
+```
+: col. and b&w
+```
+```
+: wood, blue and white
+```
+
+```
+: col. with b&w sequences (some col.)
+```
+
+
+## Relationships
+
+- **Relationships to other ISBD Elements:** "Presence of colour" is part of the "Other physical details" element (5.2) which resides within the Material Description Area (Area 5).  It's directly related to the Specific Material Designation (5.1.2) as it might clarify or supplement the information provided there. For instance, if the SMD is "1 photograph", the color designation would add important detail. It can relate to a note in area 7 if dimensions of the printed area are different from the overall dimensions of the resource.
+
+- **Super-types and Sub-types:** "Other physical details" (5.2) is the super-type.  One could consider using specific colour names (e.g., "red, green, blue") as a form of sub-typing although the ISBD does not explicitly frame it that way.
+
+- **Inverse Relationships:** None explicitly defined.
+
+
+
+## Stipulations
+
+- **Special Considerations:** For microform resources, staining is indicated if present. When the dimensions of a color resource are given for the carrier and the color content is different, the latter may be indicated in area 7.
+
+- **Exceptions:** "Presence of colour" is *omitted* when it is *implicit* in the specific material designation, such as with sound recordings where sound is an inherent characteristic. For older monographic resources, when there's a need to mention information about changes to color in later editions, this information is to be included in a note (area 7).
+
+
+- **Best Practices:**  Prioritize clarity and conciseness. When possible, stick to the standard abbreviations (`col.` and `b&w`).  Only use specific colour names when necessary for clarity or to distinguish different versions of a resource.  Avoid subjective colour descriptions. If color varies throughout a multipart resource, information about that variation may be indicated in area 7.
+
+
+---
+
+*This content was automatically generated from the ISBD PDF documentation using Gemini AI analysis.*

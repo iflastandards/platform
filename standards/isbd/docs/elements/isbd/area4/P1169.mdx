@@ -1,0 +1,77 @@
+---
+id: P1169
+title: has name of publisher, producer, distributor statement
+description: ISBD element documentation for has name of publisher, producer, distributor statement
+uri: "isbd:elements/P1169"
+area: area4
+RDF:
+  definition: "Relates a resource to a statement including the name of publisher, producer, distributor, and the parallel statement of publisher, producer, distributor."
+  domain: "isbd:elements/C2001"
+  range: "isbd:elements/C2019"
+  type: "rdf:Property"
+reg:hasUnconstrained: "isbd:unc/elements/P1169"
+reg:name: hasNameOfPublisherProducerDistributorStatement
+reg:status: "RegStatus:1001"
+rdf:type: "rdf:Property"
+rdfs:domain: "isbd:elements/C2001"
+rdfs:isDefinedBy: "isbd:elements/"
+rdfs:label: has name of publisher, producer, distributor statement
+rdfs:label@es: "tiene mención del nombre del editor, productor o distribuidor"
+rdfs:range: "isbd:elements/C2019"
+skos:definition: "Relates a resource to a statement including the name of publisher, producer, distributor, and the parallel statement of publisher, producer, distributor."
+skos:definition@es: "Relaciona un recurso con una mención que incluye el nombre del editor, productor, distribuidor y la mención de editor, productor, distribuidor paralela."
+---
+# has name of publisher, producer, distributor statement
+
+The ISBD element "name of publisher, producer, and/or distributor statement" is found within the Publication, Production, Distribution, etc. Area (Area 4). It corresponds to the RDF element isbd:elements/P1169.
+
+## Element Reference
+
+- **Official ISBD Definition:** The name of the publisher, producer, and/or distributor corresponds to the person or corporate body that effects the publication, production and/or distribution or release activities for the resource.
+- **Domain:**  Monographic resources, Serials, Cartographic resources, Multimedia resources, Continuing resources, Integrating resources. Essentially all resource types described by ISBD.
+- **Range:**  A personal name or name of a corporate body, often accompanied by words or phrases indicating their function (e.g., "published by," "produced by," "distributed by").
+- **Element Type:** Literal
+
+
+## Additional Information
+
+- **Scope and Purpose:** This element identifies the entity responsible for making the resource available. This aids in identifying the resource, understanding its origin, and evaluating its authority or authenticity. It's crucial for tasks like acquisition, resource sharing, and attribution.
+- **User Tasks Supported:** Identifying the source of a publication; distinguishing between different publications with the same title; evaluating the authority or reliability of a resource; contacting the publisher for acquisition or further information.
+
+
+## Element Values
+
+- **Rules and Guidelines:**  The name should be transcribed as it appears on the resource, generally in the shortest form that can be understood and identified without ambiguity.  Abbreviations may be used if unambiguous (see section 4.2.6 of the ISBD document).  If more than one publisher is named, they should be transcribed in the order and form they appear on the source.
+- **Value Constraints and Formats:**  No specific character encoding is prescribed by ISBD itself, but typically UTF-8 would be used for encoding.
+- **Encoding Schemes**: Although ISBD does not define specific string encoding schemes, cataloging rules that utilize ISBD often recommend or mandate the use of UTF-8.
+
+
+
+## Examples
+
+```
+: Oxford University Press
+: Wiley
+: Springer-Verlag
+: Doubleday [distributor]  // If only distributor is known
+: Penguin ; Toronto : McClelland and Stewart // Multiple publishers
+```
+
+
+## Relationships
+
+- **Relationships to other ISBD elements:** Closely related to Area 4 (Place of Publication) and Area 4.3 (Date of Publication). The place of the publisher is given immediately before the publisher's name in Area 4, creating a direct link. The date follows. This area works together to provide the complete publication statement.
+- **Super-types and Sub-types:** No direct sub-types, but specific rules exist for different resource types or situations (e.g., older monographic resources, music manuscripts). The general "statement of responsibility" (Area 1) is a super-type that encompasses this element along with statements of responsibility relating to the title.
+- **Inverse relationships:**  Could be argued that an inverse relationship might be "published/produced/distributed by" from the resource's perspective.
+
+
+## Stipulations
+
+- **Special Considerations:** If the name is taken from a source other than the prescribed source, it should be enclosed in square brackets.  If the name is unknown, "[s.n.]" (sine nomine) should be used. If the publisher also acts as the printer, this may be implied and not stated explicitly. For older resources, publisher, printer, and bookseller roles may be combined. For manuscripts, only the date and place might appear.
+- **Exceptions:**  Label names appearing on sound recordings or other similar resources are not generally included as the publisher but can be given in other areas (Series or Resource Identifier).
+- **Best Practices:** Use the shortest unambiguous form of the name. Provide notes to clarify any ambiguities or discrepancies between sources. If the resource is part of a series, take care to distinguish the publisher of the resource itself from the publisher of the series. Be consistent with cataloging rules (like RDA or AACR2) which further refine the application of ISBD.
+
+
+---
+
+*This content was automatically generated from the ISBD PDF documentation using Gemini AI analysis.*

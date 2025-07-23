@@ -1,0 +1,73 @@
+---
+id: P1133
+title: has number of sound channels
+description: ISBD element documentation for has number of sound channels
+uri: "isbd:elements/P1133"
+area: general
+RDF:
+  definition: Relates a resource to the number of its sound channels.
+  domain: "isbd:elements/C2001"
+  type: "rdf:Property"
+reg:hasUnconstrained: "isbd:unc/elements/P1133"
+reg:name: hasNumberOfSoundChannels
+reg:status: "RegStatus:1001"
+rdf:type: "rdf:Property"
+rdfs:domain: "isbd:elements/C2001"
+rdfs:isDefinedBy: "isbd:elements/"
+rdfs:label: has number of sound channels
+rdfs:label@es: "tiene número de canales de sonido"
+skos:definition: Relates a resource to the number of its sound channels.
+skos:definition@es: "Relaciona un recurso con el número de sus canales de sonido."
+---
+# has number of sound channels
+
+The ISBD element "number of sound channels" is found within the Material Description Area, specifically under Other physical details, and pertains primarily to sound recordings.
+
+## Element Reference
+
+- **Official ISBD Definition:** The number of separate pathways (channels) provided in a resource for conveying sound. (Derived from the definition of "sound channels" in Appendix E: Glossary)
+- **Domain:** Sound recordings (audio reels, audio cassettes, sound discs, etc.)
+- **Range:** Integer
+- **Element Type:** Descriptive
+
+## Additional Information
+
+- **Scope and Purpose:** This element specifies the number of distinct audio channels present in a sound recording. This information is crucial for determining playback compatibility and understanding the audio characteristics of the resource.  It helps distinguish between mono, stereo, quadraphonic, and other multi-channel audio formats.
+- **User Tasks Supported:**
+    - Identifying appropriate playback equipment.
+    - Distinguishing different audio formats (mono, stereo, surround sound).
+    - Understanding the audio experience intended by the creator.
+    - Selecting resources based on specific audio requirements.
+
+
+## Element Values
+
+- **Specific Rules/Guidelines:** The number is given in Arabic numerals.  If the number of channels is not readily ascertainable, it is omitted.
+- **Value Constraints/Formats:** Positive integers only.
+- **String Encoding Schemes:** Not applicable.
+
+## Examples
+
+```
+1 sound disc: 33 1/3 rpm; 30 cm; mono
+1 sound reel (100 min): 19 cm/s; 2 tracks; stereo
+1 sound reel (45 min): 19 cm/s; 4 tracks; quad
+1 sound disc (74 min): DDD; 5.1 surround sound
+1 sound cassette (60 min): stereo
+```
+
+## Relationships
+
+- **Relationships to other ISBD elements:** This element is related to other technical specifications like `playing speed`, `number of tracks`, `track configuration`, `equalization`, and `noise reduction`.  It is part of the larger `material description area`.
+- **Super-types and Sub-types:**  No formal sub-types in ISBD, but conceptually related to general audio formats like mono, stereo, multi-channel.
+- **Inverse Relationships:** None specified.
+
+## Stipulations
+
+- **Special Considerations/Exceptions:** For resources where the number of channels is implicit in the specific material designation or other elements (like a standard cassette labeled "stereo"), the element can be omitted.  For resources with varying numbers of channels (like a compilation album), the information may be best provided in a contents note.
+- **Best Practices:**  When providing the number of sound channels, it's often helpful to include other relevant technical information in the same area for completeness.  For example, for a sound disc, one might include the playing speed (rpm) and the recording method (AAD, ADD, DDD).  For more complex audio configurations, consider providing a detailed description in a note.
+
+
+---
+
+*This content was automatically generated from the ISBD PDF documentation using Gemini AI analysis.*

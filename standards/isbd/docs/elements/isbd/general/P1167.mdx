@@ -1,0 +1,79 @@
+---
+id: P1167
+title: has statement of printing or manufacture
+description: ISBD element documentation for has statement of printing or manufacture
+uri: "isbd:elements/P1167"
+area: general
+RDF:
+  definition: "Relates a resource to a statement including the place of printing or manufacture, the name of printer or manufacturer, and the date of printing or manufacture."
+  domain: "isbd:elements/C2001"
+  range: "isbd:elements/C2020"
+  type: "rdf:Property"
+reg:hasUnconstrained: "isbd:unc/elements/P1167"
+reg:name: hasStatementOfPrintingOrManufacture
+reg:status: "RegStatus:1001"
+rdf:type: "rdf:Property"
+rdfs:domain: "isbd:elements/C2001"
+rdfs:isDefinedBy: "isbd:elements/"
+rdfs:label: has statement of printing or manufacture
+rdfs:label@es: "tiene mención de impresión o fabricación"
+rdfs:range: "isbd:elements/C2020"
+skos:definition: "Relates a resource to a statement including the place of printing or manufacture, the name of printer or manufacturer, and the date of printing or manufacture."
+skos:definition@es: "Relaciona un recurso con una mención que incluye el lugar de impresión o fabricación, el nombre del impresor o fabricante y la fecha de impresión o fabricación."
+---
+# has statement of printing or manufacture
+
+The ISBD element "statement of printing or manufacture" is discussed as part of the larger "Publication, Production, Distribution, etc." area (Area 4). It isn't a distinct element with its own formal definition in the way some other elements are. Instead, the concepts related to printing and manufacture are addressed within the stipulations for places and names of entities involved in the production process.
+
+## Element Reference
+
+The ISBD doesn't define "statement of printing or manufacture" as a separate, formally named element like "title proper" or "edition statement."  It's considered an aspect of the information provided within Area 4 (Publication, Production, Distribution, etc.).  Within Area 4, you'll find guidance about recording place of printing, name of printer, and date of printing, but not as a cohesive "statement."
+
+
+## Additional Information
+
+The stipulations relating to printing or manufacture aim to capture the details about the physical production of the resource.  This helps to distinguish between the entity responsible for the intellectual content (author, composer, etc.) and the entity responsible for the physical creation of the item (printer, manufacturer). This information can be important for identifying the resource, understanding its physical characteristics, and for resources where the printing or manufacturing location differs significantly from the place of publication.
+
+User tasks this information supports include:
+* Identifying variations in printing or manufacturing.
+* Distinguishing between different printings of the same edition.
+* Locating resources printed or manufactured at specific locations (for provenance or historical research).
+
+
+## Element Values
+
+**Rules and Guidelines:** The stipulations encourage recording place of printing or manufacture, name of printer or manufacturer, and date of printing or manufacture.  These should be recorded as they appear on the resource.
+
+
+**Value Constraints and Formats:** Standard abbreviations can be used. Arabic numerals should be used for dates. If these details relate to an entity named in Area 4, they are often given parenthetically after the entity's name and place.
+
+
+## Examples
+
+```
+London : J. Smith, 1822 (Printed by William Jones)
+
+Paris : Presses Universitaires de France, 2010 (Imprimé en Italie)
+
+[S.l. : s.n.], 1900 (Impr. de Louis Dubois, Nantes)  
+// Example where place of publication and publisher are unknown, but printer is known.
+```
+
+## Relationships
+
+* **Relationship to Area 4:**  The details about printing and manufacture are considered part of the larger Publication, Production, Distribution, etc. area.  They are not a distinct element in the same way as Title Proper or Edition Statement.
+* **Relationship to names and places in Area 4:** When a printer's name and/or place appears in Area 4 *and* is associated with a named publisher/producer, the printing information is usually presented after the publishing information, often in parentheses.
+
+
+
+## Stipulations
+
+* **Older Monographic Resources:**  For older resources, the distinction between printer and publisher might be more significant and consistently recorded. The ISBD gives guidance on handling these cases.
+* **When to record:** Area 4 should primarily focus on publication details. Printing/manufacturing information is usually only recorded when it is considered essential for identification or significantly different from the place of publication.
+* **Unknown information:** If the printer or manufacturer is unknown, standard abbreviations like `s.n.` (sine nomine) are used. Place of printing can be recorded as `[s.l.]` (sine loco) if unknown.
+* **Multiple printers/manufacturers:** If there are multiple entities involved in printing or manufacturing, punctuation similar to that used for multiple publishers is employed.
+* **Copy-Specific Information:**  Details about the printing or manufacture particular to the copy in hand (e.g., a unique binding or printing flaw) should be recorded in Area 7 (Notes).
+
+---
+
+*This content was automatically generated from the ISBD PDF documentation using Gemini AI analysis.*

@@ -1,0 +1,80 @@
+---
+id: P1020
+title: has name of printer or manufacturer
+description: ISBD element documentation for has name of printer or manufacturer
+uri: "isbd:elements/P1020"
+area: general
+RDF:
+  definition: "Relates a resource to the name of the person or corporate body appearing on the resource that effects the printing or manufacturing of the resource."
+  domain: "isbd:elements/C2001"
+  type: "rdf:Property"
+reg:hasUnconstrained: "isbd:unc/elements/P1020"
+reg:name: hasNameOfPrinterOrManufacturer
+reg:status: "RegStatus:1001"
+rdf:type: "rdf:Property"
+rdfs:domain: "isbd:elements/C2001"
+rdfs:isDefinedBy: "isbd:elements/"
+rdfs:label: has name of printer or manufacturer
+rdfs:label@es: "tiene nombre de impresor o fabricante"
+skos:definition: "Relates a resource to the name of the person or corporate body appearing on the resource that effects the printing or manufacturing of the resource."
+skos:definition@es: "Relaciona un recurso con el nombre de la persona o entidad corporativa que aparece en el recurso que efectúa la impresión o fabricación del recurso."
+---
+# has name of printer or manufacturer
+
+The ISBD element "name of printer or manufacturer" (isbd:elements/P1020) is discussed as part of Area 4.  The specific element as described in the RDF with domain and range etc. is not explicitly defined in the PDF in the way the prompt requests. The information below is derived from section 4.5 of the ISBD: International Standard Bibliographic Description (2011, updated 2021).
+
+## Element Reference
+
+- **Official ISBD definition:** The name of the person or corporate body that prints a printed resource or manufactures other types of resources (such as sound recordings, multimedia, etc.). This is distinct from the publisher (who issues the resource) and the distributor (who makes it available).  In older materials, these functions were often combined.
+- **Domain:**  Printed resources and manufactured resources where applicable. Part of Area 4: Publication, Production, Distribution, etc. Area.
+- **Range:**  Name of a person or corporate body.
+- **Element type:**  Descriptive.
+
+## Additional Information
+
+- **Scope and purpose:** To identify the printer or manufacturer responsible for the physical production of the resource, when this is distinct from the publisher. This is particularly relevant for older materials and for cases where the printing or manufacturing quality is a significant factor (e.g., art reproductions, fine press books, etc.).  In modern publishing, the printer is often less significant, and the publisher takes primary responsibility.
+- **User tasks:**  Helps users distinguish between different printings or editions, especially when variations in printing or manufacturing quality might exist. Supports research into printing history and the history of the book.  May help in identifying resources produced by specific printing houses or manufacturers.
+
+
+## Element Values
+
+- **Specific rules/guidelines:** The name is transcribed as it appears on the resource. Abbreviations may be used if unambiguous. If the name appears in conjunction with an address or other qualifying information, these are included only if they aid in identification.
+- **Value constraints/formats:**  No specific format is prescribed, but clarity and consistency are encouraged.
+- **String encoding:** Not applicable in the core ISBD. Encoding would be determined by the cataloging rules or metadata schema being implemented.
+
+
+## Examples
+
+```
+: [London] : Printed by William Clowes and Sons, Limited
+```
+
+```
+: Oxford : Printed at the Clarendon Press
+```
+
+```
+: Paris : Imprimerie nationale
+```
+
+```
+: [S.l.] : [s.n.], 1974 (Manchester : Unity Press)  
+Note: "S.l." and "s.n." indicate unknown place and publisher. Information in parentheses is the place and name of printer taken from a secondary source.
+```
+
+
+## Relationships
+
+- **Relationships to other ISBD elements:** Closely related to the "place of printing or manufacture" (4.4) and "date of printing or manufacture" (4.6). Also related to "name of publisher, producer and/or distributor" (4.2), as the printer or manufacturer may also sometimes be the publisher.
+- **Super-types/sub-types:** None explicitly defined in the ISBD.
+- **Inverse relationships:** None defined in the ISBD.
+
+
+## Stipulations
+
+- **Special considerations:**  If the printer is also the publisher, the name is recorded only once as the publisher (in 4.2). If information about the printer is taken from outside the prescribed sources (e.g., another catalog record), it is enclosed in square brackets. For older materials where the printer is grammatically separated from the publisher on the title page, both are recorded separately (4.2 and 4.5). If the place of publication and name of publisher are unknown but the printer is known, the name of the printer is given in Area 4 (4.5).
+- **Best practices:**  For older resources, provide as much information about the printer as is available and relevant, including address and date. For modern resources, the printer is usually less significant and can be omitted unless it is particularly relevant to identification or the quality of the production. Distinguish clearly between the printer and the publisher. Use standard abbreviations where possible for common printers' names.
+
+---
+
+*This content was automatically generated from the ISBD PDF documentation using Gemini AI analysis.*

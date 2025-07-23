@@ -1,0 +1,96 @@
+---
+id: P1004
+title: has title proper
+description: ISBD element documentation for has title proper
+uri: "isbd:elements/P1004"
+area: area1
+RDF:
+  definition: "Relates a resource to the title proper (the chief name of a resource, i.e. the title of a resource in the form in which it appears on the preferred source of information for the resource)."
+  domain: "isbd:elements/C2001"
+  type: "rdf:Property"
+  scopeNote: "The title proper includes any alternative title, but excludes parallel titles and other title information. In the case of a section or some supplements and some titles of subseries or parts, the title proper can consist of two or more components: the common title (or the title of the main series or of the multipart monographic resource), the dependent title and the dependent title designation. For resources containing several individual works the title proper is the collective title. Resources containing several individual works and lacking a collective title are considered not to have a title proper. A series or subseries also has its own title proper."
+  elementSubType: "isbd:elements/P1012"
+reg:hasUnconstrained: "isbd:unc/elements/P1004"
+reg:name: hasTitleProper
+reg:status: "RegStatus:1001"
+rdf:type: "rdf:Property"
+rdfs:domain: "isbd:elements/C2001"
+rdfs:isDefinedBy: "isbd:elements/"
+rdfs:label: has title proper
+rdfs:label@es: "tiene título propiamente dicho"
+rdfs:subPropertyOf: "isbd:elements/P1012"
+skos:definition: "Relates a resource to the title proper (the chief name of a resource, i.e. the title of a resource in the form in which it appears on the preferred source of information for the resource)."
+skos:definition@es: "Relaciona un recurso con el título propiamente dicho (el nombre principal de un recurso, es decir, el título de un recurso en la forma en la que aparece en la fuente preferida de información para el recurso)."
+skos:scopeNote: "The title proper includes any alternative title, but excludes parallel titles and other title information. In the case of a section or some supplements and some titles of subseries or parts, the title proper can consist of two or more components: the common title (or the title of the main series or of the multipart monographic resource), the dependent title and the dependent title designation. For resources containing several individual works the title proper is the collective title. Resources containing several individual works and lacking a collective title are considered not to have a title proper. A series or subseries also has its own title proper."
+skos:scopeNote@es: "El t\u00edtulo propiamente dicho incluye cualquier t\u00edtulo alternativo, pero excluye t\u00edtulos paralelos e informaci\u00f3n complementaria del t\u00edtulo. En el caso de una secci\u00f3n o algunos suplementos y algunos t\u00edtulos de subseries o partes, el t\u00edtulo propiamente dicho puede consistir en dos o m\u00e1s componentes: el t\u00edtulo com\u00fan (o el t\u00edtulo de la serie principal o del recurso monogr\u00e1fico multiparte), el t\u00edtulo dependiente y la designaci\u00f3n del t\u00edtulo dependiente. Para recursos que contienen varias obras individuales, el t\u00edtulo propiamente dicho es el t\u00edtulo colectivo. Se considera que un recurso no tiene t\u00edtulo propiamente dicho cuando contiene varias obras individuales y no existe un t\u00edtulo colectivo. Una serie o subserie tiene tambi\u00e9n su t\u00edtulopropiamente dicho."
+---
+# has title proper
+
+The ISBD element `has title proper` (isbd:elements/P1004), referred to as "Title Proper" in the ISBD documentation, is described below.
+
+## Element Reference
+
+- **Definition:** The chief name of a resource, i.e., the title of a resource in the form in which it appears on the preferred source of information for the resource.  The title proper includes any alternative title, but excludes parallel titles and other title information.
+- **Domain:**  Relates a bibliographic resource (manifestation level in FRBR terms) to its title proper.
+- **Range:** A string representing the title.
+- **Element Type:**  Mandatory if available.
+
+
+## Additional Information
+
+- **Scope and Purpose:** To provide the primary name by which a resource is known and cited. This is the most prominent title and serves as the basis for identification and retrieval.
+- **User Tasks Supported:** Finding resources by title, citing resources, distinguishing different resources with similar content.
+
+
+## Element Values
+
+- **Rules and Guidelines:** Transcribe the title proper from the preferred source of information exactly as to wording, but not necessarily as to capitalization or punctuation. Do not correct typographical errors in the title proper itself (record them in a note if necessary). 
+- **Value Constraints and Formats:** The title proper must be present if available. If a resource has no title, a title is devised and supplied in square brackets, with an explanatory note in Area 7.   
+    - The first five words (six if the first word is an article) are essential for serials. Changes within these words generally necessitate a new record.
+    - Abridgement of lengthy titles is permitted only in the middle or at the end, with omissions indicated by an ellipsis (...).
+- **String Encoding:**  Dependent on the script used. No specific encoding scheme is mandated by ISBD, but Unicode is recommended for international interoperability.
+
+
+## Examples
+
+```
+The Lord of the Rings
+```
+
+```
+Pride and Prejudice
+```
+
+```
+Quantum Mechanics for Mathematicians
+```
+
+```
+Moby-Dick, or, The Whale 
+```
+
+```
+1984
+```
+
+
+## Relationships
+
+- **Relationship to other ISBD elements:**  The title proper is the first element in Area 1 (Title and Statement of Responsibility Area). It may be followed by a parallel title, other title information, and a statement of responsibility.
+- **Sub-types:** Common title and dependent title (in the case of series or multipart monographic resources).
+- **Inverse Relationships:**  None explicitly defined in ISBD.
+
+
+## Stipulations
+
+- **Special Considerations:**
+    - **Serials:** Title changes are significant, especially within the first five/six words.
+    - **Multipart Monographs:**  If the title includes part numbering, record the first and last part numbers (e.g., Part 1-3).
+    - **Older Monographs:**   Information preceding the commonly known title on the title page is included in the title proper.
+    - **Manuscripts:**  If no title is present, devise one based on the content.
+- **Best Practices:**  Use the most complete and accurate form of the title proper as found on the preferred source of information. If there's doubt about which title is most prominent, consult cataloging rules (e.g., RDA, AACR2) for guidance.  Provide notes (Area 7) explaining any complexities or variations in titles.
+
+
+---
+
+*This content was automatically generated from the ISBD PDF documentation using Gemini AI analysis.*

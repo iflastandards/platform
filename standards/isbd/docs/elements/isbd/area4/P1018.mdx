@@ -1,0 +1,85 @@
+---
+id: P1018
+title: has date of publication, production, distribution
+description: ISBD element documentation for has date of publication, production, distribution
+uri: "isbd:elements/P1018"
+area: area4
+RDF:
+  definition: "Relates a resource to the date on which it is officially offered for sale or distribution to the public, usually given in the form of a year."
+  domain: "isbd:elements/C2001"
+  type: "rdf:Property"
+reg:hasUnconstrained: "isbd:unc/elements/P1018"
+reg:name: hasDateOfPublicationProductionDistribution
+reg:status: "RegStatus:1001"
+rdf:type: "rdf:Property"
+rdfs:domain: "isbd:elements/C2001"
+rdfs:isDefinedBy: "isbd:elements/"
+rdfs:label: has date of publication, production, distribution
+rdfs:label@es: "tiene fecha de publicación, producción, distribución"
+skos:definition: "Relates a resource to the date on which it is officially offered for sale or distribution to the public, usually given in the form of a year."
+skos:definition@es: "Relaciona un recurso con la fecha en que oficialmente se ha ofrecido para la venta o distribución al público, normalmente se da en la forma de un año."
+---
+# has date of publication, production, distribution
+
+The ISBD element "date of publication, production, and/or distribution" (isbd:elements/P1018) is described in section 4.3 of the provided PDF.
+
+## Element Reference
+
+- **Official ISBD Definition:** The date or dates of publication, production, or distribution of the resource are given.
+- **Domain:**  Monographic resources, Serials, Integrating resources, Multipart monographic resources, Cartographic resources, Multimedia resources, etc. - essentially any resource that is published, produced, or distributed.
+- **Range:**  Date or range of dates.
+- **Element Type:**  Literal (date).
+
+
+## Additional Information
+
+- **Scope and Purpose:**  This element is crucial for identifying the resource and placing it within a chronological context.  It helps establish the intellectual context of the work, aiding in research and understanding the evolution of ideas. For serials and integrating resources, it also helps to determine currency and relevance.
+- **User Tasks Supported:**  Discovering resources published/produced/distributed within a specific timeframe, identifying the most recent edition of a work, understanding the historical context of a resource, and selecting resources based on their currency.
+
+
+## Element Values
+
+- **Specific Rules/Guidelines:**  Use Arabic numerals for Gregorian calendar dates.  Dates not of the Gregorian calendar are given as they appear on the resource, with the Gregorian equivalent added in square brackets if possible (4.3.4). If multiple dates apply (e.g., publication and distribution), each date is given after the appropriate associated name (4.3.2, 4.3.3).  If the publication, production, or distribution date is unknown, use an approximate date in square brackets (4.3.8). The date of printing or manufacture may be used if the publication date is unavailable (4.3.7). If no date can be determined, approximations based on internal evidence or other sources are permissible (4.3.8). For continuing resources, beginning and ending dates are given, separated by a hyphen (4.3.10).
+- **Value Constraints/Formats:** YYYY or YYYY-MM-DD are preferred formats where possible. A range of dates can be indicated with a hyphen. Less precise dates or approximations should be enclosed in square brackets (e.g., [199-?], [ca. 1850]). Specific instructions for representing dates from non-Gregorian calendars are also provided.
+- **String Encoding Schemes:** No specific encoding scheme is mentioned in this context within the document, however, the element itself uses literal string values.
+
+
+## Examples
+
+```
+, 2023
+```
+
+```
+, 1998-2005
+```
+
+```
+, [189-]
+```
+
+```
+, 1857 on the feast of Saint Luke [18 Oct. 1857]
+```
+
+```
+, cop. 1985 (reprinted 1992)
+```
+
+## Relationships
+
+- **Relationships to other ISBD elements:**  The date is directly related to the place and name of the publisher, producer, and/or distributor (Area 4).  For older monographic resources, it may be part of the imprint information. For continuing resources, it's related to the Numbering Area (3.3). Copyright dates are related to but distinct from the date of publication, production or distribution (4.3.6).
+- **Super-types and Sub-types:** None explicitly defined in the document, although different types of dates (publication, production, distribution, copyright, etc.) could be considered subtypes.  
+- **Inverse Relationships:** None explicitly defined.
+
+
+
+## Stipulations
+
+- **Special Considerations/Exceptions:**  Distinguish between publication, production, and distribution dates if necessary. Use square brackets for inferred, approximate, or corrected dates. Omit or provide details about the source of the date if it’s not found in the prescribed source (e.g. title page). If the date is part of another area (e.g., title proper), record it in that area and also in Area 4 within square brackets.
+- **Best Practices:** Strive for the most accurate and complete date information possible. Provide explanations for approximate, corrected, or non-standard dates in a note (Area 7) as necessary. Follow the specified order and punctuation for clarity and consistency.  When dealing with older or more complex resources, carefully analyze all available sources to determine the most appropriate date representation.
+
+
+---
+
+*This content was automatically generated from the ISBD PDF documentation using Gemini AI analysis.*

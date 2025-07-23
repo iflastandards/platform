@@ -1,0 +1,103 @@
+---
+id: P1164
+title: has series and multipart monographic resource area
+description: ISBD element documentation for has series and multipart monographic resource area
+uri: "isbd:elements/P1164"
+area: area6
+RDF:
+  definition: "Relates a resource to a statement including the title proper of a series or multipart monographic resource, the parallel title of a series or multipart monographic resource, the other title information of a series or multipart monographic resource, the parallel other title information of a series or multipart monographic resource, the statement of responsibility relating to a series or multipart monographic resource, the parallel statement of responsibility relating to a series or multipart monographic resource, the international standard number of a series or multipart monographic resource, and the numbering within a series or multipart monographic resource."
+  domain: "isbd:elements/C2001"
+  range: "isbd:elements/C2009"
+  type: "rdf:Property"
+reg:hasUnconstrained: "isbd:unc/elements/P1164"
+reg:name: hasSeriesAndMultipartMonographicResourceArea
+reg:status: "RegStatus:1001"
+rdf:type: "rdf:Property"
+rdfs:domain: "isbd:elements/C2001"
+rdfs:isDefinedBy: "isbd:elements/"
+rdfs:label: has series and multipart monographic resource area
+rdfs:label@es: "tiene área de serie y recurso monográfico multiparte"
+rdfs:range: "isbd:elements/C2009"
+skos:definition: "Relates a resource to a statement including the title proper of a series or multipart monographic resource, the parallel title of a series or multipart monographic resource, the other title information of a series or multipart monographic resource, the parallel other title information of a series or multipart monographic resource, the statement of responsibility relating to a series or multipart monographic resource, the parallel statement of responsibility relating to a series or multipart monographic resource, the international standard number of a series or multipart monographic resource, and the numbering within a series or multipart monographic resource."
+skos:definition@es: "Relaciona un recurso con una mención que incluye el título propiamente dicho de una serie o recurso monográfico multiparte, el título paralelo de la serie o recurso monográfico multiparte, la información complementaria del título de la serie o recurso monográfico multiparte, la información complementaria del título paralela de la serie o recurso monográfico multiparte, la mención de resposabilidad relativa a la serie o recurso monográfico multiparte, la mención de resposabilidad paralela de la serie o recurso monográfico multiparte, el numero internacional normalizado de la serie o recurso monográfico multiparte y la numeración de la serie o recurso monográfico multiparte."
+---
+# has series and multipart monographic resource area
+
+## Element Reference
+
+- **Official ISBD Definition:** The series and multipart monographic resource area includes the title proper of a series or multipart monographic resource, parallel title of a series or multipart monographic resource, other title information of a series or multipart monographic resource, statement of responsibility relating to a series or multipart monographic resource, international standard number of a series or multipart monographic resource, and numbering within a series or multipart monographic resource. (Page 179)
+
+- **Domain and Range:**  While not explicitly stated in RDF terms, the domain would be the bibliographic resource being described, and the range would be the descriptive information about the series or multipart resource to which it belongs.
+
+- **Element Type:** Descriptive data element
+
+
+## Additional Information
+
+- **Scope and Purpose:** This element is used to indicate that the resource being described is part of a larger bibliographic resource: either a series or a multipart monographic resource. It provides standardized information about that larger resource, facilitating identification, collocation, and retrieval.
+
+- **User Tasks Supported:**
+    - Identifying resources that are part of a known series.
+    - Retrieving all parts of a multipart resource.
+    - Understanding the context and relationship of the resource to a larger work.
+
+
+## Element Values
+
+- **Specific Rules/Guidelines:**
+    - Elements are recorded in the order: Title proper, Parallel title, Other title information, Statement of responsibility, International standard number, Numbering within series.
+    - Each series statement is enclosed in parentheses.
+    - Standard abbreviations can be used (as outlined in A.6.4 and Appendix D).
+    - Arabic numerals are used for numbering.
+    - If the resource belongs to multiple series, area 6 is repeated.
+
+- **Value Constraints/Formats:** See prescribed punctuation details on page 179-180 of the document. Common and dependent titles are also addressed.
+
+- **String Encoding Schemes:** Not explicitly defined, but assumes the same character encoding used for the rest of the record (e.g., UTF-8).
+
+
+## Examples
+
+```
+(The German pre-classics. Series A, George Philipp Telemann)
+```
+
+```
+(Sounds of the theatre. Music = Voci del teatro. La musica)
+```
+
+```
+(Carte géologique de la France à 1:50000; IV-19)
+```
+
+```
+(Publications of the University of Manchester. Administration series ; no. 1)
+   Note: Numbering in the main series : 244
+```
+
+```
+(Pricing and buying. Module 5, Automobile prices)
+```
+
+
+
+## Relationships
+
+- **Relationships to other ISBD elements:**  Area 6 is distinct from Area 1 (Title and Statement of Responsibility), even if information about the series appears on the title page. If the resource is part of a subseries, the main series information can be provided in area 7 (Notes).  
+
+- **Super-types and sub-types:** "Series" is a super-type, with "main series" and "subseries" as sub-types.
+
+- **Inverse relationships:** Not explicitly defined in ISBD.
+
+
+
+## Stipulations
+
+- **Special Considerations/Exceptions:** A continuing resource or a multipart resource can itself be part of a larger series.  Older monographic resources and music manuscripts may have variations in how series information is presented.
+
+- **Best practices:**  Always use the series title page as the preferred source if available. If a resource belongs to multiple series, record each series in a separate series statement. If necessary, provide explanatory notes in area 7 to clarify the relationship of the resource to the series.
+
+
+---
+
+*This content was automatically generated from the ISBD PDF documentation using Gemini AI analysis.*

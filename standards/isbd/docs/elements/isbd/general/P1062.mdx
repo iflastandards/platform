@@ -1,0 +1,75 @@
+---
+id: P1062
+title: has presence or absence of sound
+description: ISBD element documentation for has presence or absence of sound
+uri: "isbd:elements/P1062"
+area: general
+RDF:
+  definition: "Relates a resource that includes sound as an integral feature to the abbreviations \"sd.\" (for sound) or \"si.\" (for silent) (or their equivalents in another language)."
+  domain: "isbd:elements/C2001"
+  type: "rdf:Property"
+  scopeNote: "Omitted if the presence of sound is implicit in the specific material designation."
+reg:hasUnconstrained: "isbd:unc/elements/P1062"
+reg:name: hasPresenceOrAbsenceOfSound
+reg:status: "RegStatus:1001"
+rdf:type: "rdf:Property"
+rdfs:domain: "isbd:elements/C2001"
+rdfs:isDefinedBy: "isbd:elements/"
+rdfs:label: has presence or absence of sound
+rdfs:label@es: "tiene presencia o ausencia de sonido"
+skos:definition: "Relates a resource that includes sound as an integral feature to the abbreviations \"sd.\" (for sound) or \"si.\" (for silent) (or their equivalents in another language)."
+skos:definition@es: "Relaciona un recurso que incluye sonido como una característica integral con las abreviaturas “son.” (para “sonoro”) o “sil.” (para “silencio”) (o sus equivalentes en otra lengua)."
+skos:scopeNote: "Omitted if the presence of sound is implicit in the specific material designation."
+skos:scopeNote@es: "Se omite si la presencia de sonido está implícita en la designación específica del material."
+---
+# has presence or absence of sound
+
+The ISBD element "presence or absence of sound" is found within the larger "Other physical details" element of Area 5 (Material Description Area).  It's not a standalone element like `title proper` but rather a characteristic recorded as part of the extent statement.
+
+## Element Reference
+
+- **Definition:** The abbreviations sd. (for sound) or si. (for silent) (or their equivalents in another language) are given as appropriate for materials that include sound as an integral feature and for which the presence of sound is not implicit in the specific material designation. (Section 5.2.6.1)
+- **Domain:**  Resources where the presence or absence of sound is a relevant descriptive characteristic and is not implied by the specific material designation (e.g., not necessary for a "sound disc").
+- **Range:**  "sd." (sound), "si." (silent), or language equivalents.
+- **Element type:** Attribute/characteristic of the resource.
+
+## Additional Information
+
+- **Scope and purpose:** To indicate whether a resource has an integral sound component or is silent, where this isn't already obvious. This helps users understand the nature of the resource and select appropriate materials.
+- **User tasks supported:**  Resource discovery and selection, identification of appropriate playback equipment.
+
+
+## Element Values
+
+- **Rules/Guidelines:** Use "sd." for resources with sound, "si." for silent resources.  Use language equivalents where appropriate.  For materials where sound is only an exception (like slides), the absence of sound may be indicated with "si." (5.2.6.3)
+- **Constraints:**  Only applicable to resources where the presence or absence of sound is a meaningful distinction.
+- **Formats:**  "sd." or "si." immediately following other physical details, if present.
+
+
+## Examples
+
+```
+1 film reel (20 min): b&w, si.
+1 videocassette (U-matic) (30 min): col., sd.
+1 CD-I: col., sd. 
+1 electronic disk: sd.
+24 slides: col.; 35 mm, si.
+```
+
+## Relationships
+
+- **Relationships to other ISBD elements:** Part of the "other physical details" description in Area 5 (Material Description Area). Often appears after details of color. It may be omitted if the presence or absence of sound is implicit in the specific material designation (e.g., "sound disc" implies "sd.").
+- **Super/sub-types:** No explicit sub-types defined in this version of the ISBD. Could potentially be further specified if desired (e.g., "sd. (mono)", "sd. (stereo)").
+- **Inverse relationships:** None.
+
+
+
+## Stipulations
+
+- **Special considerations:** Omit if sound is implicit. For resources with sound, brief explanations may be added in parenthesis after "sd.", such as sound format. (5.2.6.2)
+- **Best Practices:** Use consistently for resources where the distinction is relevant.  Be mindful of resource types where this element might not add meaningful information.
+
+
+---
+
+*This content was automatically generated from the ISBD PDF documentation using Gemini AI analysis.*

@@ -1,0 +1,87 @@
+---
+id: P1056
+title: has composition of material
+description: ISBD element documentation for has composition of material
+uri: "isbd:elements/P1056"
+area: general
+RDF:
+  definition: "Relates a resource to a word or phrase indicating the material of which it is composed."
+  domain: "isbd:elements/C2001"
+  type: "rdf:Property"
+reg:hasUnconstrained: "isbd:unc/elements/P1056"
+reg:name: hasCompositionOfMaterial
+reg:status: "RegStatus:1001"
+rdf:type: "rdf:Property"
+rdfs:domain: "isbd:elements/C2001"
+rdfs:isDefinedBy: "isbd:elements/"
+rdfs:label: has composition of material
+rdfs:label@es: "tiene composición de material"
+skos:definition: "Relates a resource to a word or phrase indicating the material of which it is composed."
+skos:definition@es: "Relaciona un recurso con una palabra o frase que indica el material del que está compuesto."
+---
+# has composition of material
+
+The ISBD element "composition of material" is found within the Material Description Area (Area 5) and specifically within the "Other physical details" element (5.2).
+
+## Element Reference
+
+**Definition:** A word or phrase indicating the material of which the resource is composed. (5.2.2)
+
+**Domain:**  Resources where the material composition is relevant and can be determined.
+
+**Range:**  Free text describing the material(s).
+
+**Element Type:** Descriptive
+
+## Additional Information
+
+**Scope and Purpose:** This element provides information about the physical make-up of a resource. This can be crucial for identification, preservation, and access, particularly for certain types of resources like globes (wood, plastic, etc.), sculptures (bronze, marble, etc.), or historical documents (papyrus, vellum, etc.). It distinguishes resources with identical content but different physical forms.
+
+**User Tasks Supported:**
+- Identifying resources made of specific materials.
+- Distinguishing resources with identical content but different carriers.
+- Understanding the preservation needs of a resource.
+- Facilitating specialized research focusing on resources made of particular materials.
+
+
+## Element Values
+
+**Rules and Guidelines:** The value is a word or phrase describing the material.  Standard terminology is recommended where appropriate, but precise and accurate description is prioritized.
+
+**Value Constraints and Formats:**  No strict controlled vocabulary is enforced, but consistency and clarity are encouraged.
+
+**String Encoding Schemes:**  Not applicable.  Free text.
+
+## Examples
+
+```
+1 globe: wood
+1 sound reel (27 min): paper
+1 diorama: various materials
+1 sculpture: bronze
+1 manuscript: vellum
+```
+
+## Relationships
+
+**Relationships to Other ISBD Elements:**  This element is a sub-element of "Other physical details" (5.2) which itself is part of the Material Description Area (Area 5). It is related to the "Extent" element (5.1) as it further describes the physical units.
+
+
+**Super-types and Sub-types:**  No formal super-types or sub-types defined within the ISBD, although more specific material terms could be considered sub-types in practice (e.g., "acid-free paper" is a sub-type of "paper").
+
+**Inverse Relationships:** None explicitly defined within the ISBD.
+
+
+## Stipulations
+
+**Special Considerations:** The "composition of material" may be omitted if it's implicit in the Specific Material Designation (e.g., the material of a "book" is generally assumed to be paper unless otherwise stated).
+
+**Exceptions:**  None explicitly mentioned.
+
+
+**Best Practices:**  Use standard terminology where possible.  Be as specific as the information allows. When multiple materials are used, list them in order of prominence if applicable.  If the material is unknown or uncertain, use terms like "unknown material" or "probably wood." If detailed material analysis is available, that information might be better suited for a note.
+
+
+---
+
+*This content was automatically generated from the ISBD PDF documentation using Gemini AI analysis.*

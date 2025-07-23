@@ -1,0 +1,70 @@
+---
+id: P1144
+title: has addition to place of publication
+description: ISBD element documentation for has addition to place of publication
+uri: "isbd:elements/P1144"
+area: area4
+RDF:
+  definition: "Relates a resource to the name of a larger place such as a country, state, etc. and, if it is considered necessary for identification, the full address of the publisher, producer or distributor."
+  domain: "isbd:elements/C2001"
+  type: "rdf:Property"
+reg:hasUnconstrained: "isbd:unc/elements/P1144"
+reg:name: hasAdditionToPlaceOfPublication
+reg:status: "RegStatus:1001"
+rdf:type: "rdf:Property"
+rdfs:domain: "isbd:elements/C2001"
+rdfs:isDefinedBy: "isbd:elements/"
+rdfs:label: has addition to place of publication
+rdfs:label@es: "tiene adición al lugar de publicación"
+skos:definition: "Relates a resource to the name of a larger place such as a country, state, etc. and, if it is considered necessary for identification, the full address of the publisher, producer or distributor."
+skos:definition@es: "Relaciona un recurso con el nombre de un lugar de mayor rango, como un país, estado, etc., y, si se considera necesario para su identificación, la dirección completa del editor, productor o distribuidor."
+---
+# has addition to place of publication
+
+The ISBD element "addition to place of publication" is referred to as "Additions to place of publication, production and/or distribution" in the 2021 update of the ISBD consolidated edition (2011).
+
+## Element Reference
+
+- **Official ISBD Definition:** The name of a larger place such as a country, state, etc., added to the place of publication, production and/or distribution when deemed necessary for identification.  (See section 4.1.9 in the provided document.)
+- **Domain:**  Place of publication, production and/or distribution (ISBD Area 4.1).
+- **Range:** String representing a larger geographic entity (e.g., country, state, province).
+- **Element Type:** Descriptive.
+
+## Additional Information
+
+- **Scope and Purpose:** To disambiguate the place of publication when the given place name might be ambiguous or shared by multiple locations (e.g., Cambridge in Massachusetts vs. Cambridge in England). It provides greater precision and facilitates more accurate identification and retrieval of resources.
+- **User Tasks Supported:**  Improved search and retrieval of resources; disambiguation of locations; enhanced understanding of the publication context.
+
+## Element Values
+
+- **Rules/Guidelines:** The addition should represent a well-known and established larger geographic entity.  It should follow the place of publication and be separated by a comma if taken from a prescribed source, or enclosed in square brackets if taken from another source.  
+- **Value Constraints/Formats:**  No strict format, but should generally follow common usage and established geographic naming conventions.
+- **String Encoding Schemes:** UTF-8 is the recommended encoding scheme for the entire ISBD record.
+
+## Examples
+
+```
+- London, England
+- Cambridge, Mass.
+- Santiago [Chile]
+- Cambridge [England]
+- 고성군[강원도] (Goseong-gun [Gangwon-do])
+```
+
+## Relationships
+
+- **Relationship to other ISBD elements:** This element is directly related to and clarifies the "Place of publication, production and/or distribution" element (Area 4.1).
+- **Super-types/Sub-types:**  None explicitly defined in the ISBD, though one could consider "country" a super-type of "state" or "province".
+- **Inverse Relationships:**  None explicitly defined.
+
+
+## Stipulations
+
+- **Special Considerations:** Only use the addition if necessary for disambiguation.  Avoid adding redundant information (e.g., if the place name is already highly specific like "Washington, D.C.").
+- **Exceptions/Usage Notes:** If the larger place name is itself ambiguous (e.g. "Georgia" could refer to the U.S. state or the country), further disambiguation may be needed, potentially in a note.
+- **Best Practices:** Follow established geographic naming conventions and use authorized forms of place names whenever possible. Be consistent in the application of this element within a catalog.  Prioritize information from prescribed sources when available.
+
+
+---
+
+*This content was automatically generated from the ISBD PDF documentation using Gemini AI analysis.*

@@ -1,0 +1,70 @@
+---
+id: P1077
+title: has qualification to identifier
+description: ISBD element documentation for has qualification to identifier
+uri: "isbd:elements/P1077"
+area: area8
+RDF:
+  definition: "Relates a resource to a brief statement that qualifies, explains, or corrects the identifier."
+  domain: "isbd:elements/C2001"
+  type: "rdf:Property"
+reg:hasUnconstrained: "isbd:unc/elements/P1077"
+reg:name: hasQualificationToIdentifier
+reg:status: "RegStatus:1001"
+rdf:type: "rdf:Property"
+rdfs:domain: "isbd:elements/C2001"
+rdfs:isDefinedBy: "isbd:elements/"
+rdfs:label: has qualification to identifier
+rdfs:label@es: "tiene aclaración para el identificador"
+skos:definition: "Relates a resource to a brief statement that qualifies, explains, or corrects the identifier."
+skos:definition@es: "Relaciona un recurso con una breve mención que califica, explica o corrige el identificador."
+---
+# has qualification to identifier
+
+The ISBD element "qualification to identifier" is found within the PDF documentation. It is discussed within section 8.1.3, titled "Qualification to identifier".
+
+## Element Reference
+
+- **Official ISBD Definition:** A brief statement that qualifies, explains, or corrects the identifier, such as the type of binding in which the resource is issued.
+- **Domain:** Resource Identifier (Specifically ISBN, ISMN, Plate number, Publisher's number but in principle any identifier)
+- **Range:** Text
+- **Element Type:** Descriptive
+
+## Additional Information
+
+- **Scope and Purpose:** Provides additional information or context about the identifier that might be useful for identification or selection of the resource.  It can clarify the specific format or version of the resource being identified. Can also be used to correct invalid identifiers if the correct one is known.
+- **User Tasks Supported:** Helps users discern between different formats or versions of a resource, understand specific characteristics of the identified resource, and retrieve the correct version when errors in identifiers are present.
+
+## Element Values
+
+- **Rules and Guidelines:** The qualification is given in parentheses immediately following the identifier it relates to. Standard abbreviations in the language chosen by the cataloguing agency may be used. Multiple qualifications can be given, separated by a semicolon and a space.
+- **Value Constraints and Formats:**  Should be brief and factual.  Focus on characteristics related to the physical resource or access format, such as binding type, format for visually impaired users, or edition status (e.g., looseleaf).
+- **String Encoding Schemes:** Not applicable, plain text.
+
+## Examples
+
+```
+ISBN 978-0-85020-025-6 (cloth)
+ISBN 978-0-330-23591-4 (paperback)
+ISBN 978-3-525-52139-7 (Lw.) ;Large print
+Publ. no.: Z 1039 (cloth)
+ISBN 978-0-86325-016-3 (looseleaf)
+CBS M-34129 (disc). CBS MT 35158 (cassette)
+```
+
+## Relationships
+
+- **Relationships to Other ISBD Elements:** Directly follows and qualifies the resource identifier in Area 8. Can also relate to the information given in Area 5 (Physical Description) for details like binding or format.  If the qualification describes the edition, it can relate to Area 2.
+- **Super-types and Sub-types:** None explicitly defined in ISBD.
+- **Inverse Relationships:** None explicitly defined.
+
+## Stipulations
+
+- **Special Considerations:** Should not be used for information that belongs in other areas, like statements of responsibility (Area 1), edition statements (Area 2), or detailed physical descriptions (Area 5). Do not repeat information already implied by the identifier itself (e.g. "book" for an ISBN).  
+- **Exceptions:** None explicitly stated, but the general principle is to use only when adding valuable distinguishing information.
+- **Best Practices:** Use standard abbreviations where possible. Keep qualifications concise and focused on characteristics relevant to identification and access. Only include information that cannot be easily gleaned from other parts of the bibliographic description. Use judgment to determine if a qualification is necessary and truly adds value.
+
+
+---
+
+*This content was automatically generated from the ISBD PDF documentation using Gemini AI analysis.*

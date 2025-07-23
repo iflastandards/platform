@@ -1,0 +1,72 @@
+---
+id: P1011
+title: has additional edition statement
+description: ISBD element documentation for has additional edition statement
+uri: "isbd:elements/P1011"
+area: area2
+RDF:
+  definition: "Relates a resource to a statement identifying it as belonging to an edition or impression within an edition, or to an edition that is equivalent to the first named edition, or when the resource has significant differences in content from other impressions of the larger edition to which it belongs."
+  domain: "isbd:elements/C2001"
+  type: "rdf:Property"
+reg:hasUnconstrained: "isbd:unc/elements/P1011"
+reg:name: hasAdditionalEditionStatement
+reg:status: "RegStatus:1001"
+rdf:type: "rdf:Property"
+rdfs:domain: "isbd:elements/C2001"
+rdfs:isDefinedBy: "isbd:elements/"
+rdfs:label: has additional edition statement
+rdfs:label@es: "tiene mención de edición adicional"
+skos:definition: "Relates a resource to a statement identifying it as belonging to an edition or impression within an edition, or to an edition that is equivalent to the first named edition, or when the resource has significant differences in content from other impressions of the larger edition to which it belongs."
+skos:definition@es: "Relaciona un recurso a una mención que lo identifica como perteneciente a una edición o impresión dentro de una edición, o a una edición equivalente a la primera edición mencionada, o cuando el recurso presenta diferencias significativas de contenido con respecto a otras impresiones de la edición más amplia a la que pertenece."
+---
+# has additional edition statement
+
+The requested element "additional edition statement" is found within the ISBD documentation as part of Area 2, specifically under section 2.4 "Additional edition, drafting, version, etc. statement".  However, it is not treated as a distinct *element* on its own, but rather as a type of "edition statement" which falls under the "Edition area". Therefore, there isn't a formal ISBD definition for it in isolation. The stipulations provided in the ISBD apply to the overall edition statement, encompassing the initial edition statement and any additional edition statements.
+
+## Element Reference
+
+While not a distinct element in the ISBD's formal model, it's conceptually a string value that's part of the overall "Edition area" (Area 2).  It elaborates or refines the initial edition statement.
+
+- **Informal Definition:** A string appearing on a resource that provides information about a separate issue or printing within a larger edition, reprints, or subsequent editions with significant changes.
+- **Domain:**  Multipart resources, Serials, and Older monographic resources (where reprints and variant issues are common).
+- **Range:**  String literal
+- **Element type:** String
+
+## Additional Information
+
+- **Scope and Purpose:**  To give more granular information about a specific iteration or variant of a resource within the context of a larger edition, specifically when there are important distinctions to be made. Often applies to reprints with corrections, revised issues, or similar situations.
+- **User Tasks:** Allows users to differentiate between different issues, impressions, or iterations of an edition based on the presence of significant changes or specific characteristics. Helps in identifying and selecting the most appropriate version of a resource.
+
+## Element Values
+
+- **Rules/Guidelines:** Transcribe the additional edition statement as it appears on the resource. Use standard abbreviations (e.g., "rev.", "corr.", "repr.") where applicable. Use Arabic numerals.
+- **Value Constraints/Formats:** No specific format is prescribed, but conciseness and clarity are recommended.
+- **Encoding:**  Follow the character encoding of the resource (UTF-8 recommended for newer resources).
+
+## Examples
+
+```
+. - 3rd ed., reprinted with a new pref.
+. - 2nd ed., revised issue
+. - 4th ed. / revised by H.G. Le Mesurier and E. McIntosh, reprinted with corrections
+. - 3rd ed., 2nd (corrected) impression
+. - Interactive ed., 1993 version
+```
+
+## Relationships
+
+- **Relationship to other ISBD elements:** Part of Area 2 (Edition area).  Directly follows the initial edition statement, separated by a comma and space. Can be followed by a statement of responsibility related to that additional edition.
+- **Super/Sub-types:**  It's a sub-type of the more general "edition statement."
+- **Inverse relationships:**  None specifically defined in ISBD.
+
+## Stipulations
+
+- If the additional edition statement names an unchanged impression or reissue (e.g., "2nd printing"), it can still be included.
+- If the additional edition information appears only on a non-prescribed source, enclose it in square brackets.
+- For serials, statements like "Revised edition issued every 6 months" are treated as frequency statements (in Area 7) rather than edition statements.
+- Best practice is to include additional edition statements only when they add meaningful information to the description, enabling users to differentiate between versions. Minor variations may be omitted or relegated to notes.
+
+
+---
+
+*This content was automatically generated from the ISBD PDF documentation using Gemini AI analysis.*

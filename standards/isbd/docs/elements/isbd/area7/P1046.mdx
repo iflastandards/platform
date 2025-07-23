@@ -1,0 +1,78 @@
+---
+id: P1046
+title: has note on copy in hand
+description: ISBD element documentation for has note on copy in hand
+uri: "isbd:elements/P1046"
+area: area7
+RDF:
+  definition: Relates a resource to a note on the copy being catalogued.
+  domain: "isbd:elements/C2001"
+  type: "rdf:Property"
+  scopeNote: "Includes notes relating to the physical characteristics of the copy, notes relating to \"bound with\" copies, provenance notes, and action notes."
+  elementSubType: "isbd:elements/P1045"
+reg:hasUnconstrained: "isbd:unc/elements/P1046"
+reg:name: hasNoteOnCopyInHand
+reg:status: "RegStatus:1001"
+rdf:type: "rdf:Property"
+rdfs:domain: "isbd:elements/C2001"
+rdfs:isDefinedBy: "isbd:elements/"
+rdfs:label: has note on copy in hand
+rdfs:label@es: "Incluye notas relativas a las características físicas del ejemplar, notas relativas a ejemplares “encuadernados con”, notas de procedencia y notas de acción."
+rdfs:subPropertyOf: "isbd:elements/P1045"
+skos:definition: Relates a resource to a note on the copy being catalogued.
+skos:definition@es: "Relaciona un recurso con una nota sobre el ejemplar que se está catalogando."
+skos:scopeNote: "Includes notes relating to the physical characteristics of the copy, notes relating to \"bound with\" copies, provenance notes, and action notes."
+---
+# has note on copy in hand
+
+The ISBD element "note on copy in hand" is found within the PDF as part of the Note Area (Area 7). It doesn't have its own distinct entry in the Specification of Elements but is discussed as part of 7.11 "Notes relating to the copy in hand".
+
+## Element Reference
+
+- **Official ISBD definition:**  Notes on the copy being catalogued may be given. These may include notes relating to the physical characteristics of the copy, notes relating to “bound with” copies, provenance notes, notes of the history of the resource after the end of the production plan and action notes.
+- **Domain and range:** Not explicitly defined in a formal domain/range structure in ISBD.  The domain would be a bibliographic description, and the range would be a textual note.
+- **Element type:**  Descriptive
+
+## Additional Information
+
+- **Scope and purpose:** This element allows catalogers to record specific details about the physical copy of the resource being described that are unique to that particular copy and are not characteristics of the resource as a whole. This includes imperfections, unique bindings, provenance information, annotations, or any other detail relevant to the specific physical item.  This helps to distinguish a specific copy from other copies of the same resource.
+- **User tasks supported:** Identifying a particular copy of a resource; understanding the condition and history of a specific copy; making informed decisions about acquisition, access, and preservation.
+
+## Element Values
+
+- **Rules and guidelines:** Notes should be concise and descriptive. They should clearly state the feature being described and its location within the resource if applicable.  Established terminology for describing book conditions, binding types, etc., should be used.  For provenance information, details of previous owners, dates of ownership, and any relevant marks (bookplates, signatures, etc.) should be included.
+- **Value constraints or formats:** No strictly defined formats, but clarity and conciseness are recommended.
+- **String encoding schemes:**  UTF-8 is recommended for modern cataloging.
+
+## Examples
+
+```
+Note: Ms. notes by author
+
+Note: Signed by the composer. Number 11 of 50 signed and numbered copies
+
+Note: Imperfect: missing cover and title page. Title page with repaired tear. Restored in 2016. Bound with: The Boston Ebenezer. Boston: printed by B. Green & J. Allen, for
+Samuel Phillips, 1698; The cure of sorrow. Boston: printed by B. Green, 1709.  Inscription on inside of front cover: Theodorinis ab Engelsberg. Leather binding of late 19th Century (for a Renaissance manuscript)
+
+Note: Local file name: MENSAT. Resource copied Oct. 1996 from local area network  (For electronic resources)
+
+Note: String and choral parts with 48 manuscript duplicates (for a manuscript set of parts) (For music resources)
+```
+
+
+## Relationships
+
+- **Relationships to other ISBD elements:** The note on copy in hand provides information that is *in addition to* the descriptive information in Area 5 (Material Description Area) which describes the resource as issued.  It often relates to 7.11 which describes imperfections in the original.
+- **Super-types and sub-types:**  Not formally defined in ISBD. Could conceptually be considered a sub-type of "Note."
+- **Inverse relationships:** None.
+
+
+## Stipulations
+
+- **Special considerations:** For manuscripts and older materials, comprehensive notes on the copy in hand are particularly important, as variations between copies are more common.  For electronic resources, the focus is typically on locally assigned file names and dates of copying.
+- **Best practices:** Be consistent in terminology and style. Use established vocabulary for book conditions and binding descriptions.  When in doubt about the significance of a feature, it is generally better to include the note.  Clearly distinguish information related to the copy in hand from descriptive information about the resource itself.
+
+
+---
+
+*This content was automatically generated from the ISBD PDF documentation using Gemini AI analysis.*

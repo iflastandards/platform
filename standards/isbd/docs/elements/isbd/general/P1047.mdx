@@ -1,0 +1,92 @@
+---
+id: P1047
+title: has statement of scale
+description: ISBD element documentation for has statement of scale
+uri: "isbd:elements/P1047"
+area: general
+RDF:
+  definition: "Relates a resource that is cartographic to the ratio of distances on the resource to the actual distances they represent, given as a representative fraction, expressed as a ratio (1: )."
+  domain: "isbd:elements/C2001"
+  type: "rdf:Property"
+reg:hasUnconstrained: "isbd:unc/elements/P1047"
+reg:name: hasStatementOfScale
+reg:status: "RegStatus:1001"
+rdf:type: "rdf:Property"
+rdfs:domain: "isbd:elements/C2001"
+rdfs:isDefinedBy: "isbd:elements/"
+rdfs:label: has statement of scale
+rdfs:label@es: "tiene mención de escala"
+skos:definition: "Relates a resource that is cartographic to the ratio of distances on the resource to the actual distances they represent, given as a representative fraction, expressed as a ratio (1: )."
+skos:definition@es: "Relaciona un recurso cartogr\u00e1fico con la raz\u00f3n matem\u00e1tica entre la distancia en el recurso y la medida real que representa, se da como una fracci\u00f3n representativa, expresada como una ratio (1: )."
+---
+# has statement of scale
+
+The ISBD element "statement of scale" is found within the Material or Type of Resource Specific Area of the ISBD.
+
+## Element Reference
+
+- **Official ISBD Definition:** The statement of scale is a representation of the ratio of a distance on a cartographic resource to the corresponding distance on the Earth. It is mandatory if available and is expressed as a representative fraction (RF) written as a ratio using the format "1:". (3.1.1)
+
+- **Domain:** Cartographic resources.
+
+- **Range:** Representative fraction.
+
+- **Element Type:** Literal.
+
+
+## Additional Information
+
+- **Scope and Purpose:** The statement of scale is a fundamental element for cartographic resources as it allows users to understand the level of detail and the geographic extent represented by the map. It aids in resource discovery by enabling users to filter search results based on the required map scale.
+
+- **User Tasks Supported:**
+    - Identifying the level of detail and coverage of a map.
+    - Comparing maps with different scales.
+    - Searching and filtering for maps based on scale.
+
+
+## Element Values
+
+- **Rules/Guidelines:**
+    - The scale is given as a representative fraction (RF), expressed as 1:. There is no space before or after the colon. (3.1.1.1)
+    - Arabic numerals are used. (3.1.1.1)
+    - The term "scale" or its equivalent in another language may precede the RF. (3.1.1.1)
+    - If the scale applies only to specific parts of the resource, this should be indicated. (3.1.1.2)
+    - If a verbal statement of scale is present and the RF is derived from it, the RF is enclosed in square brackets. (3.1.1.4)
+    - If there is no scale given on the resource and the scale has not been calculated, “Scale not given” is recorded. (3.1.1.7)
+    - If there is no scale and the resource is not constructed to scale, “Not drawn to scale” is recorded. (3.1.1.6)
+
+- **Value Constraints/Formats:**  Representative fraction (e.g., 1:25000).
+
+- **String Encoding:** No specific encoding scheme mentioned within the ISBD, but typically encoded using Unicode for internationalization.
+
+
+## Examples
+
+```
+Scale 1:25000
+Escala 1:100000
+縮尺 1:50000
+Scale 1:5000-1:25000 (Indicates a range of scales)
+Scale [1:63360]. 1 inch to 1 mile (RF derived from a verbal statement)
+```
+
+## Relationships
+
+- **Relationships to other ISBD elements:**  Related to other elements within Area 3 Mathematical data for Cartographic resources, such as the statement of projection and coordinates. Can also influence the general material designation chosen for the resource.
+
+- **Super-types/Sub-types:**  No explicit hierarchical structure within the statement of scale itself. However, the concept of scale is broader, with the RF being a specific way to represent it. Other representations (verbal statement, graphic scale bar) are not part of this element but can be used to derive the RF.
+
+- **Inverse Relationships:**  No direct inverse relationship.
+
+
+
+## Stipulations
+
+- **Special Considerations/Exceptions:** When working with older cartographic resources, or resources where the scale is not explicitly stated, derivation from other sources like bar scales or comparison with known maps might be necessary.  The approximate nature of the derived scale should be indicated (e.g., using "ca"). (3.1.1.5)  Vertical scales for resources like relief models are recorded after the horizontal scale. (3.1.1.8)
+
+- **Best Practices:**  Always attempt to provide the RF whenever possible, even if derived. Clearly indicate the source of the information and any estimations involved. If no scale information is available despite research, explicitly state "Scale not given". For celestial charts, use angular scale instead of RF. (3.1.1.9)
+
+
+---
+
+*This content was automatically generated from the ISBD PDF documentation using Gemini AI analysis.*

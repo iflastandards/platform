@@ -1,0 +1,91 @@
+---
+id: P1098
+title: has note on reproduction
+description: ISBD element documentation for has note on reproduction
+uri: "isbd:elements/P1098"
+area: area4
+RDF:
+  definition: "Relates a resource that is is an exact reproduction of another resource to a note on the title of the original resource (when different from the title of the reproduction) and its publication details."
+  domain: "isbd:elements/C2001"
+  type: "rdf:Property"
+  scopeNote: "Includes facsimile reproductions or other photographic (or micro-) reproductions of a printed title, sound cassette copies of a sound disc, videotape reproductions of a motion picture, digitisations. Includes the frequency of the original resource."
+  elementSubType: "isbd:elements/P1045"
+reg:hasUnconstrained: "isbd:unc/elements/P1098"
+reg:name: hasNoteOnReproduction
+reg:status: "RegStatus:1001"
+rdf:type: "rdf:Property"
+rdfs:domain: "isbd:elements/C2001"
+rdfs:isDefinedBy: "isbd:elements/"
+rdfs:label: has note on reproduction
+rdfs:label@es: "tiene nota de reproducción"
+rdfs:subPropertyOf: "isbd:elements/P1045"
+skos:definition: "Relates a resource that is is an exact reproduction of another resource to a note on the title of the original resource (when different from the title of the reproduction) and its publication details."
+skos:definition@es: "Relaciona un recurso que es una reproducción exacta de otro recurso con una nota sobre el título del recurso original (cuando es diferente del de la reproducción) y sus datos de publicación."
+skos:scopeNote: "Includes facsimile reproductions or other photographic (or micro-) reproductions of a printed title, sound cassette copies of a sound disc, videotape reproductions of a motion picture, digitisations. Includes the frequency of the original resource."
+skos:scopeNote@es: "Se incluyen reproducciones facsimilares u otras reproducciones fotográficas o micro-reproducciones de un título impreso, copias en cassette de un disco de sonoro, reproducciones en cita de vídeo de una película, digitalizaciones. Se incluye la frecuencia del recurso original."
+---
+# has note on reproduction
+
+The ISBD element "note on reproduction" is found within the ISBD documentation and corresponds to the RDF element `isbd:elements/P1098`.
+
+## Element Reference
+
+- **Official ISBD Definition:** A note stating that the resource is a reproduction (e.g., facsimile reproduction, photographic reproduction, microreproduction, digitization, sound cassette copy of a sound disc, videotape reproduction of a motion picture) and providing the title and publication details of the original resource. The frequency of the original resource may also be given.
+- **Domain:**  Resources that are reproductions of other resources.
+- **Range:**  Textual information describing the original resource.
+- **Element Type:** Note
+
+## Additional Information
+
+- **Scope and Purpose:** To inform users that the resource in hand is a reproduction, and to provide bibliographic information about the original resource being reproduced.  This aids in understanding the context of the item being described, its provenance, and its relationship to the original.
+- **User Tasks Supported:**
+    - Identifying the original resource.
+    - Understanding the nature of the item in hand (as a copy).
+    - Distinguishing the reproduction from the original in searches and catalogs.
+    - Potentially locating the original resource if desired.
+
+## Element Values
+
+- **Rules and Guidelines:** The note should clearly state that the resource is a reproduction (e.g., "Reproduction of:", "Facsimile of:", "Microform reproduction of:").  Following this statement, the title of the original resource and its publication details (place, publisher, and date) should be provided, following the conventions of Areas 1 and 4 of the ISBD, separated by a point and a space. The frequency of the original (if a serial) may also be included.
+- **Value Constraints or Formats:** No strict format, but should follow general ISBD conventions for transcription of titles and publication statements.
+- **String Encoding Schemes:** No specific encoding scheme mentioned, but UTF-8 recommended as per Appendix C.
+
+## Examples
+
+```
+Note: Reproduction of: The monthly publication, Paris: Librairie Rouquette. Areas 1-5: Le banquet. — Reprod. [en fac-sim.]. — No 1 (mars 1892)-no 8 (mars 1893). Genève: Slatkine, 1971. 23 cm.
+```
+
+```
+Note: Facsimile reproduction. Originally published: London: R. Walton, [1654]. Area 4: London: London Topographical Society, 1898
+```
+
+```
+Note: Digital reproduction. Originally published: Impressa Romae : per B[ernardinum de] V[italibus], 1522. Area 4: Nacionalna i sveučilišna knjižnica, 2005
+```
+
+
+```
+Note: Microform reproduction. Original Edition: xiv, 624p
+```
+
+
+```
+Note: Reproduction of original manuscript held in the British Library (Add MS 42831)
+```
+
+## Relationships
+
+- **Relationships to other ISBD elements:** Relates to Area 7 (Notes Area) specifically, and more broadly to Area 2 (Edition Area) as it provides information about a particular edition of a work. Also connected to Area 1 (Title and Statement of Responsibility Area) and Area 4 (Publication, Production, Distribution, etc. Area) because it includes information drawn from these areas as they apply to the *original* resource.
+- **Super-types/Sub-types:**  This is a type of note within Area 7 and could be considered a subtype of a note relating to bibliographic history (7.2).  There could be more specific subtypes depending on the method of reproduction (e.g., "note on microform reproduction," "note on digital reproduction").
+- **Inverse relationships:** None explicitly stated.
+
+## Stipulations
+
+- **Special Considerations/Exceptions:**  If the reproduction has its own distinctive title, this should be treated as the title proper (Area 1) and the note on reproduction should still be included to provide context. If the original and the reproduction share the same title, care should be taken to differentiate the publication details to avoid confusion.
+- **Best Practices:** Be as specific as possible about the type of reproduction (facsimile, microfilm, digital, etc.). Provide sufficient bibliographic information about the original resource to ensure it can be easily identified.  If the reproduction is from a specific edition of the original, be sure to indicate that. If relevant to identification, the location of the original resource (e.g., "Copy held at the British Library") may also be provided.
+
+
+---
+
+*This content was automatically generated from the ISBD PDF documentation using Gemini AI analysis.*

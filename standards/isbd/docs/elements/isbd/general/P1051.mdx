@@ -1,0 +1,82 @@
+---
+id: P1051
+title: has right ascension and declination
+description: ISBD element documentation for has right ascension and declination
+uri: "isbd:elements/P1051"
+area: general
+RDF:
+  definition: "Relates a resource that is cartographic to its right ascension (the angular distance measured eastward on the Equator from the vernal equinox to the hour circle through the celestial body, from 0 to 24 hours), and declination (the angular distance to a body on the celestial sphere measured north or south through 90 degrees from the celestial equator along the hour circle of the body; comparable to latitude on the terrestrial sphere)."
+  domain: "isbd:elements/C2001"
+  type: "rdf:Property"
+  scopeNote: Applies also to celestial charts.
+  elementSubType: "isbd:elements/P1050"
+reg:hasUnconstrained: "isbd:unc/elements/P1051"
+reg:name: hasRightAscensionAndDeclination
+reg:status: "RegStatus:1001"
+rdf:type: "rdf:Property"
+rdfs:domain: "isbd:elements/C2001"
+rdfs:isDefinedBy: "isbd:elements/"
+rdfs:label: has right ascension and declination
+rdfs:label@es: "tiene ascensión recta y declinación"
+rdfs:subPropertyOf: "isbd:elements/P1050"
+skos:definition: "Relates a resource that is cartographic to its right ascension (the angular distance measured eastward on the Equator from the vernal equinox to the hour circle through the celestial body, from 0 to 24 hours), and declination (the angular distance to a body on the celestial sphere measured north or south through 90 degrees from the celestial equator along the hour circle of the body; comparable to latitude on the terrestrial sphere)."
+skos:definition@es: "Relaciona un recurso cartográfico con su ascensión recta (la distancia angular medida desde el Equinoccio de primavera hacia el Este a lo largo del Ecuador, al círculo horario a través del cuerpo celeste, en valores de 0 a 24 horas) y la declinación (la distancia angular de  un cuerpo sobre la esfera celeste medida en 90 grados Norte o Sur, con el Ecuador celeste a través del círculo horario del cuerpo celeste; comparable a la latitud de la esfera terrestre)."
+skos:scopeNote: Applies also to celestial charts.
+skos:scopeNote@es: "Aplicar también a las cartas celestes."
+---
+# has right ascension and declination
+
+The ISBD element "right ascension and declination" is not explicitly named as such in the provided 2021 update to the ISBD consolidated edition.  However, the concept is addressed within the *Coordinates* element, and specifically under the heading "Right ascension and declination" within the "Mathematical data (Cartographic resources)" section (3.1.3.1.3). Therefore, the following response will address the relevant concepts related to right ascension and declination within the context of the *Coordinates* element as described in the provided document.
+
+## Element Reference
+
+- **Definition:** For celestial charts, the right ascensions of the western and eastern limits of the area covered by the chart or the right ascension of the centre of the chart, and the declinations of the northern and southern limits of the area covered, or the declination of the centre of the chart, are given as equatorial coordinates.
+
+- **Domain:** Cartographic resources depicting celestial bodies or regions. Specifically, celestial charts.
+- **Range:**  Pairs of numerical values representing right ascension and declination expressed in the appropriate units (see below).
+- **Element Type:** Data element consisting of coordinate pairs.
+
+## Additional Information
+
+- **Scope and Purpose:** The element provides a standardized way to express the spatial extent and location of the area depicted on a celestial chart using the equatorial coordinate system (right ascension and declination). This facilitates precise identification and retrieval of charts covering specific celestial regions.
+
+- **User Tasks:**  Allows users to locate charts depicting specific celestial objects or areas; Enables searching and filtering of bibliographic records based on celestial coordinates; Supports interoperability between different cataloging systems and databases.
+
+## Element Values
+
+- **Rules and Guidelines:**
+    - Right ascension (RA) is designated by "RA" or its equivalent in another language, followed by the hours, minutes, and seconds of the twenty-four-hour clock.
+    - Declination (Decl.) is designated by "Decl." or its equivalent, followed by the degrees, minutes, and seconds using a plus sign (+) for the northern celestial hemisphere and a minus sign (-) for the southern celestial hemisphere.
+    -  RA and Decl. are separated by a slash (/) without spaces.
+    - When two RAs and two Decls. are given (to represent a range), each RA or Decl. is linked to its counterpart by the word "to" or its equivalent.
+
+- **Value Constraints and Formats:**  Values should conform to the sexagesimal system (360° circle) for degrees, minutes and seconds, unless decimal degrees are used for other coordinate systems.
+
+
+## Examples
+
+```
+(RA 16 h 30 min to 19 h 30 min/Decl. -16° to -49°)
+(RA 2 h/Decl. +30°)
+(RA 2 h 00 min to 2 h 30 min/Decl. -30° to 45°)
+(Long. 300° to 360°/Lat. -30° to +30°, ecliptic coordinates)  Example of other celestial coordinates
+```
+
+
+## Relationships
+
+- **Relationships to Other Elements:**  The *Coordinates* element is part of the *Material or type of resource specific area* (Area 3) for cartographic resources. It is related to the *Statement of projection* and *Statement of scale*, which provide further information necessary for interpreting the spatial characteristics of the chart. *Celestial hemisphere* may also be given when applicable.
+
+- **Sub-types:** As seen in the examples, other coordinate systems may be used (e.g., ecliptic, galactic) for non-terrestrial celestial maps and would be specified with "Long." and "Lat." followed by the coordinate system.
+
+## Stipulations
+
+-  The standard emphasizes recording the coordinate information *as given on the resource*.
+- If the coordinate information isn't explicitly given but can be derived (e.g., from a graticule), it can be supplied in square brackets.
+- If unavailable, a statement indicating this should be included.
+- For digital cartographic resources, additional information like the data type (raster, vector), object type, resolution, etc., might be provided in a note (7.3.1.3) to complement the coordinate information. This information, though related to spatial characteristics, isn't considered part of the core *Coordinates* element as described in the provided section.
+
+
+---
+
+*This content was automatically generated from the ISBD PDF documentation using Gemini AI analysis.*

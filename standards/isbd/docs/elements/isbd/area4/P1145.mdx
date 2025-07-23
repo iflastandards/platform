@@ -1,0 +1,80 @@
+---
+id: P1145
+title: has parallel place of publication, production, distribution
+description: ISBD element documentation for has parallel place of publication, production, distribution
+uri: "isbd:elements/P1145"
+area: area4
+RDF:
+  definition: "Relates a resource to the name of the place of publication, production and/or distribution in the language and script of the title proper when the name appears on the prescribed source of information for the resource in more than one language or script."
+  domain: "isbd:elements/C2001"
+  type: "rdf:Property"
+  scopeNote: "If the criterion in the definition does not apply, the form of name made prominent by typography or, if there is no typographical distinction, the form of name that appears first is used."
+reg:hasUnconstrained: "isbd:unc/elements/P1145"
+reg:name: hasParallelPaceOfPublicationProductionDistribution
+reg:status: "RegStatus:1001"
+rdf:type: "rdf:Property"
+rdfs:domain: "isbd:elements/C2001"
+rdfs:isDefinedBy: "isbd:elements/"
+rdfs:label: has parallel place of publication, production, distribution
+rdfs:label@es: "tiene lugar paralelo de publicación, producción, distribución"
+skos:definition: "Relates a resource to the name of the place of publication, production and/or distribution in the language and script of the title proper when the name appears on the prescribed source of information for the resource in more than one language or script."
+skos:definition@es: "Relaciona un recurso con el nombre de un lugar de publicación, producción y/o distribución en la lengua y escritura del título propiamente dicho cuando el nombre aparece en la fuente prescrita de información para el recurso en más de una lengua o escritura."
+skos:scopeNote: "If the criterion in the definition does not apply, the form of name made prominent by typography or, if there is no typographical distinction, the form of name that appears first is used."
+---
+# has parallel place of publication, production, distribution
+
+The requested element "parallel place of publication, production, distribution" (isbd:elements/P1145) does not appear to be explicitly defined as a distinct, separate element in the provided 2021 update to the ISBD documentation.  The concept of parallel statements *is* addressed, and relates to this area, but a specific parallel place is handled as part of the general "Place of publication, production, and/or distribution" element and its associated rules for parallel statements.
+
+## Element Reference (for related concept of Parallel statements)
+
+The ISBD addresses parallel statements generally, not a specific "parallel place" element.  Parallel statements are defined as information appearing in more than one language or script.
+
+- **Definition (from A.3.2.9):** "When in an area or an element the same information appears in more than one language or script, the following provisions apply: ... When one element is recorded in more than one language or script, the information in each language or script after the first is preceded by a space, equals sign, space (= )."
+
+- **Domain:** Applies to various areas of the ISBD, including Area 4 (Publication, Production, Distribution, etc.) where place is recorded.
+- **Range:**  Strings representing place names in different languages/scripts.
+- **Element Type:**  Part of a complex string structure within the relevant area.
+
+
+## Additional Information
+
+- **Scope and Purpose:**  To provide the place of publication, production, and/or distribution in multiple languages and/or scripts when this information appears on the resource. This supports multilingual catalogs and international data exchange.
+- **User Tasks Supported:**  Finding resources published in a specific location regardless of the language used in the catalog record; facilitating identification of resources in multilingual contexts.
+
+
+## Element Values (for Place of publication, production, and/or distribution with parallel statements)
+
+- **Rules and Guidelines:**  Parallel place names are recorded after the primary place name, separated by an equals sign. Each parallel place name should be in the orthographic form and grammatical case as found on the resource.
+- **Value Constraints and Formats:** Place names should follow standardized forms where possible (see section 4.1 of the ISBD).
+- **String Encoding Schemes:**  UTF-8 is recommended for electronic records (7.0.4).
+
+
+## Examples
+
+```
+London = Londres = لندن
+München = Munich = ميونيخ
+Roma = Rome = روما
+Kyiv = Kiev = كييف
+Tóquio = Tokio = طوكيو 
+```
+
+
+## Relationships
+
+- **Relationship to other ISBD elements:** Part of Area 4 (Publication, Production, Distribution, etc.), directly related to the Name of publisher, producer and/or distributor (4.2). If parallel publisher names are provided, parallel place names often accompany them.
+- **Super-types/Sub-types:** None explicitly defined, it is a refinement of the general "place" element.
+- **Inverse Relationships:** None explicitly defined.
+
+
+
+## Stipulations
+
+- **Special Considerations:**  Section 4.1 of the ISBD provides detailed instructions on handling multiple places and choosing the primary place when several are given.  These rules also apply when parallel places are present. The order of parallel statements is determined according to the sequence on the resource (4.1.11).
+- **Exceptions:** None explicitly stated for parallel place names.
+- **Best Practices:** Follow established authority lists and gazetteers for standardized place names.  Ensure consistent application of chosen transliteration schemes when transcribing from non-Roman scripts.  Prefer the form of the place name that corresponds to the language of the title proper (4.1.11).
+
+
+---
+
+*This content was automatically generated from the ISBD PDF documentation using Gemini AI analysis.*

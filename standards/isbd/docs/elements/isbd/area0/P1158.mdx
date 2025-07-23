@@ -1,0 +1,76 @@
+---
+id: P1158
+title: has content form and media type area
+description: ISBD element documentation for has content form and media type area
+uri: "isbd:elements/P1158"
+area: area0
+RDF:
+  definition: "Relates a resource to one or more statements each comprising three elements, each taken from closed lists: the content form, one or more terms reflecting the fundamental form or forms in which the content of a resource is expressed; the content qualification, specifying the type, sensory nature, dimensionality, and/or presence or absence of motion for the resource being described; and  the media type, indicating the type or types of carrier used to convey the content of the resource."
+  domain: "isbd:elements/C2001"
+  range: "isbd:elements/C2003"
+  type: "rdf:Property"
+reg:hasUnconstrained: "isbd:unc/elements/P1158"
+reg:name: hasContentFormAndMediaTypeArea
+reg:status: "RegStatus:1001"
+rdf:type: "rdf:Property"
+rdfs:domain: "isbd:elements/C2001"
+rdfs:isDefinedBy: "isbd:elements/"
+rdfs:label: has content form and media type area
+rdfs:label@es: "tiene área de forma del contenido y de tipo de medio"
+rdfs:range: "isbd:elements/C2003"
+skos:definition: "Relates a resource to one or more statements each comprising three elements, each taken from closed lists: the content form, one or more terms reflecting the fundamental form or forms in which the content of a resource is expressed; the content qualification, specifying the type, sensory nature, dimensionality, and/or presence or absence of motion for the resource being described; and  the media type, indicating the type or types of carrier used to convey the content of the resource."
+skos:definition@es: "Relaciona un recurso con una menci\u00f3n que comprende tres elementos, cada uno tomado de listas cerradas: la forma del contenido, que son uno o m\u00e1s t\u00e9rminos que reflejan la forma o formas fundamentales en que se expresa el contenido del recurso; la calificaci\u00f3n del contenido, que especifica el tipo, naturaleza sensorial, dimensiones y/o la presencia/ausencia de movimiento en el recurso que se describe; y el tipo de medio, que indica el tipo o tipos de soporte utilizados para transmitir el contenido del recurso."
+---
+# has content form and media type area
+
+The ISBD element "content form and media type area" is found within the provided PDF.
+
+## Element Reference
+
+- **Official ISBD Definition:** The content form and media type area comprises three elements: (1) the content form, reflecting the fundamental form(s) in which the resource's content is expressed, which may be further specified by content qualifications; (2) the production process term; and (3) the media type.
+- **Domain:**  Bibliographic resource (implicitly). The area applies to the description of all types of resources.
+- **Range:**  A string containing content form term(s), optionally followed by content qualification(s) in parentheses, then a production process term following a colon, and lastly the media type term following a semicolon.
+- **Element Type:** Complex. It's comprised of sub-elements (content form, production process, media type).
+
+## Additional Information
+
+- **Scope and Purpose:**  This area aims to provide detailed information about how the content is expressed (e.g., text, image, sound), how it's fixed in a carrier (e.g., handwritten, printed, recorded), and the type of carrier (e.g., book, electronic, audio) to help users identify and select resources based on their needs.  It also improves the granularity of description and supports interoperability with other metadata standards.
+- **User Tasks Supported:** This element facilitates resource discovery by allowing users to refine their searches based on format and media. It also aids in resource selection by providing information about the format and required equipment.
+
+## Element Values
+
+- **Specific Rules/Guidelines:** 
+    - Content form is mandatory and chosen from a controlled list (e.g., text, image, music, object, dataset, etc.).  Multiple terms can be used if there is no predominant content form, or "multiple content forms" if three or more apply.
+    - Content qualifications further describe the content form (e.g., visual, tactile, still, moving, 2-dimensional, etc.). They're optional and enclosed in parentheses.  Multiple qualifications are separated by semicolons.
+    - Production process is optional and taken from a controlled list (e.g., printing, handwriting, magnetic recording, etc.).
+    - Media type is mandatory and chosen from a controlled list (e.g., audio, electronic, microform, projected, etc.)
+    - If a resource combines different content forms within one media type, each content form term after the first is preceded by a period.
+    - For resources with multiple media types, each content form : production process ; media type is separated by a plus sign.
+- **Value Constraints/Formats:** The terms for content form, production process and media type are taken from lists defined in the standard.
+- **String Encoding Schemes:**  Not explicitly defined, but UTF-8 is recommended (Appendix D).
+
+
+## Examples
+
+```
+Text (visual) : printing ; book
+Image (cartographic ; still ; 2-dimensional ; visual) : printing ; projected
+Music (performed) : electronic recording ; audio
+Dataset (cartographic) : electronic recording ; electronic
+Text (visual) : printing ; microform + Text (visual): electronic recording ; electronic  
+```
+
+## Relationships
+
+- **Relationships to other ISBD Elements:** Area 0 directly precedes Area 1 (Title and Statement of Responsibility Area) in the bibliographic description. It provides contextual information relevant to the title and other descriptive elements.
+- **Super-types/Sub-types:**  Content form has subtypes reflected in the content qualification.
+- **Inverse Relationships:** None explicitly defined.
+
+## Stipulations
+
+- **Special Considerations/Exceptions:**  If one content form is predominant in a resource with mixed content, the less significant forms can be omitted.
+- **Best Practices:**  Use the most specific content form and media type terms available. If information is not available on the resource itself, consult other sources (e.g., publisher's website, library catalog). Use consistent terminology.  This area is particularly useful when describing complex resources or those that may be available in multiple formats. For unpublished resources, focus on manuscripts and limit the level of granularity to avoid conflict with archival standards. Consider national extensions or specific codes for more detailed descriptions.  For cartographic resources, particularly celestial cartography, ensure clear and explicit stipulations, potentially moving elements from notes into Area 3 for more structured description.
+
+---
+
+*This content was automatically generated from the ISBD PDF documentation using Gemini AI analysis.*

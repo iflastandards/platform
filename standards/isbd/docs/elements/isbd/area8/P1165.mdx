@@ -1,0 +1,110 @@
+---
+id: P1165
+title: has resource identifier and terms of availability area
+description: ISBD element documentation for has resource identifier and terms of availability area
+uri: "isbd:elements/P1165"
+area: area8
+RDF:
+  definition: "Relates a resource to a statement including the resource identifier, the key title, and the terms of availability."
+  domain: "isbd:elements/C2001"
+  range: "isbd:elements/C2011"
+  type: "rdf:Property"
+reg:hasUnconstrained: "isbd:unc/elements/P1165"
+reg:name: hasResourceIdentifierAndTermsOfAvailabilityArea
+reg:status: "RegStatus:1001"
+rdf:type: "rdf:Property"
+rdfs:domain: "isbd:elements/C2001"
+rdfs:isDefinedBy: "isbd:elements/"
+rdfs:label: has resource identifier and terms of availability area
+rdfs:label@es: "tiene área de identificador del recurso y condiciones de disponibilidad"
+rdfs:range: "isbd:elements/C2011"
+skos:definition: "Relates a resource to a statement including the resource identifier, the key title, and the terms of availability."
+skos:definition@es: "Relaciona un recurso con una mención que incluye el identificador del recurso, el título clave y las condiciones de disponibilidad."
+---
+# has resource identifier and terms of availability area
+
+The ISBD element "resource identifier and terms of availability area" (isbd:elements/P1165) is indeed found in the provided PDF. Here's a breakdown of the element according to your requested structure:
+
+## Element Reference
+
+- **Official ISBD Definition:**  The resource identifier and terms of availability area includes the resource identifier, the key title (for continuing resources), and the terms of availability.  (See Section 8, Introductory Note). The elements are defined in the glossary (Appendix E).
+
+- **Domain:**  Monographic resources, Serials, Integrating Resources, Cartographic resources, Multimedia resources, etc. Essentially, any resource described using ISBD.
+
+- **Range:** A string containing one or more resource identifiers (e.g., ISBN, ISSN, ISMN, publisher's number, plate number, etc.), potentially a key title, and terms of availability (price or other conditions of access).
+
+- **Element Type:** Complex - consisting of potentially multiple sub-elements (Resource Identifier, Key Title, Terms of Availability).
+
+
+## Additional Information
+
+- **Scope and Purpose:** This area serves to uniquely identify a specific resource and to provide information regarding how it can be obtained (purchased, borrowed, accessed online, etc.).  This is crucial for resource sharing, ordering, and access. The key title element facilitates identification and retrieval of continuing resources.
+
+- **User Tasks Supported:**
+    - Finding and identifying specific resources.
+    - Ordering or requesting resources.
+    - Accessing online resources.
+    - Understanding the cost or conditions of obtaining a resource.
+
+
+## Element Values
+
+- **Rules and Guidelines:**
+    -  Resource identifiers should be recorded according to their relevant standards (e.g., ISBN, ISSN, ISMN). See Section 8.1.2.
+    -  The Key Title should be the one assigned by the ISSN Network. See Section 8.2.
+    - Price should be given using ISO 4217 currency codes when the resource is for sale. See section 8.3.1.
+    - If multiple identifiers exist, they can be recorded with qualifiers. See Section 8.1.3.
+    - Information related to the history of the resource (like ISBNs of earlier editions) shouldn't be included here but rather in the Note Area.
+
+
+- **Value Constraints and Formats:**  Resource identifiers have specific formats defined by their respective standards (e.g., hyphens in ISBNs).  Currency codes are also standardized. Key title follows ISSN network rules.
+
+- **String Encoding Schemes:**  Not explicitly specified in the ISBD, but bibliographic records typically use UTF-8 now.
+
+
+
+## Examples
+
+```
+- ISBN 978-0-330-23591-4 (paperback) : £9.99
+```
+
+```
+- ISSN 0075-2363 = Bulletin critique du livre français : Free to member institutions
+```
+
+```
+- ISMN 979-0-3217-6543-6 (score). — ISMN 979-0-3217-6544-3 (vocal score) : Available for hire
+```
+
+```
+- Pl. no.: PWM-8601 : Not for sale
+```
+
+```
+- Label_name LPLP-1234 (limited edition) : €25.00
+```
+
+
+## Relationships
+
+- **Relationships to other ISBD Elements:** The resource identifier is often mentioned elsewhere in the description (e.g., series area), but the *complete* information and preferred display is in this area. Key title is directly related to the title of a continuing resource.
+
+- **Super-types and Sub-types:** Resource identifiers might have narrower subtypes (e.g., ISBN-10 and ISBN-13).
+
+- **Inverse Relationships:**  None explicitly defined in the ISBD.
+
+
+## Stipulations
+
+- **Special Considerations:**  If the resource is not for sale, a brief statement of availability should be provided (e.g., "Not for sale," "For hire," "Free to educational institutions").
+
+- **Best Practices:** Always prioritize standardized identifiers (ISBN, ISSN, etc.) and record them accurately. Use ISO currency codes for prices.  If an identifier is printed incorrectly on the resource, provide the corrected form, if known, alongside the incorrect one with an appropriate qualifier. (See Section 8.1.4). Use qualifiers to distinguish between different manifestations of a resource (e.g., different bindings).
+
+
+This detailed explanation provides a more thorough overview of the "resource identifier and terms of availability area" within ISBD. This area's clear identification and availability information is crucial for modern library systems and resource discovery.
+
+
+---
+
+*This content was automatically generated from the ISBD PDF documentation using Gemini AI analysis.*

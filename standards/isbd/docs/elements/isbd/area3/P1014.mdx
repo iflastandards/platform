@@ -1,0 +1,72 @@
+---
+id: P1014
+title: has music format statement
+description: ISBD element documentation for has music format statement
+uri: "isbd:elements/P1014"
+area: area3
+RDF:
+  definition: "Relates a resource that is notated music to a term or phrase representing the physical form in which it is presented."
+  domain: "isbd:elements/C2001"
+  type: "rdf:Property"
+  scopeNote: "Includes score, parts. Also known as musical presentation format."
+reg:hasUnconstrained: "isbd:unc/elements/P1014"
+reg:name: hasMusicFormatStatement
+reg:status: "RegStatus:1001"
+rdf:type: "rdf:Property"
+rdfs:domain: "isbd:elements/C2001"
+rdfs:isDefinedBy: "isbd:elements/"
+rdfs:label: has music format statement
+rdfs:label@es: "tiene mención de formato musical"
+skos:definition: "Relates a resource that is notated music to a term or phrase representing the physical form in which it is presented."
+skos:definition@es: "Relaciona un recurso de música notada con un término o frase que representa la forma física en la cual se presenta."
+skos:scopeNote: "Includes score, parts. Also known as musical presentation format."
+skos:scopeNote@es: "Incluye partitura, partes. También se le conoce como formato de presentación musical."
+---
+# has music format statement
+
+The ISBD element "music format statement" is found within the PDF as part of Area 3, specifically section 3.2.
+
+## Element Reference
+
+- **Official ISBD Definition:** The music format statement is a term or phrase representing the physical form of presentation of a notated music resource.
+- **Domain:** Notated music resources.
+- **Range:** Terms representing the physical form of the notated music (e.g., "score", "parts", "miniature score").
+- **Element Type:** Descriptive.
+
+## Additional Information
+
+- **Scope and Purpose:** This element specifies the physical format of the notated music itself, differentiating between presentations like a full score, a vocal score, parts for individual instruments, etc.  It aids in resource discovery and selection by allowing users to identify resources in the format they need.  It also distinguishes the format of the work *as presented in the resource* from the format of the original work (which might be noted elsewhere, like in a note field).
+- **User Tasks Supported:** Finding music in a specific arrangement or instrumentation; distinguishing between different formats of the same work; understanding the intended use of the resource (performance, study, etc.).
+
+## Element Values
+
+- **Rules and Guidelines:** Use terms commonly used in music bibliography and cataloging. Examples given in the ISBD include "full score", "Orchester-Partitur", "score and set of parts", "miniature score". If no term is found on the resource, a suitable term may be supplied in square brackets (e.g., "[Partition et parties]"). The term should be in the language of the title proper or the language chosen by the cataloging agency.
+- **Value Constraints and Formats:** No specific format is mandated, but clarity and common usage are emphasized.
+- **String Encoding Schemes:**  Not applicable. The element is textual.
+
+## Examples
+
+```
+- Full score
+- Orchester-Partitur
+- Score and set of parts
+- Miniature score
+- [Partition et parties]
+```
+
+## Relationships
+
+- **Relationships to Other ISBD Elements:** This element is part of Area 3, the "Material or Type of Resource Specific Area."  It complements the information provided in Area 5 (Material Description Area), which describes the physical characteristics of the resource (number of pages, dimensions, etc.).  Specifically, it refines the broad "specific material designation" in Area 5 (e.g. "1 score") by giving a more precise format.
+- **Super-types and Sub-types:** No formal hierarchy of super/subtypes is explicitly defined in the ISBD for this element.  However, in practice, more granular terms (e.g. "violin part") might be seen as sub-types of more general terms (e.g., "parts").
+- **Inverse Relationships:** None specified.
+
+## Stipulations
+
+- **Special Considerations:** The ISBD explicitly states that a music format statement is *not* given for works for solo instrument, works for only one voice, or works for one voice and one accompanying instrument.  The assumption is that the format is self-evident in these cases (e.g., a solo piano piece is assumed to be presented as a score for piano).
+- **Exceptions:** As mentioned above, if the term "edition" appears on the resource but is used to describe the format of the musical presentation (as opposed to a statement about publication), it's treated as a music format statement and recorded in Area 3. Conversely, if "edition" refers to the version, arrangement, etc. of the musical *work*, it goes in Area 1 (or Area 2 if related to publication).
+- **Best Practices:** Use standardized terminology whenever possible. If a term is not found on the resource, consult established music cataloging practices and vocabularies (e.g., Library of Congress Subject Headings, RDA) before supplying a term. If the resource includes multiple parts in different formats (e.g. score and parts), separate music format statements can be given for each format.
+
+
+---
+
+*This content was automatically generated from the ISBD PDF documentation using Gemini AI analysis.*

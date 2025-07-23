@@ -1,0 +1,73 @@
+---
+id: P1124
+title: has note on other relationships
+description: ISBD element documentation for has note on other relationships
+uri: "isbd:elements/P1124"
+area: area7
+RDF:
+  definition: "Relates a resource to a note on other relationships between it and other resources, including the nature of the relationship, the title, the key title and ISSN of the other resource or resources."
+  domain: "isbd:elements/C2001"
+  type: "rdf:Property"
+  scopeNote: Includes resources published together and described separately.
+reg:hasUnconstrained: "isbd:unc/elements/P1124"
+reg:name: hasNoteOnOtherRelationships
+reg:status: "RegStatus:1001"
+rdf:type: "rdf:Property"
+rdfs:domain: "isbd:elements/C2001"
+rdfs:isDefinedBy: "isbd:elements/"
+rdfs:label: has note on other relationships
+rdfs:label@es: "tiene nota de otras relaciones"
+skos:definition: "Relates a resource to a note on other relationships between it and other resources, including the nature of the relationship, the title, the key title and ISSN of the other resource or resources."
+skos:definition@es: "Relaciona un recurso con una nota sobre otras relaciones entre él y otros recursos, incluyendo la naturaleza de la relación, el título, título clave e ISSN del otro recurso o recursos."
+skos:scopeNote: Includes resources published together and described separately.
+skos:scopeNote@es: "Incluye recursos publicados conjuntamente y descritos por separado."
+---
+# has note on other relationships
+
+The ISBD element "note on other relationships" is found within section 7.2.4.6 of the *2021 Update to the 2011 Consolidated Edition* of the ISBD.
+
+## Element Reference
+
+- **Official ISBD Definition:** Notes on other relationships between the resource being described and other resources.
+- **Domain:**  Monographic resources, Serials, Integrating Resources, and Manuscripts (in certain cases).  Essentially, any resource where a relationship to another resource exists and is considered important for users of the catalog.
+- **Range:** Text. A free-text note describing the relationship.
+- **Element Type:** Descriptive.
+
+## Additional Information
+
+- **Scope and Purpose:** To document relationships between the resource being described and other resources that are not covered by other, more specific relationship notes (like translations, reproductions, continuations, mergers, splits, or supplements/inserts).  This allows catalogers to provide context and aid in resource discovery by linking related materials.
+- **User Tasks Supported:** Discovery of related resources; Understanding the broader context of a resource; Disambiguation of similar resources.
+
+## Element Values
+
+- **Rules and Guidelines:**  The note should clearly state the nature of the relationship. It should also provide sufficient bibliographic information to identify the related resource(s). For serials and integrating resources, this may include the key title and ISSN. In other cases, it should include the title proper and other identifying elements.
+- **Value Constraints and Formats:** No specific format is prescribed beyond the general guidelines for notes.  The note should be concise and clear.
+- **String Encoding Schemes:**  UTF-8 is recommended.
+
+## Examples
+
+```
+Note: Published with: Sugar industry abstracts.
+Title proper: La sucrerie belge
+
+Note: Issued with: Gamla Testament. Stockholm: Rumstedt, 1812; Nya Testament. 4th ed., Stockholm: Rumstedt, 1811. Both also issued separately
+
+Note: For a palimpsest: A note on the relationship between the new and the old texts is given, if both texts are described separately.
+```
+
+## Relationships
+
+- **Relationships to other ISBD elements:** This element is part of the Note Area (Area 7). It is related to, but distinct from, other notes in Area 7 that describe specific types of relationships (7.2.4.1-7.2.4.5 and 7.2.4.7).
+- **Super-types and sub-types:**  This note type could be considered a super-type for more specific relationship notes. For example, a note about a resource being issued with another could be further specified as a note about a supplement, if that relationship applies.
+- **Inverse relationships:**  If resource A has a "note on other relationships" pointing to resource B, resource B might have a similar note pointing back to resource A.  This is not required, however.
+
+## Stipulations
+
+- **Special Considerations:** The use of this note is at the discretion of the cataloger. It should only be used when the relationship is considered important for users of the catalog and is not adequately covered by other, more specific relationship notes.
+- **Exceptions:**  None explicitly stated.
+- **Best Practices:** Be consistent in the wording used to describe relationships.  Provide enough information to unambiguously identify the related resource(s). Avoid vague or overly general statements.  When in doubt, consult relevant cataloging rules or guidelines.
+
+
+---
+
+*This content was automatically generated from the ISBD PDF documentation using Gemini AI analysis.*

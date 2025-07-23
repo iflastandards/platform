@@ -1,0 +1,79 @@
+---
+id: P1050
+title: has coordinates
+description: ISBD element documentation for has coordinates
+uri: "isbd:elements/P1050"
+area: general
+RDF:
+  definition: "Relates a resource that is cartographic to its coordinates (the quantities of latitude and longitude that define the position of points on the surface of the Earth or other celestial sphere that delimit the greatest extent of the area covered)."
+  domain: "isbd:elements/C2001"
+  type: "rdf:Property"
+  elementSuperType: "isbd:elements/P1051"
+reg:hasSubproperty: "isbd:elements/P1051"
+reg:hasUnconstrained: "isbd:unc/elements/P1050"
+reg:name: hasCoordinates
+reg:status: "RegStatus:1001"
+rdf:type: "rdf:Property"
+rdfs:domain: "isbd:elements/C2001"
+rdfs:isDefinedBy: "isbd:elements/"
+rdfs:label: has coordinates
+rdfs:label@es: "tiene coordenadas"
+skos:definition: "Relates a resource that is cartographic to its coordinates (the quantities of latitude and longitude that define the position of points on the surface of the Earth or other celestial sphere that delimit the greatest extent of the area covered)."
+skos:definition@es: "Relaciona un recurso cartográfico con sus coordenadas (las medidas de latitud y longitud que definen la posición de puntos sobre la superficie de la Tierra u otra esfera celeste que delimita la mayor extensión del área cubierta)."
+---
+# has coordinates
+
+## Element Reference
+
+- **Definition:** The quantities of latitude and longitude that define the position of a point on the surface of the Earth or other celestial sphere.  (Derived from *U.S. Defense Mapping Agency, Hydrographic/Topographic Center. Glossary of Mapping, Charting, and Geodetic Terms*.)
+- **Domain:** Cartographic resources
+- **Range:** String representing coordinates
+- **Element Type:** Descriptive
+
+## Additional Information
+
+- **Scope and Purpose:** The coordinates element delimits the greatest extent of the area covered by a cartographic resource. This provides a concise summary of the geographic area depicted, aiding in resource discovery and identification.  It's particularly crucial for maps, charts, and atlases.
+- **User Tasks Supported:**
+    - Discovering resources covering a specific geographic location.
+    - Refining search results based on geographic coverage.
+    - Determining the spatial extent of a map or chart.
+
+
+## Element Values
+
+- **Rules and Guidelines:**
+    - Coordinates are recorded when present on the resource or may be supplied if known and considered important to users.
+    - For terrestrial maps, the order is: westernmost longitude–easternmost longitude/northernmost latitude–southernmost latitude.
+    - Longitude and latitude are expressed in degrees (°), minutes ('), and seconds (") of the sexagesimal system (360° circle), followed by a comma, space, and the geographic coordinate system (if not Greenwich).
+    - Coordinates may also be recorded as decimal degrees.
+    - For celestial charts, right ascension and declination are used (see specific instructions in ISBD).  Non-terrestrial coordinates are recorded as appropriate to the celestial body's system.
+- **Value Constraints and Formats:**  Follows the degree, minute, second format or decimal degree format.  Requires proper use of N, S, E, W indicators or +/- for declination.
+- **String Encoding:**  UTF-8 is recommended.
+
+
+## Examples
+
+```
+(W 74°50’–W 74°40’/N 45°5’–N 45°00’)
+(W 95.15°-W 74.35°/N 56.85°-N 41.73°, selenographic coordinate system)
+(RA 16 h 30 min to 19 h 30 min/Decl. -16° to -49°)
+(Long. 300° to 360°/Lat. -30° to +30°, ecliptic coordinates)
+(E 110°30'-E 120°30'/N 25°15'-N 22°10')
+```
+
+## Relationships
+
+- **Relationships to other ISBD elements:** Closely related to the "Statement of Projection" (3.1.2) and "Statement of Scale" (3.1.1) as these elements work together to define the spatial characteristics of the cartographic resource. It's also related to Area 0 "Content Form, Production Process and Media Type Area," specifically when content is qualified as "cartographic."
+- **Sub-types:** Terrestrial coordinates, Non-terrestrial coordinates, Right ascension and declination.
+
+
+## Stipulations
+
+- **Special Considerations:** For older resources, the original coordinate system should be retained, even if it differs from current systems. A note can be added providing modern coordinates for clarity.
+- **Exceptions:** If a resource covers a very large or undefined area (e.g., a world atlas), coordinates may be omitted.  A verbal description might be preferred.
+- **Best Practices:**  Ensure consistency and accuracy in recording coordinates, using established conventions and authoritative sources for place names and coordinate systems. Always indicate the coordinate system used if it's not Greenwich. If coordinates are approximated or derived from other information (like a bar scale), clearly indicate that they are approximate.
+
+
+---
+
+*This content was automatically generated from the ISBD PDF documentation using Gemini AI analysis.*

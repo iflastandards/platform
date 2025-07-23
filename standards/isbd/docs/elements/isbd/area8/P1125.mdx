@@ -1,0 +1,88 @@
+---
+id: P1125
+title: has resource identifier statement
+description: ISBD element documentation for has resource identifier statement
+uri: "isbd:elements/P1125"
+area: area8
+RDF:
+  definition: Relates a resource to a statement of its identifier.
+  domain: "isbd:elements/C2001"
+  range: "isbd:elements/C2028"
+  type: "rdf:Property"
+reg:hasUnconstrained: "isbd:unc/elements/P1125"
+reg:name: hasResourceIdentifierStatement
+reg:status: "RegStatus:1001"
+rdf:type: "rdf:Property"
+rdfs:domain: "isbd:elements/C2001"
+rdfs:isDefinedBy: "isbd:elements/"
+rdfs:label: has resource identifier statement
+rdfs:range: "isbd:elements/C2028"
+skos:definition: Relates a resource to a statement of its identifier.
+---
+# has resource identifier statement
+
+The requested element, "resource identifier statement", or `isbd:P1125` in the RDF model, is more accurately represented in the ISBD documentation as **Resource Identifier**. This comprises various identifier elements like ISBN, ISMN, ISSN, etc., rather than a single "statement." Therefore, the following response will address the **Resource Identifier (Area 8)** as presented in the ISBD documentation.
+
+## Element Reference
+
+- **Official ISBD definition:** Area 8 of the ISBD contains the resource identifier, key title (for continuing resources), and terms of availability.  A resource identifier is any number or alphanumeric designation associated with and identifying a resource according to an international standard, such as an International Standard Book Number (ISBN) or an International Standard Serial Number (ISSN), or a designation assigned by a publisher.  (See Introduction to Area 8 and Glossary entry).
+- **Domain:** Bibliographic resources
+- **Range:**  Strings representing identifiers (ISBN, ISSN, ISMN, publisher-assigned numbers, etc.), Key Titles (for serials), Terms of Availability
+- **Element type:** Complex (can include multiple sub-elements)
+
+
+## Additional Information
+
+- **Scope and purpose:**  The Resource Identifier area serves to uniquely identify a specific manifestation of a resource. This facilitates resource sharing, retrieval, and disambiguation. The Key Title further refines identification for continuing resources, and the Terms of Availability provides information about access or acquisition.
+- **User tasks supported:** Finding specific resources, ordering or requesting resources, citing resources, distinguishing between different manifestations of the same work.
+
+
+## Element Values
+
+- **Specific rules or guidelines:**
+    - Standard identifiers (ISBN, ISSN, ISMN) should be recorded according to their respective standards.
+    - Publisher-assigned identifiers should be recorded as they appear on the resource.
+    - Key titles are assigned by the ISSN Network.
+    - Terms of availability may include price or access restrictions.
+- **Value constraints or formats:** Standard identifiers have specific formats (e.g., ISBN-13 has 13 digits with hyphens).
+- **String encoding schemes:** UTF-8 is recommended for encoding.
+
+
+## Examples
+
+```
+ISBN 978-0-330-23591-4 (paperback)
+```
+
+```
+ISSN 0075-2363 =  Journal of library administration
+```
+
+```
+ISMN 979-0-3217-6543-6 :  USD 25.00
+```
+```
+Pl. no.: A.F. 539
+```
+```
+Telefunken 6.35368 : Available for purchase
+```
+
+
+## Relationships
+
+- **Relationships to other ISBD elements:** Area 8 is typically the last area in an ISBD record. It may refer back to information in other areas (e.g., if qualifying an identifier with binding information that could be in Area 5).
+- **Super-types and sub-types:**  The Resource Identifier is a super-type, encompassing sub-types like ISBN, ISSN, ISMN, etc.
+- **Inverse relationships:**  None explicitly defined in ISBD.
+
+
+
+## Stipulations
+
+- **Special considerations:**  If a resource has multiple identifiers, Area 8 can be repeated (see 8.1.3). Information about the bibliographic history of the resource (e.g., ISBNs for earlier editions) is recorded in Area 7, not Area 8.
+- **Exceptions:**  Identifiers considered unimportant to catalog users may be omitted.
+- **Best practices:** Prioritize standard identifiers over publisher-assigned identifiers. Include terms of availability whenever possible to enhance resource discoverability. When relevant,  distinguish between identifiers related to different manifestations by using qualifiers (e.g. different bindings or formats). Use the Key Title for continuing resources.  Record identifiers precisely as they appear on the resource.  Use appropriate punctuation and spacing as described in Area 8's introduction.
+
+---
+
+*This content was automatically generated from the ISBD PDF documentation using Gemini AI analysis.*

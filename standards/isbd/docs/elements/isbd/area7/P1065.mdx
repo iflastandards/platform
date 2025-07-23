@@ -1,0 +1,88 @@
+---
+id: P1065
+title: has note on frequency
+description: ISBD element documentation for has note on frequency
+uri: "isbd:elements/P1065"
+area: area7
+RDF:
+  definition: "Relates a resource that is a serial to a note on the frequency. Relates a resource that is an integrating resource to a note on the frequency of updates."
+  domain: "isbd:elements/C2001"
+  type: "rdf:Property"
+  scopeNote: "Used when the frequency is not stated in the title and statement of responsibility area, or it is necessary to convey some additional information."
+  elementSubType: "isbd:elements/P1045"
+reg:hasUnconstrained: "isbd:unc/elements/P1065"
+reg:name: hasNoteOnFrequency
+reg:status: "RegStatus:1001"
+rdf:type: "rdf:Property"
+rdfs:domain: "isbd:elements/C2001"
+rdfs:isDefinedBy: "isbd:elements/"
+rdfs:label: has note on frequency
+rdfs:label@es: "tiene nota de frecuencia"
+rdfs:subPropertyOf: "isbd:elements/P1045"
+skos:definition: "Relates a resource that is a serial to a note on the frequency. Relates a resource that is an integrating resource to a note on the frequency of updates."
+skos:definition@es: "Relaciona un recurso que es una publicación seriada con una nota de frecuencia. Relaciona un recurso que es un recurso integrable con una nota de frecuencia de actualizaciones."
+skos:scopeNote: "Used when the frequency is not stated in the title and statement of responsibility area, or it is necessary to convey some additional information."
+skos:scopeNote@es: "Se utiliza cuando la frecuencia no está establecida en el área de título y mención de responsabilidad o es necesario transmitir alguna información adicional."
+---
+# has note on frequency
+
+The ISBD element "note on frequency" is found within the Note Area (Area 7) of the ISBD.  Specifically, it's discussed under section 7.0.2.
+
+## Element Reference
+
+- **Official ISBD Definition:** A note of the frequency of a serial or the frequency of updates to an integrating resource is given when the frequency is not stated in area 1.
+- **Domain:** Continuing resources (serials and integrating resources).
+- **Range:** String literal representing the frequency (e.g., "Daily," "Weekly," "Monthly").
+- **Element Type:** Descriptive.
+
+## Additional Information
+
+- **Scope and Purpose:**  This element provides information about how often a serial is published or an integrating resource is updated. It clarifies the periodicity of the resource, which is crucial for managing expectations and understanding the nature of the content.
+- **User Tasks Supported:** Helps users understand the publication pattern of a serial or the update frequency of an integrating resource. This is important for subscription management, collection development, and research purposes.
+
+## Element Values
+
+- **Rules and Guidelines:** The frequency should be stated clearly and concisely using standard terminology (e.g., "Daily," "Weekly," "Monthly," "Quarterly," "Annually," "Semiannually," "Three times a year,"  "Irregular"). More complex or unusual frequencies should be explained in detail.
+- **Value Constraints or Formats:** No strict format is prescribed, but clarity is essential.  Abbreviations may be used if they are unambiguous.
+- **String Encoding Schemes:**  UTF-8 is recommended.
+
+## Examples
+
+```
+Note: Bimonthly
+```
+
+```
+Note: Irregular
+```
+
+```
+Note: Monthly (July-August issues combined)
+```
+
+```
+Note: Continuously updated
+```
+
+```
+Note: Four times each term
+```
+
+## Relationships
+
+- **Relationship to other ISBD elements:** If the frequency is stated in Area 1 (Title and Statement of Responsibility Area), it may be repeated in Area 7 if necessary to convey additional information (e.g., to explain a complex frequency).  It's specifically related to elements in area 3 (Numbering of Serials) when dealing with revisions or updates in serials (e.g. "Revised edition issued every 6 months" would be a frequency note and not an edition statement).
+- **Super-types and Sub-types:**  None explicitly defined in ISBD.
+- **Inverse Relationships:**  None explicitly defined in ISBD.
+
+
+## Stipulations
+
+- **Special Considerations:** When the frequency of a continuing resource is unknown, the note "Frequency unknown" is given.
+- **Exceptions:** N/A
+- **Usage notes:** Changes in the frequency of a serial or integrating resource may also be noted in Area 7, following the initial frequency statement. For example:  "Quarterly as from 1975, no. 1-".
+- **Best Practices:** Use standard terminology and be as specific as possible when describing the frequency.  If the frequency changes, clearly document the change and the date it took effect.
+
+
+---
+
+*This content was automatically generated from the ISBD PDF documentation using Gemini AI analysis.*

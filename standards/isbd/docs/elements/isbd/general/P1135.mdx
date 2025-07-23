@@ -1,0 +1,73 @@
+---
+id: P1135
+title: has noise reduction
+description: ISBD element documentation for has noise reduction
+uri: "isbd:elements/P1135"
+area: general
+RDF:
+  definition: Relates a resource to the noise reduction it employs.
+  domain: "isbd:elements/C2001"
+  type: "rdf:Property"
+reg:hasUnconstrained: "isbd:unc/elements/P1135"
+reg:name: hasNoiseReduction
+reg:status: "RegStatus:1001"
+rdf:type: "rdf:Property"
+rdfs:domain: "isbd:elements/C2001"
+rdfs:isDefinedBy: "isbd:elements/"
+rdfs:label: has noise reduction
+rdfs:label@es: "tiene reducción de ruido"
+skos:definition: Relates a resource to the noise reduction it employs.
+skos:definition@es: "Relaciona un recurso con la reducción de ruido que emplea."
+---
+# has noise reduction
+
+The ISBD element "noise reduction" is found within the "Other physical details" element (5.2) of Area 5 (Material Description Area).  Specifically, it's discussed under section 5.2.7.11.
+
+## Element Reference
+
+- **Official ISBD Definition:**  The noise reduction employed may be given if known. (5.2.7.11)
+- **Domain:** Analog and digital sound recordings (primarily audio cassettes and reels). Though not explicitly stated, it could logically apply to any sound recording format where noise reduction techniques might be used.
+- **Range:** String values representing the noise reduction system used (e.g., "Dolby processed", "Dolby B", "Dolby C", "DBX").
+- **Element Type:** Property (describing a characteristic of the resource).
+
+## Additional Information
+
+- **Scope and Purpose:**  This element provides information about any noise reduction system applied to a sound recording during its production. Noise reduction systems are used to minimize background hiss and other unwanted audio artifacts, improving the overall sound quality. This information can be useful for users seeking high-fidelity recordings or for archival purposes where preserving the original sound is critical.
+- **User Tasks Supported:**
+    - Identifying recordings with enhanced audio quality.
+    - Understanding the technical specifications of a sound recording.
+    - Selecting appropriate playback equipment.
+    - Making preservation decisions for archival recordings.
+
+## Element Values
+
+- **Rules and Guidelines:** Use a concise term or phrase that clearly identifies the noise reduction system used.  Commonly used systems like "Dolby" should be sufficient, but more specific designations (e.g., "Dolby B", "Dolby C", "Dolby S", "DBX", "Dolby HX Pro") can be used if needed.
+- **Value Constraints and Formats:** There isn't a formally defined list of values, but sticking to well-known and established terms is recommended. If an obscure system is used, a brief explanation might be included in a note (Area 7).
+- **String Encoding Schemes:**  UTF-8 is generally recommended for representing text in ISBD records.
+
+## Examples
+
+```
+1 sound cassette (60 min): Dolby processed
+. - 1 sound reel (90 min) : 19 cm/s, Dolby B
+. - 2 audio cassettes (60 min each): Dolby C ; DBX
+. - 1 sound reel (75 min): 19 cm/s, Dolby HX Pro
+. - 1 audio cassette (45 min): Telcom c4, noise-reduced
+```
+
+## Relationships
+
+- **Relationships to other ISBD elements:** This element is part of the "Other physical details" (5.2) element within the Material Description Area (5). It is related to other technical specifications of sound recordings, such as playing speed (5.2.7.3), recording method (5.2.7.4), number of tracks (5.2.7.7), equalization (5.2.7.10), etc.
+- **Super-types and Sub-types:**  "Noise reduction" can be considered a sub-type of a more general "audio processing" characteristic. Specific noise reduction systems (e.g., "Dolby B", "Dolby C") are sub-types of "noise reduction".
+- **Inverse Relationships:** None explicitly defined in the ISBD.
+
+
+## Stipulations
+
+- **Special Considerations:** If the specific type of noise reduction is unknown or cannot be determined, it is generally omitted rather than using a generic term like "noise-reduced".  Clarity and accuracy are prioritized.
+- **Best Practices:** Use standardized terminology for well-known noise reduction systems.  If a less common system is used, provide further explanation in a note (Area 7). This element is typically only included when noise reduction has been specifically applied; its absence doesn't necessarily imply the recording *hasn't* been processed in some way.
+
+
+---
+
+*This content was automatically generated from the ISBD PDF documentation using Gemini AI analysis.*

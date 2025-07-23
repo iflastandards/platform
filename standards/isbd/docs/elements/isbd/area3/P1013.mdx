@@ -1,0 +1,102 @@
+---
+id: P1013
+title: has mathematical data area
+description: ISBD element documentation for has mathematical data area
+uri: "isbd:elements/P1013"
+area: area3
+RDF:
+  definition: "Relates a resource that is cartographic to a statement including the statement of scale, statement of projection, and the statement of coordinates and equinox."
+  domain: "isbd:elements/C2001"
+  range: "isbd:elements/C2012"
+  type: "rdf:Property"
+reg:hasUnconstrained: "isbd:unc/elements/P1013"
+reg:name: hasMathematicalDataArea
+reg:status: "RegStatus:1001"
+rdf:type: "rdf:Property"
+rdfs:domain: "isbd:elements/C2001"
+rdfs:isDefinedBy: "isbd:elements/"
+rdfs:label: has mathematical data area
+rdfs:label@es: "tiene área de datos matemáticos"
+rdfs:range: "isbd:elements/C2012"
+skos:definition: "Relates a resource that is cartographic to a statement including the statement of scale, statement of projection, and the statement of coordinates and equinox."
+skos:definition@es: "Relaciona un recurso cartográfico a una mención que incluye la mención de escala, mención de proyección y mención de coordenadas y equinoccio."
+---
+# has mathematical data area
+
+The ISBD element "mathematical data area" (isbd:elements/P1013), or rather "Material or type of resource specific area", as it applies to cartographic resources contains mathematical data. Specifically, this includes a statement of scale, statement of projection, and statement of coordinates (including celestial hemisphere, epoch, equinox, and magnitude) for cartographic resources. This section will address the requested information related to this element as it relates to cartographic materials.
+
+
+## Element Reference
+
+- **Official ISBD Definition:** The mathematical data area includes the statement of scale, statement of projection, and the statement of coordinates and equinox for cartographic resources. (Section 3.1)
+
+- **Domain:** Cartographic resources.
+
+- **Range:**  A combination of string values representing the scale, projection, and coordinates.
+
+- **Element Type:** Complex. Composed of several sub-elements.
+
+
+## Additional Information
+
+- **Scope and Purpose:** The purpose of the mathematical data area is to provide standardized information crucial for identifying and understanding the spatial characteristics of cartographic resources. This information facilitates the retrieval and use of maps, charts, and other cartographic materials, particularly in geographic information systems (GIS) and for cartometric analysis.
+
+- **User Tasks Supported:**
+    - Discovering maps at specific scales.
+    - Identifying maps using particular projections.
+    - Locating map coverage by coordinates.
+    - Distinguishing different versions or editions of the same map based on epoch or equinox.
+    - Selecting celestial charts based on magnitude limits.
+
+
+## Element Values
+
+- **Specific Rules/Guidelines:** See section 3.1 of the provided document for detailed guidelines. Specific examples for each sub-element are provided below.
+
+- **Value Constraints/Formats:**
+    - **Scale:** Expressed as a representative fraction (e.g., 1:25000). The term "Scale" or its equivalent may precede the fraction.  If the scale is not given, “Scale not given” is recorded. If the item is not drawn to scale “Not drawn to scale” is recorded. Special scale designations are available for celestial maps (in mm or cm per degree or minute) and for relief maps, which have a horizontal and vertical scale.
+    - **Projection:**  The name of the map projection used (e.g., "Mercator projection", "Lambert conformal conic projection").  Associated phrases describing specific parameters of the projection for the map are included, if appropriate. If a projection is not given, this element is omitted.
+    - **Coordinates:**  Terrestrial coordinates are presented as westernmost-easternmost/northernmost-southernmost (longitude/latitude) in degrees, minutes, and seconds (e.g., W 74°50'–W 74°40'/N 45°5′-N 45°00'). Decimal degrees may also be used.  Celestial coordinates are given as right ascension (RA) and declination (Decl.) (e.g., RA 16 h 30 min to 19 h 30 min/Decl. -16° to -49°). The celestial hemisphere is added if known (e.g. northern celestial hemisphere, southern celestial hemisphere). Non-terrestrial and other celestial coordinate systems are also addressed with specific stipulations.
+    - **Epoch and Equinox:** For celestial charts, epoch and equinox are recorded when given (e.g., epoch 1948, equinox 1950).
+    - **Magnitude:** For celestial charts, the brightness magnitude is given if available (e.g., limiting magnitude 3.5). Both the limiting and the brightest magnitudes may be given if known (e.g., brightest magnitude 8.0; limiting magnitude 12.0).
+
+
+- **String Encoding:**  UTF-8 is recommended.
+
+
+## Examples
+
+```
+Scale 1:50000; Lambert conformal conic projection (W 90°--W 85°/N 45°--N 40°)
+```
+
+```
+Scale 1:1000000; Transverse Mercator projection (E 10°00'--E 20°00'/N 60°00'--N 50°00')
+```
+```
+Scale not given; Not drawn to scale
+```
+
+```
+Scale 88 mm per 1°; (RA 2 h/Decl. +30°; northern celestial hemisphere); epoch 1950
+```
+
+
+## Relationships
+
+- **Relationships to other ISBD Elements:** This area interacts with the Content Form and Media Type Area (Area 0) and the Material Description Area (Area 5), as they provide complementary information about the resource's content, physical format, and dimensions.
+
+- **Sub-Types:**  The "Coordinates" element can be further broken down into terrestrial, non-terrestrial, and celestial coordinates, each with its specific representation format. Celestial coordinates can be further broken down to right ascension and declination, or other coordinate systems as they apply.
+
+
+## Stipulations
+
+- **Special Considerations:** When a resource has multiple maps or charts with differing mathematical data, Area 3 can be repeated for each distinct set of data.  The order should be data related to content, followed by data related to the production plan.
+
+
+- **Best Practices:**  Always strive for the most precise and complete mathematical data possible, drawing from the resource itself or reliable external sources.  If data is approximated or supplied, indicate this clearly using brackets and provide an explanatory note in Area 7. Use standard abbreviations and terminology for projections and coordinate systems for clarity and interoperability.
+
+
+---
+
+*This content was automatically generated from the ISBD PDF documentation using Gemini AI analysis.*

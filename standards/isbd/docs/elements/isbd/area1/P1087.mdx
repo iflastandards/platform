@@ -1,0 +1,88 @@
+---
+id: P1087
+title: has note on statement of responsibility
+description: ISBD element documentation for has note on statement of responsibility
+uri: "isbd:elements/P1087"
+area: area1
+RDF:
+  definition: "Relates a resource to a note on its statements of responsibility (statements, transcribed from the resource being described, relating to persons responsible for the intellectual or artistic content of the resource, to corporate bodies from which the content emanates, or to persons or corporate bodies responsible for the performance of the content of the resource)."
+  domain: "isbd:elements/C2001"
+  type: "rdf:Property"
+  scopeNote: "Includes statements of responsibility taken from outside the resource, its container or accompanying textual matter; notes on variant or expanded forms of names of persons or corporate bodies, notes on pseudonyms, notes on persons or corporate bodies connected with the work that cannot be included in other areas of the description (because, for example, their function is not specified); statements of responsibility relating to appendices and other supplementary matter appearing on the resource but not on a prescribed source of information; notes on the staging, instrumentation, etc., of performed works; notes on persons or bodies connected with the technical production, administrative and consulting functions of the work."
+  elementSubType: "isbd:elements/P1045"
+reg:hasUnconstrained: "isbd:unc/elements/P1087"
+reg:name: hasNoteOnStatementOfResponsibility
+reg:status: "RegStatus:1001"
+rdf:type: "rdf:Property"
+rdfs:domain: "isbd:elements/C2001"
+rdfs:isDefinedBy: "isbd:elements/"
+rdfs:label: has note on statement of responsibility
+rdfs:label@es: "tiene nota sobre mención de responsabilidad"
+rdfs:subPropertyOf: "isbd:elements/P1045"
+skos:definition: "Relates a resource to a note on its statements of responsibility (statements, transcribed from the resource being described, relating to persons responsible for the intellectual or artistic content of the resource, to corporate bodies from which the content emanates, or to persons or corporate bodies responsible for the performance of the content of the resource)."
+skos:definition@es: "Relaciona un recurso con una nota sobre sus menciones de responsabilidad (menciones, que se transcriben del recurso que se está describiendo, relativas a las personas responsables del contenido intelectual o artístico del recurso, a las entidades corporativas de las que emana el contenido, o a las personas o entidades corporativas responsables de la realización del contenido del recurso)."
+skos:scopeNote: "Includes statements of responsibility taken from outside the resource, its container or accompanying textual matter; notes on variant or expanded forms of names of persons or corporate bodies, notes on pseudonyms, notes on persons or corporate bodies connected with the work that cannot be included in other areas of the description (because, for example, their function is not specified); statements of responsibility relating to appendices and other supplementary matter appearing on the resource but not on a prescribed source of information; notes on the staging, instrumentation, etc., of performed works; notes on persons or bodies connected with the technical production, administrative and consulting functions of the work."
+skos:scopeNote@es: "Incluye menciones de responsabilidad tomadas de fuentes externas al recurso, su envase o información textual aneja; notas sobre las variantes o formas desarrolladas de nombres de personas o de entidades corporativas, notas sobre seudónimos, notas sobre personas o entidades corporativas relacionadas con la obra que no pueden incluirse en otras áreas de la descripción (porque, por ejemplo, no está especificada su función); menciones de responsabilidad relativas a los apéndices y a otros materiales complementarios que aparecen en el recurso pero no en la fuente de información prescrita; notas sobre puesta en escena, instrumentación, etc. de las obras representadas; notas sobre personas o entidades corporativas relacionadas con la producción técnica y las funciones administrativas y consultivas de la obra."
+---
+# has note on statement of responsibility
+
+The ISBD element "note on statement of responsibility" is found within the broader context of notes related to the title and statement of responsibility area (Area 1) and within Area 7 (Note Area) of the ISBD. It doesn't have its own distinct and separate section with a heading like "note on statement of responsibility" but is covered under various stipulations within those areas.  Specifically, the concept is covered in sections 7.1.4 and 1.4.5 of the provided document.
+
+## Element Reference
+
+- **Official ISBD Definition:**  While not explicitly defined in a single place, a "note on statement of responsibility" refers to a note within Area 7 that provides additional information, clarifications, corrections, or contextual details regarding the statement of responsibility recorded in Area 1.
+- **Domain and Range:** Not explicitly defined in RDF terms in the document.  However, conceptually, its domain would be the resource being described, and the range would be a textual note.
+- **Element Type:**  Descriptive text.
+
+## Additional Information
+
+- **Scope and Purpose:** To provide context, explain variations, supply missing information, or clarify ambiguities related to the individuals or bodies responsible for the intellectual or artistic content of the resource.  This might include clarifying roles, providing full names for abbreviated forms, explaining the source of the statement if it's not from the preferred source, and noting changes in responsibility over time for serials or multipart resources.
+- **User Tasks Supported:**  Disambiguation of responsibility, understanding the role of contributors, identifying changes in authorship or editorship over time, and generally improving the discoverability and understanding of the resource's creation.
+
+
+## Element Values
+
+- **Specific Rules/Guidelines:** Notes should be concise, factual, and non-evaluative.  They should provide enough information to be meaningful to the user. Standard abbreviations can be used.
+- **Value Constraints/Formats:** No strict format, but clarity and conciseness are recommended.
+- **String Encoding Schemes:**  UTF-8 is recommended, but not strictly mandated in this specific instance, though contextually it fits within the encoding suggested in the PDF's Appendix C.
+
+## Examples
+
+```
+. - / J. S. / Note: Full name of author: John Smith.
+```
+
+```
+. - / [s.n.] / Note: Publisher identified as Acme Press based on printer's device.
+```
+
+```
+. - / Ed. / Note: Editor's name varies in subsequent volumes; see area 7 for details.
+```
+
+```
+. - / Smith, J. / Note: Statement of responsibility taken from cover.
+```
+
+```
+. - / [M.M.] / Note: Full name of composer: Maria Martinez, according to Grove Dictionary of Music and Musicians.
+```
+
+
+## Relationships
+
+- **Relationships to Other ISBD Elements:** Directly related to the statement of responsibility in Area 1.  Can also be related to notes in other areas if the statement of responsibility contains information also found in those areas (e.g., information about edition, translation, etc.).
+- **Super-types and Sub-types:** This element can be considered a sub-type of a more general "note" element. Specific instances could relate to a sub-type like a "note on translator" or a "note on editor."
+- **Inverse Relationships:**  Not explicitly defined in the ISBD.
+
+
+## Stipulations
+
+- **Special Considerations:** The ISBD emphasizes recording only statements of *principal* responsibility in Area 1. Notes can be used to record statements of secondary responsibility if they are considered important.
+- **Exceptions:** There are stipulations allowing parts of the statement of responsibility to be included in Area 4 (Publication, etc., area) or in other areas if linguistically linked. In those cases, a note might be necessary to clarify the situation.
+- **Best Practices:** Provide notes when there is ambiguity or missing information in the statement of responsibility that would be beneficial to the user.  Keep notes concise and relevant.  Use standard abbreviations where appropriate. Be consistent in applying these practices across records.
+
+
+---
+
+*This content was automatically generated from the ISBD PDF documentation using Gemini AI analysis.*

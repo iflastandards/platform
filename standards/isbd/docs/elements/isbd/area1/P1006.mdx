@@ -1,0 +1,114 @@
+---
+id: P1006
+title: has other title information
+description: ISBD element documentation for has other title information
+uri: "isbd:elements/P1006"
+area: area1
+RDF:
+  definition: "Relates a resource to a word or phrase, or a group of characters, appearing in conjunction with, and subordinate to, the title proper of the resource."
+  domain: "isbd:elements/C2001"
+  type: "rdf:Property"
+  scopeNote: "Other title information can include variant titles appearing on the same source as the title proper."
+  elementSubType: "isbd:elements/P1012"
+reg:hasUnconstrained: "isbd:unc/elements/P1006"
+reg:name: hasOtherTitleInformation
+reg:status: "RegStatus:1001"
+rdf:type: "rdf:Property"
+rdfs:domain: "isbd:elements/C2001"
+rdfs:isDefinedBy: "isbd:elements/"
+rdfs:label: has other title information
+rdfs:label@es: "tiene información complementaria del título"
+rdfs:subPropertyOf: "isbd:elements/P1012"
+skos:definition: "Relates a resource to a word or phrase, or a group of characters, appearing in conjunction with, and subordinate to, the title proper of the resource."
+skos:definition@es: "Relaciona un recurso con una palabra oexpresión, o grupo de caracteres que aparecen en conjunción con y subordinados al título propiamente dicho del recurso."
+skos:scopeNote: "Other title information can include variant titles appearing on the same source as the title proper."
+skos:scopeNote@es: "La información complementaria del título puede incluir variantes de título que aparecen en la misma fuente que el título propiamente dicho."
+---
+# has other title information
+
+The ISBD element "other title information" (isbd:elements/P1006) is described in the provided PDF documentation as follows:
+
+## Element Reference
+
+**Definition:** Other title information consists of a word or phrase, or a group of characters, appearing in conjunction with and subordinate to the title proper, a parallel title or titles of individual works contained in the resource. 
+
+**Domain:**  Monographic resources, Serials, Multipart Monographic resources. Effectively any resource that can have a title proper.
+
+**Range:**  String literal representing the other title information.
+
+**Element Type:**  Descriptive metadata.
+
+
+## Additional Information
+
+**Scope and Purpose:** This element provides additional title information that is subordinate to the title proper. It is included when it appears on the prescribed source of information and is necessary for identification or is otherwise considered important to users of the catalog. It is used to clarify or expand upon the title proper.
+
+
+**User Tasks Supported:**
+* Enhanced resource discovery and identification.
+* Disambiguation between similar resources.
+* Facilitation of accurate citation generation.
+
+
+
+## Element Values
+
+
+**Rules and Guidelines:**  
+* Transcribe other title information exactly as to wording, but not necessarily as to capitalization and punctuation. 
+* Exceptionally, other title information may be abridged if very lengthy, but without loss of essential information or introducing incorrect grammar (omitting none of the first five words and using the ellipsis).
+* Can include statements of responsibility, name of publisher, or details relating to other descriptive elements (like edition) when linguistically integrated into the other title information.  
+
+**Value Constraints and Formats:** There are no specific formats prescribed for other title information, although they frequently take the form of subtitles, explanatory phrases, or alternative titles.
+
+
+**String Encoding:**  Follow the encoding scheme specified in A.5 (Language and script of the description).
+
+
+
+## Examples
+
+```
+Title Proper: Hamlet
+Other Title Information: Prince of Denmark
+
+Title Proper: The Lord of the Rings
+Other Title Information: Part 1, The Fellowship of the Ring
+
+Title Proper:  An Introduction to Programming
+Other Title Information: With Examples in Python
+
+Title Proper:  Beethoven's Symphonies
+Other Title Information:  A Complete Guide
+
+Title Proper:  The Art of War
+Other Title Information:  Sun Tzu's Military Strategies
+
+```
+
+
+
+## Relationships
+
+**Relationships to other ISBD Elements:** Subordinate to and appears after the title proper (1.1) and parallel title (1.2), if any. Precedes the statement of responsibility (1.4). Can be related to series (6) when the series title is generic and the other title information is specific to the resource.
+
+**Super-types and Sub-types:**  This element doesn't have explicit sub-types defined in the ISBD standard. However, different types of information it can contain (like subtitles or explanatory phrases) can be considered implicit sub-types.
+
+**Inverse Relationships:** No inverse relationships are defined in the ISBD.
+
+
+
+## Stipulations
+
+
+**Special Considerations:** For older monographic resources, information preceding the title proper on the preferred source is included as other title information even if its typography suggests its subsidiary nature. In manuscripts, incipit, explicit, and date may be given as other title information, especially for untitled resources.  For unpublished resources more broadly, incipit, explicit, date, place, etc. may be given as other title information in square brackets, when considered useful for identification.
+
+
+**Exceptions:** Statements of responsibility that are not integral to other title information are recorded in area 1.4 (Statement of responsibility).
+
+
+**Best Practices:** If other title information appears on the preferred source of information before the title proper and it is linguistically or otherwise possible, transcribe it following the title proper. Otherwise, consider recording it in area 7 (Note area).  Only include information essential to identification or considered important to catalog users. Use notes to provide more detailed information if necessary.
+
+---
+
+*This content was automatically generated from the ISBD PDF documentation using Gemini AI analysis.*

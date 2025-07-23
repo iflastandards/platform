@@ -1,0 +1,79 @@
+---
+id: P1181
+title: has compound title of parallel title
+description: ISBD element documentation for has compound title of parallel title
+uri: "isbd:elements/P1181"
+area: area1
+RDF:
+  definition: "Relates a resource to the title proper consisting of a common title and a dependent title, with or without a dependent title designation, presented on the prescribed sources of information for the resource as an equivalent in another language or script."
+  domain: "isbd:elements/C2001"
+  range: "isbd:elements/C2025"
+  type: "rdf:Property"
+reg:hasUnconstrained: "isbd:unc/elements/P1181"
+reg:name: hasCompoundTitleOfParallelTitle
+reg:status: "RegStatus:1001"
+rdf:type: "rdf:Property"
+rdfs:domain: "isbd:elements/C2001"
+rdfs:isDefinedBy: "isbd:elements/"
+rdfs:label: has compound title of parallel title
+rdfs:label@es: "tiene título compuesto de título paralelo"
+rdfs:range: "isbd:elements/C2025"
+skos:definition: "Relates a resource to the title proper consisting of a common title and a dependent title, with or without a dependent title designation, presented on the prescribed sources of information for the resource as an equivalent in another language or script."
+skos:definition@es: "Relaciona un recurso con un título propiamente dicho consistente en un título común y un título dependiente, con o sin designación de título dependiente, presentado como equivalente en otra lengua o escritura en la fuente de información preferida del recurso."
+---
+# has compound title of parallel title
+
+The element "compound title of parallel title" (isbd:elements/P1181) is not explicitly defined in the provided ISBD documentation.  While the ISBD discusses parallel titles and compound titles (specifically regarding the *title proper* of a resource), it doesn't provide stipulations for a "compound title *of* a parallel title".  The closest concepts addressed are those of common titles and dependent titles within parallel titles, where the parallel title itself might have components (common title and dependent title).
+
+Since the requested element isn't directly defined, I will instead explain how parallel titles and compound title structures are handled within the ISBD framework, drawing upon related elements and providing relevant examples.
+
+## Parallel Titles and Compound Title Structures within ISBD
+
+The ISBD *does* address compound title structures within the *title proper* field (area 1.1).  A compound title consists of a common title and one or more dependent titles. This structure can also appear within parallel titles.  Here is a breakdown based on related elements and inferred logic:
+
+### Element Reference (for related elements)
+
+* **Parallel title (1.2):** A title in another language or script than the title proper, presented as an equivalent of the title proper.
+* **Common title (1.1.3.7, 6.1):** The shared part of a title common to multiple resources belonging to the same series or multipart resource.
+* **Dependent title (1.1.3.7, 6.1):** The part of a compound title that follows the common title and provides further specificity.
+
+### Additional Information (inferred)
+
+* **Scope and Purpose:** To enable the description of resources where the parallel title itself exhibits a compound structure, allowing for greater precision and clarity in representing titles in multiple languages/scripts.
+* **User Tasks Supported:** Facilitates the identification and retrieval of resources with complex parallel title structures.
+
+### Element Values (inferred)
+
+* **Rules and Guidelines:** The parallel title would be transcribed with its common and dependent parts, following the punctuation guidelines for compound titles within the title proper field (see section 1.1 and section 6 of the ISBD document).
+* **Value Constraints:** The common title should be present in all parallel titles of the set. The dependent title should reflect the language/script of its corresponding parallel title.
+
+### Examples
+
+```
+Title Proper:  Annual Report.  Part 1, Financial Statements
+Parallel Title:  Rapport Annuel.  Partie 1, États Financiers
+
+Title Proper:  Advanced Calculus.  Solutions Manual
+Parallel Title:  Cálculo Avanzado.  Manual de Soluciones
+
+Title Proper:  International Journal of Physics.  Supplement 1, Conference Proceedings
+Parallel Title:  Revista Internacional de Física.  Suplemento 1, Actas de la Conferencia
+```
+
+### Relationships (inferred)
+
+* **Relationship to Other ISBD Elements:**  This compound parallel title structure is a combination of parallel title (1.2), common title (1.1.3.7, 6.1), and dependent title (1.1.3.7, 6.1) elements.
+* **Super-types and Sub-types:**  Not applicable in this inferred structure.
+* **Inverse Relationships:** Not applicable.
+
+### Stipulations (inferred)
+
+* **Special Considerations:** Ensure consistency in the common title across all parallel titles.  Transcribe each dependent title in the appropriate language/script of the parallel title.
+
+
+This explanation provides a logical framework for handling compound titles within parallel title fields based on the principles and elements already defined in the ISBD. It is crucial to remember that this is an *interpretation* based on existing ISBD rules, as the "compound title of parallel title" element is not explicitly defined.  Always consult the latest official ISBD documentation for definitive guidance.
+
+
+---
+
+*This content was automatically generated from the ISBD PDF documentation using Gemini AI analysis.*

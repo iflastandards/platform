@@ -1,0 +1,68 @@
+---
+id: P1048
+title: has statement of projection
+description: ISBD element documentation for has statement of projection
+uri: "isbd:elements/P1048"
+area: general
+RDF:
+  definition: "Relates a resource that is cartographic to the name and properties of a systematic drawing of lines on a plane surface to represent the parallels of latitude and the meridians of longitude of the Earth or a section of the Earth or other celestial sphere."
+  domain: "isbd:elements/C2001"
+  type: "rdf:Property"
+reg:hasUnconstrained: "isbd:unc/elements/P1048"
+reg:name: hasStatementOfProjection
+reg:status: "RegStatus:1001"
+rdf:type: "rdf:Property"
+rdfs:domain: "isbd:elements/C2001"
+rdfs:isDefinedBy: "isbd:elements/"
+rdfs:label: has statement of projection
+rdfs:label@es: "tiene mención de proyección"
+skos:definition: "Relates a resource that is cartographic to the name and properties of a systematic drawing of lines on a plane surface to represent the parallels of latitude and the meridians of longitude of the Earth or a section of the Earth or other celestial sphere."
+skos:definition@es: "Relaciona un recurso cartográfico con el nombre y propiedades de un dibujo sistemático de líneas sobre una superficie plana que representa los paralelos de latitud y los meridianos de longitud de la Tierra o una sección de la Tierra u otra esfera celeste."
+---
+# has statement of projection
+
+The ISBD element "Statement of projection" is found within the Material or Type of Resource Specific Area, specifically for cartographic resources.
+
+## Element Reference
+
+- **Official ISBD Definition:**  The statement of projection consists of the name of the projection. Associated phrases related to the statement of projection may be added. Such phrases usually consist of statements pertaining to properties of the projection that are applicable only to the resource described (e.g., as regards meridians and parallels; or in the case of celestial cartography the external or geocentric perspective).
+- **Domain:** Cartographic resources.
+- **Range:** String (name of map projection).
+- **Element Type:** Descriptive.
+
+## Additional Information
+
+- **Scope and Purpose:** To specify the map projection used in a cartographic resource. This is essential information for understanding the spatial properties and distortions inherent in the map's representation of the Earth or another celestial body.
+- **User Tasks Supported:**  Allows users to identify maps created using specific projections, understand the spatial characteristics of the map, and compare maps created using different projections.  Aids in geospatial analysis and data integration.
+
+## Element Values
+
+- **Specific Rules/Guidelines:** Use the standard name of the map projection. Associated phrases may be added to provide further details or clarify specific parameters of the projection as applied to the resource. Standard abbreviations may be used.
+- **Value Constraints/Formats:** No specific format is prescribed, but clarity and conciseness are recommended.  The projection name should be readily understandable by users familiar with cartographic terminology.
+- **String Encoding Schemes:**  Not applicable beyond general character encoding used for the bibliographic record (e.g., UTF-8).
+
+## Examples
+
+```
+; proj. conique conforme de Lambert sécante aux parallèles 48° et 77°
+; proj. de Mercator transverse universelle, ellipsoide de Clarke 1880
+; conic equidistant proj., standard parallels 40° and 21° N
+; azimuthal equidistant proj. centered on Nicosia, N 35°10′, E 33°22′
+; proj. stéréographique
+```
+
+## Relationships
+
+- **Relationships to other ISBD Elements:**  Part of Area 3 (Material or Type of Resource Specific Area) for Cartographic resources.  Often appears in conjunction with statement of scale and statement of coordinates.
+- **Super-types and Sub-types:**  No explicit super- or sub-types defined within ISBD, though various map projection classifications exist outside of ISBD.
+- **Inverse Relationships:**  None defined within ISBD.
+
+## Stipulations
+
+- **Special Considerations/Exceptions:**  When identified from sources other than the resource itself, the statement of projection should be enclosed in square brackets.
+- **Best Practices:** Use established cartographic terminology and standard abbreviations where appropriate. If the projection involves specific parameters unique to the resource (such as standard parallels, central meridian, etc.), these should be included in the statement.  If the projection is uncertain, this can be indicated in a note.
+
+
+---
+
+*This content was automatically generated from the ISBD PDF documentation using Gemini AI analysis.*

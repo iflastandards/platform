@@ -1,0 +1,79 @@
+---
+id: P1160
+title: has edition area
+description: ISBD element documentation for has edition area
+uri: "isbd:elements/P1160"
+area: area2
+RDF:
+  definition: "Relates a resource to a statement including the edition statement, parallel edition statements, statements of responsibility relating to the edition, additional edition statements, and statements of responsibility following an additional edition statement."
+  domain: "isbd:elements/C2001"
+  range: "isbd:elements/C2005"
+  type: "rdf:Property"
+reg:hasUnconstrained: "isbd:unc/elements/P1160"
+reg:name: hasEditionArea
+reg:status: "RegStatus:1001"
+rdf:type: "rdf:Property"
+rdfs:domain: "isbd:elements/C2001"
+rdfs:isDefinedBy: "isbd:elements/"
+rdfs:label: has edition area
+rdfs:label@es: "tiene área de edición"
+rdfs:range: "isbd:elements/C2005"
+skos:definition: "Relates a resource to a statement including the edition statement, parallel edition statements, statements of responsibility relating to the edition, additional edition statements, and statements of responsibility following an additional edition statement."
+skos:definition@es: "Relaciona un recurso con una mención que incluye la mención de edición, menciones de edición paralela, menciones de responsabilidad relativas a la edición, menciones de edición adicional y menciones de responsabilidad relativas a la mención de edición adicional."
+---
+# has edition area
+
+The ISBD element "edition area" is referred to as the "Edition, drafting, version, etc. area" in the provided 2021 update to ISBD.
+
+## Element Reference
+
+- **Official ISBD definition:** The Edition, drafting, version, etc. area includes the edition, drafting, version, etc. statement, parallel edition, drafting, version, etc. statements, drafting, version, etc. statements of responsibility relating to the edition, drafting, version, etc., additional edition, drafting, version, etc. statements, and statements of responsibility relating to an additional edition, drafting, version, etc. statement.
+- **Domain (implicit):**  Monographic resources, Serials, Integrating resources, and other resources that may have editions, versions, revisions, etc.
+- **Range:**  Strings representing edition statements, statements of responsibility related to editions, and additional edition statements.
+- **Element type:** Complex, composed of sub-elements like the edition statement and statement of responsibility relating to edition.
+
+
+## Additional Information
+- **Scope and purpose:** To provide information about the specific edition, version, or iteration of a resource being described, distinguishing it from other iterations of the same work.  This aids in identifying and selecting the correct resource.
+- **User tasks supported:** 
+    - Identifying a specific iteration of a resource.
+    - Distinguishing between different editions, versions, revisions, translations, etc.
+    - Understanding the changes or additions made in a specific edition.
+
+
+## Element Values
+- **Rules and guidelines:**
+    - The wording of edition statements should be taken directly from the resource.
+    - Standard abbreviations can be used (e.g., "ed.", "rev.", "corr.").
+    - Arabic numerals should be used for edition numbers.
+    - Multiple edition statements are separated by commas.
+- **Value constraints or formats:**  Generally, the format is [edition statement] [/ [statement of responsibility relating to edition]].  Specific wording is transcribed from the resource.  See stipulations for specific guidance on unpublished resources.
+- **String encoding schemes:**  UTF-8 is recommended, though this may depend on broader cataloging rules.
+
+
+## Examples
+
+```
+2nd ed.
+Rev. ed.
+3rd rev. and enl. ed. / edited by John Smith.
+2023 version
+Version 1.2.5
+```
+
+## Relationships
+- **Relationships to other ISBD elements:** Related to the Title and Statement of Responsibility Area (Area 1) as the edition is often part of a work's formal designation. Also strongly related to Area 7 (Notes), where changes in edition across different parts of a multipart resource or across different issues of a serial can be documented.
+- **Super-types:** None within the immediate context of ISBD elements. Could potentially be considered a sub-element of a broader "Descriptive Metadata" concept.
+- **Sub-types:** The edition area itself has sub-elements, namely the "edition statement", "parallel edition statement", "statement of responsibility relating to edition", "additional edition statement", and "statement of responsibility relating to additional edition statement".
+- **Inverse relationships:** None explicitly defined in ISBD.
+
+
+## Stipulations
+- **Special considerations:**  For unpublished resources, the Edition area may include details about pre-publication materials (e.g., "draft", "copy for print") or the state of a manuscript.  Information on the production process is recorded in Area 3, not Area 2.
+- **Exceptions:** If the edition statement is an integral part of the title proper (Area 1) or other title information (Area 1), it should not be repeated in Area 2.
+- **Best practices:** Be consistent in applying abbreviations and transcription rules. When an edition statement is not present on the resource, a supplied statement may be provided in square brackets, but edition numbers should not be supplied unless the resource clearly has a numbered sequence of editions.  When in doubt, provide information in Area 7 (Notes) instead.
+
+
+---
+
+*This content was automatically generated from the ISBD PDF documentation using Gemini AI analysis.*

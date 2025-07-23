@@ -1,0 +1,87 @@
+---
+id: P1095
+title: has note on bibliographic history
+description: ISBD element documentation for has note on bibliographic history
+uri: "isbd:elements/P1095"
+area: area7
+RDF:
+  definition: "Relates a resource to a note relating to the edition being described or the bibliographic history of the work."
+  domain: "isbd:elements/C2001"
+  type: "rdf:Property"
+  elementSubType: "isbd:elements/P1045"
+reg:hasUnconstrained: "isbd:unc/elements/P1095"
+reg:name: hasNoteOnBibliographicHistory
+reg:status: "RegStatus:1001"
+rdf:type: "rdf:Property"
+rdfs:domain: "isbd:elements/C2001"
+rdfs:isDefinedBy: "isbd:elements/"
+rdfs:label: has note on bibliographic history
+rdfs:label@es: "tiene nota de historia bibliográfica"
+rdfs:subPropertyOf: "isbd:elements/P1045"
+skos:definition: "Relates a resource to a note relating to the edition being described or the bibliographic history of the work."
+skos:definition@es: "Relaciona un recurso con una nota relativa a la edición que se describe o a la historia bibliográfica de la obra."
+---
+# has note on bibliographic history
+
+The ISBD element "note on bibliographic history" is discussed within the broader context of notes relating to the edition area and bibliographic history of the resource. It's not presented as a distinct, named element like "title proper" or "edition statement."  Therefore, I will answer the prompt based on the relevant stipulations in section 7.2.3 of the ISBD documentation.
+
+## Element Reference
+
+- **Official ISBD Definition:** Not explicitly defined as a separate element, but discussed as a type of note within section 7.2.3 "Bibliographic history of the resource."  The section states: "Notes relating to the edition being described or the bibliographic history of the work *may* be given."
+- **Domain and Range:**  Not applicable in the traditional sense since it's not a formally defined element in the ISBD RDF model. However, it appears within the "Note Area" (ISBD area 7).
+- **Element Type:**  Descriptive text.
+
+
+## Additional Information
+
+- **Scope and Purpose:** To provide information about the publication history of the work embodied in the resource, beyond the specific edition being described. This can include details of earlier or related editions, title changes, republications, formats, etc.
+- **User Tasks Supported:** Aids users in understanding the relationship of the resource in hand to other manifestations of the same work.  Helps in identifying different editions or formats, tracing the evolution of a work, and locating specific versions.
+
+
+## Element Values
+
+- **Rules and Guidelines:** Notes should be concise and factual. They should clearly indicate the relationship between the resource being described and the information in the note (e.g., "Originally published as...", "Previously issued as...", "Formerly available as...").
+- **Value Constraints and Formats:** No strict format is prescribed. However, the use of standard bibliographic terminology and consistent citation practices is recommended.
+- **String Encoding Schemes:** Not applicable as a general rule. Encoding may be necessary for specific characters within the note text depending on the cataloging system used.
+
+
+## Examples
+
+```
+Note: Originally published: London: J. Tonson, 1747
+```
+
+```
+Note: Originally issued in 1965
+```
+
+```
+Note: Previously published as: The players of Null-A. London: Dodson, 1970;
+originally published as: The pawns of Null-A. New York: Street and Smith, 1948
+```
+
+```
+Note: Formerly available as: CAS 675
+```
+
+```
+Note: Reprint of the second edition: London: [s.n.], 1760
+```
+
+
+## Relationships
+
+- **Relationship to other ISBD elements:**  Closely related to the edition area (Area 2), as bibliographic history often involves details of different editions. Also related to Area 1 (Title and Statement of Responsibility Area) if the history includes title changes.  Can be related to Area 4 (Publication, Production, Distribution Area) if there are changes in publishers, places of publication, etc. over time.
+- **Super-types and Sub-types:**  This type of note is a sub-type of the more general "note" element found in Area 7.
+- **Inverse Relationships:** Not applicable.
+
+
+## Stipulations
+
+- **Special Considerations:**  The level of detail provided in bibliographic history notes can vary depending on the cataloging agency's policies and the perceived importance of the information to users.
+- **Best Practices:**  Consistency in wording and citation style is essential. Use of established bibliographic terms and abbreviations is encouraged.  Provide sufficient information to clearly identify the related resources.
+
+
+---
+
+*This content was automatically generated from the ISBD PDF documentation using Gemini AI analysis.*

@@ -1,0 +1,83 @@
+---
+id: P1141
+title: has parallel statement of responsibility relating to title
+description: ISBD element documentation for has parallel statement of responsibility relating to title
+uri: "isbd:elements/P1141"
+area: area1
+RDF:
+  definition: "Relates a resource to a statement of responsibility  presented on the preferred source of information for the resource as an equivalent in another language or script."
+  domain: "isbd:elements/C2001"
+  type: "rdf:Property"
+reg:hasUnconstrained: "isbd:unc/elements/P1141"
+reg:name: hasParallelStatementOfResponsibilityRelatingToTitle
+reg:status: "RegStatus:1001"
+rdf:type: "rdf:Property"
+rdfs:domain: "isbd:elements/C2001"
+rdfs:isDefinedBy: "isbd:elements/"
+rdfs:label: has parallel statement of responsibility relating to title
+rdfs:label@es: "tiene mención de responsabilidad paralela al título"
+skos:definition: "Relates a resource to a statement of responsibility  presented on the preferred source of information for the resource as an equivalent in another language or script."
+skos:definition@es: "Relaciona un recurso con una mención de responsabilidad que se presenta en la fuente de información preferida para el recurso como un equivalente en otra lengua o escritura."
+---
+# has parallel statement of responsibility relating to title
+
+The ISBD element "parallel statement of responsibility relating to title" (isbd:elements/P1141) corresponds to the element described in the PDF as "Parallel statement of responsibility relating to title". It's important to note that the ISBD standard uses wording like "is given" and "may be given" for mandatory and optional elements respectively, which are different from the stricter domain and range constraints found in more formal modeling languages like RDF.
+
+
+## Element Reference
+
+- **Official ISBD Definition:** A statement of responsibility relating to the title proper that is an equivalent of the statement of responsibility in another language or script.  (Derived from the stipulations in 1.4.5.10 and surrounding text.)
+- **Domain (implied):** Title and statement of responsibility area of the ISBD description.
+- **Range (implied):**  Text string containing the statement of responsibility in a parallel language or script.
+- **Element Type:**  Descriptive metadata.
+
+## Additional Information
+
+- **Scope and Purpose:** To provide the statement of responsibility in multiple languages or scripts, enhancing accessibility and internationalization of bibliographic records. It makes the responsibility information understandable to a wider audience and helps in identifying translations or versions of the resource.
+- **User Tasks Supported:** Identifying the entities responsible for the creation of the resource in different languages; differentiating resources with similar titles but different creators in different linguistic contexts.
+
+## Element Values
+
+- **Specific Rules/Guidelines:** The parallel statement of responsibility follows the same rules as the main statement of responsibility (see 1.4) in terms of form and content. It should accurately reflect the information found on the resource. Abbreviations and shortened forms are treated the same way as in the main statement of responsibility.
+- **Value Constraints/Formats:**  Follows the conventions for statements of responsibility.  Can include names of persons or corporate bodies with or without linking phrases indicating their role.
+- **String Encoding Schemes:**  Should be encoded using Unicode (UTF-8 preferred) to accommodate diverse scripts.
+
+## Examples
+
+```
+Title Proper = Le Petit Prince = The Little Prince / [by] Antoine de Saint-Exupéry = / [작가] 앙투안 드 생텍쥐페리
+```
+
+```
+Title Proper = Cien años de soledad = One Hundred Years of Solitude / by Gabriel García Márquez = / por Gabriel García Márquez
+```
+
+```
+Title Proper =  Die Verwandlung = The Metamorphosis / by Franz Kafka = / von Franz Kafka
+```
+
+```
+Title proper:   喜福会 = The Joy Luck Club / by Amy Tan = / [작가] 에이미 탄
+```
+
+```
+Title proper:   百年孤独 = One Hundred Years of Solitude / by Gabriel García Márquez  =[작가] 가브리엘 가르시아 마르케스
+```
+
+
+## Relationships
+
+- **Relationships to other ISBD elements:**  Directly related to the "Statement of Responsibility" element (1.4). It appears after the title proper and parallel title if present.
+- **Super-types:** Statement of Responsibility.
+- **Sub-types:**  None explicitly defined in ISBD.
+- **Inverse Relationships:** None explicitly defined.
+
+## Stipulations
+
+- **Special Considerations/Exceptions:** If the parallel title combines the title proper and other title information, the parallel statement of responsibility follows all parallel titles (1.4.5.10). If the statement of responsibility is presented in a mixture of languages, rules for transcription of single statements in multiple languages apply (A.3.2.9 and 1.4.5.10).
+- **Best Practices:** Include parallel statements of responsibility whenever they appear on the resource and are considered important for identification or access. Ensure consistency in the form and abbreviation of names and terms between the main and parallel statements. Use appropriate linking phrases to clarify roles where necessary. Use Unicode for encoding.
+
+
+---
+
+*This content was automatically generated from the ISBD PDF documentation using Gemini AI analysis.*

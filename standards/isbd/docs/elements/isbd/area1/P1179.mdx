@@ -1,0 +1,82 @@
+---
+id: P1179
+title: has parallel dependent title of series or multipart monographic resource
+description: ISBD element documentation for has parallel dependent title of series or multipart monographic resource
+uri: "isbd:elements/P1179"
+area: area1
+RDF:
+  definition: "Relates a resource that is a series or multipart monographic resource to a title that by itself is insufficient to identify the resource and that requires the addition of the common title, or the title of the main resource or the title of the main series, presented on the preferred source of information for the resource as an equivalent in another language or script."
+  domain: "isbd:elements/C2001"
+  type: "rdf:Property"
+reg:hasUnconstrained: "isbd:unc/elements/P1179"
+reg:name: hasParallelDependentTitleOfSeriesOrMultipartMonographicResource
+reg:status: "RegStatus:1001"
+rdf:type: "rdf:Property"
+rdfs:domain: "isbd:elements/C2001"
+rdfs:isDefinedBy: "isbd:elements/"
+rdfs:label: has parallel dependent title of series or multipart monographic resource
+rdfs:label@es: "tiene título dependiente paralelo de serie o recurso monográfico multiparte"
+skos:definition: "Relates a resource that is a series or multipart monographic resource to a title that by itself is insufficient to identify the resource and that requires the addition of the common title, or the title of the main resource or the title of the main series, presented on the preferred source of information for the resource as an equivalent in another language or script."
+skos:definition@es: "Relaciona un recurso que es una serie o un recurso monográfico multiparte con un título que por sí mismo es insuficiente para identificar el recurso y que requiere de la adición del título común, o del título del recurso principal o del título de la serie principal, presentado como equivalente en otra lengua o escritura en la fuente de información preferida del recurso."
+---
+# has parallel dependent title of series or multipart monographic resource
+
+The ISBD element "parallel dependent title of series or multipart monographic resource" is discussed as part of the larger concept of "Parallel title of a series or multipart monographic resource" within section 6.2. There isn't a distinct definition for the "parallel dependent title" itself, but rather instructions on how to handle it within the context of a parallel title for series or multipart monographic resources that have dependent titles.
+
+## Element Reference
+
+- **Definition (implied):** A parallel dependent title of series or multipart monographic resource is a secondary title of the series or multipart item, presented as an equivalent to the dependent title on the resource in another language or script. This appears alongside the parallel common title.
+- **Domain:** Series or multipart monographic resources with dependent titles.
+- **Range:** String representing the parallel dependent title.
+- **Element type:** Literal.
+
+
+## Additional Information
+
+- **Scope and purpose:** To provide an equivalent of the dependent title in another language or script, aiding in internationalization and identification of series and multipart items.
+- **User tasks supported:** Searching and identifying resources belonging to multilingual or multiscript series or multipart items.
+
+
+## Element Values
+
+- **Rules/Guidelines:** The parallel dependent title is transcribed following the parallel common title and is separated from it by the punctuation specified for dependent titles (a point, space "."). If the parallel title itself is made up of multiple parts, the parallel dependent title is linked to the parallel common title using the standard punctuation for dependent titles within parallel titles (see 6.2.2).
+- **Constraints/formats:** Follows the same rules and guidelines for transcription as titles in general (1.1.5, 1.2.5).
+- **Encoding:**  UTF-8 encoding is recommended.
+
+
+## Examples
+
+```
+(Common Title. Dependent Title = Parallel Common Title. Parallel Dependent Title)
+
+Example 1:
+(Sounds of the theatre. Music = Voci del teatro. La musica)
+
+Example 2:
+(Carte géologique de la France. Feuille Bonnières-sur-Seine = Geologische Karte von Frankreich. Blatt Bonnières-sur-Seine)
+
+Example 3:
+(Canadian urban sources. Statistical supplement = Sources urbaines canadiennes. Supplément statistique)
+```
+
+
+
+## Relationships
+
+- **Relationship to other ISBD elements:** Directly related to the "Common title and dependent title" (1.1.3.7, 1.1.4.6.1, 6) and "Parallel title of a series or multipart monographic resource" (6.2).
+- **Super/sub-types:**  A sub-type of "Parallel title".
+- **Inverse relationships:** None specified.
+
+
+## Stipulations
+
+- **Special considerations:**  Only presented if the resource already has a dependent title and a parallel common title.  The stipulations in 6.2.2 emphasize the linking and ordering of parallel common titles and parallel dependent titles.
+- **Best practices:** Apply the parallel dependent title only when it is deemed necessary for identification or is considered important for users of the catalog, especially in multilingual or multi-script contexts. Maintain consistency in punctuation and transcription with the corresponding dependent title and common title. If a series statement has both a parallel title and other title information, the parallel title precedes the other title information.
+
+
+
+
+
+---
+
+*This content was automatically generated from the ISBD PDF documentation using Gemini AI analysis.*

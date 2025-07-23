@@ -1,0 +1,106 @@
+---
+id: P1197
+title: is work reflected in
+description: ISBD element documentation for is work reflected in
+uri: "isbd:elements/P1197"
+area: general
+RDF:
+  definition: Relates a work to a bibliographic resource that reflects it.
+  domain: "frbrer:C1001"
+  range: "isbd:elements/C2001"
+  type: "rdf:Property"
+  inverseOf: "isbd:elements/P1193"
+reg:hasUnconstrained: "isbd:unc/elements/P1197"
+reg:name: isWorkReflectedIn
+reg:status: "RegStatus:1001"
+rdf:type: "rdf:Property"
+rdfs:domain: "frbrer:C1001"
+rdfs:isDefinedBy: "isbd:elements/"
+rdfs:label: is work reflected in
+rdfs:range: "isbd:elements/C2001"
+owl:inverseOf: "isbd:elements/P1193"
+skos:definition: Relates a work to a bibliographic resource that reflects it.
+---
+# is work reflected in
+
+The element "is work reflected in" (isbd:elements/P1197) is not explicitly defined as a standalone element in the provided ISBD documentation.  The concept it represents, however, is addressed within the ISBD framework through relationships between works, expressions, manifestations, and items, primarily covered in Area 7 (Notes Area) regarding bibliographic history and relationships to other resources.
+
+Since the element doesn't have a formal definition, the following sections will interpret the requested information based on how the ISBD handles related resources and bibliographic history.
+
+## Element Reference
+
+- **Interpreted Definition:**  "Is work reflected in" indicates the resource (manifestation) in which a related work is embodied or contained, especially when dealing with adaptations, translations, reproductions, or versions.  This can also refer to a component part within a host resource.
+
+- **Domain:**  A resource (manifestation) being described.
+- **Range:** Another resource (manifestation) embodying the related work.
+
+- **Element Type:** Relationship
+
+
+## Additional Information
+
+- **Scope and Purpose:** This element would establish a connection between a resource and another resource that embodies a related work, clarifying their relationship (e.g., adaptation, translation, reproduction) and facilitating retrieval of related works.
+
+
+- **User Tasks Supported:** Discovering different manifestations of the same work (e.g., different editions, translations, adaptations).  Understanding the bibliographic history and relationships between resources.
+
+
+
+## Element Values
+
+- **Rules/Guidelines:** The related resource should be identified with sufficient detail to allow for unambiguous identification, ideally using standard identifiers (ISBN, ISSN) or a concise bibliographic description, including title and statement of responsibility.
+
+- **Value Constraints/Formats:** No strict format is prescribed in ISBD itself, but best practices recommend using standard bibliographic citation styles or referring to another record in a shared cataloging system.
+- **String Encoding:** UTF-8 is recommended for character encoding.
+
+
+
+## Examples
+
+```
+Note: Translation of: Don Quijote de la Mancha
+```
+
+```
+Note: Adaptation of: Hamlet / William Shakespeare
+```
+
+```
+Note: Reproduction of:  [Map of the City of London, 1780]. Originally published: London : s.n., 1780.
+```
+
+```
+Note: Based on: The Wind in the Willows / Kenneth Grahame
+```
+```
+In: Hamlet / William Shakespeare. - London : Arden Shakespeare, 2006.
+     p. 112-135.  [Describing an article analysing Hamlet]
+```
+
+
+
+## Relationships
+
+- **Relationships to other ISBD elements:** Closely related to Area 7 (Notes) which is where this information would normally be recorded in an ISBD record. Connects to elements like title proper, statement of responsibility, and edition statement of the related resource.
+
+
+- **Super-types/Sub-types:**  Could be considered a more specific type of "related resource" relationship. Sub-types could include "translation of," "adaptation of," "reproduction of," etc.
+
+
+- **Inverse Relationships:** The inverse relationship would be "is reflection of work in" (or similar wording), indicating the original work from which the current resource is derived.
+
+
+
+## Stipulations
+
+- **Special Considerations:** The nature of the relationship between the works should be specified (e.g., "translation," "adaptation," "reproduction"). If the related resource has multiple editions, the specific edition being referenced should be identified.
+
+- **Best Practices:** Use standard citation styles and provide sufficient information to unambiguously identify the related resource. When referencing another record in a system, use appropriate linking mechanisms (e.g., URIs).
+
+
+The lack of a formal "is work reflected in" element in ISBD underscores the flexibility the standard offers in recording relationships between works within the notes area.  This flexibility can be beneficial but requires careful implementation to ensure clarity and consistency.  Future developments of ISBD or related models could benefit from a more explicit definition of relationships between works, aligning more closely with the data elements and properties defined in linked data environments.
+
+
+---
+
+*This content was automatically generated from the ISBD PDF documentation using Gemini AI analysis.*

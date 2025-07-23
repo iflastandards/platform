@@ -1,0 +1,71 @@
+---
+id: P1127
+title: has playing speed
+description: ISBD element documentation for has playing speed
+uri: "isbd:elements/P1127"
+area: general
+RDF:
+  definition: Relates a resource to its playing speed.
+  domain: "isbd:elements/C2001"
+  type: "rdf:Property"
+reg:hasUnconstrained: "isbd:unc/elements/P1127"
+reg:name: hasPlayingSpeed
+reg:status: "RegStatus:1001"
+rdf:type: "rdf:Property"
+rdfs:domain: "isbd:elements/C2001"
+rdfs:isDefinedBy: "isbd:elements/"
+rdfs:label: has playing speed
+rdfs:label@es: "tiene velocidad de reproducción"
+skos:definition: Relates a resource to its playing speed.
+skos:definition@es: "Relaciona un recurso con su velocidad de reproducción."
+---
+# has playing speed
+
+The ISBD element "playing speed" is found within the Material Description Area (Area 5) of the ISBD.
+
+## Element Reference
+
+- **Official ISBD Definition:** The playing speed of a resource is given in appropriate terms. (5.2.7.3 Playing speed)
+- **Domain:** Audiovisual resources, specifically sound recordings and moving image materials like film reels and videodiscs.
+- **Range:**  A value representing the speed at which the resource is intended to be played. This can be expressed in revolutions per minute (rpm), centimeters per second (cm/s), or other units appropriate to the resource type.
+- **Element Type:** Property. It describes a physical characteristic of the resource.
+
+
+## Additional Information
+
+- **Scope and Purpose:** This element specifies the speed required for proper playback of a sound recording or moving image resource. This information ensures accurate reproduction of the audio or visual content as intended by the creator.
+- **User Tasks Supported:** This element aids users in identifying compatible playback equipment and ensuring accurate reproduction of the recorded content.  It also helps distinguish different versions of a resource that might have been recorded at different speeds.
+
+
+## Element Values
+
+- **Specific Rules/Guidelines:** Use standard units of measurement for the respective media.  For sound discs, use revolutions per minute (rpm). For film reels and audio tapes, use centimeters per second (cm/s). For videodiscs, specify the rotational speed in revolutions per minute (rpm).
+- **Value Constraints/Formats:**  Numeric values representing the speed, followed by the unit of measurement.  For examples, "33 1/3 rpm", "19 cm/s".
+- **String Encoding Schemes:** Not applicable.
+
+
+## Examples
+
+```
+1 sound disc: 33 1/3 rpm
+1 sound reel (100 min): 19 cm/s
+2 videodiscs (24 min): 1500 rpm
+1 sound disc: 45 rpm
+1 sound disc: 78 rpm
+```
+
+## Relationships
+
+- **Relationships to other ISBD elements:** Playing speed is part of the broader Material Description Area and often appears alongside other technical specifications like groove direction/size (for analogue discs), number of tracks/sound channels (for tapes), or recording method. It is related to "playing time" (5.1.5) which indicates the duration of the recording.
+- **Super-types and Sub-types:**  "Playing speed" itself doesn't have direct sub-types in the ISBD.  However, the general concept of "technical specifications" for audiovisual resources can be considered a super-type, encompassing elements like playing speed, recording method, etc.
+- **Inverse relationships:** No inverse relationship defined in the ISBD.
+
+## Stipulations
+
+- **Special Considerations/Exceptions/Usage Notes:**  If the playing speed is not readily ascertainable from the resource itself, its container, or accompanying documentation, it can be omitted. It may also be omitted for resources whose playing speed is implied (e.g., standard audio cassettes are typically 4.76 cm/s). If needed, a note can be added in Area 7 (Notes) for more complex or specific information related to the playing speed.
+- **Best Practices:** Always try to ascertain the precise playing speed from reliable sources. When providing an approximation, indicate that it is approximate (e.g., "approx. 19 cm/s"). Ensure consistency in using abbreviations and units across all records.  Use the standard terminology and units defined in relevant industry standards if they exist.
+
+
+---
+
+*This content was automatically generated from the ISBD PDF documentation using Gemini AI analysis.*

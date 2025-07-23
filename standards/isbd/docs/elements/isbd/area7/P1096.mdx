@@ -1,0 +1,103 @@
+---
+id: P1096
+title: has note on translations
+description: ISBD element documentation for has note on translations
+uri: "isbd:elements/P1096"
+area: area7
+RDF:
+  definition: "Relates a resource that contains a work that is a translation to a note on the original title of the work, or, where appropriate, the key title and ISSN."
+  domain: "isbd:elements/C2001"
+  type: "rdf:Property"
+  scopeNote: "Notes on translations may be included in the notes on contents when the resource contains several individual works. Excludes notes on the language of the title. Excludes notes on editions of a resource appearing simultaneously in different languages."
+  elementSubType: "isbd:elements/P1045"
+reg:hasUnconstrained: "isbd:unc/elements/P1096"
+reg:name: hasNoteOnTranslations
+reg:status: "RegStatus:1001"
+rdf:type: "rdf:Property"
+rdfs:domain: "isbd:elements/C2001"
+rdfs:isDefinedBy: "isbd:elements/"
+rdfs:label: has note on translations
+rdfs:label@es: "tiene nota de traducciones"
+rdfs:subPropertyOf: "isbd:elements/P1045"
+skos:definition: "Relates a resource that contains a work that is a translation to a note on the original title of the work, or, where appropriate, the key title and ISSN."
+skos:definition@es: "Relaciona un recurso que contiene una obra que es una traducción con una nota sobre el título original de la obra o, cuando sea apropiado, el título clave e ISSN."
+skos:scopeNote: "Notes on translations may be included in the notes on contents when the resource contains several individual works. Excludes notes on the language of the title. Excludes notes on editions of a resource appearing simultaneously in different languages."
+skos:scopeNote@es: "La notas sobre traducciones se pueden incluir en las notas sobre contenido cuando el recurso contiene varias obras individuales. Se excluyen notas sobre la lengua del título. Se excluyen notas sobre ediciones de un recurso que aparecen simultáneamente en varias lenguas."
+---
+# has note on translations
+
+The ISBD element "note on translations" is found within the Note Area (Area 7) of the ISBD. Specifically, it is discussed in section 7.2.4.1 under the heading "Translations".
+
+## Element Reference
+
+- **Official ISBD Definition:**  The ISBD itself does not explicitly define individual note elements in a structured, formal way like RDF.  Instead, it describes the overall purpose and content of notes, and provides categories and examples of common note types. The "note on translations" is one such categorized example.
+
+- **Domain and Range:** Not formally defined in the ISBD in RDF terms.  The domain would be the resource being described. The range would be a textual note.
+
+- **Element Type:** Textual note providing information relating to a translation.
+
+
+## Additional Information
+
+- **Scope and Purpose:** To indicate that the resource being described is a translation and to provide information about the original resource from which it was translated. This aids in identifying the original work and understanding the relationship between the translation and the original.
+
+- **User Tasks Supported:**
+    - Discovering translations of a known work.
+    - Identifying the original work of a given translation.
+    - Understanding the context and origin of the translation.
+
+
+## Element Values
+
+- **Rules and Guidelines:** The note should contain the original title of the work, and optionally the publication details and frequency (for serials) of the original resource.  If the translation is of a specific edition of the work, this should be mentioned. Key title and ISSN may be used for serials.
+
+- **Value Constraints and Formats:** No strict format is prescribed, but enough information should be provided to unambiguously identify the original resource.  Standard bibliographic conventions should be followed.
+
+- **String Encoding:** No specific encoding scheme is mandated by the ISBD, but the script and language used should be consistent with the rest of the description (or explicitly noted if different).
+
+
+## Examples
+
+```
+Note: Translation of: La muerte de Artemio Cruz
+```
+
+```
+Note: Original title: Dissertatio physica de natura et remediis fulminum
+```
+
+```
+Note: Original title: North Land footprints, or, Lives on Little Bent Tree Lake; translated from the French
+```
+
+```
+Note: Translation of: Radiohimiâ = ISSN 0033-8311 
+Title proper: Soviet radiochemistry // Shows usage of Key Title and corresponding Title Proper
+```
+
+```
+Note: Translation of the 2nd ed.: Handbuch der Physik.  Original title:  Textbook of Physics
+```
+
+
+## Relationships
+
+- **Relationship to other ISBD elements:** This note type is related to the Title and Statement of Responsibility Area (Area 1) and the Edition Area (Area 2) as it provides context and origin information about the title and edition being described.  It is also closely related to other notes in Area 7 that deal with bibliographic history (7.2.3) and relationships to other resources (7.2.4). It is part of the larger Note Area (Area 7).
+
+- **Super-types and Sub-types:** The "note on translations" could be considered a sub-type of a broader "note on relationships to other resources".
+
+- **Inverse Relationship:**  An original work could have a note indicating resources that are translations of it, although this isn't a formal ISBD element.
+
+
+
+## Stipulations
+
+- **Special Considerations:**  The ISBD emphasizes providing enough information to clearly identify the original resource. If the original exists in multiple languages or editions, the specific one being translated from should be identified if possible.  If the translation itself is then translated into further languages, the note should explain this process.  (See the third example above).
+
+
+- **Best Practices:**  Follow standard bibliographic citation practices and use clear, concise language. If the relationship to the original resource is complex, it may be beneficial to separate this information into a dedicated note rather than combining it with other notes.
+
+
+---
+
+*This content was automatically generated from the ISBD PDF documentation using Gemini AI analysis.*

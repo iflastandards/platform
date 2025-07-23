@@ -1,0 +1,75 @@
+---
+id: P1055
+title: has playing time
+description: ISBD element documentation for has playing time
+uri: "isbd:elements/P1055"
+area: general
+RDF:
+  definition: "Relates a resource that has an inherent durational aspect to the time it takes to play the whole resource."
+  domain: "isbd:elements/C2001"
+  type: "rdf:Property"
+reg:hasUnconstrained: "isbd:unc/elements/P1055"
+reg:name: hasPlayingTime
+reg:status: "RegStatus:1001"
+rdf:type: "rdf:Property"
+rdfs:domain: "isbd:elements/C2001"
+rdfs:isDefinedBy: "isbd:elements/"
+rdfs:label: has playing time
+rdfs:label@es: "tiene duración"
+skos:definition: "Relates a resource that has an inherent durational aspect to the time it takes to play the whole resource."
+skos:definition@es: "Relaciona un recurso que tiene un aspecto inherente de duración con el tiempo que conlleva la ejecución del recurso completo."
+---
+# has playing time
+
+The ISBD element "playing time" (isbd:elements/P1055) is discussed within the "Extent" element (5.1) in the provided ISBD documentation. It is not given its own distinct section or numbering separate from the more general "extent" element.
+
+
+## Element Reference
+
+- **Official ISBD Definition:**  The extent of any resource having an inherent durational aspect is recorded in terms of playing time. (5.1.5.1)
+- **Domain:** Resources with an inherent duration (sound recordings, moving images, audiovisual resources, etc.)
+- **Range:** Duration expressed as a time value (e.g., minutes, seconds). Optionally, for motion pictures and videorecordings, the physical length of the film may be added.
+- **Element Type:**  A property of a resource describing its temporal extent.
+
+
+## Additional Information
+- **Scope and Purpose:** To convey the duration of a resource with a time-based component. This helps users understand the length of a recording, film, etc., and aids in resource selection and management.
+- **User Tasks Supported:**  
+    - Identifying the duration of a resource.
+    - Comparing the length of different resources.
+    - Selecting resources appropriate to a user's time constraints.
+    - Estimating storage requirements for time-based resources.
+
+
+
+## Element Values
+- **Rules/Guidelines:** The playing time is recorded as given on the resource, its container, or accompanying material (5.1.5.2). If no precise duration is stated, an approximation may be given (using "ca."). If neither a precise value nor an approximation can be provided, the statement is omitted. For motion pictures and videorecordings, the physical length (e.g., in meters) may optionally be added to the playing time.
+- **Value Constraints/Formats:**  Duration is typically expressed in minutes and seconds, potentially with fractional seconds if required. For film, length is expressed in meters.
+- **String Encoding Schemes:** Not applicable at the level of the playing time itself, but the overall bibliographic record may be encoded using UTF-8 or other appropriate character encodings.
+
+
+## Examples
+
+```
+- 1 sound disc (ca. 50 min)
+- 1 film reel (22 min, 577 m) 
+- 3 sound discs (50, 55, 50 min)
+- 1 sound cassette (60 min): Dolby processed; 12 cm
+- 1 streaming sound file (14 min)
+```
+
+
+## Relationships
+- **Relationships to Other ISBD Elements:** Playing time is a sub-element of the broader "Extent" (5.1) element within the Material Description Area. It is closely related to other physical details like the specific material designation (e.g., "sound disc," "film reel").
+- **Super-types/Sub-types:**  "Extent" is the super-type. Playing time itself doesn't have further sub-types within the ISBD framework, though specifications like playing speed (rpm) might be considered related sub-elements.
+- **Inverse Relationships:** None explicitly defined within ISBD.
+
+
+## Stipulations
+- **Special Considerations:** For resources with multiple works, the individual playing times are recorded in a note (7.10.1) and the overall playing time for the resource might be omitted from the Material Description Area (5.1.5.4).  For electronic resources with remote access, playing time might be omitted due to the difficulty in establishing a fixed duration.
+- **Best Practices:** When an approximation is necessary, provide the best estimate possible. For older or unusual resources, it's helpful to provide a note explaining how the playing time was derived. Ensure consistency in the units used (minutes, seconds, meters). If including film length, clearly separate it from the playing time value (e.g., using a comma).
+
+
+---
+
+*This content was automatically generated from the ISBD PDF documentation using Gemini AI analysis.*

@@ -1,0 +1,89 @@
+---
+id: P1022
+title: has specific material designation and extent
+description: ISBD element documentation for has specific material designation and extent
+uri: "isbd:elements/P1022"
+area: area5
+RDF:
+  definition: "Relaciona un recurso con una mención incluyendo la designación específica de material, la extension, la mención de paginación (si es un recurso impreso) y la duración (si el recurso tiene un aspecto inherente de duración)."
+  domain: "isbd:elements/C2001"
+  range: "isbd:elements/C2015"
+  type: "rdf:Property"
+reg:hasUnconstrained: "isbd:unc/elements/P1022"
+reg:name: hasSpecificMaterialDesignationAndExtent
+reg:status: "RegStatus:1001"
+rdf:type: "rdf:Property"
+rdfs:domain: "isbd:elements/C2001"
+rdfs:isDefinedBy: "isbd:elements/"
+rdfs:label: has specific material designation and extent
+rdfs:label@es: "tiene designación específica del material y extensión"
+rdfs:range: "isbd:elements/C2015"
+skos:definition: "Relaciona un recurso con una mención incluyendo la designación específica de material, la extension, la mención de paginación (si es un recurso impreso) y la duración (si el recurso tiene un aspecto inherente de duración)."
+---
+# has specific material designation and extent
+
+The ISBD element "specific material designation and extent" is discussed as two separate, though related, elements in the ISBD documentation: "specific material designation" and "extent." They are always used together in Area 5 (Material Description Area) and so will be treated as a combined element for the purposes of this response.
+
+## Element Reference
+
+**Definition:** The specific material designation names and numbers the physical unit(s) constituting the resource. The extent then adds other measures of extent as appropriate, such as the number of pages or leaves.
+
+**Domain:** Area 5 (Material Description Area) of an ISBD bibliographic record.
+
+**Range:** A string containing the number and type of units, followed by the number of subunits and/or playing time in parentheses.
+
+**Element type:** Literal.
+
+
+## Additional Information
+
+**Scope and Purpose:**  This combined element provides a concise overview of the physical makeup of a resource. It tells the user how many physical pieces the resource comprises and how extensive each of those pieces is. This information helps in identification and selection, especially when differentiating between various editions or formats of a work. It also assists in physical resource management within libraries.
+
+**User tasks supported:**
+- Identifying a specific manifestation of a resource.
+- Distinguishing between different editions or formats.
+- Understanding the physical composition of the resource.
+- Requesting or retrieving the correct material.
+
+
+
+## Element Values
+
+**Rules and Guidelines:** The number of physical units is recorded in Arabic numerals, followed by the specific material designation. If the resource is still being issued or the number of units is unknown, only the specific material designation is given without a number. Standard abbreviations may be used (e.g., "vol." for volume, "p." for pages).  The extent is recorded in parentheses after the specific material designation.
+
+**Value Constraints and Formats:**  Units of measurement for dimensions are typically centimeters (rounded up), millimeters for film gauges and tape widths, or minutes/seconds for playing time. The extent uses Arabic numerals for page numbers, leaves, frames, etc., and may use roman numerals in specific cases as noted in the ISBD documentation.
+
+**String encoding scheme:** UTF-8 is recommended, but ultimately determined by the system implementing the ISBD.
+
+
+## Examples
+
+```
+1 sound disc (30 min)
+3 vol. (512, 480, 500 p.)
+1 map : col. ; 65 x 48 cm, folded to 22 x 12 cm
+1 film reel (120 min, 1200 m)
+1 score (32 p.) + 4 parts (12, 15, 10, 8 p.)
+```
+
+
+## Relationships
+
+**Relationship to other ISBD elements:** The specific material designation and extent is directly related to other physical details given in Area 5, such as dimensions and accompanying material. It may also be linked to notes in Area 7 that clarify ambiguities or provide more details on the physical description.
+
+**Super-types and sub-types:** "Extent" might be considered a sub-element of the more general concept of "material description". There are also sub-types of extent, such as "pagination" for describing the extent of paged resources.
+
+**Inverse relationships:** None explicitly defined in the ISBD.
+
+
+
+## Stipulations
+
+**Special considerations:** For older monographic resources, there are specific rules for dealing with bibliographic format designations (folio, quarto, octavo, etc.) and collation. For unpublished resources, the description always relates to the copy in hand.  For electronic resources, file size may be included in parentheses as part of the extent.
+
+**Best practices:**  Use standard abbreviations and terminology where possible for consistency. If the resource is complex or has unusual physical characteristics, consider adding notes in Area 7 for clarification.  For multipart resources or serials, clearly indicate the extent of each part if it varies. Ensure consistency in the application of rounding rules for dimensions and other measurements.  Prioritize clarity and unambiguity when describing the extent of complex or unusual resources.
+
+
+---
+
+*This content was automatically generated from the ISBD PDF documentation using Gemini AI analysis.*

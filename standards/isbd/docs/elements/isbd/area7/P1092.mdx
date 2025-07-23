@@ -1,0 +1,86 @@
+---
+id: P1092
+title: has note on numbers
+description: ISBD element documentation for has note on numbers
+uri: "isbd:elements/P1092"
+area: area7
+RDF:
+  definition: Relates a resource to a note on numbers or identifiers associated with it.
+  domain: "isbd:elements/C2001"
+  type: "rdf:Property"
+  scopeNote: "Excludes identifiers recorded in the resource identifier and terms of availability area."
+  elementSubType: "isbd:elements/P1045"
+reg:hasUnconstrained: "isbd:unc/elements/P1092"
+reg:name: hasNoteOnNumbers
+reg:status: "RegStatus:1001"
+rdf:type: "rdf:Property"
+rdfs:domain: "isbd:elements/C2001"
+rdfs:isDefinedBy: "isbd:elements/"
+rdfs:label: has note on numbers
+rdfs:label@es: "tiene nota relativa a números"
+rdfs:subPropertyOf: "isbd:elements/P1045"
+skos:definition: Relates a resource to a note on numbers or identifiers associated with it.
+skos:definition@es: "Relaciona un recurso a una nota relativa a números o identificadores asociados con él."
+skos:scopeNote: "Excludes identifiers recorded in the resource identifier and terms of availability area."
+skos:scopeNote@es: "Se excluyen los identificadores registrados en el área de identificador del recurso y condiciones de disponibilidad."
+---
+# has note on numbers
+
+The ISBD element "note on numbers" (isbd:elements/P1092) is found within the ISBD documentation and corresponds to section 7.10.4 in the PDF.
+
+## Element Reference
+
+- **Official ISBD Definition:** Numbers or identifiers associated with the resource but not given in area 8 may be given in a note.
+- **Domain:**  Relates to a bibliographic resource.
+- **Range:**  A textual note containing numbers or identifiers.
+- **Element Type:** Descriptive.
+
+## Additional Information
+
+- **Scope and Purpose:** This element allows for the inclusion of any numbers or identifiers relevant to the resource that don't fit within the formally defined areas, particularly Area 8 (Resource Identifier and Terms of Availability).  This can include various control numbers, report numbers, technical report numbers, deposit numbers, or other identifiers assigned by organizations or publishers.
+- **User Tasks Supported:**  Enhanced resource discovery and identification; disambiguation between similar resources; facilitating retrieval in systems using different identification schemes.
+
+## Element Values
+
+- **Rules and Guidelines:** The note should clearly state the type of number being provided (e.g., "Report number:", "Technical report number:", "Contract number:").  If the number is part of a specific scheme, the name of the scheme should be included (e.g., "ERIC document number:").
+- **Value Constraints and Formats:**  No specific format is prescribed, but clarity and consistency are essential. If a standard format exists for the particular type of number, it should be followed.
+- **String Encoding Schemes:**  Not applicable, as this element appears within a textual note.
+
+## Examples
+
+```
+Note: Report number: PB85-100448
+```
+
+```
+Note: Technical report number: UIUCDCS-R-89-1501
+```
+
+```
+Note: Contract number: DAAG29-80-C-0041
+```
+
+```
+Note: Project number: DOE/ER/01198
+```
+
+```
+Note: ERIC document number: ED296688
+```
+
+## Relationships
+
+- **Relationships to Other ISBD Elements:**  Complements Area 8 (Resource Identifier and Terms of Availability) by providing additional identifying numbers. Can also relate to information provided in other areas, if the number clarifies or expands upon that information.
+- **Super-types and Sub-types:**  No formal super- or sub-types are defined within the ISBD standard itself, though individual cataloging agencies or systems might define them for their specific needs.
+- **Inverse Relationships:** None explicitly defined.
+
+## Stipulations
+
+- **Special Considerations:** Only numbers considered important for users of bibliographic records should be included. Avoid redundant information already present in other areas.
+- **Exceptions:** No exceptions noted in the ISBD.
+- **Best Practices:** Be as specific as possible when identifying the type of number provided. Use established labels and standard formats where they exist.  Maintain consistency in presentation across records.
+
+
+---
+
+*This content was automatically generated from the ISBD PDF documentation using Gemini AI analysis.*

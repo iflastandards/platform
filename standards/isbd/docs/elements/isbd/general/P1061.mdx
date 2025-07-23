@@ -1,0 +1,71 @@
+---
+id: P1061
+title: has reduction ratio
+description: ISBD element documentation for has reduction ratio
+uri: "isbd:elements/P1061"
+area: general
+RDF:
+  definition: Relates a resource that is a microform to an indication of the reduction ratio.
+  domain: "isbd:elements/C2001"
+  type: "rdf:Property"
+  scopeNote: "Where possible the ratio is expressed numerically. The terms \"low reduction\" (up to 15x), \"high reduction\" (31x–60x), \"very high reduction\" (61x–90x) and \"ultra-high reduction\" (91x and upwards) or their equivalents in another language and/or script are used in cases where the reduction ratio cannot be specified exactly."
+reg:hasUnconstrained: "isbd:unc/elements/P1061"
+reg:name: hasReductionRatio
+reg:status: "RegStatus:1001"
+rdf:type: "rdf:Property"
+rdfs:domain: "isbd:elements/C2001"
+rdfs:isDefinedBy: "isbd:elements/"
+rdfs:label: has reduction ratio
+rdfs:label@es: "tiene proporción de reducción"
+skos:definition: Relates a resource that is a microform to an indication of the reduction ratio.
+skos:definition@es: "Relaciona un recurso que es una microforma con una indicación de su proporción de reducción."
+skos:scopeNote: "Where possible the ratio is expressed numerically. The terms \"low reduction\" (up to 15x), \"high reduction\" (31x–60x), \"very high reduction\" (61x–90x) and \"ultra-high reduction\" (91x and upwards) or their equivalents in another language and/or script are used in cases where the reduction ratio cannot be specified exactly."
+---
+# has reduction ratio
+
+The ISBD element "reduction ratio" (isbd:elements/P1061) is found within the PDF as part of the "Other physical details" element in Area 5 (Material Description Area).
+
+## Element Reference
+
+- **Official ISBD definition:** An indication of the reduction ratio is given for microforms. (5.2.5)
+- **Domain:** Microform resources.
+- **Range:** A representative fraction or descriptive terms indicating reduction size.
+- **Element type:**  Descriptive.
+
+## Additional Information
+
+- **Scope and purpose:** To indicate the degree to which the original document has been reduced in size in a microform reproduction. This helps users understand the level of magnification required for viewing and helps in identifying specific microform editions.
+- **User tasks supported:** Selecting the appropriate microform reader, understanding the scale of the reproduced content, differentiating between different microform editions of the same resource.
+
+## Element Values
+
+- **Specific rules or guidelines:** The ratio is preferably expressed numerically as a representative fraction (e.g., 14x, 150x). When a precise ratio cannot be determined, descriptive terms such as "low reduction" (up to 15x), "high reduction" (31x–60x), "very high reduction" (61x-90x), and "ultra-high reduction" (91x and upwards) or their equivalents may be used.
+- **Value constraints or formats:**  If numeric, use the multiplier followed by "x" (e.g., 24x). Standard ranges are defined for the descriptive terms.
+- **String encoding schemes:**  Not applicable.
+
+## Examples
+
+```
+1 microfilm reel: diazo, 14x
+6 microfiches: silver halide, 150x
+1 microcard: ultra high reduction
+1 aperture card: reduction ratio 24X
+1 microfilm cassette: silver halide, low reduction
+```
+
+## Relationships
+
+- **Relationships to other ISBD elements:** This element is a sub-element of "Other physical details" in Area 5. It is related to "Specific material designation" (e.g., "1 microfilm reel") as it further describes the characteristics of the microform.
+- **Super-types and sub-types:** The general super-type would be "Physical description."  Sub-types would be the specific designations (e.g., "high reduction," "24x").
+- **Inverse relationships:** None specified in ISBD.
+
+
+## Stipulations
+
+- **Special considerations, exceptions, or usage notes:**  Use descriptive terms only when a precise numerical ratio cannot be ascertained.  The specific definitions for the terms (e.g., the ranges for "high reduction") should be consistently applied.
+- **Best practices:**  Always strive for the most precise numerical reduction ratio.  If descriptive terms are used, ensure clarity and consistency by adhering to the defined ranges for each term. It's also good practice to provide accompanying documentation that clarifies reduction ratios further where possible, especially for older microform collections that might not be standardized.
+
+
+---
+
+*This content was automatically generated from the ISBD PDF documentation using Gemini AI analysis.*

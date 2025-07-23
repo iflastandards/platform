@@ -1,0 +1,89 @@
+---
+id: P1123
+title: has note on supplement to or insert in
+description: ISBD element documentation for has note on supplement to or insert in
+uri: "isbd:elements/P1123"
+area: area7
+RDF:
+  definition: "Relates a resource that is a supplement to or insert in another resource to a note of the title, the key title and ISSN of the main resource."
+  domain: "isbd:elements/C2001"
+  type: "rdf:Property"
+  elementSubType: "isbd:elements/P1045"
+reg:hasUnconstrained: "isbd:unc/elements/P1123"
+reg:name: hasNoteOnSupplementToOrInsertIn
+reg:status: "RegStatus:1001"
+rdf:type: "rdf:Property"
+rdfs:domain: "isbd:elements/C2001"
+rdfs:isDefinedBy: "isbd:elements/"
+rdfs:label: has note on supplement to or insert in
+rdfs:label@es: "tiene nota de suplemento a o de insertado en"
+rdfs:subPropertyOf: "isbd:elements/P1045"
+skos:definition: "Relates a resource that is a supplement to or insert in another resource to a note of the title, the key title and ISSN of the main resource."
+skos:definition@es: "Relaciona un recurso que es un suplemento de o un inserto en otro recurso con una nota del título, título clave e ISSN del recurso principal."
+---
+# has note on supplement to or insert in
+
+The ISBD element "note on supplement to or insert in" is discussed within the broader context of notes related to other resources in Section 7.2.4.5 of the ISBD documentation.  It doesn't appear as a distinct, individually defined element with a unique identifier like isbd:elements/P1123. Therefore, I cannot provide all the requested sections as they are not explicitly defined in the ISBD in that granular way.
+
+## Element Reference
+
+- **Definition:** A note indicating the title or key title (and ISSN) of the main resource to which the described resource is a supplement or insert. (Derived from section 7.2.4.5)
+- **Domain and Range:**  Not explicitly defined in the ISBD as separate properties, but implicitly relates a described *resource* (manifestation in FRBR terms) to its *host resource*.
+- **Element type:** Note (textual)
+
+
+## Additional Information
+
+- **Scope and Purpose:** To clarify the relationship between a supplementary or inserted resource and the main resource it is associated with, aiding in identification and retrieval.  This is particularly important when the supplement or insert has a non-distinctive title that would be insufficient on its own.
+- **User tasks supported:** Finding supplements or inserts related to a main work; understanding the bibliographic context of a supplement or insert; distinguishing between different supplements or inserts related to the same main work.
+
+
+## Element Values
+
+- **Rules and Guidelines:** The note should begin with "Supplement to:" or "Insert in:" followed by the title of the main work.  If the main work is a continuing resource, providing the key title and ISSN is recommended.
+- **Value constraints or formats:** No strict format is mandated, but clarity and conciseness are encouraged.
+- **String Encoding:** No specific encoding is prescribed by the ISBD, but UTF-8 is generally recommended for internationalization.
+
+
+## Examples
+
+```
+Supplement to: Philosophical magazine = ISSN 0031-8086
+Title proper: Advances in physics
+```
+
+```
+Supplement to: La lettre du maire = ISSN 0395-0182
+Title proper: La lettre du maire (Paris). Textes et documents
+```
+
+```
+Insert in: Transport public = ISSN 0249-5643
+Title proper: Action transport
+```
+
+```
+Supplement to: Hamlet / William Shakespeare
+```
+
+```
+Insert in: The complete works of Jane Austen
+```
+
+## Relationships
+
+- **Relationships to other ISBD elements:** Relates to Area 1 (Title and Statement of Responsibility) and Area 6 (Series and Multipart Monographic Resource) as it clarifies titles and their relationships.  Also related to Area 7 (Notes) more generally.
+- **Super-types and Sub-types:** This could be considered a sub-type of a more general "Relationship Note" that describes relationships between resources.
+- **Inverse Relationship:**  A main work might have a note listing its supplements or inserts (though this isn't explicitly defined as an ISBD element).
+
+
+
+## Stipulations
+
+- **Special Considerations:** If the main work is itself part of a series, the series information should be included in Area 6, not in this note.
+- **Best practices:** Use standard abbreviations (e.g., ISSN) where appropriate. Ensure that the title provided for the main work is sufficient for unambiguous identification. If necessary, include additional bibliographic details such as the statement of responsibility or publication information.
+
+
+---
+
+*This content was automatically generated from the ISBD PDF documentation using Gemini AI analysis.*

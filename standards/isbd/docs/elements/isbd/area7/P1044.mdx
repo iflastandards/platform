@@ -1,0 +1,90 @@
+---
+id: P1044
+title: has note on basis of description
+description: ISBD element documentation for has note on basis of description
+uri: "isbd:elements/P1044"
+area: area7
+RDF:
+  definition: "Relates a resource that is a series or multipart monograph to a note on the issue, part, iteration, etc., that forms that basis of its description."
+  domain: "isbd:elements/C2001"
+  type: "rdf:Property"
+  scopeNote: "Includes the issue or part that forms the basis of the description if the description of a serial or multipart monographic resource is not based on the first issue or part published. Includes the earliest analytic consulted and its date of publication, production, distribution, etc. if a description is made for an unnumbered monographic series itself. Includes the analytic and its date of publication if other analytics also have been consulted and the latest analytic can be identified. Includes the latest iteration consulted in preparing the description if the description is not based on the first iteration of an integrating resource. Includes the issue or iteration that forms the basis of the description of a remote-access electronic resource, along with the date on which it was viewed."
+  elementSubType: "isbd:elements/P1045"
+reg:hasUnconstrained: "isbd:unc/elements/P1044"
+reg:name: hasNoteOnBasisOfDescription
+reg:status: "RegStatus:1001"
+rdf:type: "rdf:Property"
+rdfs:domain: "isbd:elements/C2001"
+rdfs:isDefinedBy: "isbd:elements/"
+rdfs:label: has note on basis of description
+rdfs:label@es: "tiene nota sobre base de descripción"
+rdfs:subPropertyOf: "isbd:elements/P1045"
+skos:definition: "Relates a resource that is a series or multipart monograph to a note on the issue, part, iteration, etc., that forms that basis of its description."
+skos:definition@es: "Relaciona un recurso que es una serie o recurso monográfico multiparte con una nota sobre el fascículo, parte, iteración, etc., en  que se basa la descripción."
+skos:scopeNote: "Includes the issue or part that forms the basis of the description if the description of a serial or multipart monographic resource is not based on the first issue or part published. Includes the earliest analytic consulted and its date of publication, production, distribution, etc. if a description is made for an unnumbered monographic series itself. Includes the analytic and its date of publication if other analytics also have been consulted and the latest analytic can be identified. Includes the latest iteration consulted in preparing the description if the description is not based on the first iteration of an integrating resource. Includes the issue or iteration that forms the basis of the description of a remote-access electronic resource, along with the date on which it was viewed."
+skos:scopeNote@es: "Incluye el fascículo o parte en el que se basa la descripción cuando la descripción de una publicación seriada o recurso monográfico multiparte no está basada en el primer fascículo o parte publicada. Incluye la primera analítica consultada y su fecha de publicación, producción, distribución, etc, si se hace una descripción para una serie monográfica no numerada. Si también se han consultado otras analíticas y se puede identificar la última analítica incluye la analítica y su fecha de publicación. Incluye la última iteración consultada al preparar la descripción si esta descripción no se basa en la primera iteración de un recurso integrable. Incluye el fascículo o iteración que forma la base de la descripción de un recurso electrónico de acceso remoto, con la fecha en la que se consultó."
+---
+# has note on basis of description
+
+The ISBD element "note on basis of description" is found within section 7.9 of the ISBD documentation. It's not explicitly defined as a separate, named element like in the RDF, but rather as a type of note within the broader Note Area.
+
+## Element Reference
+
+- **Definition:**  A note stating the specific issue, part, iteration, etc. of a serial, multipart monograph, or integrating resource that forms the basis of the description, especially when the description is not based on the first issue or part. For remote resources, the note includes the date on which the resource was viewed.
+- **Domain:**  Serials, multipart monographs, integrating resources, and remote-access electronic resources.
+- **Range:**  Textual description of the issue/part/iteration and, for remote resources, the date viewed.
+- **Element Type:** Note
+
+## Additional Information
+
+- **Scope and Purpose:**  To clarify which iteration of the resource the description applies to, as this can be crucial for resources that change over time. This is especially important for serials and integrating resources that are not described based on their first issue/iteration. For remote resources, the viewing date provides context, as online content can be dynamic.
+
+- **User Tasks Supported:** Identifying the specific version of the resource being described; understanding the scope and currency of the description, especially for dynamic online resources.
+
+## Element Values
+
+- **Rules/Guidelines:** The numbering for serials is recorded as it would be in Area 3 (Numbering Area).  For integrating resources, the note indicates the latest iteration consulted.  For remote resources, both the iteration/version *and* the date viewed are provided.
+- **Constraints/Formats:** The note should be concise and clearly identify the issue, part, or iteration.  Dates should follow a standard format (YYYY-MM-DD is recommended).
+- **String Encoding:**  UTF-8 is the recommended encoding.
+
+## Examples
+
+```
+. - Description based on: Vol. 3, no. 3 (May/June 1975)
+```
+
+```
+. - Latest volume consulted: Ibsen: four major plays / translated by Rick Davis and Brian Johnson, 1995
+```
+
+```
+. - Description based on the iteration viewed on Oct. 12, 2006
+```
+
+```
+. - Description based on home page (viewed on Feb. 28, 2003, last updated Jan. 8, 2002)
+```
+
+```
+. - Description based on version dated: Oct. 4, 1997 13:22:11
+```
+
+
+## Relationships
+
+- **Related ISBD Elements:** Area 3 (Numbering Area) for serials, Area 2 (Edition Area) for multipart monographs.
+- **Super-types/Sub-types:** This is a sub-type of "Note."
+- **Inverse Relationships:**  None explicitly defined in ISBD.
+
+## Stipulations
+
+- **Special Considerations:** For resources in multiple parts/issues,  the note clarifies which part was used for the description, particularly if it is not the first one. For continuing resources with minor title changes, this note is essential for distinguishing versions.
+- **Exceptions:** This note is not used if the description is based on the first issue/part.
+- **Best Practices:** Be consistent in how the note is phrased (e.g., always use "Description based on:" or "Latest iteration consulted:"). For remote resources, always include the date viewed.  Use standardized date formats.
+
+It is important to note that this type of note provides contextual information crucial for understanding the description's scope.  It's particularly vital for resources that change over time or have multiple iterations available.
+
+
+---
+
+*This content was automatically generated from the ISBD PDF documentation using Gemini AI analysis.*

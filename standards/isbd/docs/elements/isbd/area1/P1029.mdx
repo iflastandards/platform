@@ -1,0 +1,91 @@
+---
+id: P1029
+title: has statement of responsibility of series or multipart monographic resource
+description: ISBD element documentation for has statement of responsibility of series or multipart monographic resource
+uri: "isbd:elements/P1029"
+area: area1
+RDF:
+  definition: "Relates a resource that is a series or multipart monographic resource to one or more names, phrases, or groups of characters relating to the identification and/or function of any persons or corporate bodies responsible for or contributing to the creation or realisation of the intellectual or artistic content of a work contained in the resource."
+  domain: "isbd:elements/C2001"
+  type: "rdf:Property"
+  scopeNote: "The first statement of responsibility is given if the title proper of the series or multipart monographic resource is a generic term. The first and subsequent statements of responsibility are given in other cases when they appear on the prescribed source of information and are necessary for identification of the larger bibliographic resource or otherwise considered important to users of the catalogue."
+reg:hasUnconstrained: "isbd:unc/elements/P1029"
+reg:name: hasStatementOfResponsibilityOfSeriesOrMultipartMonographicResource
+reg:status: "RegStatus:1001"
+rdf:type: "rdf:Property"
+rdfs:domain: "isbd:elements/C2001"
+rdfs:isDefinedBy: "isbd:elements/"
+rdfs:label: has statement of responsibility of series or multipart monographic resource
+rdfs:label@es: "tiene mención de responsabilidad de serie o recurso monográfico multiparte"
+skos:definition: "Relates a resource that is a series or multipart monographic resource to one or more names, phrases, or groups of characters relating to the identification and/or function of any persons or corporate bodies responsible for or contributing to the creation or realisation of the intellectual or artistic content of a work contained in the resource."
+skos:definition@es: "Relaciona un recurso que es una serie o recurso monográfico multiparte con uno o más nombres, frases o grupos de caracteres relacionados con la identificación y/o función de cualquier persona o entidad corporativa responsable de, o que contribuye a, la creación o realización del contenido artístico o intelectual de una obra contenida en el recurso."
+skos:scopeNote: "The first statement of responsibility is given if the title proper of the series or multipart monographic resource is a generic term. The first and subsequent statements of responsibility are given in other cases when they appear on the prescribed source of information and are necessary for identification of the larger bibliographic resource or otherwise considered important to users of the catalogue."
+skos:scopeNote@es: "Se da la primera mención de responsabilidad si el título propiamente dicho de la serie o recurso monográfico multiparte es un término genérico. En los demás  casos, se dan la primera y siguientes menciones de responsabilidad cuando aparecen en la fuente de información prescrita y son necesarias para la identificación del recurso bibliográfico más amplio o bien se considera importante para los usuarios del catálogo."
+---
+# has statement of responsibility of series or multipart monographic resource
+
+The ISBD element "statement of responsibility relating to series or multipart monographic resource" is found within the PDF.
+
+## Element Reference
+
+- **Official ISBD Definition:**  A statement of responsibility relating to a series or multipart monographic resource consists of one or more names, phrases, or groups of characters relating to the identification and/or function of any persons or corporate bodies responsible for or contributing to the intellectual or artistic content of the series or multipart monographic resource. This is analogous to the statement of responsibility relating to title.
+- **Domain:** Series or multipart monographic resource
+- **Range:** Text
+- **Element Type:** Descriptive
+
+## Additional Information
+
+- **Scope and Purpose:**  This element identifies the individuals or entities responsible for the intellectual or artistic content of the series as a whole, not necessarily the individual resource being cataloged. This helps distinguish series and aids in identifying the overall intellectual direction of the series.
+- **User Tasks Supported:**  Searching and browsing series based on persons or entities associated with them, understanding the editorial or creative control of a series.
+
+
+## Element Values
+
+- **Rules/Guidelines:** Transcribe the statement of responsibility exactly as it appears on the series title page, not necessarily as to capitalization and punctuation. Standard abbreviations may be used. Arabic numerals are given in place of other numerals or spelled out numbers.
+- **Value Constraints/Formats:** The first statement of responsibility is preceded by a space, diagonal slash, space (/). Each subsequent statement is preceded by a space, semicolon, space (;), unless the statements are considered to form a single phrase. Parallel statements of responsibility are given according to A.3.2.9 of the ISBD.
+- **String Encoding Schemes:**  Not applicable (although bibliographic records themselves might employ specific encoding, this element does not define it).
+
+## Examples
+
+```
+(Advances in genetics / edited by M.R. Cummings)
+```
+
+```
+(Smithsonian contributions to botany / prepared by the Department of Botany,
+National Museum of Natural History, in cooperation with the United States
+Department of Agriculture ; no. 78)
+```
+
+```
+(Monumenta Germaniae historica. Deutsches Mittelalter. Kritische Studientexte /
+herausgegeben von Kurt Gärtner ; Bd. 2)
+```
+```
+(Sounds of the theatre. Music / editor, George Dale ; assistant editor,
+James Dean)
+```
+```
+(交響曲全集 / 指揮, フルトヴェングラー) 
+```
+
+
+
+## Relationships
+
+- **Relationship to Other ISBD Elements:** Closely related to the "statement of responsibility" element in Area 1, but specifically applied to the series or multipart resource as a whole, appearing in Area 6. Also relates to the "title proper of a series or multipart monographic resource" element, as the statement of responsibility typically follows the title.
+- **Super-types/Sub-types:** No specific sub-types within the ISBD.
+- **Inverse Relationships:** No defined inverse relationship.
+
+## Stipulations
+
+- **Special Considerations:** If the title proper of a series is a generic term, the first statement of responsibility is given. In other cases, subsequent statements of responsibility are given only if they are necessary for identification or otherwise considered important to the users of the catalog.
+- **Exceptions/Usage Notes:** If the larger bibliographic resource consists of a common title and a dependent title or subseries, the statement of responsibility, if given, are given according to 1.4.5.12. If the title proper of a series is made up of a common title and a dependent title, the statement or statements of responsibility, if given, are given according to 1.4.5.12.
+- **Best Practices:** Be consistent in choosing which statements of responsibility to include (first, all, or only those deemed essential).  Prioritize clarity and conciseness.
+
+
+
+
+---
+
+*This content was automatically generated from the ISBD PDF documentation using Gemini AI analysis.*

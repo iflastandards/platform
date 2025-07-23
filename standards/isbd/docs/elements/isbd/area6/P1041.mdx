@@ -1,0 +1,85 @@
+---
+id: P1041
+title: has note on series and multipart monographic resources
+description: ISBD element documentation for has note on series and multipart monographic resources
+uri: "isbd:elements/P1041"
+area: area6
+RDF:
+  definition: Relates a resource to a note on the series and monographic resources area.
+  domain: "isbd:elements/C2001"
+  type: "rdf:Property"
+  scopeNote: "Includes notes giving information about a series or multipart monographic resource in which the resource has been issued, and notes on series editors."
+  elementSubType: "isbd:elements/P1045"
+reg:hasUnconstrained: "isbd:unc/elements/P1041"
+reg:name: hasNoteOnSeriesAndMultipartMonographicResources
+reg:status: "RegStatus:1001"
+rdf:type: "rdf:Property"
+rdfs:domain: "isbd:elements/C2001"
+rdfs:isDefinedBy: "isbd:elements/"
+rdfs:label: has note on series and multipart monographic resources
+rdfs:label@es: "tiene nota de serie o recurso monográfico multiparte"
+rdfs:subPropertyOf: "isbd:elements/P1045"
+skos:definition: Relates a resource to a note on the series and monographic resources area.
+skos:definition@es: "Relaciona un recurso con una nota sobre el área de serie y recurso monográfico."
+skos:scopeNote: "Includes notes giving information about a series or multipart monographic resource in which the resource has been issued, and notes on series editors."
+skos:scopeNote@es: "Incluye notas que dan información sobre la serie o recurso monográfico multiparte en el que el recurso ha sido publicado, y notas sobre los editores de la serie."
+---
+# has note on series and multipart monographic resources
+
+The ISBD element "note on series and multipart monographic resources" is found within the broader "Note Area" (Area 7) of the ISBD.  Specifically, it's discussed in section 7.6 of the provided document.
+
+## Element Reference
+
+- **Official ISBD Definition:** Notes giving information about a series or multipart monographic resource in which a resource has been issued (see area 6) and notes on series editors.  Also, for older monographic resources, notes indicating the source from which series information has been obtained when it's a source other than a prescribed source.
+- **Domain:**  Bibliographic resources that are part of a series or a multipart monographic resource.
+- **Range:** Text strings containing descriptive information about the series or series editors.
+- **Element Type:**  Descriptive.
+
+## Additional Information
+
+- **Scope and Purpose:**  To provide additional information about the series or multipart monographic resource itself, which might not be included in the formal series area (Area 6), such as the overall numbering of the main series when a resource belongs to a subseries, details about the main series when a resource belongs to a subseries, or details about series editors.  For older resources, it clarifies the source of series information when derived from non-prescribed sources.  This aids in contextualizing the resource within the larger bibliographic context of the series and can be valuable for identification, retrieval, and collection management.
+- **User Tasks Supported:** Searching and filtering resources by series, understanding the context of the resource within a series,  identifying works related to a specific editor or within a particular numbered series or subseries.
+
+## Element Values
+
+- **Rules/Guidelines:** Notes should be concise and factual.  Standard abbreviations can be used. For notes indicating a relationship to other continuing resources (continuation, merger, split, absorption, subseries, and subseries relationships), see 7.2.4.7.
+- **Value Constraints/Formats:**  Free text, but preferably following the prescribed punctuation of Areas 1-6 where appropriate (e.g., separating a series title from a statement of responsibility with a `/`).
+- **String Encoding Schemes:**  UTF-8 is recommended.
+
+## Examples
+
+```
+. - (Publications of the University of Manchester. Administration series; no. 1)
+    Note: Numbering in the main series: 244
+
+. - (Das Erbe deutscher Musik. Abteilung Oper und Sologesang; Bd. 8)
+    Note: Numbering in the main series: 68
+
+. - (Geological research reports. Map series; no. 3)
+    Note: Numbering in the main series: 135
+    Note: Editor of the series: Dr. Jane Doe
+
+. - (Early English Text Society. Original series; 245)
+    Note: Series statement from preliminary pages; colophon gives different series information.
+
+. - (Monumenta Germaniae Historica. Scriptores rerum Germanicarum in usum scholarum separatim editi; 62)
+   Note: Numbering in the main series not given.
+```
+
+
+## Relationships
+
+- **Relationship to Other ISBD Elements:**  Complements the information provided in Area 6 (Series and Multipart Monographic Resource Area).  May also relate to Area 7.2 (bibliographic history notes) in cases of complex series relationships. 
+- **Super-types/Sub-types:** Is a sub-type of "Note" (Area 7).  Specific types of series notes (like editor notes) could be considered further sub-types.
+- **Inverse Relationships:**  None explicitly defined in ISBD.
+
+## Stipulations
+
+- **Special Considerations:** For older resources, the source of the series information must be specified in the note if it is not from a prescribed source. This helps determine the authority and reliability of the series information. This source is given after "Series statement from ...".
+- **Exceptions:**  If the series information is already given fully in Area 6, no additional note is needed.
+- **Best Practices:**  Keep notes concise and clear.  Use standard abbreviations where applicable. Be consistent in formatting and punctuation. If a resource belongs to a larger series, give the ISSN of the series as well. Consider the relevance of the information to users – avoid overly detailed or obscure notes that are unlikely to be helpful.
+
+
+---
+
+*This content was automatically generated from the ISBD PDF documentation using Gemini AI analysis.*

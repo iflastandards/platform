@@ -1,0 +1,89 @@
+---
+id: P1192
+title: has manifestation aspect
+description: ISBD element documentation for has manifestation aspect
+uri: "isbd:elements/P1192"
+area: general
+RDF:
+  definition: Relates a bibliographic resource to a manifestation reflected in it.
+  domain: "isbd:elements/C2001"
+  range: "frbrer:C1003"
+  type: "rdf:Property"
+  inverseOf: "isbd:elements/P1196"
+reg:hasUnconstrained: "isbd:unc/elements/P1192"
+reg:name: hasManifestationAspect
+reg:status: "RegStatus:1001"
+rdf:type: "rdf:Property"
+rdfs:domain: "isbd:elements/C2001"
+rdfs:isDefinedBy: "isbd:elements/"
+rdfs:label: has manifestation aspect
+rdfs:range: "frbrer:C1003"
+owl:inverseOf: "isbd:elements/P1196"
+skos:definition: Relates a bibliographic resource to a manifestation reflected in it.
+---
+# has manifestation aspect
+
+The element "manifestation aspect" (isbd:elements/P1192) is **not explicitly defined** within the provided ISBD documentation. The ISBD standard focuses on describing the physical and intellectual characteristics of resources, and while the concept of "manifestation" is touched upon (as in the distinction between edition, issue, and copy), there isn't a dedicated element for "manifestation aspect" as formally defined in FRBR.  The closest elements in the ISBD relate to the "Material Description Area" (Area 5), which covers extent, other physical details, dimensions, and accompanying material. It's within these elements that aspects of a manifestation are implicitly described.
+
+Since the element itself is absent, the requested structured response cannot be fully provided.  However, I can offer some information based on a FRBR understanding of manifestation and how its aspects are *implicitly* handled within ISBD:
+
+##  Element Reference (Implicit in ISBD)
+
+While not explicitly defined, aspects of manifestation are covered through various ISBD elements within Area 5: "Material Description Area":
+
+* **Extent (5.1):**  This covers the number and type of physical units, pagination, playing time, etc., which are all aspects of the manifestation's physical format.
+* **Other physical details (5.2):**  Includes information on illustrations, color, sound characteristics, etc., which are further aspects differentiating manifestations.
+* **Dimensions (5.3):** Physical dimensions contribute to distinguishing different manifestations.
+* **Accompanying material (5.4):** The presence or absence of accompanying materials is another manifestation-level distinction.
+
+## Additional Information (FRBR Context)
+
+In FRBR, a manifestation is the physical embodiment of an expression of a work. Manifestation aspects, therefore, refer to the specific physical characteristics that distinguish one manifestation from another.  This helps users understand the specific format and physical makeup of the resource they are looking for.
+
+
+## Element Values (Implicit in ISBD)
+
+The values for manifestation aspects are embedded within the values of the ISBD elements mentioned above. These values would adhere to the specific rules and guidelines for each respective ISBD element (e.g., expressing dimensions in centimeters, indicating the presence of illustrations with "ill.", etc.).
+
+
+## Examples (Implicit in ISBD)
+
+Here are examples showing how aspects of a manifestation are represented through ISBD elements:
+
+```
+1 sound disc (33 1/3 rpm, stereo) ; 30 cm.  + 1 booklet (12 p.)
+```
+
+```
+1 videocassette (VHS) (120 min) : col. ; sd.
+```
+
+
+```
+1 portfolio (12 maps : col.) ; 40 x 50 cm.
+```
+
+```
+3 vol. (xx, 320 p. ; xiv, 288 p. ; xvi, 352 p.): ill. ; 24 cm.
+```
+
+```
+1 microfilm reel : positive ; 35 mm. ; 18x reduction.
+```
+
+## Relationships (FRBR Context)
+
+In FRBR, the manifestation is related to the expression.  The ISBD description as a whole contributes to identifying the manifestation.  There isn't a direct, formalized link between a specific "manifestation aspect" element and other ISBD elements, as the concept is distributed across Area 5.
+
+
+## Stipulations (General ISBD Principles)
+
+The general stipulations of ISBD apply when describing manifestation aspects. These include transcribing information accurately from the resource, using prescribed punctuation, and providing information in a consistent order.
+
+
+It's important to reiterate that the concept of "manifestation aspect" as a formalized element is not present in the provided ISBD documentation. The information above is an interpretation of how ISBD elements are used to *implicitly* describe characteristics that align with the FRBR definition of manifestation aspects.  A future alignment of ISBD with LRM may introduce a more explicit element for this purpose.
+
+
+---
+
+*This content was automatically generated from the ISBD PDF documentation using Gemini AI analysis.*

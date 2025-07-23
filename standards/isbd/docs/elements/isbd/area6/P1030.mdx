@@ -1,0 +1,71 @@
+---
+id: P1030
+title: has international standard number of series or multipart monographic resource
+description: ISBD element documentation for has international standard number of series or multipart monographic resource
+uri: "isbd:elements/P1030"
+area: area6
+RDF:
+  definition: "Relates a resource that is a series or multipart monographic resource to an international standard number relating to it."
+  domain: "isbd:elements/C2001"
+  type: "rdf:Property"
+reg:hasUnconstrained: "isbd:unc/elements/P1030"
+reg:name: hasInternationalStandardNumberOfSeriesOrMultipartMonographicResource
+reg:status: "RegStatus:1001"
+rdf:type: "rdf:Property"
+rdfs:domain: "isbd:elements/C2001"
+rdfs:isDefinedBy: "isbd:elements/"
+rdfs:label: has international standard number of series or multipart monographic resource
+rdfs:label@es: "tiene número normalizado internacional de serie o recurso monográfico multiparte"
+skos:definition: "Relates a resource that is a series or multipart monographic resource to an international standard number relating to it."
+skos:definition@es: "Relaciona un recurso que es una serie o recurso monográfico multiparte con un número normalizado internacional relacionado con él."
+---
+# has international standard number of series or multipart monographic resource
+
+The ISBD element "international standard number of series or multipart monographic resource" is found in the PDF and corresponds to element 6.5.
+
+## Element Reference
+
+- **Definition:** An international standard number relating to a series or multipart monographic resource of which a resource is a part is given when it is known, preceded by its customary label.
+- **Domain:** Series or multipart monographic resource.
+- **Range:** International Standard Serial Number (ISSN) or International Standard Book Number (ISBN).
+- **Element Type:** Identifier.
+
+## Additional Information
+
+- **Scope and Purpose:**  This element serves to uniquely identify the series or multipart monographic resource to which the described resource belongs.  It aids in collocation, retrieval, and management of resources that are part of a larger publication sequence.
+- **User Tasks Supported:** Finding all resources within a given series, differentiating between series with similar titles, managing series holdings in libraries.
+
+
+## Element Values
+
+- **Rules and Guidelines:** The number should be presented with its prefixed label (ISSN or ISBN) and conform to the respective standard format (e.g., ISSN with hyphens, ISBN-10 or ISBN-13).
+- **Value Constraints and Formats:** Must be a valid ISSN or ISBN, as applicable. ISSN should include the hyphens. For ISBN, the older 10-digit format or the newer 13-digit format may be used.
+- **String Encoding Schemes:**  No specific string encoding is prescribed, but UTF-8 is generally recommended for international interoperability.
+
+## Examples
+
+```
+(Graeco-Roman memoirs, ISSN 0306-9222)
+(Transactions of the Royal Society of Edinburgh, ISSN 0080-4568)
+(Historia de España, ISBN 978-84-413-2761-0)
+(Elsevier's interactive anatomy, ISSN 0929-2225)
+(Manuskripte des Geographischen Instituts der FU Berlin, ISSN 0170-6268)
+```
+
+
+## Relationships
+
+- **Relationships to other ISBD elements:**  Relates directly to the "title proper of a series or multipart monographic resource" (element 6.1) and other series information in Area 6. May be supplemented by notes in Area 7 if the standard number applies to a subseries or if there are variant numbers.
+- **Super-types and Sub-types:** None explicitly mentioned in the documentation.
+- **Inverse relationships:** A series could potentially be described as having multiple resources as members, but this relationship isn't directly expressed in ISBD itself.
+
+## Stipulations
+
+- **Special Considerations:** If a resource is part of a subseries with a dependent title and also part of a larger main series, the ISSN for the main series is omitted from area 6 and may instead be given in area 7 (see 7.6.1). This prevents redundant recording of the main series ISSN when describing individual parts within a subseries.
+- **Exceptions:** No exceptions to recording the standard number when known are described, but the element itself is only *mandatory if available*.
+- **Best Practices:** Always record the number when it is known and applicable. Ensure the number and its label adhere to the appropriate standard and include hyphens where necessary for ISSNs.  Use notes in Area 7 to explain any complexities or variations in numbering.
+
+
+---
+
+*This content was automatically generated from the ISBD PDF documentation using Gemini AI analysis.*

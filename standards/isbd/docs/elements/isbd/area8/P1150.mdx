@@ -1,0 +1,71 @@
+---
+id: P1150
+title: has qualification to terms of availability
+description: ISBD element documentation for has qualification to terms of availability
+uri: "isbd:elements/P1150"
+area: area8
+RDF:
+  definition: "Relates a resource to a qualification to a statement of the price if it is for sale or a brief statement of other terms if it is not for sale."
+  domain: "isbd:elements/C2001"
+  type: "rdf:Property"
+reg:hasUnconstrained: "isbd:unc/elements/P1150"
+reg:name: hasQualificationToTermsOfAvailability
+reg:status: "RegStatus:1001"
+rdf:type: "rdf:Property"
+rdfs:domain: "isbd:elements/C2001"
+rdfs:isDefinedBy: "isbd:elements/"
+rdfs:label: has qualification to terms of availability
+rdfs:label@es: "tiene aclaración a condición de disponibilidad"
+rdfs:label@es[2]: tiene título propiamente dicho de serie
+skos:definition: "Relates a resource to a qualification to a statement of the price if it is for sale or a brief statement of other terms if it is not for sale."
+skos:definition@es: "Relaciona un recurso con una aclaración sobre una mención del precio, si está a la venta, o, si no lo está, una breve mención sobre otras condiciones de disponibilidad."
+---
+# has qualification to terms of availability
+
+The ISBD element "qualification to terms of availability" is found within the larger "Terms of Availability" element and is used to provide additional context or details about the availability information.  It does not have its own distinct entry in the glossary.
+
+## Element Reference
+
+- **Definition:**  A brief statement that qualifies, explains, or corrects the terms of availability.  (Derived from the description in 8.3.2 and general principles of qualifications within ISBD)
+- **Domain:** Terms of availability (isbd:P1140)
+- **Range:** Literal (text)
+- **Element Type:** Sub-element (qualifier)
+
+
+## Additional Information
+
+- **Scope and Purpose:** To provide further details or context to the terms of availability, such as specifying discounts, limitations on availability, or specific vendor information. It clarifies ambiguities and provides a more granular level of detail.
+- **User Tasks Supported:** Aids users in understanding the nuances of how a resource can be obtained or accessed. For example, it helps distinguish between different price categories (e.g., student price vs. institutional price) or clarify if access is restricted.
+
+## Element Values
+
+- **Rules/Guidelines:**  Free text, but should be concise and relevant to the availability information. Standard abbreviations may be used.
+- **Value Constraints/Formats:**  Enclosed in parentheses following the terms of availability. Multiple qualifiers are separated by a space, semicolon, space (;).
+- **String Encoding:**  UTF-8 (general ISBD recommendation for character encoding)
+
+## Examples
+
+```
+: USD 25.00 (member price)
+: EUR 15.00 (special offer until Dec. 31, 2024)
+: Free access (limited to university network)
+: Available from vendor XYZ only
+: Print version not for sale; online version free (open access)
+```
+
+## Relationships
+
+- **Relationship to other ISBD elements:**  A sub-element of "Terms of Availability" (isbd:P1140). It is directly related to the price or availability statement it qualifies.
+- **Super-types/Sub-types:** None explicitly defined in ISBD.  However, you can consider different categories of qualifiers based on the type of information they provide (e.g., price qualifiers, access restriction qualifiers, vendor information qualifiers), although ISBD doesn't formalize this.
+- **Inverse Relationships:**  None specified.
+
+## Stipulations
+
+- **Special Considerations:** Use sparingly. Only include qualifications that are deemed important for users to understand the availability of the resource.  Avoid redundant or trivial information.
+- **Exceptions:** None explicitly stated in ISBD, but general principles of conciseness and relevance apply.
+- **Best Practices:** Use standard abbreviations where possible. Keep the qualification brief and directly related to the terms of availability. If the qualification is lengthy or complex, consider putting the information in a note instead.
+
+
+---
+
+*This content was automatically generated from the ISBD PDF documentation using Gemini AI analysis.*

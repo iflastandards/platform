@@ -1,0 +1,98 @@
+---
+id: P1053
+title: has extent
+description: ISBD element documentation for has extent
+uri: "isbd:elements/P1053"
+area: area5
+RDF:
+  definition: "Relates a resource to the names and numbers of the physical unit or units constituting the resource."
+  domain: "isbd:elements/C2001"
+  type: "rdf:Property"
+reg:hasUnconstrained: "isbd:unc/elements/P1053"
+reg:name: hasExtent
+reg:status: "RegStatus:1001"
+rdf:type: "rdf:Property"
+rdfs:domain: "isbd:elements/C2001"
+rdfs:isDefinedBy: "isbd:elements/"
+rdfs:label: has extent
+rdfs:label@es: "tiene extensión"
+skos:definition: "Relates a resource to the names and numbers of the physical unit or units constituting the resource."
+skos:definition@es: "Relaciona un recurso con los nombres y números de la unidad o unidades físicas que constituyen el recurso."
+---
+# has extent
+
+The ISBD element "extent" (isbd:elements/P1053) is found within the Material Description Area (Area 5) of the ISBD.
+
+## Element Reference
+
+- **Definition:** The extent of a resource is the number of units and/or subunits making up a resource, e.g., the volumes and/or pages of a printed text, the frames of a filmstrip, the duration or playing time of an audiovisual resource.
+- **Domain:**  Monographic resources, Serials, Integrating resources, Multipart resources, Cartographic resources, Multimedia resources, etc.  Essentially any bibliographic resource that has a quantifiable physical or temporal extent.
+- **Range:**  Numeric values with units (e.g., pages, leaves, volumes, discs, tracks, minutes, bytes, etc.), statements of approximate extent (e.g. "ca. 300 pages"), or coded representations.
+- **Element Type:**  Descriptive metadata.
+
+
+## Additional Information
+
+- **Scope and Purpose:** The extent element provides essential information for identifying and selecting a resource. It helps users understand the physical size or duration of the material, which is crucial for determining its suitability for their needs (e.g., a short article vs. a multi-volume set, a 3-minute song vs. a full-length symphony). It also helps distinguish different manifestations of the same work.
+- **User Tasks Supported:**
+    - Identifying a specific manifestation.
+    - Selecting appropriate resources based on length or size.
+    - Estimating the time required to engage with a resource.
+    - Distinguishing different editions or versions of a resource.
+
+
+## Element Values
+
+- **Rules/Guidelines:**
+    - Arabic numerals are used for quantifiable extent.
+    - Standard abbreviations can be used for units (e.g., "p." for pages, "vol." for volumes, "min" for minutes).
+    - For numbered sequences, the number on the *last* numbered unit is recorded.
+    - If leaves are numbered on one side only, "leaves" is used. If numbered on both sides, "pages" is used.
+    - For older resources, the ideal extent is of the complete resource.  If the resource is incomplete or a complete copy can't be found, this is indicated in a note. For manuscripts, the description is based on the item in hand, and imperfections are noted.
+- **Value Constraints/Formats:**  Follow specified order and punctuation patterns for the area (see section 5.1 and A.3 of the linked document).
+- **String Encoding Schemes:** Not applicable in the core ISBD element; encoding would be applied at the record level (e.g., MARC, MODS).
+
+
+## Examples
+
+```
+334 p.
+```
+
+```
+4 v. (various pagings)
+```
+
+```
+1 sound disc (30 min)
+```
+
+```
+1 microfilm reel (36 fr.)
+```
+
+```
+ca. 500 leaves
+```
+
+```
+1 online resource (2 MB)
+```
+
+
+## Relationships
+
+- **Relationships to Other ISBD Elements:**  Extent is closely related to other elements within the Material Description Area, including specific material designation (5.1.1), other physical details (5.2), and dimensions (5.3). It can influence how information in these related areas is recorded.
+- **Supertypes/Subtypes:** The general "extent" element may be further specified with other elements that more precisely quantify extent like "number of pages" or "playing time".
+- **Inverse Relationships:** None specified in the ISBD.
+
+## Stipulations
+
+- **Special Considerations:** When a resource is issued in multiple units with separate numbering, the extent of each unit should be specified (see 5.1.4.2). For component parts, the extent may be omitted if it can be inferred from the host resource (5.1.4.3.1).
+- **Exceptions:** See the rules for incomplete resources, older monographic resources, and manuscripts noted in the Element Values section.
+- **Best Practices:** Strive to provide as precise and complete an extent statement as possible based on the available information. If the extent is unclear or approximate, use qualifiers like "ca." (circa) and explain any uncertainties or peculiarities in a note. Use standard abbreviations and units to ensure consistency and interoperability.
+
+
+---
+
+*This content was automatically generated from the ISBD PDF documentation using Gemini AI analysis.*

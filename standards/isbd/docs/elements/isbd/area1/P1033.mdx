@@ -1,0 +1,75 @@
+---
+id: P1033
+title: has key title
+description: ISBD element documentation for has key title
+uri: "isbd:elements/P1033"
+area: area1
+RDF:
+  definition: "Relates a resource that is a continuing resource to the unique name assigned to it by the ISSN Network."
+  domain: "isbd:elements/C2001"
+  type: "rdf:Property"
+  scopeNote: "The key title is given even when it is identical to the title proper of the continuing resource. It is not given if the ISSN to which it applies is not given."
+reg:hasUnconstrained: "isbd:unc/elements/P1033"
+reg:name: hasKeyTitle
+reg:status: "RegStatus:1001"
+rdf:type: "rdf:Property"
+rdfs:domain: "isbd:elements/C2001"
+rdfs:isDefinedBy: "isbd:elements/"
+rdfs:label: has key title
+rdfs:label@es: "tiene título clave"
+skos:definition: "Relates a resource that is a continuing resource to the unique name assigned to it by the ISSN Network."
+skos:definition@es: "Relaciona un recurso continuado con un nombre único que le ha asignado la Red ISSN."
+skos:scopeNote: "The key title is given even when it is identical to the title proper of the continuing resource. It is not given if the ISSN to which it applies is not given."
+skos:scopeNote@es: "El título clave se da incluso si es idéntico al título propiamente dicho del recurso continuado. No se da si el ISSN al que se aplica no aparece."
+---
+# has key title
+
+The ISBD element "key title" (isbd:elements/P1033) is described in the provided documentation as follows:
+
+## Element Reference
+
+- **Definition:** The unique name assigned to a continuing resource by the ISSN Network and inseparably linked with its ISSN. The key title may be the same as the title proper; or, in order to achieve uniqueness, it can be constructed by the addition of identifying and/or qualifying elements such as name of issuing body, place of publication, edition, drafting, version, etc. statement (see also ISSN). (Appendix E: Glossary)
+- **Domain:** Continuing Resources
+- **Range:** Literal (text)
+- **Element Type:** Data element
+
+## Additional Information
+
+- **Scope and Purpose:**  The key title serves as a unique and unambiguous identifier for a serial publication within the ISSN (International Standard Serial Number) system. This ensures that even with title changes or variations across different languages, the serial can be consistently tracked and managed.  It's designed for use within the ISSN Network and systems that utilize ISSNs.
+- **User Tasks Supported:**
+    - Identification and differentiation of continuing resources.
+    - Retrieval of continuing resources in bibliographic databases.
+    - Linking different versions or editions of the same continuing resource.
+    - Management of serial subscriptions and holdings.
+
+
+## Element Values
+
+- **Rules and Guidelines:** The key title, when present, should be recorded even if identical to the title proper.  (Section 8.2). It must be derived according to the rules of the ISSN Network.
+- **Value Constraints and Formats:** Not explicitly defined in the ISBD itself, but governed by the rules of the ISSN International Centre. Generally, it's a concise and distinctive representation of the title.
+- **String Encoding:**  UTF-8 is recommended (Section 7.0.4; based on current best practices, not an explicit statement in the document).
+
+
+## Examples
+
+```
+ISSN 0308-1249 = Medicos (Nottingham)
+ISSN 0028-5390 = The new Hungarian quarterly
+ISSN 1234-5678 = Journal of Applied Sciences = Revista de Ciencias Aplicadas
+```
+
+## Relationships
+
+- **Relationship to other ISBD elements:** Inseparably linked to the ISSN.  If the key title is different from the title proper of the serial, this can be indicated in a note. (Section 7.6.3).
+- **Super-types and Sub-types:** Not applicable.
+- **Inverse Relationship:**  An ISSN would be said to have a key title.
+
+## Stipulations
+
+- **Special Considerations:** A key title is recorded *only* if the corresponding ISSN is also recorded.  (Section 8.2).  The construction of the key title is not defined by the ISBD, but by the ISSN guidelines.
+- **Best Practices:**  Consult the official ISSN guidelines and manuals for the most accurate and up-to-date information on constructing key titles. Use the key title as recorded by the ISSN International Centre whenever available.  Ensure consistency in recording key titles.
+
+
+---
+
+*This content was automatically generated from the ISBD PDF documentation using Gemini AI analysis.*

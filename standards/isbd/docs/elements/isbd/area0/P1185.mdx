@@ -1,0 +1,76 @@
+---
+id: P1185
+title: has content form and media type statement
+description: ISBD element documentation for has content form and media type statement
+uri: "isbd:elements/P1185"
+area: area0
+RDF:
+  definition: "Relates a resource to a statement comprising three elements, each taken from closed lists: the content form, one or more terms reflecting the fundamental form or forms in which the content of a resource is expressed; the content qualification, specifying the type, sensory nature, dimensionality, and/or presence or absence of motion for the resource being described; and the media type, indicating the type or types of carrier used to convey the content of the resource."
+  domain: "isbd:elements/C2001"
+  range: "isbd:elements/C2026"
+  type: "rdf:Property"
+reg:hasUnconstrained: "isbd:unc/elements/P1185"
+reg:name: hasContentFormAndMediaTypeStatement
+reg:status: "RegStatus:1001"
+rdf:type: "rdf:Property"
+rdfs:domain: "isbd:elements/C2001"
+rdfs:isDefinedBy: "isbd:elements/"
+rdfs:label: has content form and media type statement
+rdfs:label@es: "tiene mención de forma del contenido y de tipo de medio"
+rdfs:range: "isbd:elements/C2026"
+skos:definition: "Relates a resource to a statement comprising three elements, each taken from closed lists: the content form, one or more terms reflecting the fundamental form or forms in which the content of a resource is expressed; the content qualification, specifying the type, sensory nature, dimensionality, and/or presence or absence of motion for the resource being described; and the media type, indicating the type or types of carrier used to convey the content of the resource."
+skos:definition@es: "Relaciona un recurso con una menci\u00f3n que comprende tres elementos, cada uno tomado de listas cerradas: la forma del contenido, que son uno o m\u00e1s t\u00e9rminos que reflejan la forma o formas fundamentales en que se expresa el contenido del recurso; la calificaci\u00f3n del contenido, que especifica el tipo, naturaleza sensorial, dimensiones y/o la presencia/ausencia de movimiento en el recurso que se describe; y el tipo de medio, que indica el tipo o tipos de soporte utilizados para transmitir el contenido del recurso."
+---
+# has content form and media type statement
+
+The "content form and media type statement" element is found within Area 0 of the ISBD. It's not explicitly labeled as "content form and media type statement" but is described through the stipulations for Area 0 which includes "content form" and "media type", along with an optional "content qualification".
+
+
+## Element Reference
+
+- **Official ISBD definition:** The content form, production process and media type area "is to indicate at the beginning of the description both the fundamental form or forms in which the content of a resource is expressed, the method and plan of fixation of this content in a carrier and the type or types of carrier used to convey that content". This is achieved through the "content form" and "media type" elements.
+- **Domain:**  Resources (bibliographic entities)
+- **Range:**  Content form terms, content qualifications, production process terms, media type terms
+- **Element type:**  Complex, composed of several sub-elements.
+
+
+## Additional Information
+
+- **Scope and purpose:** This area aims to improve resource discovery and selection by offering greater specificity in describing how the content is expressed (text, image, sound, etc.), how it's fixed to a carrier (printed, handwritten, recorded), and the type of carrier (book, CD, website). This enhances interoperability with other metadata standards and aids in granular searching.
+- **User tasks supported:** Enables users to refine searches based on content format and physical characteristics. For example, a user might be looking for a "notated music" resource in "electronic" format, or a "cartographic image" in "projected" media.
+
+
+## Element Values
+
+- **Specific rules or guidelines:** Content form and media type are taken from controlled vocabularies provided within the ISBD (Section 0.1 and 0.2.2).  Content qualification further refines the content form (Section 0.1.1).  Multiple content forms and media types can be listed if applicable, separated by punctuation according to the ISBD specifications. Production process is described in 0.2.1
+- **Value constraints or formats:** Controlled vocabulary, prescribed punctuation (., :, ;, +, ( ) )
+- **String encoding:** Not specifically addressed by the ISBD, but generally UTF-8 is recommended for digital environments.
+
+
+## Examples
+
+```
+Dataset : electronic
+Image (cartographic ; still ; 2-dimensional ; visual) : projected
+Music (performed) : audio
+Object (tactile) : unmediated
+Text (visual) : handwriting (unpublished) ; unmediated + Text (visual) : microform
+```
+
+
+## Relationships
+
+- **Relationships to other ISBD elements:** Area 0 precedes all other descriptive areas (Area 1-8). The physical details described in area 5 complement the information given in Area 0 by offering further specific information about the physical carrier.
+- **Super-types and sub-types:** Content form has sub-types defined by the content qualification.  For example, `image (moving ; 2-dimensional)` is a more specific type of `image`. Media type can also have platform specific qualifications such as `video (VHS)`
+- **Inverse relationships:** Not explicitly defined.
+
+
+## Stipulations
+
+- **Special considerations:**  For resources with mixed content, if one part is predominant, the less significant content forms can be omitted. If no appropriate term is found in the provided lists, "other content form" or "other media" may be used.
+- **Best practices:**  Use the most specific content form and media type terms possible. Use content qualification to add further granularity. If an element doesn't apply, it's omitted entirely along with its associated punctuation.  Follow ISBD punctuation strictly for consistent recording.
+
+
+---
+
+*This content was automatically generated from the ISBD PDF documentation using Gemini AI analysis.*

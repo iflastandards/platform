@@ -1,0 +1,79 @@
+---
+id: P1021
+title: has date of printing or manufacture
+description: ISBD element documentation for has date of printing or manufacture
+uri: "isbd:elements/P1021"
+area: area4
+RDF:
+  definition: "Relates a resource to the date on which it is printed or manufactured, usually given in the form of a year."
+  domain: "isbd:elements/C2001"
+  type: "rdf:Property"
+reg:hasUnconstrained: "isbd:unc/elements/P1021"
+reg:name: hasDateOfPrintingOrManufacture
+reg:status: "RegStatus:1001"
+rdf:type: "rdf:Property"
+rdfs:domain: "isbd:elements/C2001"
+rdfs:isDefinedBy: "isbd:elements/"
+rdfs:label: has date of printing or manufacture
+rdfs:label@es: "tiene fecha de impresión o fabricación"
+skos:definition: "Relates a resource to the date on which it is printed or manufactured, usually given in the form of a year."
+skos:definition@es: "Relaciona un recurso con la fecha en la que se imprime o fabrica, normalmente se da en la forma de un año."
+---
+# has date of printing or manufacture
+
+The ISBD element "Date of printing or manufacture" (isbd:elements/P1021) is found within the Publication, Production, Distribution, etc. Area (Area 4) of the ISBD.
+
+## Element Reference
+
+- **Definition:** The date of printing or manufacture is the date when a resource was physically printed or manufactured.  This is distinct from the date of publication, which refers to when the resource was made available to the public.
+- **Domain:**  Resources (specifically those that are printed or manufactured)
+- **Range:**  Dates
+- **Element type:**  Literal
+
+## Additional Information
+
+- **Scope and Purpose:** The date of printing or manufacture is recorded to provide a more complete bibliographic history of the resource, especially for older resources or when the printing or manufacturing history is distinct from the publishing history. This date can be useful for identifying different impressions or states of a resource.
+- **User Tasks Supported:**  This element helps users distinguish between different printings or manufacturing runs of the same edition, facilitating identification of specific copies and research into printing history.
+
+## Element Values
+
+- **Rules and Guidelines:**  The date should be transcribed as it appears on the resource.
+- **Value Constraints and Formats:**  Use Arabic numerals for Gregorian calendar dates. For dates not in the Gregorian calendar, record them as they appear on the resource and add the Gregorian equivalent in square brackets if possible. For reprints, the date of the original printing is provided in the Note Area (Area 7).
+- **String Encoding Schemes:** Not applicable.
+
+## Examples
+
+```
+, 1976 (Twickenham: CTD Printers, 1974)
+```
+
+```
+, 1949 (1968 printing)
+```
+
+```
+, [1980], p 1973 (manufactured 1979)
+```
+
+```
+, 1786 ([1788 reprint])
+```
+
+
+## Relationships
+
+- **Relationships to other ISBD elements:**  Closely related to the Place of Printing or Manufacture (4.4) and the Name of Printer or Manufacturer (4.5) elements. Distinct from the Date of Publication, Production, and/or Distribution (4.3), which is recorded separately. If the Date of Printing or Manufacture is used in place of an unknown publication date, it is recorded in Area 4 with an indication of the type of date (e.g., "1981 printing").  Reprint dates are recorded in Area 7.
+- **Super-types and sub-types:** None.
+- **Inverse relationships:** None.
+
+
+## Stipulations
+
+- **Special Considerations:** The date of printing or manufacture is only recorded if it appears on the resource. It is not supplied if unknown.  For serials and integrating resources, changes in the printer or manufacturer are usually noted in Area 7 rather than Area 4, unless it affects the identification of the resource.
+- **Exceptions:**  For older monographic resources, information about the printing or manufacturing may be recorded even if the printer is the same as the publisher, if the information is presented separately on the resource.
+- **Best Practices:**  Always clearly distinguish between the date of printing/manufacture and the date of publication.  For clarity, it's best to record the date of printing or manufacture parenthetically after the name of the printer or manufacturer (e.g., "London: Smith (printed 1923)").  If this is impossible or impractical, a phrase may be added after the date to clarify it (e.g., "1923 printing").
+
+
+---
+
+*This content was automatically generated from the ISBD PDF documentation using Gemini AI analysis.*
