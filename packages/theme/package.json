@@ -57,6 +57,11 @@
       "import": "./dist/config/siteConfig.mjs",
       "require": "./dist/config/siteConfig.js"
     },
+    "./components": {
+      "types": "./dist/components/index.d.ts",
+      "import": "./dist/components/index.mjs",
+      "require": "./dist/components/index.js"
+    },
     "./theme/NavbarItem/ComponentTypes": {
       "types": "./dist/theme/NavbarItem/ComponentTypes.d.ts",
       "import": "./dist/theme/NavbarItem/ComponentTypes.mjs",

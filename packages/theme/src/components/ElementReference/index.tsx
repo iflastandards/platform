@@ -168,21 +168,25 @@ export default function ElementReference({
 
   // Pre-process URLs for element sub-types and super-types to avoid calling hooks in callbacks
   const processedElementSubTypes = React.useMemo(() => {
-    return (
-      elementSubType?.map((subType) => ({
-        ...subType,
-        processedUrl: subType.url,
-      })) || []
-    );
+    // Ensure elementSubType is an array before mapping
+    if (!Array.isArray(elementSubType)) {
+      return [];
+    }
+    return elementSubType.map((subType) => ({
+      ...subType,
+      processedUrl: subType.url,
+    }));
   }, [elementSubType]);
 
   const processedElementSuperTypes = React.useMemo(() => {
-    return (
-      elementSuperType?.map((superType) => ({
-        ...superType,
-        processedUrl: superType.url,
-      })) || []
-    );
+    // Ensure elementSuperType is an array before mapping
+    if (!Array.isArray(elementSuperType)) {
+      return [];
+    }
+    return elementSuperType.map((superType) => ({
+      ...superType,
+      processedUrl: superType.url,
+    }));
   }, [elementSuperType]);
 
   // Generate JSON-LD

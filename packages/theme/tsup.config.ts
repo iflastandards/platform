@@ -5,6 +5,7 @@ import type { Plugin } from 'esbuild';
 export default defineConfig({
   entry: {
     index: 'src/index.ts',
+    'components/index': 'src/components/index.ts',
     'components/SiteLink': 'src/components/SiteLink.tsx',
     'components/ElementReference': 'src/components/ElementReference/index.tsx',
     'components/SiteManagementLink':
