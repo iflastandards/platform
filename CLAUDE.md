@@ -9,6 +9,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 1. **🔴 Admin app** (apps/admin) → Next.js with **CRITICAL basePath rules**
 2. **🟢 Documentation sites** (standards/*) → Docusaurus with simpler routing
 3. **📦 Shared packages** (packages/*) → Used by both
+4. **📚 System Design** (@system-design-docs/) → Authoritative architecture documentation
 
 **💡 USER TIP**: Start prompts with "Working on admin:" or "Working on docs:" to help me focus!
 
@@ -338,6 +339,21 @@ The project has optimized GitHub Actions workflows:
 2. **Environment-specific**: Different configurations for preview/production
 3. **Validation**: Automated checks before deployment
 4. **Caching**: Aggressive caching for faster builds
+
+---
+
+## 📚 SYSTEM DESIGN DOCUMENTATION
+
+### Authoritative Architecture Documentation
+- **Location**: `@system-design-docs/` - Comprehensive system design and architecture
+- **Numbered Sequence**: Documents are numbered 00-32 for logical reading order
+- **Key Documents**:
+  - `00-executive-summary.md` - High-level system overview
+  - `01-system-architecture-overview.md` - Core architecture patterns
+  - `10-implementation-strategy.md` - Implementation roadmap
+  - `31-spreadsheet-export-import-comprehensive-guide.md` - Import/export workflows
+  - `32-phase1-import-export-implementation-plan.md` - Phase 1 integration approach
+- **Usage**: Consult these documents for authoritative architectural decisions and design patterns
 
 ---
 

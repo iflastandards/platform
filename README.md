@@ -44,7 +44,9 @@ standards-dev/
 │   └── standards-cli/           # CLI tools
 ├── scripts/                     # Build and utility scripts
 ├── e2e/                         # End-to-end tests
-└── docs/                        # Project documentation
+├── docs/                        # Project documentation
+├── developer_notes/             # Development guides and notes
+└── system-design-docs/          # 📚 Authoritative system architecture docs (00-32)
 ```
 
 ## 🚀 Quick Start
@@ -212,6 +214,17 @@ Configuration is centralized in `packages/theme/src/config/siteConfig.ts`.
 
 ## 📖 Documentation
 
+### System Design Documentation (Authoritative)
+- **Complete Architecture**: See `system-design-docs/` for comprehensive system design
+- **Numbered Sequence**: Documents are numbered 00-32 for reading order
+- **Key Documents**:
+  - `00-executive-summary.md` - High-level overview
+  - `01-system-architecture-overview.md` - Core architecture
+  - `10-implementation-strategy.md` - Implementation roadmap
+  - `31-spreadsheet-export-import-comprehensive-guide.md` - Import/export workflows
+  - `32-phase1-import-export-implementation-plan.md` - Phase 1 integration approach
+
+### Development Documentation
 - **Developer Notes**: Comprehensive guides in `developer_notes/`
 - **API Documentation**: Generated from TypeScript interfaces
 - **Architecture Decisions**: Documented in `docs/`
