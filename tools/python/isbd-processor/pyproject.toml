@@ -1,41 +1,16 @@
 [project]
 name = "isbd-processor"
 version = "1.0.0"
-description = "Process ISBD elements using Gemini AI and PDF documentation"
-readme = "README.md"
+description = "Process ISBD elements using Gemini AI"
 requires-python = ">=3.9"
 dependencies = [
-  "google-genai>=0.1.0",  # This is correct!
+  "google-generativeai>=0.8.0",  # Using legacy SDK for stability
   "rdflib>=7.0.0",
   "pyyaml>=6.0",
   "python-dotenv>=1.0.0",
 ]
 
-[project.optional-dependencies]
-dev = [
-  "ruff>=0.5.0",
-  "mypy>=1.10.0",
-  "pytest>=8.0.0",
-]
-
-[project.scripts]
-isbd-process = "isbd_processor:main"
-
 [tool.uv]
 dev-dependencies = [
-  "ipython>=8.0.0",
+  "ruff>=0.5.0",
 ]
-
-[tool.ruff]
-line-length = 120
-target-version = "py39"
-
-[tool.ruff.lint]
-select = ["E", "F", "I", "N", "UP", "B", "SIM"]
-ignore = ["E501"]  # Line too long
-
-[tool.mypy]
-python_version = "3.9"
-warn_return_any = true
-warn_unused_configs = true
-disallow_untyped_defs = true

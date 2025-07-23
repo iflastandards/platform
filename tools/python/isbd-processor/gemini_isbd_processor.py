@@ -1,5 +1,4 @@
-from google import genai
-from google.genai import types
+import google.generativeai as genai
 import csv
 import json
 import time
@@ -20,8 +19,8 @@ DEFAULT_OUTPUT_DIR = '/Users/jonphipps/Code/IFLA/standards-dev/standards/isbd/do
 
 class ISBDProcessor:
   def __init__(self, api_key, output_dir=None):
-    # Initialize the new Google GenAI client
-    self.client = genai.Client(api_key=api_key)
+    genai.configure(api_key=api_key)
+    self.model = genai.GenerativeModel('gemini-1.5-pro')
     self.output_dir = Path(output_dir) if output_dir else Path(DEFAULT_OUTPUT_DIR)
     self.namespaces = {
       'rdfs': 'http://www.w3.org/2000/01/rdf-schema#',
@@ -34,23 +33,18 @@ class ISBDProcessor:
     """Upload PDF to Gemini"""
     print(f"Uploading {pdf_path} to Gemini...")
 
-    # Upload the file using the new API
-    with open(pdf_path, 'rb') as f:
-      pdf_file = self.client.files.upload(
-        path=pdf_path,
-        display_name='ISBD Documentation'
-      )
-
+    # Upload the file
+    pdf_file = genai.upload_file(pdf_path, mime_type='application/pdf')
     print(f"Uploaded file: {pdf_file.name}")
 
     # Wait for processing
-    while pdf_file.state == "PROCESSING":
+    while pdf_file.state.name == "PROCESSING":
       print("Processing PDF...")
       time.sleep(10)
-      pdf_file = self.client.files.get(name=pdf_file.name)
+      pdf_file = genai.get_file(pdf_file.name)
 
-    if pdf_file.state != "ACTIVE":
-      raise ValueError(f"File processing failed: {pdf_file.state}")
+    if pdf_file.state.name != "ACTIVE":
+      raise ValueError(f"File processing failed: {pdf_file.state.name}")
 
     print("PDF ready for analysis!")
     return pdf_file
@@ -62,6 +56,10 @@ class ISBDProcessor:
     with open(csv_path, 'r', encoding='utf-8') as f:
       reader = csv.DictReader(f)
       for row in reader:
+        # Skip rows that don't have rdf:Property in the rdf:type column
+        if row.get('rdf:type') != 'rdf:Property':
+          continue
+
         # Try to find the label from various possible columns
         label = (row.get('rdfs:label@en') or
                  row.get('dc:title@en') or
@@ -79,6 +77,7 @@ class ISBDProcessor:
         if element['label']:
           elements.append(element)
 
+    print(f"Found {len(elements)} elements with rdf:type = rdf:Property")
     return elements
 
   def parse_rdf_xml(self, xml_path):
@@ -159,8 +158,15 @@ class ISBDProcessor:
 
   def query_gemini_for_element(self, pdf_file, element):
     """Query Gemini for element description"""
+    # Remove leading "has " from the label for better matching in the PDF
+    search_label = element['label']
+    if search_label.lower().startswith('has '):
+      search_label = search_label[4:]  # Remove "has "
+
     prompt = f"""
-Looking at the ISBD documentation PDF, please find and describe the ISBD element "{element['label']}" ({element['uri']}).
+Looking at the ISBD documentation PDF, please find and describe the ISBD element "{search_label}" ({element['uri']}).
+
+Note: The element in the RDF may be named "has {search_label}" but in the PDF it's likely referred to as just "{search_label}".
 
 Please provide a well-structured response with the following sections, using proper Markdown headings:
 
@@ -193,31 +199,8 @@ Provide at least 3-5 practical examples showing how this element would be used i
 If this specific element is not found in the PDF, please indicate that clearly at the beginning of your response.
 """
 
-    # Use the new API to generate content
-    response = self.client.models.generate_content(
-      model='gemini-1.5-pro',
-      contents=[
-        types.Content(
-          parts=[
-            types.Part.from_uri(
-              file_uri=pdf_file.uri,
-              mime_type=pdf_file.mime_type
-            ),
-            types.Part.from_text(prompt)
-          ]
-        )
-      ],
-      config=types.GenerateContentConfig(
-        temperature=0.1,
-        max_output_tokens=2048,
-      )
-    )
-
+    response = self.model.generate_content([pdf_file, prompt])
     return response.text
-
-  def format_rdf_for_yaml(self, element):
-    """This method is no longer needed with the new approach"""
-    pass
 
   def determine_isbd_area(self, element):
     """Determine which ISBD area this element belongs to"""
