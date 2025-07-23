@@ -15,22 +15,14 @@ rdf:type: "rdf:Property"
 rdfs:domain: "isbd:elements/C2001"
 rdfs:isDefinedBy: "isbd:elements/"
 rdfs:label: has presence of colour
-rdfs:label@es: "tiene presencia de color"
 skos:definition: "Relates a resource that has coloured illustrations, or is visual, to a statement indicating the presence of coloured illustrations or colour characteristics, using the abbreviations \"col.\" or \"b&w\" (or their equivalents in another language)."
-skos:definition@es: "Relaciona un recurso que tiene ilustraciones en color, o es visual, con una mención que indica la presencia de ilustraciones en color o características de color, utilizando las abreviaturas “col.” o “bl. y n.” (o sus equivalentes en otra lengua)."
 ---
 # has presence of colour
 
 ## Element Reference
 
-- **Definition:** The "presence of colour" element describes the colour characteristics of a resource, primarily focusing on visual resources like images, maps, filmstrips, etc.  It also addresses colour in illustrations within textual resources and electronic resources capable of colour display. It's implied for resources where colour is inherent (e.g., sound recordings) and thus omitted in those cases.
 
-- **Domain:** This element applies to the Material Description Area (Area 5) of an ISBD record.  More specifically, it's part of the "other physical details" (5.2) element within Area 5.
-
-- **Range:**  The value of this element will be a controlled term indicating color characteristics or, in limited cases, a short list of up to three specific colors.  Additional descriptive phrases clarifying the colour aspect may be enclosed within parentheses.
-
-- **Element Type:** Descriptive.
-
+<ElementReference frontMatter={frontMatter} />
 
 ## Additional Information
 - **Scope and Purpose:** This element helps users quickly assess whether a resource is in colour, black and white, or a combination. This is crucial for identification, selection, and retrieval of resources, especially for visual materials where colour may be a significant content characteristic. It distinguishes different versions or editions of a resource.  
