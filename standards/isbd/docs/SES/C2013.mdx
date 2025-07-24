@@ -1,0 +1,80 @@
+---
+# Navigation
+slug: /SES/C2013
+sidebar_class_name: sidebar-level-1
+sidebar_label: Music Format Statement Area Encoding Scheme
+sidebar_level: 1
+sidebar_position: 1
+sidebar_category: 'SES'
+
+# Element identification
+id: C2013
+title: Music Format Statement Area Encoding Scheme
+
+# RDF metadata
+RDF:
+  definition: Syntax Encoding Scheme for the music format statement area (Area 3 for notated music resources).
+  type: 'owl:Class'
+  scopeNote: ''
+
+# Deprecation tracking
+deprecated: null
+deprecatedInVersion: null
+willBeRemovedInVersion: null
+---
+
+# Music Format Statement Area Encoding Scheme
+
+## Element Reference
+<ElementReference frontMatter={frontMatter} />
+
+## Definition
+
+<div className="guid">
+This is a sub-area within the **Material or Type of Resource Specific Area (Area 3)**, used specifically for **notated music resources**. It describes the **physical form of presentation** of the music (e.g., "Full score," "Chorus score," "Parts"). It is not used for works for solo instruments/voices or one voice and one accompanying instrument.
+</div>
+
+## Required Elements
+
+<div className="guid">
+- **Music format statement (Mandatory if available):** The term or phrase for the physical presentation form, transcribed as it appears on the resource. Explanatory phrases may be included.
+- **Parallel music format statement (Optional):** An equivalent music format statement in another language or script.
+
+</div>
+
+## Punctuation Rules
+
+<div className="guid">
+- Each area is preceded by **. —**.
+- Each **parallel music format statement** is preceded by **=**.
+
+</div>
+
+## Relationship to ISBD Standards
+
+<div className="guid">
+This is element **3.2** within Area 3. It's a key part of the specialized description for notated music.
+</div>
+
+## Relationship to Other SES
+
+<div className="guid">
+- It is a component of the "Material Or Type Of Resource Specific Area Encoding Scheme."
+- Details of the physical units (e.g., number of pages, dimensions) are given in the **Material Description Area (Area 5)**.
+- If the term "edition" in the resource indicates version or arrangement of music, it's given in Area 1; if it indicates the music format, it's given in this area.
+- Notes on music format peculiarities are given in the **Note Area (Area 7)**.
+
+</div>
+
+## Examples
+
+<div className="stip">
+- **. — Full score**
+- **. — Partition, reproduction du manuscrit de l'auteur**
+- **. — Játszópartitúra = Playing score**
+
+</div>
+
+<hr />
+
+*This content was automatically generated from the ISBD PDF documentation using Gemini AI analysis.*

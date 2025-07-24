@@ -1,0 +1,91 @@
+---
+# Navigation
+slug: /SES/C2003
+sidebar_class_name: sidebar-level-1
+sidebar_label: Content Form And Media Type Area Encoding Scheme
+sidebar_level: 1
+sidebar_position: 1
+sidebar_category: 'SES'
+
+# Element identification
+id: C2003
+title: Content Form And Media Type Area Encoding Scheme
+
+# RDF metadata
+RDF:
+  definition: Syntax Encoding Scheme for the content form and media type area (Area 0).
+  type: 'owl:Class'
+  scopeNote: ''
+
+# Deprecation tracking
+deprecated: null
+deprecatedInVersion: null
+willBeRemovedInVersion: null
+---
+
+# Content Form And Media Type Area Encoding Scheme
+
+## Element Reference
+<ElementReference frontMatter={frontMatter} />
+
+## Definition
+
+<div className="guid">
+This area (Area 0) serves to indicate the **fundamental form or forms in which the content of a resource is expressed**, the **method and plan of fixation** of this content in a carrier, and the **type or types of carrier** used to convey that content. Its purpose is to assist catalogue users in identifying and selecting resources, facilitate the exchange of cataloguing records within cooperative networks, and enable interoperability with other metadata standards. This area was a new addition to the 2011 Consolidated Edition of ISBD.
+</div>
+
+## Required Elements
+
+<div className="guid">
+- **Content form (Mandatory):** Categories reflecting the fundamental forms of content (e.g., dataset, music, image, text). For mixed content, all applicable terms are recorded alphabetically, or "multiple content forms" if three or more apply. Non-predominant content forms may be omitted.
+- **Content qualification (Mandatory if applicable):** Sub-categories that expand on the content form, specifying type (e.g., cartographic, notated, performed), presence or absence of motion, dimensionality (e.g., 2-dimensional, 3-dimensional), and sensory nature (e.g., visual, tactile, audible).
+- **Production process (Optional):** Categories reflecting both how content is fixed (e.g., writing, printing, magnetic recording) and the industrial or artisanal method used (e.g., handwriting, daguerreotype). It can be further qualified by "Production process qualification" terms (e.g., published, unpublished).
+- **Media type (Mandatory):** Categories recording the type of carrier used to convey content (e.g., audio, electronic, unmediated, video). These reflect the format of the storage medium and housing, combined with the intermediation device needed. For mixed media, all applicable terms are recorded, or "multiple media" if three or more apply. If no mediation device is required, "unmediated" is used.
+
+</div>
+
+## Punctuation Rules
+
+<div className="guid">
+- **Content qualification terms** are enclosed in **parentheses ( )** immediately following the content form term.
+- Subsequent **content qualification terms** are preceded by **;**.
+- The **production process term** is preceded by **:**.
+- **Production process qualification terms** are enclosed in **parentheses ( )** immediately following the production process term.
+- The **media type term** is preceded by **;** unless it's the first element and no production process term is given.
+- When **different content forms** are contained in one media type, each content form term after the first is preceded by **.**.
+- When a resource consists of **different media types and contains different content forms and production processes**, each subsequent statement is preceded by **+**.
+
+</div>
+
+## Relationship to ISBD Standards
+
+<div className="guid">
+This area is identified as **Area 0** in the ISBD specification, making it a foundational element for description within the standard. Its full information aids in universal bibliographic control.
+</div>
+
+## Relationship to Other SES
+
+<div className="guid">
+- It contains core elements such as "Content Form And Media Type Statement Encoding Scheme" (which combines Content Form, Production Process, and Media Type).
+- The "Production process" element was introduced to extend ISBD coverage to **unpublished resources**.
+- Notes on this area provide additional details and insights, and are given in the **Note Area (Area 7)**.
+
+</div>
+
+## Examples
+
+<div className="stip">
+```
+. — Dataset : electronic
+
+. — Text (visual) : handwriting (unpublished) ; unmediated
+
+. — Image (cartographic ; moving ; 2-dimensional) : video
+
+. — Text (visual) : unmediated + Text (visual) : microform
+```
+</div>
+
+<hr />
+
+*This content was automatically generated from the ISBD PDF documentation using Gemini AI analysis.*

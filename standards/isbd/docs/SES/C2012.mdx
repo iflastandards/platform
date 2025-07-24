@@ -1,0 +1,101 @@
+---
+# Navigation
+slug: /SES/C2012
+sidebar_class_name: sidebar-level-1
+sidebar_label: Mathematical Data Area Encoding Scheme
+sidebar_level: 1
+sidebar_position: 1
+sidebar_category: 'SES'
+
+# Element identification
+id: C2012
+title: Mathematical Data Area Encoding Scheme
+
+# RDF metadata
+RDF:
+  definition: Syntax Encoding Scheme for the mathematical data area (Area 3 for cartographic resources).
+  type: 'owl:Class'
+  scopeNote: ''
+
+# Deprecation tracking
+deprecated: null
+deprecatedInVersion: null
+willBeRemovedInVersion: null
+---
+
+# Series And Multipart Monographic Resource Area Encoding Scheme
+
+## Element Reference
+<ElementReference frontMatter={frontMatter} />
+
+## Definition
+
+<div className="guid">
+This is a sub-area within the **Material or Type of Resource Specific Area (Area 3)** specifically for 
+**cartographic resources**. It includes details like scale, projection, coordinates, celestial hemisphere, 
+epoch, equinox, and magnitude, which are essential for describing maps, charts, and globes.
+</div>
+
+## Required Elements
+
+<div className="guid">
+- **Statement of scale (Mandatory if applicable):** Given as a representative fraction (e.g., "1:25 000"). 
+    Can include vertical scale for relief models or angular scale for celestial charts.
+- **Statement of projection (Mandatory if available):** The name of the projection 
+    (e.g., "universal transverse Mercator proj."), possibly with associated phrases.
+- **Statement of coordinates and celestial hemisphere (Mandatory if available):** This covers:
+  - **Terrestrial coordinates:** Longitude and latitude in degrees, minutes, and seconds, 
+        with cardinal directions.
+  - **Celestial coordinates (Right ascension and declination):** RA in hours/minutes/seconds 
+        and Decl. in degrees/minutes/seconds, with +/- for hemispheres.
+  - **Other celestial coordinate systems:** Ecliptic, galactic, 
+        supergalactic coordinates.
+  - **Celestial hemisphere:** Indication of northern, southern, 
+        or both hemispheres.
+- **Statement of epoch and equinox (Mandatory if available):** A reference moment in time for position 
+    measurements (epoch) and one of the intersection points of the ecliptic and celestial equator (equinox).
+- **Statement of magnitude (Mandatory if available):** For celestial charts, 
+    the brightness magnitude (e.g., "limiting magnitude 3.5").
+
+</div>
+
+## Punctuation Rules
+
+<div className="guid">
+- The **projection statement** is preceded by **;**.
+- The statements of **coordinates, celestial hemisphere, epoch and equinox** are enclosed in 
+    **one pair of parentheses ( )**.
+- The **statement of equinox** is preceded by **;**.
+- The **statement of celestial hemisphere** is preceded by **;**.
+- The **statement of magnitude** is preceded by **;**.
+- Within coordinates, pairs are separated by **/** (no space), 
+    and ranges by **–** (no space).
+
+</div>
+
+## Relationship to ISBD Standards
+
+<div className="guid">
+This is element **3.1** within Area 3. The 2021 Update broadened and refined the description of 
+cartographic resources, clarifying stipulations and reorganizing elements, especially for celestial cartography.
+</div>
+
+## Relationship to Other SES
+
+<div className="guid">
+It is a key component of the "Material Or Type Of Resource Specific Area Encoding Scheme." 
+Notes can provide additional mathematical or cartographic data, including details on digital graphic representation.
+</div>
+
+## Examples
+
+<div className="stip">
+- **. — Scale 1:250 000 ; universal transverse Mercator proj.**
+- **. — Scale 1:25 000 (E 79°–E 86°/N 20°–N 12°)**
+- **. — RA 16 h/Decl. -23° ; equinox 1950)**
+
+</div>
+
+<hr />
+
+*This content was automatically generated from the ISBD PDF documentation using Gemini AI analysis.*

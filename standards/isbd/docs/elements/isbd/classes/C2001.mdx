@@ -1,0 +1,136 @@
+---
+# Navigation
+sidebar_class_name: sidebar-level-1
+sidebar_label: Resource
+sidebar_level: 1
+sidebar_position: 1
+sidebar_category: 'SES'
+
+# Element identification
+id: C2001
+title: Resource
+
+# RDF metadata
+RDF:
+  definition: 'An entity, tangible or intangible, that comprises intellectual and/or artistic content and is conceived, produced and/or issued as a unit, forming the basis of a single bibliographic description.'
+  type: 'owl:Class'
+  scopeNote: 'Includes text, music, still and moving images, graphics, maps, sound recordings and video recordings, electronic data or programs, including those issued serially.'
+
+# Deprecation tracking
+deprecated: null
+deprecatedInVersion: null
+willBeRemovedInVersion: null
+---
+
+# {frontMatter.title}
+
+## Element Reference
+<ElementReference frontMatter={frontMatter} />
+
+Here's a detailed description of the ISBD core 'Resource' class:
+
+## Definition of a Resource
+A **resource** is defined as an "entity, tangible or intangible, that comprises intellectual and/or artistic content and is conceived, produced and/or issued as a unit, forming the basis of a single bibliographic description". This broad definition encompasses a vast array of materials that are likely to appear in library collections, including published and unpublished materials, those in manuscript form, and resources for the visually impaired.
+
+## Scope and Purpose of Describing Resources
+The primary purpose of ISBD is to provide consistent stipulations for descriptive cataloguing worldwide, aiding the international exchange of bibliographic records. By specifying elements and their prescribed order and punctuation, ISBD allows records from different sources to be interchangeable and assists in interpreting records across language barriers. The ISBD is the standard that determines the data elements to be recorded or transcribed in a specific sequence as the basis of the description of the resource being catalogued.
+
+## ISBD's Treatment of Resources
+The ISBD is used to create a description of a single resource or a set of resources that share the same characteristics in terms of both intellectual content and physical format, i.e., an edition. The description is typically based on the item in hand as an exemplar of the entire manifestation.
+
+The ISBD provides specific stipulations for a wide array of resource types, extending its coverage to:
+
+### Single-part monographic resources
+Resources issued as a single physical unit.
+### Multipart monographic resources
+Resources in a finite number of physically separate parts, conceived or issued as a unit, with parts potentially having their own titles and statements of responsibility. They can be catalogued using multilevel description or a single-level description.
+### Continuing resources
+Resources issued over time with no predetermined conclusion, such as serials (journals, magazines, newspapers) or ongoing integrating resources (updating looseleafs, updating web sites). ISBD includes stipulations for major and minor changes to these resources, affecting whether a new description is required.
+### Electronic resources
+Materials that are computer-controlled, including data and programs, which can be direct-access (e.g., CD-ROM) or remote-access (e.g., websites).
+### Component parts
+Resources that are not separately published and are dependent on a 'host resource' for identification or access (e.g., a chapter in a book, an article in a serial, a track from a sound recording). Describing a component part involves four segments: the description of the part, a linking element, identification of the host resource, and location details within the host.
+### Older monographic resources
+Resources produced before machine printing in the nineteenth century, including manuscripts. Special attention is paid to variations like issues, impressions, and states.
+### Multimedia resources
+Resources comprising two or more distinct media or differing forms of the same medium, intended for use as a unit.
+
+## Elements for Describing a Resource
+
+To describe a resource, ISBD organizes bibliographic data into **eight main areas**, each with its own elements and prescribed punctuation:
+
+### Area 0
+
+**Content Form, Production Process and Media Type.** This indicates the fundamental form of content (e.g., text, image, sound), the method of fixation (e.g., printing, handwriting, burning), and the type of carrier (e.g., unmediated, electronic, audio).
+
+### Area 1
+
+**Title and Statement of Responsibility.** This includes the title proper, parallel titles, other title information, and statements of responsibility relating to the creation of the content.
+
+### Area 2
+
+**Edition, Drafting, Version, Etc..** This area captures information about the edition, drafting, or version of the resource.
+
+### Area 3
+
+**Material or Type of Resource Specific Area.** This area is for data unique to a particular class of material, such as mathematical data for cartographic resources, music format statements for notated music, numbering for serials, and unpublished statements for unpublished resources.
+
+### Area 4
+
+**Publication, Production, Distribution, Etc., Area.** This area records place and name of publication/production/distribution, and associated dates.
+
+### Area 5
+
+**Material Description Area.** This details the physical extent of the resource, other physical characteristics (like colour or sound), and dimensions, including accompanying material.
+
+### Area 6
+
+**Series and Multipart Monographic Resource Area.** This area identifies any larger bibliographic resource (series or multipart monographic resource) to which the described resource belongs.
+
+### Area 7
+
+**Note Area.** This area contains any descriptive information not given in other areas but important to users, clarifying or amplifying the description.
+
+### Area 8
+
+**Resource Identifier and Terms of Availability Area.** This area includes identifiers like ISBN, ISSN, ISMN, and terms of availability like price.
+
+## Examples of Resources and their Description (Illustrative)
+
+The following examples demonstrate how different types of 'resources' are described using ISBD elements and punctuation:
+
+### Text (Book) [an unmediated resource]
+
+`Text (visual) : unmediated`
+*   `. — The natural history of Iceland ... ; to which is added, A meteorological table, with remarks / translated from the Danish original of Mr. N. Horrebow`
+*   `. — London : J. and H. Hughs ... and sold by T. Payne`
+*   `, `
+*   `. —, 328 p. : ill. ; 22 cm`
+*   `. — (Graeco-Roman memoirs, ISSN 0306-9222)`
+*   `. — ISBN 978-0-85020-025-6 (cloth)`
+
+### Cartographic Resource (Map) [an unmediated resource]
+
+`Image (cartographic ; still ; 2-dimensional ; visual) : unmediated`
+*   `. — Map of the Canadian Pacific Railway and its connections. — Scale [ca 1:9 200 000] (W 131°--W 59°/N 53°--N 38°). — 1 map ; 18 x 57 cm + timetable sheet. — Facsimile of map originally printed by “Canada Bank Note Co., printers”.`
+
+### Sound Recording (Music) [an audio resource]
+
+`Music (performed ; aural) : audio` [Not explicitly shown in sources, inferred from 0.1, 0.1.1.5, 0.2.2]
+*   `. — Le nozze di Figaro = Die Hochzeit des Figaro = The marriage of Figaro`
+*   `. — 5 sound discs (256 min) : 33 1/3 rpm, stereo ; 30 cm, in container`
+*   `. — CBS M-34129 (disc)`
+
+### Electronic Resource (Dataset) [an electronic resource]
+
+`Dataset : electronic`
+*   `. — 1 website`
+*   `. — System requirements: UNIX workstation with Mosaic software`
+*   `. — Mode of access: World Wide Web. URL: http://www.un.org`
+*   `. — Description based on the iteration viewed on Oct. 12, 2006`
+
+These examples, derived from the provided sources, illustrate the diverse nature of entities categorized as 'resources' within the ISBD framework and how their descriptive data elements are systematically encoded.
+
+<hr />
+
+*This content was automatically generated from the ISBD PDF documentation using Gemini AI analysis.*

@@ -1,0 +1,71 @@
+---
+# Navigation
+slug: /SES/C2002
+sidebar_class_name: sidebar-level-1
+sidebar_label: ISBD Syntax Encoding Scheme
+sidebar_level: 1
+sidebar_position: 1
+sidebar_category: 'SES'
+
+# Element identification
+id: C2002
+title: ISBD Syntax Encoding Scheme
+
+# RDF metadata
+RDF:
+  definition: Syntax encoding scheme used by International Standard Bibliographic Description (ISBD).
+  type: 'owl:Class'
+  scopeNote: ''
+
+# Deprecation tracking
+deprecated: null
+deprecatedInVersion: null
+willBeRemovedInVersion: null
+---
+
+# {frontMatter.title}
+
+## Element Reference
+<ElementReference frontMatter={frontMatter} />
+
+Here are the general rules for ISBD's "syntax encoding" through prescribed punctuation:
+
+## Inter-Area Punctuation
+
+  <div className="guid">
+*   Each of the eight main areas (Area 0 to Area 8), other than the first in a paragraph, is typically preceded by a **point, space, dash, space (. —)**.
+*   If areas are clearly separated by paragraphing, this point, space, dash, space may be replaced by a point (.) given at the end of the preceding area.
+  </div>
+
+## Intra-Area Punctuation
+
+  <div className="guid">
+*   Elements within an area have their own specific prescribed punctuation that either precedes or encloses them. This punctuation is omitted when it would be the very first element of an area.
+*   Prescribed punctuation is generally preceded and followed by a single space, with the exceptions of the comma (,) and point (.), which are only followed by a space.
+*   **Parentheses ( ( ) ) and square brackets ( [ ] ) are treated as single punctuation symbols**; the preceding space comes before the opening symbol and the following space comes after the closing symbol. If a closing parenthesis or square bracket is followed by a prescribed comma or point, no space is used.
+*   Prescribed punctuation is retained even if it results in double punctuation.
+  </div>
+
+## Information from Outside Prescribed Sources
+
+<div className="guid">
+*   Information transcribed into areas 1 to 4 and Area 6 that is found on the resource but not on a prescribed source of information for that area is **enclosed in square brackets ([ ])**.
+*   Alternatively, such information may be provided in Area 7 (the Note Area) without being enclosed in square brackets.
+  </div>
+
+## Multiple Languages or Scripts
+
+  <div className="guid">
+*   When the same information for a single element appears in more than one language or script, the information in each language or script after the first is preceded by a **space, equals sign, space ( = )**.
+  </div>
+
+## Omission of Elements/Areas
+  <div className="guid">
+*   An area or element that does not apply to the resource being described is not included in the description, and its corresponding preceding or enclosing prescribed punctuation is also omitted.
+  </div>
+
+These punctuation and structural rules are integral to how ISBD data is formatted, ensuring that bibliographic records are clear, consistent, and machine-readable across different cataloguing systems and languages.
+
+<hr />
+
+*This content was automatically generated from the ISBD PDF documentation using Gemini AI analysis.*

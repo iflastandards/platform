@@ -1,0 +1,93 @@
+---
+# Navigation
+slug: /SES/C2007
+sidebar_class_name: sidebar-level-1
+sidebar_label: 'Publication, Production, Distribution, Etc Area Encoding Scheme'
+sidebar_level: 1
+sidebar_position: 1
+sidebar_category: 'SES'
+
+# Element identification
+id: C2007
+title: 'Publication, Production, Distribution, Etc Area Encoding Scheme'
+
+# RDF metadata
+RDF:
+  definition: 'Syntax Encoding Scheme for the publication, production, distribution, etc. area (Area 4).'
+  type: 'owl:Class'
+  scopeNote: ''
+
+# Deprecation tracking
+deprecated: null
+deprecatedInVersion: null
+willBeRemovedInVersion: null
+---
+
+# Publication, Production, Distribution, Etc Area Encoding Scheme
+
+## Element Reference
+<ElementReference frontMatter={frontMatter} />
+
+## Definition
+
+<div className="guid">
+This area (Area 4) contains information about the **place of publication, production, and/or distribution**; the **name of the publisher, producer, and/or distributor**; and the **date of publication, production, and/or distribution**. It also records data related to the **physical manufacture** of the resource, such as the place, name, and date of printing or manufacture.
+</div>
+
+## Required Elements
+
+<div className="guid">
+- **Place of publication, production and/or distribution (Mandatory):** The geographic location associated with the publishing, production, or distribution entity. Multiple places can be recorded.
+- **Name of publisher, producer and/or distributor (Mandatory):** The person or corporate body responsible for the publication, production, or distribution activities. Multiple names can be recorded.
+- **Date of publication, production and/or distribution (Mandatory):** The date the resource was officially offered for sale or distribution. Can include copyright dates or legal deposit dates if publication date is unknown.
+- **Place of printing or manufacture (Optional):** Given when it appears on the resource and publication/distribution details are unknown, or optionally in addition to publication/distribution details.
+- **Name of printer or manufacturer (Optional):** Given under the same conditions as the place of printing/manufacture.
+- **Date of printing or manufacture (Optional):** Can be given as an element following the printer/manufacturer or by itself.
+
+</div>
+
+## Punctuation Rules
+
+<div className="guid">
+- Each area (other than the first in a paragraph) is preceded by **. —**.
+- A **second or subsequent place** is preceded by **;** (unless a linking word is given).
+- Each **name (publisher, producer, distributor)** is preceded by **:** (unless a linking word is given for subsequent names).
+- **Parallel information** is preceded by **=**.
+- The **date** is preceded by **,**.
+- A **hyphen (-) after the date** indicates a continuing resource.
+- **Printing or manufacturing information** (place, name, date) is enclosed in **one pair of parentheses ( )**.
+
+</div>
+
+## Relationship to ISBD Standards
+
+<div className="guid">
+Identified as **Area 4**, this is a mandatory area providing fundamental information for identification and access. For older monographic resources, the distinction between publisher, bookseller, and printer might be undifferentiated.
+</div>
+
+## Relationship to Other SES
+
+<div className="guid">
+- It encompasses the "Place Of Publication, Production, Distribution Statement Encoding Scheme," "Name Of Publisher, Producer, Distributor Statement Encoding Scheme," and "Statement Of Printing Or Manufacture Encoding Scheme."
+- The dates given in the **Numbering Area (Area 3)** for serials may or may not coincide with the dates of publication given in this area.
+- Changes to information in this area (e.g., place, name of publisher) are often recorded in the **Note Area (Area 7)**.
+
+</div>
+
+## Examples
+
+<div className="stip">
+```
+. — Place of publication or production : name of publisher or producer, date
+
+. — London : Methuen, 1979
+
+. — [S.l.] : [s.n.], 1974 (Manchester : Unity Press)
+
+. — Washington, D.C. : Smithsonian Institution ; New York : distributed by W.W. Norton, 1973
+```
+</div>
+
+<hr />
+
+*This content was automatically generated from the ISBD PDF documentation using Gemini AI analysis.*

@@ -1,0 +1,89 @@
+---
+# Navigation
+slug: /SES/C2028
+sidebar_class_name: sidebar-level-1
+sidebar_label: Resource Identifier Statement Encoding Scheme
+sidebar_level: 1
+sidebar_position: 1
+sidebar_category: 'SES'
+
+# Element identification
+id: C2028
+title: Resource Identifier Statement Encoding Scheme
+
+# RDF metadata
+RDF:
+  definition: Syntax Encoding Scheme for the resource identifier statement.
+  type: 'owl:Class'
+  scopeNote: ''
+
+# Deprecation tracking
+deprecated: null
+deprecatedInVersion: null
+willBeRemovedInVersion: null
+---
+
+# Resource Identifier Statement Encoding Scheme
+
+## Element Reference
+<ElementReference frontMatter={frontMatter} />
+
+## Definition
+
+<div className="guid">
+This refers to element **8.1** within the **Resource Identifier and Terms of Availability Area (Area 8)**. It provides a **number or alphanumeric designation** that uniquely identifies a resource. This can include international standard identifiers (like ISBN, ISSN, ISMN, URN, DOI, URL) or designations assigned by a publisher (like publisher's numbers, plate numbers, or label names with catalogue numbers). For older monographic resources and music manuscripts, it also includes "Fingerprint" and "Music incipit" as identifiers.
+</div>
+
+## Required Elements
+
+<div className="guid">
+The element is **Optional**.
+- **Standard identifier (Optional):** Recorded with its customary label (e.g., "ISBN 978-952-92-0267-6," "ISSN 0075-2363," "doi:10.1000/1").
+- **Publisher's number (Optional, for notated music):** Preceded by "Publ. no.".
+- **Plate number (Optional, for notated music):** Preceded by "Pl. no.".
+- **Qualification to identifier (Optional):** A brief statement in parentheses to qualify, explain, or correct the identifier (e.g., "(cloth)", "(corrected)", "(invalid)").
+- **Label name and catalogue number (Optional, for sound/videorecordings):** The label name followed by all catalogue numbers supplied by the issuing company (e.g., "Telefunken 6.35368").
+- **Fingerprint (Mandatory if available, for older monographic resources):** An alphanumeric string derived from the text (e.g., "163704 - b1 A2 ,$en : b2 I2 a,$").
+- **Music incipit (Optional, for music manuscripts):** A series of notes from a musical work, serving as an identifier.
+
+</div>
+
+## Punctuation Rules
+
+<div className="guid">
+- The identifier is the **first element** in its statement within Area 8 and is not preceded by prescribed punctuation.
+- **Qualifications** are enclosed in **parentheses ( )**. Multiple qualifications are separated by **;**.
+- If **multiple identifiers** for the same resource (e.g., for different formats or parts) are given by repeating the area, each subsequent statement is preceded by **. —**.
+- A **plate number** following an ISBN or publisher's number is preceded by **. —**.
+
+</div>
+
+## Relationship to ISBD Standards
+
+<div className="guid">
+This is element **8.1** within Area 8. It provides standardized, unique identification for resources, aiding in their discovery and management.
+</div>
+
+## Relationship to Other SES
+
+<div className="guid">
+- It is a component of the "Resource Identifier And Terms Of Availability Area Encoding Scheme."
+- It directly relates to the "Key title" (element 8.2), which is given only if the ISSN (a type of resource identifier) is also given.
+- Identifiers for earlier editions or bibliographic history are not given here but may be recorded in the **Note Area (Area 7)**.
+
+</div>
+
+## Examples
+
+<div className="stip">
+- **. — ISBN 978-952-92-0267-6**
+- **. — ISSN 0075-2363**
+- **. — ISMN 979-0-3217-6543-6 (score)**
+- **. — Telefunken 6.35368**
+- **. — Fingerprint:163704 - b1 A2 ,$en : b2 I2 a,$**
+
+</div>
+
+<hr />
+
+*This content was automatically generated from the ISBD PDF documentation using Gemini AI analysis.*

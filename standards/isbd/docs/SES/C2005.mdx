@@ -1,0 +1,91 @@
+---
+# Navigation
+slug: /SES/C2005
+sidebar_class_name: sidebar-level-1
+sidebar_label: Edition Area Encoding Scheme
+sidebar_level: 1
+sidebar_position: 1
+sidebar_category: 'SES'
+
+# Element identification
+id: C2005
+title: Edition Area Encoding Scheme
+
+# RDF metadata
+RDF:
+  definition: Syntax Encoding Scheme for the edition area (Area 2).
+  type: 'owl:Class'
+  scopeNote: ''
+
+# Deprecation tracking
+deprecated: null
+deprecatedInVersion: null
+willBeRemovedInVersion: null
+---
+
+# Edition Area Encoding Scheme
+
+## Element Reference
+<ElementReference frontMatter={frontMatter} />
+
+## Definition
+
+<div className="guid">
+This area (Area 2) records information about the **edition, drafting, version, etc.**, of a resource. For unpublished resources, it can specify the stage of the production process for pre-publication materials, the state of a drafting, or the version of a file.
+</div>
+
+## Required Elements
+
+<div className="guid">
+- **Edition, drafting, version, etc. statement (Mandatory if available):** Usually includes the word "edition" (or equivalent) with a number (e.g., "2nd ed."), or a term indicating difference (e.g., "new edition," "revised version," "first draft," "release 0.5").
+- **Parallel edition, drafting, version, etc. statement (Optional):** An equivalent edition statement in another language or script.
+- **Statement of responsibility relating to the edition, drafting, version, etc. (Mandatory if available):** Refers to persons or corporate bodies responsible for the specific edition, such as revisers or those providing supplementary matter within that edition.
+- **Additional edition, drafting, version, etc. statement (Mandatory if available):** A formal statement identifying the resource as belonging to an impression within an edition, or an edition equivalent to the first-named edition, especially if it has significant content differences from other impressions.
+- **Statement of responsibility relating to an additional edition, drafting, version, etc. statement (Mandatory if available):** Responsibilities related to the additional edition statement.
+
+</div>
+
+## Punctuation Rules
+
+<div className="guid">
+- Each **parallel edition, drafting, version, etc. statement** is preceded by **=**.
+- The **first statement of responsibility** (related to the edition or following an additional statement) is preceded by **/**.
+- Each **subsequent statement of responsibility** is preceded by **;** (unless statements form a single phrase).
+- An **additional edition, drafting, version, etc. statement** is preceded by **,**.
+
+</div>
+
+## Relationship to ISBD Standards
+
+<div className="guid">
+This is identified as **Area 2** in the ISBD specification. It's crucial for distinguishing different versions or iterations of a work.
+</div>
+
+## Relationship to Other SES
+
+<div className="guid">
+- Information related to the production process (e.g., master, matrix) is transcribed in the **Material or Type of Resource Specific Area (Area 3)**, not here.
+- Edition statements that are an integral part of the title proper or other title information are recorded in the **Title and Statement of Responsibility Area (Area 1)** and not repeated here.
+- Changes in edition statements for serials or integrating resources may require a new description or be noted in the **Note Area (Area 7)**.
+
+</div>
+
+## Examples
+
+<div className="stip">
+```
+. — 2nd ed.
+
+. — Revised version / programmer, Kate Maggor
+
+. — Canadian ed. = Éd. canadienne
+
+. — 3rd ed., reprinted with a new pref.
+
+. — [New ed.]
+```
+</div>
+
+<hr />
+
+*This content was automatically generated from the ISBD PDF documentation using Gemini AI analysis.*

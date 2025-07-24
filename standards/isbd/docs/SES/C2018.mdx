@@ -1,0 +1,84 @@
+---
+# Navigation
+slug: /SES/C2018
+sidebar_class_name: sidebar-level-1
+sidebar_label: 'Place Of Publication, Production, Distribution Statement Encoding Scheme'
+sidebar_level: 1
+sidebar_position: 1
+sidebar_category: 'SES'
+
+# Element identification
+id: C2018
+title: 'Place Of Publication, Production, Distribution Statement Encoding Scheme'
+
+# RDF metadata
+RDF:
+  definition: 'Syntax Encoding Scheme for the place of publication, production, distribution statement.'
+  type: 'owl:Class'
+  scopeNote: ''
+
+# Deprecation tracking
+deprecated: null
+deprecatedInVersion: null
+willBeRemovedInVersion: null
+---
+
+# Place Of Publication, Production, Distribution Statement Encoding Scheme
+
+## Element Reference
+<ElementReference frontMatter={frontMatter} />
+
+## Definition
+
+<div className="guid">
+This refers to element **4.1** within the **Publication, Production, Distribution, Etc. Area (Area 4)**. It specifies the **name of the place associated with the publisher, producer, or distributor**, or the place from which the resource was issued or distributed.
+</div>
+
+## Required Elements
+
+<div className="guid">
+- **Place name (Mandatory):** The name of the city or town (e.g., "London," "Baltimore"). If unknown or uncertain, it can be supplied in square brackets, possibly with a question mark.
+- **Larger place (Optional):** The name of a country, state, etc., added for identification (e.g., "Washington, D.C.", "Cambridge, Mass."). This is preceded by a comma if from the source, or in square brackets if supplied.
+- **Full address (Optional):** The full address of the publisher, producer, or distributor, if necessary for identification. Enclosed in parentheses if from source, or square brackets if supplied.
+- **Alternative/corrected version (Optional):** If the given place name is incorrect, a correction can be supplied (e.g., "Paris [i.e. Leiden]", "Christiania [Oslo]").
+
+</div>
+
+## Punctuation Rules
+
+<div className="guid">
+- A **second or subsequent place** is preceded by **;** (unless a linking word or phrase is given).
+- **Supplied information** (e.g., unknown place, additions for identification) is enclosed in **square brackets [ ]**.
+- The **abbreviation s.l. (sine loco)** is supplied in square brackets if no place can be determined.
+
+</div>
+
+## Relationship to ISBD Standards
+
+<div className="guid">
+This is element **4.1** within Area 4. It is a mandatory element in the bibliographic description.
+</div>
+
+## Relationship to Other SES
+
+<div className="guid">
+- It is a component of the "Publication, Production, Distribution, Etc Area Encoding Scheme."
+- It is inherently linked to the "Name Of Publisher, Producer, Distributor Statement Encoding Scheme" (element 4.2), as the place is associated with that name.
+- Changes in the place of publication for continuing resources or multipart monographic resources are noted in the **Note Area (Area 7)**.
+
+</div>
+
+## Examples
+
+<div className="stip">
+- **. — London**
+- **. — Washington, D.C.**
+- **. — Santiago [Chile]**
+- **. — [S.l.]**
+- **. — Paris (66, avenue de Versailles, 75016)**
+
+</div>
+
+<hr />
+
+*This content was automatically generated from the ISBD PDF documentation using Gemini AI analysis.*

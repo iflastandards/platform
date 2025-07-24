@@ -1,0 +1,105 @@
+---
+# Navigation
+slug: /SES/C2016
+sidebar_class_name: sidebar-level-1
+sidebar_label: Other Physical Details Encoding Scheme
+sidebar_level: 1
+sidebar_position: 1
+sidebar_category: 'SES'
+
+# Element identification
+id: C2016
+title: Other Physical Details Encoding Scheme
+
+# RDF metadata
+RDF:
+  definition: Syntax encoding scheme for other physical details.
+  type: 'owl:Class'
+  scopeNote: ''
+
+# Deprecation tracking
+deprecated: null
+deprecatedInVersion: null
+willBeRemovedInVersion: null
+---
+
+# Title And Statement Of Responsibility Area Encoding Scheme
+
+## Element Reference
+<ElementReference frontMatter={frontMatter} />
+
+## Definition
+
+<div className="guid">
+This element within the **Material Description Area (Area 5)** provides a statement of 
+**additional physical characteristics** of the resource beyond its extent and dimensions. 
+This includes details like material composition, presence of colour or illustrations, and various technical specifications.
+</div>
+
+## Required Elements
+
+<div className="guid">
+<p>All elements are optional:</p>
+- **Composition of material:** Word or phrase indicating what the resource is made of 
+    (e.g., "wood," "nitrate," "transparency").
+- **Presence of illustrations:** Abbreviation "ill." (or equivalent). 
+    Can specify "all ill." or "chiefly maps".
+- **Presence of colour:** "col." for colour, "b&amp;w" for black and white.
+- **Reduction ratio (Microforms):** Numerical ratio (e.g., "14x," "150x") 
+    or descriptive terms (e.g., "low reduction").
+- **Presence or absence of sound:** "sd." for sound, "si." for silent, when not implicit in 
+    the specific material designation (e.g., for film reels). Brief explanatory phrases can be added (e.g., "(Beta HiFi)").
+- **Other technical specifications:**
+  - **Frame alignment** (for microforms/filmstrips, 
+        e.g., "cine mode," "comic mode").
+  - **Process or method of reproduction** (for still images, 
+        e.g., "drypoint, aquatint").
+  - **Playing speed** (e.g., "33 1/3 rpm," "19 cm/s").
+  - **Recording method** (e.g., "stereo," "mono").
+  - **Groove direction/size** (for sound discs).
+  - **Number of tape tracks**.
+  - **Track configuration** (for sound reels with 4+ tracks).
+  - **Number of sound channels** (e.g., "mono," "stereo").
+  - **Equalization**.
+  - **Noise reduction**.
+
+</div>
+
+## Punctuation Rules
+
+<div className="guid">
+This statement is preceded by **:** within Area 5.
+</div>
+
+## Relationship to ISBD Standards
+
+<div className="guid">
+This is element **5.2** within Area 5. 
+It provides granular details about the physical manifestation of the resource.
+</div>
+
+## Relationship to Other SES
+
+<div className="guid">
+- It is a component of the "Material Description Area Encoding Scheme."
+- If a resource is available in alternative formats with different physical details, this information may be 
+    omitted here and given in **Area 8 (Resource Identifier and Terms of Availability Area)** 
+    or the **Note Area (Area 7)**.
+- Notes providing additional physical details or peculiar characteristics are given in 
+    the **Note Area (Area 7)**.
+
+</div>
+
+## Examples
+
+<div className="stip">
+- **. — 1 globe : wood**
+- **. — 1 film reel (20 min) : b&amp;w, si.**
+- **. — 1 sound disc : 33 1/3 rpm, stereo**
+- **. — 1 CD-I : col., sd.**
+
+</div>
+
+<hr />
+
+*This content was automatically generated from the ISBD PDF documentation using Gemini AI analysis.*

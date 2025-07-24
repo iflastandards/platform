@@ -1,0 +1,94 @@
+---
+# Navigation
+slug: /SES/C2009
+sidebar_class_name: sidebar-level-1
+sidebar_label: Series And Multipart Monographic Resource Area Encoding Scheme
+sidebar_level: 1
+sidebar_position: 1
+sidebar_category: 'SES'
+
+# Element identification
+id: C2009
+title: Series And Multipart Monographic Resource Area Encoding Scheme
+
+# RDF metadata
+RDF:
+  definition: Syntax Encoding Scheme for the series and multipart monographic resource area (Area 6).
+  type: 'owl:Class'
+  scopeNote: ''
+
+# Deprecation tracking
+deprecated: null
+deprecatedInVersion: null
+willBeRemovedInVersion: null
+---
+
+# Series And Multipart Monographic Resource Area Encoding Scheme
+
+## Element Reference
+<ElementReference frontMatter={frontMatter} />
+
+## Definition
+
+<div className="guid">
+<p>This area (Area 6) is used to indicate that the resource being described belongs to a **larger bibliographic resource**, specifically a series or a multipart monographic resource. It helps to contextualize the individual resource within a broader collection.</p>
+</div>
+
+## Required Elements
+
+<div className="guid">
+- **Title proper of a series or multipart monographic resource (Mandatory if available):** The collective title of the larger resource, transcribed as it would be if described as a serial or multipart monographic resource.
+- **Parallel title of a series or multipart monographic resource (Optional):** An equivalent series title in another language or script.
+- **Other title information of a series or multipart monographic resource (Optional):** Subordinate information qualifying the series title, given if necessary for identification or importance.
+- **Statement of responsibility relating to a series or multipart monographic resource (Optional):** Identifies persons or corporate bodies responsible for the series, especially if the title is generic, or if considered important.
+- **International standard number of a series or multipart monographic resource (Mandatory if available):** The ISBN or ISSN related to the series or multipart monographic resource (e.g., ISSN 0306-9222).
+- **Numbering within a series or multipart monographic resource (Mandatory if available):** The numbering of the specific resource within that series (e.g., "no. 78", "vol. 2").
+
+</div>
+
+## Punctuation Rules
+
+<div className="guid">
+- **Each series statement** is enclosed in **parentheses ( )**.
+- A **second and each subsequent series statement** is preceded by a space.
+- Each **parallel title or parallel statement** is preceded by **=**.
+- Each **statement of other title information** is preceded by **:**.
+- The **first statement of responsibility** is preceded by **/**.
+- Each **subsequent statement of responsibility** is preceded by **;**.
+- The **international standard number** is preceded by **,**.
+- **Numbering within a series or multipart monographic resource** is preceded by **;**.
+- The **section or subseries designation or dependent title** following a common title is preceded by **.**.
+- The **dependent title** following a section or subseries designation is preceded by **,**.
+
+</div>
+
+## Relationship to ISBD Standards
+
+<div className="guid">
+<p>Identified as **Area 6**, this area helps to establish hierarchical relationships between bibliographic resources. It explicitly uses the concepts of "common title" and "dependent title" for series and subseries.</p>
+</div>
+
+## Relationship to Other SES
+
+<div className="guid">
+- It defines how "Title Proper (Compound) Of Series Or Multipart Monographic Resource Encoding Scheme" and "Parallel Title (Compound) Of Series Or Multipart Monographic Resource Encoding Scheme" are applied.
+- If a resource is part of a subseries with its own ISSN, the ISSN of the main series may be noted in the **Note Area (Area 7)**.
+- Common titles of a main resource for a supplement or insert may be given in this area.
+- Information on series editors can also be found in Area 7.
+
+</div>
+
+## Examples
+
+<div className="stip">
+- **. — (Title proper of series, ISSN ; numbering within series)**
+- **. — (Pepys series)**
+- **. — (Bibliothèque française et romane. Série B, Éditions critiques de textes)**
+- **. — (Map supplement / Association of American Geographers)**
+- **. — (Graeco-Roman memoirs, ISSN 0306-9222 ; no. 78)**
+
+</div>
+
+<hr />
+
+*This content was automatically generated from the ISBD PDF documentation using Gemini AI analysis.*

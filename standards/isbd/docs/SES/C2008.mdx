@@ -1,0 +1,107 @@
+---
+# Navigation
+slug: /SES/C2008
+sidebar_class_name: sidebar-level-1
+sidebar_label: Material Description Area Encoding Scheme
+sidebar_level: 1
+sidebar_position: 1
+sidebar_category: 'SES'
+
+# Element identification
+id: C2008
+title: Material Description Area Encoding Scheme
+
+# RDF metadata
+RDF:
+  definition: Syntax Encoding Scheme for the material description area (Area 5).
+  type: 'owl:Class'
+  scopeNote: ''
+
+# Deprecation tracking
+deprecated: null
+deprecatedInVersion: null
+willBeRemovedInVersion: null
+---
+
+# Material Description Area Encoding Scheme
+
+## Element Reference
+<ElementReference frontMatter={frontMatter} />
+
+## Definition
+
+<div className="guid">
+This area (Area 5) describes the **physical characteristics** of the resource. It includes details about the extent, other physical characteristics, dimensions, and any accompanying material. The description should reflect the resource as it was originally issued.
+</div>
+
+## Required Elements
+
+<div className="guid">
+- **Extent (Mandatory):** Names and numbers the physical unit(s) (e.g., "36 slides," "1 computer disk") 
+    and may include subunits like pages or playing time (e.g., "(37 p.)", "(ca 60 min)"). 
+    (Further detailed in "Specific Material Designation And Extent Encoding Scheme").
+- **Other physical details (Optional):** Statement of other characteristics, such as:
+  - **Composition of material** (e.g., "wood," "nitrate").
+  - **Presence of illustrations** (e.g., "ill.", "col. ill.", "chiefly maps").
+  - **Presence of colour** (e.g., "col.", "b&amp;w").
+  - **Reduction ratio** (for microforms, e.g., "14x", "high reduction").
+  - **Presence or absence of sound** (e.g., "sd.", "si.").
+  - **Other technical specifications** (e.g., frame alignment, process of reproduction, playing speed, 
+        sound channels, noise reduction). (Further detailed in "Other Physical Details Encoding Scheme").
+- **Dimensions (Optional):** Linear measurements of the resource, typically in centimetres. 
+    For certain media (film, tape), gauge or width in millimetres.
+- **Accompanying material statement (Optional):** Describes any physically separable material issued with 
+    and intended to be used with the resource. A short physical description of the accompanying material may be included.
+
+</div>
+
+## Punctuation Rules
+
+<div className="guid">
+- Each area is preceded by **. —**.
+- The **statement of other physical details** is preceded by **:**.
+- The **dimensions statement** is preceded by **;**.
+- Each **accompanying material statement** is preceded by **+**.
+- **Extent, other physical details, and dimensions of accompanying material** are enclosed in 
+    **parentheses ( )**.
+
+</div>
+
+## Relationship to ISBD Standards
+
+<div className="guid">
+Identified as **Area 5**, this is a key area for providing physical description of resources. 
+It provides unambiguous information for identification and reference.
+</div>
+
+## Relationship to Other SES
+
+<div className="guid">
+- It contains distinct encoding schemes for "Specific Material Designation And Extent Encoding Scheme" 
+    and "Other Physical Details Encoding Scheme."
+- Information about the physical units of notated music and unpublished resources mentioned in Area 3 
+    is specified here.
+- Notes on this area provide additional physical details or clarify peculiarities, 
+    and are found in the **Note Area (Area 7)**.
+- Accompanying material can alternatively be described independently or in a note.
+
+</div>
+
+## Examples
+
+<div className="stip">
+```
+. — Specific material designation (extent) : other physical details statement ; dimensions 
++ accompanying material statement
+
+. — 1 score (37 p.) + 4 parts on 1 CD-ROM
+
+. — 1 videocassette (U-matic) (30 min) : col., sd. ; 18.8 x 10.4 x 2.5 cm
+
+. — 1 map : transparency, col. ; 65 x 40 cm + 1 memoir
+```
+</div>
+
+<hr />
+
+*This content was automatically generated from the ISBD PDF documentation using Gemini AI analysis.*

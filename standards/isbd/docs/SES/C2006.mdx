@@ -1,0 +1,85 @@
+---
+# Navigation
+slug: /SES/C2006
+sidebar_class_name: sidebar-level-1
+sidebar_label: Material Or Type Of Resource Specific Area Encoding Scheme
+sidebar_level: 1
+sidebar_position: 1
+sidebar_category: 'SES'
+
+# Element identification
+id: C2006
+title: Material Or Type Of Resource Specific Area Encoding Scheme
+
+# RDF metadata
+RDF:
+  definition: Syntax Encoding Scheme for the material or type of resource specific area (Area 3).
+  type: 'owl:Class'
+  scopeNote: ''
+
+# Deprecation tracking
+deprecated: null
+deprecatedInVersion: null
+willBeRemovedInVersion: null
+---
+
+# Material Or Type Of Resource Specific Area Encoding Scheme
+
+## Element Reference
+<ElementReference frontMatter={frontMatter} />
+
+## Definition
+
+<div className="guid">
+This area (Area 3) is specifically designed to contain **data unique to a particular class of material or type of resource**. It groups together specific elements for cartographic resources, notated music, serials, and unpublished resources.
+</div>
+
+## Required Elements
+
+<div className="guid">
+The elements in this area are material-specific:
+- **Mathematical data (Cartographic resources) (Mandatory if applicable):** Includes statement of scale, projection, coordinates, celestial hemisphere, epoch, equinox, and magnitude. (Further detailed in "Mathematical Data Area Encoding Scheme").
+- **Music format statement (Notated music) (Mandatory if available):** A term describing the physical form of presentation of notated music (e.g., "Full score," "Parts"). (Further detailed in "Music Format Statement Area Encoding Scheme").
+- **Numbering (Serials) (Mandatory if available):** Numeric and/or chronological designations of the first and/or last issues or parts of a serial. (Further detailed in "Numbering Area Encoding Scheme").
+- **Unpublished statement (Optional):** A term or phrase indicating the category, nature, or production method of an unpublished resource (e.g., "Master tape," "[Manuscript]"). This element was introduced in the 2021 Update to extend ISBD's coverage.
+
+</div>
+
+## Punctuation Rules
+
+<div className="guid">
+The punctuation patterns are specific to each type of material and are set out within their respective sub-sections. The area as a whole is preceded by **. —**. If repeated, each repetition is preceded by **. —**.
+</div>
+
+## Relationship to ISBD Standards
+
+<div className="guid">
+Identified as **Area 3**, this area allows for specialized descriptive data tailored to different resource types, promoting granular description and harmonization.
+</div>
+
+## Relationship to Other SES
+
+<div className="guid">
+- It contains distinct encoding schemes for "Mathematical Data," "Music Format Statement," and "Numbering" for specific material types.
+- Physical details of materials described here (like the actual pages of a score or the dimensions of an unpublished manuscript) are often provided in the **Material Description Area (Area 5)**.
+- Notes on this area, providing additional mathematical or numbering details, are found in the **Note Area (Area 7)**.
+
+</div>
+
+## Examples
+
+<div className="stip">
+```
+. — Scale 1:250 000 ; universal transverse Mercator proj. (Cartographic)
+
+. — Full score (Notated Music)
+
+. — Vol. 1, no. 1 (Jan. 1971)– (Serials)
+
+. — Master tape (Unpublished)
+```
+</div>
+
+<hr />
+
+*This content was automatically generated from the ISBD PDF documentation using Gemini AI analysis.*

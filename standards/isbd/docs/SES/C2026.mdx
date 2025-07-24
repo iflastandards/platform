@@ -1,0 +1,84 @@
+---
+# Navigation
+slug: /SES/C2026
+sidebar_class_name: sidebar-level-1
+sidebar_label: Content Form And Media Type Statement Encoding Scheme
+sidebar_level: 1
+sidebar_position: 1
+sidebar_category: 'SES'
+
+# Element identification
+id: C2026
+title: Content Form And Media Type Statement Encoding Scheme
+
+# RDF metadata
+RDF:
+  definition: Syntax Encoding Scheme for the content form and media type statement.
+  type: 'owl:Class'
+  scopeNote: ''
+
+# Deprecation tracking
+deprecated: null
+deprecatedInVersion: null
+willBeRemovedInVersion: null
+---
+
+# Content Form And Media Type Statement Encoding Scheme
+
+## Element Reference
+<ElementReference frontMatter={frontMatter} />
+
+## Definition
+
+<div className="guid">
+This refers to the **combined, formatted statement** of the content form(s), production process (if applicable), and media type(s) that forms the core description within **Area 0 (Content Form, Production Process and Media Type Area)**. It provides an immediate overview of what the resource contains and on what physical carrier it exists.
+</div>
+
+## Required Elements
+
+<div className="guid">
+It combines the elements from Area 0:
+- **Content form:** (Mandatory) The fundamental form (e.g., "Text," "Image," "Dataset").
+- **Content qualification:** (Mandatory if applicable) Specific attributes (e.g., "(visual)", "(cartographic ; still ; 2-dimensional)").
+- **Production process:** (Optional) Method of fixation and production (e.g., "handwriting," "burning").
+- **Production process qualification:** (Optional) Status of production (e.g., "(unpublished)").
+- **Media type:** (Mandatory) Type of carrier (e.g., "electronic," "unmediated," "video").
+
+</div>
+
+## Punctuation Rules
+
+<div className="guid">
+The punctuation patterns define how these elements are combined:
+- **Content form (content qualification) : production process (production process qualification) ; media type**.
+- **Content form (content qualification ; content qualification) : media type**.
+- **Content form. Content form (content qualification) : media type** (for different content forms in one media type).
+- **Content form (content qualification) : production process ; media type + Content form (content qualification) : production process (production process qualification) ; media type** (for different media types, content forms, and production processes).
+
+</div>
+
+## Relationship to ISBD Standards
+
+<div className="guid">
+This is the primary output of **Area 0**, explicitly detailing its structured nature. It was a significant development in the 2011 consolidated edition to provide greater specificity.
+</div>
+
+## Relationship to Other SES
+
+<div className="guid">
+It integrates the "Content Form," "Production Process," and "Media Type" elements (which themselves could be considered mini-SES) into a coherent statement. It's the practical application of the "Content Form And Media Type Area Encoding Scheme."
+</div>
+
+## Examples
+
+<div className="stip">
+- **Dataset : electronic**
+- **Text (visual) : handwriting (unpublished) ; unmediated**
+- **Image (cartographic ; still ; 2-dimensional ; visual) : unmediated**
+- **Text (visual) : unmediated + Text (visual) : microform**
+
+</div>
+
+<hr />
+
+*This content was automatically generated from the ISBD PDF documentation using Gemini AI analysis.*

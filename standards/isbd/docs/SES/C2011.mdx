@@ -1,0 +1,108 @@
+---
+# Navigation
+slug: /SES/C2011
+sidebar_class_name: sidebar-level-1
+sidebar_label: Resource Identifier And Terms Of Availability Area Encoding Scheme
+sidebar_level: 1
+sidebar_position: 1
+sidebar_category: 'SES'
+
+# Element identification
+id: C2011
+title: Resource Identifier And Terms Of Availability Area Encoding Scheme
+
+# RDF metadata
+RDF:
+  definition: Syntax Encoding Scheme for the resource identifier and terms of availability area (Area 8).
+  type: 'owl:Class'
+  scopeNote: ''
+
+# Deprecation tracking
+deprecated: null
+deprecatedInVersion: null
+willBeRemovedInVersion: null
+---
+
+# Resource Identifier And Terms Of Availability Area Encoding Scheme
+
+## Element Reference
+<ElementReference frontMatter={frontMatter} />
+
+## Definition
+
+<div className="guid">
+<p>This area (Area 8) includes identifiers (numbers or alphanumeric designations) that identify a resource 
+according to international standards (e.g., ISBN, ISSN, ISMN) or publishers' designations. 
+It also includes statements about the terms under which the resource is available (e.g., price, distribution conditions).</p>
+</div>
+
+## Required Elements
+
+<div className="guid">
+- **Resource identifier (Optional):**
+  - **Standard identifiers:** ISBN, ISSN, ISMN, URN, DOI, URL, preceded by their customary labels.
+  - **Publisher's number (Notated music only):** Preceded by "Publ. no.".
+  - **Plate number (Notated music only):** Preceded by "Pl. no.".
+  - **Label name and catalogue number (Sound/videorecordings):** The label name followed by 
+        all catalogue numbers.
+  - **Fingerprint (Older monographic resources):** A unique alphanumeric string.
+  - **Music incipit (Music manuscripts):** A series of notes from predetermined staves, 
+        serving as an identifier.
+- **Qualification to identifier (Optional):** A brief statement (in parentheses) that qualifies, 
+    explains, or corrects the identifier (e.g., binding type, "(corrected)", "(invalid)").
+- **Key title (Mandatory for continuing resources if ISSN is given):** The unique name assigned by 
+    the ISSN Network, inseparably linked to its ISSN.
+- **Terms of availability (Optional):** The price (with ISO 4217 currency code) or a statement of 
+    other terms if not for sale (e.g., "for hire," "free to educational institutions").
+- **Qualification to terms of availability (Optional):** Qualifications to the terms, 
+    enclosed in parentheses (e.g., "(to members)", "(annual subscription)").
+
+</div>
+
+## Punctuation Rules
+
+<div className="guid">
+- Each area is preceded by **. —**.
+- The **key title** is preceded by **=**.
+- **Terms of availability** are preceded by **:**.
+- A **qualification** is enclosed in **parentheses ( )**. 
+    Multiple qualifiers are separated by **;**.
+- Each **subsequent identifier and terms of availability statement** 
+    (if repeating the area for multiple identifiers) is preceded by **. —**.
+
+</div>
+
+## Relationship to ISBD Standards
+
+<div className="guid">
+<p>Identified as **Area 8**, this area provides crucial access and identification points for users, 
+especially for purchasing or locating specific versions of a resource. 
+The area can be repeated if a resource has multiple identifiers.</p>
+</div>
+
+## Relationship to Other SES
+
+<div className="guid">
+- It contains the "Resource Identifier Statement Encoding Scheme" and 
+    "Terms Of Availability Statement Encoding Scheme."
+- Identifiers relating to bibliographic history (e.g., ISBNs for earlier editions) are typically not included here 
+    but can be given in the **Note Area (Area 7)**.
+- Physical details related to different formats might be recorded here if omitted from Area 5.
+- The "Label name and catalogue number" here is distinct from publisher names in Area 4.
+
+</div>
+
+## Examples
+
+<div className="stip">
+- **. — ISBN 978-952-92-0267-6**
+- **. — ISSN 0075-2363 = Medicos (Nottingham)**
+- **. — ISBN 978-0-85020-025-6 (cloth)**
+- **. — Telefunken 6.35368**
+- **. — Fingerprint:163704 - b1 A2 ,$en : b2 I2 a,$**
+
+</div>
+
+<hr />
+
+*This content was automatically generated from the ISBD PDF documentation using Gemini AI analysis.*

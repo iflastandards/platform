@@ -1,0 +1,86 @@
+---
+# Navigation
+slug: /SES/C2014
+sidebar_class_name: sidebar-level-1
+sidebar_label: Numbering Area Encoding Scheme
+sidebar_level: 1
+sidebar_position: 1
+sidebar_category: 'SES'
+
+# Element identification
+id: C2014
+title: Numbering Area Encoding Scheme
+
+# RDF metadata
+RDF:
+  definition: Syntax Encoding Scheme for the numbering area (Area 3 for serials).
+  type: 'owl:Class'
+  scopeNote: ''
+
+# Deprecation tracking
+deprecated: null
+deprecatedInVersion: null
+willBeRemovedInVersion: null
+---
+
+# Numbering Area Encoding Scheme
+
+## Element Reference
+<ElementReference frontMatter={frontMatter} />
+
+## Definition
+
+<div className="guid">
+This is a sub-area within the **Material or Type of Resource Specific Area (Area 3)**, specifically for **serials**. It records the **numeric and/or chronological designation** of the first and/or last issue or part of the serial.
+</div>
+
+## Required Elements
+
+<div className="guid">
+- **Numeric designation (Mandatory if available):** Numbers (arabic numerals preferred) with or without accompanying characters/words (e.g., "Vol. 1, no. 1", "Bd. 1–").
+- **Chronological designation (Mandatory if available):** Dates (e.g., "Jan. 1970", "1925–").
+- **Parallel numbering system (Optional):** Designations in another language or script for the same issues.
+- **Alternative numbering system (Optional):** A different numbering system used concurrently.
+- **New sequence of numbering (Optional):** The designation and numbering for a new sequence when the serial continues under a new numbering scheme (e.g., "new ser., v. 1–").
+
+</div>
+
+## Punctuation Rules
+
+<div className="guid">
+- A **hyphen (–)** after the number/date of the first issue links to the last issue or indicates it is continuing.
+- If both **numeric and chronological designations** are present, the date is enclosed in **parentheses ( )** after the number, unless the number is a division of the date.
+- The **second and each subsequent system of numbering** (parallel or alternative) is preceded by **=**.
+- A **new sequence of numbering** is preceded by **;**.
+
+</div>
+
+## Relationship to ISBD Standards
+
+<div className="guid">
+This is element **3.3** within Area 3. It provides specific, standardized numbering information critical for identifying and managing serial resources.
+</div>
+
+## Relationship to Other SES
+
+<div className="guid">
+- It is a component of the "Material Or Type Of Resource Specific Area Encoding Scheme."
+- The dates in this area may not coincide with publication dates in the **Publication, Production, Distribution, Etc. Area (Area 4)**.
+- Major changes in numbering can require a new description for the serial (see Area A.2.6).
+- Notes on complex, irregular numbering, or explanations for omissions are given in the **Note Area (Area 7)**.
+
+</div>
+
+## Examples
+
+<div className="stip">
+- **. — Vol. 1, no. 1 (Jan. 1971)–**
+- **. — 1971, no. 1 (Jan. 1971)–1975, no. 12 (Dec. 1975)**
+- **. — Bd. 1, Nr. 1 (Frühling 1970)– = Nr. 1–**
+- **. — 1–v. 101 ; new ser., v. 1–**
+
+</div>
+
+<hr />
+
+*This content was automatically generated from the ISBD PDF documentation using Gemini AI analysis.*
