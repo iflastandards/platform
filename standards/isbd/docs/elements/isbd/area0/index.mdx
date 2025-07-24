@@ -5,54 +5,113 @@ sidebar_position: 1
 
 # Area 0: Content Form, Production Process and Media Type Area
 
-This area indicates the fundamental form of content, the method of content fixation, and the carrier type.
+Area 0 provides essential information about the fundamental nature of a resource's content and the technical characteristics of its carrier. This area is crucial for users to understand what type of resource they are accessing and what equipment or software may be needed.
+
+## Purpose and Scope
+
+Area 0 elements:
+- **Identify content type**: What kind of intellectual content the resource contains
+- **Specify technical requirements**: How the content is fixed and delivered
+- **Support access decisions**: Help users determine if they can use the resource
+- **Enable format filtering**: Allow searching and browsing by format
 
 ## Elements in Area 0
 
-### Content Form (0.1)
-Reflects how content is expressed (e.g., dataset, image, movement, object, program, sounds, spoken word, text).
+### Core Elements
 
-### Content Qualification (0.1.1)
-Expands on content form, specifying:
-- **Type**: cartographic, notated, performed
-- **Motion**: moving, still
-- **Dimensionality**: 2-dimensional, 3-dimensional
-- **Sensory specification**: aural, tactile, visual
+#### Content Form (0.1)
+**Definition**: The fundamental form or forms in which the content of a resource is expressed.
 
-### Production Process (0.2.1)
-Describes the fixation method and industrial/artisanal production method:
-- impression
-- magnetic recording
-- electronic recording
-- daguerrotype process
-- burning
-- electroforming
-- hard copying
+**Examples**:
+- dataset (numeric, environmental, etc.)
+- image (still or moving)
+- movement (dance, stage action, choreography)
+- object (three-dimensional forms)
+- program (application software, operating systems)
+- sounds (music, speech, environmental sounds)
+- spoken word (audio books, lectures, interviews)
+- text (language-based content)
 
-*This element is optional.*
+**Related vocabulary**: <InLink href="/docs/vocabularies/contentform">Content Form vocabulary</InLink>
 
-### Production Process Qualification (0.2.1.1)
-Specifies the status (published or unpublished) of the production plan or process.
+#### Media Type (0.2.2) - *Mandatory*
+**Definition**: The type of carrier used to convey the content of the resource.
 
-### Media Type (0.2.2)
-Records the carrier type(s) used:
-- audio
-- electronic
-- microform
-- microscopic
-- multiple media
-- stereographic
-- unmediated
-- video
+**Categories**:
+- **audio**: Resources requiring audio playback equipment
+- **electronic**: Resources requiring a computer
+- **microform**: Resources requiring magnification
+- **microscopic**: Resources requiring a microscope
+- **multiple media**: Resources with multiple carrier types
+- **stereographic**: Resources with stereoscopic effect
+- **unmediated**: Resources requiring no mediation device
+- **video**: Resources requiring video playback
 
-*This element is mandatory.*
+**Related vocabulary**: <InLink href="/docs/vocabularies/mediatype">Media Type vocabulary</InLink>
 
-## Usage Notes
+### Qualification Elements
 
-Area 0 elements:
-- Are fundamental to resource description
-- Provide essential technical metadata
-- Support format identification and access requirements
-- Include both mandatory and optional elements
+#### Content Qualification (0.1.1)
+Provides additional specificity about content characteristics:
 
-*Note: Individual element pages will be populated through the import process.*
+**Type specifications**:
+- **cartographic**: Maps, atlases, globes, digital terrain models
+- **notated**: Musical or choreographic notation
+- **performed**: Recorded performances of music, drama, etc.
+
+**Physical characteristics**:
+- **Motion**: <InLink href="/docs/vocabularies/contentqualification/motion">moving or still</InLink>
+- **Dimensionality**: <InLink href="/docs/vocabularies/contentqualification/dimensionality">2-dimensional or 3-dimensional</InLink>
+- **Sensory specification**: <InLink href="/docs/vocabularies/contentqualification/sensoryspecification">aural, tactile, visual, etc.</InLink>
+
+### Production Elements
+
+#### Production Process (0.2.1) - *Optional*
+**Definition**: The method used to fix the content in or on the carrier.
+
+**Common processes**:
+- **Traditional printing**: impression, lithography, engraving
+- **Recording methods**: magnetic recording, optical recording, electronic recording
+- **Photographic processes**: daguerrotype, photogravure, photocopying
+- **Digital methods**: burning (optical discs), downloading, streaming
+
+#### Production Process Qualification (0.2.1.1)
+Indicates the publication status:
+- **published**: Commercially or publicly released
+- **unpublished**: Manuscripts, private recordings, archival materials
+
+## Prescribed Punctuation
+
+Area 0 uses specific punctuation to separate elements:
+```
+Content form (content qualification) : media type
+```
+
+Examples:
+- `text (visual) : unmediated`
+- `spoken word (aural) : audio`
+- `dataset (electronic) : electronic`
+- `image (moving ; two-dimensional ; visual) : video`
+
+## Implementation Guidelines
+
+1. **Always include mandatory elements**: Media type must be present
+2. **Use controlled vocabularies**: Apply terms from ISBD vocabularies
+3. **Multiple values**: Repeat elements as needed for multi-format resources
+4. **Order of elements**: Follow the prescribed sequence
+5. **Language neutrality**: Use vocabulary codes, not display labels
+
+## Related Resources
+
+<SeeAlso 
+  links={[
+    { href: "/docs/vocabularies/contentform", label: "Content Form Vocabulary" },
+    { href: "/docs/vocabularies/mediatype", label: "Media Type Vocabulary" },
+    { href: "/docs/vocabularies/contentqualification", label: "Content Qualification Vocabularies" },
+    { href: "/docs/elements/isbd", label: "All ISBD Elements" }
+  ]} 
+/>
+
+## Elements in This Area
+
+*Individual element pages are listed below and will be populated through the import process.*

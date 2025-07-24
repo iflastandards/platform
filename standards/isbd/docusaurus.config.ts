@@ -85,7 +85,18 @@ const config: Config = {
       '@easyops-cn/docusaurus-search-local',
       {
         hashed: true,
+        language: ['en', 'fr', 'es'], // Add language support
+        indexDocs: true,
         indexBlog: true,
+        docsRouteBasePath: '/docs',
+        searchBarShortcutHint: false,
+        searchBarPosition: 'right',
+        // Add search contexts for faceting
+        searchContextByPaths: [
+          'elements',      // Element sets
+          'vocabularies',  // VES
+          'SES'           // Syntax Encoding Schemes
+        ]
       },
     ],
     

@@ -5,15 +5,82 @@ sidebar_position: 0
 
 # Classes
 
-This section defines the fundamental classes used in ISBD resource description.
+This section defines the fundamental classes used in ISBD resource description. Classes provide the structural foundation for organizing bibliographic data.
 
-## Classes in ISBD
+## Overview
+
+ISBD classes establish the basic entities that can be described using ISBD elements. Unlike properties (which describe relationships and attributes), classes represent the "things" being described.
+
+## Core Classes
 
 ### Resource (C2001)
+
 The core class representing an entity, tangible or intangible, that comprises intellectual and/or artistic content and is conceived, produced and/or issued as a unit, forming the basis of a single bibliographic description.
 
-<InLink href="/docs/elements/isbd/classes/C2001">View Resource class details</InLink>
+**Key Characteristics:**
+- Forms the domain for all ISBD property elements
+- Encompasses all types of bibliographic resources
+- Represents both physical and digital materials
+- Serves as the primary unit of description
 
+**Scope:**
+The Resource class includes:
+- Printed books and serials
+- Electronic resources
+- Audiovisual materials
+- Cartographic resources
+- Music and sound recordings
+- Graphics and three-dimensional objects
+- Mixed materials
 
-In the context of ISBD, the core concept of 'Resource' is fundamental, forming the very basis of bibliographic description. The ISBD framework specifies the requirements for describing and identifying these resources to ensure global consistency and facilitate the international exchange of bibliographic records.
+<InLink href="/docs/elements/isbd/classes/C2001">View complete Resource class definition →</InLink>
+
+## Role in ISBD Structure
+
+In the ISBD framework, the Resource class serves as:
+
+1. **Domain Foundation**: All ISBD properties have Resource as their domain, meaning they describe aspects of resources
+2. **Unifying Concept**: Provides a single conceptual model for diverse material types
+3. **RDF Compatibility**: Enables semantic web applications through formal class definition
+
+## Relationship to Properties
+
+The Resource class works in conjunction with ISBD properties across all areas:
+- **Area 0**: Content form and media type properties
+- **Area 1**: Title and statement of responsibility properties
+- **Area 2**: Edition properties
+- **Area 3**: Material specific properties
+- **Area 4**: Publication and distribution properties
+- **Area 5**: Physical description properties
+- **Area 6**: Series properties
+- **Area 7**: Notes properties
+- **Area 8**: Identifier properties
+
+## Implementation Notes
+
+When implementing ISBD in RDF or other semantic frameworks:
+- Use the full URI: `http://iflastandards.info/ns/isbd/elements/C2001`
+- Declare resources as instances of this class
+- Apply ISBD properties to describe resource characteristics
+
+Example:
+```turtle
+@prefix isbd: <http://iflastandards.info/ns/isbd/elements/> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+
+<http://example.org/resource/1> 
+    rdf:type isbd:C2001 ;
+    isbd:P1001 "The Great Gatsby" ;
+    isbd:P1008 "First edition" .
+```
+
+## See Also
+
+<SeeAlso 
+  links={[
+    { href: "/docs/elements/isbd", label: "Browse all ISBD Elements" },
+    { href: "/docs/SES", label: "Syntax Encoding Schemes" },
+    { href: "/docs/introduction", label: "ISBD Introduction" }
+  ]} 
+/>
 

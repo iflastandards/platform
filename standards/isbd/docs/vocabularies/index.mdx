@@ -16,46 +16,35 @@ These vocabularies support ISBD Area 0 (Content form and media type area) by pro
 
 ## Available Vocabularies
 
-<div style={{ display: 'grid', gap: '16px', marginTop: '24px' }}>
-  <div style={{ background: '#fff', border: '1px solid #388e3c', borderRadius: '8px', padding: '20px' }}>
-    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'start', marginBottom: '12px' }}>
-      <h3 style={{ margin: 0, color: '#388e3c' }}>Content Form</h3>
-      <span style={{ background: '#e8f5e9', color: '#388e3c', fontSize: '12px', padding: '4px 12px', borderRadius: '16px' }}>25 terms</span>
-    </div>
-    <p style={{ color: '#666', marginBottom: '16px' }}>
-      Content form categories reflect the fundamental form or forms in which the content of a resource is expressed.
-    </p>
-    <a href="/docs/vocabularies/contentform" style={{ color: '#388e3c', textDecoration: 'none', fontWeight: 'bold' }}>
-      Browse vocabulary →
-    </a>
-  </div>
+<VocabularyCard
+  vocabulary={{
+    id: "contentform",
+    title: "Content Form",
+    description: "Content form categories reflect the fundamental form or forms in which the content of a resource is expressed.",
+    termCount: 25,
+    path: "/docs/vocabularies/contentform"
+  }}
+/>
 
-  <div style={{ background: '#fff', border: '1px solid #388e3c', borderRadius: '8px', padding: '20px' }}>
-    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'start', marginBottom: '12px' }}>
-      <h3 style={{ margin: 0, color: '#388e3c' }}>Content Form Base</h3>
-      <span style={{ background: '#e8f5e9', color: '#388e3c', fontSize: '12px', padding: '4px 12px', borderRadius: '16px' }}>8 terms</span>
-    </div>
-    <p style={{ color: '#666', marginBottom: '16px' }}>
-      Compound terms for qualified ISBD content forms that map to RDA/ONIX Framework for Resource Categorization base content categories.
-    </p>
-    <a href="/docs/vocabularies/contentformbase" style={{ color: '#388e3c', textDecoration: 'none', fontWeight: 'bold' }}>
-      Browse vocabulary →
-    </a>
-  </div>
+<VocabularyCard
+  vocabulary={{
+    id: "contentformbase",
+    title: "Content Form Base",
+    description: "Compound terms for qualified ISBD content forms that map to RDA/ONIX Framework for Resource Categorization base content categories.",
+    termCount: 8,
+    path: "/docs/vocabularies/contentformbase"
+  }}
+/>
 
-  <div style={{ background: '#fff', border: '1px solid #388e3c', borderRadius: '8px', padding: '20px' }}>
-    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'start', marginBottom: '12px' }}>
-      <h3 style={{ margin: 0, color: '#388e3c' }}>Media Type</h3>
-      <span style={{ background: '#e8f5e9', color: '#388e3c', fontSize: '12px', padding: '4px 12px', borderRadius: '16px' }}>12 terms</span>
-    </div>
-    <p style={{ color: '#666', marginBottom: '16px' }}>
-      Media type categories record the type or types of carrier used to convey the content of the resource.
-    </p>
-    <a href="/docs/vocabularies/mediatype" style={{ color: '#388e3c', textDecoration: 'none', fontWeight: 'bold' }}>
-      Browse vocabulary →
-    </a>
-  </div>
-</div>
+<VocabularyCard
+  vocabulary={{
+    id: "mediatype",
+    title: "Media Type",
+    description: "Media type categories record the type or types of carrier used to convey the content of the resource.",
+    termCount: 12,
+    path: "/docs/vocabularies/mediatype"
+  }}
+/>
 
 ## Content Qualification Vocabularies
 
@@ -66,49 +55,49 @@ These vocabularies support ISBD Area 0 (Content form and media type area) by pro
 </div>
 
 <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(280px, 1fr))', gap: '16px' }}>
-  <div style={{ background: '#fff', border: '1px solid #e0e0e0', borderRadius: '6px', padding: '16px' }}>
-    <h4 style={{ margin: '0 0 8px 0', color: '#388e3c' }}>Dimensionality</h4>
-    <p style={{ color: '#666', fontSize: '0.9rem', marginBottom: '8px' }}>
-      Number of spatial dimensions in image content
-    </p>
-    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-      <span style={{ color: '#999', fontSize: '0.85rem' }}>2 terms</span>
-      <a href="/docs/vocabularies/contentqualification/dimensionality" style={{ color: '#388e3c', fontSize: '0.9rem' }}>View →</a>
-    </div>
-  </div>
+  <VocabularyCard
+    vocabulary={{
+      id: "dimensionality",
+      title: "Dimensionality",
+      description: "Number of spatial dimensions in image content",
+      termCount: 2,
+      path: "/docs/vocabularies/contentqualification/dimensionality"
+    }}
+    variant="compact"
+  />
 
-  <div style={{ background: '#fff', border: '1px solid #e0e0e0', borderRadius: '6px', padding: '16px' }}>
-    <h4 style={{ margin: '0 0 8px 0', color: '#388e3c' }}>Motion</h4>
-    <p style={{ color: '#666', fontSize: '0.9rem', marginBottom: '8px' }}>
-      Presence or absence of movement in images
-    </p>
-    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-      <span style={{ color: '#999', fontSize: '0.85rem' }}>2 terms</span>
-      <a href="/docs/vocabularies/contentqualification/motion" style={{ color: '#388e3c', fontSize: '0.9rem' }}>View →</a>
-    </div>
-  </div>
+  <VocabularyCard
+    vocabulary={{
+      id: "motion",
+      title: "Motion",
+      description: "Presence or absence of movement in images",
+      termCount: 2,
+      path: "/docs/vocabularies/contentqualification/motion"
+    }}
+    variant="compact"
+  />
 
-  <div style={{ background: '#fff', border: '1px solid #e0e0e0', borderRadius: '6px', padding: '16px' }}>
-    <h4 style={{ margin: '0 0 8px 0', color: '#388e3c' }}>Sensory Specification</h4>
-    <p style={{ color: '#666', fontSize: '0.9rem', marginBottom: '8px' }}>
-      Human senses for perceiving content
-    </p>
-    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-      <span style={{ color: '#999', fontSize: '0.85rem' }}>48 terms</span>
-      <a href="/docs/vocabularies/contentqualification/sensoryspecification" style={{ color: '#388e3c', fontSize: '0.9rem' }}>View →</a>
-    </div>
-  </div>
+  <VocabularyCard
+    vocabulary={{
+      id: "sensoryspecification",
+      title: "Sensory Specification",
+      description: "Human senses for perceiving content",
+      termCount: 48,
+      path: "/docs/vocabularies/contentqualification/sensoryspecification"
+    }}
+    variant="compact"
+  />
 
-  <div style={{ background: '#fff', border: '1px solid #e0e0e0', borderRadius: '6px', padding: '16px' }}>
-    <h4 style={{ margin: '0 0 8px 0', color: '#388e3c' }}>Type</h4>
-    <p style={{ color: '#666', fontSize: '0.9rem', marginBottom: '8px' }}>
-      Content qualification sub-categories
-    </p>
-    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-      <span style={{ color: '#999', fontSize: '0.85rem' }}>53 terms</span>
-      <a href="/docs/vocabularies/contentqualification/type" style={{ color: '#388e3c', fontSize: '0.9rem' }}>View →</a>
-    </div>
-  </div>
+  <VocabularyCard
+    vocabulary={{
+      id: "type",
+      title: "Type",
+      description: "Content qualification sub-categories",
+      termCount: 53,
+      path: "/docs/vocabularies/contentqualification/type"
+    }}
+    variant="compact"
+  />
 </div>
 
 ## Technical Details
