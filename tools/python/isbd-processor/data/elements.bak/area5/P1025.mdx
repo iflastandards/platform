@@ -1,0 +1,105 @@
+---
+id: P1025
+title: has accompanying material statement
+description: ISBD element documentation for has accompanying material statement
+uri: "isbd:elements/P1025"
+area: area5
+RDF:
+  definition: "Relates a resource to a statement on accompanying material (any physically separable part of the resource that is issued (or intended to be issued) at the same time and intended to be used with the resource)."
+  domain: "isbd:elements/C2001"
+  type: "rdf:Property"
+reg:hasUnconstrained: "isbd:unc/elements/P1025"
+reg:name: hasAccompanyingMaterialStatement
+reg:status: "RegStatus:1001"
+rdf:type: "rdf:Property"
+rdfs:domain: "isbd:elements/C2001"
+rdfs:isDefinedBy: "isbd:elements/"
+rdfs:label: has accompanying material statement
+rdfs:label@es: "tiene mención de material anejo"
+skos:definition: "Relates a resource to a statement on accompanying material (any physically separable part of the resource that is issued (or intended to be issued) at the same time and intended to be used with the resource)."
+skos:definition@es: "Relaciona un recurso con una mencion de material anejo (cualquier parte separada físicamente del recurso que se ha publicado (o existe intención de que se publique) al mismo tiempo y destinado para ser utilizado con el recurso)."
+---
+# has accompanying material statement
+
+The ISBD element "accompanying material statement" is found within the PDF documentation. Here's a breakdown of the element based on the provided structure:
+
+## Element Reference
+
+- **Official ISBD Definition:** The accompanying material statement is the fourth element of the Material Description Area (Area 5).  It denotes any physically separable part of the resource not so far specified in the material description area that is issued (or intended to be issued) at the same time and intended to be used with the resource that is being described. (See page 177)
+
+- **Domain:**  Monographic resources, multipart resources, continuing resources. Essentially any resource that can have supplementary material issued alongside it.
+
+- **Range:** A textual statement describing the accompanying material.  This can be a free-text description, utilize specific material designations similar to the extent statement, or a short physical description incorporating elements of extent and dimensions.
+
+- **Element Type:** Descriptive.
+
+
+## Additional Information
+
+- **Scope and Purpose:**  To inform users of the existence and nature of supplementary materials issued with the main resource, facilitating identification and retrieval of all related items.  This promotes a more comprehensive understanding of the complete resource package.
+
+- **User Tasks Supported:**
+    - Identifying whether a resource has accompanying materials.
+    - Understanding the type and format of the accompanying material.
+    - Locating and accessing accompanying material if desired.
+
+
+## Element Values
+
+- **Specific Rules/Guidelines:**
+    - The accompanying material statement may be given in the terms in which it appears on the resource or by means of an appropriate specific material designation or description (5.4.1).
+    - A short physical description can be given (5.4.2).
+    - Alternative descriptions can be provided in a separate analytic description, in a note, or using multilevel description (5.4.3).
+
+
+- **Value Constraints/Formats:**  No strict format is prescribed, but brevity and clarity are encouraged.  Standard abbreviations can be used (A.6.4).
+
+- **String Encoding Schemes:**  Not applicable. The accompanying material statement is textual.
+
+
+
+## Examples
+
+```
+271 p. : ill. ; 21 cm + 1 wallchart : col. ; 65 x 97 cm
+```
+
+```
+96 p.; 8° (16 cm, publisher's binding) + 1 teacher's manual (32 p. ; 24 cm)
+```
+
+```
+1 sound disc (55 min): 33 1/3 rpm, mono; 30 cm + 1 libretto (16 p. ; 20 cm) 
+```
+
+```
+20 maps on 1 CD-ROM : sd., col. ; 12 cm + 1 user guide (24 p.)
+```
+
+```
+1 score (92 p.) + 4 parts (various pagings)
+```
+
+
+## Relationships
+
+- **Relationships to other ISBD elements:** Directly follows the dimensions statement within Area 5 (Material Description Area).  Related to extent (5.1), other physical details (5.2), and dimensions (5.3) which describe the main resource, allowing users to differentiate between the primary resource and its accompaniment.
+
+- **Super-types and Sub-types:** Not explicitly defined within the ISBD framework.
+
+- **Inverse Relationships:** Not applicable.
+
+
+
+## Stipulations
+
+- **Special Considerations:**  Accompanying material is distinguished from inserts (A.2.5, 5.4) which are considered integral parts of the main resource.  For electronic resources, accompanying documentation may be treated as accompanying material if physically separate (7.5.1).  If the accompanying material is complex, consider using an analytic description, a note, or multilevel description (5.4.3).
+
+- **Exceptions:**  If details of accompanying material are included elsewhere (e.g., a comprehensive contents note in 7.7), then the statement may be omitted in Area 5.
+
+- **Best Practices:**  Use specific and concise language to describe the accompanying material's type and format. For example, specify "teacher's manual" instead of just "manual," or "errata slip" instead of just "slip." If the accompanying material itself has accompanying material, enclose its description in parentheses (5.4.1).
+
+
+---
+
+*This content was automatically generated from the ISBD PDF documentation using Gemini AI analysis.*

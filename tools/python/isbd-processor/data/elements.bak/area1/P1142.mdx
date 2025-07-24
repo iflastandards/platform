@@ -1,0 +1,85 @@
+---
+id: P1142
+title: has parallel statement of responsibility relating to edition
+description: ISBD element documentation for has parallel statement of responsibility relating to edition
+uri: "isbd:elements/P1142"
+area: area1
+RDF:
+  definition: "Relates a resource to one or more names, phrases, or groups of characters relating to the identification and/or function of any persons or corporate bodies responsible for or contributing to the creation or realisation of the intellectual or artistic content of an edition of a work contained in the resource, presented on the preferred source of information for the resource as an equivalent in another language or script."
+  domain: "isbd:elements/C2001"
+  type: "rdf:Property"
+reg:hasUnconstrained: "isbd:unc/elements/P1142"
+reg:name: hasParallelStatementOfResponsibilityRelatingToEdition
+reg:status: "RegStatus:1001"
+rdf:type: "rdf:Property"
+rdfs:domain: "isbd:elements/C2001"
+rdfs:isDefinedBy: "isbd:elements/"
+rdfs:label: has parallel statement of responsibility relating to edition
+rdfs:label@es: "tiene mención de responsabilidad paralela relativa a edición"
+skos:definition: "Relates a resource to one or more names, phrases, or groups of characters relating to the identification and/or function of any persons or corporate bodies responsible for or contributing to the creation or realisation of the intellectual or artistic content of an edition of a work contained in the resource, presented on the preferred source of information for the resource as an equivalent in another language or script."
+skos:definition@es: "Relaciona un recurso con uno o más nombres, frases o grupos de caracteres relativos a la identificación y/o función de cualquier persona o entidad corporativa responsable de o que contribuye a la creación o realización del contenido intelectual o artístico de una edición de una obra contenida en el recurso, que se presenta en la fuente de información preferida para el recurso y que se muestra como equivalente en otra lengua o escritura."
+---
+# has parallel statement of responsibility relating to edition
+
+The ISBD element "parallel statement of responsibility relating to edition" is related to the statement of responsibility associated with the edition and is provided in another language or script.  It is referred to as a parallel statement because it mirrors the primary statement of responsibility relating to the edition, ensuring accessibility for a multilingual audience.
+
+## Element Reference
+
+The ISBD defines a parallel statement of responsibility relating to edition as an equivalent of the statement of responsibility relating to the edition, provided in another language and/or script. (2.3.4)
+
+- **Domain:** Edition, drafting, version, etc. statement (ISBD Area 2)
+- **Range:** String representing the parallel statement of responsibility relating to the edition.
+- **Element type:** Literal (string)
+
+
+## Additional Information
+- **Scope and Purpose:**  To provide the statement of responsibility associated with a specific edition of the resource in multiple languages or scripts, promoting international accessibility and interoperability of bibliographic data. This is especially relevant for resources published in multiple linguistic regions or intended for a multilingual audience.
+- **User tasks supported:** This element aids users in identifying all individuals or entities responsible for a specific edition of a resource regardless of the user's language preference. This can be crucial for researchers attributing work, libraries managing collections, and systems exchanging bibliographic information internationally.
+
+
+## Element Values
+- **Rules and Guidelines:** The parallel statement is transcribed from the resource exactly as worded, though capitalization may differ from the original. Standard abbreviations as specified in A.6.4 and Appendix D may be used.
+- **Value Constraints and Formats:** The structure and punctuation should follow the guidelines outlined for statements of responsibility in 1.4. The language/script used should be clearly indicated or readily understandable from context.
+- **String Encoding:**  UTF-8 is the recommended encoding.
+
+
+
+## Examples
+```
+. - 2nd ed. / revised by John Smith = 2e éd. / révisé par John Smith
+```
+
+```
+. - Nueva ed. / edición a cargo de Maria Garcia = New ed. / edited by Maria Garcia
+```
+
+```
+. -  改訂版 / 山田太郎 = Revised ed. / revised by Taro Yamada
+```
+
+```
+.-  3. Aufl. / herausgegeben von Anna Schmidt = 3rd ed. / edited by Anna Schmidt
+```
+
+```
+. -  개정판 / 김철수 편집 = Revised ed. / edited by Cheolsoo Kim 
+```
+
+
+
+## Relationships
+- **Relationship to other ISBD elements:** This element is directly related to the edition statement (2.1) and the statement of responsibility relating to edition (2.3). It exists as a parallel element to provide multilingual access.
+- **Super-types and Sub-types:**  "Parallel statement of responsibility relating to edition" could be considered a sub-type of the more general "statement of responsibility".
+- **Inverse relationship:** While not explicitly defined as an inverse, the primary "statement of responsibility relating to edition" could be considered its counterpart.
+
+
+
+## Stipulations
+- **Special Considerations:** If there are multiple parallel edition statements, they are transcribed in the order indicated by typography or sequence on the source.
+- **Exceptions:** If the statement of responsibility is an integral part of the parallel edition statement itself (linguistically inseparable), it is included within the parallel edition statement and not treated as a separate element.
+- **Best Practices:** It is best practice to provide parallel statements whenever they appear on the resource and are deemed valuable for identification or access by users. Clarity regarding the language and script used is essential.  If an abbreviation is used for the statement of responsibility (e.g., ed. for edited by), the abbreviation should match the language of the parallel statement.
+
+
+---
+
+*This content was automatically generated from the ISBD PDF documentation using Gemini AI analysis.*

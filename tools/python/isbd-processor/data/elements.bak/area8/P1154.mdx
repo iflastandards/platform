@@ -1,0 +1,76 @@
+---
+id: P1154
+title: has standard identifier
+description: ISBD element documentation for has standard identifier
+uri: "isbd:elements/P1154"
+area: area8
+RDF:
+  definition: Relates a resource to a standard identifier preceded by its customary label.
+  domain: "isbd:elements/C2001"
+  type: "rdf:Property"
+  scopeNote: "Customary labels include \"ISBN\", \"ISSN\", \"ISMN\"."
+  elementSubType: "isbd:elements/P1032"
+reg:hasUnconstrained: "isbd:unc/elements/P1154"
+reg:name: hasStandardIdentifier
+reg:status: "RegStatus:1001"
+rdf:type: "rdf:Property"
+rdfs:domain: "isbd:elements/C2001"
+rdfs:isDefinedBy: "isbd:elements/"
+rdfs:label: has standard identifier
+rdfs:label@es: "tiene identificador normalizado"
+rdfs:subPropertyOf: "isbd:elements/P1032"
+skos:definition: Relates a resource to a standard identifier preceded by its customary label.
+skos:definition@es: "Relaciona un recurso con un identificador normalizado precedido de su etiqueta convencional."
+skos:scopeNote: "Customary labels include \"ISBN\", \"ISSN\", \"ISMN\"."
+skos:scopeNote@es: "Como etiquetas convencionales se incluyen “ISBN”, “ISSN”, “ISMN”."
+---
+# has standard identifier
+
+The ISBD element "standard identifier" (isbd:elements/P1154) is discussed as part of the larger element "resource identifier" within Section 8.1 of the ISBD documentation.  There isn't a separate, stand-alone definition for "standard identifier." It's treated as a type of resource identifier specifically based on established standards.
+
+## Element Reference
+
+- **Official ISBD definition:**  A standard identifier is not explicitly defined in the glossary but is described as "... recorded in accordance with its relevant standard, as appropriate. The standard identifier is preceded by its customary label, such as ISBN, ISSN, ISMN." (Section 8.1.2)
+- **Domain and range information:** The domain is a bibliographic resource. The range is a literal value representing an identifier conforming to a specific standard (e.g., ISBN, ISSN, ISMN).
+- **Element type:**  Literal (string representing an identifier)
+
+## Additional Information
+
+- **Scope and purpose:** To uniquely identify a published resource according to an internationally agreed upon standard, facilitating identification, retrieval, and exchange of bibliographic information across systems and institutions.
+- **User tasks supported:** Identifying a specific resource, searching for a resource in library catalogs or databases, linking to the correct record in other systems, managing collections and inventory.
+
+## Element Values
+
+- **Specific rules or guidelines:**  Use the appropriate standard and its associated label (ISBN, ISSN, ISMN). Transcribe the identifier exactly as it appears in a prescribed source, adhering to the format defined by the standard. Use Arabic numerals.
+- **Value constraints or formats:** Must conform to the format and validation rules of the specific standard used.  For example, ISBNs have specific length and check digit requirements. ISSNs have a hyphen and check digit, and ISMNs have a specific structure defined by the standard.
+- **String encoding schemes:**  UTF-8 (generally assumed but not explicitly stated in the document).
+
+## Examples
+
+```
+ISBN 978-0-330-23591-4 
+ISSN 0075-2363
+ISMN 979-0-3217-6543-6
+```
+
+## Relationships
+
+- **Relationships to other ISBD elements:** Part of the Resource Identifier and Terms of Availability Area (Area 8). Closely related to the "qualification to identifier" element (8.1.3), which provides additional context about the identifier, such as the binding type. It's also closely related to "label names and catalog numbers" (8.1.4) which are used for resources like sound recordings, as they may not have a standard identifier, or can have both.
+
+- **Super-types and sub-types:** The "standard identifier" is a sub-type of the broader "resource identifier" element.  There aren't further sub-types of standard identifier as defined in the standard.
+
+
+- **Inverse relationships:** None explicitly stated.
+
+## Stipulations
+
+- **Special considerations:** If the standard identifier is printed incorrectly on the resource, provide the correct identifier if known and mark the incorrect one as "invalid." (8.1.4.1)  If there are multiple standard identifiers for the resource, such as for different formats, record them all as repetitions of area 8.
+
+- **Exceptions:** Older monographic resources might not have standard identifiers. In those cases, other resource identifiers, such as "fingerprint" (8.1.5), might be used. Music manuscripts can use "music incipit" (8.1.6).  
+
+- **Best practices:** Always try to obtain the standard identifier from a prescribed source (see A.4.3 for the prescribed order of sources). Ensure that the identifier is transcribed accurately and conforms to the relevant standard's requirements.  When including multiple identifiers, ensure it's clear to which resource each applies, using qualifiers if necessary.
+
+
+---
+
+*This content was automatically generated from the ISBD PDF documentation using Gemini AI analysis.*

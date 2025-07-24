@@ -1,0 +1,77 @@
+---
+id: P1177
+title: has parallel title (compound) of series or multipart monographic resource
+description: ISBD element documentation for has parallel title (compound) of series or multipart monographic resource
+uri: "isbd:elements/P1177"
+area: area1
+RDF:
+  definition: "Relates a resource that is a series or multipart monograph to a title consisting of a common title and a dependent title, with or without a dependent title designation, in another language or script than the title proper and presented as an equivalent of the title proper on the prescribed source or sources of information."
+  domain: "isbd:elements/C2001"
+  range: "isbd:elements/C2024"
+  type: "rdf:Property"
+reg:hasUnconstrained: "isbd:unc/elements/P1177"
+reg:name: hasParallelTitleCompoundOfSeriesOrMultipartMonographicResource
+reg:status: "RegStatus:1001"
+rdf:type: "rdf:Property"
+rdfs:domain: "isbd:elements/C2001"
+rdfs:isDefinedBy: "isbd:elements/"
+rdfs:label: has parallel title (compound) of series or multipart monographic resource
+rdfs:label@es: "tiene título paralelo (compuesto) de serie o recurso monográfico multiparte"
+rdfs:range: "isbd:elements/C2024"
+skos:definition: "Relates a resource that is a series or multipart monograph to a title consisting of a common title and a dependent title, with or without a dependent title designation, in another language or script than the title proper and presented as an equivalent of the title proper on the prescribed source or sources of information."
+---
+# has parallel title (compound) of series or multipart monographic resource
+
+The provided ISBD documentation PDF does not explicitly define an element called "parallel title (compound) of series or multipart monographic resource" (isbd:elements/P1177).  While the concept of parallel titles for series is addressed, the specific notion of a "compound" parallel title is not detailed separately. The closest element is the "parallel title of series or multipart monographic resource," which can encompass compound titles naturally within its scope.
+
+
+## Element Reference
+
+- **Definition (adapted for compound titles):** A parallel title of a series or multipart monographic resource is a title appearing on the resource in another language or script that is considered an equivalent of the series title proper. A compound parallel title would be one consisting of a common title and dependent title, each with their parallel equivalent.
+- **Domain:** Series or multipart monographic resources.
+- **Range:** Strings representing titles in different languages/scripts.
+- **Element Type:** Literal.
+
+
+## Additional Information
+- **Scope and Purpose:** To provide equivalent series titles in multiple languages or scripts, facilitating international access and retrieval of resources belonging to that series.  Compound titles further refine this by allowing for parallel equivalents of both common and dependent titles within the series structure.
+- **User Tasks Supported:** Identifying series across language barriers; searching for resources in a specific series regardless of cataloging language.
+
+
+
+## Element Values
+- **Rules and Guidelines:** Parallel titles should be taken from the resource itself.  For compound titles, follow the same structure as the title proper of the series, presenting the parallel common title followed by the parallel dependent title. Use the equals sign (=) to separate different language/script versions of the same title component.
+- **Value Constraints:** Should be an accurate representation of a title appearing on the resource.
+- **String Encoding:**  Follow the encoding scheme appropriate for the language/script used (e.g., UTF-8).
+
+
+
+## Examples
+
+```
+(Monumenta musicae Byzantinae.  Series altera, Monographies =  Μνημεῖα τῆς βυζαντινῆς μουσικῆς. Δεύτερη σειρά, Μελέται = Monumenta musicae Byzantinae. Series altera, Monographies)
+```
+
+```
+(Flora Danica. Icones plantarum sponte nascentium in regnis Daniae et Norvegiae, in ducatibus Slesvici et Holsatiae, et in comitatibus Oldenburgi et Delmenhorsti =  Flora Danica. Afbildninger af vilde planter i Kongerigerne Danmark og Norge, i Hertugdømmerne Slesvig og Holsten, og i Grevskaberne Oldenborg og Delmenhorst)
+```
+
+```
+(Les chemins de fer, hier et aujourd'hui. Voies étroites = The railways, yesterday and today. Narrow gauge)
+```
+
+
+## Relationships
+- **Relationship to Other Elements:**  Directly related to the "title proper of series or multipart monographic resource" element, serving as its parallel equivalent.
+- **Super/Sub-types:**  Could be considered a sub-type of a more general "parallel title" element.
+- **Inverse Relationships:** None defined in the ISBD.
+
+
+## Stipulations
+- **Special Considerations:** If a parallel series title is not found on the resource, it should not be constructed. If multiple parallel titles exist, record them in the order they appear on the resource. Abbreviate lengthy parallel compound titles as needed following the same guidelines as for abridging the title proper (omitting elements after the first five words and using an ellipsis).
+- **Best Practices:** Use parallel titles from the resource whenever possible for accuracy and consistency. Clearly indicate the language/script of each parallel title component. Ensure the relationship between the parallel title proper and parallel dependent title components is easily understandable.
+
+
+---
+
+*This content was automatically generated from the ISBD PDF documentation using Gemini AI analysis.*

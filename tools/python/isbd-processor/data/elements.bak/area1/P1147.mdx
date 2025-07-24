@@ -1,0 +1,87 @@
+---
+id: P1147
+title: has common title of series or multipart monographic resource
+description: ISBD element documentation for has common title of series or multipart monographic resource
+uri: "isbd:elements/P1147"
+area: area1
+RDF:
+  definition: "Relates a resource that is a series or multipart monographic resource to that part of the title that is carried by a group of related resources in addition to their different section titles."
+  domain: "isbd:elements/C2001"
+  type: "rdf:Property"
+reg:hasUnconstrained: "isbd:unc/elements/P1147"
+reg:name: hasCommonTitleOfSeriesOrMultipartMonographicResource
+reg:status: "RegStatus:1001"
+rdf:type: "rdf:Property"
+rdfs:domain: "isbd:elements/C2001"
+rdfs:isDefinedBy: "isbd:elements/"
+rdfs:label: has common title of series or multipart monographic resource
+rdfs:label@es: "tiene título común de serie o recurso monográfico multiparte"
+skos:definition: "Relates a resource that is a series or multipart monographic resource to that part of the title that is carried by a group of related resources in addition to their different section titles."
+skos:definition@es: "Relaciona un recurso que es una serie o recurso monográfico multiparte con aquella parte del título que es común a un grupo de recursos relacionados que tienen también sus títulos de sección diferentes."
+---
+# has common title of series or multipart monographic resource
+
+The ISBD element "common title of series or multipart monographic resource" is found within the context of the larger "Series and Multipart Monographic Resource Area" (Area 6).  While the element itself isn't explicitly defined in isolation, the concept of "common title" is explained within the stipulations for Area 6 and through the related concept of "dependent title." Therefore, the following description is derived from the general principles and rules governing Area 6, specifically focusing on the common title component.
+
+## Element Reference
+
+- **Definition:** The common title of a series or multipart monographic resource is the title that is shared by a group of related resources, distinguishing them as belonging to the same series or multipart entity. It is usually accompanied by a dependent title or designation that makes the title of each individual resource unique within the larger group.
+- **Domain:** Series or multipart monographic resource.
+- **Range:** String (text representing the title).
+- **Element Type:** Descriptive.
+
+
+## Additional Information
+
+- **Scope and Purpose:** The common title serves to identify the series or multipart resource as a whole. It provides a high-level grouping for bibliographic records, enabling users to easily browse and discover related resources.
+- **User Tasks Supported:** Browsing for related resources, identifying series membership, retrieving all parts of a multipart resource.
+
+
+## Element Values
+
+- **Rules and Guidelines:** The common title is transcribed exactly as it appears on the resource (series title page, title page of the multipart resource, etc.), following the general transcription rules for Area 1 (Title Proper). This includes retaining the wording, order of words, and spelling as found on the resource. Punctuation and capitalization may be standardized according to the conventions of the cataloging agency.
+- **Value Constraints and Formats:** No specific format is prescribed, but the title should be concise and clearly represent the unifying theme or subject of the series.
+- **String Encoding:**  UTF-8 is the recommended encoding for ISBD.
+
+
+## Examples
+
+```
+(The history of England. Vol. 5, The Tudor age)
+```
+
+```
+(Advances in computer science. Module 3, Artificial intelligence)
+```
+
+```
+(The Oxford history of art. The eighteenth century) 
+```
+
+```
+(Beethoven's piano sonatas.  Op. 10, No. 1)
+```
+
+```
+(Jigsaw puzzles.  Space exploration)
+```
+
+
+
+## Relationships
+
+- **Relationship to Other ISBD Elements:**  The common title is intimately linked to the dependent title or designation (e.g., volume number, part number, section title), which together form the complete title for an individual resource within the series or multipart entity.  It also relates to the statement of responsibility for the series and the series ISSN.
+- **Super-types and Sub-types:** A main series can have subseries, each with its own common and dependent title structure.  Therefore, "main series title" is a super-type, and "subseries title" is a sub-type.
+- **Inverse Relationships:**  None explicitly defined in ISBD.
+
+
+## Stipulations
+
+- **Special Considerations:** When a resource belongs to both a main series and a subseries, both series titles are recorded in Area 6, nested within their own parentheses. For example: `((Main Series. Subseries; No. 5))`
+- **Exceptions:** If a series or subseries has a distinctive title, the entire title is treated as a single unit in Area 6.  This means that what might conceptually be a common and dependent title structure is transcribed as a single unified title.
+- **Best Practices:** For clarity, it is recommended to include a note in Area 7 if the common title has been derived from a source other than a series title page or the main title page of the multipart resource. This note should also specify the source used. Also, include notes about changes to the common title over time in Area 7.
+
+
+---
+
+*This content was automatically generated from the ISBD PDF documentation using Gemini AI analysis.*

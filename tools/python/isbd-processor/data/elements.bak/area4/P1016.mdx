@@ -1,0 +1,80 @@
+---
+id: P1016
+title: has place of publication, production, distribution
+description: ISBD element documentation for has place of publication, production, distribution
+uri: "isbd:elements/P1016"
+area: area4
+RDF:
+  definition: "Relates a resource to the name of the place associated on the prescribed source of information with the name of the publisher, producer or distributor."
+  domain: "isbd:elements/C2001"
+  type: "rdf:Property"
+  scopeNote: "Usually given on the preferred source of information as the name of a city. If no publisher, producer or distributor is named, it is the place from which the resource was issued or distributed."
+reg:hasUnconstrained: "isbd:unc/elements/P1016"
+reg:name: hasPlaceOfPublicationProductionDistribution
+reg:status: "RegStatus:1001"
+rdf:type: "rdf:Property"
+rdfs:domain: "isbd:elements/C2001"
+rdfs:isDefinedBy: "isbd:elements/"
+rdfs:label: has place of publication, production, distribution
+rdfs:label@es: "tiene lugar de publicación, producción, distribución"
+skos:definition: "Relates a resource to the name of the place associated on the prescribed source of information with the name of the publisher, producer or distributor."
+skos:definition@es: "Relaciona un recurso con el nombre de un lugar asociado en la fuente de información prescrita con el nombre del editor, productor o distribuidor."
+skos:scopeNote: "Usually given on the preferred source of information as the name of a city. If no publisher, producer or distributor is named, it is the place from which the resource was issued or distributed."
+skos:scopeNote@es: "Normalmente figura en la fuente preferida de información como el nombre de una ciudad. Si no consta el nombre de ningún editor, productor o distribuidor, es el lugar en el cual el recurso se ha emitido o distribuido."
+---
+# has place of publication, production, distribution
+
+The ISBD element "place of publication, production, and/or distribution" (isbd:P1016) is found within the PDF documentation.
+
+## Element Reference
+
+- **Official ISBD Definition:** The place of publication, production, and/or distribution is the name of the place associated on the prescribed source of information with the name of the publisher, producer, or distributor (see 4.2). If no publisher, producer, or distributor is named, it is the place from which the resource was issued or distributed. (Section 4.1.1)
+- **Domain:** Manifestation 
+- **Range:**  Literal (place name)
+- **Element Type:**  Descriptive
+
+## Additional Information
+
+- **Scope and Purpose:** This element serves to geographically locate where a resource was published, produced, and/or distributed. This is crucial for resource identification and discovery, as place can often disambiguate resources with similar titles or creators. It can also be useful for collection development and research purposes (e.g., studying publishing trends in specific regions).
+- **User Tasks Supported:**
+    - Finding resources published in a specific geographic area.
+    - Identifying different editions of a work published in different locations.
+    - Understanding the geographic origins of a resource.
+
+## Element Values
+
+- **Rules/Guidelines:**
+    - Record the place name as it appears on the resource, including the orthographic form and grammatical case. (4.1.8)
+    - If the place name is known to be incorrect, provide the correction in square brackets and/or an explanation in area 7 (notes). (4.1.2)
+    - When multiple places are associated with a single publisher, producer, or distributor, record the place made most prominent by typography, or the first appearing one. (4.1.3)
+    - If no place can be determined, use the abbreviation `[s.l.]` (sine loco). (4.1.14)
+    - For component parts, location is handled differently (see A.2.8.4).
+- **Value Constraints/Formats:** No specific character encoding scheme is mandated, but the PDF advises to use the script and language as found on the resource.
+
+## Examples
+
+```
+- London : Penguin Books, 2023
+- New York : [s.n.], 1888
+- [Paris] : Imprimerie Royale, 1756
+- Oxford ; New York : Oxford University Press, 1998
+- Washington, D.C. : Smithsonian Institution ; London : British Museum, 2001
+```
+
+## Relationships
+
+- **Relationships to other ISBD elements:**  Closely related to the "name of publisher, producer, and/or distributor" element (4.2).  The place is usually found in conjunction with this element on the resource. The date of publication often follows these two elements.
+- **Super-types/Sub-types:** A larger geographical entity (e.g., country, state, etc.) can be added to the city or town when considered necessary for identification (4.1.9).  The address of the publisher, producer, or distributor can also be added within parentheses (4.1.10).
+- **Inverse Relationships:** None explicitly defined.
+
+
+## Stipulations
+
+- **Special Considerations:**  For older monographic resources and manuscripts, prepositions and accompanying words or phrases associated with the place name are included. (4.1.8)
+- **Exceptions:** For unpublished resources, the date and place may *only* be recorded in Area 4 if they appear on the resource.
+- **Best Practices:**  When a cataloging agency needs to supply a place of publication because it's missing from the resource, it should use a standardized form of the name and provide a note indicating the source of the information or stating that the information was supplied by the cataloger. (4.1.9, 4.1.12)
+
+
+---
+
+*This content was automatically generated from the ISBD PDF documentation using Gemini AI analysis.*

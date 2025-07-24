@@ -1,0 +1,89 @@
+---
+id: P1151
+title: has addition to parallel place of publication
+description: ISBD element documentation for has addition to parallel place of publication
+uri: "isbd:elements/P1151"
+area: area4
+RDF:
+  definition: "Relates a resource to the name of a larger place such as a country, state, etc. and, if it is considered necessary for identification, the full address of the publisher, producer or distributor, in the language and script of the title proper when the name appears on the prescribed source of information for the resource in more than one language or script."
+  domain: "isbd:elements/C2001"
+  type: "rdf:Property"
+reg:hasUnconstrained: "isbd:unc/elements/P1151"
+reg:name: hasAdditionToParallelPlaceOfPublication
+reg:status: "RegStatus:1001"
+rdf:type: "rdf:Property"
+rdfs:domain: "isbd:elements/C2001"
+rdfs:isDefinedBy: "isbd:elements/"
+rdfs:label: has addition to parallel place of publication
+rdfs:label@es: "tiene adición al lugar de publicación paralelo"
+skos:definition: "Relates a resource to the name of a larger place such as a country, state, etc. and, if it is considered necessary for identification, the full address of the publisher, producer or distributor, in the language and script of the title proper when the name appears on the prescribed source of information for the resource in more than one language or script."
+skos:definition@es: "Relaciona un recurso con el nombre de un lugar de mayor rango como por ejemplo, páis, estado, etc., y, si se considera necesario para la identificación, la dirección completa del editor, productor o distribuidor, en la lengua y escritura del título propiamente dicho cuando el nombre aparece en la fuente prescrita de información para el recurso en más de una lengua o escritura."
+---
+# has addition to parallel place of publication
+
+The ISBD element "addition to parallel place of publication" (isbd:elements/P1151) is not explicitly defined as a separate element in the provided ISBD documentation.  Instead, additions to places of publication are handled under the general stipulations for the "Place of publication, production, and/or distribution" element (4.1) and its parallel equivalent. The concept is addressed through the stipulations related to "Additions to the place of publication, production and/or distribution" (4.1.9) and implicitly applied to parallel places through the general principle of parallel statements following the same structure as their primary counterparts.
+
+Therefore, the following description merges the principles of 4.1, 4.1.9, and the general handling of parallel statements to explain how additions to parallel places of publication would be treated within ISBD.
+
+## Element Reference
+
+- **Definition (Derived):** An addition to a parallel place of publication is information considered necessary for identification, such as the name of a larger place (country, state, etc.), added to a place of publication given as a parallel statement.  This addition is subordinate to the parallel place of publication.
+
+- **Domain:** Parallel Place of Publication
+
+- **Range:** String (representing the addition, typically a larger geographic entity)
+
+- **Element Type:**  Data Element (Textual)
+
+## Additional Information
+
+- **Scope and Purpose:** This element clarifies or expands upon the geographic location of the publication, aiding in disambiguation and improving resource identification, especially when the parallel place of publication name alone might be ambiguous.
+
+- **User Tasks Supported:** This element helps users to:
+    - More precisely identify the geographic origin of a resource.
+    - Disambiguate resources published in places with similar or identical names.
+    - Facilitate retrieval and filtering of resources based on geographic criteria.
+
+
+
+## Element Values
+
+- **Rules and Guidelines:**  The added information should represent a larger geographic entity that encompasses the parallel place of publication. It should be given in a standardized form and be presented concisely.
+
+- **Value Constraints and Formats:**  No specific format is mandated, but consistency within a catalog's practice is recommended.
+
+- **String Encoding Schemes:** The string should be encoded using the character set and encoding appropriate for the bibliographic description (e.g., UTF-8).
+
+
+## Examples
+
+```
+London, England : Publisher = Londres, Angleterre : Éditeur
+Santiago [Chile] : Editorial = Santiago de Chile : Editorial
+Cambridge [Massachusetts] : Press = Cambridge, Massachusetts : Press
+Berlin, Deutschland : Verlag = Berlin, Allemagne : Verlag
+Wien, Österreich : Druckerei = Vienne, Autriche : Imprimerie
+
+```
+
+
+## Relationships
+
+- **Relationship to other ISBD elements:**  This element is an addition to the parallel place of publication within Area 4 (Publication, Production, Distribution, etc.).
+
+- **Super-types and Sub-types:** The "addition to parallel place of publication" concept would be a sub-type of  "Place of Publication, Production, and/or Distribution".
+
+- **Inverse Relationships:** None specified.
+
+
+## Stipulations
+
+- **Special Considerations:**  Additions to parallel places of publication should be given only when necessary for improved identification or when required by local cataloging rules.
+
+
+- **Best Practices:**  Consistency in the presentation of these additions is crucial for efficient retrieval. It is advisable to follow established authority lists or gazetteers for geographic names. It is also recommended to use square brackets around the addition if it is not taken directly from the resource, as stipulated in the general guidelines for additions to places of publication (4.1.9).
+
+
+---
+
+*This content was automatically generated from the ISBD PDF documentation using Gemini AI analysis.*

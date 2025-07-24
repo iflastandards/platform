@@ -1,0 +1,83 @@
+---
+id: P1100
+title: has note on supplements, inserts, etc.
+description: ISBD element documentation for has note on supplements, inserts, etc.
+uri: "isbd:elements/P1100"
+area: area7
+RDF:
+  definition: "Relates a resource that has one or more supplements and/or inserts to a note on the title, the key title and ISSN of the supplement and/or insert."
+  domain: "isbd:elements/C2001"
+  type: "rdf:Property"
+  scopeNote: "A general note about the existence of supplements is used when they are numerous."
+  elementSubType: "isbd:elements/P1045"
+reg:hasUnconstrained: "isbd:unc/elements/P1100"
+reg:name: hasNoteOnSupplementsInsertsEtc
+reg:status: "RegStatus:1001"
+rdf:type: "rdf:Property"
+rdfs:domain: "isbd:elements/C2001"
+rdfs:isDefinedBy: "isbd:elements/"
+rdfs:label: has note on supplements, inserts, etc.
+rdfs:label@es: "tiene nota de suplementos, insertos, etc."
+rdfs:subPropertyOf: "isbd:elements/P1045"
+skos:definition: "Relates a resource that has one or more supplements and/or inserts to a note on the title, the key title and ISSN of the supplement and/or insert."
+skos:definition@es: "Relaciona un recurso que tiene uno o más suplementos y/o insertos con una nota sobre el título, el título clave e ISSN del suplemento y/o el inserto."
+skos:scopeNote: "A general note about the existence of supplements is used when they are numerous."
+skos:scopeNote@es: "Se utiliza una nota general sobre la existencia de suplementos cuando sean muy numerosos."
+---
+# has note on supplements, inserts, etc.
+
+The ISBD element "note on supplements, inserts, etc." is found within the NOTE AREA (Area 7) of the ISBD specification. It's discussed specifically in section 7.2.4.4.  While the provided RDF structure names the element "has note on supplements, inserts, etc." the ISBD documentation itself just refers to the concept as notes regarding resources with supplements or inserts.
+
+## Element Reference
+
+- **Official ISBD definition:**  Not explicitly defined as a separate element in the way "title" or "edition" are.  Rather, it's a type of note providing information about supplements and/or inserts accompanying the main resource.
+- **Domain and range:** N/A (not explicitly defined as a property in the RDF)
+- **Element type:**  Text
+
+## Additional Information
+
+- **Scope and Purpose:** To inform users about additional materials issued with the main resource that are considered supplements or inserts. These could include addenda, appendices, corrigenda, or other supplementary materials intended to be used with the main resource. It clarifies the relationship between the main resource and these supplementary items.
+- **User tasks supported:** Helps users understand the complete package of materials associated with a resource.  Aids in retrieval and resource discovery when users are looking for specific supplementary information.
+
+## Element Values
+
+- **Specific Rules/Guidelines:**  The note should clearly state the title of the supplement or insert. It can also include other descriptive information about the supplement/insert, such as its extent or numbering. If the supplement or insert has its own independent title and ISSN, these can be included in the note as well.
+- **Value constraints or formats:** No strict format is prescribed, but descriptive information within the note may follow the general ISBD punctuation guidelines where applicable (e.g., separating title and statement of responsibility with a `/`).
+- **String encoding schemes:**  N/A
+
+## Examples
+
+```
+Note: Supplement: Journal of the Royal Numismatic Society = ISSN 0307-8019. Title proper: Numismatic chronicle
+```
+
+```
+Note: Includes text describing the geology of the area covered, in English and French.  Includes an index of populated places and distance table.
+```
+
+```
+Note: Eighth-10th eds. updated by quarterly and annual cumulative supplements.
+```
+```
+Note: Supplement to: Philosophical magazine = ISSN 0031-8086. Title proper: Advances in physics
+```
+
+```
+Note: Insert in: Transport public = ISSN 0249-5643. Title proper: Action transport
+```
+
+## Relationships
+
+- **Relationships to other ISBD elements:**  Relates to the main resource described in areas 0-6. Supplements and inserts can also be described as separate resources, and in such cases, a relationship note could be made in Area 7 of either record to link them. (see 7.2.4.5, 7.2.4.6)
+- **Super-types and sub-types:** N/A
+- **Inverse relationships:** If the supplement/insert is described separately, the main resource record could have a note indicating the existence of the supplement/insert, and vice-versa.
+
+## Stipulations
+
+- **Special considerations:** If the supplements are numerous, a general note about their existence may be given (e.g., "Numerous supplements").
+- **Best Practices:** Be clear and concise in describing the relationship between the main resource and the supplement/insert. Provide enough information to enable users to identify and locate the supplement/insert. If supplements are substantial and have their own bibliographic significance, consider cataloging them separately and making linking notes in Area 7 of both records.
+
+
+---
+
+*This content was automatically generated from the ISBD PDF documentation using Gemini AI analysis.*

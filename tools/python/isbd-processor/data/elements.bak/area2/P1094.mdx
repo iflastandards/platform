@@ -1,0 +1,73 @@
+---
+id: P1094
+title: has note on change to edition
+description: ISBD element documentation for has note on change to edition
+uri: "isbd:elements/P1094"
+area: area2
+RDF:
+  definition: "Relates a resource that is a serial or multipart monograph to a note on changes in edition statements that occur after the issue or part used as the basis of description and do not require a new description. Relates a resource that is an integrating resource to a note on earlier edition statements that are no longer present on the current iteration or that are in a different form on an earlier iteration and do not require a new description."
+  domain: "isbd:elements/C2001"
+  type: "rdf:Property"
+  elementSubType: "isbd:elements/P1045"
+reg:hasUnconstrained: "isbd:unc/elements/P1094"
+reg:name: hasNoteOnChangeToEdition
+reg:status: "RegStatus:1001"
+rdf:type: "rdf:Property"
+rdfs:domain: "isbd:elements/C2001"
+rdfs:isDefinedBy: "isbd:elements/"
+rdfs:label: has note on change to edition
+rdfs:label@es: "tiene nota de cambio en edición"
+rdfs:subPropertyOf: "isbd:elements/P1045"
+skos:definition: "Relates a resource that is a serial or multipart monograph to a note on changes in edition statements that occur after the issue or part used as the basis of description and do not require a new description. Relates a resource that is an integrating resource to a note on earlier edition statements that are no longer present on the current iteration or that are in a different form on an earlier iteration and do not require a new description."
+skos:definition@es: "Relaciona un recurso que es una publicación seriada o una monografía multiparte con una nota sobre cambios en las menciones de edición que son posteriores al fascículo o parte que se usa como base de la descripción, pero que no requiere una nueva descripción. Relaciona un recurso integrable con una nota sobre una mención de edición anterior que ya no está presente en la iteración más reciente o que está de una forma diferente a la iteración anterior, y que no requiere una nueva descripción."
+---
+# has note on change to edition
+
+The ISBD element "note on change to edition" is discussed within the broader context of notes related to the edition area and bibliographic history in section 7.2.2 of the ISBD documentation.  While not explicitly called out as a distinct, named element like in the RDF model (isbd:P1094), the concept is clearly addressed. Therefore, I will respond based on the information presented in the context of 7.2.2.
+
+## Element Reference
+
+- **Official ISBD definition (inferred):** A textual note within Area 7 (Notes) that documents changes to the edition statement of a serial, multipart monograph, or integrating resource that occur after the first issue or part and that do not constitute a major change requiring a new description.
+- **Domain (inferred):** Serials, Multipart Monographs, Integrating Resources
+- **Range:** Text
+- **Element type (inferred):** Note
+
+## Additional Information
+
+- **Scope and purpose:** To inform users of variations in edition statements across different issues/parts of a continuing resource that may affect content or access, without warranting entirely separate bibliographic records. This allows for efficient recording of minor edition changes.
+- **User tasks supported:** Understanding the edition history of the resource; differentiating between versions; selecting appropriate issues/parts based on edition changes.
+
+
+## Element Values
+
+- **Specific rules or guidelines:**  The note should clearly state the nature of the edition change and the specific issue/part/iteration on which it occurred.  Standard abbreviations may be used. The wording should follow the general transcription guidelines of Area 2 (Edition Area).
+- **Value constraints or formats:** No specific format is prescribed other than the general guidelines for notes (e.g., separation from other notes).
+- **String encoding schemes:** Not applicable, plain text.
+
+## Examples
+
+```
+Note: 2nd ed. revised by John Smith appears from v. 10.
+
+Note: Title proper changes from v. 2; edition statement changes to "Rev. and expanded" from v. 5.
+
+Note:  From issue no. 10, designation added: "International Edition".
+
+Note: Description based on the 2020 iteration; previous iterations labeled "Beta Release".
+```
+
+## Relationships
+
+- **Relationships to other ISBD elements:** Directly related to Area 2 (Edition Area), where the main edition statement is recorded. Also related to Area 7 (Notes), where the note itself is located. Connected to Area 1 (Title and Statement of Responsibility) and Area 6 (Series and Multipart Monograph Area) as changes in those areas might necessitate a change in edition statement.
+- **Super-types and sub-types:**  This element could be considered a sub-type of "Note on Edition Area" or "Note on Bibliographic History."
+- **Inverse relationships:** None specified.
+
+## Stipulations
+
+- **Special considerations, exceptions, or usage notes:** For serials, if a change in edition statement occurs alongside a change in a generic title, a new description might be required (see A.2.6.2).  Changes that significantly alter the scope/content necessitate a new description rather than a note.
+- **Best practices:** Be concise and specific in the note. Only record changes deemed important for users, avoiding overly detailed or trivial variations. When numerous minor edition changes occur, consider a general note like "Edition statement varies" instead of listing every single one.
+
+
+---
+
+*This content was automatically generated from the ISBD PDF documentation using Gemini AI analysis.*

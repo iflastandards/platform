@@ -1,0 +1,72 @@
+---
+id: P1002
+title: has content qualification
+description: ISBD element documentation for has content qualification
+uri: "isbd:elements/P1002"
+area: area0
+RDF:
+  definition: "Relates a resource to a sub-category that expands a category that reflects the fundamental form or forms in which the content is expressed."
+  domain: "isbd:elements/C2001"
+  type: "rdf:Property"
+  scopeNote: "Content qualifications specify the type, presence or absence of motion, dimensionality and sensory nature for the resource being described."
+reg:hasUnconstrained: "isbd:unc/elements/P1002"
+reg:name: hasContentQualification
+reg:status: "RegStatus:1001"
+rdf:type: "rdf:Property"
+rdfs:domain: "isbd:elements/C2001"
+rdfs:isDefinedBy: "isbd:elements/"
+rdfs:label: has content qualification
+rdfs:label@es: "tiene aclaración de contenido"
+skos:definition: "Relates a resource to a sub-category that expands a category that reflects the fundamental form or forms in which the content is expressed."
+skos:definition@es: "Relaciona un recurso con una subcategoría que amplía una categoría que refleja la forma o formas fundamentales en que se expresa el contenido."
+skos:scopeNote: "Content qualifications specify the type, presence or absence of motion, dimensionality and sensory nature for the resource being described."
+skos:scopeNote@es: "Los calificativos del contenido especifican el tipo, presencia o ausencia de movimiento, dimensión y naturaleza sensorial del recurso que se describe."
+---
+# has content qualification
+
+The ISBD element "content qualification" is found in the provided PDF.
+
+## Element Reference
+
+- **Official ISBD Definition:**  A content form category is expanded by one or more content qualification sub-categories that are applicable to the resource being described. Content qualifications specify the type, presence or absence of motion, dimensionality, and sensory nature for the resource being described. (Section 0.1.1)
+- **Domain:** Content Form
+- **Range:**  Type, Motion, Dimensionality, Sensory Nature
+- **Element Type:**  Descriptive
+
+## Additional Information
+
+- **Scope and Purpose:** To provide additional granularity to the description of the content form, enabling users to more precisely identify and select resources matching their needs.  It refines the basic content form by adding characteristics that might not be immediately apparent from the content form alone.
+- **User Tasks Supported:**  Refined searching and retrieval of resources based on specific content characteristics (e.g., finding cartographic images, notated music intended for visual perception, or three-dimensional moving images).
+
+## Element Values
+
+- **Specific Rules/Guidelines:** Terms are taken from controlled lists provided in the ISBD (section 0.1.1.1 and following), or their equivalents in the language chosen by the cataloguing agency. Multiple qualification terms are allowed and are separated by semicolons within parentheses.
+- **Value Constraints/Formats:** Values must be chosen from the allowed lists for type, motion (for images only), dimensionality (for images only), and sensory perception.
+- **String Encoding:** Not applicable, although the script chosen by the cataloguing agency for the element values should be consistent with the rest of the record.
+
+## Examples
+
+```
+Content Form (Content Qualification): Media Type
+image (cartographic; still; 2-dimensional; visual): unmediated 
+music (notated; visual): electronic
+object (tactile): unmediated
+image (moving; 3-dimensional): video
+text (visual) : microform
+```
+
+## Relationships
+
+- **Relationships to other ISBD elements:** Content qualification refines the Content Form element, providing more detail about its characteristics.  It is closely related to the media type and can be influenced by the physical description of the resource.
+- **Super-types/sub-types:** The content form is the super-type, and the specific types (cartographic, notated, performed), motion (moving, still), dimensionality (2-dimensional, 3-dimensional), and sensory specifications (aural, visual, tactile, etc.) are sub-types.
+- **Inverse relationships:** None specified.
+
+## Stipulations
+
+- **Special Considerations/Exceptions:**  If a resource has mixed content where one part is predominant, qualifications related to non-predominant content forms can be omitted. If three or more content forms are applicable and no single form is predominant, the generic term "multiple content forms" can be used.  (Section 0.1)
+- **Best Practices:** Use all applicable content qualifications to maximize the searchability and discoverability of the resource. Ensure consistency in the application of terms from the controlled lists. When in doubt about the appropriate qualification, consult the ISBD standard for guidance.
+
+
+---
+
+*This content was automatically generated from the ISBD PDF documentation using Gemini AI analysis.*

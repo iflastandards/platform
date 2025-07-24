@@ -1,0 +1,71 @@
+---
+id: P1054
+title: has pagination
+description: ISBD element documentation for has pagination
+uri: "isbd:elements/P1054"
+area: general
+RDF:
+  definition: "Relates a resource that is a printed text to the sequential numbering of the pages."
+  domain: "isbd:elements/C2001"
+  type: "rdf:Property"
+  scopeNote: "Includes notated music and cartographic resources as well as printed textual resources."
+reg:hasUnconstrained: "isbd:unc/elements/P1054"
+reg:name: hasPagination
+reg:status: "RegStatus:1001"
+rdf:type: "rdf:Property"
+rdfs:domain: "isbd:elements/C2001"
+rdfs:isDefinedBy: "isbd:elements/"
+rdfs:label: has pagination
+rdfs:label@es: "tiene paginación"
+skos:definition: "Relates a resource that is a printed text to the sequential numbering of the pages."
+skos:definition@es: "Relaciona un recurso de texto impreso con la numeración secuencial de páginas."
+skos:scopeNote: "Includes notated music and cartographic resources as well as printed textual resources."
+skos:scopeNote@es: "Incluye la numeración de hojas, columnas, etc."
+---
+# has pagination
+
+The ISBD element "pagination" is found within the larger "Extent" element (5.1) in the Material Description Area and is discussed in section 5.1.4, referred to as "Pagination" in the provided document. It's not explicitly defined as a standalone element like "title proper" but rather a component of describing the extent.
+
+## Element Reference
+
+- **Official ISBD definition:**  While not explicitly defined, pagination is described as "used to designate any sequence of pages, leaves, columns, sheets, frames, etc." (footnote 19, page 155).  It represents the numbering of subunits within a resource.
+- **Domain:**  Monographic resources, serials, and other resources with sequential subunits.  Primarily applies to printed resources but concepts extend to other formats like filmstrips (frames).
+- **Range:**  A string expressing the numbering of the resource's subunits.
+- **Element type:**  Text
+
+## Additional Information
+
+- **Scope and purpose:** To indicate the extent of a resource in terms of its numbered subunits, aiding in identification and allowing for precise referencing of specific parts. This supports user tasks like retrieving specific sections of a resource and understanding its overall size.
+- **User tasks supported:**  Identifying a specific part within a larger resource, understanding the physical extent of the resource, requesting parts of a resource (interlibrary loan, etc.).
+
+## Element Values
+
+- **Specific rules or guidelines:**  Use Arabic numerals for pagination unless the resource uses Roman numerals. Numbering is transcribed as it appears in the resource, even if incorrect. Clarifications or corrections are provided in a note (7.5.1).  The last numbered page, leaf, column, etc. of each numbered sequence is recorded.
+- **Value constraints or formats:**  Generally a sequence of numbers or letters indicating the first and last numbered subunit, separated by a hyphen when continuous (e.g., "328 p.", "iv, 328 p.", "p. 16-32").  Special stipulations exist for unnumbered sequences, multiple sequences, and incorrect numbering (see 5.1.4.1.5 - 5.1.4.1.7).
+- **String encoding schemes:**  No specific encoding scheme mentioned, but assumes a character encoding compatible with the script of the resource.
+
+## Examples
+
+```
+328 p.
+xiv, 325 p.
+v. 1 (325 p.)
+1 score (34 p.)
+[100] p.  (For unnumbered pages)
+```
+
+## Relationships
+
+- **Relationships to other ISBD elements:** Part of the "Extent" element (5.1) in the Material Description Area. Related to notes in the Note Area (7.5, 7.7, 7.9, 7.11) which can provide further details or clarifications. Specifically, information about incorrect pagination is recorded in 7.5.1. For multipart items, the contents note (7.7) can provide details of pagination for each part.
+- **Super-types and sub-types:**  "Extent" is the super-type. Specific instances of pagination for different resource types (e.g., pages, leaves, frames) could be considered sub-types.
+- **Inverse relationships:** None explicitly defined.
+
+## Stipulations
+
+- **Special considerations, exceptions, or usage notes:**  Detailed rules exist for handling various scenarios like unnumbered pages, multiple sequences, incorrect numbering, and resources in multiple physical units (see 5.1.4). Section 5.3, "Dimensions," is closely related to Pagination, especially for older monographic resources where format and dimensions are closely linked.
+- **Best practices:** Transcribe pagination exactly as it appears in the resource. Use notes to provide clarifications or corrections. When in doubt, consult the detailed stipulations in section 5.1.4 of the ISBD.
+
+
+---
+
+*This content was automatically generated from the ISBD PDF documentation using Gemini AI analysis.*

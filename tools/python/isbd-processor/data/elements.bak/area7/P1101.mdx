@@ -1,0 +1,80 @@
+---
+id: P1101
+title: has note on relationship between continuing resources
+description: ISBD element documentation for has note on relationship between continuing resources
+uri: "isbd:elements/P1101"
+area: area7
+RDF:
+  definition: "Relates a resource that is a continuing resource to a note on a continuing resource that it is related to."
+  domain: "isbd:elements/C2001"
+  type: "rdf:Property"
+  elementSubType: "isbd:elements/P1045"
+reg:hasUnconstrained: "isbd:unc/elements/P1101"
+reg:name: hasNoteOnRelationshipBetweenContinuingResources
+reg:status: "RegStatus:1001"
+rdf:type: "rdf:Property"
+rdfs:domain: "isbd:elements/C2001"
+rdfs:isDefinedBy: "isbd:elements/"
+rdfs:label: has note on relationship between continuing resources
+rdfs:label@es: "tiene nota de relación entre recursos continuados"
+rdfs:subPropertyOf: "isbd:elements/P1045"
+skos:definition: "Relates a resource that is a continuing resource to a note on a continuing resource that it is related to."
+skos:definition@es: "Relaciona un recurso que es un recurso continuado con una nota sobre otro recurso continuado con el que está relacionado."
+---
+# has note on relationship between continuing resources
+
+The ISBD element "note on relationship between continuing resources" is found within the broader category of notes related to the edition area and bibliographic history of the resource. Specifically, it falls under the section describing "Relationships between continuing resources"  (7.2.4.7) which is part of the larger "Relationships to other Resources" section (7.2.4)
+
+## Element Reference
+
+- **Official ISBD Definition:** The ISBD does not explicitly define "note on relationship between continuing resources" as a distinct, atomic element like `title proper`. Instead, it provides guidelines for crafting notes that describe the relationships between continuing resources, such as continuation, merger, split, absorption, and other related changes. These notes fall under the umbrella of the Note Area (Chapter 7). 
+- **Domain and Range:** Not applicable in the traditional RDF sense, as "note on relationship between continuing resources" is a descriptive practice rather than a formally defined property with a fixed domain and range. However, conceptually, its domain would be the bibliographic description of the continuing resource, and its range would be a textual note describing the relationship.
+- **Element Type:**  Descriptive text.
+
+
+## Additional Information
+
+- **Scope and Purpose:**  To provide information about the bibliographic history of a continuing resource, specifically concerning its relationship to other continuing resources.  This helps to understand the evolution of the resource over time and to locate related resources.
+- **User Tasks Supported:** Discovering related continuing resources (predecessors, successors, merged titles, etc.). Understanding changes in title, numbering, or publishing information over the life of a resource.
+
+
+## Element Values
+
+- **Specific Rules and Guidelines:**  The note should clearly indicate the type of relationship (Continues:, Continued by:, Merger of:, Split into:, Absorbed:, Absorbed by:, Separated from:, etc.). It should also provide sufficient bibliographic information to identify the related resource(s). For serials, this typically includes the title or key title and ISSN.  For other continuing resources, the title and other relevant identifying information should be included.
+- **Value Constraints or Formats:**  Free text, but clarity and conciseness are important. The use of standard terminology for relationships (Continues:, Continued by:, etc.) is recommended.  Bibliographic information for related resources should be presented in a consistent format.
+- **String Encoding Schemes:**  UTF-8 is the recommended encoding for ISBD data.
+
+
+
+## Examples
+
+```
+Continues: Monthly Scottish news bulletin = ISSN 0307-5273. — Title proper: Pointer
+
+Merged with: Journal of the British Ceramic Society = ISSN 0524-5133; to become: Transactions and journal of the British Ceramic Society = ISSN 0307-7357. — Title proper: Transactions / British Ceramic Society
+
+Split into: Comparative biochemistry and physiology. A, Comparative physiology = ISSN 0300-9629; and into: Comparative biochemistry and physiology. B, Comparative biochemistry = ISSN 0305-0491. — Title proper: Comparative biochemistry and physiology
+
+Absorbed: Annals of philosophy = ISSN 0365-4915. — Title proper: Philosophical magazine
+
+Absorbed by: Quarterly review of marketing = ISSN 0307-7667. — Title proper: Marketing forum
+
+Separated from: Boekengids. — Title proper: Jeugdboekengids
+```
+
+
+## Relationships
+
+- **Relationships to Other ISBD Elements:**  Related to the edition area (Area 2) and the key title (Area 8). Also relevant to the general principles of the Note Area (Area 7).
+- **Super-types and Sub-types:** "Note on relationship between continuing resources" can be considered a sub-type of the more general "note on bibliographic history" (7.2.3).  It has more specific sub-types:  "continuation note" (7.2.4.7.1), "merger note" (7.2.4.7.2), "split note" (7.2.4.7.3), "absorption note" (7.2.4.7.4), etc. 
+- **Inverse Relationships:**  A resource identified as being continued *by* another resource would have an inverse relationship with the continuing resource that *continues* it.
+
+
+## Stipulations
+
+- **Special Considerations:**  If numerous changes have occurred, a general note may be given summarizing the changes rather than listing each one individually.  The date the absorption occurred is included in the note if considered important.  If the relationship between resources is not continuation, merger, split, or absorption, the "Other Relationships" note (7.2.4.6) should be used.
+- **Best Practices:** Be consistent in the use of terminology and the presentation of bibliographic information.  Provide enough information to clearly identify the related resources, but avoid unnecessary detail. When possible, use the key title and ISSN to identify serials.  For other continuing resources, give the title and other relevant identifying information.
+
+---
+
+*This content was automatically generated from the ISBD PDF documentation using Gemini AI analysis.*

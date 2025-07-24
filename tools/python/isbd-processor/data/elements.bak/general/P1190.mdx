@@ -1,0 +1,96 @@
+---
+id: P1190
+title: has expression aspect
+description: ISBD element documentation for has expression aspect
+uri: "isbd:elements/P1190"
+area: general
+RDF:
+  definition: Relates a bibliographic resource to an expression reflected in it.
+  domain: "isbd:elements/C2001"
+  range: "frbrer:C1002"
+  type: "rdf:Property"
+  inverseOf: "isbd:elements/P1194"
+reg:hasUnconstrained: "isbd:unc/elements/P1190"
+reg:name: hasExpressionAspect
+reg:status: "RegStatus:1001"
+rdf:type: "rdf:Property"
+rdfs:domain: "isbd:elements/C2001"
+rdfs:isDefinedBy: "isbd:elements/"
+rdfs:label: has expression aspect
+rdfs:range: "frbrer:C1002"
+owl:inverseOf: "isbd:elements/P1194"
+skos:definition: Relates a bibliographic resource to an expression reflected in it.
+---
+# has expression aspect
+
+The element "expression aspect" (isbd:elements/P1190) is not explicitly defined as a separate element in the provided ISBD documentation.  The ISBD focuses on describing *manifestations*, which in FRBR terms combines the expression and manifestation.  While the ISBD *does* allow for recording information that would typically be considered part of the expression (like language, form of musical notation, etc.), it does so within other elements, primarily within Area 0 (Content Form, Production Process, and Media Type) and Area 1 (Title and Statement of Responsibility).  It does not use the FRBR terminology of "expression aspect".
+
+
+Instead of describing a non-existent "expression aspect" element, I will outline how the ISBD handles information that *relates* to the FRBR concept of expression, focusing on the relevant areas and elements.
+
+## Relevant ISBD Areas and Elements
+
+Instead of a dedicated "expression aspect" element, the ISBD distributes information related to the FRBR expression across several areas and elements.
+
+**Area 0: Content Form, Production Process, and Media Type:**
+
+* **Content Form (0.1):** This element captures the fundamental form of the content (text, image, music, etc.), which is a core aspect of the FRBR expression.  Content qualifications further refine this by specifying characteristics like dimensionality (2-dimensional image, 3-dimensional object), motion (still image, moving image), and sensory nature (aural, visual, tactile).
+* **Production Process (0.2.1):** While primarily focused on the *physical* process of creating the resource, this element indirectly contributes to understanding the expression, particularly for resources where the production process significantly impacts the form of expression (e.g., handwriting, etching, magnetic recording).
+* **Media Type (0.2.2):** This element indicates the type of carrier, which, while a manifestation characteristic, can influence how the expression is perceived (e.g., audio, video, electronic).
+
+**Area 1: Title and Statement of Responsibility:**
+
+* **Title Proper (1.1):**  The title proper often includes information that distinguishes different expressions of the same work, such as alternative titles or titles specific to a particular edition or version.
+* **Other Title Information (1.3):** This element may contain details about the expression, such as the form of a musical work (concerto, sonata), or information about translations (e.g., "Translation of: Original title").
+
+**Area 7: Note Area:**
+
+* **Notes on Language (7.1.2.2):** These notes provide details about the language of the content, a crucial aspect of the FRBR expression.
+* **Notes on Nature, Scope, Form, Purpose, or Language (7.1.2.1):**  These notes may provide further details relevant to the expression that are not captured elsewhere.
+
+
+## Examples
+
+Here are a few examples demonstrating how expression-related information is captured in ISBD records:
+
+```
+0. Content form (cartographic; still; 2-dimensional; visual) : impression (unpublished) ; unmediated
+1. World map [cartographic material] : political and physical / by John Doe.
+...
+```
+
+```
+0. Music (notated; visual) : impression (unpublished) ; unmediated
+1. Symphony no. 5 in C minor / [Ludwig van Beethoven]
+...
+```
+
+```
+0. Text (visual) : impression ; unmediated + Spoken word : audio
+1. The adventures of Huckleberry Finn / by Mark Twain ; read by Samuel L. Jackson.
+...
+```
+
+
+```
+0. Spoken word : audio : electronic recording ; audio
+1. Mark Twain's The adventures of Huckleberry Finn : unabridged / read by Samuel L. Jackson.
+...
+Note: Read in English
+```
+
+
+
+## Relationships
+
+The elements mentioned above relate to each other in forming a complete understanding of the resource being described.  For instance, the content form may be "text," while other title information might specify that the text is a "translation of" another work.
+
+
+## Stipulations
+
+The ISBD emphasizes describing the resource *as manifested*.  Therefore, while it acknowledges the importance of information relating to the expression, it does not explicitly separate it as "expression aspect."  Catalogers should use the available elements within the appropriate areas to convey this information in a manner consistent with the overall ISBD structure.
+
+
+---
+
+*This content was automatically generated from the ISBD PDF documentation using Gemini AI analysis.*

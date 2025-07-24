@@ -1,0 +1,70 @@
+---
+id: P1031
+title: has numbering within series or multipart monographic resource
+description: ISBD element documentation for has numbering within series or multipart monographic resource
+uri: "isbd:elements/P1031"
+area: area3
+RDF:
+  definition: "Relates a resource that is a series or multipart monographic resource to its numbering."
+  domain: "isbd:elements/C2001"
+  type: "rdf:Property"
+reg:hasUnconstrained: "isbd:unc/elements/P1031"
+reg:name: hasNumberingWithinSeriesOrMultipartMonographicResource
+reg:status: "RegStatus:1001"
+rdf:type: "rdf:Property"
+rdfs:domain: "isbd:elements/C2001"
+rdfs:isDefinedBy: "isbd:elements/"
+rdfs:label: has numbering within series or multipart monographic resource
+rdfs:label@es: "tiene numeración de serie o recurso monográfico multiparte"
+skos:definition: "Relates a resource that is a series or multipart monographic resource to its numbering."
+skos:definition@es: "Relaciona un recurso que es una serie o recurso monográfico multiparte con su numeración."
+---
+# has numbering within series or multipart monographic resource
+
+The ISBD element "numbering within series or multipart monographic resource" is found within the Series and Multipart Monographic Resource Area (Area 6) of the ISBD.
+
+## Element Reference
+
+- **Official ISBD Definition:** The numbering of the resource within a series or multipart monographic resource.
+- **Domain:** Series or multipart monographic resource.
+- **Range:**  String representing the numbering.
+- **Element Type:** Data element.
+
+## Additional Information
+
+- **Scope and Purpose:** This element specifies the resource's position or identifier within a larger series or multipart item.  It helps distinguish individual resources within a series and facilitates the ordering and retrieval of parts within a larger whole.
+- **User Tasks Supported:**  Locating specific parts of a series, ordering parts of a series, identifying a resource's place in a sequence.
+
+## Element Values
+
+- **Specific Rules/Guidelines:** The numbering is recorded exactly as it appears on the source, including capitalization, punctuation, and spacing. Standard abbreviations may be used. Arabic numerals are used in place of spelled-out numbers or other numerals.  If the numbering appears in more than one language or script, the numbering in the language and script of the title proper is given; if this criterion does not apply, the first numbering is given.
+- **Value Constraints/Formats:**  No specific constraints, although the value should represent the numbering as it appears on the resource.
+- **String Encoding Schemes:** No specific encoding scheme mandated, but Unicode is generally recommended for best practice in representing a wide range of characters.
+
+
+## Examples
+
+```
+(Beatrix Potter jigsaw puzzles ; no. 1)
+(Selected works of Rudyard Kipling ; vol. 2)
+(Carte géologique de la France à 1:50000 ; IV-19)
+(合唱名曲コレクション ; D 11)
+(일론의 땅 시리즈 ; 3탄)
+```
+
+## Relationships
+
+- **Relationships to other ISBD elements:** Closely related to the "title proper of a series or multipart monographic resource" (6.1) and other elements in Area 6. Can be further clarified or explained by notes in Area 7.
+- **Super-types and Sub-types:** No direct sub-types in ISBD. Might be conceived as a sub-type of a broader "resource identifier" concept.
+- **Inverse relationships:**  Could be argued that a resource "is numbered within" a particular series, which would be an inverse expression.
+
+## Stipulations
+
+- **Special Considerations:** If the numbering includes a date or other information which is also part of the chronological designation, it goes in Area 3. (For instance, "1995, vol. 1" would have "1995-" in area 3 and "vol. 1" in area 6.)
+- **Exceptions:** When the title of the series has a dependent title or subseries, the numbering for the common title is omitted and only the numbering for the dependent title/subseries appears in Area 6.
+- **Best Practices:**  Consistency is crucial.  A cataloging agency should choose a consistent approach to transcribing or recording numbering (e.g., abbreviations, roman vs. arabic numerals) and apply it across all records.  Providing notes in Area 7 to clarify complex or unusual numbering patterns is highly recommended.
+
+
+---
+
+*This content was automatically generated from the ISBD PDF documentation using Gemini AI analysis.*

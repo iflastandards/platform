@@ -1,0 +1,78 @@
+---
+id: P1152
+title: has parallel other title information of series or multipart monographic resource
+description: ISBD element documentation for has parallel other title information of series or multipart monographic resource
+uri: "isbd:elements/P1152"
+area: area1
+RDF:
+  definition: "Relates a resource that is a serial or multipart monographic resource to a word or phrase, or a group of characters, appearing in conjunction with, and subordinate to, the title proper of the resource presented on the preferred source of information for the resource as an equivalent in another language or script."
+  domain: "isbd:elements/C2001"
+  type: "rdf:Property"
+  scopeNote: "Parallel other title information  is given when considered important to users of the catalogue."
+reg:hasUnconstrained: "isbd:unc/elements/P1152"
+reg:name: hasParallelOtherTitleInformationOfSeriesOrMultipartMonographicResource
+reg:status: "RegStatus:1001"
+rdf:type: "rdf:Property"
+rdfs:domain: "isbd:elements/C2001"
+rdfs:isDefinedBy: "isbd:elements/"
+rdfs:label: has parallel other title information of series or multipart monographic resource
+rdfs:label@es: "tiene información complementaria del título paralela de serie o de recurso monográfico multiparte"
+skos:definition: "Relates a resource that is a serial or multipart monographic resource to a word or phrase, or a group of characters, appearing in conjunction with, and subordinate to, the title proper of the resource presented on the preferred source of information for the resource as an equivalent in another language or script."
+skos:definition@es: "Relaciona un recurso que es una publicación seriada o recurso monográfico multiparte con una palabra o frase o grupo de caracteres, que aparecen en conjunción con y subordinado al título propiamente dicho del recurso,  presentado en la fuente de información preferida para el recurso como un equivalente en otra lengua o escritura."
+skos:scopeNote: "Parallel other title information  is given when considered important to users of the catalogue."
+skos:scopeNote@es: "La información complementaria del título paralela se da cuando se considera importante para los usuarios del catálogo."
+---
+# has parallel other title information of series or multipart monographic resource
+
+The ISBD element "parallel other title information of series or multipart monographic resource" is found within the context of the larger "Series and Multipart Monographic Resource Area" (Area 6).  While the consolidated 2011 edition (updated 2021) doesn't explicitly label it as "parallel other title information of series or multipart monographic resource," the concept is addressed through stipulations relating to parallel titles and other title information within Area 6.
+
+## Element Reference
+
+The ISBD doesn't offer a formal, standalone definition for "parallel other title information of series or multipart monographic resource."  The closest concept is covered by the stipulations in section 6.3 (Other title information of a series or multipart monographic resource) and the general instructions for parallel statements (section A.3.2.9, among others). It combines the principles of "other title information" and "parallel title" as they apply to series and multipart resources.
+
+- **Domain:** Series and Multipart Monographic Resource
+- **Range:** String (representing the other title information in a language/script different from the title proper of the series)
+- **Element Type:** Descriptive
+
+## Additional Information
+
+- **Scope and Purpose:** To provide other title information for the series or multipart resource in a language or script different from that used for the title proper of the series. This helps with identification, especially in multilingual contexts, and improves access for users searching in different languages.
+- **User Tasks Supported:** Searching and identifying series or multipart resources in various languages, enhancing multilingual access.
+
+## Element Values
+
+- **Rules and Guidelines:** Section 6.3.1 states that parallel other title information should be given if it appears on the prescribed source of information (series title page, etc.) and is necessary for identification or important to users.  The general guidelines for transcribing parallel titles apply (accuracy, no corrections for capitalization/punctuation unless needed for clarity).
+- **Value Constraints and Formats:** No specific constraints other than those governing other title information in general.
+- **String Encoding Schemes:**  UTF-8 is recommended, but this applies generally to the ISBD.
+
+## Examples
+
+```
+(Carte géologique de la France à 1:50000 = Geological map of France at 1:50 000)
+```
+
+```
+(土佐日記 = The Tosa Diary)
+```
+```
+(Die schönsten deutschen Volkslieder = The most beautiful German folk songs)
+
+
+```
+
+## Relationships
+
+- **Relationship to Other ISBD Elements:** Related to the "Title proper of a series or multipart monographic resource" (6.1) and the general "Other title information of a series or multipart monographic resource" (6.3).  It shares characteristics with "Parallel title" (1.2) in Area 1, as applied to series.
+- **Super-types and Sub-types:** This element can be considered a sub-type of "Other title information" in the context of series.
+- **Inverse Relationships:** None specified.
+
+
+## Stipulations
+
+- **Special Considerations:** The primary consideration is whether this information aids in identification and is important to users. If the resource only has a title proper of the series in a single language and script, a parallel other title information element wouldn't exist.  Guidance for parallel titles and other title information should be followed.
+- **Best Practices:**  Transcribe accurately from the preferred source. Be consistent in application.  Consider the needs of your user community.  Use notes (Area 7) for clarification or if the source of the information is not the prescribed source.
+
+
+---
+
+*This content was automatically generated from the ISBD PDF documentation using Gemini AI analysis.*

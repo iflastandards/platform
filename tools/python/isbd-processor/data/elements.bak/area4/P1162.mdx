@@ -1,0 +1,108 @@
+---
+id: P1162
+title: has publication, production, distribution, etc area
+description: ISBD element documentation for has publication, production, distribution, etc area
+uri: "isbd:elements/P1162"
+area: area4
+RDF:
+  definition: "Relates a resource to a statement including the place of publication, production and/or distribution; the name of publisher, producer, and/or distributor; the date of publication, production, and/or distribution; the place of printing or manufacture; the name of printer or manufacturer; and the date of printing or manufacture."
+  domain: "isbd:elements/C2001"
+  range: "isbd:elements/C2007"
+  type: "rdf:Property"
+  scopeNote: "Covers all types of publication, production, distribution, issuing and release activities connected with resources."
+reg:hasUnconstrained: "isbd:unc/elements/P1162"
+reg:name: hasPublicationProductionDistributionEtcArea
+reg:status: "RegStatus:1001"
+rdf:type: "rdf:Property"
+rdfs:domain: "isbd:elements/C2001"
+rdfs:isDefinedBy: "isbd:elements/"
+rdfs:label: has publication, production, distribution, etc area
+rdfs:label@es: "tiene área de publicación, producción, distribución, etc."
+rdfs:range: "isbd:elements/C2007"
+skos:definition: "Relates a resource to a statement including the place of publication, production and/or distribution; the name of publisher, producer, and/or distributor; the date of publication, production, and/or distribution; the place of printing or manufacture; the name of printer or manufacturer; and the date of printing or manufacture."
+skos:definition@es: "Relaciona un recurso con una mención que incluye el lugar de publicación, producción y/o distribución; el nombre del editor, productor y/o distribuidor; la fecha de publicación, producción y/o distribución; el lugar de impresión o fabricación; el nombre del  impresor o fabricante, y la fecha de impresión o fabricación."
+skos:scopeNote: "Covers all types of publication, production, distribution, issuing and release activities connected with resources."
+skos:scopeNote@es: "Cubre todos los tipos de publicación, producción, distribución, edición y actividades de difusión relacionadas con los recursos."
+---
+# has publication, production, distribution, etc area
+
+The ISBD element `publication, production, distribution, etc. area` (isbd:elements/P1162) is found within the provided PDF.
+
+## Element Reference
+
+- **Official ISBD Definition:** The publication, production, distribution, etc., area includes the place of publication, production and/or distribution; the name of publisher, producer, and/or distributor; the date of publication, production, and/or distribution; the place of printing or manufacture; the name of printer or manufacturer; and the date of printing or manufacture.
+- **Domain:**  Manifestation (though applicable to component parts as well)
+- **Range:** String
+- **Element Type:** Complex - contains sub-elements for place, name, and date of publication/production/distribution, as well as place, name, and date of printing/manufacture.
+
+
+## Additional Information
+
+- **Scope and Purpose:** This area is crucial for identifying and locating a resource, understanding its origins, and placing it within its publishing and production context.  The wording “publication, production, distribution, etc.” is intended to be inclusive of all activities involved in making a resource available.  It also covers the physical manufacturing, which may or may not be carried out by the publishing entity.
+- **User Tasks Supported:**
+    - Identifying the publisher, producer, and/or distributor of a resource.
+    - Determining the place and date of publication, production, and/or distribution.
+    - Ascertaining the place and date of printing or manufacture (when distinct from publishing).
+    - Disambiguating resources with the same title.
+    - Understanding the history and dissemination of a resource.
+
+
+
+## Element Values
+
+- **Rules and Guidelines:** The stipulations prioritize information found directly on the resource itself. Specific prescribed sources are outlined for different resource types (printed text, manuscripts, cartographic resources, etc.). The general order of preference for sources is based on comprehensiveness, proximity to the content, and persistence. If information is taken from outside the prescribed source, it's enclosed in square brackets.
+- **Value Constraints and Formats:**
+    - Place names are given in the form they appear on the resource. Standardized forms or additional geographic qualifiers (e.g., country, state) can be added for clarity and enclosed in square brackets when not explicitly stated on the source.
+    - Publisher names are given as they appear, though abbreviations are allowed for readily identifiable publishers. Functions other than publishing (e.g., "distributed by") are included.
+    - Dates are preferred in Arabic numerals according to the Gregorian calendar. Non-Gregorian dates are transcribed as they appear, with Gregorian equivalents added in square brackets. Approximate dates are enclosed in square brackets (e.g., [197-?] ).
+- **String Encoding:**  UTF-8 is recommended for electronic records.
+
+
+
+## Examples
+
+```
+London : Faber & Faber, 1984.
+```
+
+```
+[S.l. : s.n.], 1852 (New York : Printed by John Smith).
+```
+
+```
+Paris : Unesco ; New York : Distributed by Random House, c1997.
+```
+
+```
+Cambridge, Mass. : MIT Press, [2023], c2022 (Printed in the United States of America).
+```
+
+```
+[London] : [William Caxton], [1477].  Note: Publication information from colophon.
+```
+
+
+
+## Relationships
+
+- **Relationship to Other Elements:** Area 4 directly precedes the Material Description Area (Area 5) and follows the Edition Area (Area 2) in an ISBD record. The information in Area 4 can be supplemented or clarified by notes in Area 7.
+
+- **Sub-elements:**
+    - Place of Publication/Production/Distribution
+    - Name of Publisher/Producer/Distributor
+    - Date of Publication/Production/Distribution
+    - Place of Printing/Manufacture
+    - Name of Printer/Manufacturer
+    - Date of Printing/Manufacture
+
+
+## Stipulations
+
+- **Special Considerations:** Area 4 is mandatory. If information is missing, best efforts should be made to supply it from other sources, always indicating the source.
+- **Exceptions:**  For manuscripts, only the date and place are given if they appear on the resource. Archival standards should be considered for archival collections.
+- **Best Practices:** When in doubt about the function of a named entity, use the general term “publisher, producer and/or distributor” to avoid misrepresentation.  Be consistent with the chosen abbreviations for places and publishers. Always provide notes explaining any supplied or corrected information. Use square brackets consistently.
+
+
+---
+
+*This content was automatically generated from the ISBD PDF documentation using Gemini AI analysis.*

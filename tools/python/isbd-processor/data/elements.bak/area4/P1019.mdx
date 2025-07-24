@@ -1,0 +1,105 @@
+---
+id: P1019
+title: has place of printing or manufacture
+description: ISBD element documentation for has place of printing or manufacture
+uri: "isbd:elements/P1019"
+area: area4
+RDF:
+  definition: "Relates a resource to the name of the place associated on the resource with its printing or manufacture."
+  domain: "isbd:elements/C2001"
+  type: "rdf:Property"
+reg:hasUnconstrained: "isbd:unc/elements/P1019"
+reg:name: hasPlaceOfPrintingOrManufacture
+reg:status: "RegStatus:1001"
+rdf:type: "rdf:Property"
+rdfs:domain: "isbd:elements/C2001"
+rdfs:isDefinedBy: "isbd:elements/"
+rdfs:label: has place of printing or manufacture
+rdfs:label@es: "tiene lugar de impresión o fabricación"
+skos:definition: "Relates a resource to the name of the place associated on the resource with its printing or manufacture."
+skos:definition@es: "Relaciona un recurso al nombre del lugar asociado en el recurso con su impresión o fabricación."
+---
+# has place of printing or manufacture
+
+The ISBD element "place of printing or manufacture" (isbd:elements/P1019) is not explicitly defined as a separate element in the provided 2021 update to the ISBD consolidated edition.  Instead, the concept is covered as part of Area 4: PUBLICATION, PRODUCTION, DISTRIBUTION, ETC. AREA, specifically within elements regarding the overall place and name of entities involved in the production process. The distinction between publisher/producer and printer/manufacturer is addressed, but less formally than other elements.  Therefore, the following response addresses the information available about  "place of printing or manufacture" within its broader context within Area 4.
+
+## Element Reference
+
+While not a formally separate element, the "place of printing or manufacture" information is treated as an aspect of Area 4, which contains:
+
+- Place of publication, production, and/or distribution (4.1)
+- Name of publisher, producer, and/or distributor (4.2)
+- Date of publication, production, and/or distribution (4.3)
+- Place of printing or manufacture (4.4)
+- Name of printer or manufacturer (4.5)
+- Date of printing or manufacture (4.6)
+
+
+Domain and range, and element type information are not formally specified in the ISBD documentation in the same way as in linked data ontologies.
+
+
+## Additional Information
+
+The scope of "place of printing or manufacture" is to provide information about the geographical location where the physical production or manufacturing of the resource took place,  separate from the location of the publisher or distributor. This is primarily for situations where the publisher/distributor and printer/manufacturer are distinct entities.
+
+This element supports user tasks involving:
+
+- Identifying resources based on their production location.
+- Differentiating between editions or versions produced in different locations.
+- Researching printing or manufacturing history.
+
+
+
+## Element Values
+
+The "place of printing or manufacture" value should be a geographical name.
+
+- It should be given in the orthographic form and grammatical case in which it appears on the resource (4.1.8).
+- Standard abbreviations may be used (A.6.4). 
+- When necessary for identification, larger place names (country, state, etc.) can be added (4.1.9).
+- Full addresses may be added, in parentheses if from a prescribed source, in square brackets if from other sources (4.1.10).
+- If the place is uncertain or unknown, conventions like \[place?], \[country] or \[s.l.] are used (4.1.12, 4.1.14).
+
+String encoding schemes are not specified within the ISBD itself, but would be determined by the encoding standard used for the bibliographic record (e.g., MARC, MODS).
+
+
+## Examples
+
+```
+London : Publisher, 2023 (Printed in China)
+```
+
+```
+[S.l.] : [s.n.], 1974 (Manchester : Unity Press) 
+```
+ (Example where publication place and publisher are unknown, but printing place is known)
+
+```
+Paris : Publisher, 2023 (Imprimé en France)
+```
+
+
+## Relationships
+
+The "place of printing or manufacture" is related to other Area 4 elements:
+
+- Closely related to "name of printer or manufacturer" (4.5) and "date of printing or manufacture" (4.6), forming a single production statement.
+- Distinguished from "place of publication, production, and/or distribution" (4.1) and "name of publisher, producer, and/or distributor" (4.2) which deal with publishing information, not the physical production.
+
+
+## Stipulations
+
+- When a person/body combines publishing and printing/manufacturing activities, or responsibility is unclear, the place/name is treated as relating to publishing (Area 4 introductory notes).
+- For older monographic resources, the place of printing is given when printer and publisher are distinct, often found in a colophon or other imprint statement (4.1.8, 4.4.2). If the printing information only appears outside prescribed sources, it goes in Area 7.
+- For manuscripts, typically place and date of production (if on the resource) would be in Area 4, but details about the script, hand, etc. would be in other areas or in notes (Area 4 introductory notes, A.5).
+- If the resource was printed in several locations, punctuation rules similar to those for multiple places of publication are used (4.4.3).
+- Changes in the place of printing or manufacture in serials or multipart monographs are generally noted in Area 7 (7.4.2).
+
+
+
+The general ISBD principles of recording information as found on the resource, using abbreviations where appropriate, and supplying information in square brackets when inferred or taken from outside the resource, also apply to this element.  The lack of a specific, formally defined element for "place of printing or manufacture" makes the application somewhat dependent on interpretation and cataloging rules.
+
+
+---
+
+*This content was automatically generated from the ISBD PDF documentation using Gemini AI analysis.*

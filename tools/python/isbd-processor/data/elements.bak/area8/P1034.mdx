@@ -1,0 +1,77 @@
+---
+id: P1034
+title: has terms of availability
+description: ISBD element documentation for has terms of availability
+uri: "isbd:elements/P1034"
+area: area8
+RDF:
+  definition: "Relates a resource to a statement of the price if it is for sale or a brief statement of other terms if it is not for sale."
+  domain: "isbd:elements/C2001"
+  type: "rdf:Property"
+  scopeNote: "It is recommended that the price of the resource be given with the international standard code for the currency as in ISO 4217."
+reg:hasUnconstrained: "isbd:unc/elements/P1034"
+reg:name: hasTermsOfAvailability
+reg:status: "RegStatus:1001"
+rdf:type: "rdf:Property"
+rdfs:domain: "isbd:elements/C2001"
+rdfs:isDefinedBy: "isbd:elements/"
+rdfs:label: has terms of availability
+rdfs:label@es: "tiene condiciones de disponibilidad"
+skos:definition: "Relates a resource to a statement of the price if it is for sale or a brief statement of other terms if it is not for sale."
+skos:definition@es: "Relaciona un recurso con una mención del precio si está a la venta o una breve mención de otras condiciones si no está a la venta."
+skos:scopeNote: "It is recommended that the price of the resource be given with the international standard code for the currency as in ISO 4217."
+skos:scopeNote@es: "Se recomienda que el precio del recurso se de con el código normalizado internacional para la moneda como en la norma ISO 4217."
+---
+# has terms of availability
+
+The ISBD element "terms of availability" (isbd:elements/P1034) is found within the PDF as part of Area 8: Resource Identifier and Terms of Availability Area.
+
+## Element Reference
+
+- **Official ISBD Definition:** A statement of the conditions under which a resource may be obtained, e.g., the price of a resource offered for sale or a statement that a resource is not for sale. (Section 8.3, Glossary)
+- **Domain:**  Relates to a bibliographic resource (specifically a manifestation in FRBR terms).
+- **Range:**  A textual statement indicating price or availability conditions.
+- **Element Type:**  Descriptive.
+
+## Additional Information
+
+- **Scope and Purpose:** The "terms of availability" element provides information essential for acquiring or accessing the resource. It indicates whether the resource is commercially available, for hire, not for sale, or under other specific conditions.  For commercially available resources, it typically includes the price.
+- **User Tasks Supported:**  Helps users determine how to obtain the resource. Supports acquisition and interlibrary loan processes. Facilitates price comparisons.
+
+
+## Element Values
+
+- **Rules and Guidelines:** The price should be given with the international standard code for the currency as defined in ISO 4217 (Section 8.3.1). If the resource is not for sale, a brief statement of the availability conditions is given.  Qualifications or additional details about the price/availability are given in parentheses following the main statement (Section 8.3.2).
+- **Value Constraints and Formats:** Currency codes should follow ISO 4217. Prices are generally represented numerically.  Availability statements should be concise and descriptive.
+- **String Encoding Schemes:**  Not applicable, as currency codes are standardized.
+
+
+## Examples
+
+```
+: USD 25.00
+: EUR 15.50
+: Not for sale
+: Free to educational institutions
+: GBP 10.00 (for members)
+: CAD 30.00 (includes access code)
+```
+
+
+## Relationships
+
+- **Relationship to Other ISBD Elements:**  Part of Area 8, following the resource identifier (ISBN, ISSN, etc.) and key title (for serials).
+- **Super-types and Sub-types:** No formal sub-types defined within ISBD, though price can be considered an implicit sub-element when the resource is for sale.
+- **Inverse Relationships:** None explicitly defined.
+
+
+## Stipulations
+
+- **Special Considerations:** If the resource has multiple prices (e.g., different prices for different bindings, or different prices for institutions vs. individuals), each price is given with its corresponding qualification.
+- **Exceptions:** Historical pricing is generally not recorded.
+- **Best Practices:**  Be consistent in the application of ISO 4217 currency codes.  When a resource is not for sale, clearly state the terms of availability. For items available online, specifying access restrictions (e.g., subscription required) or open access status is crucial.  Using standardized vocabulary for availability terms (e.g., "Open Access", "Subscription required", "For hire") improves interoperability.
+
+
+---
+
+*This content was automatically generated from the ISBD PDF documentation using Gemini AI analysis.*

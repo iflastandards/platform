@@ -1,0 +1,89 @@
+---
+id: P1097
+title: has note on different editions
+description: ISBD element documentation for has note on different editions
+uri: "isbd:elements/P1097"
+area: area2
+RDF:
+  definition: Relates a resource to a note on the name of another edition or editions.
+  domain: "isbd:elements/C2001"
+  type: "rdf:Property"
+  scopeNote: "Used when the resource is one of two or more simultaneously published editions differing in partial content or language. A general note is used if the name of the other edition or editions is not readily available, or the resource is published in more editions than can be named conveniently."
+  elementSubType: "isbd:elements/P1045"
+reg:hasUnconstrained: "isbd:unc/elements/P1097"
+reg:name: hasNoteOnDifferentEditions
+reg:status: "RegStatus:1001"
+rdf:type: "rdf:Property"
+rdfs:domain: "isbd:elements/C2001"
+rdfs:isDefinedBy: "isbd:elements/"
+rdfs:label: has note on different editions
+rdfs:label@es: "tiene nota de diferentes ediciones"
+rdfs:subPropertyOf: "isbd:elements/P1045"
+skos:definition: Relates a resource to a note on the name of another edition or editions.
+skos:definition@es: "Relaciona un recurso con una nota sobre el nombre de otra edición o ediciones."
+skos:scopeNote: "Used when the resource is one of two or more simultaneously published editions differing in partial content or language. A general note is used if the name of the other edition or editions is not readily available, or the resource is published in more editions than can be named conveniently."
+skos:scopeNote@es: "Se utiliza cuando el recurso es una de dos o más ediciones publicadas simultáneamente, que difieren parcialmente en el contenido o en la lengua. Se emplea una nota general si no está disponible el nombre de la otra edición o ediciones, o si el recurso se publica en más ediciones que pueden nombrarse convenientemente."
+---
+# has note on different editions
+
+The ISBD element "note on different editions" is found within the broader category of "Notes on the edition area and the bibliographic history of the resource" and corresponds to relationship information recorded in note area 7.  Specifically, it addresses the relationship described in 7.2.4.3, "Resources with different editions."
+
+## Element Reference
+
+- **Official ISBD Definition:**  The ISBD itself doesn't define a specific element called "note on different editions."  It falls under the general stipulations for notes related to editions and bibliographic history within Area 7. The closest named element is the "note on relationship to other resources," a general category that includes relationships such as translations, reproductions, and different editions. 7.2.4.3 addresses resources issued in more than one edition simultaneously, where the resource being described is one of these editions.
+- **Domain and Range:** Not applicable in the strict sense of RDF properties, as the ISBD is not formally expressed in RDF in this version. However, conceptually, the domain would be the resource being described, and the range would be a textual note describing the relationship to other editions.
+- **Element Type:** Textual note.
+
+
+## Additional Information
+
+- **Scope and Purpose:** To provide information about other editions of the same resource that were published simultaneously, which may differ in partial content and/or language.  This helps users understand the context of the described resource and locate other related editions.
+- **User Tasks Supported:** Identifying all available editions of a work, understanding differences between simultaneously published editions (e.g., language, abridgements, content variations), selecting the most appropriate edition for a specific need.
+
+## Element Values
+
+- **Specific Rules/Guidelines:** The note should clearly identify the other editions, providing enough information to distinguish them. This might include the edition statement (e.g., "Large print edition," "Teacher's edition"), language, or significant content variations.  If the other editions have distinctive titles, those should be used. The guidelines in Area 1 for recording titles and statements of responsibility generally apply. If there are too many editions to list conveniently, a general note (like "Numerous other editions") can be used.
+- **Value Constraints/Formats:** No strict format is prescribed, but clarity and conciseness are recommended.
+- **String Encoding:**  UTF-8 is generally recommended for modern cataloging.
+
+
+## Examples
+
+```
+Note: Also published in a large print edition and a Braille edition.
+```
+
+```
+Note: Simultaneously published in a French edition (ISBN 978-2-222-04155-9) and a German edition (ISBN 978-3-525-52139-7).
+```
+
+```
+Note: This edition contains only the North American program listings.  See also the international edition for worldwide coverage.
+```
+
+```
+Note: Numerous other editions with program listings for specific geographical areas are available.
+```
+
+```
+Note:  Also published as a teacher's edition with additional exercises and answer keys.
+```
+
+
+
+## Relationships
+
+- **Relationships to Other ISBD Elements:** This note type expands on the information given in Area 2 (Edition Area) and clarifies the relationship between different manifestations of the same work.
+- **Super-types/Sub-types:**  This note type could be considered a sub-type of "note on relationship to other resources."
+- **Inverse Relationships:** No direct inverse relationship within ISBD.
+
+
+## Stipulations
+
+- **Special Considerations:** When a resource is published in multiple, easily named editions, list the other editions. If there are many editions or they are difficult to name individually, a general note suffices. If different simultaneous editions are created by adapting or modifying an edition, use a separate bibliographic record for each of the derivative editions and link these to the bibliographic record for the original or the closest to an original edition using the note "adapted from" or "modified from".
+- **Best Practices:**  Be as specific as possible when identifying other editions.  If possible, provide identifiers (ISBN, ISSN) for each different edition.  If the differences are very substantial, consider creating separate bibliographic records linked by notes.
+
+
+---
+
+*This content was automatically generated from the ISBD PDF documentation using Gemini AI analysis.*

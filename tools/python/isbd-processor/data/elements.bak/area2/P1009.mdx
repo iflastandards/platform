@@ -1,0 +1,72 @@
+---
+id: P1009
+title: has parallel edition statement
+description: ISBD element documentation for has parallel edition statement
+uri: "isbd:elements/P1009"
+area: area2
+RDF:
+  definition: "Relates a resource to an equivalent of an edition statement (a word or phrase, or a group of characters, indicating that the resource belongs to an edition) in another language or script."
+  domain: "isbd:elements/C2001"
+  type: "rdf:Property"
+reg:hasUnconstrained: "isbd:unc/elements/P1009"
+reg:name: hasParallelEditionStatement
+reg:status: "RegStatus:1001"
+rdf:type: "rdf:Property"
+rdfs:domain: "isbd:elements/C2001"
+rdfs:isDefinedBy: "isbd:elements/"
+rdfs:label: has parallel edition statement
+rdfs:label@es: "tiene mención de edición paralela"
+skos:definition: "Relates a resource to an equivalent of an edition statement (a word or phrase, or a group of characters, indicating that the resource belongs to an edition) in another language or script."
+skos:definition@es: "Relaciona un recurso con un equivalente de la mención de edición (término, frase o grupo de caracteres que indican que el recurso pertenece a una edición) en otra lengua o escritura."
+---
+# has parallel edition statement
+
+The ISBD element "parallel edition statement" is referred to as "Parallel edition, drafting, version, etc. statement" in the provided PDF.  It's discussed primarily in section 2.2.
+
+## Element Reference
+
+- **Official ISBD Definition:** A parallel edition, drafting, version, etc. statement is an equivalent of the edition, drafting, version, etc. statement in another language or script. (2.2)
+- **Domain:**  A resource (specifically, its manifestation)
+- **Range:** A string representing the edition statement in a language and/or script different from the title proper.
+- **Element Type:**  Descriptive metadata
+
+## Additional Information
+
+- **Scope and Purpose:** To provide the edition statement in multiple languages or scripts, facilitating international interoperability and understanding of the resource's edition. This is especially useful in multilingual contexts or when a resource is published with parallel titles in different languages.
+- **User Tasks Supported:**  Identifying the specific edition of a resource in different languages, enabling more accurate retrieval and filtering of bibliographic records.  It also helps users understand the publication history when different languages are involved.
+
+
+## Element Values
+
+- **Specific Rules/Guidelines:** The parallel edition statement should be a direct equivalent of the primary edition statement. It should not contain additional information or qualifiers not present in the primary statement.
+- **Value Constraints/Formats:** No specific format is prescribed, but it usually follows the conventions of expressing editions in the relevant language and/or script. It may involve numerals (e.g., "2e éd."), ordinal numbers (e.g., "Segunda edición"), or descriptive terms (e.g., "Revised edition").
+- **String Encoding Schemes:**  The character set used should be appropriate for the language and script of the statement.  UTF-8 is recommended for broad compatibility.
+
+
+## Examples
+
+```
+. - 2nd ed. = 2e éd.
+. - Rev. ed. = Éd. révisée
+. - New ed. = Nueva ed.
+. - 3. Aufl. = 3rd edition
+. - 初版 = First edition
+```
+
+## Relationships
+
+- **Relationships to other ISBD elements:** Directly related to the "Edition, drafting, version, etc. statement" (2.1).  It's a parallel representation of this element.  May be indirectly related to the "Parallel title" (1.2) if the resource has parallel titles.
+- **Super-types:** Could be considered a sub-type of a broader "Edition Statement" concept.
+- **Sub-types:**  None explicitly defined within ISBD.
+- **Inverse Relationships:** None explicitly defined within ISBD.
+
+## Stipulations
+
+- **Special Considerations:** If the prescribed source of information contains the edition statement in multiple languages, the one matching the language of the title proper is recorded in Area 2.1, and the other(s) as the parallel edition statement in Area 2.2. If there's no such match, the statement made most prominent by typography is recorded in Area 2.1, and the other as a parallel statement (2.2).
+- **Exceptions/Usage Notes:** Only given when necessary, and follows the order on the resource.  If a statement of responsibility relates to a specific edition statement, the appropriate parallel statement of responsibility should be associated with the parallel edition statement.
+- **Best Practices:** Ensure the parallel edition statement is an accurate and unambiguous equivalent of the primary edition statement. Maintain consistency in terminology and formatting across all parallel statements within a record.  Use appropriate character encoding.
+
+
+---
+
+*This content was automatically generated from the ISBD PDF documentation using Gemini AI analysis.*

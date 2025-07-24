@@ -1,0 +1,97 @@
+---
+id: P1068
+title: has note on title proper
+description: ISBD element documentation for has note on title proper
+uri: "isbd:elements/P1068"
+area: area1
+RDF:
+  definition: "Relates a resource to a note on the title proper (the chief name of a resource, i.e. the title of a resource in the form in which it appears on the preferred source of information for the resource)."
+  domain: "isbd:elements/C2001"
+  type: "rdf:Property"
+  elementSubType: "isbd:elements/P1045"
+reg:hasUnconstrained: "isbd:unc/elements/P1068"
+reg:name: hasNoteOnTitleProper
+reg:status: "RegStatus:1001"
+rdf:type: "rdf:Property"
+rdfs:domain: "isbd:elements/C2001"
+rdfs:isDefinedBy: "isbd:elements/"
+rdfs:label: has note on title proper
+rdfs:label@es: "tiene nota sobre título propiamente dicho"
+rdfs:subPropertyOf: "isbd:elements/P1045"
+skos:definition: "Relates a resource to a note on the title proper (the chief name of a resource, i.e. the title of a resource in the form in which it appears on the preferred source of information for the resource)."
+skos:definition@es: "Relaciona un recurso con una nota sobre el título propiamente dicho (el nombre principal de un recurso, por ejemplo, el título de un recurso en la forma en la que aparece en la fuente preferida de información de información para el recurso)."
+---
+# has note on title proper
+
+The ISBD element "Note on title proper" is found within the PDF as part of the Note Area (Area 7).  Specifically, it is discussed under section 7.1.1 "Notes on the title proper".
+
+
+## Element Reference
+
+- **Official ISBD Definition:** Notes on variant titles are given if they are considered important to users of the catalogue. (7.1.1.2)  The standard does not explicitly define "note on title proper," but instead focuses on variant titles appearing in different locations on a resource.  The element "source of title proper" (7.1.1.1) handles cases where the title is not taken from the title page.
+- **Domain:**  Monographic resources, integrating resources, serials, multipart monographic resources, and arguably any resource where variant titles are deemed significant.
+- **Range:**  Text strings containing variant titles or information about the source of the title proper.
+- **Element Type:** Descriptive.
+
+
+## Additional Information
+
+- **Scope and Purpose:** To provide additional title information found on the resource, but not on the preferred source for the title proper (usually the title page). This can include titles found on the cover, spine, caption, running title, container, etc. This aids in resource identification and retrieval. For integrating resources, this includes variant titles found on earlier iterations.
+- **User Tasks Supported:**  Disambiguation of resources with similar titles, identification of different manifestations of the same work, understanding the context of the title proper.
+
+
+## Element Values
+
+- **Specific Rules/Guidelines:**  Transcribe the variant title exactly as it appears on the source.  Indicate the location of the variant title (e.g., "Title on cover," "Title on spine,"  "Title frame reads...," "File name," "Earlier title"). For manuscripts, explain the source of a supplied title if it's not taken from the prescribed sources.
+- **Value Constraints/Formats:** No strict format, but clarity and conciseness are recommended.
+- **String Encoding Schemes:** No specific stipulations on string encoding, but generally follows the encoding of the bibliographic record.
+
+
+## Examples
+
+```
+Title proper:  A brief history of time
+Note: Title on cover: A short history of time
+```
+
+```
+Title proper:  Symphony No. 5
+Note:  Title on score:  Fifth Symphony
+```
+
+```
+Title proper:  Hamlet
+Note:  Title on title page verso: The tragedie of Hamlet
+```
+
+```
+Title frame reads: 20th Century Fox Presents
+Star Wars
+Note: Title on container: Star Wars Episode IV: A New Hope
+```
+
+```
+Title proper: [Speeches on educational reform].
+Note: Speeches presented at the National Education Conference, Washington,
+D.C., 1893. Title supplied by cataloguer. Opening words of
+resource: Fellow educators,...
+```
+
+## Relationships
+
+- **Relationships to Other ISBD Elements:** Directly related to the `title proper` element (1.1). Also related to the `prescribed source(s)` (A.4.3) for the title proper.
+- **Super-types/Sub-types:** Can be considered a sub-type of a more general "note relating to the title area."
+- **Inverse Relationships:** None explicitly defined.
+
+
+
+## Stipulations
+
+- **Special Considerations:** For older monographic resources, information appearing before the title proper on the preferred source is included in the title proper itself, not as a note. For integrating resources, the description is updated to reflect the latest iteration's title, and the former titles are given in the notes if considered important.
+- **Exceptions:** As mentioned above, the concept of "note on title proper" is implied rather than directly addressed in the ISBD.  The standard tends to treat variant titles as notes related to the *title area* more broadly.
+- **Best Practices:**  Be consistent in the wording used to introduce variant titles (e.g., "Title on spine," "Cover title," etc.).  Provide notes on variant titles only if they differ significantly from the title proper and add useful information. If many variant titles exist, a more general note may be preferable (e.g., "Title varies slightly"). For manuscripts, always indicate the source of a supplied title if it's not from the prescribed sources.  Prioritize clarity and brevity.
+
+
+---
+
+*This content was automatically generated from the ISBD PDF documentation using Gemini AI analysis.*

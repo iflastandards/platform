@@ -1,0 +1,63 @@
+---
+id: P1143
+title: has parallel additional edition statement
+description: ISBD element documentation for has parallel additional edition statement
+uri: "isbd:elements/P1143"
+area: area2
+RDF:
+  definition: "Relates a resource to a word or phrase, or a group of characters, indicating that a resource belongs to an edition presented on the preferred source of information for the resource as an equivalent in another language or script."
+  domain: "isbd:elements/C2001"
+  type: "rdf:Property"
+reg:hasUnconstrained: "isbd:unc/elements/P1143"
+reg:name: hasParallelAdditionalEditionStatement
+reg:status: "RegStatus:1001"
+rdf:type: "rdf:Property"
+rdfs:domain: "isbd:elements/C2001"
+rdfs:isDefinedBy: "isbd:elements/"
+rdfs:label: has parallel additional edition statement
+rdfs:label@es: "tiene mención de edición adicional paralela"
+skos:definition: "Relates a resource to a word or phrase, or a group of characters, indicating that a resource belongs to an edition presented on the preferred source of information for the resource as an equivalent in another language or script."
+skos:definition@es: "Relaciona un recurso con una palabra o frase, o grupo de caracteres que indican que el recurso pertenece a una edición que se presenta en la fuente de información preferida para el recurso y que se muestra como equivalente en otra lengua o escritura."
+---
+# has parallel additional edition statement
+
+The element "parallel additional edition statement" is not explicitly defined as a distinct element within the provided ISBD documentation. However, the concept of parallel statements applies to additional edition statements.  The relevant section is 2.4.4, titled "Parallel additional edition, drafting, version, etc. statement".  Based on this and the general principles of parallel statements within ISBD, the following describes how a "parallel additional edition statement" would be handled.
+
+## Element Reference
+- **Definition:**  A statement, presented on the resource alongside the primary additional edition statement, that provides the same information in a different language and/or script.
+- **Domain:** Additional edition, drafting, version, etc., Area (Area 2) of an ISBD record.
+- **Range:** A string representing the additional edition information in a different language and/or script.
+- **Element type:** Descriptive.
+
+## Additional Information
+- **Scope and purpose:** To provide the additional edition statement in multiple languages or scripts, facilitating international exchange and understanding of bibliographic information. This aligns with the overall purpose of parallel statements within ISBD.
+- **User tasks supported:**  Allows users who are more familiar with a language or script other than that of the primary additional edition statement to understand the edition information. Aids in identifying equivalent editions in different languages.
+
+## Element Values
+- **Rules and guidelines:**  The parallel additional edition statement should convey the same information as the primary additional edition statement. It follows the same transcription rules as the primary statement (2.1.2 and 2.1.3), using Arabic numerals and standard abbreviations.
+- **Value constraints or formats:** No specific format beyond the general guidelines for edition statements.
+- **String encoding schemes:**  UTF-8 is recommended for general use within ISBD.
+
+## Examples
+```
+. - 2nd ed., rev. and enl., Large print ed. = 2e éd. rév. et augm., Édition en gros caractères
+. - 3. Aufl., Jubiläumsausg. = 3rd ed., Jubilee edition
+. -  改訂版,普及版 = Revised edition, Popular edition
+. -  제3판, 수정증보판 = 3rd ed., Revised and augmented edition
+. - Edición revisada, Edición para estudiantes = Revised edition, Student edition
+```
+
+## Relationships
+- **Relationship to other ISBD elements:**  Directly related to the primary additional edition statement (2.4).  Also related to the general edition statement (2.1) and parallel edition statement (2.2).
+- **Super-types and sub-types:** This is a sub-type of the more general "edition, drafting, version, etc. statement".
+- **Inverse relationships:**  The inverse relationship would be "has primary additional edition statement".
+
+## Stipulations
+- **Special considerations:** The parallel additional edition statement should only be included if it appears on the prescribed sources of information for Area 2. If it appears elsewhere on the resource, it might be considered for inclusion in a note.
+- **Exceptions:** If the additional edition statement is integrally linked to another part of the description (such as the title proper), it would not be repeated as a parallel statement.
+- **Best practices:** Use the equals sign (=) preceded and followed by a space to separate the primary additional edition statement from its parallel equivalent. If the parallel statement also has an associated statement of responsibility, include that following the same punctuation rules as in Area 2.3. Each complete parallel set (statement and any related responsibility) is linked by the equals sign. If multiple parallel statements exist, they are presented in the order indicated by typography or sequence on the resource.
+
+
+---
+
+*This content was automatically generated from the ISBD PDF documentation using Gemini AI analysis.*

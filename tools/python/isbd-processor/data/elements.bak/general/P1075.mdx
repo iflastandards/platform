@@ -1,0 +1,101 @@
+---
+id: P1075
+title: has fingerprint
+description: ISBD element documentation for has fingerprint
+uri: "isbd:elements/P1075"
+area: general
+RDF:
+  definition: "Relates a resource that is an older monographic resource to a number of characters drawn from a number of uniform places in the text of the resource, considered as a substitute for a standard number."
+  domain: "isbd:elements/C2001"
+  type: "rdf:Property"
+  scopeNote: "A definitive formula for fingerprint has yet to be determined by international agreement. Until such an agreement is made, various forms of fingerprint can be used."
+  elementSubType: "isbd:elements/P1032"
+reg:hasUnconstrained: "isbd:unc/elements/P1075"
+reg:name: hasFingerprint
+reg:status: "RegStatus:1001"
+rdf:type: "rdf:Property"
+rdfs:domain: "isbd:elements/C2001"
+rdfs:isDefinedBy: "isbd:elements/"
+rdfs:label: has fingerprint
+rdfs:label@es: "tiene identificador tipográfico"
+rdfs:subPropertyOf: "isbd:elements/P1032"
+skos:definition: "Relates a resource that is an older monographic resource to a number of characters drawn from a number of uniform places in the text of the resource, considered as a substitute for a standard number."
+skos:definition@es: "Relaciona un recurso monográfico antiguo con un número de caracteres procedentes de un número regulado de lugares en el texto de un recurso, considerado como un sustituto de un número normalizado."
+skos:scopeNote: "A definitive formula for fingerprint has yet to be determined by international agreement. Until such an agreement is made, various forms of fingerprint can be used."
+skos:scopeNote@es: "Todavía tiene que determinarse por acuerdo internacional una fórmula definitiva para el identificador tipográfico. Hasta que se lleve a cabo ese acuerdo, se pueden utilizar las diferentes formas de identificadores tipográficos."
+---
+# has fingerprint
+
+The ISBD element "fingerprint" is found within the PDF as part of Area 8, Resource Identifier and Terms of Availability Area.
+
+## Element Reference
+
+- **Official ISBD Definition:** [older monographic resources] A group of characters derived from a resource with the purpose of identifying the edition uniquely. The fingerprint consists of a number of characters drawn from a number of uniform places in the text of the resource, followed by a number indicating the source of one or more of the characters, and/or a letter indicating the direction of the chain-lines, and/or the date as it appears in the publication, production, distribution, etc., area.  (See page 252 of the PDF, under "fingerprint").
+
+- **Domain and Range:** The domain of "fingerprint" would be an older monographic resource (pre-19th century).  The range would be a string of characters representing the fingerprint.
+
+- **Element type:** Literal
+
+
+## Additional Information
+
+- **Scope and Purpose:** The fingerprint acts as a unique identifier for older monographic resources, particularly those published before the widespread adoption of standard identifiers like ISBNs. It helps differentiate between different editions of a work and aids in identifying specific copies. It serves a similar purpose as a standard number for older resources.
+
+- **User Tasks Supported:**
+    - Identifying a specific edition of an older monographic resource.
+    - Differentiating between copies of the same edition with variations.
+    - Retrieving bibliographic records for older materials.
+    - Collating and comparing copies in different libraries.
+
+
+## Element Values
+
+- **Specific Rules/Guidelines:**
+    - The fingerprint is extracted from pre-determined locations within the text. Though the locations are supposed to be uniform, a definitive, internationally-agreed-upon formula is absent from the PDF.
+    -  Include a number indicating the source of the extracted characters (presumably indicating the page, line, etc.), a letter indicating chain-line direction, and/or date from the publication statement.
+
+- **Value Constraints/Formats:** No strict format is defined in the ISBD. It refers to external resources like *Fingerprints = Empreintes = Impronte* and *Nouvelles des empreintes = Fingerprint newsletter* for variations. The examples themselves use differing conventions.
+
+- **String Encoding:** Not specified within the ISBD documentation, but would likely utilize the character encoding appropriate for the language and script of the resource.
+
+
+## Examples
+```
+Fingerprint: 163704 - b1 A2,$en: b2 12 a,$
+```
+
+```
+Fingerprint: ([leaf] a2r, l. 12: [date] 1789)
+```
+
+```
+Fingerprint: (sig. A2r, word 7; sig. C3v, line 25)
+```
+
+```
+Fingerprint: (p. 34, line 10; date from colophon)
+```
+
+```
+Fingerprint: (chain line : u; catchword : the; date : MDCCLXXXIX)
+```
+
+
+## Relationships
+
+- **Relationships to Other ISBD Elements:** The fingerprint is most closely related to the resource identifier (Area 8).  It is considered a substitute for standard identifiers (like ISBN) when those are unavailable for older resources. It could also relate to notes in Area 7 (e.g., to indicate chain line direction).
+
+- **Super-types/Sub-types:**  Not explicitly addressed in the ISBD documentation.
+
+- **Inverse Relationships:** Not applicable.
+
+
+## Stipulations
+
+- **Special Considerations:**  The ISBD acknowledges a lack of international consensus on a definitive fingerprint formula. The PDF recommends that cataloging agencies use established forms based on published resources on fingerprint methodology.
+- **Best Practices:** Consult existing guidelines and best practices within the rare books community and be consistent in application within a catalog. Where possible, document the method used to generate the fingerprint to allow for validation and comparison.  Include explanatory notes to clarify any ambiguity.  When using a non-standard format, provide a key explaining the elements and their source in the record.
+
+
+---
+
+*This content was automatically generated from the ISBD PDF documentation using Gemini AI analysis.*

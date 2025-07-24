@@ -1,0 +1,73 @@
+---
+id: P1116
+title: has parallel numbering system
+description: ISBD element documentation for has parallel numbering system
+uri: "isbd:elements/P1116"
+area: area3
+RDF:
+  definition: "Relates a resource that is a serial to the designation appearing in the language and script of the title proper when there are designations in more than one language or script on the issue or part."
+  domain: "isbd:elements/C2001"
+  type: "rdf:Property"
+  scopeNote: "If the criterion in the definition does not apply, the first designation is used. The parallel designations may also be given."
+reg:hasUnconstrained: "isbd:unc/elements/P1116"
+reg:name: hasParallelNumberingSystem
+reg:status: "RegStatus:1001"
+rdf:type: "rdf:Property"
+rdfs:domain: "isbd:elements/C2001"
+rdfs:isDefinedBy: "isbd:elements/"
+rdfs:label: has parallel numbering system
+rdfs:label@es: "tiene sistema paralelo de numeración"
+skos:definition: "Relates a resource that is a serial to the designation appearing in the language and script of the title proper when there are designations in more than one language or script on the issue or part."
+skos:definition@es: "Relaciona un recurso que es una publicación seriada con la designación del fascículo o parte que aparece en la lengua y escritura del título propiamente dicho, cuando existen designaciones en más de una lengua o escritura."
+skos:scopeNote: "If the criterion in the definition does not apply, the first designation is used. The parallel designations may also be given."
+skos:scopeNote@es: "Si no es aplicable el criterio de la definición, se utiliza la primera designación que aparece. También se pueden dar las designaciones paralelas."
+---
+# has parallel numbering system
+
+The ISBD element "parallel numbering system" is found within the Numbering (Serials) section (3.3) as part of the Material or Type of Resource Specific Area (Area 3). It is specifically addressed in section 3.3.5.
+
+## Element Reference
+
+- **Definition:** The parallel numbering system refers to the numbering designations present on a serial issue or part in more than one language or script.  It complements the primary numbering and is recorded in Area 3 of the ISBD record.
+- **Domain:** Serials (continuing resources). Specifically serial issues or parts.
+- **Range:**  String values representing numbering designations.
+- **Element Type:**  Literal (string).
+
+## Additional Information
+
+- **Scope and Purpose:** The purpose of recording parallel numbering systems is to facilitate the identification and retrieval of serial issues or parts, especially in multilingual contexts. It allows users and systems to recognize equivalent numbering in different languages and scripts.
+- **User Tasks Supported:** Searching for, identifying, and retrieving specific serial issues or parts using different language versions of the numbering.
+
+
+## Element Values
+
+- **Rules and Guidelines:** The numbering given in the language and script of the title proper is recorded first. If this criterion doesn't apply (e.g., if the resource has no identifiable language/script associated with the title proper, or if all the numbering designations appear with equal prominence), the first numbering designation appearing on the source is recorded first. The other parallel numbering designations are then recorded, each preceded by a space, equals sign, and space (` = `).  The numbering within each system is recorded following the guidelines in section 3.3.4 (Transcription).
+- **Value Constraints and Formats:**  No specific constraints are defined besides general ISBD numbering transcription rules (use of Arabic numerals for numeric designations, hierarchical order for multiple levels of numbering, etc.). Numbering can include alphanumeric characters.
+- **String Encoding Schemes:** No specific encoding scheme is mandated, but adherence to the encoding scheme used for the entire bibliographic record is implied.
+
+
+## Examples
+```
+- Vol. 20- = T. 20- = Bd. 20-
+- 1976, broj 1 (1 siecenj = 1 jan.)-
+. - 11巻 1号 (1958)- = 101号(1958)-
+- No 188 (22 oct. 1796 = 1er brum. an 5)-no 500 (4 sept. 1797 = 18 fruct. an 5)
+```
+
+
+## Relationships
+
+- **Relationships to other ISBD elements:** This element is closely related to the `numeric designation` (isbd:P1114) and `chronological designation` (isbd:P1115) elements within the Numbering Area. It effectively provides parallel versions of those designations.  It is also related to the `title proper` element (isbd:P1004) because the language/script of the title proper informs which parallel numbering system is recorded first.
+- **Super-types and Sub-types:**  Not applicable. This element represents a specific type of numbering information and doesn't have broader or narrower subtypes in the ISBD context.
+- **Inverse Relationships:** Not applicable.
+
+
+## Stipulations
+
+- **Special Considerations and Usage Notes:**  The ISBD explicitly states that if there's no parallel numbering (i.e., the numbering only appears in one language/script), only that numbering is recorded.
+- **Best Practices:** Record all available parallel numbering systems to maximize accessibility and searchability across languages and scripts. Ensure consistency in the application of transcription rules within each numbering system. If there is doubt about which numbering system to prioritize, provide explanatory notes in Area 7.
+
+
+---
+
+*This content was automatically generated from the ISBD PDF documentation using Gemini AI analysis.*

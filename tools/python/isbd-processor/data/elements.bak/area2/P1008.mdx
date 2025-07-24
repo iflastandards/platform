@@ -1,0 +1,81 @@
+---
+id: P1008
+title: has edition statement
+description: ISBD element documentation for has edition statement
+uri: "isbd:elements/P1008"
+area: area2
+RDF:
+  definition: "Relates a resource to a word or phrase, or a group of characters, indicating that the resource belongs to an edition."
+  domain: "isbd:elements/C2001"
+  type: "rdf:Property"
+  scopeNote: "An edition statement normally includes either the word \"edition\" (or its equivalent in another language) or a related term together with a number (\"2nd edition\", etc.), or a term indicating difference from other editions (\"new edition\", \"revised edition\",\"“standard edition\", \"large print edition\", \"fourth state\", \"May 1970 script\", etc.). A statement that includes the word \"edition\" or its equivalent is not considered an edition statement when it represents printing information, as is typical in the publication patterns of certain countries. An edition statement can also include other phrases that may be linguistically associated, linking the edition to other elements of the description (e.g. original title in a form such as \"abridgement of ...\")."
+reg:hasUnconstrained: "isbd:unc/elements/P1008"
+reg:name: hasEditionStatement
+reg:status: "RegStatus:1001"
+rdf:type: "rdf:Property"
+rdfs:domain: "isbd:elements/C2001"
+rdfs:isDefinedBy: "isbd:elements/"
+rdfs:label: has edition statement
+rdfs:label@es: "tiene mención de edición"
+skos:definition: "Relates a resource to a word or phrase, or a group of characters, indicating that the resource belongs to an edition."
+skos:definition@es: "Relaciona un recurso con un término, frase o grupo de caracteres que indican que el recurso pertenece a una edición."
+skos:scopeNote: "An edition statement normally includes either the word \"edition\" (or its equivalent in another language) or a related term together with a number (\"2nd edition\", etc.), or a term indicating difference from other editions (\"new edition\", \"revised edition\",\"“standard edition\", \"large print edition\", \"fourth state\", \"May 1970 script\", etc.). A statement that includes the word \"edition\" or its equivalent is not considered an edition statement when it represents printing information, as is typical in the publication patterns of certain countries. An edition statement can also include other phrases that may be linguistically associated, linking the edition to other elements of the description (e.g. original title in a form such as \"abridgement of ...\")."
+skos:scopeNote@es: "Una mención de edición normalmente incluye o bien la palabra “edición” (o su equivalente en otra lengua) o un término similar, junto con un número ordinal (“2ª edición”, etc.) o un término que indique la diferencia respecto a otras ediciones (“nueva edición”, “edición revisada”, “edición estándar”, “edición de grandes caracteres”, cuarto estado”, “guión de mayo de 1970”, etc.). Una mención de edición puede incluir igualmente otras frases que pueden estar unidas lingüísticamente, vinculando la edición a otros elementos de la descripción (ej. título original con una forma como “resumen de….”)."
+---
+# has edition statement
+
+The ISBD element "edition statement" (isbd:P1008) is found within the PDF as "Edition, drafting, version, etc. statement".
+
+## Element Reference
+
+- **Official ISBD Definition:**  An edition, drafting, version, etc. statement normally includes either the word edition (or its equivalent in another language) or a related term together with a number (2nd edition, etc.), or a term indicating difference from other editions (new edition, revised edition, standard edition, large print edition, fourth state, May 1970 script, etc.).
+- **Domain:** Manifestation (in FRBR terms)
+- **Range:** Literal (text string)
+- **Element type:** Descriptive
+
+## Additional Information
+
+- **Scope and Purpose:**  The edition statement indicates a particular release of a resource that differs from other releases in some significant way. This might be due to revisions of content, changes in format, additions of material, or other modifications.  It helps to distinguish between various iterations of the same work.
+- **User Tasks Supported:**  The edition statement helps users:
+    - Identify a specific version of a resource.
+    - Distinguish between different editions of a work.
+    - Understand the relationship between different iterations of a resource (e.g., revised, expanded, abridged).
+    - Select the most appropriate edition for their needs.
+
+## Element Values
+
+- **Rules and Guidelines:** The edition statement should be transcribed from the resource itself. Standard abbreviations may be used (as listed in the ISBD). Arabic numerals should replace other numerals or spelled-out numbers.
+- **Value Constraints and Formats:** The statement should reflect the wording on the resource as closely as possible.  It can include descriptive phrases.
+- **String Encoding Schemes:**  The character set used should be appropriate for the language and script of the edition statement.  (The ISBD itself doesn't mandate a specific encoding.)
+
+## Examples
+
+```
+2nd ed.
+Rev. ed.
+Abridged ed.
+Large print ed.
+Version 3.2
+1st Carroll & Graf ed.
+```
+
+## Relationships
+
+- **Relationships to other ISBD elements:**  The edition statement is part of Area 2 (Edition, drafting, version, etc. area) and can be followed by a statement of responsibility relating to that edition (element 2.3). It is distinct from the publication date (Area 4).
+- **Super-types and Sub-types:** The "edition statement" is a more general term that encompasses edition, drafting, and version statements.  It might be considered a super-type, with specific types like "edition," "drafting," and "version" as sub-types.
+- **Inverse Relationships:**  None explicitly defined in ISBD.
+
+
+## Stipulations
+
+- **Special Considerations:**
+    - Statements indicating unchanged reprints (e.g., "5th impression") are also considered edition statements.
+    - If the statement mentions a previous title (e.g., "Revised edition of..."), this information belongs in a note (Area 7) and not in the edition statement itself.
+    - For unpublished resources, the edition area can include details about production stages, states of drafts, etc., but only for resources with limited circulation.
+    - If the edition statement is unavailable on the resource, but the resource is known to differ from other editions, a statement may be supplied in square brackets.
+- **Best Practices:**  Transcribe the edition statement accurately from the prescribed sources. Use standard abbreviations when appropriate. When supplying information, clearly indicate that it's supplied by using square brackets. If necessary, add notes to explain or clarify the edition statement.
+
+
+---
+
+*This content was automatically generated from the ISBD PDF documentation using Gemini AI analysis.*

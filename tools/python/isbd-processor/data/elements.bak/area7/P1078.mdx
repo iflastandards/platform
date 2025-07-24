@@ -1,0 +1,75 @@
+---
+id: P1078
+title: has note on binding
+description: ISBD element documentation for has note on binding
+uri: "isbd:elements/P1078"
+area: area7
+RDF:
+  definition: Relates a resource to a note on the binding as issued by the publisher.
+  domain: "isbd:elements/C2001"
+  type: "rdf:Property"
+  scopeNote: Excludes a binding specific to a copy in hand.
+  elementSubType: "isbd:elements/P1045"
+reg:hasUnconstrained: "isbd:unc/elements/P1078"
+reg:name: hasNoteOnBinding
+reg:status: "RegStatus:1001"
+rdf:type: "rdf:Property"
+rdfs:domain: "isbd:elements/C2001"
+rdfs:isDefinedBy: "isbd:elements/"
+rdfs:label: has note on binding
+rdfs:label@es: "tiene nota sobre la encuadernación"
+rdfs:subPropertyOf: "isbd:elements/P1045"
+skos:definition: Relates a resource to a note on the binding as issued by the publisher.
+skos:definition@es: "Relaciona un recurso con una nota sobre la encuadernación como fue publicada por el editor."
+skos:scopeNote: Excludes a binding specific to a copy in hand.
+skos:scopeNote@es: "Se excluye una encuadernación específica de un ejemplar que se tiene en la mano."
+---
+# has note on binding
+
+The ISBD element "note on binding" is found within the broader context of notes in Area 7, specifically within notes related to the resource identifier and terms of availability (7.8). The specific stipulations for "note on binding" are located in section 7.8.2.
+
+## Element Reference
+
+- **Official ISBD Definition:**  The "note on binding" element provides information about the binding of a resource *as issued by the publisher*.  It pertains to the original binding and not subsequent bindings added after publication.
+- **Domain and Range:** While not explicitly defined in RDF terms in this version of the ISBD, the domain would be the resource being described, and the range would be a textual note describing the binding.
+- **Element Type:** Textual note
+
+## Additional Information
+
+- **Scope and Purpose:** This element is used to describe the original binding of a resource, providing additional physical details not captured in the material description area (Area 5). This information can be helpful for identifying specific copies or editions and is valuable for rare book cataloging or when the binding itself is of particular significance.
+- **User Tasks Supported:** This element supports the following user tasks:
+    - Identifying a specific copy or edition of a resource.
+    - Understanding the original publication format.
+    - Researching book history and binding practices.
+
+## Element Values
+
+- **Rules and Guidelines:** The note should clearly and concisely describe the material and style of the binding. Standard terminology for bookbinding should be used where appropriate.
+- **Value Constraints and Formats:** No specific format is prescribed, but brevity and clarity are encouraged.
+- **String Encoding Schemes:**  Standard character encoding for bibliographic data (e.g., UTF-8) should be used.
+
+## Examples
+
+```
+. - First 25 copies bound in leather.
+. - Publisher's full-leather binding with gilt tooling.
+. - Issued in paper wrappers.
+. - Original boards, rebacked.  (Note: This example refers to an imperfect copy and would be in 7.11, notes relating to the copy in hand).
+. - Bound in contemporary calf, with marbled endpapers.
+```
+
+## Relationships
+
+- **Relationship to Other ISBD Elements:** The note on binding complements the information in the material description area (Area 5), which gives the extent and other physical details of the resource. It is related to 7.11, which describes characteristics related specifically to *the copy in hand*.
+- **Super-types and Sub-types:** This element can be considered a sub-type of a more general "note on physical characteristics" element.
+- **Inverse Relationships:**  None specified.
+
+## Stipulations
+
+- **Special Considerations:**  The note on binding should only describe the original binding as issued by the publisher.  Subsequent bindings (e.g., library bindings) or repairs should be described in notes relating to the copy in hand (7.11).
+- **Exceptions:** Notes on individual copy bindings are recorded in 7.11, *not* 7.8.2.
+- **Best Practices:** Use established bookbinding terminology to ensure clarity and consistency. If the binding is particularly significant or complex, more detailed information can be provided. When the resource is a multi-part monograph or a serial, the note on binding refers to the binding of the first or earliest part or issue. Changes to the binding in later parts or issues may also be noted.
+
+---
+
+*This content was automatically generated from the ISBD PDF documentation using Gemini AI analysis.*

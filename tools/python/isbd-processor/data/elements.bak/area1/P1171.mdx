@@ -1,0 +1,95 @@
+---
+id: P1171
+title: has compound title of title proper
+description: ISBD element documentation for has compound title of title proper
+uri: "isbd:elements/P1171"
+area: area1
+RDF:
+  definition: "Relates a resource to the title proper consisting of a common title and a dependent title, with or without a dependent title designation."
+  domain: "isbd:elements/C2001"
+  range: "isbd:elements/C2021"
+  type: "rdf:Property"
+reg:hasUnconstrained: "isbd:unc/elements/P1171"
+reg:name: hasCompoundTitleOfTitlePrope
+reg:status: "RegStatus:1001"
+rdf:type: "rdf:Property"
+rdfs:domain: "isbd:elements/C2001"
+rdfs:isDefinedBy: "isbd:elements/"
+rdfs:label: has compound title of title proper
+rdfs:label@es: "tiene título compueso de propiamente dicho"
+rdfs:range: "isbd:elements/C2021"
+skos:definition: "Relates a resource to the title proper consisting of a common title and a dependent title, with or without a dependent title designation."
+skos:definition@es: "Relaciona un recurso con un título propiamente dicho consistente en un título común y un título dependiente, con o sin designación de título dependiente."
+---
+# has compound title of title proper
+
+The element "compound title of title proper" (isbd:elements/P1171) is not explicitly defined as a separate element within the provided ISBD documentation.  The ISBD standard focuses on "title proper" (1.1) as a single cohesive unit, which may be comprised of different types of titles like common titles and dependent titles, or generic titles with other qualifying information. The idea of a "compound title of title proper" seems to conflate the overall title proper concept with the sub-parts that may comprise it.
+
+Instead of defining "compound title of title proper", the ISBD outlines how to treat different title situations *within* the title proper element.  The relevant sections that address the nuances implied by a "compound title" are covered below, categorized using the requested headings for clarity.
+
+
+## Element Reference (for Title Proper - 1.1)
+
+- **Definition (1.1):** The title proper is the chief name of a resource, i.e., the title of a resource in the form in which it appears on the preferred source of information for the resource. The title proper includes any alternative title, but excludes parallel titles and other title information.
+- **Domain:**  Bibliographic resources (monographs, serials, etc.)
+- **Range:** String literal representing the title.
+- **Element Type:** Literal value.
+
+## Additional Information (for Title Proper - 1.1)
+
+- **Scope and Purpose:** The title proper is the primary identifier of a work and is essential for distinguishing it from other resources.
+- **User Tasks Supported:**  Identifying a specific resource, searching catalogues, and retrieving bibliographic information.
+
+## Element Values (related to components *within* Title Proper - 1.1)
+
+- **Common Title and Dependent Title (1.1.3.7, 1.1.4.6, 1.1.5.3):** When a title proper has a common title and a dependent title, the common title comes first, followed by the dependent title, with a connecting punctuation mark. The dependent title may be further qualified by a designation.
+- **Generic Term with Other Information (1.1.3.5):**  For music, if a title includes a generic term (e.g., sonata, symphony) and qualifiers (e.g., key, opus number), these are combined within the title proper.
+- **Multipart Resources (1.1.3.6):**  For multipart resources, the title proper might indicate the numbering extent of the parts if the numbering is integral to the title.
+
+
+- **String Encoding:** Dependent on the cataloging agency, typically UTF-8.
+
+## Examples
+
+```
+Beethoven, Ludwig van.  Symphony no. 9 in D minor, op. 125 / Ludwig van Beethoven.
+```
+
+```
+Shakespeare, William. Hamlet, Prince of Denmark / William Shakespeare.
+```
+
+```
+United States Geological Survey.  Geologic map of the Death Valley area, California and Nevada / by B.C. Burchfiel and M.G. Stewart.
+```
+
+```
+Pricing and buying. Module 5, Patterns : automobile prices
+```
+
+```
+Chopin, Fryderyk.  Nocturne in E-flat major, op. 9, no. 2 / Fryderyk Chopin.
+```
+
+
+## Relationships
+
+- **Relationship to Other Elements:**  The title proper is closely related to the statement of responsibility (1.4), which indicates the creators or contributors to the intellectual content. It is the first element of the Title and Statement of Responsibility Area.
+- **Sub-types:**  As explained above, common title, dependent title, generic term, and numbering components are not sub-types of a separate "compound title" element, but rather components *within* the title proper element itself.
+
+
+## Stipulations
+
+
+- **Transcription (1.1.5):** The title proper is transcribed exactly as to wording from the preferred source, but capitalization and punctuation may be adjusted according to ISBD conventions.
+- **Omissions (1.1.5.1):**  A very lengthy title proper may be abridged, but not the first five words.
+- **Supplied Titles (1.1.4.5):** If a resource has no title, one is supplied in square brackets.
+
+
+
+This detailed breakdown addresses the various complexities surrounding the handling of different title structures within the ISBD framework, which encompasses the nuances of what might have been conceptually misconstrued as a "compound title of title proper".  By understanding these rules, catalogers can create consistent and accurate title proper elements that effectively represent even complex resources.
+
+
+---
+
+*This content was automatically generated from the ISBD PDF documentation using Gemini AI analysis.*

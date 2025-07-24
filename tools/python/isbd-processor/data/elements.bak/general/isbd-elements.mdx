@@ -1,0 +1,99 @@
+---
+id: isbd-elements
+title: ISBD elements
+description: ISBD element documentation for ISBD elements
+uri: "isbd:elements/"
+area: general
+dc:title: ISBD elements
+skos:note: "This is a registration of classes and properties from International Standard Bibliographic Description (ISBD), consolidated edition, published by De Gruyter Saur in July 2011 (ISBN 978-3-11-026379-4)."
+foaf:homepage: "http://www.ifla.org/files/assets/cataloguing/isbd/isbd-cons_20110321.pdf"
+---
+# ISBD elements
+
+The element "ISBD elements" (isbd:elements/) is not explicitly defined as a single, cohesive element within the ISBD standard itself.  Instead, the ISBD standard defines individual *data elements* within each area of the description. The list of all data elements is given in Table A.3.1 on pages 15-18. It seems that your query is about this collection of elements rather than one singular element.  Therefore, I'll provide information about the overall concept of ISBD elements and address the requested sections as best as possible in that context.
+
+## Element Reference
+
+- **Official ISBD definition:**  The ISBD standard defines a set of data elements to be recorded or transcribed for bibliographic resources. Each element represents a distinct aspect of the resource, such as its title, edition, publication details, physical description, etc. These are grouped into 8 main areas (0-8).
+
+
+- **Domain:** Bibliographic resources (monographs, serials, cartographic materials, music, electronic resources, etc., both published and unpublished)
+
+- **Range:** Text strings, numbers, and combinations thereof, often qualified by terms or phrases indicating the source of the data or its nature.
+
+- **Element type:** Each element has a specific definition and transcription rules within the ISBD.
+
+
+## Additional Information
+
+- **Scope and purpose:**  The ISBD elements provide a standardized framework for describing bibliographic resources. Their purpose is to enable consistent and unambiguous descriptions that facilitate the international exchange of bibliographic data and interoperability between cataloging systems. The elements ensure that essential information needed to identify and select a resource is recorded.
+
+- **User tasks supported:** The ISBD elements support various user tasks, including:
+    - Identifying and selecting resources in catalogs and bibliographies
+    - Distinguishing between different editions and manifestations of a resource
+    - Interpreting bibliographic descriptions across language barriers
+    - Exchanging bibliographic data between libraries and systems
+    - Supporting automated processing of bibliographic data
+
+
+## Element Values
+
+- **Specific rules and guidelines:** Each ISBD element has specific rules regarding its source, transcription, punctuation, and capitalization, detailed throughout the standard.
+
+- **Value constraints or formats:** Some elements have prescribed formats, such as the representative fraction for the scale of a map or the ISBN. Others may allow for more free-text description.
+
+- **String encoding schemes:**  The ISBD itself doesn't mandate specific character encoding schemes. This is left to be determined by individual implementations. However, in the context of modern bibliographic systems, Unicode is the recommended encoding to accommodate characters from various scripts.
+
+
+## Examples
+
+Demonstrating the "ISBD elements" conceptually through examples from several areas:
+
+```
+Area 1:
+Title proper: The Lord of the Rings.
+Other title information: Part 1, The Fellowship of the Ring.
+Statement of Responsibility: / J.R.R. Tolkien.
+
+Area 2:
+Edition statement: 2nd ed.
+
+Area 4:
+Place of publication, production, and/or distribution: London :
+Name of publisher, producer, and/or distributor: Allen & Unwin,
+Date of publication, production, and/or distribution: 1954.
+```
+
+```
+Area 1:
+Title proper:  Moonlight Sonata
+Other title information: (Piano sonata no. 14 in C-sharp minor, op. 27, no. 2)
+Statement of responsibility: / Ludwig van Beethoven.
+```
+
+```
+Area 0:
+Content form: image (cartographic ; still ; 2-dimensional ; visual) :
+Production process: impression ;
+Media type: unmediated
+Area 1:
+Title proper: Map of the world
+```
+
+## Relationships
+
+- **Relationships to other ISBD elements:**  The ISBD elements are interconnected. For instance, the title proper (Area 1) is essential for understanding other title information (Area 1) or notes relating to the title (Area 7). The choice of title proper may influence the choice of the parallel title (Area 1).
+
+- **Super-types and sub-types:**  Some elements have subtypes. For example, "statement of responsibility" can include authors, editors, translators, illustrators, etc. "Other title information" can include subtitles, variant titles, etc.
+
+
+## Stipulations
+
+- **Special considerations:** When transcribing information, catalogers must follow the stipulations for each element precisely. This includes rules for capitalization, punctuation, abbreviations, and the handling of data not found on prescribed sources.
+
+- **Best practices:** Adherence to the ISBD standard is crucial for creating high-quality bibliographic records. It's essential to consult the latest version of the standard and any relevant national or international guidelines for its application. Using controlled vocabularies and authority files for names, places, and subjects further enhances the consistency and interoperability of bibliographic data.
+
+
+---
+
+*This content was automatically generated from the ISBD PDF documentation using Gemini AI analysis.*

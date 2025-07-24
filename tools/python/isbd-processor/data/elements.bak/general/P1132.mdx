@@ -1,0 +1,66 @@
+---
+id: P1132
+title: has track configuration
+description: ISBD element documentation for has track configuration
+uri: "isbd:elements/P1132"
+area: general
+RDF:
+  definition: "Relates a resource that is a sound reel recorded on four or more tracks to its track configuration."
+  domain: "isbd:elements/C2001"
+  type: "rdf:Property"
+reg:hasUnconstrained: "isbd:unc/elements/P1132"
+reg:name: hasTrackConfiguration
+reg:status: "RegStatus:1001"
+rdf:type: "rdf:Property"
+rdfs:domain: "isbd:elements/C2001"
+rdfs:isDefinedBy: "isbd:elements/"
+rdfs:label: has track configuration
+rdfs:label@es: "tiene configuración de pistas"
+skos:definition: "Relates a resource that is a sound reel recorded on four or more tracks to its track configuration."
+skos:definition@es: "Relaciona un recurso que es un rollo sonoro grabado en cuatro o más pistas con la configuración de sus pistas."
+---
+# has track configuration
+
+The ISBD element "track configuration" is found within the "Other physical details" element (5.2) and refers specifically to sound recordings on open-reel tapes. It describes how multiple audio tracks are arranged on the tape.
+
+## Element Reference
+
+- **Official ISBD Definition:** The track configuration of a sound reel recorded on four or more tracks is specified. (5.2.7.8)
+- **Domain:** Sound reels (specifically those with four or more tracks)
+- **Range:** Text
+- **Element Type:** Descriptive
+
+## Additional Information
+
+- **Scope and Purpose:** This element provides detailed technical information about the arrangement of audio tracks on a multi-track open-reel tape.  It helps differentiate between various recording formats and aids in identifying compatible playback equipment.
+- **User Tasks Supported:**  Identifying specific tape formats, selecting appropriate playback equipment, understanding the technical aspects of a recording.
+
+## Element Values
+
+- **Specific Rules/Guidelines:** The value should clearly and concisely describe the track layout. Common terms might include "adjacent," "staggered," or descriptions of specific track groupings.
+- **Value Constraints/Formats:** No specific format is prescribed in the ISBD, but clarity and brevity are encouraged.
+- **String Encoding Schemes:**  Not applicable. Plain text is used.
+
+## Examples
+
+```
+1 sound reel (90 min): 19 cm/s, 4 tracks, adjacent
+1 sound reel (120 min): 38 cm/s, 8 tracks, staggered (2 groups of 4)
+1 sound reel (75 min): 19 cm/s, 16 tracks, interleaved
+```
+
+## Relationships
+
+- **Relationships to other ISBD elements:**  This element is part of the "Other physical details" (5.2) element within the "Material Description Area" (Area 5). It is typically preceded by information about the number of tracks (e.g., "4 tracks") and is related to elements like "Playing speed," "Number of sound channels," "Equalization," and "Noise reduction," which provide a fuller technical description of the sound recording.  "Track configuration" provides further specification of the "Number of tracks" element.
+- **Super-types and sub-types:**  Not applicable within the ISBD framework.  Potentially "Number of tracks" can be considered a super-type element.
+- **Inverse relationships:** None specified.
+
+## Stipulations
+
+- **Special Considerations/Exceptions:** The ISBD only requires track configuration to be specified for tapes with *four or more tracks*.  Two-track stereo or mono tapes do not require this element.
+- **Best Practices:** Use commonly understood terminology for track arrangements. If a non-standard configuration is used, provide a clear and concise explanation. If information about track configuration is unclear or unavailable from the resource, it is preferable to omit the element rather than supplying conjectural information.
+
+
+---
+
+*This content was automatically generated from the ISBD PDF documentation using Gemini AI analysis.*

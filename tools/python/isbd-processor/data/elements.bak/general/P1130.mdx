@@ -1,0 +1,69 @@
+---
+id: P1130
+title: has groove size
+description: ISBD element documentation for has groove size
+uri: "isbd:elements/P1130"
+area: general
+RDF:
+  definition: Relates a resource that is an analogue sound disc to its groove size.
+  domain: "isbd:elements/C2001"
+  type: "rdf:Property"
+reg:hasUnconstrained: "isbd:unc/elements/P1130"
+reg:name: hasGrooveSize
+reg:status: "RegStatus:1001"
+rdf:type: "rdf:Property"
+rdfs:domain: "isbd:elements/C2001"
+rdfs:isDefinedBy: "isbd:elements/"
+rdfs:label: has groove size
+rdfs:label@es: "tiene tamaño del surco"
+skos:definition: Relates a resource that is an analogue sound disc to its groove size.
+skos:definition@es: "Relaciona un recurso que es un disco sonoro analógico con el tamaño del surco."
+---
+# has groove size
+
+The ISBD element "groove size" is found within the "Other physical details" element (5.2) of the Material Description Area (Area 5).
+
+## Element Reference
+
+- **Official ISBD Definition:** The groove size of an analog sound disc is given if known.  (5.2.7.6)
+- **Domain:** Analog sound discs.
+- **Range:**  Terms indicating groove size (e.g., "fine," "microgroove," "coarse").
+- **Element Type:** Descriptive.
+
+## Additional Information
+
+- **Scope and Purpose:** This element provides information about the physical characteristics of the grooves on an analog sound disc, which can be helpful in determining playback compatibility and identifying different pressings or editions.  Different groove sizes may require different styli for proper playback.
+- **User Tasks Supported:**
+    - Identifying resources with specific playback requirements.
+    - Distinguishing between different pressings or editions of a sound recording.
+
+## Element Values
+
+- **Specific Rules/Guidelines:**  Use terms that accurately reflect the size of the grooves, such as "fine," "microgroove," or "coarse." If a standardized term or measurement is available, prefer that.
+- **Value Constraints/Formats:** No specific format is prescribed in the ISBD, but consistency is encouraged.  If using a non-standard term, provide a note explaining it if necessary (e.g., "Groove size: 0.7 mil").
+- **String Encoding Schemes:** Not applicable.
+
+## Examples
+
+```
+1 sound disc: 33 1/3 rpm; 30 cm : microgroove
+1 sound disc: 78 rpm; 25 cm : coarse groove
+1 sound disc: 45 rpm; 18 cm : 0.7 mil microgroove
+1 sound disc (25 min): col.; 30 cm : fine groove
+```
+
+## Relationships
+
+- **Relationships to other ISBD elements:**  This element is a sub-element of "Other physical details" (5.2) and is related to "Specific material designation" (5.1.2) which would identify the resource as a sound disc, and "Playing speed" (5.2.7.3), which often helps determine the expected groove size.
+- **Super-types and sub-types:** "Other physical details" is the super-type.  There are no further subtypes of "groove size".
+- **Inverse relationships:** None specified.
+
+## Stipulations
+
+- **Special Considerations/Exceptions/Usage Notes:** This element is primarily applicable to older analog sound discs where groove size variations were common. For modern compact discs and other digital formats, groove size is not relevant and should be omitted.
+- **Best Practices:**  If the information is readily available on the disc label or container, transcribe it directly. If derived from another source, consider adding a note indicating the source (e.g., "Groove size: fine (according to manufacturer's documentation)"). If the groove size is uncertain or unknown, it may be omitted. Be consistent in terminology throughout your catalog.  If using non-standard terms, explain them in a note.
+
+
+---
+
+*This content was automatically generated from the ISBD PDF documentation using Gemini AI analysis.*

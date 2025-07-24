@@ -1,0 +1,86 @@
+---
+id: P1172
+title: has parallel title statement
+description: ISBD element documentation for has parallel title statement
+uri: "isbd:elements/P1172"
+area: area1
+RDF:
+  definition: Relates a resource to a statement of its parallel title.
+  domain: "isbd:elements/C2001"
+  type: "rdf:Property"
+reg:hasUnconstrained: "isbd:unc/elements/P1172"
+reg:name: hasParallelTitleStatement
+reg:status: "RegStatus:1001"
+rdf:type: "rdf:Property"
+rdfs:domain: "isbd:elements/C2001"
+rdfs:isDefinedBy: "isbd:elements/"
+rdfs:label: has parallel title statement
+skos:definition: Relates a resource to a statement of its parallel title.
+---
+# has parallel title statement
+
+The ISBD element "parallel title statement" is not explicitly defined as a separate element in the provided ISBD documentation.  Instead, the concept is covered by the "Parallel title" element described in section 1.2.  There isn't a distinct "statement" aspect to it within the ISBD structure. The parallel title is treated as a complete unit on its own.
+
+
+Therefore, the following description pertains to the "Parallel title" element (which encompasses the idea of a "parallel title statement"):
+
+## Element Reference
+
+- **Definition:** A parallel title consists of a title in another language or script than the title proper and presented as an equivalent of the title proper on the preferred source or sources of information. A title in another language that is linguistically linked to another part of the description is not treated as a parallel title. (Section 1.2.1)
+- **Domain:**  Bibliographic resources (specifically manifestations within the FRBR model). Implicitly, it applies to the "Title and Statement of Responsibility Area" of the ISBD description.
+- **Range:**  Text strings representing titles in different languages or scripts.
+- **Element type:**  Literal (text string).
+
+## Additional Information
+
+- **Scope and Purpose:** The parallel title element is designed to facilitate the international exchange of bibliographic information and to aid in identifying and retrieving resources in multilingual catalogs.  It provides alternative titles for the same resource, making it accessible to users who may search using different languages.
+- **User Tasks Supported:** Searching for resources by title in different languages, identifying translations or multilingual editions, understanding the language(s) of the resource's content.
+
+## Element Values
+
+- **Rules and Guidelines:** The parallel title is transcribed exactly as to wording from the preferred source of information, but not necessarily as to capitalization and punctuation. (Section 1.2.5) Abbreviations are generally avoided unless they are part of the title itself. If a statement of responsibility, other title information, or a publication statement is linguistically linked to a parallel title, it's included as part of the parallel title.
+- **Value Constraints and Formats:** No specific character encoding is prescribed, but the script should be appropriate for the language of the title. (See A.5 for general guidance on language and script). Titles may be abridged in exceptional cases (see 1.2.5.2), but abbreviations should be avoided unless they are part of the title itself as found on the resource.
+- **String Encoding Schemes:** No specific encoding is mandated, but best practice would be to use UTF-8 to support the widest range of characters.
+
+
+## Examples
+
+```
+= Romeo and Juliet = Romeo y Julieta = Roméo et Juliette
+```
+
+```
+: Handbook of statistical methods = Manuel de méthodes statistiques
+```
+
+```
+=  アジア経済白書 =  Asian economic white paper
+```
+
+```
+/ by J. Smith = / von J. Schmidt  = / par J. Smith (If the statement of responsibility is considered linguistically linked)
+```
+
+```
+= Der Zauberberg = The magic mountain
+```
+
+
+## Relationships
+
+- **Relationship to Other ISBD Elements:** The parallel title is directly related to the "Title proper" (1.1) element. It is considered a secondary title to the title proper. There can be multiple parallel titles for a single resource.
+- **Super-types and Sub-types:** None explicitly defined in the ISBD.
+- **Inverse Relationships:**  None explicitly defined.
+
+## Stipulations
+
+- **Special Considerations:**  Section 1.2.5.3 describes how to handle parallel titles when the source of information is not the preferred source. Square brackets are used to indicate this.
+- **Exceptions:** A parallel title is not used for titles in another language that are linguistically linked to another descriptive element, like a statement of responsibility or other title information (see 1.2.1).
+- **Best Practices:** Include all parallel titles found on the preferred source of information that are considered important for identification or access.  Use appropriate script and diacritics for each language. Use UTF-8 encoding when possible.  If a title needs to be abridged, do so carefully following the rules in 1.2.5.2 (similar to abridging the title proper).
+
+It's important to note that RDA (Resource Description and Access), a more recent standard that has largely superseded AACR2 (which was contemporary with ISBD), handles multilingual titles somewhat differently.  RDA emphasizes relationships between resources, so a parallel title in RDA might be expressed as a related manifestation in another language.  However, the underlying principle of capturing multilingual titles remains the same.
+
+
+---
+
+*This content was automatically generated from the ISBD PDF documentation using Gemini AI analysis.*

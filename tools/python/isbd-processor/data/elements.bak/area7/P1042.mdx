@@ -1,0 +1,96 @@
+---
+id: P1042
+title: has note on contents
+description: ISBD element documentation for has note on contents
+uri: "isbd:elements/P1042"
+area: area7
+RDF:
+  definition: Relates a resource to a note relating to the contents.
+  domain: "isbd:elements/C2001"
+  type: "rdf:Property"
+  scopeNote: "Includes the list of contents and notes on otherinclusions, such as indexes, inserts, bibliographies, discographies, etc."
+  elementSubType: "isbd:elements/P1045"
+reg:hasUnconstrained: "isbd:unc/elements/P1042"
+reg:name: hasNoteOnContents
+reg:status: "RegStatus:1001"
+rdf:type: "rdf:Property"
+rdfs:domain: "isbd:elements/C2001"
+rdfs:isDefinedBy: "isbd:elements/"
+rdfs:label: has note on contents
+rdfs:label@es: "tiene nota sobre el contenido"
+rdfs:subPropertyOf: "isbd:elements/P1045"
+skos:definition: Relates a resource to a note relating to the contents.
+skos:definition@es: "Relaciona un recurso con una nota relativa al contenido."
+skos:scopeNote: "Includes the list of contents and notes on otherinclusions, such as indexes, inserts, bibliographies, discographies, etc."
+---
+# has note on contents
+
+The ISBD element "note on contents" is found within the PDF as "Notes relating to the contents".  It is described in section 7.7.
+
+## Element Reference
+
+- **Official ISBD Definition:** Notes relating to the contents may include the list of contents and notes on other inclusions, such as indexes, inserts, bibliographies, discographies, etc. For audiovisual resources, if the durations of individual works are given in the contents note, they are placed immediately after the bibliographic description.
+- **Domain:**  Bibliographic resources that are collections or contain various distinct parts or supplementary material.
+- **Range:** Natural language text.
+- **Element Type:** Descriptive.
+
+## Additional Information
+
+- **Scope and Purpose:** This element provides a textual description or listing of the constituent parts within a resource. It aims to clarify what is included within a larger work, enabling users to identify specific components or supplementary items.  This is particularly important for collections, anthologies, multipart monographs, or resources with substantial supplementary materials.
+- **User Tasks Supported:** 
+    - Discovering specific sections or parts within a larger work.
+    - Identifying supplemental materials included with a resource.
+    - Determining the scope and content of a resource with many parts.
+
+
+## Element Values
+
+- **Rules and Guidelines:**
+    - The list should generally follow the order in which the contents appear in the resource.
+    - Titles of included works should be transcribed as they appear in the resource.
+    - Other descriptive details (e.g., author, date, pagination for parts) may be added if deemed important for identifying parts.
+    - For audiovisual resources, the duration of individual works is given immediately after the bibliographic description, when it appears within the contents note.
+- **Value Constraints or Formats:** No strict format is prescribed, but clarity and conciseness are recommended.  The PDF gives illustrative examples.
+- **String Encoding Schemes:**  Not explicitly mentioned but UTF-8 is generally recommended for bibliographic data.
+
+
+## Examples
+
+```
+. - Contents: The homecoming / by Harold Pinter. Chips with everything / by Arnold Wesker. Marching song / by John Whiting
+```
+
+```
+. - Contents: Getting ahead of the game (81 fr.); Decisions, decisions (55 fr.); Your money (72 fr.); How to be a loser (65 fr.); The law and your pocketbook (70 fr.); The all-American consumer (63 fr.)
+```
+
+```
+. - Contents: Pt. 1, The fellowship of the ring; Pt. 2, The two towers ; Pt. 3, The return of the king
+```
+
+```
+. - Contenido: t. I. Introducción y tablas, 1921 (483 p.) -- t. II. Zona -3°, 1921 (490 p.) -- t. III. Zona -4°, 1922 (243 p.) -- t. IV. Zona -5°, 1923 (282 p.) -- t. V. Zona -6°, 1923 (257 p.) -- t. VI. Zona -7°, 1925 (256 p.) -- t. VII. Zona -8°, 1928 (275 р.) -- t. VIII. Zona -9°, 1929 (267 р.)
+```
+
+```
+. - Contents: CD-ROM data (1:29); The young person's guide to the orchestra (16:27); Extra audio examples (55:43)
+```
+
+
+## Relationships
+
+- **Relationship to other ISBD elements:** The "note on contents" is related to the Title and Statement of Responsibility Area (specifically when a resource bears a collective title - 1.1.4.3) and the Material Description Area (5.1-5.4, providing details about the parts described). It also relates to the "notes on other inclusions" (7.7.3) as they both describe components within a resource.
+- **Super-types and Sub-types:** Not applicable in the traditional sense, but could be considered a type of "note" within the Note Area (7).
+- **Inverse Relationships:**  Not applicable.
+
+
+## Stipulations
+
+- **Special Considerations:** For general notes on the nature and scope of the contents of a resource, refer to section 7.1.2. If a resource has a collective title and the titles of individual works are given in Area 1 (1.1.5.2) instead of a collective title, details of the contents are not repeated in the notes.
+- **Exceptions:** None specifically mentioned.
+- **Best Practices:** Provide sufficient detail in the content note to help users locate specific items of interest. If there are a large number of contents, consider summarizing them or providing a more general note about their nature and scope. Be concise and avoid redundant information already present in other areas of the description.
+
+
+---
+
+*This content was automatically generated from the ISBD PDF documentation using Gemini AI analysis.*

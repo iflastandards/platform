@@ -1,0 +1,84 @@
+---
+id: P1067
+title: has note on mode of access
+description: ISBD element documentation for has note on mode of access
+uri: "isbd:elements/P1067"
+area: area7
+RDF:
+  definition: "Relates a resource that is a remote access electronic resource to a note on the mode of access, preceded by the phrase \"Mode of access:\" (or its equivalent in another language)."
+  domain: "isbd:elements/C2001"
+  type: "rdf:Property"
+  elementSubType: "isbd:elements/P1045"
+reg:hasUnconstrained: "isbd:unc/elements/P1067"
+reg:name: hasNoteOnModeOfAccess
+reg:status: "RegStatus:1001"
+rdf:type: "rdf:Property"
+rdfs:domain: "isbd:elements/C2001"
+rdfs:isDefinedBy: "isbd:elements/"
+rdfs:label: has note on mode of access
+rdfs:label@es: "tiene nota sobre modo de acceso"
+rdfs:subPropertyOf: "isbd:elements/P1045"
+skos:definition: "Relates a resource that is a remote access electronic resource to a note on the mode of access, preceded by the phrase \"Mode of access:\" (or its equivalent in another language)."
+skos:definition@es: "Relaciona un recurso electr\u00f3nico remotocon una nota sobre el modo de acceso, precedido de la frase \u201cModo de acceso:\u201d (o su equivalente en otra lengua)."
+---
+# has note on mode of access
+
+The ISBD element "note on mode of access" is found within the Note Area (Area 7) of the ISBD.  Specifically, it is discussed under section 7.0.5, dedicated to notes regarding electronic resources.
+
+## Element Reference
+
+- **Definition:** A note relating to the mode of access is given for all remote-access electronic resources. It specifies how the resource can be accessed.
+- **Domain:** Remote-access electronic resources.
+- **Range:**  Textual description of the mode of access, often including URLs, system requirements, or subscription information.
+- **Element type:** Note.
+
+## Additional Information
+
+- **Scope and Purpose:** This element clarifies how a user can gain access to an electronic resource that doesn't require a physical carrier. This is crucial for remote resources, which are primarily accessed through networks or online platforms.  It distinguishes between resources freely available on the web versus those requiring subscriptions, specific software, or other access methods.
+- **User Tasks Supported:**  Finding and accessing the electronic resource; understanding any restrictions or prerequisites for access.
+
+## Element Values
+
+- **Rules and Guidelines:** The note is preceded by "Mode of access:" (or its equivalent in another language). If a system requirements note (7.0.4) is present, the mode of access note comes after it. The note should contain clear and concise information about how to access the resource. URLs should be included for web resources.  Information about subscriptions, login requirements, or other access restrictions should be clearly stated.
+- **Value Constraints and Formats:**  No specific format is prescribed, but clarity and conciseness are recommended. URLs should be valid and functional.
+- **String Encoding Schemes:** If applicable, the string encoding should follow the general guidelines for the language and script used (as described in Area A.5 of the ISBD).  For URLs, standard URL encoding practices should be followed.
+
+## Examples
+
+```
+Mode of access: World Wide Web. URL: http://www.example.org
+```
+
+```
+Mode of access: Subscription database. Available through university library proxy server.
+```
+
+```
+Mode of access: Lexis system. Requires subscription to LexisNexis.
+```
+
+```
+Mode of access: File download. Available from publisher's website after registration.
+```
+
+```
+Mode of access: Mobile app. Available for iOS and Android devices.
+```
+
+
+## Relationships
+
+- **Relationships to other ISBD elements:** The mode of access note is closely related to the resource identifier (8.1), particularly when the resource identifier is a URL.  It also complements the system requirements note (7.0.4), providing additional information related to access.
+- **Super-types and Sub-types:** Not applicable.
+- **Inverse Relationships:** Not applicable.
+
+
+## Stipulations
+
+- **Special Considerations:** If the mode of access changes (e.g., a resource becomes freely available after previously requiring a subscription), the bibliographic record should be updated accordingly.
+- **Best Practices:** Always verify that the access information provided is accurate and up-to-date.  If access is restricted, be as specific as possible about the requirements.  If multiple access methods are available, provide information for each method. For complex or unusual access methods, consider providing a more detailed explanation.
+
+
+---
+
+*This content was automatically generated from the ISBD PDF documentation using Gemini AI analysis.*

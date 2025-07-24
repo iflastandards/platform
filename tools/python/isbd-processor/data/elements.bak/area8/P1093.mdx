@@ -1,0 +1,74 @@
+---
+id: P1093
+title: has terms of availability statement
+description: ISBD element documentation for has terms of availability statement
+uri: "isbd:elements/P1093"
+area: area8
+RDF:
+  definition: Relates a resource to a statement of terms of availability.
+  domain: "isbd:elements/C2001"
+  range: "isbd:elements/C2027"
+  type: "rdf:Property"
+reg:hasUnconstrained: "isbd:unc/elements/P1093"
+reg:name: hasTermsOfAvailabilityStatement
+reg:status: "RegStatus:1001"
+rdf:type: "rdf:Property"
+rdfs:domain: "isbd:elements/C2001"
+rdfs:isDefinedBy: "isbd:elements/"
+rdfs:label: has terms of availability statement
+rdfs:range: "isbd:elements/C2027"
+skos:definition: Relates a resource to a statement of terms of availability.
+---
+# has terms of availability statement
+
+The ISBD element "terms of availability statement" (isbd:elements/P1093), while represented in the conceptual model as "has terms of availability statement", is referred to as "Terms of availability" within the ISBD documentation. It is part of Area 8: Resource Identifier and Terms of Availability Area.
+
+## Element Reference
+
+- **Official ISBD Definition:**  The conditions under which a resource may be obtained, e.g., the price of a resource offered for sale or a statement that a resource is available for hire or for free. (See Section 8.3 of the ISBD:2011 document)
+- **Domain:**  Manifestations (primarily) as understood in the context of bibliographic description.  While not explicitly stated in this way, the ISBD is essentially describing manifestations.
+- **Range:**  Literal values representing prices, availability statements, or other access information.
+- **Element Type:**  Data property representing a textual statement.
+
+
+## Additional Information
+
+- **Scope and Purpose:** This element provides information on how a resource can be obtained or accessed. This is crucial for users seeking to acquire or use the resource. It helps distinguish between resources that are for sale, for hire, free of charge, or subject to other access restrictions.
+- **User Tasks Supported:**  Finding out how to access a resource (purchase, borrow, view online, etc.), determining the cost of acquiring a resource, understanding any restrictions on access.
+
+
+## Element Values
+
+- **Specific Rules/Guidelines:** The price should be given with the international standard code for the currency (ISO 4217). If the resource is not for sale, a brief statement of its availability (e.g., "not for sale," "for hire," "free to libraries") should be given. Qualifications or additional details about the availability can be enclosed in parentheses. (See Section 8.3.1 and 8.3.2)
+- **Value Constraints/Formats:**  While not strictly constrained, the expectation is for brevity and clarity. Prices should be represented numerically with the appropriate currency code.
+- **String Encoding:**  No specific encoding scheme is mentioned within the ISBD standard itself, but generally UTF-8 would be recommended for maximum character support.
+
+
+## Examples
+
+```
+: GBP 2.05
+: EUR 950
+: not for sale
+: USD 129.00 : USD 100.00 (for colleges and universities)
+: EUR 1,20 (per issue) : EUR 20 (p.a.)
+```
+
+
+## Relationships
+
+- **Relationships to other ISBD elements:**  Closely related to the Resource Identifier (8.1), which together help uniquely identify and locate a specific resource.  For serials, also relates to the key title (8.2).
+- **Super-types/Sub-types:** None explicitly defined within ISBD, but conceptually could be thought of as a sub-property of a broader "Access Information" property.
+- **Inverse Relationships:**  Could potentially have an inverse relationship like "is available through" pointing back to a vendor or repository.
+
+
+## Stipulations
+
+- **Special Considerations:** The ISBD stresses that the term "terms of availability" is broad and can include a wide range of conditions related to obtaining or accessing a resource.
+- **Exceptions/Usage Notes:**  No specific exceptions within the standard are noted, but application profiles or local extensions might provide additional guidance for specific types of resources.
+- **Best Practices:**  Provide as much detail as is readily available and relevant. Be concise and unambiguous. Use standardized currency codes when giving prices. Consider adding explanatory notes in Area 7 if necessary.
+
+
+---
+
+*This content was automatically generated from the ISBD PDF documentation using Gemini AI analysis.*

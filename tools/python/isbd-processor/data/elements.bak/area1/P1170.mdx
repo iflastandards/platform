@@ -1,0 +1,83 @@
+---
+id: P1170
+title: has title statement
+description: ISBD element documentation for has title statement
+uri: "isbd:elements/P1170"
+area: area1
+RDF:
+  definition: Relates a resource to a statement of its title.
+  domain: "isbd:elements/C2001"
+  type: "rdf:Property"
+reg:hasUnconstrained: "isbd:unc/elements/P1170"
+reg:name: hasTitleStatement
+reg:status: "RegStatus:1001"
+rdf:type: "rdf:Property"
+rdfs:domain: "isbd:elements/C2001"
+rdfs:isDefinedBy: "isbd:elements/"
+rdfs:label: has title statement
+skos:definition: Relates a resource to a statement of its title.
+---
+# has title statement
+
+The ISBD element "title statement" (isbd:elements/P1170) does not exist as a distinct, top-level element within the ISBD standard documented in the provided PDF.  The concept of a "title statement" is instead encompassed within the broader "Title and Statement of Responsibility Area" (ISBD Area 1).  This area includes several related elements that together function to represent the title information and associated responsibilities.  The most important of these elements within Area 1 are:
+
+## Element Reference: Title Proper (1.1)
+
+- **Definition:** The chief name of a resource, i.e., the title of a resource in the form in which it appears on the preferred source of information for the resource. The title proper includes any alternative title but excludes parallel titles and other title information...
+- **Domain:**  Bibliographic resources (monographs, serials, etc.)
+- **Range:**  Text strings representing titles.
+- **Element type:**  Mandatory if available
+
+## Additional Information: Title Proper
+
+- **Scope and Purpose:** To provide the primary name by which the resource is known. This serves as the core identifying element within Area 1 and is fundamental for distinguishing the resource from others.
+- **User Tasks Supported:** Identifying the resource, searching catalogs and databases, and citing the resource.
+
+
+## Element Values: Title Proper
+
+- **Rules/Guidelines:** Transcribed exactly as to wording from the preferred source of information, but not necessarily as to capitalization or punctuation.  Typographical errors are not corrected. Lengthy titles may be abridged in the middle or at the end under specific conditions (1.1.5.1).
+- **Constraints/Formats:**  Must be taken from a prescribed source (see Prescribed Sources for Area 1). No abbreviations or abridgments are generally allowed, except for specific exceptions outlined in the standard (e.g., lengthy titles, serials with varying numbers).
+- **String Encoding:** No specific encoding scheme is prescribed by ISBD but would be subject to the encoding used by the implementing system (e.g., UTF-8, MARC-8).
+
+
+
+## Examples: Title Proper
+
+```
+Pride and prejudice
+The Lord of the rings : the fellowship of the ring
+Quantum mechanics for mathematicians
+星空清理者
+```
+
+
+
+## Relationships: Title Proper
+
+- **Relationship to Other ISBD Elements:** The title proper is the central component of Area 1. It may be followed by a parallel title (1.2), other title information (1.3), and a statement of responsibility (1.4).
+- **Sub-types:** Common title, dependent title (for resources that are part of a larger work).
+
+
+## Stipulations: Title Proper
+
+- **Special Considerations:**  Special rules exist for handling titles of older monographic resources, manuscripts, serials, integrating resources, and other resource types.  Detailed instructions are provided within the standard for selecting the appropriate title when multiple titles are present on the resource.
+- **Best Practices:**  Follow the prescribed order of preference for sources of information when selecting the title proper.  Transcribe the title exactly as found on the preferred source, resisting the temptation to correct minor errors or inconsistencies.
+
+
+
+
+## Other Relevant Elements in Area 1
+
+Along with Title Proper, these elements contribute to the overall title information:
+
+- **Parallel Title (1.2):**  A title in another language or script, presented as equivalent to the title proper.
+- **Other Title Information (1.3):**  Subordinate information appearing with the title, such as subtitles, or other explanatory titles.
+- **Statement of Responsibility (1.4):**  Information relating to persons or bodies responsible for the intellectual or artistic content of the work.
+
+These elements, collectively, fulfill the function of what might conceptually be referred to as a "title statement," though the ISBD standard itself does not use this term as a distinct element.  They are essential for providing a complete and accurate representation of the title and authorship information of a bibliographic resource.
+
+
+---
+
+*This content was automatically generated from the ISBD PDF documentation using Gemini AI analysis.*

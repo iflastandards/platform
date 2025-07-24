@@ -1,0 +1,76 @@
+---
+id: P1131
+title: has number of tape tracks
+description: ISBD element documentation for has number of tape tracks
+uri: "isbd:elements/P1131"
+area: general
+RDF:
+  definition: Relates a resource to the number of its tape tracks.
+  domain: "isbd:elements/C2001"
+  type: "rdf:Property"
+reg:hasUnconstrained: "isbd:unc/elements/P1131"
+reg:name: hasNumberOfTapeTracks
+reg:status: "RegStatus:1001"
+rdf:type: "rdf:Property"
+rdfs:domain: "isbd:elements/C2001"
+rdfs:isDefinedBy: "isbd:elements/"
+rdfs:label: has number of tape tracks
+rdfs:label@es: "tiene número de pistas"
+skos:definition: Relates a resource to the number of its tape tracks.
+skos:definition@es: "Relaciona un recurso con el número de sus pistas."
+---
+# has number of tape tracks
+
+The ISBD element "Number of tape tracks" is found within the "Other physical details" element (5.2) of the Material Description Area (Area 5). It appears as section 5.2.7.7 in the 2021 update to the 2011 Consolidated Edition.
+
+
+## Element Reference
+
+- **Definition:** Indicates the number of tracks present on a magnetic tape intended for audio recording.
+- **Domain:**  Applies to resources embodied on magnetic tape reels intended for sound recording. (Specifically excluded are tape cassettes).
+- **Range:**  A positive integer.
+- **Element Type:**  Descriptive
+
+
+## Additional Information
+
+- **Scope and Purpose:** This element provides more specific information about the physical characteristics of audio recordings on magnetic tape reels.  It aids in identifying different formats and helps ensure compatibility with playback equipment.  The number of tracks directly affects how the audio information is encoded and played back.
+- **User Tasks:** This element can help users:
+    - Identify appropriate playback equipment.
+    - Distinguish between different formats of tape recordings (e.g., two-track stereo, four-track quadraphonic, multi-track recordings).
+    - Understand the technical characteristics of the recording.
+
+
+
+## Element Values
+
+- **Rules/Guidelines:** The number of tape tracks is indicated using Arabic numerals. 
+- **Value Constraints/Formats:**  Must be a positive integer.
+- **String Encoding Schemes:** Not applicable.
+
+
+## Examples
+
+```
+1 sound reel (100 min): 19 cm/s; 2 tracks
+1 sound reel (90 min): 38 cm/s; 4 tracks 
+1 sound reel (45 min): 19 cm/s; 4 tracks, NAB
+```
+
+
+## Relationships
+
+- **Relationship to Other ISBD Elements:** This element is a sub-element of "Other physical details" (5.2) and relates to the overall "Extent" element (5.1) which broadly defines the physical composition of the resource. It is often given in conjunction with other technical specifications like playing speed (5.2.7.3), equalization (5.2.7.10), and noise reduction (5.2.7.11).
+- **Super-types and Sub-types:** "Number of tape tracks" is a sub-type of the more general "Other physical details" element.
+- **Inverse Relationships:** None specified.
+
+
+## Stipulations
+
+- **Special Considerations/Exceptions:** This element specifically applies to open-reel tapes. The number of tracks for tape *cassettes* is usually standardized (e.g., compact cassettes typically have four tracks, two per side) and thus is generally omitted unless it deviates from the standard.  The element also doesn't apply to *videotapes*, even if they have audio tracks, as the primary content is visual.
+- **Best Practices:** It's considered best practice to provide this information alongside other related technical specifications to give a complete picture of the tape's physical characteristics.  If the information is readily available, it should be included, especially for less common formats.
+
+
+---
+
+*This content was automatically generated from the ISBD PDF documentation using Gemini AI analysis.*

@@ -1,0 +1,92 @@
+---
+id: P1140
+title: has parallel other title information
+description: ISBD element documentation for has parallel other title information
+uri: "isbd:elements/P1140"
+area: area1
+RDF:
+  definition: "Relates a resource to other title information presented on the preferred source of information for the resource as an equivalent in another language or script."
+  domain: "isbd:elements/C2001"
+  type: "rdf:Property"
+  elementSubType: "isbd:elements/P1012"
+reg:hasUnconstrained: "isbd:unc/elements/P1140"
+reg:name: hasParallelOtherTitleInformation
+reg:status: "RegStatus:1001"
+rdf:type: "rdf:Property"
+rdfs:domain: "isbd:elements/C2001"
+rdfs:isDefinedBy: "isbd:elements/"
+rdfs:label: has parallel other title information
+rdfs:label@es: "tiene información complementaria del título paralela"
+rdfs:subPropertyOf: "isbd:elements/P1012"
+skos:definition: "Relates a resource to other title information presented on the preferred source of information for the resource as an equivalent in another language or script."
+skos:definition@es: "Relaciona un recurso con información complementaria del título que se presenta en la fuente de información preferida para el recurso como un equivalente en otra lengua o escritura."
+---
+# has parallel other title information
+
+The ISBD element "parallel other title information" (isbd:elements/P1140) is found within the larger context of "other title information."  While the ISBD doesn't explicitly define "parallel other title information" as a distinct, standalone element in the way RDA does, it does describe the treatment of other title information in multiple languages.  Therefore, the concept exists within the standard.
+
+
+## Element Reference
+
+- **Definition:**  Other title information consists of a word, phrase, or group of characters appearing in conjunction with and subordinate to the title proper, a parallel title or titles of individual works contained in the resource. (1.3) Parallel other title information would therefore be other title information appearing alongside its counterpart in another language, subordinate to a parallel title.
+- **Domain and Range:** Not explicitly defined in ISBD in the same structured way as RDA.
+- **Element Type:** Textual.
+
+
+## Additional Information
+
+- **Scope and Purpose:** To provide additional title information in multiple languages, clarifying or expanding upon the parallel title and aiding in resource identification, particularly in multilingual contexts.
+- **User Tasks Supported:**  Improved resource discovery and identification for users searching in different languages. Facilitates multilingual cataloging and resource sharing.
+
+
+## Element Values
+
+- **Rules/Guidelines:** Transcribed following the parallel title to which it applies, preceded by a colon. Follows the same transcription guidelines as other title information (transcribed exactly as to wording but not necessarily as to capitalization).  (1.3.4, 1.3.4.7)
+- **Constraints/Formats:** No specific format requirements beyond general transcription guidelines for other title information.
+- **String Encoding:**  No specific encoding scheme mandated within ISBD, but UTF-8 is generally recommended for broad multilingual support.
+
+
+
+## Examples
+
+```
+Title Proper = Parallel title : Parallel other title information
+The Cat = Le Chat : Un conte pour enfants
+```
+
+```
+Title Proper = Parallel title : Parallel other title information / Statement of Responsibility
+Cooking for Beginners = Kochen für Anfänger : Einfache Rezepte / by Julia Child
+```
+```
+Title Proper : Other title information = Parallel title : Parallel other title information
+Symphony No. 5 : In C Minor = Symphonie Nr. 5 : En Ut Mineur
+```
+
+```
+Title proper = Parallel title : Parallel other title information ; Parallel other title information
+Annual Report = Rapport Annuel : For the year 2023 ; Pour l'année 2023
+```
+
+
+
+## Relationships
+
+- **Relationship to other ISBD elements:** Subordinate to the parallel title.  Part of the larger Title and Statement of Responsibility Area.
+- **Super/Sub-types:** Not explicitly defined within the ISBD framework.
+- **Inverse Relationships:**  Not applicable.
+
+
+## Stipulations
+
+- **Special Considerations:**  Parallel other title information is given only when it appears on the prescribed source of information.  If multiple pieces of parallel other title information are present, they are given in the order in which they appear on the resource. (1.3, 1.3.4)
+- **Exceptions:** No specific exceptions noted within the ISBD.
+- **Best Practices:** Transcribe accurately and consistently according to the language it appears in, while adhering to the general guidelines for other title information.  Ensure that the relationship to the associated parallel title is clear.  If information is not present on the prescribed source, it should be placed in a note.
+
+
+The ISBD's approach allows flexibility in handling complex multilingual situations but relies more on cataloger judgment in determining what constitutes significantly important information to include, compared to more formal models like RDA. While the core concepts align,  the ISBD's less structured definition makes mapping to "has parallel other title information" in linked data contexts more interpretative.
+
+
+---
+
+*This content was automatically generated from the ISBD PDF documentation using Gemini AI analysis.*

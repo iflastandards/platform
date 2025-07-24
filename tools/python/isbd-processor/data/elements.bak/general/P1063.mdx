@@ -1,0 +1,63 @@
+---
+id: P1063
+title: has frame alignment
+description: ISBD element documentation for has frame alignment
+uri: "isbd:elements/P1063"
+area: general
+RDF:
+  definition: "Relates a resource that is a microfilm reel, microfilm slip, or filmstrip to a statement of its frame alignment."
+  domain: "isbd:elements/C2001"
+  type: "rdf:Property"
+reg:hasUnconstrained: "isbd:unc/elements/P1063"
+reg:name: hasFrameAlignment
+reg:status: "RegStatus:1001"
+rdf:type: "rdf:Property"
+rdfs:domain: "isbd:elements/C2001"
+rdfs:isDefinedBy: "isbd:elements/"
+rdfs:label: has frame alignment
+rdfs:label@es: "tiene alineación de los fotogramas"
+skos:definition: "Relates a resource that is a microfilm reel, microfilm slip, or filmstrip to a statement of its frame alignment."
+skos:definition@es: "Relaciona un recurso que es un carrete de microfilme, tira de microfilme, o tira de película  con una mención de su alineación de fotogramas."
+---
+# has frame alignment
+
+The ISBD element "frame alignment" is found within the "Other physical details" element (isbd:elements/P1030) in area 5 of the ISBD.  It is a specific technical specification used for describing microfilm reels, microfilm slips, and filmstrips.
+
+## Element Reference
+- **Official ISBD Definition:** The relative position of the image within the frame of a microfilm, filmstrip, or aperture card. (See Section 5.2.7.1)
+- **Domain:** Microfilm reels, microfilm slips, and filmstrips.
+- **Range:** Terms indicating frame alignment (e.g., "cine mode", "comic mode").
+- **Element Type:** Descriptive.
+
+## Additional Information
+- **Scope and Purpose:** To specify the orientation of images on microfilm reels, microfilm slips, and filmstrips, aiding in proper viewing and playback.  This is crucial as different alignment impacts how the resource is displayed and used.
+- **User Tasks Supported:** Retrieval of resources based on their frame alignment; Understanding how the images are oriented on the film; Ensuring correct playback or viewing with appropriate equipment.
+
+## Element Values
+- **Specific Rules/Guidelines:**  The value given should be a concise term describing the alignment. Standard terms like "cine mode" and "comic mode" are used.
+- **Value Constraints/Formats:**  The terms used are not strictly controlled, but common practice favors "cine mode" (image perpendicular to film edge) and "comic mode" (image parallel to film edge).  Other terms may be used if they unambiguously describe the alignment.
+- **String Encoding Schemes:** Not applicable.
+
+## Examples
+```
+- 1 microfilm reel: cine mode ; 35mm
+- 3 microfilm slips: diazo, comic mode ; 16mm
+- 1 filmstrip (42 double fr.): comic mode ; 35mm
+- 1 aperture card: map ; 7.5 x 12.5 cm (image in cine mode)
+- 1 microfilm reel: maps ; 16mm (mixed frame alignment; majority cine mode) 
+```
+
+## Relationships
+- **Relationships to other ISBD elements:**  This element is part of Area 5 (Material Description Area) and is subordinate to "Other physical details" (5.2).  It is closely related to the specific material designation and the dimensions of the resource.
+- **Super-types and sub-types:**  "Frame alignment" is a sub-type of "Other physical details." It doesn't have further subtypes in the standard.
+- **Inverse relationships:** None specified.
+
+
+## Stipulations
+- **Special considerations/exceptions/usage notes:**  If the resource has mixed frame alignment (some images in cine mode, some in comic mode), a note can be made explaining this in Area 7 (Notes).  If the frame alignment is not readily ascertainable, it should be omitted.
+- **Best practices:** Use standard terminology whenever possible. If non-standard terms are necessary, provide a clear explanation in Area 7 (Notes). Always relate the frame alignment to the physical unit being described (microfilm reel, slip, or filmstrip).
+
+
+---
+
+*This content was automatically generated from the ISBD PDF documentation using Gemini AI analysis.*

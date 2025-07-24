@@ -282,7 +282,7 @@ willBeRemovedInVersion: null
 {sections.get('examples', '[To be completed: Examples of proper SES usage]')}
 </div>
 
----
+<hr />
 
 *This content was automatically generated from the ISBD PDF documentation using Gemini AI analysis.*
 """

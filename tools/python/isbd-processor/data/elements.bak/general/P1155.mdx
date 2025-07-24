@@ -1,0 +1,76 @@
+---
+id: P1155
+title: has longitude and latitude
+description: ISBD element documentation for has longitude and latitude
+uri: "isbd:elements/P1155"
+area: general
+RDF:
+  definition: "Relates a resource that is a  terrestrial map to its coordinates expressed in decimal degrees or degrees (°), minutes (′) and seconds (″) of the sexagesimal system (360° circle) (with longitude always taken from the Greenwich prime meridian) in the order of longitude of westernmost extent, longitude of easternmost extent, latitude of northernmost extent , and latitude of southernmost extent, preceded by the appropriate initials for West (W), East (E), North (N) and South (S) or their equivalents in another language or script. Relates a resource that is a map of another celestial body to its coordinates in its coordinate system."
+  domain: "isbd:elements/C2001"
+  type: "rdf:Property"
+  elementSubType: "isbd:elements/P1050"
+reg:hasUnconstrained: "isbd:unc/elements/P1155"
+reg:name: hasLongitudeAndLatitude
+reg:status: "RegStatus:1001"
+rdf:type: "rdf:Property"
+rdfs:domain: "isbd:elements/C2001"
+rdfs:isDefinedBy: "isbd:elements/"
+rdfs:label: has longitude and latitude
+rdfs:label@es: "tiene longitud y latitud"
+rdfs:subPropertyOf: "isbd:elements/P1050"
+skos:definition: "Relates a resource that is a  terrestrial map to its coordinates expressed in decimal degrees or degrees (°), minutes (′) and seconds (″) of the sexagesimal system (360° circle) (with longitude always taken from the Greenwich prime meridian) in the order of longitude of westernmost extent, longitude of easternmost extent, latitude of northernmost extent , and latitude of southernmost extent, preceded by the appropriate initials for West (W), East (E), North (N) and South (S) or their equivalents in another language or script. Relates a resource that is a map of another celestial body to its coordinates in its coordinate system."
+skos:definition@es: "Relaciona un recurso que es un mapa terrestre con sus coordenadas expresadas en grados decimales o en grados (\u00ba), minutos (\u00b4) y segundos (\u00b4\u00b4) del sistema sexagesimal (c\u00edrculo de 360\u00ba) (con la longitud tomada siempre a partir del meridiano cero de Greeenwich) en el orden: punto de longitud m\u00e1s occidental, punto de longitud m\u00e1s oriental, latitud del punto m\u00e1s septentrional y latitud del punto m\u00e1s meridional, precedido por las iniciales apropiadas Oeste (O), Este (E), Norte (N) y Sur (S) o sus equivalentes en otra lengua o escritura. Relaciona un recurso que es un mapa de un cuerpo celeste con sus coordenadas en su sistema correspondiente."
+---
+# has longitude and latitude
+
+The element "longitude and latitude" (or a direct equivalent) is not explicitly defined as a distinct element within the ISBD standard provided. Instead, longitude and latitude are components of the larger "Coordinates" element within the Mathematical data area (Area 3.1.3) for Cartographic resources.
+
+## Element Reference
+
+- **Definition (implied):** Longitude and latitude values provide geographic coordinate information delimiting the spatial extent of a cartographic resource. These are given as part of the Coordinates element which "delimit the greatest extent of the area covered and are recorded when present on the resource, or may be supplied if they are known and considered important to users of the catalog."
+- **Domain:** Cartographic resources
+- **Range:** String representing coordinates
+- **Element Type:**  Component of a text string within the larger "Coordinates" element.
+
+
+## Additional Information
+
+- **Scope and Purpose:** To precisely define the geographic area represented by a map, chart, or other cartographic resource, aiding in discovery and retrieval.
+- **User Tasks Supported:** Discovering resources covering a specific geographic area, determining the spatial coverage of a map, geospatial indexing and searching.
+
+
+## Element Values
+
+- **Rules and Guidelines:** Longitude and latitude are expressed in degrees (°), minutes ('), and seconds (") of the sexagesimal system (360° circle).  They can also be expressed as decimal degrees.  Values are preceded by W (West), E (East), N (North), and S (South) or their equivalents. Two sets of coordinates are separated by a slash (/), and each coordinate pair (e.g., west/east longitude) is linked by a hyphen (-). The coordinate system or meridian of reference (if not Greenwich) is specified after the coordinates, separated by a comma and space.
+- **Value Constraints/Formats:** Follow the specific formatting described above.  Values must represent valid coordinates.
+- **String Encoding:**  UTF-8 is recommended.
+
+
+## Examples
+
+```
+(W 74°50'–W 74°40'/N 45°5′-N 45°00')
+(E 15°00'00"-E 17°30'45"/N 1°30'12"–S 2°30'35")
+(W 78°42'--W 70°45'/N 22°48'--N 19°06', Cadiz meridian)
+(W 95.15°-W 74.35°/N 56.85°-N 41.73°, selenographic coordinate system)  // Non-terrestrial
+```
+
+
+## Relationships
+
+- **Relationship to other ISBD elements:** Longitude and latitude are part of the "Coordinates" element, which is, in turn, part of the "Mathematical data" area (3.1) along with "Statement of scale" and "Statement of projection."
+- **Supertypes:** Coordinates
+- **Subtypes:**  Longitude, Latitude (although not formally defined in ISBD as separate elements)
+- **Inverse Relationships:** None specified within ISBD.
+
+
+## Stipulations
+
+- **Special Considerations:**  For celestial charts, Right Ascension and Declination are used instead of longitude and latitude.
+- **Exceptions:**  If a resource is not drawn to scale, "Not drawn to scale" is used instead of coordinate information. If the scale is unknown, "Scale not given" is used.
+- **Best Practices:**  Always use the coordinate system provided on the resource. If no coordinate system is provided, assume Greenwich unless there's evidence to the contrary. Supply missing coordinate information from other reliable sources whenever possible, enclosing supplied information in square brackets. If coordinates cannot be determined, omit them. Ensure consistency in formatting and use of abbreviations.
+
+
+---
+
+*This content was automatically generated from the ISBD PDF documentation using Gemini AI analysis.*

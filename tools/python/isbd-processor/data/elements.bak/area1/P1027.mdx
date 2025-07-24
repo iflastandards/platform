@@ -1,0 +1,70 @@
+---
+id: P1027
+title: has parallel title of series or multipart monographic resource
+description: ISBD element documentation for has parallel title of series or multipart monographic resource
+uri: "isbd:elements/P1027"
+area: area1
+RDF:
+  definition: "Relates a resource that is a series or multipart monographic resource to a title in another language or script than the title proper and presented as an equivalent of the title proper on the preferred source of information."
+  domain: "isbd:elements/C2001"
+  type: "rdf:Property"
+reg:hasUnconstrained: "isbd:unc/elements/P1027"
+reg:name: hasParallelTitleOfSeriesOrMultipartMonographicResource
+reg:status: "RegStatus:1001"
+rdf:type: "rdf:Property"
+rdfs:domain: "isbd:elements/C2001"
+rdfs:isDefinedBy: "isbd:elements/"
+rdfs:label: has parallel title of series or multipart monographic resource
+rdfs:label@es: "tiene título paralelo de serie o recurso monográfico multiparte"
+skos:definition: "Relates a resource that is a series or multipart monographic resource to a title in another language or script than the title proper and presented as an equivalent of the title proper on the preferred source of information."
+skos:definition@es: "Relaciona un recurso que es una serie o recurso monografico multiparte con un título en otra lengua o escritura diferente a la del título propiamente dicho y presentado como un equivalente del título propiamente dicho en la fuente preferida de información."
+---
+# has parallel title of series or multipart monographic resource
+
+The ISBD element "parallel title of series or multipart monographic resource" is found in the provided PDF.
+
+## Element Reference
+
+- **Official ISBD Definition:** A parallel title of a series or multipart monographic resource consists of a title in another language or script than the title proper of the series and presented as an equivalent of the title proper on the prescribed source or sources of information. (Section 6.2.1)
+- **Domain:** Series or multipart monographic resource.
+- **Range:** Title string in a language or script different from the title proper.
+- **Element Type:** Descriptive.
+
+## Additional Information
+
+- **Scope and Purpose:**  To provide the title of the series or multipart monographic resource in another language or script, facilitating identification and retrieval for users who may search using different languages or scripts. This is particularly useful for resources published in multilingual contexts.
+- **User Tasks Supported:** Searching, identifying, and selecting resources based on series title in multiple languages.
+
+## Element Values
+
+- **Rules and Guidelines:** The parallel title should be transcribed exactly as to wording, but not necessarily as to capitalization and punctuation (Section 1.2.5.1, also applies to parallel titles of series). If a statement of responsibility, other title information, or publication information is linked linguistically to the parallel title, it should be included as part of the parallel title.
+- **Value Constraints and Formats:** No specific format is prescribed, but it should generally follow the conventions of the language and script used.
+- **String Encoding:**  Follows the character encoding scheme used for the rest of the bibliographic record (UTF-8 recommended).
+
+
+## Examples
+
+```
+(Carte géologique de la France à 1:50000 = Geological map of France at 1:50000)
+(Análisis y modificación de conducta = Analysis and behavior modification)
+(世界文学全集 =  Complete works of world literature)
+(土佐日記 = The Tosa Diary)
+```
+
+## Relationships
+
+- **Relationship to other ISBD elements:**  The parallel title of series is directly related to the title proper of the series (element 6.1).  It is part of the Series and Multipart Monographic Resource Area (Area 6).  It can be further qualified by other title information related to the series (element 6.3).
+- **Super-types and Sub-types:** None explicitly mentioned in the document.
+- **Inverse Relationships:** None explicitly mentioned in the document.
+
+
+## Stipulations
+
+- **Special Considerations:**  Parallel titles are only given if they are necessary for identification or otherwise considered important to the users of the catalog (Section 6.2.1). A resource may have one or more parallel series titles. If the series title proper consists of a common title and a dependent title, any parallel titles follow the same structure (Section 6.2.2).
+- **Exceptions:**  A title in another language that is linguistically linked to another part of the description (such as part of the title proper of the resource itself) is *not* treated as a parallel title of the series.
+- **Best Practices:**  Include all parallel titles of the series that are present on the prescribed sources of information if they are deemed useful for identification and retrieval. Ensure consistency in the recording of parallel titles across bibliographic records.  If a parallel title is abridged, follow the instructions provided in Section 1.2.5.2 (applies to parallel titles in general).  Clearly link parallel titles to the appropriate series title proper, particularly in cases where a resource belongs to multiple series.
+
+
+---
+
+*This content was automatically generated from the ISBD PDF documentation using Gemini AI analysis.*

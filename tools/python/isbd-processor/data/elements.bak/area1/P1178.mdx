@@ -1,0 +1,71 @@
+---
+id: P1178
+title: has parallel common title of series or multipart monographic resource
+description: ISBD element documentation for has parallel common title of series or multipart monographic resource
+uri: "isbd:elements/P1178"
+area: area1
+RDF:
+  definition: "Relates a resource that is a series or multipart monographic resource to that part of the title that is carried by a group of related resources in addition to their different section titles, presented on the preferred source of information for the resource as an equivalent in another language or script."
+  domain: "isbd:elements/C2001"
+  type: "rdf:Property"
+reg:hasUnconstrained: "isbd:unc/elements/P1178"
+reg:name: hasParallelCommonTitleOfSeriesOrMultipartMonographicResource
+reg:status: "RegStatus:1001"
+rdf:type: "rdf:Property"
+rdfs:domain: "isbd:elements/C2001"
+rdfs:isDefinedBy: "isbd:elements/"
+rdfs:label: has parallel common title of series or multipart monographic resource
+rdfs:label@es: "tiene título común paralelo de serie o recurso monográfico multiparte"
+skos:definition: "Relates a resource that is a series or multipart monographic resource to that part of the title that is carried by a group of related resources in addition to their different section titles, presented on the preferred source of information for the resource as an equivalent in another language or script."
+skos:definition@es: "Relaciona un recurso que es una serie o un recurso monográfico multiparte con aquella parte del título que es común a un grupo de recursos relacionados que tienen además sus diferentes títulos de sección, presentada como equivalente en otra lengua o escritura en la fuente de información preferida del recurso."
+---
+# has parallel common title of series or multipart monographic resource
+
+The ISBD element "parallel common title of series or multipart monographic resource" is found within the Series and Multipart Monographic Resource Area (Area 6) and is used when the title proper of a series or multipart item appears in more than one language or script.
+
+## Element Reference
+
+- **Definition:** A parallel title of the common title of a series or multipart monographic resource presented on the prescribed source as an equivalent of the common title of the series or multipart monographic resource in another language or script. (Derived from sections 6.1, 6.2 and related examples in the ISBD document)
+- **Domain:** Series or multipart monographic resource
+- **Range:** String literal (the parallel common title)
+- **Element type:** Descriptive
+
+## Additional Information
+
+- **Scope and Purpose:** To provide an equivalent name for the series or multipart item in another language or script, facilitating access and identification for users who may not be familiar with the language or script of the title proper. It enhances international exchange and interoperability of bibliographic data.
+- **User Tasks Supported:**  Searching, browsing, and retrieving resources based on series information in different languages. Identifying equivalent series across different language versions.
+
+## Element Values
+
+- **Rules/Guidelines:** The parallel common title is transcribed from the prescribed source exactly as to wording, but not necessarily as to capitalization and punctuation. Follows the rules for transcribing parallel titles in general (Section 1.2).
+- **Value Constraints/Formats:**  Should be a valid title in the language and script it represents.
+- **String Encoding Schemes:**  UTF-8 is recommended for encoding.
+
+## Examples
+
+```
+(Minicomputer peripherals = Peripheriques pour miniordiateurs)
+(土佐日記 = The Tosa diary)
+(세계화 시대의 한국 사회 = Korean society in the age of globalization)
+(Carte géologique de la France à 1:50 000 = Geological map of France at 1:50 000)
+```
+
+
+## Relationships
+
+- **Relationship to other ISBD elements:**  Directly related to the "title proper of a series or multipart monographic resource" (6.1) and follows the general rules for parallel titles (1.2). It is subordinate to the common title in hierarchical series descriptions (e.g. Main series. Subseries).
+- **Super-types:** Parallel title (1.2)
+- **Sub-types:** None explicitly defined.
+- **Inverse Relationships:** None explicitly defined.
+
+## Stipulations
+
+- **Special Considerations:**  Included only if considered necessary for identification or important for users. May be omitted if the common title itself is already multilingual or covers multiple language versions. Parallel common titles are given after the common title and dependent title if present. (6.2.2)
+- **Exceptions:** Not applicable if the series is described using the dependent title as an entry point (See 6.6.2).
+- **Best Practices:** Provide parallel common titles for all significant languages or scripts in which the series is published. Ensure consistency in the application of capitalization and punctuation rules within each language or script. Use appropriate linking punctuation (=).
+
+
+
+---
+
+*This content was automatically generated from the ISBD PDF documentation using Gemini AI analysis.*

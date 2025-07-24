@@ -1,0 +1,84 @@
+---
+id: P1134
+title: has equalization
+description: ISBD element documentation for has equalization
+uri: "isbd:elements/P1134"
+area: general
+RDF:
+  definition: Relates a resource to the equalization it employs.
+  domain: "isbd:elements/C2001"
+  type: "rdf:Property"
+reg:hasUnconstrained: "isbd:unc/elements/P1134"
+reg:name: hasEqualization
+reg:status: "RegStatus:1001"
+rdf:type: "rdf:Property"
+rdfs:domain: "isbd:elements/C2001"
+rdfs:isDefinedBy: "isbd:elements/"
+rdfs:label: has equalization
+rdfs:label@es: "tiene ecualización"
+skos:definition: Relates a resource to the equalization it employs.
+skos:definition@es: "Relaciona un recurso con la ecualización que emplea."
+---
+# has equalization
+
+The ISBD element "equalization" is found within the "Other physical details" element (5.2) of the Material Description Area, specifically related to sound recordings.  It is considered a technical specification.
+
+## Element Reference
+
+- **Definition:**  The equalization employed for a sound recording. (See 5.2.7.10)
+- **Domain:** Sound recordings (specifically sound reels in the examples provided).
+- **Range:** String describing the equalization standard.
+- **Element type:**  Property.
+
+
+## Additional Information
+- **Scope and Purpose:** Equalization refers to adjustments made during the recording or playback process to compensate for the limitations of audio equipment or recording media.  It helps ensure that the recorded sound is as faithful as possible to the original sound. Describing the equalization used helps users understand the technical characteristics of a recording and select appropriate playback equipment.
+- **User Tasks Supported:** Identification of recordings with specific equalization needs for optimal playback. Facilitates compatibility checks between recordings and playback equipment.
+
+
+## Element Values
+
+- **Specific Rules/Guidelines:** The ISBD recommends specifying the equalization standard employed, if known.  The examples use "NAB" (National Association of Broadcasters) which is a common standard.  Other equalization standards exist and should be recorded if present on the resource.
+- **Value Constraints/Formats:**  Free text string, preferably using standard abbreviations.
+- **String Encoding Schemes:** No specific encoding scheme is mentioned in the ISBD, but UTF-8 would be suitable for representing a wide range of characters.
+
+
+## Examples
+
+```
+1 sound reel (45 min): 19 cm/s, 4 tracks, NAB
+```
+
+```
+1 sound reel (90 min): 7.5 ips, 2 tracks; equalization: CCIR
+```
+
+```
+1 sound reel: equalization unknown
+```
+
+```
+1 sound reel (60 min): 38 cm/s; equalization: IEC
+```
+
+```
+1 sound reel (30 min): 19 cm/s; no equalization
+```
+
+
+## Relationships
+
+- **Relationships to other ISBD elements:** "Equalization" is part of the "Other physical details" element, which is within the "Material Description Area". It is often associated with other technical details like playing speed, number of tracks, and noise reduction.
+- **Super-types/Sub-types:** None explicitly mentioned in the ISBD.  "Equalization" itself could be considered a sub-type of "Technical Specification" for sound recordings.
+- **Inverse Relationships:** None specified.
+
+
+## Stipulations
+
+- **Special Considerations/Exceptions:** The ISBD only requires recording the equalization if it's known. If unknown or not applicable, that can be noted (e.g., "equalization unknown" or "no equalization").
+- **Best Practices:** Use standardized abbreviations where possible. If no common abbreviation exists, use the full term. If the equalization is non-standard or resource-specific, a more detailed explanatory note could be added in Area 7 (Notes).
+
+
+---
+
+*This content was automatically generated from the ISBD PDF documentation using Gemini AI analysis.*

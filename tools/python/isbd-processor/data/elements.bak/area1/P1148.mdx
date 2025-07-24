@@ -1,0 +1,82 @@
+---
+id: P1148
+title: has dependent title of series or multipart monographic resource
+description: ISBD element documentation for has dependent title of series or multipart monographic resource
+uri: "isbd:elements/P1148"
+area: area1
+RDF:
+  definition: "Relates a resource that is a series or multipart monographic resource to a title that by itself is insufficient to identify the resource and that requires the addition of the common title, or the title of the main resource or the title of the main series."
+  domain: "isbd:elements/C2001"
+  type: "rdf:Property"
+reg:hasUnconstrained: "isbd:unc/elements/P1148"
+reg:name: hasDependentTitleOfSeriesOrMultipartMonographicResource
+reg:status: "RegStatus:1001"
+rdf:type: "rdf:Property"
+rdfs:domain: "isbd:elements/C2001"
+rdfs:isDefinedBy: "isbd:elements/"
+rdfs:label: has dependent title of series or multipart monographic resource
+rdfs:label@es: "tiene título dependiente de serie o recurso monográfico multiparte"
+skos:definition: "Relates a resource that is a series or multipart monographic resource to a title that by itself is insufficient to identify the resource and that requires the addition of the common title, or the title of the main resource or the title of the main series."
+skos:definition@es: "Relaciona un recurso que es una serie o recurso monográfico multiparte con un título que por sí mismo es insuficiente para identificar el recurso y que requiere la adición del título común, o el título del recurso principal o el título de la serie principal."
+---
+# has dependent title of series or multipart monographic resource
+
+The requested element, "dependent title of series or multipart monographic resource," is present within the ISBD documentation but is referred to as simply "Dependent title" within the context of series and multipart monographic resources. It is explained as a component of a larger concept involving a "Common title" and is not treated as a standalone element in the way the RDF presents it.
+
+## Element Reference
+
+**Official ISBD Definition:** A title that by itself is insufficient to identify a resource and that requires the addition of the common title, or the title of the main resource or the title of the main series. Examples are section titles, some titles of individual sheets of a map series, some supplement titles and some titles of subseries and the titles of some parts of a multipart monographic resource (See also Section Title).  (Glossary entry, page 247).  Within the context of series (Section 1.1.4.6.1 and throughout area 6) it is explained as the portion of a series title that is dependent on the common title, along with potentially a "dependent title designation," for its meaning and cannot stand alone.
+
+**Domain:** Series and multipart monographic resources.
+
+**Range:** Text string representing the dependent title.
+
+**Element Type:** Descriptive.
+
+## Additional Information
+
+**Scope and Purpose:** To provide more specific or focused title information within a broader series or multipart resource.  It distinguishes individual resources or parts within the larger series/multipart context.
+
+**User Tasks Supported:**
+- Identifying a specific resource within a series or multipart item.
+- Disambiguation between resources with the same common title.
+- Understanding the hierarchical structure of complex resources.
+
+## Element Values
+
+**Rules and Guidelines:** The dependent title should be transcribed exactly as it appears on the resource. Abbreviations are allowed as they appear.
+
+**Value Constraints and Formats:**  No specific character encoding scheme is stipulated but proper transcription from the resource into the record is assumed.
+
+## Examples
+
+```
+(Common Title. Dependent Title)
+
+(Publications of the University of Manchester. Administration series)
+(Geological research reports. Map series)
+(Das Erbe deutscher Musik. Abteilung Oper und Sologesang)
+(Arte moderna straniera. Serie C, Disegnatori)
+(Sounds of the theatre. Music)
+```
+
+## Relationships
+
+**Relationship to Other ISBD Elements:** The dependent title is directly related to the `common title` element (or `title proper of series`), which it cannot function without. It is part of the series statement (Area 6). It may also be related to a `dependent title designation`, which acts as numbering for the dependent title section.
+
+**Super-types and Sub-types:** None explicitly defined within ISBD.  "Section Title" is listed as "see also" in the glossary definition, but not as a true subtype.
+
+**Inverse Relationships:**  None explicitly defined within ISBD.
+
+## Stipulations
+
+**Special Considerations:**
+- When a series title consists of both a common title and dependent title, other title information (Area 6.3) associated with the dependent title is given *after* the dependent title.
+- For older monographic resources, if a series title contains a dependent title and a dependent title designation, the designation may be omitted when the series information is taken from sources other than the title page, and a note about the omission may be made in the notes area.
+
+**Best Practices:**  Ensure consistent application of the rules for transcribing dependent titles to facilitate accurate identification and retrieval of resources. When devising a series title for cataloging purposes, follow existing standards or create titles that clearly distinguish individual resources within the series.
+
+
+---
+
+*This content was automatically generated from the ISBD PDF documentation using Gemini AI analysis.*

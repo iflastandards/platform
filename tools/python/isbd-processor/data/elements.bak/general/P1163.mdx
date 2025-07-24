@@ -1,0 +1,79 @@
+---
+id: P1163
+title: has material description area
+description: ISBD element documentation for has material description area
+uri: "isbd:elements/P1163"
+area: general
+RDF:
+  definition: "Relates a resource to a statement including the specific material designation and extent, other physical details, the dimensions, and the accompanying material statement."
+  domain: "isbd:elements/C2001"
+  range: "isbd:elements/C2008"
+  type: "rdf:Property"
+  scopeNote: Restricted to the resource as issued by the publisher.
+reg:hasUnconstrained: "isbd:unc/elements/P1163"
+reg:name: hasMaterialDescriptionArea
+reg:status: "RegStatus:1001"
+rdf:type: "rdf:Property"
+rdfs:domain: "isbd:elements/C2001"
+rdfs:isDefinedBy: "isbd:elements/"
+rdfs:label: has material description area
+rdfs:label@es: "tiene área de descripción del material"
+rdfs:range: "isbd:elements/C2008"
+skos:definition: "Relates a resource to a statement including the specific material designation and extent, other physical details, the dimensions, and the accompanying material statement."
+skos:definition@es: "Relaciona un recurso con una mención que incluye la designación específica del material y la extensión, otros detalles físicos, dimensiones y la mención de material anejo."
+skos:scopeNote: Restricted to the resource as issued by the publisher.
+skos:scopeNote@es: "Restringido al recurso tal y como lo publica el editor."
+---
+# has material description area
+
+The ISBD element `material description area` (isbd:P1163) is found in the PDF.
+
+## Element Reference
+
+- **Official ISBD Definition:** The material description area includes the extent, other physical details, the dimensions, and the accompanying material statement.  These elements describe the physical characteristics of the resource.
+- **Domain:**  Bibliographic resource (specifically the manifestation level in FRBR terms)
+- **Range:**  A structured string of text containing extent, possibly other physical details, dimensions, and accompanying material statement.
+- **Element Type:** Complex - composed of sub-elements.
+
+## Additional Information
+
+- **Scope and Purpose:** To provide information about the physical characteristics of the resource, enabling users to identify and select a resource appropriate to their needs,  distinguish between different manifestations of the same work, and facilitate physical processing and management of library materials.
+- **User Tasks Supported:**
+    - Identifying the format and physical makeup of the resource.
+    - Distinguishing between different editions or versions based on physical characteristics.
+    - Determining if a resource is suitable for a specific purpose (e.g., interlibrary loan, digitization).
+    - Understanding the components of a multipart resource.
+
+
+## Element Values
+
+- **Specific Rules and Guidelines:** The elements within the area are generally recorded in the following order:  extent, other physical details (if applicable), dimensions, and accompanying material (if applicable).  Specific rules for each sub-element are detailed within section 5 of the ISBD.
+- **Value Constraints and Formats:**  See the stipulations for each sub-element within section 5 (Extent 5.1, Other physical details 5.2, Dimensions 5.3, Accompanying material 5.4).  Generally, numbers are given in Arabic numerals, measurements in centimeters (or millimeters for specific cases), and prescribed abbreviations are used.
+- **String Encoding Schemes:** Not applicable at the area level, though character encoding would be relevant at the record level (e.g., UTF-8).
+
+## Examples
+
+```
+1 vol. ; 20 cm
+320 p. : ill., maps ; 25 cm + 1 CD-ROM (15 min : sd.)
+1 sound disc (45 min) : digital ; 12 cm
+500 leaves ; 30 cm
+1 videocassette (30 min) : sd., col. ; VHS
+```
+
+## Relationships
+
+- **Relationships to other ISBD Elements:**  The material description area is one of the eight areas of description in the ISBD. It is directly related to the content form and media type area (Area 0), as the physical carrier often reflects the content form. It can be indirectly related to other areas like the edition area (Area 2) when the edition statement also specifies a physical characteristic (e.g., "Large print edition").
+- **Sub-elements:**  The material description area is composed of the following sub-elements: extent (5.1), other physical details (5.2), dimensions (5.3), and accompanying material (5.4).
+
+
+## Stipulations
+
+- **Special Considerations:**  The resource is described as issued. Modifications made subsequent to issuance (e.g., binding, trimming) are noted in the note area (Area 7).
+- **Exceptions:** For printed texts and certain notated music in one volume, the number of physical units in the extent may be omitted.
+- **Best Practices:** Use the most precise and specific terms possible when describing the physical characteristics of the resource.  Adhere to the prescribed order of elements within the area. Consult individual sections 5.1-5.4 for detailed stipulations regarding each sub-element.
+
+
+---
+
+*This content was automatically generated from the ISBD PDF documentation using Gemini AI analysis.*

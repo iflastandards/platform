@@ -1,0 +1,71 @@
+---
+id: P1076
+title: has label name and catalogue number
+description: ISBD element documentation for has label name and catalogue number
+uri: "isbd:elements/P1076"
+area: general
+RDF:
+  definition: "Relates a resource that is commercially issued to the label name and all catalogue numbers supplied by the issuing company."
+  domain: "isbd:elements/C2001"
+  type: "rdf:Property"
+  elementSubType: "isbd:elements/P1032"
+reg:hasUnconstrained: "isbd:unc/elements/P1076"
+reg:name: hasLabelNameAndCatalogueNumber
+reg:status: "RegStatus:1001"
+rdf:type: "rdf:Property"
+rdfs:domain: "isbd:elements/C2001"
+rdfs:isDefinedBy: "isbd:elements/"
+rdfs:label: has label name and catalogue number
+rdfs:label@es: "tiene nombre comercial y número de catálogo"
+rdfs:subPropertyOf: "isbd:elements/P1032"
+skos:definition: "Relates a resource that is commercially issued to the label name and all catalogue numbers supplied by the issuing company."
+skos:definition@es: "Relaciona un recurso que se publica comercialmente con el nombre de la etiqueta y con todos los números de catálogo suministrados por la compañía editora."
+---
+# has label name and catalogue number
+
+The ISBD element "label name and catalogue number" (isbd:elements/P1076) is discussed as part of the broader "Resource Identifier" element within the context of sound recordings, videorecordings, etc., primarily in section 8.1.4 of the provided ISBD documentation.  It doesn't appear as a separately defined element with a distinct formal definition.
+
+## Element Reference
+
+- **Definition:** The element consists of the "label name" (brand or trademark of the issuing company) and the "catalogue number" (identification number assigned by the issuing company).  
+- **Domain:**  Applies to sound recordings, videorecordings, and similar resources in Area 8 (Resource Identifier and Terms of Availability Area). While not explicitly stated, it appears its domain would be restricted to resources issued commercially by a company associated with a specific label.
+- **Range:**  Text string containing the label name and catalogue number.
+- **Element Type:**  While not explicitly categorized, it functions as a textual identifier.
+
+## Additional Information
+
+- **Scope and Purpose:** To provide additional identifying information for commercially released sound recordings, videorecordings, etc., beyond or in lieu of standard identifiers like ISBN or ISRC. This facilitates identification and retrieval of these resources, especially when a standard identifier is not available or when the label and catalogue number are the primary identifiers used in common practice.
+- **User Tasks Supported:**  Retrieval of sound recordings and similar resources based on label and catalogue number information. Disambiguation of resources that may have similar titles or other metadata.
+
+
+## Element Values
+
+- **Rules and Guidelines:** The label name is given first, followed by the catalogue number.  Spaces and punctuation appearing on the resource are transcribed exactly. The catalogue number may consist of a numeral, alphanumeric string, or a combination of both.
+- **Value Constraints or Formats:** No strict format is prescribed, reflecting the variety in how labels represent catalogue numbers.
+- **String Encoding:** Not specifically addressed, but it can be assumed that Unicode would be the standard encoding scheme to accommodate a wide range of characters and scripts.
+
+## Examples
+
+```
+- Deutsche Grammophon 479 8697
+- Naxos 8.572117
+- Chandos CHAN 10824(2)
+- ECM Records ECM 2584
+- Mode Records MODE144
+```
+
+## Relationships
+
+- **Relationship to other ISBD elements:** This element is presented as part of the Resource Identifier in Area 8. It is related to other identifiers like ISBN, ISRC, or publisher's numbers. When none of those exist, the label name and catalogue number are given.  If both standard identifiers and label/catalogue information are present, both are recorded.  There's a loose relationship to Area 7 (Notes Area) as additional information about catalogue numbers for individual parts within a set may be recorded there if the primary area only includes the number for the whole set.
+- **Super-types and Sub-types:**  Not formally defined as a separate element within the ISBD structure, so no super/sub-type relationships are defined.
+- **Inverse Relationships:**  None specifically defined.
+
+
+## Stipulations
+
+- **Special Considerations:** The label name and catalogue number are given even if the resource *does* have a standard identifier like an ISRC.  If a multipart resource has individual catalogue numbers for the parts and a single number for the entire set, the set number is given in Area 8, and individual part numbers can be given in Area 7 or as part of the content description.
+- **Best Practices:** Transcribe the label name and catalogue number exactly as they appear on the resource.  Use Unicode encoding to support the broadest possible range of characters and scripts used by different record labels.  Provide notes in Area 7 to clarify any complex numbering schemes or relationships between set and part numbers if needed.
+
+---
+
+*This content was automatically generated from the ISBD PDF documentation using Gemini AI analysis.*

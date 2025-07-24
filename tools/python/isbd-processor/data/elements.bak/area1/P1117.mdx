@@ -1,0 +1,66 @@
+---
+id: P1117
+title: has title of individual work by same author
+description: ISBD element documentation for has title of individual work by same author
+uri: "isbd:elements/P1117"
+area: area1
+RDF:
+  definition: "Relates a resource to the title of an individual work when the resource comprises two or more works without a collective title."
+  domain: "isbd:elements/C2001"
+  type: "rdf:Property"
+  elementSubType: "isbd:elements/P1012"
+reg:hasUnconstrained: "isbd:unc/elements/P1117"
+reg:name: hasTitleOfIndividualWorkBySameAuthor
+reg:status: "RegStatus:1001"
+rdf:type: "rdf:Property"
+rdfs:domain: "isbd:elements/C2001"
+rdfs:isDefinedBy: "isbd:elements/"
+rdfs:label: has title of individual work by same author
+rdfs:label@es: "tiene título de obra individual del mismo autor"
+rdfs:subPropertyOf: "isbd:elements/P1012"
+skos:definition: "Relates a resource to the title of an individual work when the resource comprises two or more works without a collective title."
+skos:definition@es: "Relaciona un recurso con el título de una obra individual cuando el recurso se compone de dos o más obras sin título colectivo."
+---
+# has title of individual work by same author
+
+The element "title of individual work by same author" (isbd:elements/P1117) is not explicitly defined as a standalone element within the provided ISBD Consolidated Edition of 2011 (updated 2021). The concept is addressed within the broader context of resources containing multiple works by the same author, but not as a separate, labeled element.
+
+Instead of a structured breakdown by the requested headings, the following explanation clarifies how the ISBD handles titles of individual works by the same author within a larger resource.
+
+The closest concept within the ISBD is discussed in section 1.1.5.2: "Resources without a collective title." This section explains how to handle resources that comprise two or more works *without* a collective title.  It stipulates that the titles of individual works are listed in the title proper area, separated by semicolons if by the same author (and by periods if by different authors - see 1.1.5.2 and 1.4.5.11.2.)
+
+A linking word or phrase between the titles of works by the same author, as given on the preferred source of information, is retained. This implies that the "title of individual work by same author" is *part* of the title proper element when multiple works are present and lack a collective title.
+
+Here are some examples illustrating this principle:
+
+```
+Title Proper:  Youth: a narrative; Heart of darkness; The end of the tether / Joseph Conrad
+```
+
+```
+Title Proper:  Duo Nr. 1 G-Dur, KV 423, für Violine und Viola; Duo Nr. 2 B-Dur, KV 424, für Violine und Viola / Wolfgang Amadeus Mozart 
+```
+
+```
+Title Proper: Rhapsody in blue; Prelude for piano no. 2 / George Gershwin
+```
+
+**Relationships to other ISBD elements:**
+
+* **Part of Title Proper (1.1):**  As shown above, individual work titles are considered parts of the larger title proper element in these cases.
+* **Statement of Responsibility (1.4):** The statement of responsibility follows the combined title proper, applying to all individual works listed unless otherwise specified (e.g., if different performers are involved in musical works).
+* **Contents Notes (7.7):** While not required in this specific case (because individual titles are in the title proper), contents notes are often used to list the titles of individual works *within* a resource that *has* a collective title.
+
+
+**Stipulations:**
+
+* No specific transcription rules exist for "title of individual work by same author" *apart from* the general transcription rules for the title proper (1.1.5).
+*  The order of the individual titles should respect the order on the resource's chief source of information.
+
+
+In summary, the ISBD does not have a discrete element "title of individual work by same author". Instead, such titles are integrated into the title proper area of the description, separated by prescribed punctuation, when a resource comprises multiple works by the same author but lacks a collective title. This approach ensures clarity and consistency in representing resources with multiple works.
+
+
+---
+
+*This content was automatically generated from the ISBD PDF documentation using Gemini AI analysis.*

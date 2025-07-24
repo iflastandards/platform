@@ -1,0 +1,88 @@
+---
+id: P1064
+title: has note on bibliographic reference
+description: ISBD element documentation for has note on bibliographic reference
+uri: "isbd:elements/P1064"
+area: area7
+RDF:
+  definition: "Relates a resource that is an older monographic resource to a citation, given in a standard and abbreviated form, to a description of the resource in a list describing older monographic resources."
+  domain: "isbd:elements/C2001"
+  type: "rdf:Property"
+  scopeNote: The note may contain more than one citation.
+  elementSubType: "isbd:elements/P1045"
+reg:hasUnconstrained: "isbd:unc/elements/P1064"
+reg:name: hasNoteOnBibliographicReference
+reg:status: "RegStatus:1001"
+rdf:type: "rdf:Property"
+rdfs:domain: "isbd:elements/C2001"
+rdfs:isDefinedBy: "isbd:elements/"
+rdfs:label: has note on bibliographic reference
+rdfs:label@es: "tiene nota de referencia bibliográfica"
+rdfs:subPropertyOf: "isbd:elements/P1045"
+skos:definition: "Relates a resource that is an older monographic resource to a citation, given in a standard and abbreviated form, to a description of the resource in a list describing older monographic resources."
+skos:definition@es: "Relaciona un recurso monográfico antiguo con una cita, de forma abreviada y normalizada de la descripción del recurso, en una lista que describe recursos monográficos antiguos."
+skos:scopeNote: The note may contain more than one citation.
+skos:scopeNote@es: "La nota debe contener más de una cita."
+---
+# has note on bibliographic reference
+
+The ISBD element "note on bibliographic reference" (isbd:elements/P1064) is not explicitly defined as a separate element in the provided ISBD documentation.  The concept exists within the broader context of the Note Area (Area 7), specifically within "Notes on the Content Form and Media Type Area and for Special Types of Material" (7.0) and often combined with the "Bibliographic History of the Resource" (7.2.3).  Therefore, this response will address the concept of bibliographic reference notes within the broader context of Area 7.
+
+## Element Reference
+
+- **Official ISBD Definition:** Not defined as a distinct element, but included as part of the Note Area (Area 7), described as containing "any descriptive information that has not been given in other areas of the description but that is considered to be important to users of bibliographic records." (7.0)
+- **Domain and Range:** Not explicitly defined as an independent element; exists within Area 7.
+- **Element Type:**  Descriptive text.
+
+## Additional Information
+
+- **Scope and Purpose:** To provide bibliographic references or citations that aid in identifying the resource, understanding its context, or researching related works. This often appears when referencing a standard or a prior work from which the current resource is derived, adapted or translated.
+- **User Tasks Supported:**
+    - Identifying related resources.
+    - Understanding the resource's origin or context.
+    - Further research and discovery.
+
+## Element Values
+
+- **Specific Rules or Guidelines:**  Follow standard citation practices (though the specific format is not dictated by ISBD).  Provide sufficient information to uniquely identify the referenced resource. This could include title, author, publication information, etc.  Use prescribed ISBD punctuation when including resource descriptions within the note.
+- **Value Constraints or Formats:** No strict format, but clarity and consistency are crucial.
+- **String Encoding Schemes:** As applicable to the language of the note.
+
+## Examples
+
+```
+. - "Based on the book of the same title by Ludwig Bemelmans"
+```
+
+```
+. - Based on: The treasure of Franchard / by Robert Louis Stevenson
+```
+
+```
+. - Adaptation of: Draculus. 1994
+```
+```
+. - Source: Holzmann & Bohatta. Deutsches Anonymenlexikon, Bd. 1, S. 409, Nr. 11863
+```
+
+```
+. - Cf. VD17 14:052745K 
+```
+
+
+## Relationships
+
+- **Relationships to other ISBD elements:**  Can relate to any area, supplementing information or providing further context.  Frequently appears in conjunction with notes on translations, adaptations, or resources based on other works (7.2.4). Often provides the source of information when data is taken from outside the prescribed sources (e.g., when providing a publisher name from a reference source if it's not on the resource itself).
+- **Super-types and sub-types:** None, as it isn't a formally defined element.
+- **Inverse relationships:** None.
+
+## Stipulations
+
+- **Special Considerations:**  Judgement is required to determine what constitutes "important" information to include. Prioritize clarity and brevity.  For continuing resources, a concise citation using the key title and ISSN may suffice.
+- **Exceptions:** None explicitly defined.
+- **Best Practices:** Be consistent in citation style. Provide clear and concise references.  When referencing a resource, ensure the reference itself can be easily located.  If a standard citation format is used within the institution, adhere to it for consistency.
+
+
+---
+
+*This content was automatically generated from the ISBD PDF documentation using Gemini AI analysis.*

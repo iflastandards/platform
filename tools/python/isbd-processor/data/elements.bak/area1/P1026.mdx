@@ -1,0 +1,74 @@
+---
+id: P1026
+title: has title proper of series or multipart monographic resource
+description: ISBD element documentation for has title proper of series or multipart monographic resource
+uri: "isbd:elements/P1026"
+area: area1
+RDF:
+  definition: "Relates a resource that is a series or multipart monographic resource to the title proper (the chief name of a resource, i.e. the title of a resource in the form in which it appears on the preferred source of information for the resource)."
+  domain: "isbd:elements/C2001"
+  type: "rdf:Property"
+reg:hasUnconstrained: "isbd:unc/elements/P1026"
+reg:name: hasTitleProperOfSeriesOrMultipartMonographicResource
+reg:status: "RegStatus:1001"
+rdf:type: "rdf:Property"
+rdfs:domain: "isbd:elements/C2001"
+rdfs:isDefinedBy: "isbd:elements/"
+rdfs:label: has title proper of series or multipart monographic resource
+rdfs:label@es: "tiene título propiamente dicho de serie o recurso monográfico multiparte"
+skos:definition: "Relates a resource that is a series or multipart monographic resource to the title proper (the chief name of a resource, i.e. the title of a resource in the form in which it appears on the preferred source of information for the resource)."
+skos:definition@es: "Relaciona un recurso que es una serie o recurso monográfico multiparte con el título propiamente dicho (el nombre principal de un recurso, es decir, el titulo de un recurso en la forma en la que aparece en la fuente preferida de información para el recurso)."
+---
+# has title proper of series or multipart monographic resource
+
+The ISBD element "title proper of series or multipart monographic resource" is found within the Series and Multipart Monographic Resource Area (Area 6) of the ISBD.
+
+## Element Reference
+
+- **Definition:** The chief name of a series or multipart monographic resource. Corresponds to the title proper in the bibliographic description of the larger bibliographic resource if it were described as a serial or multipart monographic resource according to the provisions of area 1.  (See section 6.1 of the ISBD:2011 document.)
+- **Domain:** Series or multipart monographic resources.
+- **Range:** Text string.
+- **Element type:** Descriptive.
+
+
+## Additional Information
+
+- **Scope and purpose:** To identify the series or multipart resource to which the described resource belongs.  This aids in collocation and retrieval of related resources.
+- **User tasks supported:** Finding other resources within the same series; understanding the context of the described resource.
+
+
+## Element Values
+
+- **Rules and guidelines:** Transcribe exactly as to wording, but not necessarily as to capitalization and punctuation (see A.7 Capitalization of the ISBD). Typographical errors are not corrected. If not all parts of a serial or multipart monographic resource are in the same larger bibliographic resource, an indication may be given of which parts of the resource are in each larger bibliographic resource (see 6.1 of the ISBD:2011 document).
+- **Value constraints or formats:**  No specific format is mandated beyond accurate transcription from the source. Numbers and letters can be included.
+- **String encoding:**  Dependent on the encoding used for the entire record (e.g., UTF-8).
+
+
+## Examples
+
+```
+(Pepys series)
+(Great newspapers reprinted)
+(Acta Universitatis Carolinae. Philologica)
+(Viewmaster science series. 4, Physics)
+(Problems and progress in development) 
+```
+
+## Relationships
+
+- **Relationship to other ISBD elements:**  Closely related to Area 1 (Title and Statement of Responsibility Area) as it follows the same rules for determining the title proper as if the series itself were being cataloged.  Also related to other elements within Area 6, such as the "Parallel title of a series" and "Other title information of a series."
+- **Super-types:**  None within ISBD.  Could be considered a sub-element of the broader concept of "Title" in general bibliographic models.
+- **Sub-types:** None explicitly defined within ISBD.
+- **Inverse relationships:**  A series resource would have an inverse relationship to the resources contained within it.  This isn't an explicit ISBD element, but a logical relationship that exists.
+
+
+## Stipulations
+
+- **Special considerations:** When a resource belongs to more than one series, Area 6 is repeated for each series.
+- **Exceptions:** If no series title is present on the prescribed sources, a series title is not constructed.
+- **Best practices:**  Ensure accurate transcription from the preferred source of information for the series. When multiple titles appear for the series, choose the title proper according to the rules in section 6.1. Use standard abbreviations where appropriate (see A.6 Abridgements and abbreviations).
+
+
+---
+
+*This content was automatically generated from the ISBD PDF documentation using Gemini AI analysis.*

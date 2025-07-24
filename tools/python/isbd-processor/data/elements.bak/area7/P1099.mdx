@@ -1,0 +1,90 @@
+---
+id: P1099
+title: has note on relationship to other resources
+description: ISBD element documentation for has note on relationship to other resources
+uri: "isbd:elements/P1099"
+area: area7
+RDF:
+  definition: Relates a resource to a note on relationship to other resources.
+  domain: "isbd:elements/C2001"
+  type: "rdf:Property"
+  elementSubType: "isbd:elements/P1045"
+reg:hasUnconstrained: "isbd:unc/elements/P1099"
+reg:name: hasNoteOnRelationshipToOtherResources
+reg:status: "RegStatus:1001"
+rdf:type: "rdf:Property"
+rdfs:domain: "isbd:elements/C2001"
+rdfs:isDefinedBy: "isbd:elements/"
+rdfs:label: has note on relationship to other resources
+rdfs:label@es: "tiene nota de relación con otros recursos"
+rdfs:subPropertyOf: "isbd:elements/P1045"
+skos:definition: Relates a resource to a note on relationship to other resources.
+skos:definition@es: "Relaciona un recurso con una nota de relación con otros recursos."
+---
+# has note on relationship to other resources
+
+The ISBD element "note on relationship to other resources" is discussed within the broader context of the "Notes on the edition area and the bibliographic history of the resource" (section 7.2) and specifically within "Relationships to other resources" (section 7.2.4).  It isn't treated as a distinct, named element like `isbd:P100` (title proper) but is a type of note recorded in Area 7. Therefore, it doesn't have a formal definition, domain, range, or element type in the same way other core ISBD elements do.  The structure of the note itself follows the stipulations for Area 7.
+
+## Element Reference
+
+This element is a type of note and does not have a distinct ISBD definition, domain, range, or assigned identifier like other core ISBD elements.  It is considered part of the general note area (Area 7).
+
+## Additional Information
+
+**Scope and Purpose:** The purpose of this note is to document relationships between the resource being described and other resources. These relationships can include translations, reproductions, different editions published simultaneously, resources issued as supplements or inserts, resources absorbed by or absorbing another resource, series/subseries relationships, or resources published together.
+
+**User Tasks Supported:** This element enables users to:
+
+* Understand the relationship of the described resource to other related resources.
+* Identify translations, reproductions, related editions, supplements, etc.
+* Discover other related works that might be of interest.
+
+
+## Element Values
+
+**Rules and Guidelines:** The note should clearly state the nature of the relationship (e.g., "Translation of:", "Reproduction of:", "Supplement to:") followed by sufficient bibliographic information to identify the related resource.  For serials and integrating resources, providing the key title and ISSN is recommended.  For other resources, the title proper along with statement of responsibility and/or other relevant details are usually sufficient.
+
+**Value Constraints and Formats:** There are no strict format requirements other than following the general stipulations for Area 7, but clarity and conciseness are important.  Standard abbreviations (as defined in Appendix D and referenced throughout the document) should be used where appropriate.
+
+
+## Examples
+
+```
+Translation of: La mort d'Ivan Ilitch / Léon Tolstoï. Paris : Gallimard, 1982.
+```
+
+```
+Reproduction of: The anatomy of melancholy / Robert Burton. Oxford : Clarendon Press, 1621.
+```
+
+```
+Supplement to: Journal of the American Chemical Society = ISSN 0002-7863.
+```
+
+```
+Vol. 4, no. 1- issued with: Bulletin of the Atomic Scientists. Chicago : Educational Foundation for Nuclear Science, 1947-.
+```
+
+```
+Merged with: Library journal ; School library journal ; to become: Library journal / School library journal.
+```
+
+
+
+## Relationships
+
+**Relationships to other ISBD elements:** This note type is recorded in Area 7.  The information provided in the note might relate to other areas of the description (e.g., Area 2 for edition information, Area 6 for series information).
+
+**Super-types and sub-types:**  The different relationship types (translation, reproduction, supplement, etc.) can be considered sub-types of this general note on relationship.
+
+
+## Stipulations
+
+**Special Considerations:** The level of detail required in the citation of related resources depends on the type of resource and the context of the note. The goal is to provide enough information for unambiguous identification.
+
+**Best Practices:** Be concise and clear in stating the relationship. Use standard abbreviations where possible.  When citing other resources, provide at least the title proper and preferably enough other information (statement of responsibility, publication information, ISSN/ISBN) to distinguish it from other similar resources.  If numerous related resources exist, a general note may be sufficient.
+
+
+---
+
+*This content was automatically generated from the ISBD PDF documentation using Gemini AI analysis.*

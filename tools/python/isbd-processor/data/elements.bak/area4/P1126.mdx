@@ -1,0 +1,97 @@
+---
+id: P1126
+title: has process or method of reproduction of still image
+description: ISBD element documentation for has process or method of reproduction of still image
+uri: "isbd:elements/P1126"
+area: area4
+RDF:
+  definition: "Relates a resource that is a still image to details on the process or method of reproduction."
+  domain: "isbd:elements/C2001"
+  type: "rdf:Property"
+reg:hasUnconstrained: "isbd:unc/elements/P1126"
+reg:name: hasProcessOrMethodOfReproductionOfStillImage
+reg:status: "RegStatus:1001"
+rdf:type: "rdf:Property"
+rdfs:domain: "isbd:elements/C2001"
+rdfs:isDefinedBy: "isbd:elements/"
+rdfs:label: has process or method of reproduction of still image
+rdfs:label@es: "tiene proceso o método de reproducción de imagen fija"
+skos:definition: "Relates a resource that is a still image to details on the process or method of reproduction."
+skos:definition@es: "Relaciona un recurso que es una imagen fija con los detalles del proceso o método de reproducción."
+---
+# has process or method of reproduction of still image
+
+The ISBD element "process or method of reproduction of still image" is found within the Material Description Area, specifically under Other physical details. It's discussed in section 5.2.7.2 of the provided documentation.
+
+## Element Reference
+
+**Definition:** Any details on the process or method of reproduction of a still image may be given.
+
+**Domain:** Still images (e.g., engravings, photographs, lithographs).  While not explicitly stated in the ISBD, the domain is implied by the context of section 5.2, "Other physical details," and the specific mention of reproduction methods suitable for still images.
+
+**Range:** String describing the reproduction process (e.g., "drypoint," "aquatint," "woodcut," "photogravure").
+
+**Element Type:** Descriptive.
+
+## Additional Information
+
+**Scope and Purpose:**  This element provides more specific information about the technical process used to create the still image resource being described. It adds a layer of granularity to the physical description, going beyond the basic material designation. This can be helpful for identification, especially for resources like prints and engravings where the process significantly impacts the final appearance and value.
+
+**User Tasks Supported:** This element helps users:
+
+* Distinguish between resources created using different processes.
+* Identify resources created using a specific technique of interest.
+* Better understand the physical nature of the resource.
+
+## Element Values
+
+**Rules and Guidelines:** The ISBD does not provide a controlled vocabulary for reproduction processes.  Catalogers should use terms that are commonly understood and, where possible, consistent with established usage in the field (e.g., printmaking, photography).
+
+**Value Constraints and Formats:** No specific format is prescribed, but brevity and clarity are recommended.  Multiple processes can be listed, separated by commas.
+
+**String Encoding Schemes:**  No specific encoding scheme is mentioned, but UTF-8 is generally recommended for ISBD data.
+
+## Examples
+
+```
+1 engraving : drypoint, aquatint ; 20 x 25 cm
+```
+
+```
+1 photograph : gelatin silver print ; 15 x 20 cm
+```
+
+```
+1 lithograph : color ; 30 x 40 cm
+```
+
+```
+1 woodcut ; 10 x 15 cm
+```
+
+```
+1 photograph : albumen print ; 8 x 10 cm
+```
+
+
+## Relationships
+
+**Relationships to other ISBD elements:** This element is part of the Material Description Area (Area 5) and is closely related to other physical details like the "Specific material designation" (5.1.2) and "Presence of illustrations" (5.2.3).  It provides further details about the creation of the resource.
+
+**Super-types and Sub-types:**  This element could be considered a sub-type of a more general "Reproduction Method" element. Specific processes like "drypoint" and "aquatint" are sub-types of "intaglio printing."
+
+**Inverse relationships:**  None specified.
+
+
+## Stipulations
+
+**Special Considerations:** The ISBD advises to omit details that are implicit in the specific material designation.  For example, if the resource is designated as an "engraving," it's unnecessary to specify that it's a print.
+
+**Exceptions:**  No exceptions are noted.
+
+**Best Practices:** Use established terminology from the relevant field.  When listing multiple processes, consider their relationship and list them in a logical order (e.g., from most prominent to least prominent, or chronologically based on the steps in the process). If the process is unusual or requires further explanation, consider adding a note in Area 7.
+
+
+---
+
+*This content was automatically generated from the ISBD PDF documentation using Gemini AI analysis.*

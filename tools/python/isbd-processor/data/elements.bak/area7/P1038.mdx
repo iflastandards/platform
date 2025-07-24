@@ -1,0 +1,92 @@
+---
+id: P1038
+title: has note on material type or resource specific type
+description: ISBD element documentation for has note on material type or resource specific type
+uri: "isbd:elements/P1038"
+area: area7
+RDF:
+  definition: Relates a resource to a note on the material or type of resource specific area.
+  domain: "isbd:elements/C2001"
+  type: "rdf:Property"
+  elementSubType: "isbd:elements/P1045"
+reg:hasUnconstrained: "isbd:unc/elements/P1038"
+reg:name: hasNoteOnMaterialTypeOrResourceSpecificType
+reg:status: "RegStatus:1001"
+rdf:type: "rdf:Property"
+rdfs:domain: "isbd:elements/C2001"
+rdfs:isDefinedBy: "isbd:elements/"
+rdfs:label: has note on material type or resource specific type
+rdfs:label@es: "tiene nota sobre tipo de material o tipo específico de recurso"
+rdfs:subPropertyOf: "isbd:elements/P1045"
+skos:definition: Relates a resource to a note on the material or type of resource specific area.
+skos:definition@es: "Relaciona un recurso con una nota sobre el área de material o tipo específico de recurso."
+---
+# has note on material type or resource specific type
+
+The ISBD element "note on material type or resource specific type" is found within Area 7 (Notes) of the ISBD standard. It pertains specifically to notes that relate to elements described in Area 3, which varies based on the material type.  This element itself isn't explicitly defined in the glossary or given a distinct label like "note on nature of content" in 7.1.2 has, but it falls under the broader scope of Area 7.
+
+## Element Reference
+
+- **Official ISBD definition:** Not explicitly defined as a separate element, but discussed under the guidelines for Area 7 and Area 3. Area 3 contains information specific to certain material or resource types (cartographic resources, notated music, serials, and unpublished resources), and 7.3 provides guidelines for notes related to the data given in Area 3.
+- **Domain and range:** Not applicable in the traditional sense of RDF, but the note would apply to the resource being described and the content of the note would be a textual description or explanation.
+- **Element type:** Annotation/Note
+
+## Additional Information
+
+- **Scope and purpose:**  To provide additional information, explanations, or peculiarities regarding the specific material or type of resource that is described in Area 3. These notes can relate to mathematical data (cartographic resources), music format (notated music), numbering (serials), or production statements/physical format (unpublished resources).  They enhance and clarify information that is unique to specific resource types.
+- **User tasks supported:** These notes aid users in understanding specific aspects related to the material or type of the resource, facilitating identification and selection based on specific needs. They might clarify ambiguities in the formal description, provide contextual information, or highlight unique characteristics.
+
+## Element Values
+
+- **Specific rules or guidelines:** The rules and guidelines are dependent on the resource type and relate to the specific elements present in Area 3 for that type. See 7.3.1 (Cartographic), 7.3.2 (Notated Music), 7.3.3 (Serials), 7.3.4 (Unpublished) for specific guidelines.
+- **Value constraints or formats:** No specific format, but should be concise and clear. Can be free text, structured descriptions, or references to external sources.
+- **String encoding schemes:** Not applicable in a formal sense, but the notes should be encoded using the character set appropriate for the resource being described.
+
+## Examples
+
+
+```
+7.3.1 Example (Cartographic): 
+- "This map is constructed by using a special projection system that gives a perspective 
+effect while the immediate lake area remains in scale"
+```
+
+```
+7.3.2 Example (Notated Music):
+- Lute tablature and staff notation on opposite pages
+```
+
+```
+7.3.3 Example (Serials):
+- Numbering begins with no. 1 each year
+```
+
+```
+7.3.4 Example (Unpublished):
+- Author's signature in h. 12v.
+```
+
+```
+7.3.1 Example (Cartographic - Digital):
+- Location reference: 100-year floodplain boundary; ... Geographic system: coordinates; 
+  decimal degrees; ...Format of delivery: ... 
+```
+
+
+
+## Relationships
+
+- **Relationships to other ISBD elements:** Directly related to the data given in Area 3 (Material or Type of Resource Specific Area).  Can also be indirectly related to other areas if the notes provide context or clarification for data given in those areas.
+- **Super-types and sub-types:**  No formal sub-types in the ISBD standard itself, but more granular classifications might exist in specific implementation guidelines or cataloging rules.
+- **Inverse relationships:** Not applicable.
+
+## Stipulations
+
+- **Special considerations:** Notes are optional and should be included only when they provide significant information that is not readily apparent from other elements of the description.  Avoid redundant or trivial notes.
+- **Exceptions:**  None explicitly stated, but the specific rules and application will depend on the material or resource type.
+- **Best practices:** Be concise, clear, and unambiguous in the wording of notes. Use standard terminology and abbreviations when appropriate. If the note refers to other resources, provide sufficient bibliographic information to enable identification. It is crucial to clearly link the note to the relevant portion of Area 3 if there is potential for ambiguity.
+
+
+---
+
+*This content was automatically generated from the ISBD PDF documentation using Gemini AI analysis.*

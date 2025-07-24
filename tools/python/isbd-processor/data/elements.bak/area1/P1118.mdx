@@ -1,0 +1,92 @@
+---
+id: P1118
+title: has title of individual work by different author
+description: ISBD element documentation for has title of individual work by different author
+uri: "isbd:elements/P1118"
+area: area1
+RDF:
+  definition: "Relates a resource to the title of an individual work when the resource comprises two or more works with different statements of responsibility without a collective title."
+  domain: "isbd:elements/C2001"
+  type: "rdf:Property"
+  elementSubType: "isbd:elements/P1012"
+reg:hasUnconstrained: "isbd:unc/elements/P1118"
+reg:name: hasTitleOfIndividualWorkByDifferentAuthor
+reg:status: "RegStatus:1001"
+rdf:type: "rdf:Property"
+rdfs:domain: "isbd:elements/C2001"
+rdfs:isDefinedBy: "isbd:elements/"
+rdfs:label: has title of individual work by different author
+rdfs:label@es: "tiene título de obra individual de diferente autor"
+rdfs:subPropertyOf: "isbd:elements/P1012"
+skos:definition: "Relates a resource to the title of an individual work when the resource comprises two or more works with different statements of responsibility without a collective title."
+skos:definition@es: "Relaciona un recurso con el título de una obra individual cuando el recurso se compone de dos o más obras con diferentes menciones de responsabilidad sin título colectivo."
+---
+# has title of individual work by different author
+
+The ISBD element "title of individual work by different author" (isbd:elements/P1118) appears within a statement of responsibility and is therefore covered by the stipulations for that element.  It is not a separately defined element with its own explicit rules within the ISBD standard as of the 2021 update. The stipulations related to titles of individual works within larger resources are detailed primarily in sections 1.1.5.2, 1.4.5.11, and 7.7.
+
+## Element Reference
+
+The ISBD doesn't provide a distinct definition for "title of individual work by different author."  Instead, it falls under the broader concept of *statements of responsibility* (section 1.4), and the handling of titles for works within resources containing multiple works (section 1.1.5.2 and 1.4.5.11). It is not an element in the technical sense of having a dedicated area within the ISBD framework.
+
+There's no formal domain or range defined specifically for this element.  Its range would essentially be the titles themselves (strings), and its domain would be the context of a statement of responsibility relating to a resource containing multiple works by different authors.
+
+It is not an element with a defined type within the ISBD's structure.
+
+
+## Additional Information
+
+The purpose is to clarify the authorship of individual works contained within a resource where those works are by different creators. It aids in identifying and distinguishing the separate creations within the larger whole.
+
+This element supports user tasks such as:
+* Identifying the author of a specific work contained within a larger resource.
+* Differentiating between multiple works packaged together.
+* Searching or filtering for works by a particular author within a collection or anthology.
+
+
+## Element Values
+
+The ISBD indicates that titles of individual works within a compilation should be given in the order they appear on the preferred source of information (typically the title page). The standard transcription rules of the ISBD apply (1.1.5).  This means the title should be transcribed exactly as to wording, but not necessarily capitalization or punctuation.
+
+There are no specific value constraints or string encoding schemes mandated by ISBD for this particular element, although Unicode is generally recommended for ISBD records.
+
+
+## Examples
+
+```
+1.4.5.11.2 Example:
+
+Teorija kredita : skripta / Milutin Ćirović. Teorija dopunskog kredita : skripta /
+Vjekoslav Meichsner
+
+7.7.1 Example (within a contents note):
+
+Note: Contents: Love and peril / the Marquis of Lorne. To be or not to be / Mrs.
+Alexander. The melancholy hussar / Thomas Hardy
+
+7.7.2 Example (within a contents note):
+. - Contents: The homecoming / by Harold Pinter. Chips with everything / by Arnold
+Wesker. Marching song / by John Whiting
+```
+
+
+## Relationships
+
+Related to the *statement of responsibility* (1.4) and intertwined with the *title proper* area (1.1) when dealing with multiple works within a single resource.
+
+No formal super-types or sub-types defined by ISBD.
+
+No defined inverse relationships within the ISBD structure.
+
+
+## Stipulations
+
+If a collective title is present, it is used as the title proper (1.1.4.3), and the individual titles are recorded in the contents note (7.7). If no collective title is present, and there are many works, the first three may be given followed by the mark of omission (...).  When individual works are given within the title proper area (because no collective title is present), the statements of responsibility for each work follow their respective titles (1.4.5.11.2).
+
+
+The ISBD emphasizes the importance of using prescribed sources of information and prescribed punctuation to ensure consistency and international interoperability.  Best practice is to adhere to these guidelines as much as possible when recording titles of individual works by different authors within a larger resource.
+
+
+---
+
+*This content was automatically generated from the ISBD PDF documentation using Gemini AI analysis.*

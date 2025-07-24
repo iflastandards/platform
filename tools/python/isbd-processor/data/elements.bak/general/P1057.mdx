@@ -1,0 +1,88 @@
+---
+id: P1057
+title: has presence of illustrations
+description: ISBD element documentation for has presence of illustrations
+uri: "isbd:elements/P1057"
+area: general
+RDF:
+  definition: "Relates a resource that is illustrated to the abbreviation \"ill.\" (or its equivalent in another language), followed or replaced by a specification of particular types of illustration."
+  domain: "isbd:elements/C2001"
+  type: "rdf:Property"
+reg:hasUnconstrained: "isbd:unc/elements/P1057"
+reg:name: hasPresenceOfIllustrations
+reg:status: "RegStatus:1001"
+rdf:type: "rdf:Property"
+rdfs:domain: "isbd:elements/C2001"
+rdfs:isDefinedBy: "isbd:elements/"
+rdfs:label: has presence of illustrations
+rdfs:label@es: "tiene presencia de ilustraciones"
+skos:definition: "Relates a resource that is illustrated to the abbreviation \"ill.\" (or its equivalent in another language), followed or replaced by a specification of particular types of illustration."
+skos:definition@es: "Relaciona un recurso que está ilustrado con la abreviatura “ill.” (o su equivalente en otra lengua), seguido o sustituido por una especificación del tipo concreto de ilustración."
+---
+# has presence of illustrations
+
+The element "presence of illustrations" is found within the Material Description Area (Area 5) of the ISBD.  Specifically, it is discussed in section 5.2.3.
+
+## Element Reference
+
+- **Official ISBD definition:** When a resource is illustrated, the abbreviation "ill." (or its equivalent in another language) may be given after the specific material statement. Minor illustrations may be disregarded.  Further specification of illustration types (maps, plans, portraits, etc.) or number of illustrations may follow the abbreviation. If specific illustration types constitute the only illustrations, the general "ill." abbreviation is omitted, and only the types are recorded.
+- **Domain:**  Specific material designation (5.1.2) of the resource being described.
+- **Range:**  Boolean (true if illustrations are present, implicitly false if omitted).  Can be followed by further specification of illustration type or number.
+- **Element type:** Descriptive
+
+
+## Additional Information
+
+- **Scope and purpose:** To concisely indicate the presence of illustrations (other than minor ones) within the resource, allowing users to readily identify illustrated materials.  Further specification allows for more granular retrieval and filtering.
+- **User tasks supported:** Searching and filtering for illustrated materials; understanding the general composition of the resource.
+
+
+## Element Values
+
+- **Specific rules/guidelines:** Use the abbreviation "ill." following the specific material designation.  Specific illustration types (e.g., "maps", "ports.", "facsims.") follow "ill." separated by a comma if the general abbreviation is used.  Numeric indication of number of illustrations (e.g., "ill., 25 maps") can also be included. If only specific types are present, record those types directly after the specific material designation without "ill.".
+- **Value constraints/formats:**  Use standardized abbreviations. The order is generally: `ill. [; or ,] [type of illustration] [; or ,] [number of illustrations]`.
+- **String encoding:** Not applicable, uses standardized abbreviations.
+
+
+
+## Examples
+
+```
+3 vol. : ill. ; 25 cm.
+```
+
+```
+1 map : col. ; 45 x 60 cm. + 1 booklet (20 p. : ill., maps ; 20 cm.).
+```
+
+```
+1 videorecording (30 min) : sd., col. ; VHS + 1 booklet (10 p. : ill., ports. ; 20 cm).
+```
+
+```
+5 vol. : maps, plans, tables ; 30 cm. 
+```
+
+```
+1 portfolio : facsims. ; 35 cm.
+```
+
+
+
+## Relationships
+
+- **Relationships to other elements:** Follows the specific material designation (5.1.2) and precedes other physical details (5.2.2 onwards) like color.
+- **Super/sub-types:**  "Presence of illustrations" is a general indicator.  Specific illustration types (e.g., maps, plans) are subtypes.
+- **Inverse relationships:** None specified.
+
+
+## Stipulations
+
+- **Special considerations:** Minor illustrations are generally disregarded, focusing on significant illustrative content. Judgment is required to determine "minor" status based on context and purpose of the resource.
+- **Exceptions:** As noted above, if only specific types are present, omit the general "ill." and list the types directly.
+- **Best practices:**  Consistency in applying the abbreviation and specifying illustration types is crucial for effective retrieval. Using standard abbreviations (see Appendix D of the ISBD) is strongly recommended.  If in doubt about the significance of illustrations, it's generally better to include the "ill." indicator.
+
+
+---
+
+*This content was automatically generated from the ISBD PDF documentation using Gemini AI analysis.*

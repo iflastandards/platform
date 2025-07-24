@@ -1,0 +1,75 @@
+---
+id: P1010
+title: has statement of responsibility relating to edition
+description: ISBD element documentation for has statement of responsibility relating to edition
+uri: "isbd:elements/P1010"
+area: area1
+RDF:
+  definition: "Relates a resource to one or more names, phrases, or groups of characters relating to the identification and/or function of any persons or corporate bodies responsible for or contributing to the creation or realisation of the intellectual or artistic content of an edition of a work contained in the resource."
+  domain: "isbd:elements/C2001"
+  type: "rdf:Property"
+  scopeNote: "Statements of responsibility relating to the edition can indicate functions such as that of a reviser of a new edition, or can name the person or body responsible for the provision of supplementary matter, of appendices, etc., in a new edition."
+reg:hasUnconstrained: "isbd:unc/elements/P1010"
+reg:name: hasStatementOfResponsibilityRelatingToEdition
+reg:status: "RegStatus:1001"
+rdf:type: "rdf:Property"
+rdfs:domain: "isbd:elements/C2001"
+rdfs:isDefinedBy: "isbd:elements/"
+rdfs:label: has statement of responsibility relating to edition
+rdfs:label@es: "tiene mención de responsabilidad relativa a edición"
+skos:definition: "Relates a resource to one or more names, phrases, or groups of characters relating to the identification and/or function of any persons or corporate bodies responsible for or contributing to the creation or realisation of the intellectual or artistic content of an edition of a work contained in the resource."
+skos:definition@es: "Relaciona un recurso con uno o más nombres, frases, o grupos de caracteres relacionados con la identificación y/o función de cualquier persona o entidad corporativa responsables de, o que contribuyen a, la creación o realización del contenido intelectual o artístico de una edición de una obra contenida en el recurso."
+skos:scopeNote: "Statements of responsibility relating to the edition can indicate functions such as that of a reviser of a new edition, or can name the person or body responsible for the provision of supplementary matter, of appendices, etc., in a new edition."
+skos:scopeNote@es: "Las menciones de responsabilidad relativas a la edición pueden hacer referencia a funciones tales como la de revisor de una nueva edición, o pueden designar a la persona o entidad responsable de la aportación de material complementario, apéndices, etc. a una nueva edición."
+---
+# has statement of responsibility relating to edition
+
+The ISBD element "statement of responsibility relating to edition" (isbd:elements/P1010) is discussed as "Statement of responsibility relating to the edition, drafting, version, etc." in section 2.3 of the provided PDF.
+
+## Element Reference
+
+- **Official ISBD Definition:**  Statements of responsibility relating to the edition, drafting, version, etc. can refer to persons or to corporate bodies and can indicate functions such as that of a reviser of a new edition, drafting, version, etc., or can name the person or body responsible for the provision of supplementary matter, of appendices, etc., in a new edition, drafting, version, etc.
+- **Domain:** Edition, drafting, version, etc. statement (Area 2)
+- **Range:**  Person or corporate body name(s) and/or function relating to the edition
+- **Element Type:** Text
+
+## Additional Information
+
+- **Scope and Purpose:** This element identifies the agent(s) responsible for the specific edition being described, distinguishing their contribution from the primary creators of the work.  It clarifies the nature of the edition (revised, adapted, enlarged, etc.) and who performed those actions.
+- **User Tasks Supported:**  This element helps users understand the differences between editions and select the most appropriate edition for their needs.  It also facilitates distinguishing the contributions of various agents involved in a resource's intellectual history.
+
+
+## Element Values
+
+- **Rules and Guidelines:** The statement should clearly indicate the relationship between the agent and the edition, using terms like "revised by," "edited by," "translated by," "with new introduction by," etc.
+- **Value Constraints and Formats:**  The statement should follow the general rules for Statements of Responsibility outlined in section 1.4, regarding transcription, abbreviations, multiple names, etc.  It should be concise and unambiguous.
+- **String Encoding Schemes:** Not applicable.
+
+
+## Examples
+
+```
+/ Revised by John Smith
+/ Translated from the French by Jane Doe; with a new preface by the author
+/ Edited by Mary Jones and Peter Brown, with the assistance of David Green
+/ With supplementary notes and appendices by H.J. Laski
+/ Revised collectively by the Peking Opera Troupe of Peking
+```
+
+## Relationships
+
+- **Relationship to other ISBD elements:** Closely related to the edition statement (2.1) and precedes any additional edition statement (2.4). It may also be related to information in the Note area (Area 7), if additional details about the agents or the editorial process are provided there.
+- **Super-types and Sub-types:**  Can be considered a sub-type of the general Statement of Responsibility (1.4).
+- **Inverse Relationships:** No direct inverse relationship within ISBD.
+
+
+## Stipulations
+
+- **Special Considerations:** If the statement of responsibility relating to the edition is linguistically linked to the title proper or other title information, it should be recorded there and not repeated in Area 2 (see 1.1.3.6 and 1.3.2).
+- **Exceptions:**  A statement of responsibility relating to appendices or other supplementary matter, specific to this edition and not to all editions, should be recorded following the main statement of responsibility for the edition (see 2.3.2).
+- **Best Practices:**  Be consistent in terminology and abbreviations. Use standard terms like those provided in the examples above. When multiple agents are involved, clearly indicate their respective roles. If the source of the statement is not the prescribed source for Area 2, indicate the source in Area 7.
+
+
+---
+
+*This content was automatically generated from the ISBD PDF documentation using Gemini AI analysis.*

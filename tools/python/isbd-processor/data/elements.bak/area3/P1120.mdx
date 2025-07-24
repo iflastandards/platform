@@ -1,0 +1,76 @@
+---
+id: P1120
+title: has subsequent numbering system
+description: ISBD element documentation for has subsequent numbering system
+uri: "isbd:elements/P1120"
+area: area3
+RDF:
+  definition: "Relates a resource that is a serial to a new sequence of numbering (the identification of each of the successive issues or parts)."
+  domain: "isbd:elements/C2001"
+  type: "rdf:Property"
+  scopeNote: "Normally, the serial carries a designation, such as \"new series\", \"second series\", etc., to indicate that a new sequence of numbering, not a new serial, is intended. The designation of the new sequence, if any, is included. The numbering system can include a numeral, a letter, any other character, or the combination of these, with or without an accompanying word (\"volume\", \"number\", etc.), and, or, a chronological designation."
+reg:hasUnconstrained: "isbd:unc/elements/P1120"
+reg:name: hasSubsequentNumberingSystem
+reg:status: "RegStatus:1001"
+rdf:type: "rdf:Property"
+rdfs:domain: "isbd:elements/C2001"
+rdfs:isDefinedBy: "isbd:elements/"
+rdfs:label: has subsequent numbering system
+rdfs:label@es: "tiene sistema sucesivo de numeración"
+skos:definition: "Relates a resource that is a serial to a new sequence of numbering (the identification of each of the successive issues or parts)."
+skos:definition@es: "Relaciona un recurso que es una publicación seriada con una nueva secuencia de numeración (la identificación de cada uno de los sucesivos fascículos o partes)."
+skos:scopeNote: "Normally, the serial carries a designation, such as \"new series\", \"second series\", etc., to indicate that a new sequence of numbering, not a new serial, is intended. The designation of the new sequence, if any, is included. The numbering system can include a numeral, a letter, any other character, or the combination of these, with or without an accompanying word (\"volume\", \"number\", etc.), and, or, a chronological designation."
+skos:scopeNote@es: "Generalmente, la publicación seriada lleva una designación, como “nueva serie”, “segunda serie”, etc.., con la que se indica una nueva secuencia de numeración, no una nueva publicación. Se incluye, si existe, la designación de la nueva secuencia. El sistema de numeración puede incluir un numeral, una letra o cualquier otro carácter, o una combinación de ellos, con o sin una palabra que lo acompañe (“volumen, número, etc.) y/o una designación cronológica."
+---
+# has subsequent numbering system
+
+The ISBD element "subsequent numbering system" is found within the context of serials and their numbering within the "Numbering (Serials)" section (3.3) of the ISBD documentation.  It specifically relates to situations where a serial changes its numbering system but does *not* warrant a completely new bibliographic description.  The element itself is part of a larger structure describing the complete numbering history of the serial.  Although not explicitly called "subsequent numbering system", the concept is described under section 3.3.7 "New sequence of numbering".
+
+## Element Reference
+
+- **Official ISBD Definition:** (Paraphrased from 3.3.7)  A data element indicating the numbering of a serial after it adopts a new numbering sequence, provided a new description is not required.  This often involves a designation like "new series," "second series," etc.
+- **Domain:** Serials (continuing resources) that have changed their numbering system.
+- **Range:**  String representing the new numbering designation (e.g., "n.s., vol. 1," "2nd series, no. 4").
+- **Element Type:** Descriptive.
+
+## Additional Information
+
+- **Scope and Purpose:** To provide a clear and concise record of a serial's numbering changes, facilitating the identification and retrieval of specific issues and aiding in the understanding of its publication history.  It disambiguates between a completely new serial and a continuation of an existing serial with a new numbering scheme.
+- **User Tasks Supported:**
+    - Finding specific issues of a serial.
+    - Understanding the chronological progression of a serial.
+    - Differentiating between different numbering sequences of the same serial.
+
+## Element Values
+
+- **Rules and Guidelines:** The initial numbering is provided, followed by a semicolon and space, then the designation of the new sequence (if given, e.g., "new series", abbreviated as "n.s."), a comma and space, and the numbering of the new sequence.
+- **Value Constraints and Formats:**
+    - Arabic numerals should be used for numbering.
+    - Standard abbreviations are encouraged for sequence designations (e.g., "n.s." for "new series").
+- **String Encoding:**  UTF-8 is recommended.
+
+
+## Examples
+
+```
+No. 1-50; n.s., no. 1-
+Vol. 1-10 (1990-1999); 2nd series, vol. 1- (2000-)
+1870-1920; new ser., v. 1-15 (1921-1935)
+```
+
+## Relationships
+
+- **Relationship to Other ISBD Elements:**  This element is directly related to the "Numbering (Serials)" area (3.3) and is part of a combined expression including the original numbering. It is also closely related to notes in Area 7 (Notes) which might provide further details if the numbering situation is complex (see 7.3.3, "Numbering (Continuing resources)").
+- **Super-types and Sub-types:** N/A (this is a specific value within the Numbering Area).
+- **Inverse Relationships:** N/A
+
+
+## Stipulations
+
+- **Special Considerations:** If the numbering change is significant enough to warrant a new description (e.g., change in title, medium, etc.), a separate record is created rather than using the "new sequence of numbering" element.
+- **Best Practices:** Clarity is key. Use standard abbreviations where possible, and provide notes in Area 7 for complex situations that cannot be fully expressed within the Numbering Area itself. Always include the original numbering before indicating the new sequence.
+
+
+---
+
+*This content was automatically generated from the ISBD PDF documentation using Gemini AI analysis.*

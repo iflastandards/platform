@@ -1,0 +1,80 @@
+---
+id: P1156
+title: has numeric designation
+description: ISBD element documentation for has numeric designation
+uri: "isbd:elements/P1156"
+area: general
+RDF:
+  definition: Relates a resource that is a serial to its numeric designation.
+  domain: "isbd:elements/C2001"
+  type: "rdf:Property"
+  scopeNote: "A numeric designation is given as it appears, except that arabic numerals are given in place of other numerals or spelled-out numbers and multiple levels of numbering are given in a hierarchical order. A numeric designation may include alphabetic or other characters as well as numbers. Words in the designation may be abbreviated."
+reg:hasUnconstrained: "isbd:unc/elements/P1156"
+reg:name: hasNumericDesignation
+reg:status: "RegStatus:1001"
+rdf:type: "rdf:Property"
+rdfs:domain: "isbd:elements/C2001"
+rdfs:isDefinedBy: "isbd:elements/"
+rdfs:label: has numeric designation
+rdfs:label@es: "tiene designación  numérica"
+skos:definition: Relates a resource that is a serial to its numeric designation.
+skos:definition@es: "Relaciona un recurso que es una publicación seriada con su designación numérica."
+skos:scopeNote: "A numeric designation is given as it appears, except that arabic numerals are given in place of other numerals or spelled-out numbers and multiple levels of numbering are given in a hierarchical order. A numeric designation may include alphabetic or other characters as well as numbers. Words in the designation may be abbreviated."
+skos:scopeNote@es: "Una designación numérica se da tal y como aparezca, excepto que se dan números arábigos en lugar de números no arábigos o números expresados textualente y  numeraciones en múltiples niveles que sean dadas en order jerárquico. Una designación numérica puede incluir letras u otros caracteres además de números. Las palabras de la designación pueden abreviarse."
+---
+# has numeric designation
+
+The ISBD element "numeric designation" is found within the Numbering (Serials) area (3.3) of the ISBD documentation.  It's specifically addressed in section 3.3.2.
+
+## Element Reference
+
+- **Official Definition:** A numeric designation is the numbering assigned to an issue or part of a serial publication. It is recorded as it appears on the resource, except that Arabic numerals are given in place of other numerals or spelled-out numbers, and multiple levels of numbering are presented hierarchically.
+- **Domain:** Serials (and multipart monographic resources within a series).
+- **Range:**  String (representing the number).
+- **Element Type:**  Descriptive.
+
+## Additional Information
+
+- **Scope and Purpose:**  This element is crucial for identifying and ordering specific issues or parts of serials. It provides structured information about the numbering system used by the serial, facilitating retrieval and management of individual issues.
+- **User Tasks Supported:** Identifying a specific issue or part of a serial; distinguishing between different issues; understanding the numbering system of a serial; ordering or collating serial issues.
+
+
+## Element Values
+
+- **Specific Rules and Guidelines:**
+    - Use Arabic numerals instead of Roman numerals or spelled-out numbers (e.g., "1" instead of "I" or "one").
+    - Present hierarchical numbering in a structured order (e.g., "v. 2, no. 4").
+    - Include any alphabetic or other characters present in the designation along with the numerals (e.g., "Bd. 1A").
+    - Words within the designation may be abbreviated (e.g., "vol." for "volume").
+- **Value Constraints and Formats:** The format should generally match what appears on the resource, with the conversions and structural changes mentioned above. No specific character limitations are explicitly stated, but conciseness is implied.
+- **String Encoding Schemes:** Not specified, but UTF-8 is generally recommended for bibliographic data.
+
+
+## Examples
+
+```
+Vol. 1, no. 1-
+Bd. 1-Bd. 70
+1号-
+제1호-
+```
+
+## Relationships
+
+- **Relationships to Other ISBD Elements:** This element is related to the "chronological designation" (3.3.3), which provides date information for serial issues. Together, they form the complete numbering area for serials. It is also part of the larger "Series and Multi-Part Monographic Resource Area" (6), when a serial is part of a larger series. In these cases, the numbering may include series information as well.
+- **Super-types and Sub-types:** Not explicitly defined, but could be considered a sub-type of "numbering data".
+- **Inverse Relationships:**  None explicitly stated.
+
+
+## Stipulations
+
+- **Special Considerations and Usage Notes:**
+    - When the resource is part of a series, the series numbering may also be included (see 6.6).
+    -  For serials that have ceased publication, the numbering of the last issue is given following the numbering of the first issue, separated by a hyphen (see 3.3.4.2).
+    - If a serial has changed its numbering sequence, details of the new sequence are included (see 3.3.7).
+- **Best Practices:**  Transcribe the numbering as accurately and clearly as possible, following the guidelines outlined above.  Provide notes (7.3.3) to clarify any ambiguities or irregularities in the numbering.
+
+
+---
+
+*This content was automatically generated from the ISBD PDF documentation using Gemini AI analysis.*

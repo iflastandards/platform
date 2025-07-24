@@ -1,0 +1,81 @@
+---
+id: P1121
+title: has parallel name of publisher, producer, distributor
+description: ISBD element documentation for has parallel name of publisher, producer, distributor
+uri: "isbd:elements/P1121"
+area: area4
+RDF:
+  definition: "Relates a resource to the form of name of the publisher, producer and/or distributor in the language and script of the title proper when the name appears on the prescribed source of information for the resource in more than one language or script."
+  domain: "isbd:elements/C2001"
+  type: "rdf:Property"
+  scopeNote: "If the criterion in the definition does not apply, the form of name made prominent by typography or, if there is no typographical distinction, the form of name that appears first is used."
+reg:hasUnconstrained: "isbd:unc/elements/P1121"
+reg:name: hasParallelNameOfPublisherProducerDistributor
+reg:status: "RegStatus:1001"
+rdf:type: "rdf:Property"
+rdfs:domain: "isbd:elements/C2001"
+rdfs:isDefinedBy: "isbd:elements/"
+rdfs:label: has parallel name of publisher, producer, distributor
+rdfs:label@es: "tiene nombre paralelo de editor, productor, distribuidor"
+skos:definition: "Relates a resource to the form of name of the publisher, producer and/or distributor in the language and script of the title proper when the name appears on the prescribed source of information for the resource in more than one language or script."
+skos:definition@es: "Relaciona un recurso con la forma del nombre del editor, productor y/o distribuidor en la lengua y escritura del título propiamente dicho cuando dicho nombre aparece en la fuente prescrita de información en más de una lengua o escritura."
+skos:scopeNote: "If the criterion in the definition does not apply, the form of name made prominent by typography or, if there is no typographical distinction, the form of name that appears first is used."
+---
+# has parallel name of publisher, producer, distributor
+
+The ISBD element "parallel name of publisher, producer and/or distributor" is found within section 4.2.10 of the ISBD: International Standard Bibliographic Description.
+
+## Element Reference
+
+- **Official ISBD Definition:** When the name of a publisher, producer and/or distributor appears on the prescribed source of information in more than one language or script, the form of name in the language and script of the title proper is given. If this criterion does not apply, the form of name made more prominent by typography or, if there is no typographical distinction, the form of name that appears first is given.  Parallel statements may be given. (4.2.10)
+- **Domain:**  Applies to the Name of publisher, producer and/or distributor (ISBD area 4.2).
+- **Range:** A name of a publisher, producer, or distributor in a different language or script than the primary name.
+- **Element Type:** Text
+
+## Additional Information
+
+- **Scope and Purpose:**  This element facilitates the inclusion of multiple versions of the publisher, producer, or distributor's name when they appear on the resource itself in more than one language or script. This supports internationalization and retrieval across different linguistic communities.
+- **User Tasks Supported:**  Catalogers use this element to transcribe all presented forms of the publisher name, aiding users who may search using different language versions.
+
+## Element Values
+
+- **Specific Rules/Guidelines:** The parallel name should be transcribed exactly as it appears on the resource, though capitalization need not be preserved.  Separate each parallel name with a space, equals sign, space (` = `).
+- **Value Constraints/Formats:** No specific format is prescribed beyond accurate transcription from the resource.
+- **String Encoding:**  Follow the encoding scheme of the bibliographic record (e.g., UTF-8).
+
+## Examples
+
+```
+: Galerie nationale du Canada pour la Corporation des musées nationaux du
+Canada = National Gallery of Canada for the Corporation of the National
+Museums of Canada
+```
+
+```
+: Bundeskanzlei = Chancellerie fédérale
+```
+
+```
+: Kraków: Polskie wydawnictwo muzyczne = Krakau : Polnischer Musikverlag
+```
+
+```
+: Bruxelles: Parlement européen, Direction générale des études = Brussels :
+European Parliament, Directorate General for Research
+```
+
+## Relationships
+
+- **Relationship to Other ISBD Elements:**  Directly related to the primary name of publisher, producer and/or distributor element (4.2). It is part of Area 4 (Publication, Production, Distribution, etc. Area).
+- **Super-types/Sub-types:** None explicitly defined in ISBD.
+- **Inverse Relationships:**  Technically each parallel name is an equivalent of the other, so the relationship is bi-directional.
+
+## Stipulations
+
+- **Special Considerations/Exceptions:** If the resource includes a statement of function (e.g., "published by," "produced by"), this is considered part of the name and should also be transcribed with each parallel name. If a parallel name is found on a source other than the prescribed sources for Area 4, it might be appropriate to record it in Area 7 (Notes) instead.
+- **Best Practices:**  Ensure all parallel names are transcribed from the preferred source. If the order or selection is ambiguous, prioritize the title proper's language. Maintain consistency in how parallel names are recorded within a given catalog.
+
+
+---
+
+*This content was automatically generated from the ISBD PDF documentation using Gemini AI analysis.*

@@ -1,0 +1,82 @@
+---
+id: P1001
+title: has content form
+description: ISBD element documentation for has content form
+uri: "isbd:elements/P1001"
+area: area0
+RDF:
+  definition: "Relates a resource to a category that reflects the fundamental form or forms in which the content is expressed."
+  domain: "isbd:elements/C2001"
+  type: "rdf:Property"
+reg:hasUnconstrained: "isbd:unc/elements/P1001"
+reg:name: hasContentForm
+reg:status: "RegStatus:1001"
+rdf:type: "rdf:Property"
+rdfs:domain: "isbd:elements/C2001"
+rdfs:isDefinedBy: "isbd:elements/"
+rdfs:label: has content form
+rdfs:label@es: "tiene forma del contenido"
+skos:definition: "Relates a resource to a category that reflects the fundamental form or forms in which the content is expressed."
+skos:definition@es: "Relaciona un recurso con una categoría que refleja la forma o formas fundamentales en que se expresa el contenido."
+---
+# has content form
+
+The ISBD element "content form" (isbd:elements/P1001) is found within Area 0 of the ISBD.
+
+## Element Reference
+
+- **Definition:**  Content form categories reflect the fundamental form or forms in which the content of a resource is expressed.
+- **Domain:**  Any bibliographic resource.
+- **Range:**  One or more terms from a controlled list of content form terms (e.g., text, image, music, object, etc.) possibly accompanied by one or more content qualifications.
+- **Element type:**  Descriptive.
+
+## Additional Information
+
+- **Scope and Purpose:** The purpose of the content form element is to provide a high-level categorization of the essential nature of a resource's content at the very beginning of the description. This assists users in quickly identifying and selecting resources appropriate to their needs, especially in an environment with diverse content types and user needs.  It promotes greater interoperability with other metadata standards and facilitates finer-grained retrieval.
+- **User Tasks Supported:**  Finding resources based on their fundamental content type (e.g., finding all music resources, all image resources, etc.), distinguishing resources with similar titles but different content types.
+
+## Element Values
+
+- **Rules and Guidelines:** The content form is selected from a controlled list of terms defined in the ISBD standard.  For resources with mixed content where there is no predominant part, all applicable terms are recorded in alphabetical order. If three or more terms apply in a mixed content resource, "multiple content forms" may be used.
+- **Value Constraints and Formats:** Values must be taken from the standard list or their equivalents in the language chosen by the cataloguing agency. The values are not transcribed from the resource but are assigned by the cataloguer.
+- **String Encoding:** Not applicable. The element uses terms, not coded values.
+
+## Examples
+
+```
+Text : electronic ; unmediated
+```
+
+```
+Image (cartographic ; still ; 2-dimensional ; visual) : impression ; projected
+```
+
+```
+Music (performed) : electronic recording ; audio + Text (visual) : electronic ; unmediated
+```
+
+```
+Object (tactile) : manufacture ; unmediated
+```
+
+```
+Multiple content forms : multiple media
+```
+
+## Relationships
+
+- **Relationships to other ISBD elements:** The content form is the first element in Area 0, which is the first area in the ISBD description. It is related to the media type element, also in Area 0, which indicates the type of carrier used to convey the content.  It is also implicitly related to all other areas of the description which further detail the resource.
+- **Super-types and Sub-types:**  The general "content form" element itself does not have subtypes in the formal sense. However, the individual content form terms (text, image, music, etc.) could be thought of as its subcategories.  Content form terms can be further specified with content qualifications (see 0.1.1 in the provided document) that add further details. These are not considered sub-types in the structure of the element.
+- **Inverse Relationships:** None.
+
+## Stipulations
+
+- **Special Considerations:** For resources with mixed content where one part is predominant, the content forms of the non-predominant parts may be omitted. If minimal content is present (e.g., illustrations in a primarily textual work), the content form for that minimal content can be ignored.  For unpublished resources, some national standards or codes may dictate more granular levels of description for the content form.
+
+
+- **Best Practices:** When in doubt, use as many content form terms and content qualifications as needed to adequately represent the essential nature of the resource's content.  Refer to the most updated list of content form terms and qualifications from the official ISBD standard.  Be consistent in applying the terms and qualifications within a given cataloging context.
+
+
+---
+
+*This content was automatically generated from the ISBD PDF documentation using Gemini AI analysis.*

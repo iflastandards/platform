@@ -1,0 +1,87 @@
+---
+id: P1012
+title: has title
+description: ISBD element documentation for has title
+uri: "isbd:elements/P1012"
+area: area1
+RDF:
+  definition: "Relates a resource to a word or phrase, or a group of characters, usually appearing on the resource, that is the name of the resource or the work (or any one of a group of individual works) contained in it."
+  domain: "isbd:elements/C2001"
+  type: "rdf:Property"
+  scopeNote: "A title proper; a title of individual work by the same author in a resource lacking a collective title; a title of an individual work by a different author in a resource lacking a collective title; a parallel title; other title information; or parallel other title information."
+  elementSuperType: "isbd:elements/P1004"
+reg:hasSubproperty: "isbd:elements/P1004"
+reg:hasUnconstrained: "isbd:unc/elements/P1012"
+reg:name: hasTitle
+reg:status: "RegStatus:1001"
+rdf:type: "rdf:Property"
+rdfs:domain: "isbd:elements/C2001"
+rdfs:isDefinedBy: "isbd:elements/"
+rdfs:label: has title
+rdfs:label@es: "tiene título"
+skos:definition: "Relates a resource to a word or phrase, or a group of characters, usually appearing on the resource, that is the name of the resource or the work (or any one of a group of individual works) contained in it."
+skos:definition@es: "Relaciona un recurso con una palabra, frase, o grupo de caracteres que normalmente aparecen en el recurso, que es el nombre del recurso o de la obra (o cualquiera de un grupo de obras individuales) contenida en él."
+skos:scopeNote: "A title proper; a title of individual work by the same author in a resource lacking a collective title; a title of an individual work by a different author in a resource lacking a collective title; a parallel title; other title information; or parallel other title information."
+skos:scopeNote@es: "Un título propiamente dicho, un título de obra individual por el mismo autor en un recurso que carece de titulo colectivo; un título de una obra individual por un autor diferente en un recurso que carece de título colectivo; un título paralelo; información complementaria de título; u otra información complementaria de título paralelo."
+---
+# has title
+
+The ISBD element "title" is represented by the "title proper" element within the ISBD documentation.
+
+## Element Reference
+
+- **Official ISBD Definition:** The chief name of a resource, i.e., the title of a resource in the form in which it appears on the preferred source of information for the resource. The title proper includes any alternative title but excludes parallel titles and other title information. (See page 262 of the PDF).
+- **Domain:**  Bibliographic resources (monographs, serials, etc.)
+- **Range:** Text strings representing the title of the resource.
+- **Element Type:**  Literal (text string).
+
+## Additional Information
+
+- **Scope and Purpose:** The title proper is the primary name by which a resource is known and identified.  It serves as the main access point for the resource in catalogs and bibliographies. Its purpose is to clearly and accurately represent the primary intellectual or artistic content of the resource.
+- **User Tasks Supported:** Finding resources, identifying resources, distinguishing resources with similar topics or creators, collating resources, citing resources.
+
+
+## Element Values
+
+- **Specific Rules/Guidelines:** The title proper is transcribed from the preferred source of information (e.g., title page for books) exactly as to wording, but not necessarily as to capitalization and punctuation. Obvious typographical errors are corrected.  Exceptionally long titles may be abridged, but not at the beginning of the title (first five/six words).  Numbers and/or letters forming an integral part of the title are included. (See 1.1.5.1, 1.1.3.5 and page 56 in the PDF).
+- **Value Constraints/Formats:** No specific format other than transcription accuracy and authorized abridgement rules.
+- **String Encoding Schemes:**  UTF-8 is recommended (7.0.4).  Accommodations for non-Roman scripts are discussed throughout the documentation (A.5, A.3.2.11).
+
+## Examples
+
+```
+Pride and Prejudice
+```
+
+```
+The Lord of the Rings : the fellowship of the ring
+```
+
+```
+Quantum mechanics for mathematicians
+```
+
+```
+International Standard Bibliographic Description (ISBD)
+```
+
+```
+Annalen der Physik
+```
+
+
+## Relationships
+
+- **Relationships to other ISBD elements:** The title proper is the first element in Area 1 (Title and Statement of Responsibility Area). It is followed by parallel titles (if any) and then other title information. It is related to the statement of responsibility by function. The source of the title proper may need clarification in Area 7 (Notes).
+- **Super-types/Sub-types:**  Can be divided into common title and dependent title for multipart resources or series (1.1.3.7, 1.1.4.6).
+- **Inverse Relationships:** None explicitly defined within ISBD.
+
+
+## Stipulations
+
+- **Special Considerations/Exceptions:** Special rules apply for different resource types (e.g., music, older monographic resources, manuscripts). Rules around the source of the title and transcription accuracy are critically important. For unpublished resources, a title may need to be supplied if not present on the resource itself (1.1.4.5, 1.1.4.6). 
+- **Best Practices:** Transcribe from the preferred source with accuracy. Use judgment regarding abridgement only in cases of extremely long titles, ensuring clarity is maintained. Carefully distinguish the title proper from other title information, parallel titles, and statements of responsibility. Add notes where needed to provide context or to document supplied information.  For unpublished resources, if a supplied title is necessary, ensure it is concise and accurately reflects the resource's content.
+
+---
+
+*This content was automatically generated from the ISBD PDF documentation using Gemini AI analysis.*

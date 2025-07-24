@@ -1,0 +1,71 @@
+---
+id: P1166
+title: has music format statement area
+description: ISBD element documentation for has music format statement area
+uri: "isbd:elements/P1166"
+area: area3
+RDF:
+  definition: "Relates a resource that is notated music to a statement including the music format statement and parallel music format statements."
+  domain: "isbd:elements/C2001"
+  range: "isbd:elements/C2013"
+  type: "rdf:Property"
+reg:hasUnconstrained: "isbd:unc/elements/P1166"
+reg:name: hasMusicFormatStatementArea
+reg:status: "RegStatus:1001"
+rdf:type: "rdf:Property"
+rdfs:domain: "isbd:elements/C2001"
+rdfs:isDefinedBy: "isbd:elements/"
+rdfs:label: has music format statement area
+rdfs:label@es: "tiene área de mención de formato musical"
+rdfs:range: "isbd:elements/C2013"
+skos:definition: "Relates a resource that is notated music to a statement including the music format statement and parallel music format statements."
+skos:definition@es: "Relaciona un recurso que es música notada con una mención que incluye la mención de formato musical y las menciones de formato musical paralelas."
+---
+# has music format statement area
+
+The "music format statement area" as a distinct, named area is *not* found in the provided ISBD documentation. Instead, the concept is represented by the **music format statement (isbd:P1166)**, which is an *element* within Area 3, the "Material or Type of Resource Specific Area".  Therefore, this response will focus on the "music format statement" element.
+
+## Element Reference
+
+- **Official Definition:**  A term or phrase representing the physical form of presentation of a notated music resource. (Page 110)
+- **Domain:** Notated music resources
+- **Range:**  Terms representing the physical form (e.g., "full score", "miniature score")
+- **Element Type:** Data element
+
+## Additional Information
+
+- **Scope and Purpose:** The element clarifies the physical presentation of the notated music. This distinguishes it from the description of the physical units (number of pages, volumes, etc.), which is covered in Area 5 (Material Description Area). The music format statement helps users understand if the resource is a full score, a vocal score, a set of parts, etc.
+- **User Tasks Supported:** Helps users identify and select resources in the desired format for performance, study, or research. Allows for more precise retrieval in catalogs and databases.
+
+## Element Values
+
+- **Rules and Guidelines:** The statement is given in the terms found on the resource itself. Explanatory phrases may be added if they are considered important to users. If no music format statement is on the resource, a suitable statement may be supplied in square brackets.  (Page 110)
+- **Value Constraints:** Must reflect a valid physical format for music notation.
+- **Encoding:** No specific string encoding scheme is mandated, but standard character encoding practices for bibliographic data should be followed.
+
+## Examples
+
+```
+- Full score
+- Miniature score
+- Score and set of parts
+- Partitur [und Solostimme]
+- Partition, reproduction du manuscrit de l'auteur
+```
+
+## Relationships
+
+- **Relationship to other elements:** Area 3 also includes Mathematical data (for cartographic resources), Numbering (for serials), and Unpublished statement (for unpublished resources).  Within notated music resources,  it has a corresponding "parallel music format statement" element for resources with statements in multiple languages. The music format statement relates to the physical description details in Area 5 (Material Description Area) but specifies the *format of presentation* rather than just the physical units.
+- **Super-types:**  Part of the broader concept of "Material or Type of Resource Specific Details".
+- **Sub-types:**  No direct sub-types, but specific formats like "full score," "vocal score," etc., could be considered narrower refinements.
+- **Inverse Relationship:** None explicitly stated.
+
+## Stipulations
+
+- **Special Considerations:** A music format statement is *not* given for works for solo instruments (or instruments played in succession), works for only one voice, or works for one voice and one accompanying instrument.  (Page 110) If the term "edition" on a resource refers to the *version*, *arrangement*, etc. of a musical work, it belongs in Area 1 (Title and Statement of Responsibility Area), or in Area 2 (Edition Area). If it refers to the presentation format (e.g., "study score"), it belongs in Area 3. (Page 94).  If information is taken from outside the resource it is enclosed in square brackets.
+- **Best Practices:** Use standardized terminology whenever possible. Provide clear and concise statements.  If adding information from outside the resource itself, bracket it and consider adding a note in Area 7 to indicate the source of the supplied information.
+
+
+---
+
+*This content was automatically generated from the ISBD PDF documentation using Gemini AI analysis.*

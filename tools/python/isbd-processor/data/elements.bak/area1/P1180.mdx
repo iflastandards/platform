@@ -1,0 +1,66 @@
+---
+id: P1180
+title: has parallel dependent title designation of series or multipart monographic resource
+description: ISBD element documentation for has parallel dependent title designation of series or multipart monographic resource
+uri: "isbd:elements/P1180"
+area: area1
+RDF:
+  definition: "Relates a resource that is a series or multipart monographic resource to numbering that alone or in conjunction with a dependent title serves to distinguish one of two or more related resources having a common title, presented on the preferred source of information for the resource as an equivalent in another language or script."
+  domain: "isbd:elements/C2001"
+  type: "rdf:Property"
+reg:hasUnconstrained: "isbd:unc/elements/P1180"
+reg:name: hasParallelDependentTitleDesignationOfSeriesOrMultipartMonographicResource
+reg:status: "RegStatus:1001"
+rdf:type: "rdf:Property"
+rdfs:domain: "isbd:elements/C2001"
+rdfs:isDefinedBy: "isbd:elements/"
+rdfs:label: has parallel dependent title designation of series or multipart monographic resource
+rdfs:label@es: "tiene designación de título dependiente paralelo de serie o recurso monográfico multiparte"
+skos:definition: "Relates a resource that is a series or multipart monographic resource to numbering that alone or in conjunction with a dependent title serves to distinguish one of two or more related resources having a common title, presented on the preferred source of information for the resource as an equivalent in another language or script."
+skos:definition@es: "Relaciona un recurso que es una serie o un recurso monográfico multiparte con la numeración que por sí sola o en conjunción con un título dependiente sirve para distinguir un recurso de dos o más recursos relacionados que tienen un título común, presentada como equivalente en otra lengua o escritura en la fuente de información preferida del recurso."
+---
+# has parallel dependent title designation of series or multipart monographic resource
+
+The element "parallel dependent title designation of series or multipart monographic resource" is not explicitly defined as a standalone element in the ISBD Consolidated edition of 2011 (updated 2021). However, the concept is present within the broader context of parallel titles and dependent titles within series and multipart monographic resources.  Therefore, the following response will be a constructed understanding based on related elements and overall ISBD principles.
+
+## Element Reference
+- **Definition (Constructed):**  A parallel dependent title designation is a term appearing with the parallel title of a series or multipart monographic resource, subordinate to the parallel common title, and serving, alone or in conjunction with the parallel dependent title, to distinguish one of two or more related series or multipart resources having the same parallel common title.  It is the equivalent of the dependent title designation, but appearing with the parallel title.
+- **Domain (Inferred):** Parallel title of a series or multipart monographic resource.
+- **Range (Inferred):** String expressing the designation.
+- **Element type (Inferred):** Literal.
+
+## Additional Information
+- **Scope and Purpose:** This element provides further granularity and disambiguation for series and multipart resources when they exist with parallel titles and are subdivided into sections or parts with dependent titles. It helps differentiate parallel dependent titles sharing the same parallel common title.
+- **User tasks:** Facilitates identification and selection of specific parts or sections within a series or multipart resource presented with parallel titles.  Aids in distinguishing between parts of similarly titled series presented in multiple languages.
+
+## Element Values
+- **Rules/Guidelines:** Transcribe the parallel dependent title designation from the resource exactly as it appears with the parallel series title.  Standard abbreviations may be used (as described in section A.6 and Appendix D).
+- **Constraints/Formats:**  No specific format is prescribed beyond clarity and adherence to the language and script used for the parallel title.
+- **Encoding:** Follow the character set and encoding scheme used for the parallel title.
+
+
+## Examples
+```
+(Análisis socioeconómico de América Latina. Serie Estudios ; no. 4 = Socio-economic
+analysis of Latin America. Series Studies ; no. 4)
+
+(世界文学史. 第1部, 古代 = Historia de la literatura mundial. Parte 1, Antigüedad ; 1)
+
+(Le monde des affaires.  Ventes et marketing = The Business World. - Sales and
+Marketing ; vol. 2)
+```
+
+## Relationships
+- **Related Elements:**  Closely related to `parallel common title`, `parallel dependent title`, `common title`, `dependent title designation`, and `dependent title`.
+- **Super/Sub-types:**  Can be considered a subtype of "other title information" within the context of parallel titles of series.
+- **Inverse Relationships:**  None specifically defined within the ISBD.
+
+## Stipulations
+- **Special Considerations:** This designation only appears when a series or multipart resource has a parallel title and a dependent title structure.
+- **Exceptions:**  If a designation appears ambiguous or its relationship to the parallel title is unclear, it might be best recorded as a note instead.
+- **Best Practices:** When recording parallel series titles with dependent title designations, it's helpful to also record the corresponding designations in the original language of the series in area 6 for maximum clarity.  For example, if the main series title is in English, and a parallel series title in French is presented along with a parallel dependent title designation, include the English dependent title designation in the primary series statement as well.
+
+
+---
+
+*This content was automatically generated from the ISBD PDF documentation using Gemini AI analysis.*

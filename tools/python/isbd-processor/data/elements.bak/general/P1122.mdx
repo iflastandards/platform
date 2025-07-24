@@ -1,0 +1,79 @@
+---
+id: P1122
+title: has bibliographic format of older monographic resource
+description: ISBD element documentation for has bibliographic format of older monographic resource
+uri: "isbd:elements/P1122"
+area: general
+RDF:
+  definition: "Relates a resource that is an older monographic resource to a standard designation as chosen by the cataloguing agency."
+  domain: "isbd:elements/C2001"
+  type: "rdf:Property"
+  scopeNote: "e.g. 1 °, 2 °, 4 °, 8 °, 12 °, etc. Includes the height of the outer case, measured parallel to the spine, or of the resource when it is not bound, if it can be established that the resource is in a standardized publisher's binding or in publisher's wrappers. Includes the assumed format followed by a question mark when the format cannot be determined. Excludes dimensions if it cannot be established that the resource is in a standardized publisher's binding or in publisher's wrappers."
+reg:hasUnconstrained: "isbd:unc/elements/P1122"
+reg:name: hasBibliographicFormatOfOlderMonographicResource
+reg:status: "RegStatus:1001"
+rdf:type: "rdf:Property"
+rdfs:domain: "isbd:elements/C2001"
+rdfs:isDefinedBy: "isbd:elements/"
+rdfs:label: has bibliographic format of older monographic resource
+rdfs:label@es: "tiene formato bibliográfico de recurso monográfico antiguo"
+skos:definition: "Relates a resource that is an older monographic resource to a standard designation as chosen by the cataloguing agency."
+skos:definition@es: "Relaciona un recurso que es un recurso monográfico antiguo con una designación normalizada elegida por la agencia de catalogación."
+skos:scopeNote: "e.g. 1 °, 2 °, 4 °, 8 °, 12 °, etc. Includes the height of the outer case, measured parallel to the spine, or of the resource when it is not bound, if it can be established that the resource is in a standardized publisher's binding or in publisher's wrappers. Includes the assumed format followed by a question mark when the format cannot be determined. Excludes dimensions if it cannot be established that the resource is in a standardized publisher's binding or in publisher's wrappers."
+skos:scopeNote@es: "Por ejemplo: 1\u00ba, 2\u00ba, 4\u00ba, 8\u00ba, 12\u00ba, etc. Incluye la altura de la cubierta exterior de la publicaci\u00f3n, medida paralelamente al lomo, o la del recurso cuando no est\u00e1 encuadernado, si se puede establecer que el recurso tiene una encuadernaci\u00f3n normalizada del editor. Incluye el formato supuesto, seguido de interrogaci\u00f3n, cuando no se ha podido determinar el formato. Se excluyen las dimensiones si no se puede establecer que el recurso tiene la encuadernaci\u00f3n o envoltorio normalizado por el editor."
+---
+# has bibliographic format of older monographic resource
+
+The ISBD element "bibliographic format of older monographic resource" is found within the "Dimensions" sub-area of the "Material Description Area". It specifically applies to *older* monographic resources (those published before the widespread adoption of machine printing).  While the RDF refers to it as `isbd:elements/P1122` (or "has bibliographic format of older monographic resource"), the ISBD Consolidated Edition calls it "Bibliographic format".  It's paired with and generally precedes a dimension statement (height).
+
+## Element Reference
+
+- **Definition:** A designation of the number of times the original sheet was folded to produce the leaves of an older monographic resource and thus also indicating the approximate size of the resource. The designation is chosen from among a standardized set provided by the cataloguing agency, most commonly in the form of a superscript Arabic numeral or a combination of superscript Arabic numeral and symbol (e.g., 1°, 2°, 4°, 8°, 12° etc. - or fol., 4to, 8vo etc. depending on local practice and language of description).
+- **Domain:** Older Monographic Resources
+- **Range:** Standardized Bibliographic Format Designations (e.g., fol., 4to, 8vo, 12mo, etc. or  1°, 2°, 4°, 8°, 12° etc.)
+- **Element Type:** Descriptive
+
+## Additional Information
+
+- **Scope and Purpose:** To provide a standardized, concise indication of the physical size of older monographic resources, primarily to aid in identification and collation. This format designation, based on the folding of the sheet, often correlates with the general dimensions (height) of the book, offering a quick visual clue to its size.
+- **User Tasks Supported:**
+    - Identifying resources by format.
+    - Collating and comparing different copies of a resource.
+    - Understanding the general physical size of the resource.
+    - Distinguishing between editions that may have been printed in different formats.
+
+
+## Element Values
+
+- **Rules and Guidelines:** Use standard designations as defined by the cataloguing agency's rules. The form (folio, quarto, octavo, etc. or 2°, 4°, 8°, etc.) depends on the number of leaves produced by folding a sheet of paper. When gatherings are composed of half-sheets or fractions of sheets, or of more than one sheet, this may be recorded in parentheses after the designation (e.g., 2° (6s)).
+- **Value Constraints and Formats:** Limited to the standardized set of designations; case should be handled as instructed in the agency's rules (often as found).
+- **String Encoding:**  No specific encoding scheme is stipulated. Follow general cataloging practices for character encoding.
+
+
+## Examples
+
+```
+; 4° (18 cm)
+; fol. (32 cm)
+; 8vo (22 cm)
+; 12° (15 cm, publisher's wrappers)
+; 2° (6s)
+```
+
+
+## Relationships
+
+- **Related Elements:**  Directly precedes the dimensions (height) of the resource within area 5. May be supplemented by a collation statement if needed. Relates to information on physical construction provided in notes (e.g., number of leaves in a gathering, etc.).
+- **Super/Sub-types:**  The broadsheet and half-sheet forms are considered subtypes and are designated as such instead of by their equivalent designations 1° or 1/2°.
+
+
+## Stipulations
+
+- **Special Considerations:**  Dimensions are only given within Area 5 for resources in a standardized publisher's binding or publisher's wrappers.  If the resource has non-standard binding or dimensions, that information is considered copy-specific and recorded in a note.
+- **Exceptions:** If the resource is a broadside or half-sheet, that designation replaces the bibliographic format designation.
+- **Best Practices:**  Clearly indicate the source of the bibliographic format information if it is not from a prescribed source (generally using square brackets).  Be consistent in applying the standardized designations within a catalog. Use notes to explain any deviations from standard format or to provide further details on the physical makeup of the resource.
+
+
+---
+
+*This content was automatically generated from the ISBD PDF documentation using Gemini AI analysis.*

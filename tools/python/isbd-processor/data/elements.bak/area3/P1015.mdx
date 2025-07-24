@@ -1,0 +1,74 @@
+---
+id: P1015
+title: has numbering area
+description: ISBD element documentation for has numbering area
+uri: "isbd:elements/P1015"
+area: area3
+RDF:
+  definition: "Relates a resource that is a serial to a statement including the numbering, the chronological designation, the parallel system of numbering, and the subsequent system of numbering."
+  domain: "isbd:elements/C2001"
+  range: "isbd:elements/C2014"
+  type: "rdf:Property"
+  scopeNote: "Can include a numeral, a letter, any other character, or the combination of these, with or without an accompanying word (\"volume\", \"number\", etc.), and/or a chronological designation. Omitted if both the first and last issues or parts are not available."
+reg:hasUnconstrained: "isbd:unc/elements/P1015"
+reg:name: hasNumberingArea
+reg:status: "RegStatus:1001"
+rdf:type: "rdf:Property"
+rdfs:domain: "isbd:elements/C2001"
+rdfs:isDefinedBy: "isbd:elements/"
+rdfs:label: has numbering area
+rdfs:label@es: "tiene área de numeración"
+rdfs:range: "isbd:elements/C2014"
+skos:definition: "Relates a resource that is a serial to a statement including the numbering, the chronological designation, the parallel system of numbering, and the subsequent system of numbering."
+skos:definition@es: "Relaciona un recurso que es una publicación seriada con una mención que incluye la numeración, la designación cronológica, el sistema paralelo de numeración, y el sistema sucesivo de numeración."
+skos:scopeNote: "Can include a numeral, a letter, any other character, or the combination of these, with or without an accompanying word (\"volume\", \"number\", etc.), and/or a chronological designation. Omitted if both the first and last issues or parts are not available."
+skos:scopeNote@es: "Puede incluir un número, una letra, cualquier otro carácter o la combinación de éstos, con o sin una palabra acompañándoles (“volúmen”, “número”, etc.) y /o una designación cronológica. Se omite si tanto el primer como el último número o partes no están disponibles."
+---
+# has numbering area
+
+The ISBD element "numbering area" is referred to as the **Numbering (Serials)** area in the provided PDF.  It corresponds to area 3.3 within the ISBD structure.
+
+## Element Reference
+
+- **Official ISBD Definition:** The Numbering (Serials) area consists of the numeric designation and/or chronological designation of the first and/or last issue or part of a serial.
+- **Domain:** Serials (Continuing resources)
+- **Range:**  String (Numeric and/or Chronological designations)
+- **Element Type:** Descriptive
+
+## Additional Information
+
+- **Scope and Purpose:** This element provides information about the numbering of a serial publication. It's used to identify the specific issues or parts being described and to indicate the extent of the serial if it is complete. This is crucial for distinguishing between different issues and tracking the completeness of holdings.
+- **User Tasks Supported:** Identifying specific issues, determining the chronological or sequential order of issues, and assessing the completeness of a serial run.
+
+## Element Values
+
+- **Rules and Guidelines:** Use Arabic numerals for numeric designations, even if the resource uses Roman numerals.  Chronological designations are recorded as they appear on the resource. If both numeric and chronological designations are present, enclose the chronological designation in parentheses after the numeric designation unless the number is a division of the date. Use a hyphen to connect the first and last issue designations if the serial is complete, or just a hyphen before the last issue designation if the serial is still in progress. Multiple numbering systems used simultaneously are linked by an equals sign (=). A new sequence of numbering is indicated by a semicolon (;).
+- **Value Constraints and Formats:** Follow prescribed punctuation and structure as outlined in section 3.3 of the ISBD.
+- **String Encoding Schemes:** No specific encoding scheme is mentioned, but generally, Unicode UTF-8 is recommended for representing a wide range of characters.
+
+## Examples
+
+```
+3.3 No. 1 (Jan. 1971)-vol. 5, no. 12 (Dec. 1975)
+3.3 1971, no. 1 (Jan. 1971)-1975, no. 12 (Dec. 1975)
+3.3 Bd. 5 (1957/63)–Bd. 6 (1964/70)
+3.3 Vol. 1, no. 1-
+3.3 1970-
+```
+
+## Relationships
+
+- **Relationship to Other ISBD Elements:**  The numbering area is closely related to the Title and Statement of Responsibility Area (Area 1) and the Publication, Production, Distribution, etc. Area (Area 4), as changes in title or publisher can necessitate changes in numbering and require a new description.  It is also related to the Note Area (Area 7), where additional details or irregularities in the numbering can be recorded.
+- **Super-types and Sub-types:**  The element itself doesn't have direct sub-types in the sense of an ISBD element hierarchy.  However, the *numeric designation* and *chronological designation* could be considered sub-components of this area.
+- **Inverse Relationships:**  None explicitly defined.
+
+
+## Stipulations
+
+- **Special Considerations:** If the first and/or last issue isn't available, information about it can be supplied in Area 7 (Notes). If the serial is a continuation of another serial, the numbering starts from the first issue of the new serial. If a serial adopts a new numbering sequence, include both the old and new sequences in this area.
+- **Best Practices:** Always transcribe the numbering information as accurately as possible from the resource itself. Use standard abbreviations where applicable (e.g., "vol." for volume, "no." for number). Provide clear and concise notes in Area 7 for any irregularities or complexities in the numbering.  For complex or irregular numbering not fully expressed in Area 3.3, a fuller explanation can be provided in the Notes area (7.3.3.4). If a serial has ceased publication and the first issue is not known, provide only the last issue/part information preceded by a hyphen.
+
+
+---
+
+*This content was automatically generated from the ISBD PDF documentation using Gemini AI analysis.*

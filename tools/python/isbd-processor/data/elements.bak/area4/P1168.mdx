@@ -1,0 +1,82 @@
+---
+id: P1168
+title: has place of publication, production, distribution statement
+description: ISBD element documentation for has place of publication, production, distribution statement
+uri: "isbd:elements/P1168"
+area: area4
+RDF:
+  definition: "Relates a resource to a statement including the place of publication, production, distribution, the additional place of publication statement, and the parallel statement of place of publication."
+  domain: "isbd:elements/C2001"
+  range: "isbd:elements/C2018"
+  type: "rdf:Property"
+reg:hasUnconstrained: "isbd:unc/elements/P1168"
+reg:name: hasPlaceOfPublicationProductionDistributionStatement
+reg:status: "RegStatus:1001"
+rdf:type: "rdf:Property"
+rdfs:domain: "isbd:elements/C2001"
+rdfs:isDefinedBy: "isbd:elements/"
+rdfs:label: has place of publication, production, distribution statement
+rdfs:label@es: "tiene mención de lugar de publicación, producción o distribución"
+rdfs:range: "isbd:elements/C2018"
+skos:definition: "Relates a resource to a statement including the place of publication, production, distribution, the additional place of publication statement, and the parallel statement of place of publication."
+skos:definition@es: "Relaciona un recurso con una mención que incluye el lugar de publicación, producción, distribución, la mención de lugar de publicación adicional y la mención de lugar de publicación paralela."
+---
+# has place of publication, production, distribution statement
+
+The ISBD element "place of publication, production, and/or distribution statement" is indeed found within the provided PDF, specifically described in section 4.1.  Here's a breakdown of the element according to your requested structure:
+
+## Element Reference
+
+- **Official ISBD Definition:** The place of publication, production and/or distribution is the name of the place associated on the prescribed source of information with the name of the publisher, producer, or distributor (see 4.2). If no publisher, producer or distributor is named, it is the place from which the resource was issued or distributed.  (4.1.1)
+
+
+- **Domain:**  Bibliographic resources (specifically, manifestations in FRBR terms).
+- **Range:** Place names (cities, towns, regions, or countries).  Can also include `s.l.` (sine loco) or `[s.l.]` when no place can be determined, or `[s.n.]` (sine nomine) when no publisher is given.
+- **Element Type:**  Literal (string data representing a place name).
+
+## Additional Information
+
+- **Scope and Purpose:** This element is crucial for identifying and locating a resource.  It establishes the geographic origin of the resource's publication, production, or distribution. This information helps users understand the context of the resource's creation and can be helpful for finding similar resources or resources related to a particular geographic area.
+- **User Tasks Supported:**
+    - Discovering resources published in a specific location.
+    - Identifying resources based on their geographic origin.
+    - Understanding the context of a resource's creation.
+    - Facilitating resource discovery and interlibrary loan.
+
+
+
+## Element Values
+
+- **Rules and Guidelines:** The place name should be recorded in the orthographic form and grammatical case as it appears on the resource (4.1.8). Standard abbreviations may be used (A.6.4).
+- **Value Constraints and Formats:** If multiple places are listed, they should be separated by semicolons (4.1.4). Additions like state, province, or country should be added after a comma, or enclosed in square brackets if taken from a source other than the prescribed sources of information (4.1.9).  Fictitious place names are corrected in square brackets (4.1.2). If the place name is taken from outside the prescribed source, it should be enclosed in square brackets (4.1.9).
+- **String Encoding Schemes:** Not explicitly specified in the ISBD, but generally UTF-8 is recommended for electronic records.
+
+
+## Examples
+
+```
+- London
+- New York : Macmillan
+- Paris : Gallimard ; [London] : Distributed by Thames and Hudson
+- [S.l.] : [s.n.]  
+- [United States]
+- London ; Toronto : Distributed by McClelland and Stewart
+```
+
+## Relationships
+
+- **Relationships to other ISBD elements:** The place of publication is directly related to the name of the publisher, producer, or distributor (4.2).  It can also be related to information in the note area (Area 7) if clarifications, corrections, or historical context are needed.  For older resources, the place of printing or manufacture might be recorded separately (4.4), providing a relationship to the physical production location.
+- **Super-types and Sub-types:**  No formal super- or sub-types are defined within the ISBD itself. However, conceptual hierarchies of place names (e.g., city within country) are implied.
+- **Inverse Relationships:** While not formally defined, one could consider the publisher's location as having an inverse relationship to the place of publication.  That is, knowing a publisher's usual location might help infer a place of publication if it's missing.
+
+## Stipulations
+
+- **Special Considerations:** For component parts, only the host resource location might be necessary (A.2.8.4). For older monographic resources, prepositions and accompanying text relating to the place name are included (4.1.8). The full address can be included in parentheses or square brackets if deemed necessary (4.1.10).  Alternative or corrected versions of the place name are supplied in square brackets (4.1.10).
+- **Best Practices:** Use standardized place names whenever possible.  Consult authority files like GeoNames or the Library of Congress Name Authority File. Provide clarifying notes in area 7 for ambiguous or unusual place names.  Be consistent in the level of granularity used for place names.
+
+
+
+
+---
+
+*This content was automatically generated from the ISBD PDF documentation using Gemini AI analysis.*
