@@ -384,13 +384,28 @@ Elements can reference other elements using:
 ```javascript
 // docusaurus.config.ts
 {
-  algolia: {
-    facetFilters: [
-      'namespace:isbd',
-      'element_set:isbd,unconstrained',
-      'type:element,vocabulary'
+  // Local search plugin configuration
+  themes: [
+    [
+      '@easyops-cn/docusaurus-search-local',
+      {
+        hashed: true,
+        language: ['en', 'fr', 'es'],
+        indexDocs: true,
+        indexBlog: false,
+        docsRouteBasePath: '/docs',
+        // Additional search options
+        searchBarShortcutHint: false,
+        searchBarPosition: 'right',
+        // Custom fields for faceting
+        searchContextByPaths: [
+          'elements',
+          'vocabularies',
+          'SES'
+        ]
+      }
     ]
-  }
+  ]
 }
 ```
 

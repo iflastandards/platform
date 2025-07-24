@@ -7,10 +7,11 @@ This guide explains the enhanced vocabulary site scaffolding system that generat
 The vocabulary site scaffolding system creates a complete Docusaurus site structure for IFLA standards, including:
 
 1. **Landing page** - Overview of the standard with statistics and links
-2. **Element sets** - Index and individual pages for each element set
-3. **Vocabularies** - Index and individual pages for each vocabulary
-4. **Documentation** - Standard documentation pages (introduction, examples, about)
-5. **Tools & Resources** - Pages for search, cross-set browser, and other tools
+2. **Element sets** - Index and individual pages for each element set (including classes alongside properties)
+3. **Vocabularies (VES)** - Index and individual pages for each vocabulary
+4. **Syntax Encoding Schemes (SES)** - Index and individual pages for encoding schemes (if applicable)
+5. **Documentation** - Standard documentation pages (introduction, examples, about)
+6. **Tools & Resources** - Pages for search, cross-set browser, and other tools
 
 The system ensures that all files referenced in the navigation sidebar exist, preventing "document ids do not exist" build errors.
 
@@ -80,14 +81,21 @@ standards/
         index.mdx                   # Element sets index page
         {element-set-id}/
           index.mdx                 # Element set page
-          {category}/               # Subcategories (if needed)
+          classes/                  # Classes (alongside properties)
+            index.mdx               # Classes index page
+            {class-id}.mdx          # Individual class pages
+          {category}/               # Subcategories for properties
             index.mdx               # Category index page
+            {element-id}.mdx        # Individual element pages
       vocabularies/
         index.mdx                   # Vocabularies index page
         {vocabulary-id}.mdx         # Individual vocabulary pages
         {category}/                 # Categories (if needed)
           index.mdx                 # Category index page
           {vocabulary-id}.mdx       # Categorized vocabulary pages
+      SES/                          # Syntax Encoding Schemes (optional)
+        index.mdx                   # SES index page
+        {ses-id}.mdx                # Individual SES pages
 ```
 
 ## Example Generated Files
@@ -174,6 +182,34 @@ This documentation is organized into sections covering different aspects of the 
 *This page is under development.*
 ```
 
+## Search Configuration
+
+The scaffolding system configures local search using the `@easyops-cn/docusaurus-search-local` plugin:
+
+```javascript
+// docusaurus.config.ts
+themes: [
+  [
+    '@easyops-cn/docusaurus-search-local',
+    {
+      hashed: true,
+      language: ['en', 'fr', 'es'], // Configure based on your standard's languages
+      indexDocs: true,
+      indexBlog: false,
+      docsRouteBasePath: '/docs',
+      searchBarShortcutHint: false,
+      searchBarPosition: 'right',
+      // Configure search contexts for faceting
+      searchContextByPaths: [
+        'elements',      // Element sets
+        'vocabularies',  // VES
+        'SES'           // Syntax Encoding Schemes
+      ]
+    }
+  ]
+]
+```
+
 ## Usage
 
 ### Generating a New Site
@@ -222,6 +258,9 @@ pnpm tsx scripts/page-template-generator.ts --namespace=isbd --missing-only
 3. **Follow the ISBD pattern**: Use ISBD as the reference implementation for file structure.
 4. **Use hierarchical navigation for complex standards**: For standards with many element sets and vocabularies, use hierarchical navigation.
 5. **Include all required documentation pages**: Ensure all standard documentation pages (introduction, examples, about) are included.
+6. **Configure local search**: Use `@easyops-cn/docusaurus-search-local` plugin for search functionality with appropriate language and path configuration.
+7. **Include SES when applicable**: Add Syntax Encoding Schemes as a top-level category for standards that define encoding rules.
+8. **Organize classes with properties**: Place classes alongside properties within each element set, not as a separate section.
 
 ## Troubleshooting
 
