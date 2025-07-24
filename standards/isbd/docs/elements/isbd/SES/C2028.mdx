@@ -23,7 +23,7 @@ deprecatedInVersion: null
 willBeRemovedInVersion: null
 ---
 
-# {frontMatter.title}
+# Resource Identifier Statement Encoding Scheme
 
 ## Element Reference
 <ElementReference frontMatter={frontMatter} />
@@ -31,54 +31,63 @@ willBeRemovedInVersion: null
 ## Definition
 
 <div className="guid">
-
+This refers to element <strong>8.1</strong> within the <strong>Resource Identifier and Terms of Availability Area (Area 8)</strong>. It provides a <strong>number or alphanumeric designation</strong> that uniquely identifies a resource. This can include international standard identifiers (like ISBN, ISSN, ISMN, URN, DOI, URL) or designations assigned by a publisher (like publisher's numbers, plate numbers, or label names with catalogue numbers). For older monographic resources and music manuscripts, it also includes "Fingerprint" and "Music incipit" as identifiers.
 </div>
 
 ## Required Elements
 
 <div className="guid">
-
+The element is <strong>Optional</strong>.
+<ul>
+  <li><strong>Standard identifier (Optional):</strong> Recorded with its customary label (e.g., "ISBN 978-952-92-0267-6," "ISSN 0075-2363," "doi:10.1000/1").</li>
+  <li><strong>Publisher's number (Optional, for notated music):</strong> Preceded by "Publ. no.".</li>
+  <li><strong>Plate number (Optional, for notated music):</strong> Preceded by "Pl. no.".</li>
+  <li><strong>Qualification to identifier (Optional):</strong> A brief statement in parentheses to qualify, explain, or correct the identifier (e.g., "(cloth)", "(corrected)", "(invalid)").</li>
+  <li><strong>Label name and catalogue number (Optional, for sound/videorecordings):</strong> The label name followed by all catalogue numbers supplied by the issuing company (e.g., "Telefunken 6.35368").</li>
+  <li><strong>Fingerprint (Mandatory if available, for older monographic resources):</strong> An alphanumeric string derived from the text (e.g., "163704 - b1 A2 ,$en : b2 I2 a,$").</li>
+  <li><strong>Music incipit (Optional, for music manuscripts):</strong> A series of notes from a musical work, serving as an identifier.</li>
+</ul>
 </div>
 
 ## Punctuation Rules
 
 <div className="guid">
-
+<ul>
+  <li>The identifier is the <strong>first element</strong> in its statement within Area 8 and is not preceded by prescribed punctuation.</li>
+  <li><strong>Qualifications</strong> are enclosed in <strong>parentheses ( )</strong>. Multiple qualifications are separated by <strong>;</strong>.</li>
+  <li>If <strong>multiple identifiers</strong> for the same resource (e.g., for different formats or parts) are given by repeating the area, each subsequent statement is preceded by <strong>. —</strong>.</li>
+  <li>A <strong>plate number</strong> following an ISBN or publisher's number is preceded by <strong>. —</strong>.</li>
+</ul>
 </div>
 
 ## Relationship to ISBD Standards
 
 <div className="guid">
-
+This is element <strong>8.1</strong> within Area 8. It provides standardized, unique identification for resources, aiding in their discovery and management.
 </div>
 
 ## Relationship to Other SES
 
 <div className="guid">
-
+<ul>
+  <li>It is a component of the "Resource Identifier And Terms Of Availability Area Encoding Scheme."</li>
+  <li>It directly relates to the "Key title" (element 8.2), which is given only if the ISSN (a type of resource identifier) is also given.</li>
+  <li>Identifiers for earlier editions or bibliographic history are not given here but may be recorded in the <strong>Note Area (Area 7)</strong>.</li>
+</ul>
 </div>
 
 ## Examples
 
 <div className="stip">
-```
-Example 1: ISBN 978-0-85020-025-6 (cloth)
-Context:  An ISBN for a book, with a qualification indicating it's a clothbound edition.
-
-Example 2: ISSN 0075-2363 = Chemical abstracts
-Context: An ISSN for a continuing resource, with the key title.
-
-Example 3: ISMN 979-0-3217-6543-6 (score). — ISMN 979-0-3217-6544-3 (vocal score)
-Context: ISMNs for a notated music resource, providing separate identifiers for the score and vocal score.
-
-Example 4:  ISBN 978-0-330-23591-4 (paperback): GBP 9.99
-Context: An ISBN for a paperback book with its price in British pounds.
-
-Example 5:  Pl. no.: PWM-8601
-Context: A plate number for a notated music resource (without an ISBN or ISMN).
-```
+<ul>
+  <li><strong>. — ISBN 978-952-92-0267-6</strong></li>
+  <li><strong>. — ISSN 0075-2363</strong></li>
+  <li><strong>. — ISMN 979-0-3217-6543-6 (score)</strong></li>
+  <li><strong>. — Telefunken 6.35368</strong></li>
+  <li><strong>. — Fingerprint:163704 - b1 A2 ,$en : b2 I2 a,$</strong></li>
+</ul>
 </div>
 
----
+<hr />
 
 *This content was automatically generated from the ISBD PDF documentation using Gemini AI analysis.*

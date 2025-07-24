@@ -23,7 +23,7 @@ deprecatedInVersion: null
 willBeRemovedInVersion: null
 ---
 
-# {frontMatter.title}
+# Publication, Production, Distribution, Etc Area Encoding Scheme
 
 ## Element Reference
 <ElementReference frontMatter={frontMatter} />
@@ -31,54 +31,66 @@ willBeRemovedInVersion: null
 ## Definition
 
 <div className="guid">
-
+This area (Area 4) contains information about the <strong>place of publication, production, and/or distribution</strong>; the <strong>name of the publisher, producer, and/or distributor</strong>; and the <strong>date of publication, production, and/or distribution</strong>. It also records data related to the <strong>physical manufacture</strong> of the resource, such as the place, name, and date of printing or manufacture.
 </div>
 
 ## Required Elements
 
 <div className="guid">
-
+<ul>
+  <li><strong>Place of publication, production and/or distribution (Mandatory):</strong> The geographic location associated with the publishing, production, or distribution entity. Multiple places can be recorded.</li>
+  <li><strong>Name of publisher, producer and/or distributor (Mandatory):</strong> The person or corporate body responsible for the publication, production, or distribution activities. Multiple names can be recorded.</li>
+  <li><strong>Date of publication, production and/or distribution (Mandatory):</strong> The date the resource was officially offered for sale or distribution. Can include copyright dates or legal deposit dates if publication date is unknown.</li>
+  <li><strong>Place of printing or manufacture (Optional):</strong> Given when it appears on the resource and publication/distribution details are unknown, or optionally in addition to publication/distribution details.</li>
+  <li><strong>Name of printer or manufacturer (Optional):</strong> Given under the same conditions as the place of printing/manufacture.</li>
+  <li><strong>Date of printing or manufacture (Optional):</strong> Can be given as an element following the printer/manufacturer or by itself.</li>
+</ul>
 </div>
 
 ## Punctuation Rules
 
 <div className="guid">
-
+<ul>
+  <li>Each area (other than the first in a paragraph) is preceded by <strong>. —</strong>.</li>
+  <li>A <strong>second or subsequent place</strong> is preceded by <strong>;</strong> (unless a linking word is given).</li>
+  <li>Each <strong>name (publisher, producer, distributor)</strong> is preceded by <strong>:</strong> (unless a linking word is given for subsequent names).</li>
+  <li><strong>Parallel information</strong> is preceded by <strong>=</strong>.</li>
+  <li>The <strong>date</strong> is preceded by <strong>,</strong>.</li>
+  <li>A <strong>hyphen (-) after the date</strong> indicates a continuing resource.</li>
+  <li><strong>Printing or manufacturing information</strong> (place, name, date) is enclosed in <strong>one pair of parentheses ( )</strong>.</li>
+</ul>
 </div>
 
 ## Relationship to ISBD Standards
 
 <div className="guid">
-
+Identified as <strong>Area 4</strong>, this is a mandatory area providing fundamental information for identification and access. For older monographic resources, the distinction between publisher, bookseller, and printer might be undifferentiated.
 </div>
 
 ## Relationship to Other SES
 
 <div className="guid">
-
+<ul>
+  <li>It encompasses the "Place Of Publication, Production, Distribution Statement Encoding Scheme," "Name Of Publisher, Producer, Distributor Statement Encoding Scheme," and "Statement Of Printing Or Manufacture Encoding Scheme."</li>
+  <li>The dates given in the <strong>Numbering Area (Area 3)</strong> for serials may or may not coincide with the dates of publication given in this area.</li>
+  <li>Changes to information in this area (e.g., place, name of publisher) are often recorded in the <strong>Note Area (Area 7)</strong>.</li>
+</ul>
 </div>
 
 ## Examples
 
 <div className="stip">
 ```
-Example 1: London : Faber & Faber, 1984
-Context: Standard place, publisher, and date of publication.
+. — Place of publication or production : name of publisher or producer, date
 
-Example 2: New York : Oxford University Press, 1999, c1998
-Context: Place, publisher, date of publication, and copyright date.
+. — London : Methuen, 1979
 
-Example 3: Paris : Gallimard ; [New York] : Distributed by Schocken Books, 2001
-Context: Place of publication and publisher, and place of distribution and distributor (the latter supplied because it's not on the preferred source).
+. — [S.l.] : [s.n.], 1974 (Manchester : Unity Press)
 
-Example 4: [S.l.] : [s.n.], 1850?
-Context: Place and publisher unknown, approximate date of publication.
-
-Example 5: London : Printed for the author, 1787 (Oxford : Printed by W. Jackson)
-Context: Place of publication and publisher, with place and name of printer in parentheses as a distinct statement.
+. — Washington, D.C. : Smithsonian Institution ; New York : distributed by W.W. Norton, 1973
 ```
 </div>
 
----
+<hr />
 
 *This content was automatically generated from the ISBD PDF documentation using Gemini AI analysis.*

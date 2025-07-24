@@ -23,7 +23,7 @@ deprecatedInVersion: null
 willBeRemovedInVersion: null
 ---
 
-# {frontMatter.title}
+# Terms Of Availability Statement Encoding Scheme
 
 ## Element Reference
 <ElementReference frontMatter={frontMatter} />
@@ -31,57 +31,56 @@ willBeRemovedInVersion: null
 ## Definition
 
 <div className="guid">
-
+This refers to element <strong>8.3</strong> within the <strong>Resource Identifier and Terms of Availability Area (Area 8)</strong>. It provides a statement of the <strong>conditions under which a resource may be obtained</strong>, typically its price, or a brief statement if it's not for sale (e.g., "for hire," "free to educational institutions").
 </div>
 
 ## Required Elements
 
 <div className="guid">
-
+The element is <strong>Optional</strong>.
+<ul>
+  <li><strong>Price (Optional):</strong> Given with the international standard code for the currency (e.g., "GBP 2.05," "EUR 950").</li>
+  <li><strong>Other terms (Optional):</strong> A brief statement for non-sale availability (e.g., "not for sale," "for hire," "free loan").</li>
+  <li><strong>Qualifications (Optional):</strong> Brief statements (in parentheses) clarifying the terms (e.g., "(to members)", "(until 1 January 1977)", "(annual subscription)").</li>
+</ul>
 </div>
 
 ## Punctuation Rules
 
 <div className="guid">
-
+<ul>
+  <li>The <strong>terms of availability</strong> are preceded by <strong>:</strong>.</li>
+  <li><strong>Qualifications</strong> are enclosed in <strong>parentheses ( )</strong>.</li>
+  <li>If multiple terms or qualifications are needed, they are separated as appropriate, usually by <strong>:</strong> for distinct terms or <strong>;</strong> for multiple qualifications.</li>
+</ul>
 </div>
 
 ## Relationship to ISBD Standards
 
 <div className="guid">
-
+This is element <strong>8.3</strong> within Area 8. It provides practical information about access to the resource.
 </div>
 
 ## Relationship to Other SES
 
 <div className="guid">
-
+<ul>
+  <li>It is a component of the "Resource Identifier And Terms Of Availability Area Encoding Scheme."</li>
+  <li>Notes related to terms of availability (e.g., limited print run, limited distribution) can be found in the <strong>Note Area (Area 7)</strong>.</li>
+</ul>
 </div>
 
 ## Examples
 
 <div className="stip">
-```
-Example 1: : GBP 2.05
-Context: Price of the resource in British Pounds.
-
-Example 2: : EUR 950
-Context: Price of the resource in Euros.
-
-Example 3: : not for sale
-Context: Resource is not available for purchase.
-
-Example 4: : USD 129.00 : USD 100.00 (for colleges and universities)
-Context: Different prices for different customer groups.
-
-Example 5: : EUR 1,20 (per issue) : EUR 20 (p.a.)
-Context: Price per issue and price for an annual subscription.
-```
-
-
-It is important to note that actual implementations in library catalogs and bibliographic databases might introduce further encoding schemes or practices beyond the general guidance provided by the ISBD.  Specific cataloging rules (e.g., RDA, AACR2) or metadata schemas (e.g., MARC, MODS) may have their own requirements for representing and encoding Terms of Availability.
+<ul>
+  <li><strong>: GBP 2.05</strong></li>
+  <li><strong>: not for sale</strong></li>
+  <li><strong>: USD 129.00 : USD 100.00 (for colleges and universities)</strong></li>
+  <li><strong>: EUR 4 (annual subscription) : EUR 1,20 (per issue)</strong></li>
+</ul>
 </div>
 
----
+<hr />
 
 *This content was automatically generated from the ISBD PDF documentation using Gemini AI analysis.*

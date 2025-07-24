@@ -23,7 +23,7 @@ deprecatedInVersion: null
 willBeRemovedInVersion: null
 ---
 
-# {frontMatter.title}
+# Content Form And Media Type Statement Encoding Scheme
 
 ## Element Reference
 <ElementReference frontMatter={frontMatter} />
@@ -31,39 +31,57 @@ willBeRemovedInVersion: null
 ## Definition
 
 <div className="guid">
-
+This refers to the <strong>combined, formatted statement</strong> of the content form(s), production process (if applicable), and media type(s) that forms the core description within <strong>Area 0 (Content Form, Production Process and Media Type Area)</strong>. It provides an immediate overview of what the resource contains and on what physical carrier it exists.
 </div>
 
 ## Required Elements
 
 <div className="guid">
-
+It combines the elements from Area 0:
+<ul>
+  <li><strong>Content form:</strong> (Mandatory) The fundamental form (e.g., "Text," "Image," "Dataset").</li>
+  <li><strong>Content qualification:</strong> (Mandatory if applicable) Specific attributes (e.g., "(visual)", "(cartographic ; still ; 2-dimensional)").</li>
+  <li><strong>Production process:</strong> (Optional) Method of fixation and production (e.g., "handwriting," "burning").</li>
+  <li><strong>Production process qualification:</strong> (Optional) Status of production (e.g., "(unpublished)").</li>
+  <li><strong>Media type:</strong> (Mandatory) Type of carrier (e.g., "electronic," "unmediated," "video").</li>
+</ul>
 </div>
 
 ## Punctuation Rules
 
 <div className="guid">
-
+The punctuation patterns define how these elements are combined:
+<ul>
+  <li><strong>Content form (content qualification) : production process (production process qualification) ; media type</strong>.</li>
+  <li><strong>Content form (content qualification ; content qualification) : media type</strong>.</li>
+  <li><strong>Content form. Content form (content qualification) : media type</strong> (for different content forms in one media type).</li>
+  <li><strong>Content form (content qualification) : production process ; media type + Content form (content qualification) : production process (production process qualification) ; media type</strong> (for different media types, content forms, and production processes).</li>
+</ul>
 </div>
 
 ## Relationship to ISBD Standards
 
 <div className="guid">
-
+This is the primary output of <strong>Area 0</strong>, explicitly detailing its structured nature. It was a significant development in the 2011 consolidated edition to provide greater specificity.
 </div>
 
 ## Relationship to Other SES
 
 <div className="guid">
-
+It integrates the "Content Form," "Production Process," and "Media Type" elements (which themselves could be considered mini-SES) into a coherent statement. It's the practical application of the "Content Form And Media Type Area Encoding Scheme."
 </div>
 
 ## Examples
 
 <div className="stip">
-
+<ul>
+  <li><strong>Dataset : electronic</strong></li>
+  <li><strong>Text (visual) : handwriting (unpublished) ; unmediated</strong></li>
+  <li><strong>Image (cartographic ; still ; 2-dimensional ; visual) : unmediated</strong></li>
+  <li><strong>Text (visual) : unmediated + Text (visual) : microform</strong></li>
+</ul>
 </div>
 
----
+<hr />
 
 *This content was automatically generated from the ISBD PDF documentation using Gemini AI analysis.*

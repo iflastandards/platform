@@ -23,7 +23,7 @@ deprecatedInVersion: null
 willBeRemovedInVersion: null
 ---
 
-# {frontMatter.title}
+# Specific Material Designation And Extent Encoding Scheme
 
 ## Element Reference
 <ElementReference frontMatter={frontMatter} />
@@ -31,54 +31,58 @@ willBeRemovedInVersion: null
 ## Definition
 
 <div className="guid">
-
+This refers to the naming and numbering of the physical unit(s) that constitute the resource, along with other measures of its extent. It is the <strong>first element</strong> in the <strong>Material Description Area (Area 5)</strong> [411, 5.1]. The <strong>specific material designation (SMD)</strong> identifies the specific class of physical object.
 </div>
 
 ## Required Elements
 
 <div className="guid">
-
+<ul>
+  <li><strong>Number of physical units (Optional):</strong> Given in arabic numerals (e.g., "36"). This is omitted if the resource is still being issued or the number is unknown.</li>
+  <li><strong>Specific material designation (Mandatory):</strong> A term indicating the type of physical unit (e.g., "slides," "atlas," "computer disk," "website"). Terms are not prescribed and may be abbreviated.</li>
+  <li><strong>Subunits (Optional):</strong> The number and type of internal subunits (e.g., pages, leaves, frames, pieces) and/or playing time, enclosed in parentheses (e.g., "(37 p.)", "(ca 60 min)").</li>
+</ul>
 </div>
 
 ## Punctuation Rules
 
 <div className="guid">
-
+<ul>
+  <li>The <strong>subunits statement</strong> is enclosed in <strong>parentheses ( )</strong>.</li>
+  <li>For multimedia resources, components are separated by <strong>,</strong>.</li>
+</ul>
 </div>
 
 ## Relationship to ISBD Standards
 
 <div className="guid">
-
+This is element <strong>5.1</strong> within Area 5. It is fundamental to the physical description of a resource, providing a concise summary of its physical form and quantity.
 </div>
 
 ## Relationship to Other SES
 
 <div className="guid">
-
+<ul>
+  <li>It is a component of the "Material Description Area Encoding Scheme."</li>
+  <li>Playing time (5.1.5) and pagination (5.1.4) are detailed aspects of this element.</li>
+  <li>It is closely related to the "Content Form And Media Type Area Encoding Scheme" (Area 0), as the physical carrier described here is the "Media type" in Area 0.</li>
+  <li>For component parts, this information may be inferred from the host and location, and thus omitted from the part's description itself.</li>
+  <li>Notes on extent (e.g., if numbering gives a false impression, or if it differs from bibliographic units) are given in the <strong>Note Area (Area 7)</strong>.</li>
+</ul>
 </div>
 
 ## Examples
 
 <div className="stip">
-```
-Example 1: 1 volume (xiv, 328 p.)
-Context: A single-volume book with 328 pages, including xiv preliminary pages.
-
-Example 2: 3 volumes (various pagings)
-Context: A multi-volume work where pages are numbered separately in each volume.
-
-Example 3: 2 sound discs (45 min): digital; stereo; 12 cm
-Context: Two sound discs with a total playing time of 45 minutes, digitally recorded in stereo, each 12 cm in diameter.
-
-Example 4: 1 map : col. ; 65 x 45 cm
-Context: A single color map with dimensions 65 cm by 45 cm.
-
-Example 5: 1 streaming video file (130 min)
-Context: A single video file, accessed remotely, with a duration of 130 minutes.
-```
+<ul>
+  <li><strong>. — 36 slides</strong></li>
+  <li><strong>. — 1 computer disk</strong></li>
+  <li><strong>. — 1 score (37 p.)</strong></li>
+  <li><strong>. — 1 website</strong></li>
+  <li><strong>. — 3 filmstrips, 1 map, 13 rocks and minerals, 1 wallchart</strong></li>
+</ul>
 </div>
 
----
+<hr />
 
 *This content was automatically generated from the ISBD PDF documentation using Gemini AI analysis.*

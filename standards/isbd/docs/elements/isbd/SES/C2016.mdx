@@ -23,7 +23,7 @@ deprecatedInVersion: null
 willBeRemovedInVersion: null
 ---
 
-# {frontMatter.title}
+# Title And Statement Of Responsibility Area Encoding Scheme
 
 ## Element Reference
 <ElementReference frontMatter={frontMatter} />
@@ -31,54 +31,80 @@ willBeRemovedInVersion: null
 ## Definition
 
 <div className="guid">
-
+This element within the <strong>Material Description Area (Area 5)</strong> provides a statement of 
+<strong>additional physical characteristics</strong> of the resource beyond its extent and dimensions. 
+This includes details like material composition, presence of colour or illustrations, and various technical specifications.
 </div>
 
 ## Required Elements
 
 <div className="guid">
-
+<p>All elements are optional:</p>
+<ul>
+  <li><strong>Composition of material:</strong> Word or phrase indicating what the resource is made of 
+    (e.g., "wood," "nitrate," "transparency").</li>
+  <li><strong>Presence of illustrations:</strong> Abbreviation "ill." (or equivalent). 
+    Can specify "all ill." or "chiefly maps".</li>
+  <li><strong>Presence of colour:</strong> "col." for colour, "b&w" for black and white.</li>
+  <li><strong>Reduction ratio (Microforms):</strong> Numerical ratio (e.g., "14x," "150x") 
+    or descriptive terms (e.g., "low reduction").</li>
+  <li><strong>Presence or absence of sound:</strong> "sd." for sound, "si." for silent, when not implicit in 
+    the specific material designation (e.g., for film reels). Brief explanatory phrases can be added (e.g., "(Beta HiFi)").</li>
+  <li><strong>Other technical specifications:</strong><ul>
+      <li><strong>Frame alignment</strong> (for microforms/filmstrips, 
+        e.g., "cine mode," "comic mode").</li>
+      <li><strong>Process or method of reproduction</strong> (for still images, 
+        e.g., "drypoint, aquatint").</li>
+      <li><strong>Playing speed</strong> (e.g., "33 1/3 rpm," "19 cm/s").</li>
+      <li><strong>Recording method</strong> (e.g., "stereo," "mono").</li>
+      <li><strong>Groove direction/size</strong> (for sound discs).</li>
+      <li><strong>Number of tape tracks</strong>.</li>
+      <li><strong>Track configuration</strong> (for sound reels with 4+ tracks).</li>
+      <li><strong>Number of sound channels</strong> (e.g., "mono," "stereo").</li>
+      <li><strong>Equalization</strong>.</li>
+      <li><strong>Noise reduction</strong>.</li>
+    </ul>
+  </li>
+</ul>
 </div>
 
 ## Punctuation Rules
 
 <div className="guid">
-
+This statement is preceded by <strong>:</strong> within Area 5.
 </div>
 
 ## Relationship to ISBD Standards
 
 <div className="guid">
-
+This is element <strong>5.2</strong> within Area 5. 
+It provides granular details about the physical manifestation of the resource.
 </div>
 
 ## Relationship to Other SES
 
 <div className="guid">
-
+<ul>
+  <li>It is a component of the "Material Description Area Encoding Scheme."</li>
+  <li>If a resource is available in alternative formats with different physical details, this information may be 
+    omitted here and given in <strong>Area 8 (Resource Identifier and Terms of Availability Area)</strong> 
+    or the <strong>Note Area (Area 7)</strong>.</li>
+  <li>Notes providing additional physical details or peculiar characteristics are given in 
+    the <strong>Note Area (Area 7)</strong>.</li>
+</ul>
 </div>
 
 ## Examples
 
 <div className="stip">
-```
-Example 1: 336 p. : ill., maps ; 25 cm
-Context: A book with 336 pages, containing illustrations and maps, and measuring 25 cm in height.
-
-Example 2: 1 sound disc (78 rpm) : analog, mono ; 30 cm 
-Context: An analog monaural sound disc, 30 cm in diameter, designed to be played at 78 revolutions per minute.
-
-Example 3: 1 microfilm reel : diazo, negative, high reduction ; 35 mm
-Context: A microfilm reel containing a diazo negative at a high reduction ratio on 35mm film.
-
-Example 4:  1 videocassette (60 min) : sd., col., PAL ; VHS
-Context: A VHS format video cassette with sound, color recording in PAL format, with a playing time of 60 minutes.
-
-Example 5: 1 globe : wood, col. ; 30 cm (diam.)
-Context: A colored globe made of wood with a diameter of 30 cm.
-```
+<ul>
+  <li><strong>. — 1 globe : wood</strong></li>
+  <li><strong>. — 1 film reel (20 min) : b&w, si.</strong></li>
+  <li><strong>. — 1 sound disc : 33 1/3 rpm, stereo</strong></li>
+  <li><strong>. — 1 CD-I : col., sd.</strong></li>
+</ul>
 </div>
 
----
+<hr />
 
 *This content was automatically generated from the ISBD PDF documentation using Gemini AI analysis.*

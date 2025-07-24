@@ -23,7 +23,7 @@ deprecatedInVersion: null
 willBeRemovedInVersion: null
 ---
 
-# {frontMatter.title}
+# Material Description Area Encoding Scheme
 
 ## Element Reference
 <ElementReference frontMatter={frontMatter} />
@@ -31,39 +31,82 @@ willBeRemovedInVersion: null
 ## Definition
 
 <div className="guid">
-
+This area (Area 5) describes the <strong>physical characteristics</strong> of the resource. It includes details about the extent, other physical characteristics, dimensions, and any accompanying material. The description should reflect the resource as it was originally issued.
 </div>
 
 ## Required Elements
 
 <div className="guid">
-
+<ul>
+  <li><strong>Extent (Mandatory):</strong> Names and numbers the physical unit(s) (e.g., "36 slides," "1 computer disk") 
+    and may include subunits like pages or playing time (e.g., "(37 p.)", "(ca 60 min)"). 
+    (Further detailed in "Specific Material Designation And Extent Encoding Scheme").</li>
+  <li><strong>Other physical details (Optional):</strong> Statement of other characteristics, such as:<ul>
+      <li><strong>Composition of material</strong> (e.g., "wood," "nitrate").</li>
+      <li><strong>Presence of illustrations</strong> (e.g., "ill.", "col. ill.", "chiefly maps").</li>
+      <li><strong>Presence of colour</strong> (e.g., "col.", "b&w").</li>
+      <li><strong>Reduction ratio</strong> (for microforms, e.g., "14x", "high reduction").</li>
+      <li><strong>Presence or absence of sound</strong> (e.g., "sd.", "si.").</li>
+      <li><strong>Other technical specifications</strong> (e.g., frame alignment, process of reproduction, playing speed, 
+        sound channels, noise reduction). (Further detailed in "Other Physical Details Encoding Scheme").</li>
+    </ul>
+  </li>
+  <li><strong>Dimensions (Optional):</strong> Linear measurements of the resource, typically in centimetres. 
+    For certain media (film, tape), gauge or width in millimetres.</li>
+  <li><strong>Accompanying material statement (Optional):</strong> Describes any physically separable material issued with 
+    and intended to be used with the resource. A short physical description of the accompanying material may be included.</li>
+</ul>
 </div>
 
 ## Punctuation Rules
 
 <div className="guid">
-
+<ul>
+  <li>Each area is preceded by <strong>. —</strong>.</li>
+  <li>The <strong>statement of other physical details</strong> is preceded by <strong>:</strong>.</li>
+  <li>The <strong>dimensions statement</strong> is preceded by <strong>;</strong>.</li>
+  <li>Each <strong>accompanying material statement</strong> is preceded by <strong>+</strong>.</li>
+  <li><strong>Extent, other physical details, and dimensions of accompanying material</strong> are enclosed in 
+    <strong>parentheses ( )</strong>.</li>
+</ul>
 </div>
 
 ## Relationship to ISBD Standards
 
 <div className="guid">
-
+Identified as <strong>Area 5</strong>, this is a key area for providing physical description of resources. 
+It provides unambiguous information for identification and reference.
 </div>
 
 ## Relationship to Other SES
 
 <div className="guid">
-
+<ul>
+  <li>It contains distinct encoding schemes for "Specific Material Designation And Extent Encoding Scheme" 
+    and "Other Physical Details Encoding Scheme."</li>
+  <li>Information about the physical units of notated music and unpublished resources mentioned in Area 3 
+    is specified here.</li>
+  <li>Notes on this area provide additional physical details or clarify peculiarities, 
+    and are found in the <strong>Note Area (Area 7)</strong>.</li>
+  <li>Accompanying material can alternatively be described independently or in a note.</li>
+</ul>
 </div>
 
 ## Examples
 
 <div className="stip">
+```
+. — Specific material designation (extent) : other physical details statement ; dimensions 
++ accompanying material statement
 
+. — 1 score (37 p.) + 4 parts on 1 CD-ROM
+
+. — 1 videocassette (U-matic) (30 min) : col., sd. ; 18.8 x 10.4 x 2.5 cm
+
+. — 1 map : transparency, col. ; 65 x 40 cm + 1 memoir
+```
 </div>
 
----
+<hr />
 
 *This content was automatically generated from the ISBD PDF documentation using Gemini AI analysis.*

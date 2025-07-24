@@ -23,7 +23,7 @@ deprecatedInVersion: null
 willBeRemovedInVersion: null
 ---
 
-# {frontMatter.title}
+# Title And Statement Of Responsibility Area Encoding Scheme
 
 ## Element Reference
 <ElementReference frontMatter={frontMatter} />
@@ -31,55 +31,71 @@ willBeRemovedInVersion: null
 ## Definition
 
 <div className="guid">
-
+This area (Area 1) encompasses information related to the <strong>title proper</strong> of the resource, any <strong>parallel titles</strong>, <strong>other title information</strong>, and <strong>statements of responsibility</strong> concerning the creation or realization of the intellectual or artistic content. It is designed to ensure consistency when sharing bibliographic information.
 </div>
 
 ## Required Elements
 
 <div className="guid">
-
+<ul>
+  <li><strong>Title proper (Mandatory if available):</strong> The chief name of the resource, transcribed exactly as to wording from the preferred source. It can be a generic term, a name of a person or corporate body, an initialism/acronym, include numbers/letters, or be linguistically integrated with a statement of responsibility.</li>
+  <li><strong>Parallel title (Optional):</strong> A title in another language or script that is an equivalent to the title proper and appears on the preferred source.</li>
+  <li><strong>Other title information (Optional):</strong> A word, phrase, or group of characters appearing with and subordinate to the title proper or a parallel title, which qualifies, explains, or completes it.</li>
+  <li><strong>Statement of responsibility (Mandatory if available):</strong> Names, phrases, or groups of characters identifying persons or corporate bodies responsible for or contributing to the resource's content (e.g., writers, composers, performers, editors, sponsors). Only principal responsibilities are required, but others may be included if important.</li>
+</ul>
 </div>
 
 ## Punctuation Rules
 
 <div className="guid">
-
+<ul>
+  <li>Each <strong>parallel title or parallel statement</strong> is preceded by <strong>=</strong>.</li>
+  <li>Each unit of <strong>other title information</strong> is preceded by <strong>:</strong> (unless linked by a word or phrase).</li>
+  <li>The <strong>first statement of responsibility</strong> is preceded by <strong>/</strong>.</li>
+  <li>Each <strong>subsequent statement of responsibility</strong> is preceded by <strong>;</strong> (unless statements form a single phrase).</li>
+  <li><strong>Titles of individual works by different authors</strong> are separated by <strong>.</strong>.</li>
+  <li><strong>Titles of individual works by the same author</strong> are separated by <strong>;</strong>.</li>
+  <li>For <strong>common and dependent titles</strong>, each dependent title designation or dependent title is preceded by <strong>.</strong>.</li>
+  <li>A <strong>dependent title</strong> following a dependent title designation is preceded by <strong>,</strong>.</li>
+  <li>A dependent title designation or dependent title following other title information is preceded by <strong>.</strong>.</li>
+</ul>
 </div>
 
 ## Relationship to ISBD Standards
 
 <div className="guid">
-
+Identified as <strong>Area 1</strong>, this is a <strong>mandatory</strong> area and is central to bibliographic description in ISBD. It serves as the basis for the description of the resource being catalogued and employs prescribed punctuation for display.
 </div>
 
 ## Relationship to Other SES
 
 <div className="guid">
-
+<ul>
+  <li>It specifies the "Compound Title Of Title Proper Encoding Scheme" and "Compound Title Of Parallel Title Encoding Scheme."</li>
+  <li>Information that is linguistically part of the title proper is not repeated in the Edition Area (Area 2).</li>
+  <li>Changes to the title proper can sometimes require a new description (see Area A.2.6.1).</li>
+  <li>Notes on any aspect of this area, such as sources of title, variant titles, or changes, are provided in the <strong>Note Area (Area 7)</strong>.</li>
+</ul>
 </div>
 
 ## Examples
 
 <div className="stip">
 ```
-Example 1: The Lord of the Rings : the fellowship of the ring / J.R.R. Tolkien.
-Context: Title proper with other title information and a statement of responsibility.
+Title proper : other title information
 
-Example 2:  Hamlet / William Shakespeare ; edited by David Bevington.
-Context: Title proper with a statement of responsibility.
+Title proper = Parallel title
 
-Example 3:  Star Wars : Episode IV, A new hope / story by George Lucas.
-Context: Title proper with other title information and statement of responsibility.
+Common title. Dependent title / statement of responsibility
 
-Example 4:  Pride and Prejudice / Jane Austen ; translated by Isabelle de Montolieu = Orgueil et Préjugés.
-Context: Title proper with statement of responsibility and a parallel title.
+Beyond horizons = Allende los horizontes
 
-Example 5:  Beethoven : symphonies nos. 5 & 7 / performed by the Berlin Philharmonic Orchestra.
-Context: Title proper with other title information and a statement of responsibility.
+SPSS : statistical package for the social sciences
 
+The John Franklin Bardin omnibus / John Franklin Bardin
 ```
 </div>
 
----
+<hr />
 
 *This content was automatically generated from the ISBD PDF documentation using Gemini AI analysis.*

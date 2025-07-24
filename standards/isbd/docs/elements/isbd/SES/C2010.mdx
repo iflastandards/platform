@@ -23,7 +23,7 @@ deprecatedInVersion: null
 willBeRemovedInVersion: null
 ---
 
-# {frontMatter.title}
+# Note Area Encoding Scheme
 
 ## Element Reference
 <ElementReference frontMatter={frontMatter} />
@@ -31,39 +31,65 @@ willBeRemovedInVersion: null
 ## Definition
 
 <div className="guid">
-
+<p>This area (Area 7) is a flexible space for any <strong>descriptive information not given in other areas</strong> but considered important to users of bibliographic records. Notes clarify, amplify, or provide additional insights into the resource's description, bibliographic history, or relationships to other resources.</p>
 </div>
 
 ## Required Elements
 
 <div className="guid">
-
+<p>Notes are generally <strong>optional</strong>. However, some notes are explicitly designated as "mandatory if applicable and/or available" in the A.3.1 outline for certain elements (e.g., notes on content form and media type). Notes are categorized by the ISBD areas they relate to, but can also cover aspects that don't directly correspond to a specific area.</p>
+<ul>
+  <li><strong>Notes on content form and media type (7.0):</strong> (e.g., frequency for continuing resources, system requirements for electronic resources).</li>
+  <li><strong>Notes on title and statement of responsibility (7.1):</strong> (e.g., source of title, variant titles, changes to title, explanations about statements of responsibility).</li>
+  <li><strong>Notes on edition area and bibliographic history (7.2):</strong> (e.g., source of edition statement, changes to edition, bibliographic history, relationships like translations, reproductions, other editions, supplements, mergers, splits).</li>
+  <li><strong>Notes on material or type of resource specific area (7.3):</strong> (e.g., additional mathematical data, music format peculiarities, numbering details for serials, unpublished statement peculiarities).</li>
+  <li><strong>Notes on publication, production, distribution, etc., area (7.4):</strong> (e.g., other publishers, variant information, irregularities, additional dates).</li>
+  <li><strong>Notes on material description area (7.5):</strong> (e.g., additional physical details, physical peculiarities, other physical formats available).</li>
+  <li><strong>Notes on series and multipart monographic resources area (7.6):</strong> (e.g., series editors, main series ISSN for subseries).</li>
+  <li><strong>Notes on the contents (7.7):</strong> (e.g., list of contents, indexes, bibliographies).</li>
+  <li><strong>Notes on resource identifier and terms of availability area (7.8):</strong> (e.g., limited print run, binding).</li>
+  <li><strong>Notes on the issue, part, iteration, etc., that forms the basis of the description (7.9):</strong> (e.g., if description is not based on the first issue/iteration).</li>
+  <li><strong>Other notes (7.10):</strong> (e.g., duration for music, astronomical parameters, summary, use/audience).</li>
+  <li><strong>Notes relating to the copy in hand (7.11):</strong> (e.g., physical characteristics of the specific copy, "bound with" details, provenance, imperfections).</li>
+</ul>
 </div>
 
 ## Punctuation Rules
 
 <div className="guid">
-
+<ul>
+  <li>Each <strong>note</strong> is separated from the next by <strong>. —</strong>.</li>
+  <li>If notes are in separate paragraphs, <strong>. —</strong> is omitted or replaced by a <strong>point (.)</strong> at the end of the preceding note.</li>
+  <li>Within notes, the <strong>prescribed punctuation of areas 1-6 is recommended</strong>.</li>
+  <li><strong>Key title and ISSN</strong> in a note are connected by <strong>=</strong>.</li>
+  <li><strong>Title proper and ISSN</strong> in a note are connected by <strong>,</strong>.</li>
+</ul>
 </div>
 
 ## Relationship to ISBD Standards
 
 <div className="guid">
-
+<p>Identified as <strong>Area 7</strong>, this area provides flexibility and depth to the description, allowing cataloguers to include nuances and specific details that enhance understanding beyond the structured areas.</p>
 </div>
 
 ## Relationship to Other SES
 
 <div className="guid">
-
+<p>The Note Area serves as a supplementary and explanatory component for <strong>all other ISBD Areas (0-6, 8)</strong>. Most other SES have cross-references to this area for additional information.</p>
 </div>
 
 ## Examples
 
 <div className="stip">
-
+<ul>
+  <li><strong>. — System requirements: Macintosh; at least 1 MB; System 6.0.5 or later</strong></li>
+  <li><strong>. — Title from cover</strong></li>
+  <li><strong>. — Translation of: La muerte de Artemio Cruz</strong></li>
+  <li><strong>. — Includes index</strong></li>
+  <li><strong>. — Imperfect copy: missing cover and title page</strong></li>
+</ul>
 </div>
 
----
+<hr />
 
 *This content was automatically generated from the ISBD PDF documentation using Gemini AI analysis.*

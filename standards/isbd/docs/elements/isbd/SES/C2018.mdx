@@ -23,7 +23,7 @@ deprecatedInVersion: null
 willBeRemovedInVersion: null
 ---
 
-# {frontMatter.title}
+# Place Of Publication, Production, Distribution Statement Encoding Scheme
 
 ## Element Reference
 <ElementReference frontMatter={frontMatter} />
@@ -31,59 +31,58 @@ willBeRemovedInVersion: null
 ## Definition
 
 <div className="guid">
-
+This refers to element <strong>4.1</strong> within the <strong>Publication, Production, Distribution, Etc. Area (Area 4)</strong>. It specifies the <strong>name of the place associated with the publisher, producer, or distributor</strong>, or the place from which the resource was issued or distributed.
 </div>
 
 ## Required Elements
 
 <div className="guid">
-
+<ul>
+  <li><strong>Place name (Mandatory):</strong> The name of the city or town (e.g., "London," "Baltimore"). If unknown or uncertain, it can be supplied in square brackets, possibly with a question mark.</li>
+  <li><strong>Larger place (Optional):</strong> The name of a country, state, etc., added for identification (e.g., "Washington, D.C.", "Cambridge, Mass."). This is preceded by a comma if from the source, or in square brackets if supplied.</li>
+  <li><strong>Full address (Optional):</strong> The full address of the publisher, producer, or distributor, if necessary for identification. Enclosed in parentheses if from source, or square brackets if supplied.</li>
+  <li><strong>Alternative/corrected version (Optional):</strong> If the given place name is incorrect, a correction can be supplied (e.g., "Paris [i.e. Leiden]", "Christiania [Oslo]").</li>
+</ul>
 </div>
 
 ## Punctuation Rules
 
 <div className="guid">
-
+<ul>
+  <li>A <strong>second or subsequent place</strong> is preceded by <strong>;</strong> (unless a linking word or phrase is given).</li>
+  <li><strong>Supplied information</strong> (e.g., unknown place, additions for identification) is enclosed in <strong>square brackets [ ]</strong>.</li>
+  <li>The <strong>abbreviation s.l. (sine loco)</strong> is supplied in square brackets if no place can be determined.</li>
+</ul>
 </div>
 
 ## Relationship to ISBD Standards
 
 <div className="guid">
-
+This is element <strong>4.1</strong> within Area 4. It is a mandatory element in the bibliographic description.
 </div>
 
 ## Relationship to Other SES
 
 <div className="guid">
-
+<ul>
+  <li>It is a component of the "Publication, Production, Distribution, Etc Area Encoding Scheme."</li>
+  <li>It is inherently linked to the "Name Of Publisher, Producer, Distributor Statement Encoding Scheme" (element 4.2), as the place is associated with that name.</li>
+  <li>Changes in the place of publication for continuing resources or multipart monographic resources are noted in the <strong>Note Area (Area 7)</strong>.</li>
+</ul>
 </div>
 
 ## Examples
 
 <div className="stip">
-```
-Example 1: London : Faber & Faber, 1984
-Context:  A book published in London by Faber & Faber in 1984.
-
-Example 2: New York : Knopf : Distributed by Random House, 1997
-Context: A book published by Knopf in New York and distributed by Random House in 1997.
-
-Example 3: [S.l.] : [s.n.], 1850 (Paris : Imprimerie Royale)
-Context: An older monograph where place of publication and publisher are unknown, but printing information is available.
-
-Example 4: London : J. Murray, 1831-1836
-Context: A multipart monograph published in London by John Murray between 1831 and 1836.
-
-Example 5:  New Haven : Yale University Press, c2023
-Context: A book published by Yale University Press in New Haven; date taken from copyright information.
-
-
-```
-
-
-It is important to consult the full ISBD documentation and any relevant cataloging rules for a complete understanding of the description of the Publication, Production, Distribution, etc. Area.  The absence of a specifically named encoding scheme does not detract from the structured approach to recording this information.
+<ul>
+  <li><strong>. — London</strong></li>
+  <li><strong>. — Washington, D.C.</strong></li>
+  <li><strong>. — Santiago [Chile]</strong></li>
+  <li><strong>. — [S.l.]</strong></li>
+  <li><strong>. — Paris (66, avenue de Versailles, 75016)</strong></li>
+</ul>
 </div>
 
----
+<hr />
 
 *This content was automatically generated from the ISBD PDF documentation using Gemini AI analysis.*

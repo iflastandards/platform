@@ -23,7 +23,7 @@ deprecatedInVersion: null
 willBeRemovedInVersion: null
 ---
 
-# {frontMatter.title}
+# Series And Multipart Monographic Resource Area Encoding Scheme
 
 ## Element Reference
 <ElementReference frontMatter={frontMatter} />
@@ -31,55 +31,76 @@ willBeRemovedInVersion: null
 ## Definition
 
 <div className="guid">
-
+This is a sub-area within the <strong>Material or Type of Resource Specific Area (Area 3)</strong> specifically for 
+<strong>cartographic resources</strong>. It includes details like scale, projection, coordinates, celestial hemisphere, 
+epoch, equinox, and magnitude, which are essential for describing maps, charts, and globes.
 </div>
 
 ## Required Elements
 
 <div className="guid">
-
+<ul>
+  <li><strong>Statement of scale (Mandatory if applicable):</strong> Given as a representative fraction (e.g., "1:25 000"). 
+    Can include vertical scale for relief models or angular scale for celestial charts.</li>
+  <li><strong>Statement of projection (Mandatory if available):</strong> The name of the projection 
+    (e.g., "universal transverse Mercator proj."), possibly with associated phrases.</li>
+  <li><strong>Statement of coordinates and celestial hemisphere (Mandatory if available):</strong> This covers:<ul>
+      <li><strong>Terrestrial coordinates:</strong> Longitude and latitude in degrees, minutes, and seconds, 
+        with cardinal directions.</li>
+      <li><strong>Celestial coordinates (Right ascension and declination):</strong> RA in hours/minutes/seconds 
+        and Decl. in degrees/minutes/seconds, with +/- for hemispheres.</li>
+      <li><strong>Other celestial coordinate systems:</strong> Ecliptic, galactic, 
+        supergalactic coordinates.</li>
+      <li><strong>Celestial hemisphere:</strong> Indication of northern, southern, 
+        or both hemispheres.</li>
+    </ul>
+  </li>
+  <li><strong>Statement of epoch and equinox (Mandatory if available):</strong> A reference moment in time for position 
+    measurements (epoch) and one of the intersection points of the ecliptic and celestial equator (equinox).</li>
+  <li><strong>Statement of magnitude (Mandatory if available):</strong> For celestial charts, 
+    the brightness magnitude (e.g., "limiting magnitude 3.5").</li>
+</ul>
 </div>
 
 ## Punctuation Rules
 
 <div className="guid">
-
+<ul>
+  <li>The <strong>projection statement</strong> is preceded by <strong>;</strong>.</li>
+  <li>The statements of <strong>coordinates, celestial hemisphere, epoch and equinox</strong> are enclosed in 
+    <strong>one pair of parentheses ( )</strong>.</li>
+  <li>The <strong>statement of equinox</strong> is preceded by <strong>;</strong>.</li>
+  <li>The <strong>statement of celestial hemisphere</strong> is preceded by <strong>;</strong>.</li>
+  <li>The <strong>statement of magnitude</strong> is preceded by <strong>;</strong>.</li>
+  <li>Within coordinates, pairs are separated by <strong>/</strong> (no space), 
+    and ranges by <strong>–</strong> (no space).</li>
+</ul>
 </div>
 
 ## Relationship to ISBD Standards
 
 <div className="guid">
-
+This is element <strong>3.1</strong> within Area 3. The 2021 Update broadened and refined the description of 
+cartographic resources, clarifying stipulations and reorganizing elements, especially for celestial cartography.
 </div>
 
 ## Relationship to Other SES
 
 <div className="guid">
-
+It is a key component of the "Material Or Type Of Resource Specific Area Encoding Scheme." 
+Notes can provide additional mathematical or cartographic data, including details on digital graphic representation.
 </div>
 
 ## Examples
 
 <div className="stip">
-```
-Example 1: Scale 1:250 000; Universal Transverse Mercator projection (W 78°42'--W 70°45'/N 22°48'--N 19°06', Cadiz meridian)
-Context: A terrestrial map with scale, projection, and coordinates referencing the Cadiz meridian.
-
-Example 2: Scale not given; projection not given (RA 16 h 30 min to 19 h 30 min/Decl. -16° to -49°; equinox 1950)
-Context: A celestial chart with Right Ascension, Declination, and equinox; scale and projection are unknown.
-
-
-Example 3: Scale [ca 1:1 800 000]; Conic equidistant proj. (N 40°50′−W 6°00′)
-Context: A map where the scale is approximate, calculated from a bar scale. Projection and coordinates are provided.
-
-Example 4: Scale 88 mm per 1°; stereographic projection (Decl. limit -60°; centred at South Pole)
-Context: A celestial chart centered on the South Pole with an angular scale and declination limit.
-
-Example 5: Not drawn to scale; projection not given
-Context: A thematic map or diagram where scale and projection are not relevant.
-```
+<ul>
+  <li><strong>. — Scale 1:250 000 ; universal transverse Mercator proj.</strong></li>
+  <li><strong>. — Scale 1:25 000 (E 79°–E 86°/N 20°–N 12°)</strong></li>
+  <li><strong>. — RA 16 h/Decl. -23° ; equinox 1950)</strong></li>
+</ul>
 </div>
 
----
+<hr />
 
 *This content was automatically generated from the ISBD PDF documentation using Gemini AI analysis.*
