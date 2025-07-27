@@ -280,8 +280,8 @@ export const SERVER_CONFIGS = {
       NODE_ENV: 'test',
       NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY: '',
       CLERK_SECRET_KEY: '',
-      NEXT_PUBLIC_CLERK_SIGN_IN_URL: '/admin/sign-in',
-      NEXT_PUBLIC_CLERK_AFTER_SIGN_IN_URL: '/admin/dashboard',
+          NEXT_PUBLIC_CLERK_SIGN_IN_URL: '/sign-in',
+          NEXT_PUBLIC_CLERK_AFTER_SIGN_IN_URL: '/dashboard',
       NEXT_PUBLIC_CERBOS_PDP_URL: 'http://localhost:3593',
       PATH: process.env.PATH, // Use current PATH to find correct node
     },

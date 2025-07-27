@@ -66,9 +66,23 @@ CREATE TABLE namespace_profiles (
   updated_by TEXT NOT NULL
 );
 
+-- Import logs for validation results and processing details
+CREATE TABLE import_logs (
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  import_job_id UUID REFERENCES import_jobs(id) ON DELETE CASCADE,
+  log_type TEXT CHECK (log_type IN ('validation', 'processing', 'error', 'info')) NOT NULL,
+  step TEXT, -- 'csv_parsing', 'dctap_validation', 'rdf_generation', etc.
+  message TEXT,
+  details JSONB, -- Structured data like validation issues
+  severity TEXT CHECK (severity IN ('error', 'warning', 'info')) DEFAULT 'info',
+  created_at TIMESTAMPTZ DEFAULT NOW()
+);
+
 -- Indexes for performance
 CREATE INDEX idx_import_jobs_namespace ON import_jobs(namespace_id);
 CREATE INDEX idx_import_jobs_status ON import_jobs(status);
+CREATE INDEX idx_import_logs_job ON import_logs(import_job_id);
+CREATE INDEX idx_import_logs_type ON import_logs(log_type);
 CREATE INDEX idx_activity_logs_subject ON activity_logs(subject_type, subject_id);
 CREATE INDEX idx_projects_review_group ON projects(review_group_slug);
 CREATE INDEX idx_projects_status ON projects(status);
@@ -79,6 +93,7 @@ ALTER TABLE editorial_cycles ENABLE ROW LEVEL SECURITY;
 ALTER TABLE activity_logs ENABLE ROW LEVEL SECURITY;
 ALTER TABLE projects ENABLE ROW LEVEL SECURITY;
 ALTER TABLE namespace_profiles ENABLE ROW LEVEL SECURITY;
+ALTER TABLE import_logs ENABLE ROW LEVEL SECURITY;
 
 -- RLS Policies (basic - to be refined based on Cerbos integration)
 -- For now, authenticated users can read everything but write is restricted
@@ -100,4 +115,8 @@ CREATE POLICY "Users can view projects" ON projects
 
 -- Namespace profiles: viewable by all
 CREATE POLICY "Users can view namespace profiles" ON namespace_profiles
+  FOR SELECT USING (true);
+
+-- Import logs: viewable by all
+CREATE POLICY "Users can view import logs" ON import_logs
   FOR SELECT USING (true);

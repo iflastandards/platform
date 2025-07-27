@@ -2,12 +2,13 @@ import './global.css';
 import { ClerkProvider } from '@clerk/nextjs';
 import { ThemeProvider } from '@/contexts/theme-context';
 import type { Metadata } from 'next';
+import { addBasePath } from '@ifla/theme/utils';
 
 export const metadata: Metadata = {
   title: 'IFLA Admin Portal',
   description: 'Administrative portal for IFLA Standards management',
   icons: {
-    icon: '/favicon.ico',
+    icon: addBasePath('/favicon.ico'),
   },
 };
 
@@ -26,9 +27,9 @@ export default function RootLayout({
               card: 'shadow-none',
             },
           }}
-          signInUrl="/admin/sign-in"
-          signUpUrl="/admin/sign-up"
-          afterSignOutUrl="/admin"
+          signInUrl="/sign-in"
+          signUpUrl="/sign-up"
+          afterSignOutUrl="/"
         >
           <ThemeProvider>{children}</ThemeProvider>
         </ClerkProvider>

@@ -64,6 +64,8 @@
     "coverage",
     "tools",
     "apps",
+    "scripts",
+    "supabase",
     "**/*.test.ts",
     "**/*.test.tsx",
     "**/*.spec.ts",

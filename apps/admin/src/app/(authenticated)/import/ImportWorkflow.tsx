@@ -2,6 +2,7 @@
 
 import React, { useState } from 'react';
 import { useRouter } from 'next/navigation';
+import { addBasePath } from '@ifla/theme/utils';
 import {
   Box,
   Card,
@@ -114,35 +115,21 @@ export default function ImportWorkflow({
     },
   ];
 
-  const mockValidationIssues: ValidationIssue[] = [
-    {
-      type: 'error',
-      message: 'Missing required field: rdfs:label',
-      row: 15,
-      column: 'Label',
-      suggestion: 'Add a label for this concept in the Label column',
-    },
-    {
-      type: 'warning', 
-      message: 'Duplicate concept identifier found',
-      row: 23,
-      column: 'Identifier',
-      suggestion: 'Use a unique identifier for each concept',
-    },
-    {
-      type: 'warning',
-      message: 'Long description may need review',
-      row: 8,
-      column: 'Definition',
-      suggestion: 'Consider shortening the definition for better readability',
-    },
-    {
-      type: 'info',
-      message: 'Translation detected for Spanish language',
-      row: 45,
-      column: 'Label_es',
-    },
-  ];
+  // Mock CSV data for testing validation service
+  const generateMockCsvData = (profile: string): string => {
+    if (profile.includes('elements')) {
+      return `identifier,label@en,definition@en,status\n` +
+             `isbd:P1001,"Title proper","The main title of a resource","published"\n` +
+             `isbd:P1002,"Statement of responsibility","Names of persons or corporate bodies responsible","published"\n` +
+             `,"Missing identifier","This should cause an error","published"`;
+    } else if (profile.includes('concepts')) {
+      return `identifier,prefLabel@en,definition@en,broader\n` +
+             `isbd:C1001,"Monograph","A bibliographic resource that is complete",""\n` +
+             `isbd:C1002,"Serial","A continuing resource","isbd:C1000"\n` +
+             `,"Missing identifier","This should cause an error",""`;
+    }
+    return `identifier,label\n,"Missing identifier"`;
+  };
 
   const handleNext = () => {
     if (activeStep === 3 && !validationComplete) {
@@ -163,12 +150,54 @@ export default function ImportWorkflow({
 
   const handleValidation = async () => {
     setIsValidating(true);
-    // Simulate validation
-    setTimeout(() => {
-      setValidationResults(mockValidationIssues);
+    
+    try {
+      // Generate mock CSV data based on selected profile for testing
+      const csvData = generateMockCsvData(dctapProfile);
+      
+      // Map profile selection to actual profile IDs
+      const profileMapping: Record<string, string> = {
+        'standard': 'isbd-elements',
+        'isbd': 'isbd-elements', 
+        'lrm': 'isbd-concepts',
+        'custom': 'isbd-elements'
+      };
+      
+      const profileId = profileMapping[dctapProfile] || 'isbd-elements';
+      
+      // Call the validation service
+      const response = await fetch('/api/validate-csv', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          csvData,
+          profileId,
+          worksheetName: 'Main'
+        }),
+      });
+      
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.error || 'Validation service error');
+      }
+      
+      const { issues } = await response.json();
+      setValidationResults(issues);
       setValidationComplete(true);
+      
+    } catch (error) {
+      console.error('Validation error:', error);
+      setValidationResults([{
+        type: 'error',
+        message: `Validation failed: ${error instanceof Error ? error.message : 'Unknown error'}`,
+        suggestion: 'Please check your data and try again'
+      }]);
+      setValidationComplete(true);
+    } finally {
       setIsValidating(false);
-    }, 2000);
+    }
   };
 
   const handleSubmitImport = async () => {
@@ -176,7 +205,7 @@ export default function ImportWorkflow({
     
     try {
       // Call the API to create import job
-      const response = await fetch('/api/actions/scaffold-from-spreadsheet', {
+      const response = await fetch(addBasePath('/api/actions/scaffold-from-spreadsheet'), {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

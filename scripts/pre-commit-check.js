@@ -21,7 +21,7 @@ let hasErrors = false;
 // Run typecheck
 console.log('📋 Running TypeScript type checking...');
 try {
-  execSync('nx affected --target=typecheck --parallel=3', {
+  execSync('pnpm nx affected --target=typecheck --parallel=3', {
     stdio: 'inherit',
     encoding: 'utf8'
   });
@@ -34,7 +34,7 @@ try {
 // Run lint - but don't fail on warnings
 console.log('📋 Running ESLint...');
 try {
-  execSync('nx affected --target=lint --parallel=3', {
+  execSync('pnpm nx affected --target=lint --parallel=3', {
     stdio: 'inherit',
     encoding: 'utf8'
   });
@@ -50,7 +50,7 @@ try {
 console.log('📋 Running unit tests...');
 try {
   // Use the standard test target with nx affected
-  execSync('nx affected --target=test --parallel=3', {
+  execSync('pnpm nx affected --target=test --parallel=3', {
     stdio: 'inherit',
     encoding: 'utf8'
   });

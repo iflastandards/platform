@@ -21,7 +21,7 @@ let hasErrors = false;
 console.log('📋 Running affected typecheck and tests...');
 try {
   execSync(
-    'nx affected --targets=typecheck,test --parallel=10',
+    'pnpm nx affected --targets=typecheck,test --parallel=10',
     {
       stdio: 'inherit',
       encoding: 'utf8',
@@ -45,7 +45,7 @@ let lintExitCode = 0;
 try {
   // Run the lint command and capture the output
   const lintOutput = execSync(
-    'nx affected --target=lint --parallel=10 2>&1 || true',
+    'pnpm nx affected --target=lint --parallel=10 2>&1 || true',
     {
       encoding: 'utf8',
       env: {

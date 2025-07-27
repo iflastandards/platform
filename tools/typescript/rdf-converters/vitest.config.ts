@@ -5,6 +5,7 @@ export default defineConfig({
   test: {
     globals: true,
     environment: 'node',
+    watch: false, // Ensure tests don't run in watch mode
     coverage: {
       provider: 'v8',
       reporter: ['text', 'json', 'html'],

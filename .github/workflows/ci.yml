@@ -51,5 +51,9 @@ jobs:
       - name: Run CI tests
         run: pnpm test:ci
 
+      # Check basePath compliance in admin app
+      - name: Check basePath compliance
+        run: pnpm check:basepath:strict
+
       # Build affected projects for deployment
       - run: pnpm exec nx affected -t build --parallel=6

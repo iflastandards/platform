@@ -16,7 +16,7 @@ const colors = {
 
 function isDaemonRunning() {
   try {
-    const result = execSync('nx daemon --status', { 
+    const result = execSync('pnpm nx daemon --status', { 
       encoding: 'utf8',
       stdio: ['pipe', 'pipe', 'pipe'] 
     });
@@ -30,7 +30,7 @@ function startDaemon() {
   console.log(colors.yellow('🚀 Starting Nx daemon for better performance...'));
   try {
     // Start daemon in background
-    execSync('nx daemon --start', { 
+    execSync('pnpm nx daemon --start', { 
       stdio: 'inherit',
       detached: true 
     });

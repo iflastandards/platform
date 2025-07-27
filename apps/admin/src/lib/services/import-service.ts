@@ -160,7 +160,138 @@ export class ImportService {
   }
 
   /**
-   * Validate spreadsheet data
+   * Log validation results to import_logs table
+   */
+  static async logValidationResults(
+    jobId: string,
+    issues: ValidationResult[],
+    step: string = 'dctap_validation'
+  ): Promise<void> {
+    try {
+      // Log each validation issue
+      for (const issue of issues) {
+        await db.from('import_logs').insert({
+          import_job_id: jobId,
+          log_type: 'validation',
+          step,
+          message: issue.message,
+          details: {
+            type: issue.type,
+            row: issue.row,
+            column: issue.column,
+            suggestion: issue.suggestion,
+          },
+          severity: issue.type,
+        });
+      }
+
+      // Log summary
+      const summary = {
+        total: issues.length,
+        errors: issues.filter(i => i.type === 'error').length,
+        warnings: issues.filter(i => i.type === 'warning').length,
+        info: issues.filter(i => i.type === 'info').length,
+      };
+
+      await db.from('import_logs').insert({
+        import_job_id: jobId,
+        log_type: 'validation',
+        step,
+        message: `Validation completed: ${summary.errors} errors, ${summary.warnings} warnings, ${summary.info} info`,
+        details: summary,
+        severity: summary.errors > 0 ? 'error' : summary.warnings > 0 ? 'warning' : 'info',
+      });
+    } catch (error) {
+      console.error('Error logging validation results:', error);
+    }
+  }
+
+  /**
+   * Log processing step to import_logs table
+   */
+  static async logProcessingStep(
+    jobId: string,
+    step: string,
+    message: string,
+    details?: any,
+    severity: 'error' | 'warning' | 'info' = 'info'
+  ): Promise<void> {
+    try {
+      await db.from('import_logs').insert({
+        import_job_id: jobId,
+        log_type: 'processing',
+        step,
+        message,
+        details,
+        severity,
+      });
+    } catch (error) {
+      console.error('Error logging processing step:', error);
+    }
+  }
+
+  /**
+   * Get import logs for a job
+   */
+  static async getImportLogs(jobId: string): Promise<any[]> {
+    try {
+      const { data, error } = await db
+        .from('import_logs')
+        .select('*')
+        .eq('import_job_id', jobId)
+        .order('created_at', { ascending: true });
+
+      if (error) {
+        console.error('Error fetching import logs:', error);
+        return [];
+      }
+
+      return data || [];
+    } catch (error) {
+      console.error('Error in getImportLogs:', error);
+      return [];
+    }
+  }
+
+  /**
+   * Validate spreadsheet data using the validation service
+   */
+  static async validateSpreadsheetWithService(
+    csvData: string,
+    profileId: string,
+    worksheetName?: string
+  ): Promise<ValidationResult[]> {
+    try {
+      const response = await fetch('/api/validate-csv', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          csvData,
+          profileId,
+          worksheetName,
+        }),
+      });
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.error || 'Validation service error');
+      }
+
+      const { issues } = await response.json();
+      return issues;
+    } catch (error) {
+      console.error('Validation service error:', error);
+      return [{
+        type: 'error',
+        message: `Validation service error: ${error instanceof Error ? error.message : 'Unknown error'}`,
+      }];
+    }
+  }
+
+  /**
+   * Validate spreadsheet data (legacy mock implementation)
    */
   static async validateSpreadsheet(spreadsheetUrl: string, namespace?: string, dctapProfile?: string): Promise<ValidationResult[]> {
     const results: ValidationResult[] = [];
