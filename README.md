@@ -77,10 +77,13 @@ pnpm health
 ### Development
 
 ```bash
-# Start all sites in development mode
-pnpm dev
+# Start all development servers using dev-servers helper
+pnpm dev:servers
 
-# Start specific site
+# Start specific sites only
+pnpm dev:servers --sites=portal,admin
+
+# Start specific site (individual approach)
 nx start portal          # Main portal
 nx start isbd           # ISBD standard
 nx start admin          # Admin portal

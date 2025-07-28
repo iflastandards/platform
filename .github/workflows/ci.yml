@@ -46,10 +46,9 @@ jobs:
       - run: pnpm install --frozen-lockfile
       - uses: nrwl/nx-set-shas@v4
 
-      # Run CI-focused tests (Group 5: Environment/Infrastructure focus)
-      # Development tool tests run locally via pre-commit/pre-push hooks
-      - name: Run CI tests
-        run: pnpm test:ci
+      # Run Playwright tests as the only CI step without manual server start
+      - name: Run Playwright tests
+        run: pnpm exec playwright test
 
       # Check basePath compliance in admin app
       - name: Check basePath compliance

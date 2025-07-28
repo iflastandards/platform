@@ -33,6 +33,21 @@ This directory contains detailed documentation for developers working on the IFL
 - **`url-validation-guide.md`** - URL validation and link checking
 - **`link-validation-organization.md`** - Link validation system organization
 
+### Development Tools
+- **`dev-servers-helpers.md`** - Complete guide for using the `@ifla/dev-servers` package and `pnpm dev:servers` command
+
+## How to Run Development Servers
+
+To run development servers using the `pnpm dev:servers` command, follow these steps:
+
+1. **Starting Servers:**
+   - Use the command `pnpm dev:servers` to start all servers required for development.
+   - This script automatically handles port cleanup and checks if servers are already running.
+   - You can specify individual sites if needed, e.g., `pnpm dev:servers --sites=portal,admin`.
+
+2. **Stopping Servers:**
+   - Servers started during testing can be stopped with `Ctrl+C` or programmatically using the provided stop functionality in scripts.
+
 ## Recent Updates
 
 ### January 2025: Admin Portal Architecture Finalized

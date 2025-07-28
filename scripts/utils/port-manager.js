@@ -14,6 +14,7 @@ const SITE_PORTS = {
   isbd: 3004,
   muldicat: 3005,
   unimarc: 3006,
+  admin: 3007,
   newtest: 3008
 };
 

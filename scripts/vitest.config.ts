@@ -5,6 +5,7 @@ export default defineConfig({
   test: {
     globals: true,
     environment: 'node',
+    watch: false, // Ensure tests don't run in watch mode and exit properly
     include: [
       '**/*.test.ts',
       '**/*.test.js',

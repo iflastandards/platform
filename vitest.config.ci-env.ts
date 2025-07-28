@@ -16,6 +16,7 @@ export default defineConfig({
   test: {
     globals: true,
     environment: 'jsdom',
+    watch: false, // Ensure tests don't run in watch mode and exit properly
     setupFiles: [
       resolve(__dirname, 'packages/theme/src/tests/setup.ts'),
     ],

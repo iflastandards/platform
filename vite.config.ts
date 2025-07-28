@@ -11,6 +11,23 @@ export default defineConfig((): UserConfig => {
       tsconfigPaths(), // Add the plugin here
     ],
     cacheDir: './.vitest-cache',
+    optimizeDeps: {
+      include: ['react', 'react-dom'], // Pre-bundle these for faster dev builds
+      exclude: ['@ifla/theme'], // Exclude workspace packages
+    },
+    build: {
+      target: 'es2020',
+      minify: 'esbuild', // Use esbuild for faster minification
+      sourcemap: false, // Disable source maps in prod for smaller bundles
+      rollupOptions: {
+        output: {
+          manualChunks: {
+            vendor: ['react', 'react-dom'],
+            docusaurus: ['@docusaurus/core', '@docusaurus/theme-classic'],
+          },
+        },
+      },
+    },
     resolve: {
       alias: {
         '@docusaurus/Link': resolve(

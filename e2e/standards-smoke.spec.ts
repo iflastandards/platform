@@ -3,10 +3,10 @@ import { test, expect } from '@playwright/test';
 const STANDARDS = [
   { name: 'LRM', port: 3002, path: '/LRM/' },
   { name: 'ISBDM', port: 3001, path: '/ISBDM/' },
-  { name: 'FRBR', port: 3005, path: '/FRBR/' },
-  { name: 'isbd', port: 3006, path: '/isbd/' },
-  { name: 'muldicat', port: 3007, path: '/muldicat/' },
-  { name: 'unimarc', port: 3008, path: '/unimarc/' },
+  { name: 'FRBR', port: 3003, path: '/FRBR/' },
+  { name: 'isbd', port: 3004, path: '/isbd/' },
+  { name: 'muldicat', port: 3005, path: '/muldicat/' },
+  { name: 'unimarc', port: 3006, path: '/unimarc/' },
 ];
 
 STANDARDS.forEach(({ name, port, path }) => {

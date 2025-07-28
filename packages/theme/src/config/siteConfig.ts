@@ -1,6 +1,12 @@
 /**
  * Self-contained site configuration for all IFLA sites across all environments.
- * This is the single source of truth for site URLs and base paths.
+ * This is the single source of truth for site URLs, base paths, and ports.
+ * Used by:
+ * - Docusaurus sites for build-time configuration
+ * - @ifla/dev-servers package for port management and health checks
+ * - Admin portal for environment detection
+ * - Integration tests for server bootstrapping
+ * 
  * Moved from shared-config.old to theme to eliminate cross-package dependencies.
  */
 

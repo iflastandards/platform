@@ -98,7 +98,7 @@ jobs:
       - name: Run site validation tests
         if: steps.sites.outputs.has-sites == 'true'
         run: |
-          # Create dynamic test spec based on sites to test
+          # Run Playwright tests as the only step without manual server start
           if [ "${{ inputs.test_affected_only }}" = "true" ] && [ "${{ inputs.environment }}" != "production" ]; then
             echo "Running validation for affected sites only..."
             SITES="${{ steps.sites.outputs.sites }}" DOCS_ENV=${{ inputs.environment }} \

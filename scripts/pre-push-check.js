@@ -40,7 +40,7 @@ ensureDaemon();
 function shouldAutoTriggerE2E() {
   try {
     // Check which projects are affected
-    const affectedOutput = execSync('nx show projects --affected --type=app', {
+    const affectedOutput = execSync('pnpm nx show projects --affected --type=app', {
       encoding: 'utf8',
       stdio: 'pipe'
     });
@@ -71,7 +71,7 @@ if (config.runTests) {
   console.log('📋 Running integration tests...');
   try {
     // First try to run projects that have test:integration target
-    execSync(`nx affected --target=test:integration --parallel=${config.parallelJobs}`, {
+    execSync(`pnpm nx affected --target=test:integration --parallel=${config.parallelJobs}`, {
       stdio: 'inherit',
       encoding: 'utf8'
     });
@@ -86,7 +86,7 @@ if (config.runTests) {
 if (config.runBuilds) {
   console.log('📋 Running affected builds (production readiness)...');
   try {
-    execSync(`nx affected --target=build --parallel=${config.parallelJobs}`, {
+    execSync(`pnpm nx affected --target=build --parallel=${config.parallelJobs}`, {
       stdio: 'inherit',
       encoding: 'utf8'
     });
@@ -101,16 +101,35 @@ if (config.runBuilds) {
 const shouldRunE2E = config.runE2E || shouldAutoTriggerE2E();
 
 if (shouldRunE2E) {
-  console.log('📋 Running E2E tests (critical projects affected or manually enabled)...');
+  console.log('📋 Running E2E tests with server bootstrapping (critical projects affected or manually enabled)...');
   try {
-    execSync(`nx affected --target=e2e --parallel=1`, { // E2E should run serially
+    // Kill any existing ports to start from a clean state
+    console.log('🧹 Cleaning up ports before E2E tests...');
+    try {
+      execSync('pnpm ports:kill', {
+        stdio: 'inherit',
+        encoding: 'utf8'
+      });
+    } catch (portError) {
+      console.log('⚠️  Port cleanup completed (some ports may not have been in use)');
+    }
+    
+    // Add a brief delay to ensure ports are fully released
+    console.log('⏱️  Waiting 2 seconds for ports to be fully released...');
+    // Use synchronous sleep-like behavior with execSync
+    require('child_process').execSync('sleep 2', { stdio: 'pipe' });
+    
+    // Run E2E tests - the globalSetup in playwright.config.ts automatically bootstraps servers
+    console.log('🚀 Starting E2E tests (servers will bootstrap automatically)...');
+    execSync('pnpm test:e2e', {
       stdio: 'inherit',
       encoding: 'utf8'
     });
-    console.log('✅ E2E tests passed\n');
+    console.log('✅ E2E tests passed with server bootstrapping\n');
   } catch (error) {
-    // E2E might not exist for all projects or might fail in local env
-    console.log('⚠️  E2E tests completed (some may not exist or require server setup)\n');
+    console.log('❌ E2E tests failed\n');
+    console.log('📝 E2E failure details:', error.message || 'Unknown error');
+    hasErrors = true;
   }
 } else {
   console.log('ℹ️  E2E tests skipped (no critical projects affected, enable with runE2E: true)\n');
@@ -128,8 +147,8 @@ if (hasErrors) {
   if (config.runBuilds) {
     console.log('   - Production Builds: ✅ All affected projects build successfully');
   }
-  if (config.runE2E) {
-    console.log('   - E2E Validation: ✅ End-to-end workflows verified');
+  if (shouldRunE2E) {
+    console.log('   - E2E Validation: ✅ End-to-end workflows verified with server bootstrapping');
   }
   console.log('\n🎉 Ready to push!\n');
   process.exit(0);

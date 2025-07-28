@@ -18,13 +18,13 @@ pids=()
 
 # Run lint, typecheck, test in parallel for affected projects
 echo "  🔍 Linting affected projects..."
-nx affected --target=lint --parallel=3 & pids+=($!)
+pnpm nx affected --target=lint --parallel=3 & pids+=($!)
 
 echo "  📝 Type checking affected projects..."
-nx affected --target=typecheck --parallel=3 & pids+=($!)
+pnpm nx affected --target=typecheck --parallel=3 & pids+=($!)
 
 echo "  🧪 Testing affected projects..."
-nx affected --target=test --parallel=3 & pids+=($!)
+pnpm nx affected --target=test --parallel=3 & pids+=($!)
 
 # Wait for all parallel jobs to complete
 echo "⏳ Waiting for parallel operations to complete..."
@@ -47,10 +47,10 @@ echo "✅ All code quality checks passed!"
 echo "🏗️  Analyzing affected builds..."
 
 # Get affected projects that are sites
-affected_sites=$(nx affected:projects --plain 2>/dev/null | grep -E "(portal|isbdm|lrm|frbr|isbd|muldicat|unimarc)" || echo "")
+affected_sites=$(pnpm nx affected:projects --plain 2>/dev/null | grep -E "(portal|isbdm|lrm|frbr|isbd|muldicat|unimarc)" || echo "")
 
 # Check if theme is affected (affects all sites)
-theme_affected=$(nx affected:projects --plain 2>/dev/null | grep -E "@ifla/theme" || echo "")
+theme_affected=$(pnpm nx affected:projects --plain 2>/dev/null | grep -E "@ifla/theme" || echo "")
 
 if [ -n "$theme_affected" ]; then
   echo "🎨 Theme affected - testing critical sites only"
@@ -70,7 +70,7 @@ if [ "$BRANCH" = "main" ] || [ "$BRANCH" = "dev" ]; then
   # Use Nx to build affected projects (with caching)
   if echo "$affected_sites" | grep -q "portal"; then
     echo "🏗️  Building portal..."
-    nx build portal || {
+    pnpm nx build portal || {
       echo "❌ Portal build failed"
       exit 1
     }
@@ -78,7 +78,7 @@ if [ "$BRANCH" = "main" ] || [ "$BRANCH" = "dev" ]; then
 
   if echo "$affected_sites" | grep -q "isbdm"; then
     echo "🏗️  Building ISBDM..."
-    nx build isbdm || {
+    pnpm nx build isbdm || {
       echo "❌ ISBDM build failed"
       exit 1
     }

@@ -58,3 +58,4 @@ coverage/
 nx-cloud.env
 /.kiro/settings/mcp.json
 /developer_notes/IFLA link
+/e2e/visual-regression-enhanced.spec.ts-snapshots/*

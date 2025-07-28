@@ -6,6 +6,7 @@ export default defineConfig({
     name: 'admin-server-dependent',
     root: resolve(__dirname),
     environment: 'node',
+    watch: false, // Ensure tests don't run in watch mode and exit properly
     testTimeout: 180000, // 3 minutes for server-dependent tests
     hookTimeout: 180000, // 3 minutes for setup/teardown
     include: ['src/test/integration/server-dependent/**/*.test.ts'],

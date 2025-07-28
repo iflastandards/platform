@@ -19,7 +19,7 @@ has_changes() {
 # Function to get list of affected standards sites
 get_affected_sites() {
   # Get affected Nx projects
-  local affected_projects=$(nx affected:projects --plain 2>/dev/null || echo "")
+  local affected_projects=$(pnpm nx affected:projects --plain 2>/dev/null || echo "")
 
   # Map Nx project names to site names for our build scripts
   local sites=""
@@ -56,19 +56,19 @@ get_affected_sites() {
 
 # Step 1: Run affected linting and type checking (fast)
 echo "🔍 Running affected linting and type checking..."
-nx affected --target=lint --parallel=3 || {
+pnpm nx affected --target=lint --parallel=3 || {
   echo "❌ Linting failed for affected projects"
   exit 1
 }
 
-nx affected --target=typecheck --parallel=3 || {
+pnpm nx affected --target=typecheck --parallel=3 || {
   echo "❌ Type checking failed for affected projects"
   exit 1
 }
 
 # Step 2: Run affected unit tests (fast)
 echo "🧪 Running affected unit tests..."
-nx affected --target=test --parallel=3 || {
+pnpm nx affected --target=test --parallel=3 || {
   echo "❌ Unit tests failed for affected projects"
   exit 1
 }

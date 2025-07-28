@@ -28,6 +28,8 @@ export default defineConfig({
       }
     : undefined,
   /* Redirect test results and reports to tmp and output directories */
+  /* Global setup to start and stop development servers */
+  globalSetup: require.resolve('./e2e/playwright.global'),
   outputDir: './tmp/playwright-results',
   /* Enhanced reporting with multiple formats */
   reporter: process.env.CI

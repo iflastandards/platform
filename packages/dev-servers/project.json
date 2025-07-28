@@ -1,0 +1,60 @@
+{
+  "$schema": "../../node_modules/nx/schemas/project-schema.json",
+  "name": "@ifla/dev-servers",
+  "root": "packages/dev-servers",
+  "sourceRoot": "packages/dev-servers/src",
+  "projectType": "library",
+  "tags": ["type:package", "scope:dev-tools"],
+  "targets": {
+    "build": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "tsup",
+        "cwd": "packages/dev-servers"
+      },
+      "outputs": ["{projectRoot}/dist"],
+      "inputs": [
+        "{projectRoot}/src/**/*.ts",
+        "{projectRoot}/tsup.config.ts",
+        "{projectRoot}/package.json",
+        "{projectRoot}/tsconfig.json"
+      ],
+      "cache": true
+    },
+    "clean": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "rimraf dist",
+        "cwd": "packages/dev-servers"
+      }
+    },
+    "typecheck": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "tsc --noEmit",
+        "cwd": "packages/dev-servers"
+      },
+      "inputs": [
+        "{projectRoot}/src/**/*.ts",
+        "{projectRoot}/tsconfig.json"
+      ],
+      "cache": true
+    },
+    "lint": {
+      "executor": "@nx/eslint:lint",
+      "options": {
+        "lintFilePatterns": ["packages/dev-servers/src/**/*.ts"]
+      },
+      "inputs": ["{projectRoot}/src/**/*.ts"],
+      "cache": true
+    },
+    "dev": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "tsup --watch",
+        "cwd": "packages/dev-servers"
+      }
+    }
+  },
+  "implicitDependencies": []
+}

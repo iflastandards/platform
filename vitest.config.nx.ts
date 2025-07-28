@@ -34,6 +34,7 @@ export default defineConfig({
     // Override with Nx-optimized settings
     globals: true,
     environment: 'jsdom',
+    watch: false, // Ensure tests don't run in watch mode and exit properly
     setupFiles: [
       path.resolve(__dirname, 'packages/theme/src/tests/setup.ts'),
     ],

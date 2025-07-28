@@ -1,0 +1,51 @@
+{
+  "name": "@ifla/dev-servers",
+  "version": "0.0.0",
+  "description": "Lightweight development server utilities for IFLA Standards Platform integration testing",
+  "main": "dist/index.js",
+  "module": "dist/index.mjs",
+  "types": "dist/index.d.ts",
+  "sideEffects": false,
+  "private": true,
+  "files": [
+    "LICENSE",
+    "README.md",
+    "dist",
+    "src"
+  ],
+  "scripts": {
+    "build": "pnpm exec tsup",
+    "clean": "rimraf dist",
+    "dev": "pnpm exec tsup --watch",
+    "typecheck": "tsc --noEmit"
+  },
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.mjs",
+      "require": "./dist/index.js"
+    }
+  },
+  "dependencies": {
+    "@ifla/theme": "workspace:*",
+    "node-fetch": "^3.3.2",
+    "tree-kill": "^1.2.2"
+  },
+  "devDependencies": {
+    "@types/node": "^20.0.0",
+    "tsup": "^8.0.0",
+    "typescript": "^5.0.0"
+  },
+  "peerDependencies": {
+    "node": ">=18.0.0"
+  },
+  "keywords": [
+    "ifla",
+    "development",
+    "testing",
+    "servers",
+    "integration"
+  ],
+  "author": "IFLA Standards Team",
+  "license": "ISC"
+}

@@ -4,6 +4,7 @@ This document contains all available commands in the IFLA standards-dev monorepo
 
 ## Quick Usage
 The most common commands you'll use:
+- `pnpm dev:servers` - Start all servers for development (recommended)
 - `nx build {site}` - Build a specific site (e.g., `nx build portal`)
 - `nx run {site}:start:robust` - Start dev server with port cleanup
 - `pnpm lint:fix` - Fix linting issues
@@ -208,7 +209,7 @@ pnpm stop:all               # Stop all dev servers
 ### Serve Built Sites
 ```bash
 pnpm serve                  # Serve built portal
-pnpm serve:all              # Serve all built sites
+# pnpm serve:all command has been deprecated - use pnpm dev:servers for development
 pnpm serve:portal           # Serve built portal
 pnpm serve:isbdm            # Serve built ISBDM (port 3001)
 pnpm serve:lrm              # Serve built LRM (port 3002)
