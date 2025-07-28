@@ -498,7 +498,9 @@
     "overrides": {
       "eslint-plugin-react-hooks>eslint": "9.29.0",
       "react": "19.1.1",
-      "react-dom": "19.1.1"
+      "react-dom": "19.1.1",
+      "form-data": ">=4.0.4",
+      "on-headers": ">=1.1.0"
     },
     "supportedArchitectures": {
       "cpu": [
