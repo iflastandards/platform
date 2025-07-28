@@ -36,6 +36,9 @@ export default defineConfig({
     options.jsx = 'automatic';
     options.treeShaking = true;
     options.minify = true;
+    options.keepNames = false; // Allow mangling for smaller bundles
+    options.drop = ['console', 'debugger']; // Remove console.log in production
+    options.legalComments = 'none'; // Remove license comments for smaller size
     return options;
   },
   external: [
