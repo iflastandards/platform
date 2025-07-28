@@ -466,7 +466,7 @@ importers:
         version: 4.10.3
       cheerio:
         specifier: ^1.1.0
-        version: 1.1.0
+        version: 1.1.2
       concurrently:
         specifier: ^9.2.0
         version: 9.2.0
@@ -630,13 +630,13 @@ importers:
         version: 1.2.2
     devDependencies:
       '@types/node':
-        specifier: ^20.0.0
-        version: 20.19.9
+        specifier: ^22.16.5
+        version: 22.16.5
       tsup:
-        specifier: ^8.0.0
+        specifier: ^8.5.0
         version: 8.5.0(@swc/core@1.13.0(@swc/helpers@0.5.17))(jiti@2.4.2)(postcss@8.5.6)(tsx@4.20.3)(typescript@5.8.3)(yaml@2.8.0)
       typescript:
-        specifier: ^5.0.0
+        specifier: ~5.8.3
         version: 5.8.3
 
   packages/standards-cli: {}
@@ -5278,9 +5278,6 @@ packages:
   '@types/node@18.19.120':
     resolution: {integrity: sha512-WtCGHFXnVI8WHLxDAt5TbnCM4eSE+nI0QN2NJtwzcgMhht2eNz6V9evJrk+lwC8bCY8OWV5Ym8Jz7ZEyGnKnMA==}
 
-  '@types/node@20.19.9':
-    resolution: {integrity: sha512-cuVNgarYWZqxRJDQHEB58GEONhOK79QVR/qYx4S7kcUObQvUwvFnYxJuuHUKm2aieN9X3yZB4LZsuYNU1Qphsw==}
-
   '@types/node@22.16.5':
     resolution: {integrity: sha512-bJFoMATwIGaxxx8VJPeM8TonI8t579oRvgAuT8zFugJsJZgzqv0Fu8Mhp68iecjzG7cnN3mO2dJQ5uUM2EFrgQ==}
 
@@ -6343,9 +6340,9 @@ packages:
     resolution: {integrity: sha512-VqR8m68vM46BNnuZ5NtnGBKIE/DfN0cRIzg9n40EIq9NOv90ayxLBXA8fXC5gquFRGJSTRqBq25Jt2ECLR431Q==}
     engines: {node: '>= 6'}
 
-  cheerio@1.1.0:
-    resolution: {integrity: sha512-+0hMx9eYhJvWbgpKV9hN7jg0JcwydpopZE4hgi+KvQtByZXPp04NiCWU0LzcAbP63abZckIHkTQaXVF52mX3xQ==}
-    engines: {node: '>=18.17'}
+  cheerio@1.1.2:
+    resolution: {integrity: sha512-IkxPpb5rS/d1IiLbHMgfPuS0FgiWTtFIm/Nj+2woXDLTZ7fOT2eqzgYbdMlLweqlHbsZjxEChoVK+7iph7jyQg==}
+    engines: {node: '>=20.18.1'}
 
   chevrotain-allstar@0.3.1:
     resolution: {integrity: sha512-b7g+y9A0v4mxCW1qUhf3BSVPg+/NvGErk/dOkrDaHA0nQIQGAtrOjlX//9OQtRlSCy+x9rfB5N8yC71lH1nvMw==}
@@ -16741,7 +16738,7 @@ snapshots:
       '@docusaurus/utils-validation': 3.8.1(@swc/core@1.5.29(@swc/helpers@0.5.17))(acorn@8.15.0)(esbuild@0.25.7)(react-dom@19.1.0(react@19.1.0))(react@19.1.0)
       '@easyops-cn/autocomplete.js': 0.38.1
       '@node-rs/jieba': 1.10.4
-      cheerio: 1.1.0
+      cheerio: 1.1.2
       clsx: 2.1.1
       comlink: 4.4.2
       debug: 4.4.1
@@ -20379,10 +20376,6 @@ snapshots:
     dependencies:
       undici-types: 5.26.5
 
-  '@types/node@20.19.9':
-    dependencies:
-      undici-types: 6.21.0
-
   '@types/node@22.16.5':
     dependencies:
       undici-types: 6.21.0
@@ -21710,7 +21703,7 @@ snapshots:
       parse5: 7.3.0
       parse5-htmlparser2-tree-adapter: 7.1.0
 
-  cheerio@1.1.0:
+  cheerio@1.1.2:
     dependencies:
       cheerio-select: 2.1.0
       dom-serializer: 2.0.0
