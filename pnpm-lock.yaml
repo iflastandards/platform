@@ -624,9 +624,6 @@ importers:
       '@ifla/theme':
         specifier: workspace:*
         version: link:../theme
-      node:
-        specifier: '>=18.0.0'
-        version: 20.19.4
       node-fetch:
         specifier: ^3.3.2
         version: 3.3.2
@@ -10245,9 +10242,6 @@ packages:
   node-addon-api@7.1.1:
     resolution: {integrity: sha512-5m3bsyrjFWE1xf7nz7YXdN4udnVtXK6/Yfgn5qnahL6bCkf2yKt4k3nuTKAtT4r3IG8JNR2ncsIMdZuAzJjHQQ==}
 
-  node-bin-setup@1.1.4:
-    resolution: {integrity: sha512-vWNHOne0ZUavArqPP5LJta50+S8R261Fr5SvGul37HbEDcowvLjwdvd0ZeSr0r2lTSrPxl6okq9QUw8BFGiAxA==}
-
   node-domexception@1.0.0:
     resolution: {integrity: sha512-/jKZoMpw0F8GRwl4/eLROPA3cfcXtLApP0QzLmUT/HuPCZWyB7IY9ZrMeKw2O/nFIqPQB3PVM9aYm0F312AXDQ==}
     engines: {node: '>=10.5.0'}
@@ -10286,11 +10280,6 @@ packages:
   node-schedule@2.1.1:
     resolution: {integrity: sha512-OXdegQq03OmXEjt2hZP33W2YPs/E5BcFQks46+G2gAxs4gHOIVD1u7EqlYLYSKsaIpyKCK9Gbk0ta1/gjRSMRQ==}
     engines: {node: '>=6'}
-
-  node@20.19.4:
-    resolution: {integrity: sha512-N0Yo0gnnKzDOXYUvR/ewjV/wKu2AFl+4eGs5IbVGjdFGsEtdSAOGc6ATMb3zi/cFHfdCn4eB+b+zOxJF6kvitw==}
-    engines: {npm: '>=5.0.0'}
-    hasBin: true
 
   nopt@7.2.1:
     resolution: {integrity: sha512-taM24ViiimT/XntxbPyJQzCG+p4EKOpgD3mxFwW38mGjVUrfERQOeY4EDHjdnptttfHuHQXFx+lTP08Q+mLa/w==}
@@ -26298,8 +26287,6 @@ snapshots:
   node-addon-api@7.1.1:
     optional: true
 
-  node-bin-setup@1.1.4: {}
-
   node-domexception@1.0.0: {}
 
   node-emoji@2.2.0:
@@ -26334,10 +26321,6 @@ snapshots:
       cron-parser: 4.9.0
       long-timeout: 0.1.1
       sorted-array-functions: 1.3.0
-
-  node@20.19.4:
-    dependencies:
-      node-bin-setup: 1.1.4
 
   nopt@7.2.1:
     dependencies:
