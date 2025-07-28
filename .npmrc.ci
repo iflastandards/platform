@@ -34,3 +34,9 @@ fetch-retries=5
 fetch-retry-factor=2
 fetch-retry-mintimeout=2000
 fetch-retry-maxtimeout=30000
+
+# Nx-specific CI optimizations
+# Prevent Nx daemon from starting during install
+env.NX_DAEMON=false
+env.NX_SKIP_NX_CACHE=false
+env.NX_PARALLEL=1
