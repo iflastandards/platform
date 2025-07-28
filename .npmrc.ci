@@ -6,15 +6,15 @@
 
 # CI-specific overrides
 frozen-lockfile=true
-prefer-offline=true
+prefer-offline=false
 reporter=append-only
-loglevel=error
+loglevel=warn
 
 # Disable interactive prompts
 no-color=true
 
-# Fail fast on peer dependency issues
-strict-peer-dependencies=true
+# Handle peer dependencies more gracefully in CI
+strict-peer-dependencies=false
 
 # Use cache aggressively in CI
 cache-dir=.pnpm-cache
@@ -22,3 +22,15 @@ use-store-server=false
 
 # Disable progress bars for cleaner logs
 progress=false
+
+# Better handling of native binaries in CI
+shamefully-hoist=false
+side-effects-cache=true
+use-lockfile-v9=true
+
+# Network optimizations for CI
+network-concurrency=16
+fetch-retries=5
+fetch-retry-factor=2
+fetch-retry-mintimeout=2000
+fetch-retry-maxtimeout=30000

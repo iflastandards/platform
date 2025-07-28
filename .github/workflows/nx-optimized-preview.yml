@@ -99,7 +99,25 @@ jobs:
       - name: Install dependencies with CI config
         run: |
           cp .npmrc.ci .npmrc
-          pnpm install --frozen-lockfile
+          # Ensure proper npm registry access for binary downloads
+          npm config set registry https://registry.npmjs.org/
+          # Install with retries for better reliability with native binaries
+          for i in 1 2 3; do
+            echo "Installation attempt $i..."
+            if pnpm install --frozen-lockfile --reporter=append-only; then
+              echo "✅ Installation successful on attempt $i"
+              break
+            else
+              echo "❌ Installation failed on attempt $i"
+              if [ $i -eq 3 ]; then
+                echo "All installation attempts failed"
+                exit 1
+              fi
+              echo "Cleaning cache and retrying..."
+              pnpm store prune
+              sleep 5
+            fi
+          done
           
       - uses: nrwl/nx-set-shas@v4
         id: nx-set-shas
