@@ -502,7 +502,8 @@
         "current"
       ],
       "os": [
-        "darwin"
+        "darwin",
+        "linux"
       ]
     },
     "onlyBuiltDependencies": [

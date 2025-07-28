@@ -36,9 +36,6 @@
     "tsup": "^8.5.0",
     "typescript": "~5.8.3"
   },
-  "peerDependencies": {
-    "node": ">=18.0.0"
-  },
   "keywords": [
     "ifla",
     "development",
