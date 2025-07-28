@@ -385,7 +385,7 @@
     "@nx/rollup": "21.2.2",
     "@nx/vite": "21.2.2",
     "@nx/web": "21.2.2",
-    "@playwright/mcp": "^0.0.29",
+    "@playwright/mcp": "^0.0.32",
     "@playwright/test": "^1.54.1",
     "@swc-node/register": "~1.9.2",
     "@swc/cli": "~0.6.0",
