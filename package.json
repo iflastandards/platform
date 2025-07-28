@@ -497,8 +497,8 @@
   "pnpm": {
     "overrides": {
       "eslint-plugin-react-hooks>eslint": "9.29.0",
-      "react-helmet-async>react": "^19.1.0",
-      "react-helmet-async>react-dom": "^19.1.0"
+      "react": "19.1.1",
+      "react-dom": "19.1.1"
     },
     "supportedArchitectures": {
       "cpu": [
@@ -509,17 +509,17 @@
       ]
     },
     "onlyBuiltDependencies": [
+      "@clerk/shared",
       "@parcel/watcher",
       "@swc/core",
-      "@tailwindcss/oxide",
       "core-js",
       "core-js-pure",
       "esbuild",
-      "node",
       "nx",
+      "oxc-resolver",
+      "protobufjs",
       "puppeteer",
-      "sharp",
-      "unrs-resolver"
+      "sharp"
     ]
   }
 }
