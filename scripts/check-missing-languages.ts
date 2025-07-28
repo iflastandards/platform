@@ -48,7 +48,7 @@ function loadProfile(profilePath: string): Map<string, ProfileProperty> {
       skip_empty_lines: true
     });
     
-    records.forEach((record: ProfileProperty) => {
+    (records as ProfileProperty[]).forEach((record: ProfileProperty) => {
       if (record.propertyID) {
         profileMap.set(record.propertyID, record);
       }
@@ -172,7 +172,7 @@ function analyzeCSVFile(filePath: string): LanguageReport {
     const languageProperties = getLanguagePropertiesFromProfile(profile);
     const mandatoryProperties = getMandatoryPropertiesFromProfile(profile);
     
-    const headers = Object.keys(records[0]);
+    const headers = Object.keys(records[0] as Record<string, unknown>);
     const attributeLanguages = findLanguageColumns(headers, languageProperties);
 
     // Check for mandatory language properties
@@ -195,7 +195,7 @@ function analyzeCSVFile(filePath: string): LanguageReport {
     });
 
     // Analyze each row
-    records.forEach((row: { [key: string]: string }, index : number  ) => {
+    (records as { [key: string]: string }[]).forEach((row: { [key: string]: string }, index : number  ) => {
       // Skip ConceptScheme rows and metadata rows
       if (row['rdf:type'] === 'skos:ConceptScheme' || 
           row['uri'] === 'metadataregistry.org:uri/RegStatus/1001' ||

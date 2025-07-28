@@ -57,25 +57,25 @@ export class DCTAPValidator {
       let shapeID = '';
       let shapeLabel = '';
 
-      for (const record of records) {
-        // Get shape info from first row
-        if (!shapeID && record['shapeID']) {
-          shapeID = record['shapeID'];
-          shapeLabel = record['shapeLabel'] || shapeID;
-        }
+for (const record of records as Record<string, unknown>[]) {
+  // Get shape info from first row
+  if (!shapeID && typeof record['shapeID'] === 'string') {
+    shapeID = record['shapeID'];
+    shapeLabel = typeof record['shapeLabel'] === 'string' ? record['shapeLabel'] : shapeID;
+  }
 
         // Build constraint
-        const propertyID = record['propertyID'] || record['*propertyID'] || record['uri'] || record['*uri'];
-        if (propertyID) {
+        const propertyID = (record['propertyID'] || record['*propertyID'] || record['uri'] || record['*uri']) as string;
+        if (propertyID && typeof propertyID === 'string') {
           constraints.push({
             propertyID: propertyID.replace('*', ''), // Remove mandatory marker
-            propertyLabel: record['propertyLabel'],
+            propertyLabel: record['propertyLabel'] as string | undefined,
             mandatory: propertyID.startsWith('*') || record['mandatory'] === 'TRUE',
             repeatable: record['repeatable'] !== 'FALSE',
-            valueConstraint: record['valueConstraint'],
-            valueConstraintType: record['valueConstraintType'],
-            valueShape: record['valueShape'],
-            note: record['note'],
+            valueConstraint: record['valueConstraint'] as string | undefined,
+            valueConstraintType: record['valueConstraintType'] as string | undefined,
+            valueShape: record['valueShape'] as string | undefined,
+            note: record['note'] as string | undefined,
           });
         }
       }

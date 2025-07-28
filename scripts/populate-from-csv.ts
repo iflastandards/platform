@@ -21,7 +21,7 @@ interface MappingConfig {
   source: string;
   transform?: string;
   fallback?: string;
-  default?: any;
+  default?: unknown;
 }
 
 interface TransformConfig {
@@ -78,19 +78,20 @@ async function main() {
     console.log(`Processing ${records.length} records from CSV...`);
 
     // Process each record
-    for (const record of records) {
+    for (const record of records as Record<string, unknown>[]) {
+      const recordData = record as Record<string, unknown>;
       // Skip header rows or empty records
-      if (!record.uri || record.uri === 'uri') continue;
+      if (!recordData.uri || recordData.uri === 'uri') continue;
 
       // Extract element ID
-      const elementId = extractElementId(record.uri);
+      const elementId = extractElementId(recordData.uri as string);
       if (!elementId) continue;
 
       // Determine category
       const category = determineCategory(elementId, config.categories);
 
       // Apply mappings to create frontmatter data
-      const frontmatter = applyMappings(record, templateConfig.csvMapping, config.transforms);
+      const frontmatter = applyMappings(recordData, templateConfig.csvMapping, config.transforms);
       
       // Add navigation data
       frontmatter.slug = `/${category}/${elementId}`;
@@ -139,11 +140,11 @@ function determineCategory(elementId: string, categories: Record<string, Categor
 }
 
 function applyMappings(
-  record: any,
+  record: Record<string, unknown>,
   mappings: Record<string, MappingConfig>,
   transforms: Record<string, TransformConfig>
-): any {
-  const result: any = {};
+): Record<string, unknown> {
+  const result: Record<string, unknown> = {};
 
   for (const [targetPath, mapping] of Object.entries(mappings)) {
     let value = record[mapping.source];
@@ -170,9 +171,9 @@ function applyMappings(
   return result;
 }
 
-function applyTransform(value: any, transform: TransformConfig): any {
+function applyTransform(value: unknown, transform: TransformConfig): unknown {
   if (transform.pattern) {
-    const match = value.match(new RegExp(transform.pattern));
+    const match = String(value).match(new RegExp(transform.pattern));
     return match ? match[1] : value;
   }
   
@@ -185,21 +186,21 @@ function applyTransform(value: any, transform: TransformConfig): any {
   return value;
 }
 
-function setNestedValue(obj: any, path: string, value: any): void {
+function setNestedValue(obj: Record<string, unknown>, path: string, value: unknown): void {
   const parts = path.split('.');
-  let current = obj;
+  let current: Record<string, unknown> = obj;
 
   for (let i = 0; i < parts.length - 1; i++) {
     if (!current[parts[i]]) {
       current[parts[i]] = {};
     }
-    current = current[parts[i]];
+    current = current[parts[i]] as Record<string, unknown>;
   }
 
   current[parts[parts.length - 1]] = value;
 }
 
-function populateTemplate(template: string, frontmatter: any): string {
+function populateTemplate(template: string, frontmatter: Record<string, unknown>): string {
   // Split template into frontmatter and content
   const parts = template.split('---');
   if (parts.length < 3) {
@@ -207,7 +208,7 @@ function populateTemplate(template: string, frontmatter: any): string {
   }
 
   // Parse existing frontmatter
-  const templateFrontmatter = yaml.load(parts[1]) as any || {};
+  const templateFrontmatter = (yaml.load(parts[1]) as Record<string, unknown>) || {};
 
   // Merge with populated data
   const mergedFrontmatter = { ...templateFrontmatter, ...frontmatter };

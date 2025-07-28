@@ -8,6 +8,10 @@ env:
   CI: true
   HUSKY: 0
   
+  # pnpm optimizations
+  PNPM_CACHE_FOLDER: .pnpm-cache
+  PNPM_STORE_PATH: ~/.pnpm-store
+  
   # Nx Cloud configuration
   # PUBLIC REPO: Always use read-only token
   NX_CLOUD_ACCESS_TOKEN: ${{ secrets.NX_CLOUD_ACCESS_TOKEN }}

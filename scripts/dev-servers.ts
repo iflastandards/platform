@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 
 import { execSync } from 'child_process';
-import { startServers, stopServers, StartServerOptions, ServerInfo } from '@ifla/dev-servers';
+import { startServers, stopServers } from '@ifla/dev-servers';
 import { SITE_CONFIG, ADMIN_PORTAL_CONFIG, SiteKey } from '../packages/theme/src/config/siteConfig';
 
 // Generate site ports from siteConfig for CLI status checks

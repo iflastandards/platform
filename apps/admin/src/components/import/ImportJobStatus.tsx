@@ -1,7 +1,6 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
-import { useRouter } from 'next/navigation';
 import { addBasePath } from '@ifla/theme/utils';
 import {
   Card,
