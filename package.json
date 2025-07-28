@@ -388,7 +388,7 @@
     "@playwright/mcp": "^0.0.29",
     "@playwright/test": "^1.54.1",
     "@swc-node/register": "~1.9.2",
-    "@swc/cli": "~0.6.0",
+    "@swc/cli": "~0.7.8",
     "@swc/core": "~1.5.29",
     "@swc/helpers": "~0.5.17",
     "@testing-library/dom": "^10.4.0",
