@@ -314,6 +314,8 @@ Workflow:
 
 ### Participation Levels
 
+> **Note**: For detailed role definitions and permissions, see the [RBAC Authorization Model](./12-rbac-authorization-model.md) and [Permission Matrix](./13-permission-matrix-detailed.md).
+
 1. **Public Contributors**
    - Can create issues
    - Can fork and submit pull requests

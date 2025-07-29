@@ -45,8 +45,8 @@ Component Library: @ifla/theme (shared)
 ```yaml
 Runtime: Node.js 20+
 API Layer: Vercel Edge Functions
-Authentication: Clerk + NextAuth.js 5.0
-Authorization: Cerbos Policy Engine
+Authentication: Clerk (with built-in session management)
+Authorization: Clerk Organizations & Roles
 Database: Supabase (PostgreSQL)
 File Storage: Git/GitHub
 Package Manager: pnpm 10.12.4
@@ -198,9 +198,11 @@ Production Environment:
 - **API Security**: JWT tokens with short expiry
 
 ### Authorization Model
-- **Policy Engine**: Cerbos for fine-grained permissions
+- **Authorization System**: Clerk Organizations with custom roles
 - **Role Hierarchy**: Superadmin → Review Group Admin → Namespace Admin → Editor → Translator → Reviewer
-- **Resource-based**: Permissions tied to specific namespaces/resources
+- **Organization-based**: Review Groups mapped to Clerk Organizations
+- **Resource-based**: Namespace permissions via organization metadata
+- **Comprehensive Documentation**: See [RBAC Authorization Model](./12-rbac-authorization-model.md), [Permission Matrix](./13-permission-matrix-detailed.md), and [Clerk RBAC Architecture](./14-clerk-rbac-architecture.md)
 
 ### Data Security
 - **At Rest**: Git encryption, Supabase RLS

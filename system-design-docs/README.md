@@ -16,11 +16,15 @@ This directory contains the comprehensive system design documentation for the IF
 4. **[Development Workflow](./04-development-workflow.md)** - Standards development lifecycle, roles, and processes
 5. **[API Architecture](./05-api-architecture.md)** - API design, authentication, and integration patterns
 6. **[Testing Strategy](./06-testing-strategy.md)** - Five-phase testing approach and quality gates
-7. **[Deployment Architecture](./07-deployment-architecture.md)** - CI/CD, environments, and deployment strategies
-8. **[Security Architecture](./08-security-architecture.md)** - Authentication, authorization, and security patterns
-9. **[Frontend Architecture](./09-frontend-architecture.md)** - UI components, admin portal, and Docusaurus sites
-10. **[Integration Patterns](./10-integration-patterns.md)** - External services, MCP servers, and third-party integrations
-11. **[Discussion Points](./11-discussion-points.md)** - Areas requiring clarification or team decisions
+7. **[Subsystems Architecture](./07-subsystems-architecture.md)** - Major platform subsystems and their interactions
+8. **[Architecture Evolution](./08-architecture-evolution.md)** - How the architecture has evolved and future directions
+9. **[Collaboration Architecture](./09-collaboration-architecture.md)** - GitHub-based collaboration model and workflows
+10. **[Implementation Strategy](./10-implementation-strategy.md)** - Phased implementation approach and timeline
+11. **[Design System and UI Patterns](./11-design-system-ui-patterns.md)** - UI/UX guidelines and component library
+12. **[RBAC Authorization Model](./12-rbac-authorization-model.md)** - Comprehensive role-based access control specification
+13. **[Permission Matrix Detailed](./13-permission-matrix-detailed.md)** - Detailed permission mappings for all platform activities
+14. **[Clerk RBAC Architecture](./14-clerk-rbac-architecture.md)** - Primary authorization architecture using Clerk.com organizations
+15. **[Clerk RBAC Implementation Plan](./15-clerk-rbac-implementation-plan.md)** - Implementation plan for Clerk-based authorization
 
 ## Quick Reference
 
@@ -55,9 +59,11 @@ This directory contains the comprehensive system design documentation for the IF
 ## Navigation Guide
 
 - **For new developers**: Start with documents 1, 3, and 6
-- **For architects**: Focus on documents 1, 2, 5, and 8
-- **For operations**: Review documents 6, 7, and 10
-- **For project managers**: See documents 4, 11
+- **For architects**: Focus on documents 1, 2, 5, 7, and 8
+- **For operations**: Review documents 6, 10, and implementation strategy
+- **For project managers**: See documents 4, 9, 10, and 11
+- **For security & compliance**: Focus on documents 12 and 13 for RBAC
+- **For administrators**: Review documents 12 and 13 for role management
 
 ## Document Status
 
