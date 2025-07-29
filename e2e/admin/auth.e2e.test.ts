@@ -1,41 +1,45 @@
 import { test, expect } from '@playwright/test';
 import { 
-  setupMockAuth, 
-  clearAuth, 
-  setupUnauthenticatedState, 
-  setupExpiredSession 
-} from '../utils/auth-helpers';
+  clearClerkAuth, 
+  setupClerkUnauthenticatedState, 
+  setupClerkExpiredSession,
+  setupClerkAuth
+} from '../utils/clerk-auth-helpers';
 
-test.describe('Admin Portal Authentication', () => {
+test.describe('Admin Portal Authentication (Clerk)', () => {
   test.beforeEach(async ({ page }) => {
     // Clear any existing sessions and stop route mocking
-    await clearAuth(page.context());
+await clearClerkAuth(page.context());
   });
 
   test('should redirect unauthenticated users to sign-in', async ({ page }) => {
     // Setup unauthenticated state
-    await setupUnauthenticatedState(page.context());
+await setupClerkUnauthenticatedState(page.context());
     
-    // Try to access admin portal dashboard directly
+// Try to access admin portal dashboard directly
     await page.goto('http://localhost:3007/dashboard/newtest');
     
-    // Should be redirected to sign-in page
-    await expect(page).toHaveURL(/.*\/auth\/signin/);
+    // Wait for Clerk useUser() loading state
+    await page.waitForSelector('[data-testid="dashboard-loaded"]', { state: 'visible', timeout: 5000 }).catch(() => {});
+    
+    // Should redirect to home page with Clerk authentication modal
+    await expect(page).toHaveURL('http://localhost:3007/');
+    await expect(page.locator('[data-testid="SafeSignInButton"]')).toBeVisible();
     
     // Check sign-in page elements
     await expect(page.getByText('Sign in to Admin Portal')).toBeVisible();
-    await expect(page.getByRole('button', { name: /sign in with github/i })).toBeVisible();
+await expect(page.locator('[data-testid="SafeSignInButton"]')).toBeVisible();
   });
 
   test('should handle OAuth callback flow', async ({ page }) => {
     // Setup unauthenticated state for signin page
-    await setupUnauthenticatedState(page.context());
+await setupClerkUnauthenticatedState(page.context());
     
     // Start OAuth flow
     await page.goto('http://localhost:3007/auth/signin');
     
     // Click GitHub sign-in button
-    await page.getByRole('button', { name: /sign in with github/i }).click();
+await page.locator('[data-testid="SafeSignInButton"]').click();
     
     // Should redirect to GitHub OAuth (in real test, we'd mock this)
     // For demo purposes, we'll check that the redirect happens
@@ -44,7 +48,7 @@ test.describe('Admin Portal Authentication', () => {
 
   test('should redirect to requested site after authentication', async ({ page }) => {
     // Setup unauthenticated state first
-    await setupUnauthenticatedState(page.context());
+await setupClerkUnauthenticatedState(page.context());
     
     // For demo, check that the redirect parameter is preserved
     await page.goto('http://localhost:3007/site/newtest?from=external');
@@ -55,9 +59,12 @@ test.describe('Admin Portal Authentication', () => {
 
   test('should display user info when authenticated', async ({ page, context }) => {
     // Setup authenticated state with admin user
-    await setupMockAuth(context, 'admin');
+await setupClerkAuth(context, 'admin');
 
     await page.goto('http://localhost:3007/dashboard/newtest');
+    
+// Wait for Clerk useUser() loading state
+    await page.waitForSelector('[data-testid="dashboard-loaded"]', { state: 'visible' });
     
     // Should see user interface (not redirected to sign-in)
     await expect(page).not.toHaveURL(/.*signin/);
@@ -68,9 +75,12 @@ test.describe('Admin Portal Authentication', () => {
 
   test('should sign out successfully', async ({ page, context }) => {
     // Setup authenticated state with admin user
-    await setupMockAuth(context, 'admin');
+await setupClerkAuth(context, 'admin');
 
-    await page.goto('http://localhost:3007/dashboard/newtest');
+await page.goto('http://localhost:3007/dashboard/newtest');
+    
+    // Wait for dashboard to load
+    await page.waitForSelector('[data-testid="dashboard-loaded"]', { state: 'visible' });
     
     // Find and click sign-out button (if visible in UI)
     const signOutButton = page.getByRole('button', { name: /sign out/i });
@@ -84,7 +94,7 @@ test.describe('Admin Portal Authentication', () => {
 
   test('should handle session expiration gracefully', async ({ page, context }) => {
     // Setup expired session state
-    await setupExpiredSession(context);
+await setupClerkExpiredSession(context);
 
     await page.goto('http://localhost:3007/dashboard/newtest');
     
@@ -94,7 +104,7 @@ test.describe('Admin Portal Authentication', () => {
 
   test('should prevent unauthorized site access', async ({ page }) => {
     // Setup unauthenticated state
-    await setupUnauthenticatedState(page.context());
+await setupClerkUnauthenticatedState(page.context());
     
     // Try to access a restricted site
     await page.goto('http://localhost:3007/dashboard/restricted-site');
