@@ -1,10 +1,10 @@
 import { test, expect } from '@playwright/test';
-import { mockSessionCookie } from '../utils/session-mock';
+import { setupClerkAuth } from '../utils/clerk-auth-helpers';
 import { getAdminPortalConfig } from '../../packages/theme/src/config/siteConfig';
 
 const adminConfig = getAdminPortalConfig('local');
 
-test.describe('Basic Authentication Flow', () => {
+test.describe('Basic Authentication Flow (Clerk)', () => {
   test('Editor login link is visible when not authenticated', async ({ page }) => {
     await page.goto('http://localhost:3008/newtest/');
     
@@ -15,11 +15,13 @@ test.describe('Basic Authentication Flow', () => {
     const authElements = await page.locator('[class*="auth"], [class*="Auth"], [id*="auth"], [id*="Auth"]').all();
     console.log(`Found ${authElements.length} auth-related elements`);
     
-    // Try multiple selectors for the login link
+// Try multiple selectors for the Clerk login link
     const loginSelectors = [
+      '[data-testid="SafeSignInButton"]',
       'a:text("Editor Login")',
       'a:text("Login")',
       'a:text("Sign in")',
+      'button:text("Sign in")',
       'a[href*="signin"]',
       'a[href*="auth"]'
     ];
@@ -38,42 +40,35 @@ test.describe('Basic Authentication Flow', () => {
   });
 
   test('Check navbar structure when authenticated', async ({ browser }) => {
-    const context = await mockSessionCookie({
-      browser,
-      userRoles: { newtest: 'namespace_editor' },
-      userName: 'Test User',
-    });
+    const context = await browser.newContext();
+    await setupClerkAuth(context, 'namespace_editor');
     const page = await context.newPage();
     
     await page.goto('http://localhost:3008/newtest/');
     
-    // Wait a bit for the AuthStatus component to check session
-    await page.waitForTimeout(2000);
+// Wait for Clerk useUser() loading state
+    await page.waitForSelector('[data-testid="dashboard-loaded"]', { state: 'visible', timeout: 5000 }).catch(() => {});
     
     // Debug: Take screenshot
     await page.screenshot({ path: 'tmp/newtest-authenticated.png' });
     
-    // Look for navbar items
-    const navbarItems = await page.locator('.navbar__items').all();
-    console.log(`Found ${navbarItems.length} navbar sections`);
+    // Look for navbar items (debug info)
+    const navbarItems = await page.locator('[role="navigation"]').all();
+    console.log(`Found ${navbarItems.length} navigation sections`);
     
-    // Check localStorage to verify session is set
-    const localStorageData = await page.evaluate(() => {
+// Check for Clerk session data
+    const clerkData = await page.evaluate(() => {
       return {
-        adminSession: localStorage.getItem('adminSession'),
-        iflaAdminSession: localStorage.getItem('ifla-admin-session'),
-        adminPortalSession: localStorage.getItem('adminPortalSession'),
+        clerkUser: window.__clerk_user || null,
+        clerkLoaded: window.__clerk_loaded || false,
       };
     });
-    console.log('LocalStorage data:', JSON.stringify(localStorageData, null, 2));
+    console.log('Clerk data:', JSON.stringify(clerkData, null, 2));
     
     // Check for any dropdown or button with user info
-    const dropdownSelectors = [
+const dropdownSelectors = [
       'button:has-text("Test User")',
-      '[class*="dropdown"]:has-text("Test User")',
-      '[class*="userMenu"]',
-      '[class*="authDropdown"]',
-      '.navbar__item.dropdown'
+      'button[role="button"][name="Test User"]'
     ];
     
     let userElement = null;
@@ -93,9 +88,9 @@ test.describe('Basic Authentication Flow', () => {
       console.log(`Button found: "${text}"`);
     }
     
-    // Also check for the specific auth dropdown component
-    const authDropdown = await page.locator('[class*="authDropdown"], .dropdown:has(button)').count();
-    console.log(`Found ${authDropdown} auth dropdown elements`);
+    // Check for any MUI-based button components
+    const muiButtons = await page.locator('[role="button"]').count();
+    console.log(`Found ${muiButtons} button elements`);
     
     await page.close();
   });
