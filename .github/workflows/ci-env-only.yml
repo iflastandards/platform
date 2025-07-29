@@ -14,7 +14,8 @@ permissions:
 env:
   CI: true
   NODE_ENV: production  # Always production for optimized builds
-  # DOCS_ENV is set by the calling workflow (preview or production)
+  # Set DOCS_ENV based on branch - preview for preview branch, production for main
+  DOCS_ENV: ${{ github.ref == 'refs/heads/main' && 'production' || 'preview' }}
   # Environment variables that CI tests will validate
   GOOGLE_SHEETS_API_KEY: ${{ secrets.GOOGLE_SHEETS_API_KEY }}
   GSHEETS_SA_KEY: ${{ secrets.GSHEETS_SA_KEY }}
