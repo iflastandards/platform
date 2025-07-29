@@ -59,3 +59,6 @@ nx-cloud.env
 /.kiro/settings/mcp.json
 /developer_notes/IFLA link
 /e2e/visual-regression-enhanced.spec.ts-snapshots/*
+
+# Server state files (ephemeral, not for version control)
+**/.ifla-server-state.json

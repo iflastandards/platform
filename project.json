@@ -46,6 +46,21 @@
         "{projectRoot}/playwright.config.ts"
       ]
     },
+    "e2e:pre-push": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "playwright test --config=playwright.config.pre-push.ts",
+        "cwd": "{projectRoot}"
+      },
+      "inputs": [
+        "default",
+        "{projectRoot}/e2e/**/*",
+        "{projectRoot}/playwright.config.pre-push.ts"
+      ],
+      "outputs": [
+        "{projectRoot}/tmp/playwright-results-pre-push"
+      ]
+    },
     "e2e:fail-fast": {
       "executor": "nx:run-commands",
       "options": {

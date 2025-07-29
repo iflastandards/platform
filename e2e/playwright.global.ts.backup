@@ -1,0 +1,9 @@
+import { startServers, stopServers } from '@ifla/dev-servers';
+
+let servers;
+export default async () => {
+  // Reuse existing servers if they're already running to speed up tests
+  // and avoid port conflicts
+  servers = await startServers({ reuseExisting: true });
+  return async () => await stopServers(servers);
+};

@@ -1,0 +1,5 @@
+# Conservative modern browsers for Rspack compatibility
+chrome >= 90
+firefox >= 88
+safari >= 14
+edge >= 90

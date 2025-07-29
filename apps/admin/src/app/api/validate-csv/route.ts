@@ -1,6 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { dctapValidator } from '@/lib/services/dctap-validation';
-import { parse } from 'csv-parse/sync';
 import fs from 'fs/promises';
 
 export async function POST(request: NextRequest) {

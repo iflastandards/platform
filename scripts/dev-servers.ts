@@ -2,6 +2,7 @@
 
 import { execSync } from 'child_process';
 import { startServers, stopServers } from '@ifla/dev-servers';
+import type { ServerMode, BrowserType } from '@ifla/dev-servers';
 import { SITE_CONFIG, ADMIN_PORTAL_CONFIG, SiteKey } from '../packages/theme/src/config/siteConfig';
 
 // Generate site ports from siteConfig for CLI status checks
@@ -64,6 +65,46 @@ function parseReuseExisting(args: string[]): boolean {
   return args.includes('--reuse-existing') || args.includes('--reuseExisting');
 }
 
+/**
+ * Parse server mode from CLI arguments
+ * @param args - Command line arguments
+ * @returns ServerMode
+ */
+function parseModeFromArgs(args: string[]): ServerMode {
+  // Check for --mode=value format
+  const modeArg = args.find(arg => arg.startsWith('--mode='));
+  if (modeArg) {
+    const mode = modeArg.split('=')[1] as ServerMode;
+    if (mode === 'headless' || mode === 'interactive') {
+      return mode;
+    }
+    console.warn(`⚠️  Invalid mode '${mode}', defaulting to 'headless'`);
+  }
+  
+  // Default to headless mode
+  return 'headless';
+}
+
+/**
+ * Parse browser type from CLI arguments
+ * @param args - Command line arguments
+ * @returns BrowserType
+ */
+function parseBrowserFromArgs(args: string[]): BrowserType {
+  // Check for --browser=value format
+  const browserArg = args.find(arg => arg.startsWith('--browser='));
+  if (browserArg) {
+    const browser = browserArg.split('=')[1] as BrowserType;
+    if (browser === 'chrome' || browser === 'auto') {
+      return browser;
+    }
+    console.warn(`⚠️  Invalid browser '${browser}', defaulting to 'auto'`);
+  }
+  
+  // Default to auto
+  return 'auto';
+}
+
 // Note: startServers and stopServers are imported from @ifla/dev-servers package
 
 // CLI interface when run directly
@@ -78,21 +119,39 @@ Usage:
   tsx scripts/dev-servers.ts [options]
 
 Options:
-  --sites=site1,site2    Specify which sites to start (comma-separated)
-  --reuse-existing       Skip starting if server is already running
-  --no-kill              Leave servers running on exit
-  --status               Report which required ports are currently alive
-  --cli                  Force CLI mode
-  --help, -h             Show this help
+  --sites=site1,site2         Specify which sites to start (comma-separated)
+  --mode=headless|interactive Server mode (default: headless)
+                              headless: implies --no-open, for CI/testing
+                              interactive: allows browser opening for development
+  --browser=chrome|auto       Browser to use (default: auto)
+                              chrome: force Chrome browser
+                              auto: system default browser
+  --reuse-existing            Skip starting if server is already running
+  --no-kill                   Leave servers running on exit
+  --status                    Report which required ports are currently alive
+  --cli                       Force CLI mode
+  --help, -h                  Show this help
+
+Mode Logic:
+  • On start: scan known ports for existing servers
+  • If mode matches existing → reuse and exit 0 (when --reuse-existing)
+  • If mode differs → gracefully shut down existing servers first
+  • Server state persisted in $TMPDIR/.ifla-server-state.json
 
 Environment Variables:
-  DOCS_SITES=site1,site2  Specify sites via environment variable
+  DOCS_SITES=site1,site2      Specify sites via environment variable
 
 Examples:
-  tsx scripts/dev-servers.ts --sites=portal,isbd
+  # Headless mode (default, for CI/testing)
+  tsx scripts/dev-servers.ts --mode=headless --sites=portal,isbd
+  
+  # Interactive mode (for development)
+  tsx scripts/dev-servers.ts --mode=interactive --browser=chrome
+  
+  # Mixed usage
   tsx scripts/dev-servers.ts --sites=portal,isbd --no-kill
   tsx scripts/dev-servers.ts --status
-  DOCS_SITES=portal,isbd tsx scripts/dev-servers.ts
+  DOCS_SITES=portal,isbd tsx scripts/dev-servers.ts --mode=interactive
   tsx scripts/dev-servers.ts --sites=portal --reuse-existing
 
 Available sites: ${Object.keys(SITE_PORTS).join(', ')}
@@ -117,8 +176,11 @@ Available sites: ${Object.keys(SITE_PORTS).join(', ')}
   const sites = parseSitesFromArgs(args);
   const reuseExisting = parseReuseExisting(args);
   const noKill = args.includes('--no-kill');
-  
-  startServers({ sites, reuseExisting })
+
+  const mode = parseModeFromArgs(args);
+  const browser = parseBrowserFromArgs(args);
+
+  startServers({ sites, reuseExisting, mode, browser })
     .then((servers) => {
       console.log(`\n🎯 Development servers running:`);
       servers.forEach(({ site, port }) => {

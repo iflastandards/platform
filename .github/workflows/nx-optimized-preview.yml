@@ -92,6 +92,7 @@ jobs:
           path: |
             .nx/cache
             node_modules/.cache/nx
+            !**/.ifla-server-state.json
           key: nx-${{ runner.os }}-${{ github.sha }}
           restore-keys: |
             nx-${{ runner.os }}-
@@ -195,6 +196,7 @@ jobs:
             portal/build
             standards/*/build
             packages/*/dist
+            !**/.ifla-server-state.json
           key: nx-builds-${{ runner.os }}-${{ github.sha }}
           restore-keys: |
             nx-builds-${{ runner.os }}-

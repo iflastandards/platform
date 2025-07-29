@@ -18,7 +18,7 @@
     "start": {
       "executor": "nx:run-commands",
       "options": {
-        "command": "docusaurus start standards/isbd --port 3004"
+        "command": "docusaurus start standards/isbd --port 3004 --no-open"
       }
     },
     "serve": {
@@ -30,7 +30,7 @@
     "start:robust": {
       "executor": "nx:run-commands",
       "options": {
-        "command": "node scripts/utils/port-manager.js site isbd && docusaurus start standards/isbd --port 3004"
+        "command": "node scripts/utils/port-manager.js site isbd && docusaurus start standards/isbd --port 3004 --no-open"
       }
     },
     "serve:robust": {

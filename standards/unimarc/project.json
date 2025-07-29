@@ -18,7 +18,7 @@
     "start": {
       "executor": "nx:run-commands",
       "options": {
-        "command": "docusaurus start standards/unimarc --port 3006"
+        "command": "docusaurus start standards/unimarc --port 3006 --no-open"
       }
     },
     "serve": {
@@ -30,7 +30,7 @@
     "start:robust": {
       "executor": "nx:run-commands",
       "options": {
-        "command": "node scripts/utils/port-manager.js site unimarc && docusaurus start standards/unimarc --port 3006"
+        "command": "node scripts/utils/port-manager.js site unimarc && docusaurus start standards/unimarc --port 3006 --no-open"
       }
     },
     "serve:robust": {

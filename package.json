@@ -191,6 +191,7 @@
     "test:comprehensive:unit": "nx run-many --target=test --all --parallel=3",
     "test:coverage": "pnpm test --coverage",
     "test:e2e": "nx run platform:e2e",
+    "test:e2e:pre-push": "nx run platform:e2e:pre-push",
     "test:e2e:affected": "nx affected --target=e2e",
     "test:e2e:all": "nx run-many --target=e2e --all",
     "test:e2e:isbdm": "nx run isbdm:e2e",
@@ -252,7 +253,9 @@
     "vocabulary:create": "tsx scripts/create-vocabulary-sheet.ts",
     "vocabulary:create-action": "tsx scripts/create-vocabulary-sheet-action.ts",
     "write-heading-ids": "docusaurus write-heading-ids",
-    "write-translations": "docusaurus write-translations"
+    "write-translations": "docusaurus write-translations",
+    "dev:interactive": "pnpm ports:kill && pnpm dev:servers --mode=interactive --browser=chrome",
+    "dev:headless": "pnpm dev:servers --mode=headless"
   },
   "dependencies": {
     "@anthropic-ai/sdk": "^0.57.0",
@@ -477,13 +480,6 @@
     "node": ">=18.0"
   },
   "packageManager": "pnpm@10.12.4+sha512.5ea8b0deed94ed68691c9bad4c955492705c5eeb8a87ef86bc62c74a26b037b08ff9570f108b2e4dbd1dd1a9186fea925e527f141c648e85af45631074680184",
-  "browserslist": {
-    "production": [
-      ">0.5%",
-      "not dead",
-      "not op_mini all"
-    ]
-  },
   "lint-staged": {
     "**/*.{js,jsx,ts,tsx}": [
       "eslint --quiet --fix"

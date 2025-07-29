@@ -30,7 +30,7 @@
     "start": {
       "executor": "nx:run-commands",
       "options": {
-        "command": "docusaurus start standards/muldicat --port 3005"
+        "command": "docusaurus start standards/muldicat --port 3005 --no-open"
       }
     },
     "serve": {
@@ -42,7 +42,7 @@
     "start:robust": {
       "executor": "nx:run-commands",
       "options": {
-        "command": "node scripts/utils/port-manager.js site muldicat && docusaurus start standards/muldicat --port 3005"
+        "command": "node scripts/utils/port-manager.js site muldicat && docusaurus start standards/muldicat --port 3005 --no-open"
       }
     },
     "serve:robust": {

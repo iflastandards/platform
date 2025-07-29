@@ -1,6 +1,16 @@
 import { ChildProcess } from 'child_process';
 
 /**
+ * Server mode types
+ */
+export type ServerMode = 'headless' | 'interactive';
+
+/**
+ * Browser types for server startup
+ */
+export type BrowserType = 'chrome' | 'auto';
+
+/**
  * Options for starting development servers
  */
 export interface StartServerOptions {
@@ -8,6 +18,10 @@ export interface StartServerOptions {
   sites?: string[];
   /** Whether to reuse existing servers if they're already running */
   reuseExisting?: boolean;
+  /** Server mode - headless implies --no-open, interactive allows browser opening */
+  mode?: ServerMode;
+  /** Browser type to use when opening pages */
+  browser?: BrowserType;
 }
 
 /**
@@ -20,6 +34,8 @@ export interface ServerInfo {
   port: number;
   /** The child process handle */
   proc: ChildProcess;
+  /** The mode the server is running in */
+  mode?: ServerMode;
 }
 
 /**
@@ -27,4 +43,32 @@ export interface ServerInfo {
  */
 export interface SitePorts {
   [siteName: string]: number;
+}
+
+/**
+ * Server state information for persistence
+ */
+export interface ServerState {
+  /** Process ID of the server */
+  pid: number;
+  /** Port the server is running on */
+  port: number;
+  /** Site name */
+  site: string;
+  /** Server mode */
+  mode: ServerMode;
+  /** Timestamp when server was started */
+  startedAt: number;
+}
+
+/**
+ * Complete state file structure
+ */
+export interface ServerStateFile {
+  /** List of running servers */
+  servers: ServerState[];
+  /** When this state was last updated */
+  lastUpdated: number;
+  /** Mode of the server session */
+  mode: ServerMode;
 }

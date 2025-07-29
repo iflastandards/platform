@@ -18,7 +18,7 @@
     "start": {
       "executor": "nx:run-commands",
       "options": {
-        "command": "docusaurus start standards/FRBR --port 3003"
+        "command": "docusaurus start standards/FRBR --port 3003 --no-open"
       }
     },
     "serve": {
@@ -30,7 +30,7 @@
     "start:robust": {
       "executor": "nx:run-commands",
       "options": {
-        "command": "node scripts/utils/port-manager.js site frbr && docusaurus start standards/FRBR --port 3003"
+        "command": "node scripts/utils/port-manager.js site frbr && docusaurus start standards/FRBR --port 3003 --no-open"
       }
     },
     "serve:robust": {

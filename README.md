@@ -83,6 +83,12 @@ pnpm dev:servers
 # Start specific sites only
 pnpm dev:servers --sites=portal,admin
 
+# Start in interactive mode with Chrome browser
+pnpm dev:interactive
+
+# Start in headless mode (no browser windows)
+pnpm dev:headless
+
 # Start specific site (individual approach)
 nx start portal          # Main portal
 nx start isbd           # ISBD standard

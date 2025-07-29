@@ -3,6 +3,11 @@ import treeKill from 'tree-kill';
 import { StartServerOptions, ServerInfo } from './types';
 import { SITE_PORTS, killSitePort, waitForPortFree } from './port-manager';
 import { getSiteConfig, getAdminPortalConfig, SiteKey } from '@ifla/theme/config/siteConfig';
+import { 
+  checkModeCompatibility, 
+  updateServerState, 
+  clearServerState
+} from './state-manager';
 
 // Fetch polyfill for Node.js environments
 let fetch: typeof globalThis.fetch;
@@ -85,17 +90,137 @@ async function waitForServerReady(siteName: string, port: number, timeout: numbe
 }
 
 /**
+ * Gracefully shutdown existing servers via shutdown endpoint or SIGTERM
+ * @param existingServers - Array of existing server states
+ */
+async function shutdownExistingServers(existingServers: any[]): Promise<void> {
+  console.log(`🔄 Gracefully shutting down ${existingServers.length} existing servers...`);
+  
+  for (const server of existingServers) {
+    console.log(`🛑 Shutting down ${server.site} on port ${server.port} (PID: ${server.pid})`);
+    
+    // Try shutdown endpoint first
+    let shutdownSuccess = false;
+    try {
+      const shutdownUrl = `http://localhost:${server.port}/__shutdown`;
+      const controller = new AbortController();
+      const timeoutId = setTimeout(() => controller.abort(), 5000);
+      
+      const response = await fetch(shutdownUrl, {
+        method: 'POST',
+        signal: controller.signal,
+        headers: { 'User-Agent': 'dev-servers-shutdown' }
+      });
+      
+      clearTimeout(timeoutId);
+      
+      if (response.ok) {
+        console.log(`✅ ${server.site} shutdown via endpoint`);
+        shutdownSuccess = true;
+        // Wait for graceful shutdown
+        await new Promise(resolve => setTimeout(resolve, 2000));
+      }
+    } catch {
+      // Shutdown endpoint not available or failed
+    }
+    
+    // If shutdown endpoint failed, use SIGTERM
+    if (!shutdownSuccess && server.pid > 0) {
+      try {
+        process.kill(server.pid, 'SIGTERM');
+        console.log(`📡 Sent SIGTERM to ${server.site} (PID: ${server.pid})`);
+        // Wait for graceful shutdown
+        await new Promise(resolve => setTimeout(resolve, 3000));
+        
+        // Check if process still exists, if so, force kill
+        try {
+          process.kill(server.pid, 0); // Check if process exists
+          process.kill(server.pid, 'SIGKILL');
+          console.log(`⚡ Force killed ${server.site} (PID: ${server.pid})`);
+        } catch {
+          // Process already dead
+          console.log(`✅ ${server.site} shutdown gracefully`);
+        }
+      } catch (error) {
+        console.error(`❌ Failed to shutdown ${server.site}: ${error}`);
+      }
+    }
+    
+    // Clean up the port
+    await killSitePort(server.site, false);
+  }
+  
+  console.log('🧹 Existing servers shutdown complete.');
+}
+
+/**
  * Start development servers for specified sites
  * @param opts - Options for starting servers
  * @returns Promise<ServerInfo[]> - Array of started server information
  */
 export async function startServers(opts: StartServerOptions = {}): Promise<ServerInfo[]> {
-  const { sites = Object.keys(SITE_PORTS), reuseExisting = false } = opts;
+  const { 
+    sites = Object.keys(SITE_PORTS), 
+    reuseExisting = false, 
+    mode = 'headless',
+    browser = 'auto'
+  } = opts;
   const servers: ServerInfo[] = [];
   
   console.log(`🚀 Starting servers for sites: ${sites.join(', ')}`);
+  console.log(`🎯 Mode: ${mode}${mode === 'headless' ? ' (implies --no-open)' : ''}`);
+  console.log(`🌐 Browser: ${browser}`);
   console.log(`♻️  Reuse existing: ${reuseExisting}`);
   console.log('');
+  
+  // Check mode compatibility with existing servers
+  const compatibility = checkModeCompatibility(mode);
+  
+  if (compatibility.existingServers.length > 0) {
+    if (compatibility.compatible) {
+      console.log(`✅ Found ${compatibility.existingServers.length} existing servers in compatible mode (${compatibility.existingMode})`);
+      
+      if (reuseExisting) {
+        // Reuse existing servers
+        console.log('🔄 Reusing existing servers and exiting...');
+        
+        for (const existingServer of compatibility.existingServers) {
+          const isReady = await waitForServerReady(existingServer.site, existingServer.port, 5000);
+          if (isReady) {
+            console.log(`✅ Reusing ${existingServer.site} on port ${existingServer.port}`);
+            // Create a mock process entry for consistency
+            const mockProc = { 
+              kill: () => {}, 
+              pid: existingServer.pid 
+            } as ChildProcess;
+            servers.push({ 
+              site: existingServer.site, 
+              port: existingServer.port, 
+              proc: mockProc, 
+              mode: existingServer.mode 
+            });
+          }
+        }
+        
+        if (servers.length > 0) {
+          console.log(`🎉 Reusing ${servers.length} existing servers!`);
+          return servers;
+        }
+      }
+    } else {
+      console.log(`⚠️  Found ${compatibility.existingServers.length} existing servers in incompatible mode (${compatibility.existingMode} vs ${mode})`);
+      console.log('🔄 Shutting down existing servers before starting new ones...');
+      
+      // Gracefully shutdown existing servers
+      await shutdownExistingServers(compatibility.existingServers);
+      
+      // Clear the state file
+      clearServerState();
+      
+      console.log('✅ Ready to start servers in new mode');
+      console.log('');
+    }
+  }
 
   for (const site of sites) {
     const port = SITE_PORTS[site.toLowerCase()];
@@ -168,9 +293,15 @@ export async function startServers(opts: StartServerOptions = {}): Promise<Serve
     console.log(`📡 Starting server: ${commandStr}`);
 
     // Create a prefixed output stream for this server
+    const browserSetting = mode === 'headless' ? 'none' : (browser === 'chrome' ? 'chrome' : 'auto');
+    
     const proc = spawn('nx', nxCommand, {
       stdio: ['ignore', 'pipe', 'pipe'],
-      env: { ...process.env, DOCS_ENV: process.env.DOCS_ENV || 'local' }
+      env: { 
+        ...process.env, 
+        DOCS_ENV: process.env.DOCS_ENV || 'local',
+        BROWSER: browserSetting
+      }
     });
 
     // Pipe stdout/stderr with prefixed output
@@ -235,6 +366,16 @@ export async function startServers(opts: StartServerOptions = {}): Promise<Serve
     console.log('');
   }
 
+  // Persist server state to help Playwright and other tools
+  if (servers.length > 0) {
+    const serverInfoWithMode = servers.map(server => ({
+      ...server,
+      mode: mode
+    }));
+    updateServerState(serverInfoWithMode, mode);
+    console.log(`💾 Server state persisted to ${require('os').tmpdir()}/.ifla-server-state.json`);
+  }
+  
   console.log(`🎉 Started ${servers.length} servers successfully!`);
   return servers;
 }
@@ -290,5 +431,9 @@ export async function stopServers(servers: ServerInfo[]): Promise<void> {
     }
   }
   
+  // Clear the server state file after stopping all servers
+  clearServerState();
+  
   console.log('🧹 All servers stopped and ports cleaned up.');
+  console.log('💾 Server state cleared.');
 }

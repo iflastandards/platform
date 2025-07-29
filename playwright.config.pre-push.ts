@@ -6,6 +6,9 @@ import { defineConfig, devices } from '@playwright/test';
  */
 export default defineConfig({
   testDir: './e2e',
+  /* Global setup and teardown to manage development servers */
+  globalSetup: require.resolve('./e2e/playwright/global-setup'),
+  globalTeardown: require.resolve('./e2e/playwright/global-teardown'),
   fullyParallel: false, // Sequential for pre-push reliability
   forbidOnly: true,
   retries: 1, // One retry for flaky tests
@@ -22,20 +25,23 @@ export default defineConfig({
     video: 'retain-on-failure',
   },
 
-  /* Test only essential browsers for pre-push */
+  /* Test only Chrome headless for pre-push - fast and reliable */
   projects: [
     {
       name: 'chromium',
-      use: { ...devices['Desktop Chrome'] },
+      use: { 
+        ...devices['Desktop Chrome'],
+        headless: true, // Ensure headless mode
+        launchOptions: {
+          args: [
+            '--disable-dev-shm-usage', // Prevents Chrome crashes
+            '--no-sandbox', // Required for some CI environments
+            '--disable-setuid-sandbox',
+            '--disable-gpu', // Helps with headless stability
+          ],
+        },
+      },
     },
-    {
-      name: 'firefox', 
-      use: { ...devices['Desktop Firefox'] },
-    },
-    {
-      name: 'mobile',
-      use: { ...devices['Pixel 5'] },
-    }
   ],
 
   /* No automatic server - we'll manage it manually in pre-push hook */

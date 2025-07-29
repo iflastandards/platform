@@ -51,6 +51,17 @@ jobs:
         with:
           node-version: 22
           cache: 'pnpm'
+          
+      - name: Cache Nx
+        uses: actions/cache@v4
+        with:
+          path: |
+            .nx/cache
+            node_modules/.cache/nx
+            !**/.ifla-server-state.json
+          key: nx-${{ runner.os }}-${{ github.sha }}
+          restore-keys: |
+            nx-${{ runner.os }}-
 
       - run: pnpm install --frozen-lockfile
 

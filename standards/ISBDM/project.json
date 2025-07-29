@@ -16,7 +16,7 @@
     "start": {
       "executor": "nx:run-commands",
       "options": {
-        "command": "docusaurus start standards/ISBDM --port 3001"
+        "command": "docusaurus start standards/ISBDM --port 3001 --no-open"
       }
     },
     "serve": {
@@ -28,7 +28,7 @@
     "start:robust": {
       "executor": "nx:run-commands",
       "options": {
-        "command": "node scripts/utils/port-manager.js site isbdm && docusaurus start standards/ISBDM --port 3001"
+        "command": "node scripts/utils/port-manager.js site isbdm && docusaurus start standards/ISBDM --port 3001 --no-open"
       }
     },
     "serve:robust": {

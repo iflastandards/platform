@@ -54,6 +54,18 @@
         "command": "tsup --watch",
         "cwd": "packages/dev-servers"
       }
+    },
+    "test": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "vitest run",
+        "cwd": "packages/dev-servers"
+      },
+      "inputs": [
+        "{projectRoot}/src/**/*.ts",
+        "{projectRoot}/vitest.config.ts"
+      ],
+      "cache": true
     }
   },
   "implicitDependencies": []

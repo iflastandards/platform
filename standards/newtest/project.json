@@ -18,7 +18,7 @@
     "start": {
       "executor": "nx:run-commands",
       "options": {
-        "command": "docusaurus start standards/newtest --port 3008"
+        "command": "docusaurus start standards/newtest --port 3008 --no-open"
       }
     },
     "serve": {
@@ -30,7 +30,7 @@
     "start:robust": {
       "executor": "nx:run-commands",
       "options": {
-        "command": "node scripts/utils/port-manager.js site newtest && docusaurus start standards/newtest --port 3008"
+        "command": "node scripts/utils/port-manager.js site newtest && docusaurus start standards/newtest --port 3008 --no-open"
       }
     },
     "serve:robust": {

@@ -43,23 +43,20 @@
       ]
     },
     "serve": {
-      "executor": "@nx/next:server",
+      "executor": "nx:run-commands",
       "defaultConfiguration": "development",
       "options": {
-        "buildTarget": "admin:build",
-        "dev": true,
-        "port": 3007
+        "command": "pnpm dev:interactive",
+        "cwd": "."
       },
       "configurations": {
         "development": {
-          "buildTarget": "admin:build:development",
-          "dev": true,
-          "port": 3007
+          "command": "pnpm dev:interactive",
+          "cwd": "."
         },
         "production": {
-          "buildTarget": "admin:build:production",
-          "dev": false,
-          "port": 3007
+          "command": "pnpm dev:headless",
+          "cwd": "."
         }
       }
     },

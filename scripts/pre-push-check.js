@@ -120,12 +120,12 @@ if (shouldRunE2E) {
     require('child_process').execSync('sleep 2', { stdio: 'pipe' });
     
     // Run E2E tests - the globalSetup in playwright.config.ts automatically bootstraps servers
-    console.log('🚀 Starting E2E tests (servers will bootstrap automatically)...');
-    execSync('pnpm test:e2e', {
+    console.log('🚀 Starting E2E tests (Chrome headless only for pre-push)...');
+    execSync('pnpm test:e2e:pre-push', {
       stdio: 'inherit',
       encoding: 'utf8'
     });
-    console.log('✅ E2E tests passed with server bootstrapping\n');
+    console.log('✅ E2E tests passed with Chrome headless\n');
   } catch (error) {
     console.log('❌ E2E tests failed\n');
     console.log('📝 E2E failure details:', error.message || 'Unknown error');

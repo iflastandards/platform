@@ -10,7 +10,8 @@
       "!{projectRoot}/.docusaurus/**/*",
       "!{projectRoot}/build/**/*",
       "!{projectRoot}/dist/**/*",
-      "!{projectRoot}/node_modules/**/*",
+ "!{projectRoot}/node_modules/**/*",
+      "!{workspaceRoot}/**/.ifla-server-state.json",
       "sharedGlobals"
     ],
     "production": [
