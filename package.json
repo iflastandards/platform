@@ -235,6 +235,7 @@
     "test:scripts:coverage": "nx run scripts:test:coverage",
     "test:scripts:file": "nx run scripts:test:specific --",
     "test:scripts:watch": "nx run scripts:test:watch",
+    "test:dev-servers": "nx run @ifla/dev-servers:test:on-demand",
     "test:ui": "nx test --ui",
     "test:visual": "npx nx playwright:e2e e2e/visual-regression-enhanced.spec.ts",
     "test:visual-regression": "nx playwright:e2e --config=playwright-snapshots.config.ts",

@@ -60,6 +60,8 @@ export default defineConfig({
       '**/server-dependent/**',
       // Exclude environment tests (CI only)
       '**/tests/deployment/**',
+      // Exclude dev-servers tests (run on-demand only due to mocking issues in global test environment)
+      '**/packages/dev-servers/src/**/*.{test,spec}.{ts,tsx,js,jsx}',
       // Comprehensive exclusion of build artifacts
       '**/.next/**',
       '**/apps/*/.next/**',
