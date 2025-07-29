@@ -1,7 +1,9 @@
 import { test, expect } from '@playwright/test';
 import { getAdminPortalConfig } from '../../packages/theme/src/config/siteConfig';
+import { setupClerkAuth, clearClerkAuth } from '../utils/clerk-auth-helpers';
+import selectors from '../selectors';
 
-test.describe('Authentication Dropdown URL Validation', () => {
+test.describe('Authentication Dropdown URL Validation (Clerk)', () => {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   let adminConfig: any;
   
@@ -11,8 +13,8 @@ test.describe('Authentication Dropdown URL Validation', () => {
   });
 
   test.beforeEach(async ({ page }) => {
-    // Clear any existing sessions and localStorage
-    await page.context().clearCookies();
+    // Clear any existing Clerk sessions and localStorage
+    await clearClerkAuth(page.context());
     await page.goto('http://localhost:3008/newtest/');
     await page.evaluate(() => {
       localStorage.clear();
@@ -27,7 +29,7 @@ test.describe('Authentication Dropdown URL Validation', () => {
     await expect(page.getByText('New Test Site')).toBeVisible();
     
     // Check that the login link uses correct environment-aware URL
-    const loginLink = page.getByRole('link', { name: /editor login/i });
+const loginLink = page.getByRole(selectors.auth.editorLoginLink.role, selectors.auth.editorLoginLink);
     await expect(loginLink).toBeVisible();
     await expect(loginLink).toHaveAttribute('href', adminConfig.signinUrl);
     
@@ -38,36 +40,17 @@ test.describe('Authentication Dropdown URL Validation', () => {
   });
 
   test('should have correct "Manage" URL when authenticated as admin', async ({ page, context }) => {
-    // Mock authentication with admin roles
-    await context.addCookies([
-      {
-        name: 'next-auth.session-token',
-        value: 'mock-admin-session',
-        domain: 'localhost',
-        path: '/',
-        httpOnly: true,
-        secure: false,
-      },
-    ]);
+    // Set up Clerk authentication with admin role
+    await setupClerkAuth(context, 'admin');
 
-    // Set up authenticated state in localStorage
+    // Navigate to newtest site 
     await page.goto('http://localhost:3008/newtest/');
-    await page.evaluate((config) => {
-      const authStatus = {
-        isAuthenticated: true,
-        username: 'Test Admin',
-        teams: ['ifla-admin'], // Admin role that should show "Manage"
-        keepMeLoggedIn: false,
-        loading: false
-      };
-      localStorage.setItem('authStatus', JSON.stringify(authStatus));
-    }, adminConfig);
-
-    await page.reload();
-    await page.waitForTimeout(1000);
+    
+    // Wait for Clerk auth status to sync
+    await page.waitForTimeout(2000);
 
     // Find and click the user dropdown to reveal "Manage" link
-    const userDropdown = page.locator('.navbar__item.dropdown');
+const userDropdown = page.locator(selectors.auth.legacyUserDropdown);
     await expect(userDropdown).toBeVisible();
     
     // Hover or click to open dropdown
@@ -75,7 +58,7 @@ test.describe('Authentication Dropdown URL Validation', () => {
     await page.waitForTimeout(500);
 
     // Check that the "Manage" link uses correct environment-aware URL
-    const manageLink = page.getByRole('link', { name: /manage/i });
+const manageLink = page.getByRole(selectors.auth.manageLink.role, selectors.auth.manageLink);
     await expect(manageLink).toBeVisible();
     await expect(manageLink).toHaveAttribute('href', adminConfig.dashboardUrl);
     
@@ -85,42 +68,23 @@ test.describe('Authentication Dropdown URL Validation', () => {
   });
 
   test('should have correct "Logout" URL when authenticated', async ({ page, context }) => {
-    // Mock authentication
-    await context.addCookies([
-      {
-        name: 'next-auth.session-token',
-        value: 'mock-user-session',
-        domain: 'localhost',
-        path: '/',
-        httpOnly: true,
-        secure: false,
-      },
-    ]);
+    // Set up Clerk authentication
+    await setupClerkAuth(context, 'siteEditor');
 
-    // Set up authenticated state in localStorage
+    // Navigate to newtest site
     await page.goto('http://localhost:3008/newtest/');
-    await page.evaluate((config) => {
-      const authStatus = {
-        isAuthenticated: true,
-        username: 'Test User',
-        teams: ['editors'], // Regular user role
-        keepMeLoggedIn: false,
-        loading: false
-      };
-      localStorage.setItem('authStatus', JSON.stringify(authStatus));
-    }, adminConfig);
-
-    await page.reload();
-    await page.waitForTimeout(1000);
+    
+    // Wait for Clerk auth status to sync
+    await page.waitForTimeout(2000);
 
     // Find and open the user dropdown
-    const userDropdown = page.locator('.navbar__item.dropdown');
+const userDropdown = page.locator(selectors.auth.legacyUserDropdown);
     await expect(userDropdown).toBeVisible();
     await userDropdown.hover();
     await page.waitForTimeout(500);
 
     // Check that the "Logout" link uses correct environment-aware URL
-    const logoutLink = page.getByRole('link', { name: /logout/i });
+const logoutLink = page.getByRole(selectors.auth.logoutLink.role, selectors.auth.logoutLink);
     await expect(logoutLink).toBeVisible();
     await expect(logoutLink).toHaveAttribute('href', adminConfig.signoutUrl);
     
@@ -160,12 +124,12 @@ test.describe('Authentication Dropdown URL Validation', () => {
     await page.waitForTimeout(1000);
 
     // Open the user dropdown
-    const userDropdown = page.locator('.navbar__item.dropdown');
+const userDropdown = page.locator(selectors.auth.legacyUserDropdown);
     await userDropdown.hover();
     await page.waitForTimeout(500);
 
     // Find the "Keep me logged in" checkbox
-    const keepLoggedInCheckbox = page.locator('input[type="checkbox"]');
+const keepLoggedInCheckbox = page.locator(selectors.auth.keepLoggedInCheckbox);
     await expect(keepLoggedInCheckbox).toBeVisible();
     
     // Initially should be unchecked
@@ -220,11 +184,11 @@ test.describe('Authentication Dropdown URL Validation', () => {
     await page.waitForTimeout(1000);
 
     // Open dropdown and check that checkbox is checked
-    const userDropdown = page.locator('.navbar__item.dropdown');
+const userDropdown = page.locator(selectors.auth.legacyUserDropdown);
     await userDropdown.hover();
     await page.waitForTimeout(500);
 
-    const keepLoggedInCheckbox = page.locator('input[type="checkbox"]');
+const keepLoggedInCheckbox = page.locator(selectors.auth.keepLoggedInCheckbox);
     await expect(keepLoggedInCheckbox).toBeVisible();
     await expect(keepLoggedInCheckbox).toBeChecked();
   });
@@ -278,12 +242,12 @@ test.describe('Authentication Dropdown URL Validation', () => {
       await page.waitForTimeout(1000);
 
       // Open dropdown
-      const userDropdown = page.locator('.navbar__item.dropdown');
+      const userDropdown = page.locator(selectors.auth.legacyUserDropdown);
       await userDropdown.hover();
       await page.waitForTimeout(500);
 
       // Check for "Manage" link visibility
-      const manageLink = page.getByRole('link', { name: /manage/i });
+      const manageLink = page.getByRole(selectors.auth.manageLink.role, selectors.auth.manageLink);
       
       if (testCase.shouldShowManage) {
         await expect(manageLink).toBeVisible();
@@ -306,7 +270,7 @@ test.describe('Authentication Dropdown URL Validation', () => {
     await page.waitForTimeout(2000); // Allow time for failed session check
 
     // Should fallback to showing login link
-    const loginLink = page.getByRole('link', { name: /editor login/i });
+    const loginLink = page.getByRole(selectors.auth.editorLoginLink.role, selectors.auth.editorLoginLink);
     await expect(loginLink).toBeVisible();
     await expect(loginLink).toHaveAttribute('href', adminConfig.signinUrl);
 
