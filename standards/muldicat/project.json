@@ -33,6 +33,12 @@
         "command": "docusaurus start standards/muldicat --port 3005 --no-open"
       }
     },
+    "start:interactive": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "docusaurus start standards/muldicat --port 3005"
+      }
+    },
     "serve": {
       "executor": "nx:run-commands",
       "options": {

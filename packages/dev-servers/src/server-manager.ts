@@ -279,14 +279,20 @@ export async function startServers(opts: StartServerOptions = {}): Promise<Serve
       await waitForPortFree(port, 2000, false);
     }
 
-    // Determine the command to run based on site type
+    // Determine the command to run based on site type and mode
     let nxCommand: string[];
     if (site === 'admin') {
       // Admin uses Next.js dev server
       nxCommand = ['run', `${site}:dev`];
     } else {
-      // Other sites use start:robust (with port cleanup)
-      nxCommand = ['run', `${site}:start:robust`];
+      // For Docusaurus sites, choose target based on mode
+      if (mode === 'interactive') {
+        // Interactive mode: use start:interactive target (allows browser opening)
+        nxCommand = ['run', `${site}:start:interactive`];
+      } else {
+        // Headless mode: use start:robust (with --no-open and port cleanup)
+        nxCommand = ['run', `${site}:start:robust`];
+      }
     }
     
     const commandStr = `nx ${nxCommand.join(' ')}`;

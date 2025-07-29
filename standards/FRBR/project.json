@@ -21,6 +21,12 @@
         "command": "docusaurus start standards/FRBR --port 3003 --no-open"
       }
     },
+    "start:interactive": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "docusaurus start standards/FRBR --port 3003"
+      }
+    },
     "serve": {
       "executor": "nx:run-commands",
       "options": {

@@ -21,6 +21,12 @@
         "command": "docusaurus start standards/unimarc --port 3006 --no-open"
       }
     },
+    "start:interactive": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "docusaurus start standards/unimarc --port 3006"
+      }
+    },
     "serve": {
       "executor": "nx:run-commands",
       "options": {

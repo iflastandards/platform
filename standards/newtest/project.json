@@ -21,6 +21,12 @@
         "command": "docusaurus start standards/newtest --port 3008 --no-open"
       }
     },
+    "start:interactive": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "docusaurus start standards/newtest --port 3008"
+      }
+    },
     "serve": {
       "executor": "nx:run-commands",
       "options": {

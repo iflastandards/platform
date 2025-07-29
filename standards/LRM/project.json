@@ -21,6 +21,12 @@
         "command": "docusaurus start standards/LRM --port 3002 --no-open"
       }
     },
+    "start:interactive": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "docusaurus start standards/LRM --port 3002"
+      }
+    },
     "serve": {
       "executor": "nx:run-commands",
       "options": {

@@ -19,6 +19,12 @@
         "command": "docusaurus start standards/ISBDM --port 3001 --no-open"
       }
     },
+    "start:interactive": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "docusaurus start standards/ISBDM --port 3001"
+      }
+    },
     "serve": {
       "executor": "nx:run-commands",
       "options": {

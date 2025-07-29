@@ -21,6 +21,12 @@
         "command": "docusaurus start standards/isbd --port 3004 --no-open"
       }
     },
+    "start:interactive": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "docusaurus start standards/isbd --port 3004"
+      }
+    },
     "serve": {
       "executor": "nx:run-commands",
       "options": {
