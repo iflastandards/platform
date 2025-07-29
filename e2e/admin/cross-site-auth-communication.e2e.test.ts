@@ -1,7 +1,9 @@
 import { test, expect } from '@playwright/test';
 import { getAdminPortalConfig } from '../../packages/theme/src/config/siteConfig';
+import { setupClerkAuth, clearClerkAuth } from '../utils/clerk-auth-helpers';
+import selectors from '../selectors';
 
-test.describe('Cross-Site Authentication Communication', () => {
+test.describe('Cross-Site Authentication Communication (Clerk)', () => {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   let adminConfig: any;
   
@@ -11,8 +13,8 @@ test.describe('Cross-Site Authentication Communication', () => {
   });
 
   test.beforeEach(async ({ page }) => {
-    // Clear any existing sessions and localStorage
-    await page.context().clearCookies();
+    // Clear any existing Clerk sessions and localStorage
+    await clearClerkAuth(page.context());
     // Navigate to a page first, then clear localStorage
     await page.goto('http://localhost:3008/newtest/');
     await page.evaluate(() => {
@@ -38,23 +40,14 @@ test.describe('Cross-Site Authentication Communication', () => {
     await expect(loginLink).not.toHaveAttribute('href', 'http://localhost:3007/signin'); // Missing /auth prefix
     await expect(loginLink).not.toHaveAttribute('href', 'http://localhost:3001/auth/signin'); // Wrong port
 
-    // Step 2: Navigate to admin portal and mock authentication
-    await page.goto(adminConfig.signinUrl);
+    // Step 2: Set up Clerk authentication
+    await setupClerkAuth(context, 'admin');
     
-    // Mock successful authentication by setting session cookie
-    await context.addCookies([
-      {
-        name: 'next-auth.session-token',
-        value: 'mock-site-admin-session',
-        domain: 'localhost',
-        path: '/',
-        httpOnly: true,
-        secure: false,
-      },
-    ]);
-
     // Navigate to admin portal dashboard to establish session
     await page.goto(adminConfig.dashboardUrl);
+    
+    // Wait for Clerk useUser() loading state
+    await page.waitForSelector('[data-testid="dashboard-loaded"]', { state: 'visible' });
     
     // Verify we're authenticated in admin portal
     await expect(page).not.toHaveURL(/.*signin/);
@@ -62,54 +55,33 @@ test.describe('Cross-Site Authentication Communication', () => {
     // Step 3: Return to newtest site and verify authentication is reflected
     await page.goto('http://localhost:3008/newtest/');
     
-    // Wait for the auth status to be checked and updated
-    // The useAdminSession hook should detect the session and update localStorage
-    await page.waitForTimeout(2000); // Give time for session check
+    // Wait for Clerk auth status to be checked and updated across sites
+    await page.waitForTimeout(2000); // Give time for Clerk session sync
     
     // Check if the navbar now shows authenticated state
-    // Look for user dropdown or authenticated user interface
-    const userDropdown = page.locator('.navbar__item.dropdown');
-    const accountButton = page.getByRole('button', { name: /account/i });
+    // Look for user account button or authenticated user interface
+    const accountButton = page.getByRole(selectors.auth.accountButton.role, selectors.auth.accountButton);
     
-    // Either the dropdown should be visible or the login link should be gone
-    const isAuthenticated = await userDropdown.isVisible() || await accountButton.isVisible();
+    // Either the account button should be visible or the login link should be gone
+    const isAuthenticated = await accountButton.isVisible();
     const loginLinkGone = !(await loginLink.isVisible());
     
     expect(isAuthenticated || loginLinkGone).toBeTruthy();
   });
 
   test('should reflect admin logout status in newtest navbar', async ({ page, context }) => {
-    // Step 1: Start with authenticated state
-    await context.addCookies([
-      {
-        name: 'next-auth.session-token',
-        value: 'mock-site-admin-session',
-        domain: 'localhost',
-        path: '/',
-        httpOnly: true,
-        secure: false,
-      },
-    ]);
+    // Step 1: Start with Clerk authenticated state
+    await setupClerkAuth(context, 'admin');
 
-    // Set up localStorage to simulate authenticated state
+    // Navigate to newtest site and verify authenticated state
     await page.goto('http://localhost:3008/newtest/');
-    await page.evaluate(() => {
-      const authStatus = {
-        isAuthenticated: true,
-        username: 'Test Admin',
-        teams: ['site-admin'],
-        keepMeLoggedIn: false,
-        loading: false
-      };
-      localStorage.setItem('authStatus', JSON.stringify(authStatus));
-    });
-
-    // Reload to apply the auth state
-    await page.reload();
-    await page.waitForTimeout(1000);
+    await page.waitForTimeout(2000); // Give time for Clerk session sync
 
     // Step 2: Navigate to admin portal and sign out
     await page.goto(adminConfig.dashboardUrl);
+    
+    // Wait for dashboard to load
+    await page.waitForSelector('[data-testid="dashboard-loaded"]', { state: 'visible' });
     
     // Look for sign out button and click it
     const signOutButton = page.getByRole('button', { name: /sign out/i });
@@ -149,40 +121,27 @@ test.describe('Cross-Site Authentication Communication', () => {
     const loginLink = page.getByRole('link', { name: /editor login/i });
     await expect(loginLink).toBeVisible();
 
-    // Step 2: Open admin portal in new tab and authenticate
+    // Step 2: Open admin portal in new tab and authenticate with Clerk
     const adminPage = await context.newPage();
-    await adminPage.goto(adminConfig.signinUrl);
+    await setupClerkAuth(context, 'admin');
     
-    // Mock authentication
-    await context.addCookies([
-      {
-        name: 'next-auth.session-token',
-        value: 'mock-site-admin-session',
-        domain: 'localhost',
-        path: '/',
-        httpOnly: true,
-        secure: false,
-      },
-    ]);
-
     await adminPage.goto(adminConfig.dashboardUrl);
+    await adminPage.waitForSelector('[data-testid="dashboard-loaded"]', { state: 'visible' });
     await expect(adminPage).not.toHaveURL(/.*signin/);
 
-    // Step 3: Trigger storage event to simulate cross-tab communication
+    // Step 3: Trigger Clerk session sync across tabs
     await adminPage.evaluate(() => {
-      const authStatus = {
-        isAuthenticated: true,
-        username: 'Test Admin',
-        teams: ['site-admin'],
-        keepMeLoggedIn: false,
-        loading: false
-      };
-      localStorage.setItem('authStatus', JSON.stringify(authStatus));
-      
-      // Dispatch storage event for cross-tab communication
-      window.dispatchEvent(new StorageEvent('storage', {
-        key: 'authStatus',
-        newValue: JSON.stringify(authStatus)
+      // Clerk handles cross-tab synchronization automatically
+      // Simulate Clerk's cross-tab communication by dispatching custom event
+      window.dispatchEvent(new CustomEvent('clerk:session-updated', {
+        detail: {
+          isAuthenticated: true,
+          user: {
+            firstName: 'Test',
+            lastName: 'Admin',
+            emailAddresses: [{ emailAddress: 'admin@example.com' }]
+          }
+        }
       }));
     });
 
@@ -195,10 +154,9 @@ test.describe('Cross-Site Authentication Communication', () => {
     await page.waitForTimeout(1000);
 
     // Check if authentication state is updated
-    const userDropdown = page.locator('.navbar__item.dropdown');
-    const accountButton = page.getByRole('button', { name: /account/i });
+    const accountButton = page.getByRole(selectors.auth.accountButton.role, selectors.auth.accountButton);
     
-    const isAuthenticated = await userDropdown.isVisible() || await accountButton.isVisible();
+    const isAuthenticated = await accountButton.isVisible();
     const loginLinkGone = !(await loginLink.isVisible());
     
     expect(isAuthenticated || loginLinkGone).toBeTruthy();
@@ -208,19 +166,11 @@ test.describe('Cross-Site Authentication Communication', () => {
   });
 
   test('should maintain authentication state across page reloads', async ({ page, context }) => {
-    // Step 1: Authenticate in admin portal
-    await context.addCookies([
-      {
-        name: 'next-auth.session-token',
-        value: 'mock-site-admin-session',
-        domain: 'localhost',
-        path: '/',
-        httpOnly: true,
-        secure: false,
-      },
-    ]);
+    // Step 1: Authenticate with Clerk
+    await setupClerkAuth(context, 'admin');
 
     await page.goto(adminConfig.dashboardUrl);
+    await page.waitForSelector('[data-testid="dashboard-loaded"]', { state: 'visible' });
     await expect(page).not.toHaveURL(/.*signin/);
 
     // Step 2: Navigate to newtest and wait for auth state to be established
@@ -233,28 +183,28 @@ test.describe('Cross-Site Authentication Communication', () => {
 
     // Step 4: Verify authentication state is maintained
     const loginLink = page.getByRole('link', { name: /editor login/i });
-    const userDropdown = page.locator('.navbar__item.dropdown');
-    const accountButton = page.getByRole('button', { name: /account/i });
+    const accountButton = page.getByRole(selectors.auth.accountButton.role, selectors.auth.accountButton);
     
     // Should either show authenticated UI or not show login link
-    const isAuthenticated = await userDropdown.isVisible() || await accountButton.isVisible();
+    const isAuthenticated = await accountButton.isVisible();
     const loginLinkGone = !(await loginLink.isVisible());
     
     expect(isAuthenticated || loginLinkGone).toBeTruthy();
   });
 
   test('should handle authentication errors gracefully', async ({ page, context }) => {
-    // Step 1: Set up invalid/expired session
-    await context.addCookies([
-      {
-        name: 'next-auth.session-token',
-        value: 'invalid-expired-session',
-        domain: 'localhost',
-        path: '/',
-        httpOnly: true,
-        secure: false,
-      },
-    ]);
+    // Step 1: Set up Clerk with cleared/invalid session state
+    await clearClerkAuth(context);
+    
+    // Simulate an expired Clerk session by clearing auth state
+    await context.addInitScript(() => {
+      // Clear Clerk session data to simulate expired state
+      Object.keys(localStorage).forEach(key => {
+        if (key.startsWith('__clerk') || key.includes('clerk')) {
+          localStorage.removeItem(key);
+        }
+      });
+    });
 
     // Step 2: Navigate to newtest site
     await page.goto('http://localhost:3008/newtest/');
