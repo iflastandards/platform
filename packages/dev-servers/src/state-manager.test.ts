@@ -1,20 +1,9 @@
 import { describe, it, expect, beforeEach, afterEach, vi, MockedFunction } from 'vitest';
-import { readFileSync, writeFileSync, existsSync } from 'fs';
-import { tmpdir } from 'os';
-import { join } from 'path';
-import {
-  readServerState,
-  writeServerState,
-  clearServerState,
-  updateServerState,
-  checkModeCompatibility,
-  getStateFilePath
-} from './state-manager';
 import type { ServerStateFile, ServerInfo, ServerMode } from './types';
 
-// Mock fs functions 
+// Mock fs functions completely to avoid real file system access
 vi.mock('fs', async (importOriginal) => {
-  const actual = await importOriginal<typeof import('fs')>();
+  const actual = await importOriginal();
   return {
     ...actual,
     readFileSync: vi.fn(),
@@ -23,30 +12,48 @@ vi.mock('fs', async (importOriginal) => {
   };
 });
 
-// Mock os.tmpdir
+// Mock os.tmpdir to return consistent path
 vi.mock('os', async (importOriginal) => {
-  const actual = await importOriginal<typeof import('os')>();
+  const actual = await importOriginal();
   return {
     ...actual,
     tmpdir: vi.fn(() => '/tmp')
   };
 });
 
-// Mock process.kill - will be overridden in specific tests
-const mockProcessKill = vi.spyOn(process, 'kill');
-mockProcessKill.mockImplementation(() => true);
+// Import after mocking to ensure mocks are applied
+import {
+  readServerState,
+  writeServerState,
+  clearServerState,
+  updateServerState,
+  checkModeCompatibility,
+  getStateFilePath
+} from './state-manager';
 
+import { readFileSync, writeFileSync, existsSync } from 'fs';
+
+// Get mocked versions
 const mockReadFileSync = readFileSync as MockedFunction<typeof readFileSync>;
 const mockWriteFileSync = writeFileSync as MockedFunction<typeof writeFileSync>;
 const mockExistsSync = existsSync as MockedFunction<typeof existsSync>;
 
+// Mock process.kill - will be overridden in specific tests
+const mockProcessKill = vi.spyOn(process, 'kill');
+mockProcessKill.mockImplementation(() => true);
+
 describe('state-manager', () => {
   beforeEach(() => {
     vi.clearAllMocks();
+    // Reset all mocks to their default implementations
+    mockExistsSync.mockReturnValue(false);
+    mockReadFileSync.mockReturnValue('');
+    mockWriteFileSync.mockImplementation(() => {});
+    mockProcessKill.mockImplementation(() => true);
   });
 
   afterEach(() => {
-    vi.restoreAllMocks();
+    vi.clearAllMocks();
   });
 
   describe('getStateFilePath', () => {

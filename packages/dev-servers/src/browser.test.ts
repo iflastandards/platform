@@ -1,18 +1,26 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { detectBrowser, launchBrowser } from './browser';
 
+// Mock child_process to simulate Chrome not being found (safer for tests)
 vi.mock('child_process', async (importOriginal) => {
   const actual = await importOriginal();
-  const mockSpawn = vi.fn().mockImplementation(() => ({
-    on: vi.fn((event, callback) => {
-      if (event === 'spawn') {
-        setTimeout(() => callback(), 10);
-      }
-    }),
-    unref: vi.fn(),
-    kill: vi.fn(),
-    pid: 12345
-  }));
+  const mockSpawn = vi.fn().mockImplementation(() => {
+    const mockProcess = {
+      on: vi.fn((event, callback) => {
+        if (event === 'error') {
+          // Simulate Chrome not found error to prevent real browser launches
+          setTimeout(() => callback(new Error('spawn ENOENT')), 10);
+        } else if (event === 'exit') {
+          // Simulate failure exit code
+          setTimeout(() => callback(1), 20);
+        }
+      }),
+      unref: vi.fn(),
+      kill: vi.fn(),
+      pid: undefined // No PID when process fails to start
+    };
+    return mockProcess;
+  });
   
   return {
     ...actual,
@@ -54,9 +62,11 @@ describe('Browser Override Selection', () => {
   describe('launchBrowser', () => {
     it('should attempt to launch Chrome when specified', async () => {
       const result = await launchBrowser('chrome', { url: 'http://example.com' });
-      // Chrome might be available on the system (like macOS) or not
-      expect(['launched', 'failed']).toContain(result.status);
-    }, 10000);
+      // With our mock, Chrome should not be found (safer for tests)
+      expect(result.success).toBe(false);
+      expect(result.error).toContain('Chrome/Chromium not found');
+      expect(result.fallback).toBeDefined();
+    }, 1000);
 
     it('should return error if unsupported browser is specified', async () => {
       const result = await launchBrowser('unsupported' as any, { url: 'http://example.com' });
