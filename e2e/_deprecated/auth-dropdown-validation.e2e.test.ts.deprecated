@@ -1,0 +1,236 @@
+// DEPRECATED: This test file has been moved out of the active test suite
+// Reason: The authentication interface has changed from a dropdown-based system
+// to Clerk-based authentication. The following selectors no longer exist:
+// - selectors.auth.editorLoginLink
+// - The "Editor Login" link concept
+// - The dropdown menu authentication pattern
+//
+// Date deprecated: 2025-07-29
+// Original location: e2e/admin/auth-dropdown-validation.e2e.test.ts
+
+import { test, expect } from '@playwright/test';
+import { getAdminPortalConfig } from '../../packages/theme/src/config/siteConfig';
+import { setupClerkAuth, clearClerkAuth } from '../utils/clerk-auth-helpers';
+import selectors from '../selectors';
+
+test.describe('Authentication Dropdown URL Validation (Clerk)', () => {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  let adminConfig: any;
+  
+  test.beforeAll(async () => {
+    // Get admin portal configuration for local environment
+    adminConfig = getAdminPortalConfig('local');
+  });
+
+  test.beforeEach(async ({ page }) => {
+    // Clear any existing Clerk sessions and localStorage
+    await clearClerkAuth(page.context());
+    await page.goto('http://localhost:3008/newtest/');
+    await page.evaluate(() => {
+      localStorage.clear();
+      sessionStorage.clear();
+    });
+  });
+
+  test('should have correct "Editor Login" URL when not authenticated', async ({ page }) => {
+    await page.goto('http://localhost:3008/newtest/');
+    
+    // Wait for page to load
+    await expect(page.getByText('New Test Site')).toBeVisible();
+    
+    // Check that the login link uses correct environment-aware URL
+const loginLink = page.getByRole(selectors.auth.editorLoginLink.role, selectors.auth.editorLoginLink);
+    await expect(loginLink).toBeVisible();
+    await expect(loginLink).toHaveAttribute('href', adminConfig.signinUrl);
+    
+    // Ensure it's NOT using hardcoded placeholder URLs
+    await expect(loginLink).not.toHaveAttribute('href', 'https://your-next-app.com/login');
+    await expect(loginLink).not.toHaveAttribute('href', 'http://localhost:3007/signin'); // Missing /auth prefix
+    await expect(loginLink).not.toHaveAttribute('href', 'http://localhost:3001/auth/signin'); // Wrong port
+  });
+
+  test('should have correct "Manage" URL when authenticated as admin', async ({ page, context }) => {
+    // Set up Clerk authentication with admin role
+    await setupClerkAuth(context, 'admin');
+
+    // Navigate to newtest site 
+    await page.goto('http://localhost:3008/newtest/');
+    
+    // Wait for Clerk auth status to sync
+    await page.waitForTimeout(2000);
+    
+    // Force reload to ensure auth state is loaded
+    await page.reload();
+    await page.waitForLoadState('networkidle');
+    
+    // Open user dropdown
+    const userButton = page.getByRole(selectors.auth.accountButton.role, selectors.auth.accountButton);
+    await expect(userButton).toBeVisible({ timeout: 10000 });
+    await userButton.click();
+    
+    // Check the Manage link URL in dropdown
+    const manageLink = page.getByRole(selectors.auth.manageMenuItem.role, selectors.auth.manageMenuItem);
+    await expect(manageLink).toBeVisible();
+    
+    // Get the href attribute
+    const href = await manageLink.getAttribute('href');
+    expect(href).toBeTruthy();
+    
+    // Check that it uses the correct admin portal URL
+    expect(href).toBe(adminConfig.homeUrl); // Should be admin portal home
+    
+    // Ensure it's NOT using hardcoded URLs
+    expect(href).not.toBe('https://your-next-app.com/manage');
+    expect(href).not.toBe('http://localhost:3007/manage'); // Wrong path
+    expect(href).not.toBe('http://localhost:3001/dashboard'); // Wrong port
+  });
+
+  test('should have correct "Logout" URL when authenticated', async ({ page, context }) => {
+    // Set up Clerk authentication
+    await setupClerkAuth(context, 'admin');
+
+    // Navigate to newtest site
+    await page.goto('http://localhost:3008/newtest/');
+    
+    // Wait for auth status to sync
+    await page.waitForTimeout(2000);
+    
+    // Force reload
+    await page.reload();
+    await page.waitForLoadState('networkidle');
+    
+    // Open user dropdown
+    const userButton = page.getByRole(selectors.auth.accountButton.role, selectors.auth.accountButton);
+    await expect(userButton).toBeVisible({ timeout: 10000 });
+    await userButton.click();
+    
+    // Check the Logout link
+    const logoutLink = page.getByRole(selectors.auth.logoutMenuItem.role, selectors.auth.logoutMenuItem);
+    await expect(logoutLink).toBeVisible();
+    
+    // Get the href attribute
+    const href = await logoutLink.getAttribute('href');
+    expect(href).toBeTruthy();
+    
+    // Check that it uses the correct logout URL
+    expect(href).toBe(adminConfig.signoutUrl); // Should be admin portal signout
+    
+    // Ensure it's NOT using hardcoded URLs
+    expect(href).not.toBe('https://your-next-app.com/logout');
+    expect(href).not.toBe('/logout'); // Relative path
+  });
+
+  test('should test "Keep me logged in" checkbox functionality', async ({ page, context }) => {
+    // Navigate to newtest site
+    await page.goto('http://localhost:3008/newtest/');
+    
+    // Click on Editor Login link
+    const loginLink = page.getByRole(selectors.auth.editorLoginLink.role, selectors.auth.editorLoginLink);
+    await expect(loginLink).toBeVisible();
+    await loginLink.click();
+    
+    // Should redirect to admin portal sign-in page
+    await expect(page).toHaveURL(adminConfig.signinUrl);
+    
+    // Wait for sign-in page to load
+    await expect(page.getByText(selectors.auth.signInHeading)).toBeVisible();
+    
+    // Check for "Keep me logged in" checkbox
+    const keepLoggedInCheckbox = page.locator(selectors.auth.keepLoggedInCheckbox);
+    await expect(keepLoggedInCheckbox).toBeVisible();
+    
+    // Should be unchecked by default
+    await expect(keepLoggedInCheckbox).not.toBeChecked();
+    
+    // Click the checkbox
+    await keepLoggedInCheckbox.click();
+    await expect(keepLoggedInCheckbox).toBeChecked();
+    
+    // Click again to uncheck
+    await keepLoggedInCheckbox.click();
+    await expect(keepLoggedInCheckbox).not.toBeChecked();
+  });
+
+  test('should persist "Keep me logged in" state across page reloads', async ({ page, context }) => {
+    // Navigate to admin sign-in page
+    await page.goto(adminConfig.signinUrl);
+    
+    // Wait for sign-in page to load
+    await expect(page.getByText(selectors.auth.signInHeading)).toBeVisible();
+    
+    // Check the "Keep me logged in" checkbox
+    const keepLoggedInCheckbox = page.locator(selectors.auth.keepLoggedInCheckbox);
+    await expect(keepLoggedInCheckbox).toBeVisible();
+    await keepLoggedInCheckbox.click();
+    await expect(keepLoggedInCheckbox).toBeChecked();
+    
+    // Reload the page
+    await page.reload();
+    
+    // Wait for page to load
+    await expect(page.getByText(selectors.auth.signInHeading)).toBeVisible();
+    
+    // Checkbox should still be checked
+    await expect(keepLoggedInCheckbox).toBeChecked();
+    
+    // Uncheck it
+    await keepLoggedInCheckbox.click();
+    await expect(keepLoggedInCheckbox).not.toBeChecked();
+    
+    // Reload again
+    await page.reload();
+    
+    // Should be unchecked
+    await expect(keepLoggedInCheckbox).not.toBeChecked();
+  });
+
+  test('should show "Manage" link only for admin roles', async ({ page, context }) => {
+    // Test with non-admin role (editor)
+    await setupClerkAuth(context, 'editor');
+    
+    await page.goto('http://localhost:3008/newtest/');
+    await page.waitForTimeout(2000);
+    await page.reload();
+    await page.waitForLoadState('networkidle');
+    
+    // Open user dropdown
+    const userButton = page.getByRole(selectors.auth.accountButton.role, selectors.auth.accountButton);
+    await expect(userButton).toBeVisible({ timeout: 10000 });
+    await userButton.click();
+    
+    // Manage link should NOT be visible for editor role
+    const manageLink = page.getByRole(selectors.auth.manageMenuItem.role, selectors.auth.manageMenuItem);
+    await expect(manageLink).not.toBeVisible();
+    
+    // Clear auth and test with admin role
+    await clearClerkAuth(context);
+    await setupClerkAuth(context, 'admin');
+    
+    await page.reload();
+    await page.waitForLoadState('networkidle');
+    
+    // Open user dropdown again
+    await userButton.click();
+    
+    // Manage link should be visible for admin role
+    await expect(manageLink).toBeVisible();
+  });
+
+  test('should handle authentication URL errors gracefully', async ({ page }) => {
+    // Navigate to a URL that should require authentication
+    await page.goto('http://localhost:3008/newtest/admin-only-page');
+    
+    // Should show appropriate error or redirect to login
+    // This would depend on how the app handles auth errors
+    
+    // Example expectations (adjust based on actual behavior):
+    // - Either redirected to sign-in page
+    // - Or shows an access denied message
+    
+    const currentUrl = page.url();
+    const isSignInPage = currentUrl.includes(adminConfig.signinUrl);
+    const hasAccessDenied = await page.getByText(/access denied|unauthorized/i).isVisible().catch(() => false);
+    
+    expect(isSignInPage || hasAccessDenied).toBeTruthy();
+  });
+});

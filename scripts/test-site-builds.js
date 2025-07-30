@@ -229,10 +229,10 @@ function buildSite(siteKey) {
     }
 
     // Check for incorrect URLs
-    if (env !== 'localhost' && sitemapContent.includes('localhost')) {
+    if (env !== 'local' && sitemapContent.includes('localhost')) {
       return { 
         success: false, 
-        error: 'Sitemap contains localhost URLs in non-localhost build' 
+        error: 'Sitemap contains localhost URLs in non-local build' 
       };
     }
   }

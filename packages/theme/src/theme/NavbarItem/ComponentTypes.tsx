@@ -1,4 +1,3 @@
-import AuthDropdownNavbarItem from './AuthDropdownNavbarItem';
 import DefaultNavbarItem from '@theme/NavbarItem/DefaultNavbarItem';
 import DropdownNavbarItem from '@theme/NavbarItem/DropdownNavbarItem';
 import LocaleDropdownNavbarItem from '@theme/NavbarItem/LocaleDropdownNavbarItem';
@@ -21,8 +20,6 @@ const ComponentTypes: ComponentTypesObject = {
   docSidebar: DocSidebarNavbarItem,
   docsVersion: DocsVersionNavbarItem,
   docsVersionDropdown: DocsVersionDropdownNavbarItem,
-  // Add our custom AuthStatus type
-  'custom-authDropdown': AuthDropdownNavbarItem,
 };
 
 export default ComponentTypes;

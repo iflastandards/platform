@@ -1,16 +1,16 @@
 # Executive Summary - IFLA Standards Platform System Design
 
-**Version:** 2.0  
+**Version:** 3.0  
 **Date:** January 2025  
 **Status:** Consolidated Architecture Documentation
 
 ## Overview
 
-This executive summary provides a high-level overview of the IFLA Standards Platform's system design, consolidating insights from extensive documentation analysis and architectural evolution from 2024-2025.
+This executive summary provides a high-level overview of the IFLA Standards Platform's system design, consolidating insights from extensive documentation analysis and architectural evolution from 2024-2025. The platform now implements a GitHub Projects-centric organizational model and Nx-optimized testing strategy for enhanced collaboration and quality assurance.
 
 ## Platform Vision
 
-The IFLA Standards Platform is a modern, Git-centric system for managing international library standards. It provides a collaborative environment for creating, reviewing, publishing, and maintaining vocabularies and metadata standards used by libraries worldwide.
+The IFLA Standards Platform is a modern, Git-centric system for managing international library standards. It provides a collaborative environment for creating, reviewing, publishing, and maintaining vocabularies and metadata standards used by libraries worldwide. The platform enables focused, project-based collaboration through Review Groups and chartered Teams, similar to W3C working group models.
 
 ## Key Architectural Decisions
 
@@ -38,10 +38,10 @@ The IFLA Standards Platform is a modern, Git-centric system for managing interna
 - **Previous**: 36+ environment files
 - **Impact**: Eliminated cross-contamination, improved maintainability
 
-### 5. **Five-Phase Testing Strategy**
-- **Decision**: Progressive testing from development to production
-- **Phases**: Selective → Pre-commit → Pre-push → Comprehensive → CI
-- **Impact**: 95% issues caught locally, minimal CI costs
+### 5. **Nx-Optimized Testing Strategy**
+- **Decision**: Tag-based, environment-specific testing with Nx affected
+- **Categories**: @smoke, @integration, @e2e with targeted execution
+- **Impact**: 70% reduction in test time, improved reliability, minimal CI costs
 
 ## Technology Stack Summary
 
@@ -53,8 +53,8 @@ The IFLA Standards Platform is a modern, Git-centric system for managing interna
 
 ### Backend
 - **API Layer**: Vercel Edge Functions
-- **Authentication**: Clerk + NextAuth.js 5.0
-- **Authorization**: Cerbos Policy Engine
+- **Authentication**: Clerk (replacing NextAuth.js)
+- **Authorization**: Clerk + Cerbos Policy Engine
 - **Database**: Supabase (PostgreSQL)
 
 ### Development
@@ -90,22 +90,27 @@ The IFLA Standards Platform is a modern, Git-centric system for managing interna
 ## Workflow Overview
 
 ### Standards Development Lifecycle
-1. **Namespace Initialization**: Setup and configuration
-2. **Element Set Development**: Define properties and classes
-3. **Concept Scheme Development**: Create controlled vocabularies
-4. **Internal Review**: Team validation
-5. **Public Review**: Community feedback
-6. **Finalization**: Official publication
-7. **Translation**: Multilingual versions
-8. **Maintenance**: Ongoing updates
+1. **Project Charter**: Review Group creates Project with scope
+2. **Team Formation**: Assemble experts with specific roles
+3. **Namespace Assignment**: Grant Project access to namespaces
+4. **Development**: Teams work through GitHub Projects boards
+5. **Review Cycles**: Internal team and public reviews
+6. **Deliverables**: Complete Project milestones
+7. **Publication**: Release official versions
+8. **Maintenance**: Long-term Projects for ongoing work
 
-### Role-Based Access
-- **Superadmin**: Global platform authority
-- **Review Group Admin**: Namespace creation/deletion
-- **Namespace Admin**: Full namespace control
-- **Namespace Editor**: Content CRUD
-- **Namespace Translator**: Language-specific edits
-- **Namespace Reviewer**: Review and feedback
+### Organizational Structure
+- **Review Groups**: Perpetual governance bodies (ISBD, BCM, ICP, PUC)
+- **Projects**: Time-bounded initiatives with deliverables
+- **Teams**: Role-based groups working on Projects
+- **Members**: Internal and external contributors
+
+### Role-Based Access (Project Context)
+- **Review Group Admin**: Charter Projects, create Teams
+- **Editor**: Primary content creation rights
+- **Reviewer/Author**: Review and contribution rights
+- **Translator**: Translation and localization rights
+- **External Contributor**: Project-specific access without IFLA membership
 
 ## Recent Architectural Evolution
 
@@ -115,10 +120,11 @@ The IFLA Standards Platform is a modern, Git-centric system for managing interna
 - **Result**: 90% reduction in configuration complexity
 
 ### January 2025 Enhancements
-- **OMR25 Integration**: Advanced vocabulary management
-- **Testing Optimization**: Nx-powered selective testing
+- **Projects Architecture**: GitHub Projects-based collaboration model
+- **Clerk Migration**: Unified authentication replacing NextAuth.js
+- **Nx Testing Strategy**: Tag-based, atomic test execution
 - **Admin Portal**: basePath architecture for flexible deployment
-- **Performance**: Sub-5 minute builds with caching
+- **Performance**: Sub-5 minute builds with parallelization
 
 ## Performance Achievements
 
@@ -133,19 +139,21 @@ The IFLA Standards Platform is a modern, Git-centric system for managing interna
 - **Static Assets**: CDN-distributed
 
 ### Test Performance
-- **Unit Tests**: <5 seconds per file
-- **Pre-commit Suite**: <60 seconds
-- **Full Test Suite**: <300 seconds
+- **Unit Tests**: <60s for affected projects
+- **Integration Tests**: <15min with parallelization
+- **E2E Tests**: <20min for full suite
+- **Smoke Tests**: <5min critical paths only
 
 ## Security Model
 
 ### Authentication
 - **Primary**: Clerk with GitHub OAuth
-- **Session**: NextAuth.js 5.0
-- **Token**: JWT with short expiry
+- **Session**: Clerk session management
+- **Test Users**: Dedicated test accounts for E2E
 
 ### Authorization
-- **Engine**: Cerbos policy-based
+- **Engine**: Clerk + Cerbos policy-based
+- **Context**: Project and Team membership
 - **Granularity**: Resource-level permissions
 - **Audit**: Complete activity logging
 
@@ -197,18 +205,18 @@ The IFLA Standards Platform is a modern, Git-centric system for managing interna
 - **Intangible Benefits**: Enhanced IFLA reputation, increased global participation
 
 ### Strategic Positioning
-- **Industry Leadership**: Modern standards development practices
-- **Global Accessibility**: Reduced barriers for international participation
+- **Industry Leadership**: W3C-inspired working group model
+- **Global Accessibility**: External contributors without membership barriers
 - **Future-Ready**: Scalable architecture for emerging technologies
-- **Community Growth**: Project-based collaboration enables broader engagement
+- **Community Growth**: Project-based collaboration enables focused engagement
 
 ## Future Roadmap
 
 ### Near-term (Q1-Q2 2025)
-- TinaCMS integration for WYSIWYG content editing
-- GitHub Projects for collaborative workflows
-- AI-powered semantic versioning
-- Enhanced search capabilities
+- Complete Projects/Teams/Review Groups rollout
+- Clerk authentication migration completion
+- Nx Cloud distributed test execution
+- AI-powered test generation
 
 ### Long-term (2025-2026)
 - Real-time collaboration features
@@ -225,10 +233,11 @@ The IFLA Standards Platform is a modern, Git-centric system for managing interna
 - **Quality**: >90% test coverage
 
 ### Business KPIs
-- **User Adoption**: >80% within 6 months
+- **Project Success Rate**: >90% deliverables on time
+- **External Contributors**: >30% participation
 - **Time to Publish**: 50% reduction
 - **Global Participation**: 40% non-English contributors
-- **Community Growth**: 25% increase in contributors
+- **Community Growth**: 25% increase via Projects model
 
 ### Operational KPIs
 - **Support Tickets**: 50% reduction

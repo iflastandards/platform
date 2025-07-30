@@ -1,4 +1,5 @@
 import { test, expect } from '@playwright/test';
+import selectors from '../selectors';
 
 test.describe('Site Management Workflow with newtest', () => {
   test.beforeEach(async ({ page, context }) => {
@@ -32,7 +33,7 @@ test.describe('Site Management Workflow with newtest', () => {
       await expect(page).toHaveURL(/localhost:3007.*newtest/);
     } else {
       // Manually navigate to test the admin portal
-      await page.goto('http://localhost:3007/dashboard/newtest');
+      await page.goto(`${selectors.sites.urls.admin}${selectors.dashboard.routes.namespace('newtest')}`);
     }
     
     // Verify we're in the admin portal
@@ -40,7 +41,7 @@ test.describe('Site Management Workflow with newtest', () => {
   });
 
   test('should display site overview information', async ({ page }) => {
-    await page.goto('http://localhost:3007/dashboard/newtest');
+    await page.goto(`${selectors.sites.urls.admin}${selectors.dashboard.routes.namespace('newtest')}`);
     
     // Check overview tab is active by default
     await expect(page.getByRole('tab', { name: 'Overview' })).toHaveAttribute('aria-selected', 'true');
@@ -56,7 +57,7 @@ test.describe('Site Management Workflow with newtest', () => {
   });
 
   test('should navigate between all management tabs', async ({ page }) => {
-    await page.goto('http://localhost:3007/dashboard/newtest');
+    await page.goto(`${selectors.sites.urls.admin}${selectors.dashboard.routes.namespace('newtest')}`);
     
     // Test each tab
     const tabs = ['Overview', 'Content', 'GitHub', 'Build & Deploy', 'Settings'];
@@ -90,7 +91,7 @@ test.describe('Site Management Workflow with newtest', () => {
   });
 
   test('should display GitHub integration information', async ({ page }) => {
-    await page.goto('http://localhost:3007/dashboard/newtest');
+    await page.goto(`${selectors.sites.urls.admin}${selectors.dashboard.routes.namespace('newtest')}`);
     
     // Navigate to GitHub tab
     await page.getByRole('tab', { name: 'GitHub' }).click();
@@ -109,7 +110,7 @@ test.describe('Site Management Workflow with newtest', () => {
   });
 
   test('should show content management options', async ({ page }) => {
-    await page.goto('http://localhost:3007/dashboard/newtest');
+    await page.goto(`${selectors.sites.urls.admin}${selectors.dashboard.routes.namespace('newtest')}`);
     
     // Navigate to Content tab
     await page.getByRole('tab', { name: 'Content' }).click();
@@ -127,7 +128,7 @@ test.describe('Site Management Workflow with newtest', () => {
   });
 
   test('should display build and deployment status', async ({ page }) => {
-    await page.goto('http://localhost:3007/dashboard/newtest');
+    await page.goto(`${selectors.sites.urls.admin}${selectors.dashboard.routes.namespace('newtest')}`);
     
     // Navigate to Build & Deploy tab
     await page.getByRole('tab', { name: 'Build & Deploy' }).click();
@@ -144,7 +145,7 @@ test.describe('Site Management Workflow with newtest', () => {
   });
 
   test('should show site settings configuration', async ({ page }) => {
-    await page.goto('http://localhost:3007/dashboard/newtest');
+    await page.goto(`${selectors.sites.urls.admin}${selectors.dashboard.routes.namespace('newtest')}`);
     
     // Navigate to Settings tab
     await page.getByRole('tab', { name: 'Settings' }).click();
@@ -159,7 +160,7 @@ test.describe('Site Management Workflow with newtest', () => {
 
   test('should handle direct site access workflow', async ({ page }) => {
     // Test the direct site access route
-    await page.goto('http://localhost:3007/site/newtest');
+    await page.goto(`${selectors.sites.urls.admin}/site/newtest`);
     
     // Should redirect to dashboard for authenticated user
     await expect(page).toHaveURL(/.*dashboard\/newtest/);
@@ -167,7 +168,7 @@ test.describe('Site Management Workflow with newtest', () => {
   });
 
   test('should validate live site integration', async ({ page }) => {
-    await page.goto('http://localhost:3007/dashboard/newtest');
+    await page.goto(`${selectors.sites.urls.admin}${selectors.dashboard.routes.namespace('newtest')}`);
     
     // Get the live site link
     const liveSiteLink = page.getByRole('link', { name: /view live site/i });
@@ -190,7 +191,7 @@ test.describe('Site Management Workflow with newtest', () => {
 
   test('should handle error states gracefully', async ({ page }) => {
     // Test navigation to non-existent site
-    await page.goto('http://localhost:3007/dashboard/nonexistent-site');
+    await page.goto(`${selectors.sites.urls.admin}/dashboard/nonexistent-site`);
     
     // Should handle gracefully (either redirect or show error)
     const isErrorPage = await page.getByText(/not found|error|invalid/i).isVisible().catch(() => false);
@@ -199,34 +200,4 @@ test.describe('Site Management Workflow with newtest', () => {
     expect(isErrorPage || isRedirected).toBeTruthy();
   });
 
-  test('should support keyboard navigation', async ({ page }) => {
-    await page.goto('http://localhost:3007/dashboard/newtest');
-    
-    // Test tab navigation
-    await page.keyboard.press('Tab');
-    
-    // Navigate through tabs with arrow keys
-    const overviewTab = page.getByRole('tab', { name: 'Overview' });
-    await overviewTab.focus();
-    
-    // Use arrow key to move to next tab
-    await page.keyboard.press('ArrowRight');
-    
-    // Verify focus moved to next tab
-    const contentTab = page.getByRole('tab', { name: 'Content' });
-    await expect(contentTab).toBeFocused();
-  });
-
-  test('should display proper page metadata', async ({ page }) => {
-    await page.goto('http://localhost:3007/dashboard/newtest');
-    
-    // Check page title
-    await expect(page).toHaveTitle(/New Test Site.*Management/);
-    
-    // Check meta description if present
-    const metaDescription = page.locator('meta[name="description"]');
-    if (await metaDescription.count() > 0) {
-      await expect(metaDescription).toHaveAttribute('content', expect.stringMatching(/management|admin/i));
-    }
-  });
 });

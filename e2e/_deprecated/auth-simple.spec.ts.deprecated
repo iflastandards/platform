@@ -1,10 +1,19 @@
+// DEPRECATED: This test file has been moved out of the active test suite
+// Reason: The authentication interface has changed and these tests are looking
+// for UI elements that no longer exist:
+// - "Editor Login" link (referenced in line 11, 27)
+// - The old authentication flow pattern
+//
+// Date deprecated: 2025-07-29
+// Original location: e2e/admin/auth-simple.spec.ts
+
 import { test, expect } from '@playwright/test';
-import { setupClerkAuth, clearClerkAuth } from '../utils/clerk-auth-helpers';
+import { setupClerkAuth } from '../utils/clerk-auth-helpers';
 import { getAdminPortalConfig } from '../../packages/theme/src/config/siteConfig';
 
 const adminConfig = getAdminPortalConfig('local');
 
-test.describe('Simple Authentication Tests (Clerk)', () => {
+test.describe('Simple Authentication Tests (Clerk)', () => {
   test('Unauthenticated user sees Editor Login link', async ({ page }) => {
     await page.goto('http://localhost:3008/newtest/');
     
@@ -13,7 +22,7 @@ test.describe('Simple Authentication Tests (Clerk)', () => {
     await expect(loginLink).toHaveAttribute('href', adminConfig.signinUrl);
   });
 
-  test('Mock authenticated user with Clerk', async ({ context, page }) => {
+  test('Mock authenticated user with Clerk', async ({ context, page }) => {
     // Set up Clerk authenticated state
     await setupClerkAuth(context, 'reviewer');
     

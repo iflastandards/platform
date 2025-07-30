@@ -1,3 +1,12 @@
+// DEPRECATED: This test file has been moved out of the active test suite
+// Reason: The test is trying to test a function (getEnvironmentName) that doesn't exist
+// - Missing import for getEnvironmentName() function
+// - Comment references "shared-config.old" which doesn't exist in codebase
+// - The function being tested is not defined anywhere
+//
+// Date deprecated: 2025-07-29
+// Original location: e2e/docs-env-validation.spec.ts
+
 import { test, expect } from '@playwright/test';
 
 test.describe('DOCS_ENV Validation Tests', () => {

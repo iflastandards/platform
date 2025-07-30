@@ -1,3 +1,12 @@
+// DEPRECATED: This test file has been moved out of the active test suite
+// Reason: The test expects DOCS_ENV to be plain text but it's actually encrypted
+// - DOCS_ENV in .env file is encrypted (starts with "encrypted:")
+// - Test expects plain values: 'local', 'preview', or 'production'
+// - Test doesn't account for encrypted environment variables
+//
+// Date deprecated: 2025-07-29
+// Original location: e2e/environment-fallback.spec.ts
+
 import { test, expect } from '@playwright/test';
 import * as fs from 'fs';
 import * as path from 'path';

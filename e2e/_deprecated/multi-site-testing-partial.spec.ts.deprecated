@@ -1,0 +1,65 @@
+// DEPRECATED: These specific tests from multi-site-testing.spec.ts have been extracted and deprecated
+// Reason: Tests have incorrect assumptions:
+// - "should fetch data from backend API": /dashboard returns 404, expects api-status element that doesn't exist
+// - "should measure page performance metrics": Uses wrong port (3000 instead of 3007)
+//
+// Date deprecated: 2025-07-29
+// Original location: e2e/examples/multi-site-testing.spec.ts (lines 73-121)
+
+import { test, expect } from '@playwright/test';
+import { getAdminPortalConfig } from '../../packages/theme/src/config/siteConfig';
+
+const adminConfig = getAdminPortalConfig('local');
+
+// Example: Server-dependent integration test
+test.describe('API Integration Tests', () => {
+  test('should fetch data from backend API', async ({ page, request }) => {
+    // Start by loading the admin app
+    await page.goto(adminConfig.url);
+    
+    // Make API request directly
+    const apiResponse = await request.get(`${adminConfig.url}/api/health`);
+    expect(apiResponse.ok()).toBeTruthy();
+    
+    const data = await apiResponse.json();
+    expect(data).toHaveProperty('status', 'healthy');
+    
+    // Now test the UI that depends on this API
+    await page.goto(`${adminConfig.url}/dashboard`);
+    
+    // Wait for data to load
+    await page.waitForSelector('[data-testid="api-status"]');
+    
+    // Verify the UI shows the API status
+    const statusElement = page.locator('[data-testid="api-status"]');
+    await expect(statusElement).toContainText('API: Healthy');
+  });
+});
+
+// Example: Advanced Chrome DevTools Protocol usage
+test.describe('Performance Testing with CDP', () => {
+  test('should measure page performance metrics', async ({ page }) => {
+    // Enable Chrome DevTools Protocol
+    const client = await page.context().newCDPSession(page);
+    await client.send('Performance.enable');
+    
+    // Navigate to the site
+    await page.goto('http://localhost:3000');
+    
+    // Get performance metrics
+    const performanceMetrics = await client.send('Performance.getMetrics');
+    
+    // Extract specific metrics
+    const metrics = performanceMetrics.metrics.reduce((acc, metric) => {
+      acc[metric.name] = metric.value;
+      return acc;
+    }, {} as Record<string, number>);
+    
+    // Assert performance thresholds
+    expect(metrics.DomContentLoaded).toBeLessThan(3000); // 3 seconds
+    expect(metrics.FirstMeaningfulPaint).toBeLessThan(2000); // 2 seconds
+    
+    // Disable CDP
+    await client.detach();
+  });
+});

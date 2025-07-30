@@ -164,6 +164,10 @@ const config: Config = {
               label: 'Portal',
               href: '/',
             },
+            {
+              label: 'Management',
+              href: 'http://localhost:3007/admin/dashboard/newtest',
+            },
           ],
         },
       ],

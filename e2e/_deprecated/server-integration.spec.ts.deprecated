@@ -1,28 +1,26 @@
+// DEPRECATED: This test file has been moved out of the active test suite
+// Reason: Tests are for features that don't exist:
+// - /api/vocabularies endpoint returns 404 - not implemented
+// - /vocabularies page returns 404 - not implemented
+// - /vocabularies/new page returns 404 - not implemented
+// - Expects UI elements like vocabulary-list, vocabulary-card that don't exist
+// - Tests WebSocket functionality that isn't implemented
+//
+// Date deprecated: 2025-07-29
+// Original location: e2e/examples/server-integration.spec.ts
+
 import { test, expect } from '@playwright/test';
-import { addBasePath } from '@ifla/theme/utils';
+import { getAdminPortalConfig } from '../../packages/theme/src/config/siteConfig';
+
+// Get admin portal configuration for local environment
+const adminConfig = getAdminPortalConfig('local');
 
 // Example: Testing admin app with API dependencies
 test.describe('Server-Dependent Integration Tests', () => {
-  // Helper to make authenticated API requests
-  async function authenticatedRequest(page, endpoint: string, options = {}) {
-    // Get auth token from localStorage or cookies
-    const token = await page.evaluate(() => localStorage.getItem('auth-token'));
-    
-    const response = await page.request.fetch(addBasePath(endpoint), {
-      headers: {
-        'Authorization': `Bearer ${token}`,
-        'Content-Type': 'application/json',
-        ...options.headers,
-      },
-      ...options,
-    });
-    
-    return response;
-  }
   
   test.beforeEach(async ({ page }) => {
     // Mock authentication for tests
-    await page.goto('http://localhost:3200/admin');
+    await page.goto(adminConfig.url);
     
     // Set up authentication state
     await page.evaluate(() => {
@@ -38,7 +36,7 @@ test.describe('Server-Dependent Integration Tests', () => {
   test('should load vocabularies from API and display in UI', async ({ page }) => {
     // First, verify the API is working
     const apiResponse = await page.request.get(
-      'http://localhost:3200/admin/api/vocabularies'
+      `${adminConfig.url}/api/vocabularies`
     );
     expect(apiResponse.ok()).toBeTruthy();
     
@@ -46,7 +44,7 @@ test.describe('Server-Dependent Integration Tests', () => {
     expect(Array.isArray(vocabularies)).toBeTruthy();
     
     // Now test the UI that displays this data
-    await page.goto('http://localhost:3200/admin/vocabularies');
+    await page.goto(`${adminConfig.url}/vocabularies`);
     
     // Wait for the vocabularies to load
     await page.waitForSelector('[data-testid="vocabulary-list"]', {
@@ -78,7 +76,7 @@ test.describe('Server-Dependent Integration Tests', () => {
     });
     
     // Navigate to the page
-    await page.goto('http://localhost:3200/admin/vocabularies');
+    await page.goto(`${adminConfig.url}/vocabularies`);
     
     // Should show error message
     await expect(page.locator('[data-testid="error-message"]')).toBeVisible();
@@ -99,7 +97,7 @@ test.describe('Server-Dependent Integration Tests', () => {
   });
   
   test('should create a new vocabulary via API', async ({ page }) => {
-    await page.goto('http://localhost:3200/admin/vocabularies/new');
+    await page.goto(`${adminConfig.url}/vocabularies/new`);
     
     // Fill in the form
     await page.fill('[data-testid="vocabulary-name"]', 'Test Vocabulary');
@@ -131,8 +129,8 @@ test.describe('Server-Dependent Integration Tests', () => {
     const page2 = await context.newPage();
     
     // Navigate both pages to vocabularies
-    await page1.goto('http://localhost:3200/admin/vocabularies');
-    await page2.goto('http://localhost:3200/admin/vocabularies');
+    await page1.goto(`${adminConfig.url}/vocabularies`);
+    await page2.goto(`${adminConfig.url}/vocabularies`);
     
     // Wait for WebSocket connection
     await page1.waitForTimeout(1000);

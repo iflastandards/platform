@@ -1,6 +1,40 @@
 import { BrowserContext } from '@playwright/test';
+import { seedClerkAuth, clearClerkAuth, getAvailableTestUsers, isValidTestUser } from './clerk-auth';
 
-// Function to create a test user with specific roles and attributes
+// Pre-defined test users based on real Clerk test users
+// These correspond to actual users in Clerk's development environment
+export const TEST_USERS = {
+  systemAdmin: {
+    email: 'superadmin+clerk_test@example.com',
+    name: 'Super Admin',
+    role: 'system-admin'
+  },
+  rgAdmin: {
+    email: 'rg_admin+clerk_test@example.com',
+    name: 'Review Group Admin',
+    role: 'rg-admin'
+  },
+  siteEditor: {
+    email: 'editor+clerk_test@example.com',
+    name: 'Editor',
+    role: 'editor'
+  },
+  reviewer: {
+    email: 'author+clerk_test@example.com',
+    name: 'Author/Reviewer',
+    role: 'reviewer'
+  },
+  translator: {
+    email: 'translator+clerk_test@example.com',
+    name: 'Translator',
+    role: 'translator'
+  },
+};
+
+/**
+ * @deprecated Use TEST_USERS instead. This function is kept for backward compatibility.
+ * Real Clerk users are now managed in Clerk's metadata, not through this helper.
+ */
 export function createTestUser(userData: {
   name: string;
   email: string;
@@ -9,6 +43,8 @@ export function createTestUser(userData: {
   sites?: Record<string, string>;
   languages?: string[];
 }) {
+  console.warn('createTestUser is deprecated. Use TEST_USERS with real Clerk test user emails instead.');
+  
   return {
     id: `test-${userData.name.toLowerCase().replace(/\s/g, '-')}-${Date.now()}`,
     name: userData.name,
@@ -23,187 +59,75 @@ export function createTestUser(userData: {
   };
 }
 
-// Pre-defined test users for common scenarios
-export const TEST_USERS = {
-  systemAdmin: createTestUser({
-    name: 'System Admin',
-    email: 'system-admin@test.example.com',
-    roles: ['system-admin'],
-  }),
-  rgAdmin: createTestUser({
-    name: 'ISBD Review Group Admin',
-    email: 'isbd-admin@test.example.com',
-    roles: ['user'],
-    rgs: { ISBD: 'admin' },
-  }),
-  siteEditor: createTestUser({
-    name: 'ISBDM Site Editor',
-    email: 'isbdm-editor@test.example.com',
-    roles: ['user'],
-    sites: { isbdm: 'editor' },
-  }),
-  multiRgTranslator: createTestUser({
-    name: 'Multi-Review Group Translator',
-    email: 'translator@test.example.com',
-    roles: ['user'],
-    rgs: {
-      ISBD: 'translator',
-      BCM: 'translator',
-    },
-    languages: ['en', 'fr', 'es'],
-  }),
-  basicUser: createTestUser({
-    name: 'Basic User',
-    email: 'user@test.example.com',
-    roles: ['user'],
-  }),
-};
-
 /**
- * Mock NextAuth session by setting up session cookies and intercepting API calls
+ * Setup Clerk authentication for testing.
+ * This authenticates with real Clerk test users instead of mocking.
+ * 
+ * @param context - The browser context to authenticate
+ * @param userTypeOrEmail - Either a user type key from TEST_USERS or a Clerk test user email
  */
 export async function setupMockAuth(
-  context: BrowserContext,
-  user: ReturnType<typeof createTestUser>
+  context: BrowserContext, 
+  userTypeOrEmail: keyof typeof TEST_USERS | string
 ) {
-  const mockSession = {
-    user,
-    expires: new Date(Date.now() + 24 * 60 * 60 * 1000).toISOString(), // 24 hours from now
-  };
-
-  // Mock the NextAuth session API endpoint
-  await context.route('**/api/auth/session', async (route) => {
-    await route.fulfill({
-      status: 200,
-      contentType: 'application/json',
-      body: JSON.stringify(mockSession),
-    });
-  });
-
-  // Set session cookie
-  const sessionToken = `eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.${Buffer.from(JSON.stringify({
-    sub: user.id,
-    email: user.email,
-    name: user.name,
-    roles: user.roles,
-    attributes: user.attributes,
-    iat: Math.floor(Date.now() / 1000),
-    exp: Math.floor(Date.now() / 1000) + 24 * 60 * 60,
-  })).toString('base64')}.mock-signature`;
-
-  await context.addCookies([
-    {
-      name: 'next-auth.session-token',
-      value: sessionToken,
-      domain: 'localhost',
-      path: '/',
-      httpOnly: true,
-      secure: false,
-      sameSite: 'Lax',
-      expires: Math.floor(Date.now() / 1000) + 24 * 60 * 60,
-    },
-  ]);
-
-  return mockSession;
+  let email: string;
+  
+  // Check if it's a user type key or direct email
+  if (userTypeOrEmail in TEST_USERS) {
+    email = TEST_USERS[userTypeOrEmail as keyof typeof TEST_USERS].email;
+  } else {
+    email = userTypeOrEmail as string;
+  }
+  
+  // Validate the email is a known test user
+  if (!isValidTestUser(email)) {
+    throw new Error(`Invalid test user: ${email}. Available test users: ${Object.keys(TEST_USERS).join(', ')}`);
+  }
+  
+  await seedClerkAuth(context, email);
 }
 
 /**
- * Clear authentication state
+ * Clear Clerk authentication state
  */
 export async function clearAuth(context: BrowserContext) {
-  await context.clearCookies();
-  
-  // Stop mocking session API
-  await context.unroute('**/api/auth/session');
-  await context.unroute('**/api/auth/providers');
-  await context.unroute('**/api/auth/csrf');
+  await clearClerkAuth(context);
+  // No need to unroute NextAuth endpoints since we're using Clerk
 }
 
 /**
- * Setup unauthenticated state (null session)
+ * Setup unauthenticated state by ensuring no Clerk session exists
  */
 export async function setupUnauthenticatedState(context: BrowserContext) {
-  // Mock session API to return null
-  await context.route('**/api/auth/session', async (route) => {
-    await route.fulfill({
-      status: 200,
-      contentType: 'application/json',
-      body: JSON.stringify(null),
-      headers: {
-        'Cache-Control': 'no-cache',
-        'Content-Type': 'application/json',
-      },
+  // Clear any existing Clerk authentication
+  await clearClerkAuth(context);
+  
+  // Clear any cookies that might indicate authentication
+  await context.clearCookies();
+  
+  // Ensure Clerk shows the user as unauthenticated
+  await context.addInitScript(() => {
+    // Clear any Clerk session data
+    Object.keys(localStorage).forEach(key => {
+      if (key.startsWith('__clerk') || key.includes('clerk')) {
+        localStorage.removeItem(key);
+      }
     });
-  });
-
-  // Mock providers endpoint
-  await context.route('**/api/auth/providers', async (route) => {
-    await route.fulfill({
-      status: 200,
-      contentType: 'application/json',
-      body: JSON.stringify({
-        github: {
-          id: 'github',
-          name: 'GitHub',
-          type: 'oauth',
-          signinUrl: 'http://localhost:3007/api/auth/signin/github',
-          callbackUrl: 'http://localhost:3007/api/auth/callback/github',
-        },
-      }),
-    });
-  });
-
-  // Mock the CSRF token endpoint
-  await context.route('**/api/auth/csrf', async (route) => {
-    await route.fulfill({
-      status: 200,
-      contentType: 'application/json',
-      body: JSON.stringify({
-        csrfToken: 'mock-csrf-token'
-      }),
+    
+    Object.keys(sessionStorage).forEach(key => {
+      if (key.startsWith('__clerk') || key.includes('clerk')) {
+        sessionStorage.removeItem(key);
+      }
     });
   });
 }
 
 /**
- * Setup expired session state
+ * Setup expired session state by clearing Clerk authentication
+ * In Clerk, we simulate expired sessions by simply having no valid session
  */
 export async function setupExpiredSession(context: BrowserContext) {
-  // Mock session API to return null (expired)
-  await context.route('**/api/auth/session', async (route) => {
-    await route.fulfill({
-      status: 200,
-      contentType: 'application/json',
-      body: JSON.stringify(null),
-      headers: {
-        'Cache-Control': 'no-cache',
-        'Content-Type': 'application/json',
-      },
-    });
-  });
-
-  // Mock the CSRF token endpoint
-  await context.route('**/api/auth/csrf', async (route) => {
-    await route.fulfill({
-      status: 200,
-      contentType: 'application/json',
-      body: JSON.stringify({
-        csrfToken: 'mock-csrf-token'
-      }),
-    });
-  });
-
-  // Set expired cookie
-  await context.addCookies([
-    {
-      name: 'next-auth.session-token',
-      value: 'expired-token',
-      domain: 'localhost',
-      path: '/',
-      httpOnly: true,
-      secure: false,
-      sameSite: 'Lax',
-      expires: Math.floor(Date.now() / 1000) - 3600, // Expired 1 hour ago
-    },
-  ]);
+  // For Clerk, expired sessions are handled by clearing the session
+  // Clerk will automatically redirect to sign-in when the session is invalid/expired
+  await setupUnauthenticatedState(context);
 }

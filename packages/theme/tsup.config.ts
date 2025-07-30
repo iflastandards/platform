@@ -20,8 +20,6 @@ export default defineConfig({
     'config/siteConfig': 'src/config/siteConfig.ts',
     'theme/NavbarItem/ComponentTypes':
       'src/theme/NavbarItem/ComponentTypes.tsx',
-    'theme/NavbarItem/AuthDropdownNavbarItem':
-      'src/theme/NavbarItem/AuthDropdownNavbarItem.tsx',
   },
   format: ['esm', 'cjs'],
   // Disable built-in DTS generation - use separate tsc build

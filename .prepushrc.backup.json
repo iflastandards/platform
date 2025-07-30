@@ -7,12 +7,12 @@
   "runAdminTests": true,
   "parallelJobs": 3,
   "comment": "Pre-push uses nx affected to only test what changed",
-  "comment2": "Tests run sequentially per site/app to avoid timeouts",
+  "comment2": "Pre-push adds: affected tests, builds, smoke tests, admin tests, e2e",
   "comment3": "All tests run with Chrome headless only for speed",
   "comment4": "E2E auto-triggers when portal/admin affected, or set runE2E: true",
-  "comment5": "Smoke tests disabled by default (enable with runSmokeTests: true)",
+  "comment5": "Smoke tests run when any doc site is affected",
   "comment6": "Admin tests run when admin project is affected",
-  "comment7": "Each site gets its own server to avoid port conflicts",
+  "comment7": "Disable smoke tests by default to speed up pre-push, enable manually if needed",
   "criticalE2EProjects": ["portal", "admin"],
-  "e2eStrategy": "sequential-per-site"
+  "e2eStrategy": "nx-affected"
 }

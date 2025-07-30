@@ -1,27 +1,19 @@
 import React from 'react';
-import Link from '@docusaurus/Link';
-import { useLocation } from '@docusaurus/router';
 import useDocusaurusContext from '@docusaurus/useDocusaurusContext';
+import { getAdminPortalConfig } from '../../config/siteConfig';
 
-interface SiteManagementLinkProps {
+interface FooterManagementLinkProps {
   className?: string;
-  children?: React.ReactNode;
-  style?: 'button' | 'link' | 'navbar';
-  size?: 'sm' | 'md' | 'lg';
 }
 
 /**
- * Component that provides a link to the admin portal for the current site.
- * Automatically detects the current site and creates the appropriate admin URL.
+ * Simple link for Docusaurus site footers pointing to the admin management dashboard.
+ * This replaces the complex SiteManagementLink which has been moved to the admin app.
  */
-export default function SiteManagementLink({ 
-  className = '', 
-  children,
-  style = 'button',
-  size = 'md'
-}: SiteManagementLinkProps) {
+export default function FooterManagementLink({ 
+  className = ''
+}: FooterManagementLinkProps) {
   const { siteConfig } = useDocusaurusContext();
-  const location = useLocation();
   
   // Extract site key from various sources
   const getSiteKey = (): string | null => {
@@ -36,12 +28,13 @@ export default function SiteManagementLink({
     // Map known site titles to keys
     const titleToKey: Record<string, string> = {
       'IFLA Portal': 'portal',
-      'ISBD Manifestation': 'ISBDM', 
-      'Library Reference Model': 'LRM',
-      'FRBR': 'FRBR',
+      'ISBD Manifestation': 'isbdm', // Use lowercase for consistency
+      'Library Reference Model': 'lrm',
+      'FRBR': 'frbr',
       'International Standard Bibliographic Description': 'isbd',
       'Multilingual Dictionary of Cataloguing Terms': 'muldicat',
       'UNIMARC Format': 'unimarc',
+      'New Test Site': 'newtest',
     };
     
     if (titleToKey[title]) {
@@ -53,14 +46,8 @@ export default function SiteManagementLink({
     if (baseUrl && baseUrl !== '/') {
       const pathParts = baseUrl.split('/').filter(Boolean);
       if (pathParts.length > 0) {
-        return pathParts[pathParts.length - 1];
+        return pathParts[pathParts.length - 1].toLowerCase();
       }
-    }
-    
-    // Fallback: try to detect from current pathname
-    const pathParts = location.pathname.split('/').filter(Boolean);
-    if (pathParts.length > 0 && pathParts[0] !== 'docs') {
-      return pathParts[0];
     }
     
     return null;
@@ -70,65 +57,27 @@ export default function SiteManagementLink({
   
   // Don't render if we can't determine the site key
   if (!siteKey) {
-    console.warn('SiteManagementLink: Could not determine site key from siteConfig');
+    console.warn('FooterManagementLink: Could not determine site key from siteConfig');
     return null;
   }
 
-  // Determine admin portal URL (could be configurable via environment)
-  const getAdminPortalUrl = (): string => {
-    // In development, use localhost:3007
-    if (process.env.NODE_ENV === 'development') {
-      return 'http://localhost:3007';
-    }
-    
-    // In production, this would be your deployed admin portal URL
-    // This should be configurable via environment variables
-    return process.env.ADMIN_PORTAL_URL || 'https://admin.iflastandards.info';
-  };
-
-  const adminUrl = `${getAdminPortalUrl()}/dashboard/${siteKey}`;
+  // Use centralized admin portal configuration
+  const adminConfig = getAdminPortalConfig('local'); // For now, always use local in development
+  const adminUrl = `${adminConfig.url}/dashboard/${siteKey}`;
   
-  // Style variants
-  const getClassNames = (): string => {
-    const baseClasses = className;
-    
-    switch (style) {
-      case 'button':
-        const buttonSize = size === 'sm' ? 'button--sm' : size === 'lg' ? 'button--lg' : '';
-        return `button button--primary ${buttonSize} ${baseClasses}`.trim();
-        
-      case 'navbar':
-        return `navbar__item navbar__link site-management-link ${baseClasses}`.trim();
-        
-      case 'link':
-      default:
-        return baseClasses;
-    }
-  };
-
-  const defaultChildren = style === 'navbar' ? 'Manage Site' : 'Site Management';
-
   return (
-    <Link
-      to={adminUrl}
-      className={getClassNames()}
+    <a
+      href={adminUrl}
+      className={`footer__link-item ${className}`.trim()}
       target="_blank"
       rel="noopener noreferrer"
     >
-      {children || defaultChildren}
-    </Link>
+      Management
+    </a>
   );
 }
 
-// Export individual style variants for convenience
-export const SiteManagementButton = (props: Omit<SiteManagementLinkProps, 'style'>) => (
-  <SiteManagementLink {...props} style="button" />
-);
-
-export const SiteManagementNavbarLink = (props: Omit<SiteManagementLinkProps, 'style'>) => (
-  <SiteManagementLink {...props} style="navbar" />
-);
-
-export const SiteManagementTextLink = (props: Omit<SiteManagementLinkProps, 'style'>) => (
-  <SiteManagementLink {...props} style="link" />
-);
+// Keep legacy exports for compatibility, but they now point to FooterManagementLink
+export const SiteManagementButton = FooterManagementLink;
+export const SiteManagementNavbarLink = FooterManagementLink;
+export const SiteManagementTextLink = FooterManagementLink;

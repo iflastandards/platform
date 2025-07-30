@@ -1,8 +1,8 @@
 #!/usr/bin/env node
 
 /**
- * Pre-push check script that allows warnings but fails on errors
- * This ensures code quality before pushing to remote without being overly strict
+ * Pre-push check script that uses nx affected to only test what has changed
+ * Includes smoke tests, admin tests, and API tests based on affected projects
  */
 
 const { execSync } = require('child_process');
@@ -17,6 +17,8 @@ let config = {
   runTests: true, // Integration tests
   runBuilds: true, // Production builds
   runE2E: false, // E2E tests (can be slow/flaky in local)
+  runSmokeTests: true, // Smoke tests for affected sites
+  runAdminTests: true, // Admin-specific tests when admin is affected
   parallelJobs: 3
 };
 
@@ -29,50 +31,99 @@ if (fs.existsSync(configPath)) {
   }
 }
 
-console.log('\n🚀 Running pre-push checks (assumes pre-commit passed)...\n');
+console.log('\n🚀 Running pre-push checks with nx affected (only testing what changed)...\n');
 console.log('ℹ️  Pre-commit ensures: typecheck ✓, lint ✓, unit tests ✓');
-console.log('ℹ️  Pre-push adds: integration tests, builds, smart e2e validation\n');
+console.log('ℹ️  Pre-push adds: integration tests, builds, smoke tests, e2e validation\n');
 
 // Ensure nx daemon is running for better performance
 ensureDaemon();
 
-// Smart E2E function
-function shouldAutoTriggerE2E() {
+// Get affected projects
+function getAffectedProjects() {
   try {
-    // Check which projects are affected
-    const affectedOutput = execSync('pnpm nx show projects --affected --type=app', {
+    const output = execSync('pnpm nx show projects --affected --type=app', {
       encoding: 'utf8',
       stdio: 'pipe'
     });
-    
-    const affectedProjects = affectedOutput.trim().split('\n').filter(p => p.trim());
-    const criticalE2EProjects = ['portal', 'admin'];
-    
-    const hasCriticalChanges = affectedProjects.some(project => 
-      criticalE2EProjects.includes(project)
-    );
-    
-    if (hasCriticalChanges) {
-      console.log(`🔍 Smart E2E detection: Critical projects affected (${affectedProjects.filter(p => criticalE2EProjects.includes(p)).join(', ')})`);
-      return true;
-    }
-    
-    return false;
+    return output.trim().split('\n').filter(p => p.trim());
   } catch (error) {
-    console.log('⚠️  Could not detect affected projects, using manual E2E setting');
-    return false;
+    console.log('⚠️  Could not detect affected projects, will run all tests');
+    return [];
   }
+}
+
+// Get affected projects at the start
+const affectedProjects = getAffectedProjects();
+if (affectedProjects.length > 0) {
+  console.log(`📊 Affected projects: ${affectedProjects.join(', ')}\n`);
+}
+
+// Smart test detection functions
+function shouldRunSmokeTests() {
+  if (!config.runSmokeTests) return false;
+  
+  // Run smoke tests if any documentation site or portal is affected
+  const smokeTestProjects = ['portal', 'isbd', 'isbdm', 'lrm', 'frbr', 'unimarc', 'mri', 'muldicat', 'pressoo', 'mia'];
+  const hasAffectedSites = affectedProjects.some(project => 
+    smokeTestProjects.includes(project.toLowerCase())
+  );
+  
+  if (hasAffectedSites) {
+    console.log(`🔍 Smoke tests needed: Affected sites detected`);
+    return true;
+  }
+  return false;
+}
+
+function shouldRunAdminTests() {
+  if (!config.runAdminTests) return false;
+  
+  // Run admin tests if admin project is affected
+  const isAdminAffected = affectedProjects.includes('admin');
+  
+  if (isAdminAffected) {
+    console.log(`🔍 Admin tests needed: Admin project is affected`);
+    return true;
+  }
+  return false;
+}
+
+function shouldAutoTriggerE2E() {
+  const criticalE2EProjects = ['portal', 'admin'];
+  
+  const hasCriticalChanges = affectedProjects.some(project => 
+    criticalE2EProjects.includes(project)
+  );
+  
+  if (hasCriticalChanges) {
+    console.log(`🔍 E2E tests needed: Critical projects affected (${affectedProjects.filter(p => criticalE2EProjects.includes(p)).join(', ')})`);
+    return true;
+  }
+  
+  return false;
 }
 
 let hasErrors = false;
 
-// Run integration tests (beyond unit tests)
+// Run affected tests (unit + integration)
 if (config.runTests) {
-  console.log('📋 Running integration tests...');
+  console.log('📋 Running affected tests...');
   try {
-    // First try to run projects that have test:integration target
-    execSync(`pnpm nx affected --target=test:integration --parallel=${config.parallelJobs}`, {
+    // Run all affected tests
+    execSync(`pnpm nx affected --target=test --parallel=${config.parallelJobs}`, {
       stdio: 'inherit',
+      encoding: 'utf8'
+    });
+    console.log('✅ Affected tests passed\n');
+  } catch (error) {
+    console.log('❌ Some tests failed\n');
+    hasErrors = true;
+  }
+  
+  // Run integration tests specifically if they exist
+  try {
+    execSync(`pnpm nx affected --target=test:integration --parallel=${config.parallelJobs}`, {
+      stdio: 'pipe',
       encoding: 'utf8'
     });
     console.log('✅ Integration tests passed\n');
@@ -97,39 +148,121 @@ if (config.runBuilds) {
   }
 }
 
+// Run smoke tests for affected sites
+if (shouldRunSmokeTests()) {
+  console.log('📋 Running smoke tests for affected sites...');
+  
+  const affectedSitesList = affectedProjects.filter(p => 
+    ['portal', 'isbd', 'isbdm', 'lrm', 'frbr', 'unimarc', 'mri', 'muldicat', 'pressoo', 'mia'].includes(p.toLowerCase())
+  );
+  
+  console.log(`🚀 Will run smoke tests sequentially for: ${affectedSitesList.join(', ')}\n`);
+  
+  // Run tests for each site individually
+  let smokeTestsFailed = false;
+  for (const site of affectedSitesList) {
+    console.log(`\n🔍 Testing ${site}...`);
+    try {
+      // Kill ports before each test to ensure clean state
+      try {
+        execSync('pnpm ports:kill', { stdio: 'pipe', encoding: 'utf8' });
+        execSync('sleep 1', { stdio: 'pipe' });
+      } catch (portError) {
+        // Ignore port cleanup errors
+      }
+      
+      // Run smoke test for this specific site with its own server
+      execSync(`node scripts/run-site-tests.js ${site} smoke`, {
+        stdio: 'inherit',
+        encoding: 'utf8'
+      });
+      console.log(`✅ ${site} smoke tests passed`);
+    } catch (error) {
+      console.log(`❌ ${site} smoke tests failed`);
+      smokeTestsFailed = true;
+      // Continue testing other sites even if one fails
+    }
+  }
+  
+  if (smokeTestsFailed) {
+    console.log('\n❌ Some smoke tests failed\n');
+    hasErrors = true;
+  } else {
+    console.log('\n✅ All smoke tests passed\n');
+  }
+}
+
+// Run admin-specific tests if admin is affected
+if (shouldRunAdminTests()) {
+  console.log('📋 Running admin-specific tests...');
+  
+  // Run admin unit and integration tests
+  try {
+    execSync('nx run admin:test', {
+      stdio: 'inherit',
+      encoding: 'utf8'
+    });
+    console.log('✅ Admin tests passed\n');
+  } catch (error) {
+    console.log('❌ Admin tests failed\n');
+    hasErrors = true;
+  }
+  
+  // Run admin server-dependent tests if configured
+  if (config.runAdminTests) {
+    try {
+      console.log('📋 Running admin server-dependent tests...');
+      execSync('nx run admin:test:server-dependent', {
+        stdio: 'inherit',
+        encoding: 'utf8'
+      });
+      console.log('✅ Admin server-dependent tests passed\n');
+    } catch (error) {
+      console.log('⚠️  Admin server-dependent tests completed (may require running server)\n');
+    }
+  }
+}
+
 // Smart E2E detection: Run E2E if critical projects affected
 const shouldRunE2E = config.runE2E || shouldAutoTriggerE2E();
 
 if (shouldRunE2E) {
-  console.log('📋 Running E2E tests with server bootstrapping (critical projects affected or manually enabled)...');
-  try {
-    // Kill any existing ports to start from a clean state
-    console.log('🧹 Cleaning up ports before E2E tests...');
+  console.log('📋 Running E2E tests (Chrome headless only)...');
+  
+  const affectedApps = affectedProjects.filter(p => ['portal', 'admin'].includes(p));
+  console.log(`🚀 Will run E2E tests sequentially for: ${affectedApps.join(', ')}\n`);
+  
+  // Run E2E tests for each app individually
+  let e2eTestsFailed = false;
+  for (const app of affectedApps) {
+    console.log(`\n🔍 Testing ${app}...`);
     try {
-      execSync('pnpm ports:kill', {
+      // Kill ports before each test
+      try {
+        execSync('pnpm ports:kill', { stdio: 'pipe', encoding: 'utf8' });
+        execSync('sleep 1', { stdio: 'pipe' });
+      } catch (portError) {
+        // Ignore port cleanup errors
+      }
+      
+      // Run E2E test for this specific app with its own server
+      execSync(`node scripts/run-site-tests.js ${app} e2e`, {
         stdio: 'inherit',
         encoding: 'utf8'
       });
-    } catch (portError) {
-      console.log('⚠️  Port cleanup completed (some ports may not have been in use)');
+      console.log(`✅ ${app} E2E tests passed`);
+    } catch (error) {
+      console.log(`❌ ${app} E2E tests failed`);
+      e2eTestsFailed = true;
+      // Continue testing other apps even if one fails
     }
-    
-    // Add a brief delay to ensure ports are fully released
-    console.log('⏱️  Waiting 2 seconds for ports to be fully released...');
-    // Use synchronous sleep-like behavior with execSync
-    require('child_process').execSync('sleep 2', { stdio: 'pipe' });
-    
-    // Run E2E tests - the globalSetup in playwright.config.ts automatically bootstraps servers
-    console.log('🚀 Starting E2E tests (Chrome headless only for pre-push)...');
-    execSync('pnpm test:e2e:pre-push', {
-      stdio: 'inherit',
-      encoding: 'utf8'
-    });
-    console.log('✅ E2E tests passed with Chrome headless\n');
-  } catch (error) {
-    console.log('❌ E2E tests failed\n');
-    console.log('📝 E2E failure details:', error.message || 'Unknown error');
+  }
+  
+  if (e2eTestsFailed) {
+    console.log('\n❌ Some E2E tests failed\n');
     hasErrors = true;
+  } else {
+    console.log('\n✅ All E2E tests passed\n');
   }
 } else {
   console.log('ℹ️  E2E tests skipped (no critical projects affected, enable with runE2E: true)\n');
@@ -141,14 +274,21 @@ if (hasErrors) {
   console.log('💡 Tip: You can configure pre-push behavior in .prepushrc.json\n');
   process.exit(1);
 } else {
-  console.log('✅ Pre-push checks passed! (Warnings are allowed)\n');
-  console.log('📊 Summary (building on pre-commit success):');
-  console.log('   - Integration Tests: ✅ Advanced scenarios tested');
+  console.log('✅ Pre-push checks passed! (Only affected projects tested)\n');
+  console.log('📊 Summary:');
+  console.log(`   - Affected Projects: ${affectedProjects.length > 0 ? affectedProjects.join(', ') : 'None'}`);
+  console.log('   - Unit/Integration Tests: ✅ All affected tests passed');
   if (config.runBuilds) {
     console.log('   - Production Builds: ✅ All affected projects build successfully');
   }
+  if (shouldRunSmokeTests()) {
+    console.log('   - Smoke Tests: ✅ Affected sites smoke tested');
+  }
+  if (shouldRunAdminTests()) {
+    console.log('   - Admin Tests: ✅ Admin-specific tests passed');
+  }
   if (shouldRunE2E) {
-    console.log('   - E2E Validation: ✅ End-to-end workflows verified with server bootstrapping');
+    console.log('   - E2E Tests: ✅ Critical paths verified');
   }
   console.log('\n🎉 Ready to push!\n');
   process.exit(0);

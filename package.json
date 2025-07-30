@@ -191,13 +191,18 @@
     "test:comprehensive:e2e": "nx run platform:e2e && nx run-many --target=e2e --all",
     "test:comprehensive:unit": "nx run-many --target=test --all --parallel=3",
     "test:coverage": "pnpm test --coverage",
-    "test:e2e": "nx run platform:e2e",
+    "test:e2e": "node scripts/e2e-site-oriented.js",
+    "test:e2e:legacy": "nx run platform:e2e",
     "test:e2e:pre-push": "nx run platform:e2e:pre-push",
     "test:e2e:affected": "nx affected --target=e2e",
-    "test:e2e:all": "nx run-many --target=e2e --all",
+    "test:e2e:all": "node scripts/e2e-site-oriented.js --all",
+    "test:e2e:all:legacy": "nx run-many --target=e2e --all",
+    "test:e2e:admin": "node scripts/e2e-site-oriented.js --site admin",
+    "test:e2e:portal": "nx run portal:e2e",
+    "test:e2e:chrome": "node scripts/e2e-site-oriented.js --browser chromium",
+    "test:e2e:firefox": "node scripts/e2e-site-oriented.js --browser firefox",
     "test:e2e:isbdm": "nx run isbdm:e2e",
     "test:e2e:lrm": "nx run lrm:e2e",
-    "test:e2e:portal": "nx run portal:e2e",
     "test:e2e:sharded": "SHARD_CURRENT=1 SHARD_TOTAL=4 npx nx playwright:e2e",
     "test:e2e:ui": "nx run platform:e2e:ui",
     "test:explain-strategy": "node scripts/explain-testing-strategy.js",
@@ -481,7 +486,7 @@
   "engines": {
     "node": ">=18.0"
   },
-  "packageManager": "pnpm@10.12.4+sha512.5ea8b0deed94ed68691c9bad4c955492705c5eeb8a87ef86bc62c74a26b037b08ff9570f108b2e4dbd1dd1a9186fea925e527f141c648e85af45631074680184",
+  "packageManager": "pnpm@10.13.1+sha512.37ebf1a5c7a30d5fabe0c5df44ee8da4c965ca0c5af3dbab28c3a1681b70a256218d05c81c9c0dcf767ef6b8551eb5b960042b9ed4300c59242336377e01cfad",
   "lint-staged": {
     "**/*.{js,jsx,ts,tsx}": [
       "eslint --quiet --fix"

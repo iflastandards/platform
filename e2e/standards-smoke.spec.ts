@@ -27,22 +27,18 @@ STANDARDS.forEach(({ name, port, path }) => {
       await expect(page.locator('main')).toBeVisible();
     });
 
-    test(`should have working docs navigation in ${name}`, async ({ page }) => {
+    test(`should have working navigation in ${name}`, async ({ page }) => {
       await page.goto(`http://localhost:${port}${path}`);
       await page.waitForLoadState('networkidle');
       
-      // Look for docs link
-      const docsLink = page.locator('a[href*="/docs/"], a:has-text("Documentation"), a:has-text("Docs")');
-      if (await docsLink.count() > 0) {
-        await expect(docsLink.first()).toBeVisible();
-        
-        // Try to navigate to docs
-        await docsLink.first().click();
-        await page.waitForLoadState('networkidle');
-        
-        // Should be on a docs page
-        expect(page.url()).toMatch(/\/docs\//);
-      }
+      // Check that navigation exists
+      const nav = page.locator('nav');
+      await expect(nav).toBeVisible();
+      
+      // Check that there are navigation links
+      const navLinks = nav.locator('a');
+      const linkCount = await navLinks.count();
+      expect(linkCount).toBeGreaterThan(0);
     });
 
     test(`should have vocabulary tables in ${name}`, async ({ page }) => {

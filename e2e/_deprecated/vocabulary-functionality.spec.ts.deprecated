@@ -1,3 +1,12 @@
+// DEPRECATED: This test file has been moved out of the active test suite
+// Reason: Test uses incorrect URLs and assumptions:
+// - Uses port 3001 which is wrong for test environment (ISBDM runs on different port)
+// - Tests specific page that may not exist: /ISBDM/docs/examples/sensory-test-vocabulary/
+// - Depends on vocabulary functionality that may not be implemented
+//
+// Date deprecated: 2025-07-29
+// Original location: e2e/vocabulary-functionality.spec.ts
+
 import { test, expect } from '@playwright/test';
 
 test.describe('Vocabulary Table Functionality', () => {

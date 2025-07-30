@@ -1,4 +1,9 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
+import { getAdminPortalConfig } from '@ifla/theme/config';
+
+// Get admin portal configuration for testing
+const localAdminConfig = getAdminPortalConfig('local');
+const productionAdminConfig = getAdminPortalConfig('production');
 
 // Mock the session API route handler
 const mockSessionHandler = vi.fn();
@@ -167,7 +172,7 @@ describe('Session Management', () => {
       } as Response);
 
       const portalRequest = await fetch(
-        'http://localhost:4200/api/auth/session',
+        `${localAdminConfig.sessionApiUrl}`,
         {
           headers: {
             Origin: 'http://localhost:3000',
@@ -197,7 +202,7 @@ describe('Session Management', () => {
       } as Response);
 
       const response = await fetch(
-        'https://admin.iflastandards.info/api/auth/session',
+        productionAdminConfig.sessionApiUrl,
         {
           headers: {
             Origin: 'https://www.iflastandards.info',
