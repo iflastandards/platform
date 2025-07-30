@@ -43,24 +43,15 @@ export default defineConfig({
   globalSetup: require.resolve('./e2e/playwright/integration-setup'),
   globalTeardown: require.resolve('./e2e/playwright/integration-teardown'),
   
-  // Test across more browser configurations
+  // Default to Chrome only for integration tests
+  // Use playwright.config.browsers.ts for multi-browser testing
   projects: [
     {
       name: 'chromium',
-      use: baseConfig.projects?.[0]?.use || {},
-    },
-    {
-      name: 'firefox',
-      use: baseConfig.projects?.[1]?.use || {},
-    },
-    {
-      name: 'webkit',
-      use: baseConfig.projects?.[2]?.use || {},
-    },
-    // Include mobile for responsive integration tests
-    {
-      name: 'mobile-chrome',
-      use: baseConfig.projects?.[3]?.use || {},
+      use: {
+        ...(baseConfig.projects?.[0]?.use || {}),
+        headless: true,
+      },
     },
   ],
   

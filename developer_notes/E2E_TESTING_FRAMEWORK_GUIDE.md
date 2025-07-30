@@ -92,6 +92,23 @@ pnpm test:e2e:tags @auth
 pnpm test:e2e:tags @rbac
 ```
 
+### Browser Testing
+
+By default, all tests run in headless Chrome for speed and consistency. For comprehensive browser testing:
+
+```bash
+# Run tests in all browsers (Chrome, Firefox, Safari, Edge)
+pnpm test:e2e:browsers
+
+# Run tests in specific browsers
+pnpm test:e2e:firefox
+pnpm test:e2e:safari
+pnpm test:e2e:edge
+
+# Run smoke tests in all browsers
+pnpm test:e2e:smoke:browsers
+```
+
 ### CI-Specific Commands
 
 ```bash

@@ -197,6 +197,18 @@
         "command": "nx affected --target=test:e2e:full"
       }
     },
+    "test:browsers": {
+      "executor": "@nx/playwright:playwright",
+      "options": {
+        "config": "playwright.config.browsers.ts"
+      },
+      "dependsOn": ["build-all"],
+      "inputs": ["e2eInputs", "^buildInputs"],
+      "outputs": [
+        "{workspaceRoot}/tmp/playwright-results/browsers",
+        "{workspaceRoot}/output/playwright-report/browsers"
+      ]
+    },
     "build-all": {
       "executor": "nx:run-commands",
       "options": {

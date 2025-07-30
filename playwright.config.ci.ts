@@ -55,12 +55,13 @@ export default defineConfig({
     },
   },
   
-  // Only run on optimized browsers in CI
+  // Default to Chrome only in CI for speed and consistency
   projects: [
     {
       name: 'chromium',
       use: {
         ...(baseConfig.projects?.[0]?.use || {}),
+        headless: true,
         // CI-optimized Chrome settings
         viewport: { width: 1920, height: 1080 },
         deviceScaleFactor: 1,
@@ -68,11 +69,6 @@ export default defineConfig({
         isMobile: false,
       },
     },
-    // Add Firefox only for critical tests
-    ...(process.env.TEST_TAG === 'critical' ? [{
-      name: 'firefox',
-      use: baseConfig.projects?.[1]?.use || {},
-    }] : []),
   ],
   
   // CI output configuration

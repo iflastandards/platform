@@ -74,27 +74,15 @@ export const baseConfig: PlaywrightTestConfig = {
   /* Output directory for test artifacts */
   outputDir: './tmp/playwright-results',
   
-  /* Shared projects configuration */
+  /* Default project configuration - Chrome only for speed */
   projects: [
     {
       name: 'chromium',
-      use: { ...devices['Desktop Chrome'] },
-    },
-    {
-      name: 'firefox',
-      use: { ...devices['Desktop Firefox'] },
-    },
-    {
-      name: 'webkit',
-      use: { ...devices['Desktop Safari'] },
-    },
-    {
-      name: 'mobile-chrome',
-      use: { ...devices['Pixel 5'] },
-    },
-    {
-      name: 'mobile-safari',
-      use: { ...devices['iPhone 12'] },
+      use: { 
+        ...devices['Desktop Chrome'],
+        // Ensure headless mode
+        headless: true,
+      },
     },
   ],
 };
@@ -118,6 +106,47 @@ export function createEnvironmentConfig(environment: 'local' | 'preview' | 'prod
 }
 
 /**
+ * All browser configurations for comprehensive testing
+ */
+export const allBrowserProjects = [
+  {
+    name: 'chromium',
+    use: { 
+      ...devices['Desktop Chrome'],
+      headless: true,
+    },
+  },
+  {
+    name: 'firefox',
+    use: { 
+      ...devices['Desktop Firefox'],
+      headless: true,
+    },
+  },
+  {
+    name: 'webkit',
+    use: { 
+      ...devices['Desktop Safari'],
+      headless: true,
+    },
+  },
+  {
+    name: 'mobile-chrome',
+    use: { 
+      ...devices['Pixel 5'],
+      headless: true,
+    },
+  },
+  {
+    name: 'mobile-safari',
+    use: { 
+      ...devices['iPhone 12'],
+      headless: true,
+    },
+  },
+];
+
+/**
  * Helper function to create tag-based configurations
  */
 export function createTagConfig(tag: string, options?: any) {
@@ -126,6 +155,17 @@ export function createTagConfig(tag: string, options?: any) {
     ...options,
     grep: new RegExp(`@${tag}`),
     grepInvert: undefined,
+  });
+}
+
+/**
+ * Helper function to create multi-browser configurations
+ */
+export function createMultiBrowserConfig(options?: any) {
+  return defineConfig({
+    ...baseConfig,
+    ...options,
+    projects: allBrowserProjects,
   });
 }
 

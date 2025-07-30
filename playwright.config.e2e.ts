@@ -48,12 +48,14 @@ export default defineConfig({
   globalSetup: require.resolve('./e2e/playwright/global-setup'),
   globalTeardown: require.resolve('./e2e/playwright/global-teardown'),
   
-  // Test across all browser configurations for E2E
+  // Default to Chrome only for E2E tests
+  // Use playwright.config.browsers.ts for comprehensive multi-browser testing
   projects: [
     {
       name: 'chromium',
       use: {
         ...(baseConfig.projects?.[0]?.use || {}),
+        headless: true,
         // E2E specific browser settings
         contextOptions: {
           // Accept downloads
@@ -62,22 +64,6 @@ export default defineConfig({
           recordHar: { path: './tmp/playwright-results/e2e/har/' },
         },
       },
-    },
-    {
-      name: 'firefox',
-      use: baseConfig.projects?.[1]?.use || {},
-    },
-    {
-      name: 'webkit',
-      use: baseConfig.projects?.[2]?.use || {},
-    },
-    {
-      name: 'mobile-chrome',
-      use: baseConfig.projects?.[3]?.use || {},
-    },
-    {
-      name: 'mobile-safari',
-      use: baseConfig.projects?.[4]?.use || {},
     },
   ],
   

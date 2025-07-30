@@ -36,21 +36,18 @@ export default defineConfig({
     actionTimeout: 5 * 1000,
   },
   
-  // Only test on primary browsers for smoke tests
+  // Only test on Chrome for smoke tests (fast feedback)
   projects: [
     {
       name: 'chromium',
       use: { 
         ...(baseConfig.projects?.[0]?.use || {}),
         // Smoke tests specific browser options
+        headless: true,
         launchOptions: {
           args: ['--disable-dev-shm-usage', '--no-sandbox'],
         },
       },
-    },
-    {
-      name: 'firefox',
-      use: baseConfig.projects?.[1]?.use || {},
     },
   ],
   

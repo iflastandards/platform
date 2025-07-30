@@ -84,6 +84,19 @@ pnpm test:ci:standard       # Smoke + Integration
 pnpm test:ci:full           # Everything (slowest)
 ```
 
+## 🌐 Browser Testing
+
+```bash
+# Default: Chrome only (headless)
+pnpm test:e2e:smoke         # Runs in Chrome
+
+# Multi-browser testing
+pnpm test:e2e:browsers      # All browsers (Chrome, Firefox, Safari, Edge)
+pnpm test:e2e:firefox       # Firefox only
+pnpm test:e2e:safari        # Safari only (macOS)
+pnpm test:e2e:edge          # Edge only
+```
+
 ## 🐛 Debugging
 
 ```bash
