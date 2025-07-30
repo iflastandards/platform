@@ -92,6 +92,18 @@
       "{projectRoot}/build/**/*",
       "{projectRoot}/dist/**/*",
       "{workspaceRoot}/playwright.config.*"
+    ],
+    "smokeTestInputs": [
+      "{projectRoot}/e2e/smoke/**/*",
+      "{projectRoot}/**/*.smoke.*",
+      "{workspaceRoot}/playwright.config.smoke.ts",
+      "{workspaceRoot}/playwright.config.base.ts"
+    ],
+    "integrationTestInputs": [
+      "{projectRoot}/e2e/integration/**/*",
+      "{projectRoot}/**/*.integration.*",
+      "{workspaceRoot}/playwright.config.integration.ts",
+      "{workspaceRoot}/playwright.config.base.ts"
     ]
   },
   "targetDefaults": {
@@ -167,6 +179,45 @@
       "outputs": ["{projectRoot}/coverage", "{projectRoot}/test-results"],
       "inputs": ["testInputs", "sharedGlobals"]
     },
+    "test:smoke": {
+      "executor": "@nx/playwright:playwright",
+      "cache": true,
+      "dependsOn": ["build"],
+      "inputs": ["smokeTestInputs", "^buildInputs"],
+      "outputs": [
+        "{workspaceRoot}/tmp/playwright-results/smoke",
+        "{workspaceRoot}/output/playwright-report/smoke"
+      ],
+      "options": {
+        "config": "playwright.config.smoke.ts"
+      }
+    },
+    "test:integration:e2e": {
+      "executor": "@nx/playwright:playwright",
+      "cache": true,
+      "dependsOn": ["build"],
+      "inputs": ["integrationTestInputs", "^buildInputs"],
+      "outputs": [
+        "{workspaceRoot}/tmp/playwright-results/integration",
+        "{workspaceRoot}/output/playwright-report/integration"
+      ],
+      "options": {
+        "config": "playwright.config.integration.ts"
+      }
+    },
+    "test:e2e:full": {
+      "executor": "@nx/playwright:playwright",
+      "cache": true,
+      "dependsOn": ["build"],
+      "inputs": ["e2eInputs", "^buildInputs"],
+      "outputs": [
+        "{workspaceRoot}/tmp/playwright-results/e2e",
+        "{workspaceRoot}/output/playwright-report/e2e"
+      ],
+      "options": {
+        "config": "playwright.config.e2e.ts"
+      }
+    },
     "clean": {
       "cache": false
     },
@@ -225,7 +276,7 @@
   "useInferencePlugins": true,
   "defaultTasksRunnerOptions": {
     "parallel": 8,
-    "cacheableOperations": ["build", "test", "lint", "typecheck", "e2e"],
+    "cacheableOperations": ["build", "test", "lint", "typecheck", "e2e", "test:smoke", "test:integration:e2e", "test:e2e:full"],
     "runtimeCacheInputs": ["node -v", "pnpm --version"],
     "remoteCache": {
       "enabled": true,

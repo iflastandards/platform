@@ -143,6 +143,60 @@
       },
       "dependsOn": ["build-all"]
     },
+    "test:smoke": {
+      "executor": "@nx/playwright:playwright",
+      "options": {
+        "config": "playwright.config.smoke.ts"
+      },
+      "dependsOn": ["build"],
+      "inputs": ["smokeTestInputs", "^buildInputs"],
+      "outputs": [
+        "{workspaceRoot}/tmp/playwright-results/smoke",
+        "{workspaceRoot}/output/playwright-report/smoke"
+      ]
+    },
+    "test:integration:e2e": {
+      "executor": "@nx/playwright:playwright",
+      "options": {
+        "config": "playwright.config.integration.ts"
+      },
+      "dependsOn": ["build"],
+      "inputs": ["integrationTestInputs", "^buildInputs"],
+      "outputs": [
+        "{workspaceRoot}/tmp/playwright-results/integration",
+        "{workspaceRoot}/output/playwright-report/integration"
+      ]
+    },
+    "test:e2e:full": {
+      "executor": "@nx/playwright:playwright",
+      "options": {
+        "config": "playwright.config.e2e.ts"
+      },
+      "dependsOn": ["build-all"],
+      "inputs": ["e2eInputs", "^buildInputs"],
+      "outputs": [
+        "{workspaceRoot}/tmp/playwright-results/e2e",
+        "{workspaceRoot}/output/playwright-report/e2e"
+      ]
+    },
+    "test:smoke:affected": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "nx affected --target=test:smoke"
+      }
+    },
+    "test:integration:affected": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "nx affected --target=test:integration:e2e"
+      }
+    },
+    "test:e2e:affected": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "nx affected --target=test:e2e:full"
+      }
+    },
     "build-all": {
       "executor": "nx:run-commands",
       "options": {
