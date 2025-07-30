@@ -1,4 +1,4 @@
-import { test, expect, Page } from '@playwright/test';
+import { e2eTest, expect, type Page } from '../../utils/tagged-test';
 
 // Helper to mock admin session
 async function mockAdminSession(page: Page, session: any) {
@@ -17,9 +17,9 @@ async function mockAdminSession(page: Page, session: any) {
   }, session);
 }
 
-test.describe('Superadmin Dashboard', () => {
-  test.describe('Access Control', () => {
-    test('redirects unauthenticated users to login', async ({ page }) => {
+e2eTest.describe('Superadmin Dashboard @admin @rbac @critical', () => {
+  e2eTest.describe('Access Control @auth', () => {
+    e2eTest('redirects unauthenticated users to login', async ({ page }) => {
       // Mock no session
       await page.route('**/api/auth/session', async route => {
         await route.fulfill({
@@ -36,7 +36,7 @@ test.describe('Superadmin Dashboard', () => {
       expect(page.url()).toContain('returnUrl=%2Fdashboard');
     });
 
-    test('shows access denied for non-admin users', async ({ page }) => {
+    e2eTest('shows access denied for non-admin users', async ({ page }) => {
       await mockAdminSession(page, {
         isAuthenticated: true,
         username: 'regularuser',
@@ -50,7 +50,7 @@ test.describe('Superadmin Dashboard', () => {
       await expect(page.getByText('System Administration')).not.toBeVisible();
     });
 
-    test('grants access to system-admin users', async ({ page }) => {
+    e2eTest('grants access to system-admin users', async ({ page }) => {
       await mockAdminSession(page, {
         isAuthenticated: true,
         username: 'admin',
@@ -64,7 +64,7 @@ test.describe('Superadmin Dashboard', () => {
       await expect(page.getByText('Welcome, admin')).toBeVisible();
     });
 
-    test('grants access to ifla-admin users', async ({ page }) => {
+    e2eTest('grants access to ifla-admin users', async ({ page }) => {
       await mockAdminSession(page, {
         isAuthenticated: true,
         username: 'iflaadmin',
@@ -78,8 +78,8 @@ test.describe('Superadmin Dashboard', () => {
     });
   });
 
-  test.describe('Site Creation Workflow', () => {
-    test.beforeEach(async ({ page }) => {
+  e2eTest.describe('Site Creation Workflow @admin', () => {
+    e2eTest.beforeEach(async ({ page }) => {
       await mockAdminSession(page, {
         isAuthenticated: true,
         username: 'admin',
@@ -88,7 +88,7 @@ test.describe('Superadmin Dashboard', () => {
       await page.goto('/dashboard');
     });
 
-    test('opens site creation dialog', async ({ page }) => {
+    e2eTest('opens site creation dialog', async ({ page }) => {
       // Click create site button
       await page.getByRole('button', { name: 'Create New Site' }).click();
 
@@ -102,7 +102,7 @@ test.describe('Superadmin Dashboard', () => {
       await expect(page.getByLabel('Tagline')).toBeVisible();
     });
 
-    test('validates required fields', async ({ page }) => {
+    e2eTest('validates required fields @validation', async ({ page }) => {
       await page.getByRole('button', { name: 'Create New Site' }).click();
 
       // Try to submit empty form
@@ -113,7 +113,7 @@ test.describe('Superadmin Dashboard', () => {
       await expect(page.getByText(/Title is required/i)).toBeVisible();
     });
 
-    test('successfully creates a new site', async ({ page }) => {
+    e2eTest('successfully creates a new site', async ({ page }) => {
       // Mock successful API response
       await page.route('**/api/scaffold', async route => {
         await route.fulfill({
@@ -145,7 +145,7 @@ test.describe('Superadmin Dashboard', () => {
       await expect(page.getByRole('dialog')).not.toBeVisible();
     });
 
-    test('handles API errors gracefully', async ({ page }) => {
+    e2eTest('handles API errors gracefully @error-handling', async ({ page }) => {
       // Mock error response
       await page.route('**/api/scaffold', async route => {
         await route.fulfill({
@@ -173,7 +173,7 @@ test.describe('Superadmin Dashboard', () => {
       await expect(page.getByRole('dialog')).toBeVisible();
     });
 
-    test('validates site key format', async ({ page }) => {
+    e2eTest('validates site key format @validation', async ({ page }) => {
       await page.getByRole('button', { name: 'Create New Site' }).click();
 
       // Try invalid site key
@@ -188,8 +188,8 @@ test.describe('Superadmin Dashboard', () => {
     });
   });
 
-  test.describe('Team Management', () => {
-    test.beforeEach(async ({ page }) => {
+  e2eTest.describe('Team Management @teams', () => {
+    e2eTest.beforeEach(async ({ page }) => {
       await mockAdminSession(page, {
         isAuthenticated: true,
         username: 'admin',
@@ -198,7 +198,7 @@ test.describe('Superadmin Dashboard', () => {
       await page.goto('/dashboard');
     });
 
-    test('navigates to team management', async ({ page }) => {
+    e2eTest('navigates to team management', async ({ page }) => {
       await page.getByRole('button', { name: 'Manage GitHub Teams' }).click();
 
       // Should navigate or open team management interface
@@ -206,8 +206,8 @@ test.describe('Superadmin Dashboard', () => {
     });
   });
 
-  test.describe('Dashboard Overview', () => {
-    test.beforeEach(async ({ page }) => {
+  e2eTest.describe('Dashboard Overview @monitoring', () => {
+    e2eTest.beforeEach(async ({ page }) => {
       await mockAdminSession(page, {
         isAuthenticated: true,
         username: 'admin',
@@ -215,7 +215,7 @@ test.describe('Superadmin Dashboard', () => {
       });
     });
 
-    test('displays site statistics', async ({ page }) => {
+    e2eTest('displays site statistics', async ({ page }) => {
       // Mock site statistics API
       await page.route('**/api/stats/sites', async route => {
         await route.fulfill({
@@ -237,7 +237,7 @@ test.describe('Superadmin Dashboard', () => {
       await expect(page.getByText('Draft: 2')).toBeVisible();
     });
 
-    test('shows recent activity', async ({ page }) => {
+    e2eTest('shows recent activity', async ({ page }) => {
       // Mock activity API
       await page.route('**/api/activity/recent', async route => {
         await route.fulfill({
@@ -270,8 +270,8 @@ test.describe('Superadmin Dashboard', () => {
     });
   });
 
-  test.describe('Responsive Design', () => {
-    test('adapts to mobile viewport', async ({ page }) => {
+  e2eTest.describe('Responsive Design @ui', () => {
+    e2eTest('adapts to mobile viewport', async ({ page }) => {
       await mockAdminSession(page, {
         isAuthenticated: true,
         username: 'admin',
@@ -298,7 +298,7 @@ test.describe('Superadmin Dashboard', () => {
       }
     });
 
-    test('maintains functionality on tablet', async ({ page }) => {
+    e2eTest('maintains functionality on tablet', async ({ page }) => {
       await mockAdminSession(page, {
         isAuthenticated: true,
         username: 'admin',

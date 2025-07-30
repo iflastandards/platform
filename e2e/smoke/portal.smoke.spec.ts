@@ -1,7 +1,7 @@
-import { test, expect } from '@playwright/test';
+import { smokeTest, expect } from '../utils/tagged-test';
 
-test.describe('Portal - Smoke Tests', () => {
-  test('should load portal homepage', async ({ page }) => {
+smokeTest.describe('Portal - Smoke Tests @portal @critical', () => {
+  smokeTest('should load portal homepage', async ({ page }) => {
     await page.goto('/');
     
     // Wait for page to load
@@ -17,7 +17,7 @@ test.describe('Portal - Smoke Tests', () => {
     await expect(page.locator('main')).toBeVisible();
   });
 
-  test('should have working navigation to standards', async ({ page }) => {
+  smokeTest('should have working navigation to standards', async ({ page }) => {
     await page.goto('/');
     await page.waitForLoadState('networkidle');
     
@@ -26,7 +26,7 @@ test.describe('Portal - Smoke Tests', () => {
     await expect(standardsLinks.first()).toBeVisible();
   });
 
-  test('should have working search functionality', async ({ page }) => {
+  smokeTest('should have working search functionality', async ({ page }) => {
     await page.goto('/');
     await page.waitForLoadState('networkidle');
     
@@ -37,7 +37,7 @@ test.describe('Portal - Smoke Tests', () => {
     }
   });
 
-  test('should be responsive on mobile', async ({ page }) => {
+  smokeTest('should be responsive on mobile @ui', async ({ page }) => {
     // Set mobile viewport
     await page.setViewportSize({ width: 375, height: 667 });
     await page.goto('/');

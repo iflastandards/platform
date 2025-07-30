@@ -1,33 +1,33 @@
-import { test, expect, Page } from '@playwright/test';
+import { e2eTest, expect, type Page } from '../../utils/tagged-test';
 
 const PAGE_URL = 'http://localhost:3001/ISBDM/docs/examples/sensory-test-vocabulary/';
 
-test.describe('Sensory Test Vocabulary Page - E2E Tests', () => {
+e2eTest.describe('Sensory Test Vocabulary Page - E2E Tests @standards @vocabulary @isbdm', () => {
   let page: Page;
 
-  test.beforeEach(async ({ page: testPage }) => {
+  e2eTest.beforeEach(async ({ page: testPage }) => {
     page = testPage;
     await page.goto(PAGE_URL);
     // Wait for page to fully load
     await page.waitForLoadState('networkidle');
   });
 
-  test.describe('Page Loading and Structure', () => {
-    test('should load the page successfully', async () => {
+  e2eTest.describe('Page Loading and Structure @critical', () => {
+    e2eTest('should load the page successfully', async () => {
       await expect(page).toHaveTitle(/Sensory Specification Test Vocabulary/);
       
       // Check that the main heading is present
       await expect(page.locator('h1')).toContainText('Sensory Specification Test Vocabulary');
     });
 
-    test('should display all three VocabularyTable components', async () => {
+    e2eTest('should display all three VocabularyTable components', async () => {
       // Check for the three main vocabulary tables
       await expect(page.locator('text=Sensory Specification Vocabulary (Test Data)')).toBeVisible();
       await expect(page.locator('text=Sensory Terms (Custom Display)')).toBeVisible();
       await expect(page.locator('text=Sensory Terms Glossary')).toBeVisible();
     });
 
-    test('should show CSV data loading and display vocabulary terms', async () => {
+    e2eTest('should show CSV data loading and display vocabulary terms', async () => {
       // Wait for vocabulary data to load
       await page.waitForSelector('text=aural', { timeout: 10000 });
       
@@ -38,8 +38,8 @@ test.describe('Sensory Test Vocabulary Page - E2E Tests', () => {
     });
   });
 
-  test.describe('Search and Filter Functionality', () => {
-    test('should filter vocabulary terms using search input', async () => {
+  e2eTest.describe('Search and Filter Functionality @search', () => {
+    e2eTest('should filter vocabulary terms using search input', async () => {
       // Wait for data to load first
       await page.waitForSelector('text=aural', { timeout: 10000 });
       
@@ -59,7 +59,7 @@ test.describe('Sensory Test Vocabulary Page - E2E Tests', () => {
       await expect(page.locator('text=gustatory').first()).toBeVisible();
     });
 
-    test('should show no results message for non-existent terms', async () => {
+    e2eTest('should show no results message for non-existent terms', async () => {
       // Wait for data to load
       await page.waitForSelector('text=aural', { timeout: 10000 });
       
@@ -71,8 +71,8 @@ test.describe('Sensory Test Vocabulary Page - E2E Tests', () => {
     });
   });
 
-  test.describe('Language Switching', () => {
-    test('should switch between different languages', async () => {
+  e2eTest.describe('Language Switching @i18n', () => {
+    e2eTest('should switch between different languages', async () => {
       // Wait for data to load
       await page.waitForSelector('text=aural', { timeout: 10000 });
       
@@ -103,7 +103,7 @@ test.describe('Sensory Test Vocabulary Page - E2E Tests', () => {
       }
     });
 
-    test('should display different content for different vocabulary configurations', async () => {
+    e2eTest('should display different content for different vocabulary configurations', async () => {
       // Wait for all tables to load
       await page.waitForSelector('text=aural', { timeout: 10000 });
       
@@ -117,8 +117,8 @@ test.describe('Sensory Test Vocabulary Page - E2E Tests', () => {
     });
   });
 
-  test.describe('Vocabulary Content and Definitions', () => {
-    test('should display definitions for vocabulary terms', async () => {
+  e2eTest.describe('Vocabulary Content and Definitions @content', () => {
+    e2eTest('should display definitions for vocabulary terms', async () => {
       // Wait for data to load
       await page.waitForSelector('text=aural', { timeout: 10000 });
       
@@ -128,7 +128,7 @@ test.describe('Sensory Test Vocabulary Page - E2E Tests', () => {
       await expect(page.locator('text=Content that is intended to be perceived through touch')).toBeVisible();
     });
 
-    test('should show examples for vocabulary terms', async () => {
+    e2eTest('should show examples for vocabulary terms', async () => {
       // Wait for data to load
       await page.waitForSelector('text=aural', { timeout: 10000 });
       
@@ -138,7 +138,7 @@ test.describe('Sensory Test Vocabulary Page - E2E Tests', () => {
       await expect(page.locator('text=Braille books')).toBeVisible();
     });
 
-    test('should display vocabulary URIs when enabled', async () => {
+    e2eTest('should display vocabulary URIs when enabled', async () => {
       // Wait for data to load
       await page.waitForSelector('text=aural', { timeout: 10000 });
       
@@ -147,8 +147,8 @@ test.describe('Sensory Test Vocabulary Page - E2E Tests', () => {
     });
   });
 
-  test.describe('Accessibility Features', () => {
-    test('should have proper heading structure', async () => {
+  e2eTest.describe('Accessibility Features @accessibility', () => {
+    e2eTest('should have proper heading structure', async () => {
       // Check main heading
       const h1 = page.locator('h1');
       await expect(h1).toContainText('Sensory Specification Test Vocabulary');
@@ -159,7 +159,7 @@ test.describe('Sensory Test Vocabulary Page - E2E Tests', () => {
       await expect(page.locator('h2:has-text("Example for Glossary Use")')).toBeVisible();
     });
 
-    test('should have accessible form inputs', async () => {
+    e2eTest('should have accessible form inputs', async () => {
       // Wait for inputs to load
       await page.waitForSelector('input[placeholder*="Filter"]', { timeout: 10000 });
       
@@ -174,7 +174,7 @@ test.describe('Sensory Test Vocabulary Page - E2E Tests', () => {
       }
     });
 
-    test('should support keyboard navigation', async () => {
+    e2eTest('should support keyboard navigation', async () => {
       // Wait for page to load
       await page.waitForSelector('input[placeholder*="Filter"]', { timeout: 10000 });
       
@@ -194,8 +194,8 @@ test.describe('Sensory Test Vocabulary Page - E2E Tests', () => {
     });
   });
 
-  test.describe('Performance and Loading', () => {
-    test('should load CSV data within reasonable time', async () => {
+  e2eTest.describe('Performance and Loading @performance', () => {
+    e2eTest('should load CSV data within reasonable time', async () => {
       const startTime = Date.now();
       
       // Wait for vocabulary data to appear
@@ -205,7 +205,7 @@ test.describe('Sensory Test Vocabulary Page - E2E Tests', () => {
       expect(loadTime).toBeLessThan(5000); // Should load within 5 seconds
     });
 
-    test('should handle multiple simultaneous filters', async () => {
+    e2eTest('should handle multiple simultaneous filters', async () => {
       // Wait for data to load
       await page.waitForSelector('text=aural', { timeout: 10000 });
       
@@ -226,8 +226,8 @@ test.describe('Sensory Test Vocabulary Page - E2E Tests', () => {
     });
   });
 
-  test.describe('Responsive Design', () => {
-    test('should work on mobile viewport', async () => {
+  e2eTest.describe('Responsive Design @ui', () => {
+    e2eTest('should work on mobile viewport', async () => {
       // Set mobile viewport
       await page.setViewportSize({ width: 375, height: 667 });
       
@@ -244,7 +244,7 @@ test.describe('Sensory Test Vocabulary Page - E2E Tests', () => {
       await expect(page.locator('text=gustatory').first()).toBeVisible();
     });
 
-    test('should work on tablet viewport', async () => {
+    e2eTest('should work on tablet viewport', async () => {
       // Set tablet viewport
       await page.setViewportSize({ width: 768, height: 1024 });
       

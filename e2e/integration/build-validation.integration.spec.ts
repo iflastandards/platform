@@ -1,4 +1,4 @@
-import { test, expect } from '@playwright/test';
+import { integrationTest, expect } from '../utils/tagged-test';
 
 /**
  * Post-build validation tests to verify all sites are accessible after deployment.
@@ -61,16 +61,16 @@ const getSiteUrl = (siteName: string, sitePath: string) => {
   }
 };
 
-test.describe('Post-Build Site Validation', () => {
+integrationTest.describe('Post-Build Site Validation @build @validation', () => {
   const env = process.env.DOCS_ENV || 'local';
   
-  test.beforeEach(async ({ page }) => {
+  integrationTest.beforeEach(async ({ page }) => {
     // Set a reasonable timeout for network requests
     page.setDefaultTimeout(30000);
   });
 
   for (const site of SITES) {
-    test(`${site.name} homepage should be accessible (${env})`, async ({ page }) => {
+    integrationTest(`${site.name} homepage should be accessible (${env}) @critical`, async ({ page }) => {
       const siteUrl = getSiteUrl(site.name, site.path);
       
       console.log(`Testing ${site.name} at: ${siteUrl}`);
@@ -118,7 +118,7 @@ test.describe('Post-Build Site Validation', () => {
     });
   }
 
-  test('Portal should list all sites correctly', async ({ page }) => {
+  integrationTest('Portal should list all sites correctly @portal', async ({ page }) => {
     const portalUrl = getSiteUrl('portal', '');
     
     await page.goto(portalUrl, { waitUntil: 'networkidle' });
@@ -141,7 +141,7 @@ test.describe('Post-Build Site Validation', () => {
 
   // Environment-specific tests
   if (env !== 'local') {
-    test('All sites should have HTTPS enabled', async ({ page }) => {
+    integrationTest('All sites should have HTTPS enabled @security', async ({ page }) => {
       for (const site of SITES.slice(0, 3)) { // Test first 3 sites to keep test time reasonable
         const siteUrl = getSiteUrl(site.name, site.path);
         expect(siteUrl).toMatch(/^https:/);
@@ -150,7 +150,7 @@ test.describe('Post-Build Site Validation', () => {
   }
 
   if (env === 'development' || env === 'preview') {
-    test('GitHub Pages deployment should be accessible', async ({ page }) => {
+    integrationTest('GitHub Pages deployment should be accessible @deployment', async ({ page }) => {
       const baseUrl = getBaseUrl();
       
       // Test that the base deployment URL is accessible
@@ -164,12 +164,12 @@ test.describe('Post-Build Site Validation', () => {
   }
 });
 
-test.describe('Cross-Site Navigation', () => {
+integrationTest.describe('Cross-Site Navigation @navigation', () => {
   const env = process.env.DOCS_ENV || 'local';
   
   // Only test navigation in environments where all sites should be available
   if (env !== 'local') {
-    test('Site navigation should work between sites', async ({ page }) => {
+    integrationTest('Site navigation should work between sites', async ({ page }) => {
       // Start at portal
       const portalUrl = getSiteUrl('portal', '');
       await page.goto(portalUrl, { waitUntil: 'networkidle' });
