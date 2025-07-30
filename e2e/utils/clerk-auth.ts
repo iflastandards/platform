@@ -3,41 +3,36 @@ import { addBasePath } from '@ifla/theme/utils';
 
 interface ClerkTestUser {
   email: string;
-  verificationCode: string;
   name: string;
   role: string;
   // Real users that exist in Clerk's development environment
 }
 
-// Real Clerk test users with role-based emails and 424242 verification code
+// Real Clerk test users
+// All test users use email verification code: 424242
 const CLERK_TEST_USERS: ClerkTestUser[] = [
   { 
     email: 'superadmin+clerk_test@example.com', 
-    verificationCode: '424242', 
     name: 'Super Admin',
     role: 'system-admin'
   },
   { 
     email: 'rg_admin+clerk_test@example.com', 
-    verificationCode: '424242', 
     name: 'Review Group Admin',
     role: 'rg-admin'
   },
   { 
     email: 'editor+clerk_test@example.com', 
-    verificationCode: '424242', 
     name: 'Editor',
     role: 'editor'
   },
   { 
     email: 'author+clerk_test@example.com', 
-    verificationCode: '424242', 
     name: 'Author/Reviewer',
     role: 'reviewer'
   },
   { 
     email: 'translator+clerk_test@example.com', 
-    verificationCode: '424242', 
     name: 'Translator',
     role: 'translator'
   },
@@ -45,7 +40,7 @@ const CLERK_TEST_USERS: ClerkTestUser[] = [
 
 /**
  * Authenticate with Clerk using real test users and storage-state seeding.
- * This performs actual Clerk authentication with the 424242 verification code.
+ * Uses email verification code (424242) for all test users.
  */
 export async function seedClerkAuth(context: BrowserContext, email: string) {
   const testUser = CLERK_TEST_USERS.find(u => u.email === email);
@@ -62,21 +57,21 @@ export async function seedClerkAuth(context: BrowserContext, email: string) {
     await page.goto(addBasePath('/sign-in'));
     
     // Wait for Clerk's sign-in form to load
-    await page.waitForSelector('[data-clerk-field="identifier"]', { timeout: 10000 });
+    await page.waitForSelector('input[name="identifier"]', { timeout: 30000 });
     
     // Enter email
-    await page.fill('[data-clerk-field="identifier"]', testUser.email);
-    await page.click('[data-clerk="primaryButton"]');
+    await page.fill('input[name="identifier"]', testUser.email);
+    await page.click('button[type="submit"]');
     
     // Wait for verification code input
-    await page.waitForSelector('[data-clerk-field="code"]', { timeout: 10000 });
+    await page.waitForSelector('input[name="code"]', { timeout: 10000 });
     
     // Enter the verification code (424242)
-    await page.fill('[data-clerk-field="code"]', testUser.verificationCode);
-    await page.click('[data-clerk="primaryButton"]');
+    await page.fill('input[name="code"]', '424242');
+    await page.click('button[type="submit"]');
     
     // Wait for successful authentication (redirect or success indicator)
-    await page.waitForURL('**/dashboard**', { timeout: 15000 });
+    await page.waitForURL('**/dashboard**', { timeout: 30000 });
     
     // Store the authentication state in the context
     await context.storageState({ path: `playwright-state-${testUser.role}.json` });

@@ -13,6 +13,9 @@ export const baseConfig: PlaywrightTestConfig = {
   // Base test directory
   testDir: './e2e',
   
+  // Global setup for authentication
+  globalSetup: require.resolve('./e2e/global-setup'),
+  
   // Shared test configuration
   use: {
     /* Base URL to use in actions like `await page.goto('/')`. */
@@ -76,6 +79,10 @@ export const baseConfig: PlaywrightTestConfig = {
   
   /* Default project configuration - Chrome only for speed */
   projects: [
+    // Setup project runs first
+    { name: 'setup', testMatch: /global.*setup\.ts/ },
+    
+    // Tests that don't require authentication
     {
       name: 'chromium',
       use: { 
@@ -83,6 +90,29 @@ export const baseConfig: PlaywrightTestConfig = {
         // Ensure headless mode
         headless: true,
       },
+      testIgnore: /.*\.auth\.spec\.ts/,
+    },
+    
+    // Authenticated tests with different user roles
+    {
+      name: 'chromium-admin',
+      use: {
+        ...devices['Desktop Chrome'],
+        headless: true,
+        storageState: 'playwright/.auth/admin.json',
+      },
+      dependencies: ['setup'],
+      testMatch: /.*\.auth\.spec\.ts/,
+    },
+    {
+      name: 'chromium-editor',
+      use: {
+        ...devices['Desktop Chrome'],
+        headless: true,
+        storageState: 'playwright/.auth/editor.json',
+      },
+      dependencies: ['setup'],
+      testMatch: /.*\.auth\.spec\.ts/,
     },
   ],
 };

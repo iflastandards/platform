@@ -396,6 +396,7 @@
     "zod": "^4.0.10"
   },
   "devDependencies": {
+    "@clerk/testing": "^1.10.8",
     "@docusaurus/core": "^3.8.1",
     "@docusaurus/eslint-plugin": "^3.8.1",
     "@docusaurus/faster": "^3.8.1",

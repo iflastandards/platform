@@ -56,6 +56,10 @@ coverage/
 .env.nx
 .nxrc
 nx-cloud.env
+
+# Playwright authentication files
+/playwright/.auth/
+playwright-state-*.json
 /.kiro/settings/mcp.json
 /developer_notes/IFLA link
 /e2e/visual-regression-enhanced.spec.ts-snapshots/*

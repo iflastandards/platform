@@ -208,40 +208,61 @@ BASE_URL=https://iflastandards.info nx e2e standards-dev --grep="@smoke"
 ### Global Setup for Test Users
 ```typescript
 // e2e/global-setup.ts
-import { test as setup } from '@playwright/test';
-import { ClerkTestUtils } from './utils/clerk-test-utils';
+import { chromium, FullConfig } from '@playwright/test';
+import { addBasePath } from '@ifla/theme/utils';
 
-setup('authenticate test users', async ({ page }) => {
-  const clerk = new ClerkTestUtils();
+// Pre-configured Clerk test users (verification code: 424242)
+const CLERK_TEST_USERS = [
+  { email: 'superadmin+clerk_test@example.com', role: 'system-admin' },
+  { email: 'rg_admin+clerk_test@example.com', role: 'rg-admin' },
+  { email: 'editor+clerk_test@example.com', role: 'editor' },
+  { email: 'author+clerk_test@example.com', role: 'reviewer' },
+  { email: 'translator+clerk_test@example.com', role: 'translator' }
+];
+
+async function globalSetup(config: FullConfig) {
+  const browser = await chromium.launch();
   
-  // Create or reset test users
-  await clerk.ensureTestUsers([
-    { email: 'admin@test.ifla.org', role: 'admin' },
-    { email: 'editor@test.ifla.org', role: 'editor' },
-    { email: 'reviewer@test.ifla.org', role: 'reviewer' },
-    { email: 'viewer@test.ifla.org', role: 'viewer' }
-  ]);
-  
-  // Store auth states for reuse
-  for (const user of testUsers) {
-    await clerk.authenticateUser(page, user);
-    await page.context().storageState({ 
-      path: `e2e/.auth/${user.role}.json` 
+  // Authenticate each test user
+  for (const user of CLERK_TEST_USERS) {
+    const context = await browser.newContext();
+    const page = await context.newPage();
+    
+    // Navigate to sign-in
+    await page.goto(`${baseURL}${addBasePath('/sign-in')}`);
+    
+    // Enter email
+    await page.fill('input[name="identifier"]', user.email);
+    await page.click('button[type="submit"]');
+    
+    // Enter verification code (424242)
+    await page.fill('input[name="code"]', '424242');
+    await page.click('button[type="submit"]');
+    
+    // Wait for dashboard
+    await page.waitForURL('**/dashboard**');
+    
+    // Save auth state
+    await context.storageState({ 
+      path: `playwright/.auth/${user.role}.json` 
     });
   }
-});
+  
+  await browser.close();
+}
 ```
 
 ### RBAC Test Patterns
 ```typescript
-// e2e/admin/rbac.spec.ts
-import { test, expect } from '@playwright/test';
+// e2e/admin/rbac.auth.spec.ts (uses pre-authenticated state)
+import { e2eTest as test, expect } from '../utils/tagged-test';
 
 test.describe('@integration RBAC Scenarios', () => {
-  test.use({ storageState: 'e2e/.auth/editor.json' });
+  // Tests run with pre-authenticated editor context
+  test.use({ storageState: 'playwright/.auth/editor.json' });
   
   test('editor can modify vocabulary', async ({ page }) => {
-    await page.goto('/admin/vocabularies/isbd');
+    await page.goto('/vocabularies/isbd');
     
     // Use robust selectors
     await page.getByRole('button', { name: 'Edit' }).click();
@@ -253,7 +274,7 @@ test.describe('@integration RBAC Scenarios', () => {
   });
   
   test('editor cannot access system settings', async ({ page }) => {
-    await page.goto('/admin/system/settings');
+    await page.goto('/system/settings');
     await expect(page.getByText('Access Denied')).toBeVisible();
   });
 });
