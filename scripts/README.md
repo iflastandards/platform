@@ -80,3 +80,58 @@ pnpm test:scripts:file scripts/utils/sidebar-reference-extractor.test.ts
 # Run tests in watch mode
 pnpm test:scripts:watch
 ```
+
+## Vocabulary Comparison Tool
+
+The vocabulary comparison script compares Google Sheets SKOS concepts with published RDF vocabularies.
+
+### Usage
+
+```bash
+# Run the comparison tool
+node scripts/vocabulary-comparison.mjs
+```
+
+### Testing
+
+```bash
+# Run vocabulary comparison tests
+pnpm test packages/theme/src/tests/scripts/vocabulary-comparison.test.ts
+```
+
+#### Test Details
+
+- **Test file**: `packages/theme/src/tests/scripts/vocabulary-comparison.test.ts`
+- **Script being tested**: `scripts/vocabulary-comparison.mjs`
+
+#### Key Testing Challenges Solved
+
+1. **Fetch Mocking**
+   - The script uses `globalThis.fetch` which requires special mocking approach
+   - Solution: Use `vi.stubGlobal('fetch', mockFetch)` before importing the module
+
+2. **Constructor API Calls**
+   - The constructor calls `getAvailableSheets()` which makes an API request
+   - Tests must provide a default mock response for all instances
+
+3. **API Response Differences**
+   - `fetchSheetData` returns `data.values || []` not the full response object
+   - Tests must match actual return values, not Google Sheets API structure
+
+#### Test Coverage
+
+The test suite covers 34 test cases across these areas:
+
+1. **Constructor** - Default and custom options initialization
+2. **API Methods** 
+   - `getAvailableSheets()` - Fetching and parsing sheet metadata
+   - `fetchSheetData()` - Fetching sheet content
+3. **Parsing Methods**
+   - `parseColumnHeader()` - Parsing SKOS property headers with language/index
+   - `organizeColumns()` - Grouping columns by property and language
+   - `extractPropertyValues()` - Extracting values with language fallback
+4. **Matching Logic**
+   - `findMatchingSheet()` - Token/title matching with special patterns
+5. **Validation**
+   - `isInstructionRow()` - Identifying non-data rows
+   - `hasValidRdfUri()` - URI validation

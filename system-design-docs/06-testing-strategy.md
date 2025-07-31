@@ -1,12 +1,20 @@
-# Testing Strategy
+# Comprehensive Testing Strategy
 
-**Version:** 3.0  
+**Version:** 4.0  
 **Date:** January 2025  
-**Status:** Current Implementation (Nx-Optimized)
+**Status:** Current Implementation (Nx-Optimized with AI Guidance)
 
 ## Overview
 
-The IFLA Standards Platform employs a comprehensive Nx-optimized testing strategy designed to reduce fragility, accelerate feedback loops, and leverage Nx capabilities for atomic, environment-specific, and parallelized testing. This document details the progressive testing approach, tools, patterns, and quality gates that ensure high-quality software delivery while minimizing CI costs and maintenance overhead.
+The IFLA Standards Platform employs a comprehensive Nx-optimized testing strategy designed to reduce fragility, accelerate feedback loops, and leverage Nx capabilities for atomic, environment-specific, and parallelized testing. This document serves as the authoritative guide for both human developers and AI agents, detailing the progressive testing approach, tools, patterns, and quality gates that ensure high-quality software delivery while minimizing CI costs and maintenance overhead.
+
+### Document Purpose
+- **Primary Audience**: Developers, QA Engineers, DevOps, and AI Agents
+- **Companion Documents**: 
+  - `developer_notes/AI_TESTING_INSTRUCTIONS.md` - AI-specific testing guidance
+  - `developer_notes/TESTING_QUICK_REFERENCE.md` - Concise developer reference
+  - `developer_notes/TEST_PLACEMENT_GUIDE.md` - Test categorization guide
+  - `developer_notes/TEST_TEMPLATES.md` - Ready-to-use test templates
 
 ## Core Testing Principles
 
@@ -36,24 +44,44 @@ The IFLA Standards Platform employs a comprehensive Nx-optimized testing strateg
 
 ## Test Categories and Tags
 
-### Test Tagging System
-```typescript
-// Test tags for selective execution
-type TestTag = '@smoke' | '@integration' | '@e2e' | '@unit' | '@perf' | '@a11y';
+### AI Agent Guidance
+When writing tests, AI agents should:
+1. Use the decision tree in the "Test Placement Guide" section to determine test type
+2. Apply appropriate tags from the tagging system below
+3. Place tests in the correct directory structure
+4. Follow the naming conventions for each test type
+5. Use the provided templates as starting points
 
-// Example tagged test
-test('@smoke Authentication flow', async ({ page }) => {
-  // Critical path test that runs in all environments
-});
+### Comprehensive Tagging System
 
-test('@integration @api GitHub API sync', async ({ page }) => {
-  // Integration test for preview environment
-});
+#### Category Tags (Required - Choose One)
+- `@unit` - Isolated component/function tests
+- `@integration` - Multi-component interaction tests
+- `@e2e` - End-to-end browser automation tests
+- `@smoke` - Critical path validation tests
+- `@env` - Environment/deployment configuration tests
 
-test('@e2e Full vocabulary workflow', async ({ page }) => {
-  // Comprehensive E2E for pre-push only
-});
-```
+#### Functional Tags (Recommended)
+- `@api` - API endpoint tests
+- `@auth` - Authentication/authorization tests
+- `@rbac` - Role-based access control tests
+- `@ui` - UI component tests
+- `@validation` - Data validation tests
+- `@security` - Security-focused tests
+- `@performance` - Performance validation tests
+- `@accessibility` / `@a11y` - Accessibility compliance tests
+
+#### Priority Tags (Optional)
+- `@critical` - Must-pass tests for deployment
+- `@happy-path` - Primary user workflow tests
+- `@error-handling` - Error scenario tests
+- `@edge-case` - Boundary condition tests
+
+#### Environment Tags (As Needed)
+- `@local-only` - Tests that only run locally
+- `@ci-only` - Tests that only run in CI
+- `@preview-only` - Preview environment specific
+- `@production-only` - Production environment specific
 
 ### Tag-Based Execution Strategy
 | Tag | Environment | Frequency | Time Limit | Pass Rate |
@@ -65,84 +93,29 @@ test('@e2e Full vocabulary workflow', async ({ page }) => {
 | @perf | Preview | Weekly | <30min | Baseline |
 | @a11y | All | Pre-merge | <10min | 100% |
 
-## Nx Configuration
+## Test Placement Guide for AI Agents
 
-### Project Structure
-```typescript
-// nx.json configuration
-{
-  "targetDefaults": {
-    "test": {
-      "executor": "@nx/vite:test",
-      "options": {
-        "passWithNoTests": true
-      }
-    },
-    "test:integration": {
-      "executor": "@nx/playwright:playwright",
-      "options": {
-        "config": "playwright.config.ts",
-        "grep": "@integration"
-      }
-    },
-    "e2e": {
-      "executor": "@nx/playwright:playwright",
-      "options": {
-        "config": "playwright.config.ts",
-        "grep": "@e2e"
-      }
-    }
-  },
-  "affected": {
-    "defaultBase": "main"
-  }
-}
+### Decision Tree
 ```
-
-### Playwright Configuration
-```typescript
-// playwright.config.ts - Nx-optimized
-import { defineConfig, devices } from '@playwright/test';
-
-export default defineConfig({
-  testDir: './e2e',
-  fullyParallel: true,
-  forbidOnly: !!process.env.CI,
-  retries: process.env.CI ? 2 : 0,
-  workers: process.env.CI ? '50%' : undefined,
-  reporter: [
-    ['html'],
-    ['json', { outputFile: 'test-results.json' }],
-    ['junit', { outputFile: 'test-results.xml' }],
-    ['@currents/playwright'] // Flaky test detection
-  ],
-  
-  use: {
-    baseURL: process.env.BASE_URL || 'http://localhost:3000',
-    trace: 'on-first-retry',
-    screenshot: 'only-on-failure',
-    video: 'retain-on-failure',
-    
-    // Robust waiting strategies
-    actionTimeout: 10_000,
-    navigationTimeout: 30_000,
-  },
-
-  projects: [
-    {
-      name: 'chromium',
-      use: { ...devices['Desktop Chrome'] },
-    },
-    {
-      name: 'mobile',
-      use: { ...devices['iPhone 13'] },
-      grep: /@mobile/,
-    },
-  ],
-
-  // Global setup for Clerk auth
-  globalSetup: require.resolve('./e2e/global-setup.ts'),
-});
+Start: Need to write a test
+  |
+  ├─ Does it need environment variables or external services?
+  │   └─ YES → Environment Test (@env)
+  │       └─ Place in: tests/deployment/
+  │       └─ Name: env-*.test.ts
+  |
+  ├─ Does it test multiple components working together?
+  │   └─ YES → Integration Test (@integration)
+  │       └─ Place in: tests/integration/ or *.integration.test.ts
+  |
+  ├─ Does it test a complete user workflow in a browser?
+  │   └─ YES → E2E Test (@e2e)
+  │       └─ Place in: e2e/
+  │       └─ Name: *.e2e.test.ts or *.spec.ts
+  |
+  └─ NO to all above → Unit Test (@unit)
+      └─ Place next to source file
+      └─ Name: *.test.ts or *.spec.tsx
 ```
 
 ## Testing Phases
@@ -203,15 +176,167 @@ BASE_URL=https://preview.vercel.app nx e2e standards-dev --grep="@smoke"
 BASE_URL=https://iflastandards.info nx e2e standards-dev --grep="@smoke"
 ```
 
+### Phase 5: CI Environment Tests (Automated)
+**Purpose**: Validate deployment environment  
+**Speed**: <180s  
+**Scope**: Environment variables, external services, API tokens
+
+## AI Agent Testing Guidelines
+
+### What to Test (By Component Type)
+
+#### React Components
+- **Unit Tests**: Rendering, props, state changes, event handlers
+- **Integration Tests**: Component with services, loading states, error states
+- **E2E Tests**: Critical user interactions, form submissions
+
+#### API Routes
+- **Unit Tests**: Request validation, response formatting, error handling
+- **Integration Tests**: Database operations, external service mocks
+- **E2E Tests**: Full request/response cycle, authentication flow
+
+#### Services/Utilities
+- **Unit Tests**: Pure functions, transformations, calculations
+- **Integration Tests**: Service interactions, caching behavior
+
+### How to Write Tests
+
+1. **Start with the test template** from `developer_notes/TEST_TEMPLATES.md`
+2. **Apply appropriate tags** using the tagging system
+3. **Mock external dependencies** in unit tests
+4. **Use test fixtures** for consistent test data
+5. **Follow the "Arrange-Act-Assert" pattern**
+6. **Keep tests focused** - one concept per test
+7. **Use meaningful test descriptions** that explain the expected behavior
+
+### Where to Place Tests
+
+```
+project/
+├── src/
+│   ├── components/
+│   │   ├── Button.tsx
+│   │   ├── Button.test.tsx          (@unit)
+│   │   └── Button.integration.test.tsx (@integration)
+│   ├── services/
+│   │   ├── api.ts
+│   │   └── api.test.ts              (@unit)
+│   └── tests/
+│       ├── integration/             (@integration)
+│       └── deployment/              (@env)
+└── e2e/                             (@e2e)
+    ├── auth.e2e.test.ts
+    └── workflows/
+```
+
+## Nx Configuration
+
+### Project Structure
+```typescript
+// nx.json configuration
+{
+  "targetDefaults": {
+    "test": {
+      "executor": "@nx/vite:test",
+      "options": {
+        "passWithNoTests": true
+      }
+    },
+    "test:integration": {
+      "executor": "@nx/playwright:playwright",
+      "options": {
+        "config": "playwright.config.ts",
+        "grep": "@integration"
+      }
+    },
+    "e2e": {
+      "executor": "@nx/playwright:playwright",
+      "options": {
+        "config": "playwright.config.ts",
+        "grep": "@e2e"
+      }
+    }
+  },
+  "affected": {
+    "defaultBase": "main"
+  }
+}
+```
+
+### Vitest Configuration
+```typescript
+// vitest.config.nx.ts - Primary configuration for Nx projects
+export default defineConfig({
+  test: {
+    globals: true,
+    environment: 'jsdom',
+    setupFiles: ['./src/tests/setup.ts'],
+    exclude: [
+      '**/node_modules/**',
+      '**/*.integration.test.{ts,tsx}',  // Run in pre-push
+      '**/tests/deployment/**',           // Run in CI only
+      '**/e2e/**',                       // Run via Playwright
+      '**/.next/**',                     // Build artifacts
+      '**/.nx/**',                       // Nx cache
+      '**/.docusaurus/**',               // Docusaurus build
+    ],
+    passWithNoTests: true,
+    threads: false,  // Single thread for Nx compatibility
+  }
+});
+```
+
+### Playwright Configuration
+```typescript
+// playwright.config.ts - Nx-optimized
+import { defineConfig, devices } from '@playwright/test';
+
+export default defineConfig({
+  testDir: './e2e',
+  fullyParallel: true,
+  forbidOnly: !!process.env.CI,
+  retries: process.env.CI ? 2 : 0,
+  workers: process.env.CI ? '50%' : undefined,
+  reporter: [
+    ['html'],
+    ['json', { outputFile: 'test-results.json' }],
+    ['junit', { outputFile: 'test-results.xml' }],
+    ['@currents/playwright'] // Flaky test detection
+  ],
+  
+  use: {
+    baseURL: process.env.BASE_URL || 'http://localhost:3000',
+    trace: 'on-first-retry',
+    screenshot: 'only-on-failure',
+    video: 'retain-on-failure',
+    
+    // Robust waiting strategies
+    actionTimeout: 10_000,
+    navigationTimeout: 30_000,
+  },
+
+  projects: [
+    {
+      name: 'chromium',
+      use: { ...devices['Desktop Chrome'] },
+    },
+    {
+      name: 'mobile',
+      use: { ...devices['iPhone 13'] },
+      grep: /@mobile/,
+    },
+  ],
+
+  // Global setup for Clerk auth
+  globalSetup: require.resolve('./e2e/global-setup.ts'),
+});
+```
+
 ## Clerk Authentication Testing
 
-### Global Setup for Test Users
+### Test User Configuration
 ```typescript
-// e2e/global-setup.ts
-import { chromium, FullConfig } from '@playwright/test';
-import { addBasePath } from '@ifla/theme/utils';
-
-// Pre-configured Clerk test users (verification code: 424242)
+// Pre-configured test users with verification code 424242
 const CLERK_TEST_USERS = [
   { email: 'superadmin+clerk_test@example.com', role: 'system-admin' },
   { email: 'rg_admin+clerk_test@example.com', role: 'rg-admin' },
@@ -219,102 +344,21 @@ const CLERK_TEST_USERS = [
   { email: 'author+clerk_test@example.com', role: 'reviewer' },
   { email: 'translator+clerk_test@example.com', role: 'translator' }
 ];
-
-async function globalSetup(config: FullConfig) {
-  const browser = await chromium.launch();
-  
-  // Authenticate each test user
-  for (const user of CLERK_TEST_USERS) {
-    const context = await browser.newContext();
-    const page = await context.newPage();
-    
-    // Navigate to sign-in
-    await page.goto(`${baseURL}${addBasePath('/sign-in')}`);
-    
-    // Enter email
-    await page.fill('input[name="identifier"]', user.email);
-    await page.click('button[type="submit"]');
-    
-    // Enter verification code (424242)
-    await page.fill('input[name="code"]', '424242');
-    await page.click('button[type="submit"]');
-    
-    // Wait for dashboard
-    await page.waitForURL('**/dashboard**');
-    
-    // Save auth state
-    await context.storageState({ 
-      path: `playwright/.auth/${user.role}.json` 
-    });
-  }
-  
-  await browser.close();
-}
 ```
 
-### RBAC Test Patterns
+### RBAC Test Pattern
 ```typescript
-// e2e/admin/rbac.auth.spec.ts (uses pre-authenticated state)
-import { e2eTest as test, expect } from '../utils/tagged-test';
-
+// Example RBAC test with pre-authenticated context
 test.describe('@integration RBAC Scenarios', () => {
-  // Tests run with pre-authenticated editor context
   test.use({ storageState: 'playwright/.auth/editor.json' });
   
   test('editor can modify vocabulary', async ({ page }) => {
     await page.goto('/vocabularies/isbd');
-    
-    // Use robust selectors
     await page.getByRole('button', { name: 'Edit' }).click();
     await page.getByLabel('Term Label').fill('Updated Term');
     await page.getByRole('button', { name: 'Save' }).click();
-    
-    // Verify with auto-waiting
     await expect(page.getByText('Changes saved')).toBeVisible();
   });
-  
-  test('editor cannot access system settings', async ({ page }) => {
-    await page.goto('/system/settings');
-    await expect(page.getByText('Access Denied')).toBeVisible();
-  });
-});
-```
-
-## Robust Selector Strategy
-
-### Selector Priority Order
-1. **Test IDs** for critical elements
-2. **ARIA roles** for semantic elements
-3. **Label text** for form controls
-4. **Visible text** for content
-5. **CSS selectors** as last resort
-
-```typescript
-// Good selector examples
-await page.getByTestId('submit-button').click();
-await page.getByRole('navigation', { name: 'Main' });
-await page.getByLabel('Email Address').fill('test@example.com');
-await page.getByText('Welcome to IFLA Standards');
-
-// Avoid fragile selectors
-// ❌ await page.locator('.btn-primary:nth-child(2)').click();
-// ❌ await page.locator('#app > div > form > button').click();
-```
-
-### Auto-waiting and Retry Patterns
-```typescript
-// Built-in auto-waiting
-await expect(page.getByTestId('loading')).toBeHidden();
-await expect(page.getByRole('alert')).toContainText('Success');
-
-// Custom retry logic for complex scenarios
-await test.step('Wait for data sync', async () => {
-  await expect(async () => {
-    const response = await page.request.get('/api/status');
-    expect(response.status()).toBe(200);
-    const data = await response.json();
-    expect(data.synced).toBe(true);
-  }).toPass({ timeout: 30_000 });
 });
 ```
 
@@ -344,27 +388,6 @@ export const vocabularyFixtures = {
     elements: generateElements(10)
   })
 };
-```
-
-### Database Seeding
-```typescript
-// e2e/utils/db-seed.ts
-export class TestDataManager {
-  async seedForTest(testName: string) {
-    const namespace = `test-${testName}-${Date.now()}`;
-    
-    await this.db.transaction(async (tx) => {
-      await tx.vocabularies.create({ namespace, ...fixture });
-      await tx.audit.log({ action: 'test_seed', namespace });
-    });
-    
-    return { namespace, cleanup: () => this.cleanup(namespace) };
-  }
-  
-  async cleanup(namespace: string) {
-    await this.db.vocabularies.delete({ where: { namespace } });
-  }
-}
 ```
 
 ## CI/CD Integration
@@ -404,109 +427,44 @@ jobs:
         run: |
           BASE_URL=https://iflastandards.info \
           npx nx e2e standards-dev --grep="@smoke"
-
-  nx-agents:
-    if: github.event_name == 'pull_request'
-    runs-on: ubuntu-latest
-    strategy:
-      matrix:
-        agent: [1, 2, 3, 4]
-    steps:
-      - uses: actions/checkout@v4
-      - run: npx nx-cloud start-agent
 ```
 
-### Nx Cloud Configuration
-```json
-{
-  "nxCloudAccessToken": "...",
-  "parallel": 4,
-  "cacheableOperations": ["build", "test", "lint", "e2e"],
-  "distributedExecutionEnabled": true,
-  "agentsConfiguration": {
-    "numberOfAgents": 4,
-    "workloadDistribution": "even"
-  }
-}
-```
+## Test Quality Standards
 
-## Performance Optimization
+### Coverage Requirements
+- **Unit Tests**: 80% statement coverage minimum
+- **Integration Tests**: All API endpoints, critical paths
+- **E2E Tests**: All primary user workflows
+- **Accessibility Tests**: WCAG 2.1 AA compliance
 
-### Test Execution Optimization
-```typescript
-// Parallel test configuration
-export default {
-  projects: [
-    {
-      name: 'unit',
-      testMatch: '**/*.test.ts',
-      maxWorkers: '50%'
-    },
-    {
-      name: 'integration',
-      testMatch: '**/*.integration.test.ts',
-      maxWorkers: 2
-    },
-    {
-      name: 'e2e',
-      testMatch: '**/*.e2e.test.ts',
-      maxWorkers: 1 // Sequential for stability
-    }
-  ]
-};
-```
+### Performance Targets
+- **Unit Tests**: <5 seconds per file
+- **Integration Tests**: <30 seconds per suite
+- **E2E Tests**: <60 seconds per workflow
+- **Total Pre-commit**: <60 seconds
+- **Total Pre-push**: <180 seconds
 
-### Nx Affected Optimization
+## Key Commands for AI Agents
+
 ```bash
-# Configure affected detection
-nx g @nrwl/workspace:move --project portal --implicit-dependencies
-nx affected:graph # Visualize dependencies
+# Run affected tests (most common during development)
+nx affected --target=test --parallel=3
 
-# Optimize test boundaries
-nx g @nrwl/workspace:library-boundary-rules
-```
+# Run specific project tests
+nx test @ifla/theme
+nx test admin --watch  # Watch mode for TDD
 
-## Test Maintenance
+# Run tests by tag
+pnpm test --grep "@unit"
+pnpm test --grep "@critical"
+pnpm test --grep "@auth.*@integration"  # Multiple tags
 
-### Flaky Test Detection
-```typescript
-// playwright.config.ts
-reporter: [
-  ['@currents/playwright', {
-    projectId: 'ifla-standards',
-    recordKey: process.env.CURRENTS_RECORD_KEY,
-    ci: {
-      buildId: process.env.GITHUB_RUN_ID,
-      sha: process.env.GITHUB_SHA
-    }
-  }]
-]
-```
+# Run E2E tests
+npx playwright test --grep "@smoke"
+npx playwright test --project=chromium
 
-### Test Quality Metrics
-```yaml
-Coverage Requirements:
-  unit:
-    statements: 80%
-    branches: 80%
-    functions: 80%
-    lines: 80%
-  
-  integration:
-    api_endpoints: 100%
-    critical_paths: 100%
-    error_scenarios: 90%
-  
-  e2e:
-    user_journeys: 100%
-    rbac_scenarios: 100%
-    responsive_views: 2+
-
-Performance Targets:
-  unit_tests: <60s
-  integration_tests: <15min
-  e2e_tests: <20min
-  smoke_tests: <5min
+# Check test coverage
+nx test @ifla/theme --coverage
 ```
 
 ## Troubleshooting
@@ -542,6 +500,16 @@ Performance Targets:
    const namespace = `test-${test.info().titlePath.join('-')}-${Date.now()}`;
    ```
 
+## References for AI Agents
+
+- **Test Templates**: `/developer_notes/TEST_TEMPLATES.md`
+- **AI Testing Guide**: `/developer_notes/AI_TESTING_INSTRUCTIONS.md`
+- **Test Placement**: `/developer_notes/TEST_PLACEMENT_GUIDE.md`
+- **Nx Configuration**: `/developer_notes/NX_AFFECTED_TEST_OPTIMIZATION.md`
+- **Vitest Setup**: `/developer_notes/VITEST_CONFIGURATION.md`
+- **E2E Framework**: `/developer_notes/E2E_TESTING_FRAMEWORK_GUIDE.md`
+- **Clerk Auth Testing**: `/developer_notes/CLERK_AUTHENTICATION_TESTING.md`
+
 ## Future Enhancements
 
 ### Planned Improvements
@@ -557,4 +525,4 @@ Performance Targets:
 - Q3 2025: Real user monitoring correlation
 - Q4 2025: Predictive test failure analysis
 
-This Nx-optimized testing strategy ensures high-quality software delivery while dramatically reducing test execution time, maintenance overhead, and CI costs through intelligent test selection and parallel execution.
+This comprehensive testing strategy ensures high-quality software delivery while dramatically reducing test execution time, maintenance overhead, and CI costs through intelligent test selection and parallel execution. AI agents should use this document as the authoritative reference for all testing decisions.

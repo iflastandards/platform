@@ -48,6 +48,187 @@ Core component implementation with all the main functionality:
 ### `CSVVocabulary.tsx`
 Simplified wrapper components for CSV-only usage:
 - `CSVVocabulary` - React component wrapper
+
+---
+
+## Testing VocabularyTable
+
+### Unit Testing
+
+```bash
+# Run VocabularyTable tests
+nx test theme
+pnpm test packages/theme/src/tests/components/VocabularyTable/
+```
+
+#### Test Structure
+- **Location**: `packages/theme/src/tests/components/VocabularyTable/`
+- **Framework**: Vitest + React Testing Library
+- **Coverage**: Component rendering, props handling, CSV data loading, user interactions
+
+#### Key Test Patterns
+
+##### Basic Rendering Test
+```typescript
+// Test basic component rendering
+<VocabularyTable 
+  csvFile="/data/CSV/sensory-test.csv"
+  title="Basic Vocabulary Table"
+  showTitle={true}
+/>
+```
+
+##### CSV Data Mocking
+```typescript
+// Mock fetch for consistent test data
+const mockCSVContent = `uri,skos:prefLabel@en,skos:prefLabel@fr,skos:definition@en[0]
+sensoryspec:T1001,aural,auditif,"Content intended for hearing"`;
+
+global.fetch = vi.fn(() =>
+  Promise.resolve({
+    ok: true,
+    text: () => Promise.resolve(mockCSVContent)
+  })
+) as any;
+```
+
+##### Search and Filter Testing
+```typescript
+// Test search functionality
+const searchInput = screen.getByPlaceholderText(/Filter values/i);
+fireEvent.change(searchInput, { target: { value: 'aural' } });
+
+await waitFor(() => {
+  expect(screen.getByText('aural')).toBeInTheDocument();
+  expect(screen.queryByText('gustatory')).not.toBeInTheDocument();
+});
+```
+
+##### Language Switching Testing
+```typescript
+// Test multilingual support
+await waitFor(() => {
+  expect(screen.getByText('aural')).toBeInTheDocument(); // English default
+});
+
+const frenchTab = screen.getByRole('tab', { name: /Français/i });
+fireEvent.click(frenchTab);
+
+await waitFor(() => {
+  expect(screen.getByText('auditif')).toBeInTheDocument(); // French
+});
+```
+
+### Integration Testing in Documentation Sites
+
+When using VocabularyTable in documentation sites (e.g., ISBDM), create integration tests:
+
+```typescript
+// standards/ISBDM/docs/examples/__tests__/sensory-vocabulary-integration.test.tsx
+import React from 'react';
+import { render, screen, waitFor } from '@testing-library/react';
+import VocabularyTable from '@ifla/theme/components/VocabularyTable';
+
+describe('Sensory Vocabulary Integration', () => {
+  it('loads and displays vocabulary data', async () => {
+    render(
+      <VocabularyTable 
+        csvFile="/data/CSV/sensory-test.csv"
+        title="Sensory Test Vocabulary"
+        showTitle={true}
+      />
+    );
+    
+    await waitFor(() => {
+      expect(screen.getByText('aural')).toBeInTheDocument();
+    });
+  });
+});
+```
+
+### E2E Testing
+
+For complete user workflow testing with Playwright:
+
+```bash
+# Run E2E tests
+nx e2e isbdm
+npx playwright test e2e/vocabulary-functionality.spec.ts
+```
+
+#### E2E Test Patterns
+
+##### Page Loading
+```typescript
+test('should load vocabulary page', async ({ page }) => {
+  await page.goto('/docs/examples/sensory-test-vocabulary/');
+  await page.waitForLoadState('networkidle');
+  
+  await expect(page.locator('h1')).toContainText('Sensory Specification');
+  await expect(page.locator('text=aural')).toBeVisible();
+});
+```
+
+##### Interactive Elements
+```typescript
+test('should filter vocabulary terms', async ({ page }) => {
+  const searchInput = page.locator('input[placeholder*="Filter"]').first();
+  await searchInput.fill('aural');
+  
+  await expect(page.locator('text=aural')).toBeVisible();
+  await expect(page.locator('text=gustatory')).not.toBeVisible();
+});
+```
+
+##### Language Interface
+```typescript
+test('should switch between languages', async ({ page }) => {
+  const frenchTab = page.locator('button:has-text("FR")');
+  await frenchTab.click();
+  await expect(page.locator('text=auditif')).toBeVisible();
+});
+```
+
+### Test Data Structure
+
+Expected CSV format for testing:
+```csv
+uri,rdf:type,skos:prefLabel@en,skos:prefLabel@fr,skos:definition@en[0]
+sensoryspec:T1001,skos:Concept,aural,auditif,"Content for hearing"
+```
+
+### Common Test Cases
+
+1. **Basic Rendering**: Component mounts, title displays, data loads
+2. **Search/Filter**: Input works, results filter correctly, no results message
+3. **Multilingual**: Language tabs work, content switches properly
+4. **Error Handling**: Network errors, malformed data, empty states
+5. **Accessibility**: ARIA labels, keyboard navigation, screen reader support
+6. **Performance**: Load times, responsive design, multiple filters
+
+### Debugging Tips
+
+#### Unit Tests
+- Use `screen.debug()` to see rendered HTML
+- Check console for CSV parsing warnings
+- Verify fetch mocks are properly set up
+- Use longer timeouts for async operations
+
+#### E2E Tests
+- Run with `--headed` flag to see browser
+- Use `await page.pause()` to inspect state
+- Check network tab for CSV loading issues
+- Verify correct localhost port
+
+### Best Practices
+
+1. **Always wait for data loading** before testing interactions
+2. **Use specific selectors** rather than generic text matches
+3. **Test error states** as well as happy paths
+4. **Mock external dependencies** (CSV files) for consistent tests
+5. **Test accessibility features** with proper ARIA checks
+6. **Include performance tests** for loading times
+7. **Test responsive design** with different viewport sizes
 - `VocabularyTableFromCSV` - Function-based wrapper
 
 ### `types.ts`

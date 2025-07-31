@@ -395,6 +395,140 @@ integrationTest('login flow @auth @critical', async ({ page }) => {
 
 ---
 
+## Browser Testing Implementation
+
+### Overview
+The framework defaults to Chrome-only testing for speed and consistency, with the ability to run comprehensive multi-browser tests on demand.
+
+### Default Behavior
+- All test configurations default to **headless Chrome only**
+- Benefits:
+  - 3-4x faster test execution
+  - More consistent results
+  - Lower resource usage
+  - Better CI/CD performance
+
+### Multi-Browser Testing Commands
+
+```bash
+# Run all tests in all browsers
+pnpm test:e2e:browsers
+
+# Run smoke tests in all browsers
+pnpm test:e2e:browsers:smoke
+
+# Run in specific browsers
+pnpm test:e2e:firefox
+pnpm test:e2e:safari
+pnpm test:e2e:edge
+```
+
+### Browser Configuration
+The `playwright.config.browsers.ts` includes:
+- **Desktop Chrome** (Windows, macOS, Linux)
+- **Desktop Firefox** (Windows, macOS, Linux)
+- **Desktop Safari** (macOS only)
+- **Microsoft Edge**
+- **Mobile Chrome** (Android)
+- **Mobile Safari** (iOS)
+
+### Performance Comparison
+- **Chrome-only**: ~5-10 minutes for full suite
+- **All browsers**: ~20-30 minutes for full suite
+- **Recommendation**: Use Chrome-only for development, all browsers for release testing
+
+---
+
+## Cross-Site Authentication Testing
+
+### Overview
+Comprehensive testing of authentication communication between admin-portal and documentation sites, ensuring login/logout status is properly synchronized.
+
+### Test Coverage
+
+1. **Admin Login Status Reflection**
+   - Verifies login in admin portal reflects in documentation site navbar
+   - Tests session cookie sharing and API communication
+
+2. **Admin Logout Status Reflection**
+   - Ensures logout from admin portal updates documentation site
+   - Validates session cleanup across sites
+
+3. **Cross-Tab Authentication Synchronization**
+   - Tests localStorage-based communication between tabs
+   - Verifies storage events trigger UI updates
+
+4. **Authentication State Persistence**
+   - Validates authentication survives page reloads
+   - Tests session cookie persistence
+
+5. **Error Handling**
+   - Tests graceful fallback for invalid/expired sessions
+   - Ensures no error messages shown to users
+
+### Implementation Details
+
+#### Authentication Mocking
+```typescript
+// Mock NextAuth session cookie
+await context.addCookies([
+  {
+    name: 'next-auth.session-token',
+    value: 'mock-site-admin-session',
+    domain: 'localhost',
+    path: '/',
+    httpOnly: true,
+    secure: false,
+  },
+]);
+```
+
+#### Cross-Tab Communication
+```typescript
+// Simulate localStorage-based communication
+const authStatus = {
+  isAuthenticated: true,
+  username: 'Test Admin',
+  teams: ['site-admin'],
+  loading: false
+};
+localStorage.setItem('authStatus', JSON.stringify(authStatus));
+
+// Dispatch storage event for cross-tab communication
+window.dispatchEvent(new StorageEvent('storage', {
+  key: 'authStatus',
+  newValue: JSON.stringify(authStatus)
+}));
+```
+
+### Running Cross-Site Auth Tests
+
+```bash
+# Run only cross-site auth tests
+npx playwright test e2e/admin-portal/cross-site-auth-communication.e2e.test.ts
+
+# Run with UI for debugging
+npx playwright test e2e/admin-portal/cross-site-auth-communication.e2e.test.ts --ui
+
+# Run specific test case
+npx playwright test -g "should reflect admin login status"
+```
+
+### Architecture Tested
+```
+Admin Portal (NextAuth.js) 
+    ↓ (authentication)
+Session Cookie + /api/auth/session
+    ↓ (HTTP requests)
+useAdminSession hook (docusaurus)
+    ↓ (React state + localStorage)
+AuthDropdownNavbarItem (navbar)
+    ↓ (storage events)
+Cross-tab synchronization
+```
+
+---
+
 For more information, see:
 - [Product Requirements Document](./Product%20Requirements%20Document%20(PRD)_%20Nx-Optimized.md)
 - [Testing Strategy](./TESTING_STRATEGY.md)

@@ -24,6 +24,8 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 - [ ] **Scripts first**: Check `package.json` scripts before writing bash
 - [ ] **MCP usage**: Could Context7/MUI help with this task?
 - [ ] **Testing**: Use `nx affected` not full test runs
+- [ ] **Writing tests?**: Read `developer_notes/AI_TESTING_INSTRUCTIONS.md` FIRST
+- [ ] **TypeScript**: Follow strict typing rules - NO undocumented `any` or `require`
 
 ### 🔧 Monorepo Essentials
 - **Package manager**: Always `pnpm` (never npm/yarn)
@@ -130,6 +132,14 @@ pnpm tsx scripts/scaffold-site.ts --siteKey=newsite --title="New Standard" --tag
 2. Never run all tests - always use affected
 3. Reference: `developer_notes/TESTING_STRATEGY.md`
 
+### "I'm writing tests" 
+**🚨 MANDATORY**: Read `developer_notes/AI_TESTING_INSTRUCTIONS.md` FIRST!
+Quick rules:
+1. **Decide test type**: env vars? → @env | multiple components? → @integration | browser? → @e2e | else → @unit
+2. **Tag properly**: @unit/@integration/@e2e + @api/@auth/@ui + @critical (if needed)
+3. **Place correctly**: Unit tests next to source, integration in tests/, E2E in e2e/
+4. **Use templates**: Copy from `developer_notes/TEST_TEMPLATES.md`
+
 ---
 
 ## 📚 ESSENTIAL REFERENCES
@@ -142,14 +152,16 @@ pnpm tsx scripts/scaffold-site.ts --siteKey=newsite --title="New Standard" --tag
 5. **Import utility**: `import { addBasePath } from '@ifla/theme/utils';`
 
 ### Testing Strategy (MANDATORY FOR ALL TESTS)
-1. **Pre-commit target**: < 60 seconds (use `nx affected`)
-2. **Use 5-phase strategy**: On-demand → Pre-commit → Pre-push → Comprehensive → CI
-3. **Always use `nx affected`** for development testing
-4. **Parallel execution**: `--parallel=3` for performance
-5. **Speed targets**: On-demand <5s, Pre-commit <60s, Pre-push <180s
-6. **Test placement**: Check `@developer_notes/TEST_PLACEMENT_GUIDE.md` before writing tests
+1. **AI AGENTS**: MUST read `@developer_notes/AI_TESTING_INSTRUCTIONS.md` before writing any tests
+2. **Pre-commit target**: < 60 seconds (use `nx affected`)
+3. **Use 5-phase strategy**: On-demand → Pre-commit → Pre-push → Comprehensive → CI
+4. **Always use `nx affected`** for development testing
+5. **Parallel execution**: `--parallel=3` for performance
+6. **Speed targets**: On-demand <5s, Pre-commit <60s, Pre-push <180s
+7. **Test placement**: Check `@developer_notes/TEST_PLACEMENT_GUIDE.md` before writing tests
 
 ### Critical File References
+- **AI Testing Guide**: `@developer_notes/AI_TESTING_INSTRUCTIONS.md` (MANDATORY for AI agents)
 - **Complete Testing Strategy**: `@developer_notes/TESTING_STRATEGY.md`
 - **Test Placement Guide**: `@developer_notes/TEST_PLACEMENT_GUIDE.md` (use when writing tests)
 - **Test Templates**: `@developer_notes/TEST_TEMPLATES.md` (copy for new tests)
@@ -184,6 +196,52 @@ pnpm tsx scripts/scaffold-site.ts --siteKey=newsite --title="New Standard" --tag
 - **ALWAYS CHECK MUI MCP AND CONTEXT7 MCP FOR EXAMPLES BEFORE WRITING CODE**
 - **ALWAYS RUN TYPECHECK AND ESLINT AFTER WRITING CODE BEFORE MOVING TO THE NEXT TASK**
 
+### AI Agent TypeScript & Import Compliance Rules
+
+#### ALWAYS DO THIS
+- **Always use ES Module `import`/`export` syntax** for all TypeScript, React, Next.js, or Docusaurus code
+  ```typescript
+  import { Component } from "react";
+  import util from "@workspace/shared/utils";
+  ```
+- **Always follow workspace path aliases** as defined in root `tsconfig.json` and Nx configuration
+- **Always use strict, explicit types** in all code—both production and test files
+- **Always provide clear comment explaining any use of `any`** and tag for human review
+  ```typescript
+  // Using `any` here to simulate invalid API input for edge case testing. Review required.
+  const malformedPayload: any = getUserSuppliedData();
+  expect(() => processPayload(malformedPayload)).toThrow();
+  ```
+- **Always write code that passes all linting and type checks**
+- **Always include at least one minimal test** for any new logic/UI
+- **Always add JSDoc comments** for all exported functions/types/interfaces
+
+#### NEVER DO THIS
+- **Never use `require` for module imports** - breaks compatibility
+  ```typescript
+  // ❌ WRONG
+  const config = require("./config");
+  ```
+- **Never import using deep paths or absolute paths** outside workspace/NX aliases
+  ```typescript
+  // ❌ WRONG
+  import X from "../../../lib/foo/internal/bar";
+  ```
+- **Never use `any`, `@ts-ignore`, or unsafe type casts** without:
+  - Explicit, documented rationale in comment
+  - Tagged for reviewer attention
+  - Treated as temporary exception
+- **Never merge code that fails CI, lint/type checks, or lacks test coverage**
+- **Never use `any` in tests without clear justification and reviewer signoff**
+
+#### Quick Reference Table
+| Context | ✅ Always | ❌ Never |
+|---------|-----------|----------|
+| Imports | ES modules + workspace aliases | `require` or deep paths |
+| Types | Explicit, precise, documented | Undocumented `any` |
+| Test edge cases | Document & justify `any` | Routine `any` in tests |
+| CI/Lint | Pass all checks | Merge failing code |
+
 ---
 
 ## 🧪 TESTING & QUALITY
@@ -191,7 +249,11 @@ pnpm tsx scripts/scaffold-site.ts --siteKey=newsite --title="New Standard" --tag
 ### Test File Linting
 - **Test files use relaxed linting rules**: See `pnpm lint:test-rules` for details
 - **Less strict TypeScript**: Tests use `tsconfig.test.json` with relaxed type checking
-- **Allowed in tests**: `any` types, console logs, longer functions, empty mocks
+- **⚠️ `any` in tests**: Only allowed with documented justification and review tag
+  ```typescript
+  // Using `any` to test malformed input handling. Review required.
+  const invalidData: any = { malformed: true };
+  ```
 - **Test patterns**: `**/*.{test,spec}.{js,jsx,ts,tsx}`, `**/tests/**/*`, `**/e2e/**/*`
 - **Commands**: 
   - `pnpm lint:tests` (lint only test files)
