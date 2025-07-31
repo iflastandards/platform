@@ -5,10 +5,12 @@
  */
 
 import { program } from 'commander';
-import { startServers, shutdownServers } from '@ifla/dev-servers';
-import { ServerMode, SiteKey } from '@ifla/dev-servers/src/types';
+import { startServers, stopServers } from '@ifla/dev-servers';
+import { readServerState } from '@ifla/dev-servers';
+import { ServerMode, ServerInfo } from '@ifla/dev-servers/src/types';
 
 // Define test types and their required servers
+type SiteKey = string;
 const TEST_SERVER_REQUIREMENTS: Record<string, SiteKey[]> = {
   // Smoke tests
   'smoke:portal': ['portal'],
@@ -164,7 +166,43 @@ async function stopTestServers(options: StopOptions): Promise<void> {
   }
   
   try {
-    await shutdownServers({ sites });
+    // Read current server state
+    const serverState = readServerState();
+    
+    if (!serverState || serverState.servers.length === 0) {
+      console.log('ℹ️  No running servers found');
+      return;
+    }
+    
+    // Filter servers to stop based on sites
+    let serversToStop = serverState.servers;
+    if (sites) {
+      serversToStop = serverState.servers.filter(server => 
+        sites!.includes(server.site as SiteKey)
+      );
+      
+      if (serversToStop.length === 0) {
+        console.log(`ℹ️  No running servers found for sites: ${sites.join(', ')}`);
+        return;
+      }
+    }
+    
+    // Convert ServerState to ServerInfo format for stopServers
+    const serverInfos: ServerInfo[] = serversToStop.map(server => ({
+      site: server.site,
+      port: server.port,
+      proc: {
+        pid: server.pid,
+        kill: (signal?: NodeJS.Signals) => {
+          if (server.pid > 0) {
+            process.kill(server.pid, signal || 'SIGTERM');
+          }
+        }
+      } as any, // Mock ChildProcess for compatibility
+      mode: server.mode
+    }));
+    
+    await stopServers(serverInfos);
     console.log('✅ Successfully stopped servers');
   } catch (error) {
     console.error('❌ Failed to stop servers:', error);
