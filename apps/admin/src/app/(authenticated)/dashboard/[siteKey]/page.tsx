@@ -159,12 +159,12 @@ export default async function NamespaceManagementPage({ params }: PageProps) {
             <p className="text-gray-600 dark:text-gray-400 mb-6">
               {isSpecialCase ? (
                 <>
-                  You don't have permission to manage {namespaceConfig.title}. 
+                  You don&apos;t have permission to manage {namespaceConfig.title}. 
                   This is a special system area that requires superadmin access.
                 </>
               ) : (
                 <>
-                  You don't have permission to manage the{' '}
+                  You don&apos;t have permission to manage the{' '}
                   {namespaceConfig.title} namespace.
                 </>
               )}

@@ -599,7 +599,7 @@ export default function AdoptSpreadsheetForm({ userId: _userId, userName }: Adop
         </Typography>
         <Typography variant="body2" color="text.secondary">
           This tool allows superadmins to register existing Google Sheets documents in the system.
-          Once adopted, the spreadsheet will appear in the project's active spreadsheets list and
+          Once adopted, the spreadsheet will appear in the project&apos;s active spreadsheets list and
           can be imported through the standard import workflow. This is particularly useful for:
         </Typography>
         <Box component="ul" sx={{ mt: 1, pl: 2 }}>

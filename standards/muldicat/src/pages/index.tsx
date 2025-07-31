@@ -74,7 +74,7 @@ function HistorySection() {
           <div className="col col--12">
             <div className={styles.benefitCard}>
               <p>
-                The MulDiCat project began in 1998, initiated by Monika Muennich for IFLA's Cataloguing Section.
+                The MulDiCat project began in 1998, initiated by Monika Muennich for IFLA&apos;s Cataloguing Section.
                 Originally, it was stored in a proprietary database developed by Bernard Eversberg in 2003.
               </p>
               <p>

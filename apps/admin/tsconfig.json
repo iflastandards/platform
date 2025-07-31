@@ -45,7 +45,6 @@
     "**/*.jsx",
     "**/*.ts",
     "**/*.tsx",
-    "../../apps/admin/.next/types/**/*.ts",
     ".next/types/**/*.ts",
     "next-auth-types.d.ts",
     "next-env.d.ts",
@@ -58,6 +57,8 @@
     "src/**/*.test.ts",
     "src/**/*.spec.tsx",
     "src/**/*.test.tsx",
-    "src/test/**/*"
+    "src/test/**/*",
+    "dist/**/*",
+    ".next/**/*"
   ]
 }

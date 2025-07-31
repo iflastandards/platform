@@ -327,7 +327,7 @@ export default function PersonalDashboard({ user }: PersonalDashboardProps) {
               </Grid>
             ) : (
               <Alert severity="warning">
-                You don't have access to any namespaces. You need to be assigned to a review group or project to gain namespace access.
+                You don&apos;t have access to any namespaces. You need to be assigned to a review group or project to gain namespace access.
               </Alert>
             )}
           </Box>

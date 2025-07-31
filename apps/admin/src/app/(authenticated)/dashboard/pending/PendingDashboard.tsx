@@ -44,7 +44,7 @@ export default function PendingDashboard({ user }: PendingDashboardProps) {
         <Alert severity="info" sx={{ mb: 4 }}>
           <Typography variant="body1">
             Hello <strong>{user.name}</strong>, your account has been created successfully, 
-            but you haven't been assigned to any Review Groups or Projects yet.
+            but you haven&apos;t been assigned to any Review Groups or Projects yet.
           </Typography>
         </Alert>
 
@@ -94,7 +94,7 @@ export default function PendingDashboard({ user }: PendingDashboardProps) {
             </li>
           </ol>
           <Typography variant="body2" color="text.secondary" sx={{ mt: 2 }}>
-            Once you've been assigned, you'll automatically gain access to the appropriate 
+            Once you&apos;ve been assigned, you&apos;ll automatically gain access to the appropriate 
             dashboards and tools based on your role.
           </Typography>
         </Paper>

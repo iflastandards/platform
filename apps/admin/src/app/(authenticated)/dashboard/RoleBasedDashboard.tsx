@@ -237,7 +237,7 @@ export default function RoleBasedDashboard({ userId }: RoleBasedDashboardProps) 
               />
             ) : (
               <Alert severity="info">
-                You don't have access to any namespaces yet. Contact an administrator to be added to a project.
+                You don&apos;t have access to any namespaces yet. Contact an administrator to be added to a project.
               </Alert>
             )}
           </Box>

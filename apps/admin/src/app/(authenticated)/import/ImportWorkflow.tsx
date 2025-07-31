@@ -381,7 +381,7 @@ export default function ImportWorkflow({
                   {spreadsheetUrl && (
                     <Alert severity="success" sx={{ mt: 2 }}>
                       <Typography variant="body2">
-                        Spreadsheet URL provided. Click "Next" to continue.
+                        Spreadsheet URL provided. Click &quot;Next&quot; to continue.
                       </Typography>
                     </Alert>
                   )}
@@ -614,7 +614,7 @@ export default function ImportWorkflow({
                       <li>A GitHub issue will be created for tracking</li>
                       <li>Vocabulary data will be processed and validated</li>
                       <li>RDF files will be generated</li>
-                      <li>You'll receive notifications about the progress</li>
+                      <li>You&apos;ll receive notifications about the progress</li>
                     </Box>
                   </Alert>
 

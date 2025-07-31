@@ -829,8 +829,8 @@ export default function AdoptSpreadsheetFormV2({
         <Stack direction="row" spacing={1} alignItems="center">
           <InfoIcon color="info" />
           <Typography variant="body2" color="text.secondary">
-            This tool creates a "birth certificate" for spreadsheets that were created outside the normal export process.
-            Fill in as much information as you know about the spreadsheet's origin and content.
+            This tool creates a &quot;birth certificate&quot; for spreadsheets that were created outside the normal export process.
+            Fill in as much information as you know about the spreadsheet&apos;s origin and content.
           </Typography>
         </Stack>
       </Paper>
