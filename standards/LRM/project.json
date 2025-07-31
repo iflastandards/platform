@@ -3,16 +3,30 @@
   "root": "standards/LRM",
   "sourceRoot": "standards/LRM",
   "projectType": "application",
-  "tags": ["docusaurus", "site", "standard", "lrm"],
-  "implicitDependencies": ["@ifla/theme"],
+  "tags": [
+    "docusaurus",
+    "site",
+    "standard",
+    "lrm"
+  ],
+  "implicitDependencies": [
+    "@ifla/theme"
+  ],
   "targets": {
     "build": {
       "executor": "nx:run-commands",
       "options": {
         "command": "docusaurus build standards/LRM"
       },
-      "inputs": ["production", "^production", "docusaurus"],
-      "outputs": ["{projectRoot}/build", "{projectRoot}/.docusaurus"],
+      "inputs": [
+        "production",
+        "^production",
+        "docusaurus"
+      ],
+      "outputs": [
+        "{projectRoot}/build",
+        "{projectRoot}/.docusaurus"
+      ],
       "cache": true
     },
     "start": {
@@ -67,6 +81,19 @@
         "{workspaceRoot}/playwright-report"
       ]
     },
+    "lint": {
+      "executor": "@nx/eslint:lint",
+      "options": {
+        "lintFilePatterns": [
+          "standards/LRM/src/**/*.{ts,tsx,js,jsx}",
+          "standards/LRM/*.{ts,tsx,js,jsx}"
+        ]
+      },
+      "inputs": [
+        "default"
+      ],
+      "cache": true
+    },
     "typecheck": {
       "executor": "nx:run-commands",
       "options": {
@@ -74,7 +101,9 @@
         "cwd": "standards/LRM"
       },
       "cache": true,
-      "dependsOn": ["^build"],
+      "dependsOn": [
+        "^build"
+      ],
       "inputs": [
         "default",
         "{projectRoot}/tsconfig.json",

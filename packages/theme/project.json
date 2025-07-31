@@ -63,6 +63,17 @@
       "inputs": ["testInputs", "sharedGlobals"],
       "outputs": ["{projectRoot}/coverage", "{projectRoot}/test-results"]
     },
+    "lint": {
+      "executor": "@nx/eslint:lint",
+      "options": {
+        "lintFilePatterns": [
+          "packages/theme/src/**/*.{ts,tsx,js,jsx}",
+          "packages/theme/*.{ts,tsx,js,jsx}"
+        ]
+      },
+      "inputs": ["default"],
+      "cache": true
+    },
     "typecheck": {
       "executor": "nx:run-commands",
       "options": {

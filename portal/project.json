@@ -43,6 +43,17 @@
         "command": "docusaurus clear portal"
       }
     },
+    "lint": {
+      "executor": "@nx/eslint:lint",
+      "options": {
+        "lintFilePatterns": [
+          "portal/src/**/*.{ts,tsx,js,jsx}",
+          "portal/*.{ts,tsx,js,jsx}"
+        ]
+      },
+      "inputs": ["default"],
+      "cache": true
+    },
     "typecheck": {
       "executor": "nx:run-commands",
       "options": {

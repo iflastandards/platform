@@ -15,16 +15,13 @@
       "executor": "@nx/eslint:lint",
       "options": {
         "lintFilePatterns": [
-          "**/*.{js,jsx,ts,tsx}",
-          "!node_modules/**/*",
-          "!dist/**/*",
-          "!build/**/*",
-          "!.nx/**/*",
-          "!**/.next/**/*",
-          "!playwright-report/**/*",
-          "!test-results/**/*",
-          "!.idea/**/*",
-          "!.vscode/**/*"
+          "scripts/**/*.{js,jsx,ts,tsx}",
+          "e2e/**/*.{js,jsx,ts,tsx}",
+          "tests/**/*.{js,jsx,ts,tsx}",
+          "test/**/*.{js,jsx,ts,tsx}",
+          "examples/**/*.{js,jsx,ts,tsx}",
+          "*.config.{js,mjs,ts}",
+          "eslint.config.mjs"
         ]
       }
     },

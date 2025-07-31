@@ -3,16 +3,30 @@
   "root": "standards/unimarc",
   "sourceRoot": "standards/unimarc",
   "projectType": "application",
-  "tags": ["docusaurus", "site", "standard", "unimarc"],
-  "implicitDependencies": ["@ifla/theme"],
+  "tags": [
+    "docusaurus",
+    "site",
+    "standard",
+    "unimarc"
+  ],
+  "implicitDependencies": [
+    "@ifla/theme"
+  ],
   "targets": {
     "build": {
       "executor": "nx:run-commands",
       "options": {
         "command": "docusaurus build standards/unimarc"
       },
-      "inputs": ["production", "^production", "docusaurus"],
-      "outputs": ["{projectRoot}/build", "{projectRoot}/.docusaurus"],
+      "inputs": [
+        "production",
+        "^production",
+        "docusaurus"
+      ],
+      "outputs": [
+        "{projectRoot}/build",
+        "{projectRoot}/.docusaurus"
+      ],
       "cache": true
     },
     "start": {
@@ -67,6 +81,19 @@
         "{workspaceRoot}/playwright-report"
       ]
     },
+    "lint": {
+      "executor": "@nx/eslint:lint",
+      "options": {
+        "lintFilePatterns": [
+          "standards/unimarc/src/**/*.{ts,tsx,js,jsx}",
+          "standards/unimarc/*.{ts,tsx,js,jsx}"
+        ]
+      },
+      "inputs": [
+        "default"
+      ],
+      "cache": true
+    },
     "typecheck": {
       "executor": "nx:run-commands",
       "options": {
@@ -74,7 +101,9 @@
         "cwd": "standards/unimarc"
       },
       "cache": true,
-      "dependsOn": ["^build"],
+      "dependsOn": [
+        "^build"
+      ],
       "inputs": [
         "default",
         "{projectRoot}/tsconfig.json",

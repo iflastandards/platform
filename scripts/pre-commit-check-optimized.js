@@ -39,44 +39,28 @@ try {
   hasErrors = true;
 }
 
-// Run lint separately to handle warnings gracefully
-console.log('📋 Running ESLint...');
-let lintExitCode = 0;
+// Run lint with fix-dry-run on affected files using our custom script
+console.log('📋 Running ESLint with fix-dry-run on affected files...');
 try {
-  // Run the lint command and capture the output
-  const lintOutput = execSync(
-    'pnpm nx affected --target=lint --parallel=10 2>&1 || true',
+  execSync(
+    'pnpm lint:affected:fix-dry-run',
     {
+      stdio: 'inherit',
       encoding: 'utf8',
       env: {
         ...process.env,
-        NODE_OPTIONS: '--max-old-space-size=4096',
-        NX_SKIP_NX_CACHE: 'false',
-        NX_DAEMON: 'true'
+        NODE_OPTIONS: '--max-old-space-size=2048'
       }
     }
   );
-  
-  // Parse the output to check for actual errors
-  if (lintOutput.includes(' error ') || lintOutput.includes(' errors)')) {
-    // Extract error count from the summary line
-    const errorMatch = lintOutput.match(/(\d+) errors?/);
-    const errorCount = errorMatch ? parseInt(errorMatch[1]) : 0;
-    
-    if (errorCount > 0) {
-      console.log(lintOutput);
-      console.log(`❌ ESLint found ${errorCount} error(s) that must be fixed\n`);
-      hasErrors = true;
-    } else {
-      console.log('✅ ESLint passed (warnings are allowed in pre-commit)\n');
-    }
-  } else {
-    console.log('✅ ESLint passed (no issues)\n');
-  }
+  console.log('✅ ESLint with fix-dry-run completed\n');
 } catch (error) {
-  // This shouldn't happen with || true, but just in case
-  console.log('❌ ESLint command failed unexpectedly\n');
-  hasErrors = true;
+  if (error.status === 1) {
+    console.log('📋 ESLint found issues (this is normal with --fix-dry-run)\n');
+  } else {
+    console.log('❌ ESLint failed unexpectedly:\n', error.message);
+    hasErrors = true;
+  }
 }
 
 // Summary

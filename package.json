@@ -308,6 +308,7 @@
     "test:api": "pnpm test:by-tag --tags @api",
     "test:validation": "pnpm test:by-tag --tags @validation",
     "test:rbac": "pnpm test:by-tag --tags @rbac",
+    "lint:affected:fix-dry-run": "node scripts/lint-affected-fix-dry-run.js",
     "test:ci:affected": "nx affected --target=test --parallel=6 --maxParallel=6",
     "test:ci:critical": "pnpm test:by-tag --tags @critical --parallel",
     "test:dev": "nx affected --target=test --parallel=3 --watch",

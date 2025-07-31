@@ -7,21 +7,40 @@
   "targets": {
     "build": {
       "executor": "@nx/js:tsc",
-      "outputs": ["{options.outputPath}"],
+      "outputs": [
+        "{options.outputPath}"
+      ],
       "options": {
         "outputPath": "dist/tools/sheet-sync",
         "tsConfig": "tools/sheet-sync/tsconfig.lib.json",
         "packageJson": "tools/sheet-sync/package.json",
         "main": "tools/sheet-sync/src/index.ts",
-        "assets": ["tools/sheet-sync/*.md"]
+        "assets": [
+          "tools/sheet-sync/*.md"
+        ]
       }
     },
     "test": {
       "executor": "@nx/vite:test",
-      "outputs": ["{workspaceRoot}/coverage/tools/sheet-sync"],
+      "outputs": [
+        "{workspaceRoot}/coverage/tools/sheet-sync"
+      ],
       "options": {
         "config": "tools/sheet-sync/vite.config.ts"
       }
+    },
+    "lint": {
+      "executor": "@nx/eslint:lint",
+      "options": {
+        "lintFilePatterns": [
+          "tools/sheet-sync/src/**/*.{ts,tsx,js,jsx}",
+          "tools/sheet-sync/*.{ts,tsx,js,jsx}"
+        ]
+      },
+      "inputs": [
+        "default"
+      ],
+      "cache": true
     }
   }
 }
