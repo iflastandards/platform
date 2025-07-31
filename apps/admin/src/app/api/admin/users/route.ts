@@ -1,37 +1,23 @@
 // apps/admin/src/app/api/admin/users/route.ts
 import { NextResponse } from 'next/server';
-import { getCerbosUser } from '@/lib/clerk-cerbos';
-import cerbos from '@/lib/cerbos';
+import { currentUser } from '@clerk/nextjs/server';
 
 export async function GET() {
-  const user = await getCerbosUser();
+  const user = await currentUser();
 
   if (!user) {
     return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
   }
 
-  const principal = {
-    id: user.id,
-    roles: user.roles || [],
-    attributes: user.attributes || {},
-  };
+  // TODO: Implement proper role checking without Cerbos
+  // For now, check if user has admin role in their metadata
+  const userRoles = (user.publicMetadata?.roles as string[]) || [];
+  const hasAccess = userRoles.includes('admin') || 
+                   userRoles.includes('super-admin') || 
+                   userRoles.includes('user-admin');
 
-  const resource = {
-    kind: 'user_admin',
-    id: 'user_listing',
-    attributes: {
-      scope: 'system', // This could be more granular
-    },
-  };
-
-  const isAllowed = await cerbos.isAllowed({
-    principal,
-    resource,
-    action: 'view_users',
-  });
-
-  if (!isAllowed) {
-    return NextResponse.json({ error: 'Forbidden' }, { status: 403 });
+  if (!hasAccess) {
+    return NextResponse.json({ error: 'Forbidden - Admin access required' }, { status: 403 });
   }
 
   // In a real application, you would fetch users from a database.

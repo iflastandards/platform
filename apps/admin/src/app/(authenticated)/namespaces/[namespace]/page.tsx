@@ -1,5 +1,5 @@
 import { notFound, redirect } from 'next/navigation';
-import { getCerbosUser } from '@/lib/clerk-cerbos';
+import { getAuthUser } from '@/lib/auth';
 import NamespaceDashboard from './NamespaceDashboard';
 import { mockNamespaces } from '@/lib/mock-data/namespaces-extended';
 
@@ -38,7 +38,7 @@ export default async function NamespacePage({
   }
 
   // Production mode - use real auth
-  const user = await getCerbosUser();
+  const user = await getAuthUser();
   if (!user) {
     redirect(`/sign-in?redirect_url=${encodeURIComponent(`/namespaces/${namespace}`)}`);
   }

@@ -78,12 +78,9 @@ vi.mock('@clerk/nextjs/server', () => ({
   clerkMiddleware: vi.fn(() => vi.fn()),
 }));
 
-// Mock clerk-cerbos bridge
-vi.mock('@/lib/clerk-cerbos', () => ({
-  getCerbosUser: vi.fn(() => Promise.resolve(null)),
-  userHasRole: vi.fn(() => Promise.resolve(false)),
-  getUserNamespaceRole: vi.fn(() => Promise.resolve(null)),
-  getUserSiteRole: vi.fn(() => Promise.resolve(null)),
+// Mock auth helper
+vi.mock('@/lib/auth', () => ({
+  getAuthUser: vi.fn(() => Promise.resolve(null)),
 }));
 
 // Global fetch mock

@@ -16,7 +16,7 @@ export function setMockUser(user: MockUser | null) {
   
   // Update the Clerk mocks to return this user
   const clerkServerModule = vi.mocked(await import('@clerk/nextjs/server'));
-  const clerkCerbosModule = vi.mocked(await import('@/lib/clerk-cerbos'));
+  const authModule = vi.mocked(await import('@/lib/auth'));
   
   if (user) {
     // Mock Clerk server functions
@@ -51,33 +51,14 @@ export function setMockUser(user: MockUser | null) {
       },
     } as any);
     
-    // Mock clerk-cerbos bridge
-    clerkCerbosModule.getCerbosUser.mockResolvedValue({
+    // Mock auth helper
+    authModule.getAuthUser.mockResolvedValue({
       id: user.id,
-      name: user.name,
       email: user.email,
+      firstName: user.name.split(' ')[0],
+      lastName: user.name.split(' ').slice(1).join(' '),
+      imageUrl: '',
       roles: user.roles,
-      attributes: {},
-    });
-    
-    clerkCerbosModule.userHasRole.mockImplementation(async (role) => {
-      return user.roles.includes(role);
-    });
-    
-    clerkCerbosModule.getUserNamespaceRole.mockImplementation(async (namespace) => {
-      const namespaceRole = user.roles.find(r => 
-        r.includes(`${namespace.toLowerCase()}-`) || 
-        r.includes(`namespace-admin`)
-      );
-      return namespaceRole || null;
-    });
-    
-    clerkCerbosModule.getUserSiteRole.mockImplementation(async (site) => {
-      const siteRole = user.roles.find(r => 
-        r.includes(`${site.toLowerCase()}-`) || 
-        r.includes(`site-admin`)
-      );
-      return siteRole || null;
     });
   } else {
     // Reset to unauthenticated state
@@ -89,10 +70,7 @@ export function setMockUser(user: MockUser | null) {
     
     clerkServerModule.currentUser.mockResolvedValue(null);
     
-    clerkCerbosModule.getCerbosUser.mockResolvedValue(null);
-    clerkCerbosModule.userHasRole.mockResolvedValue(false);
-    clerkCerbosModule.getUserNamespaceRole.mockResolvedValue(null);
-    clerkCerbosModule.getUserSiteRole.mockResolvedValue(null);
+    authModule.getAuthUser.mockResolvedValue(null);
   }
   
   // Also update client-side Clerk mocks

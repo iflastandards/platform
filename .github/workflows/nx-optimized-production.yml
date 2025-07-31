@@ -46,11 +46,6 @@ env:
   NEXT_PUBLIC_SUPABASE_URL: ${{ secrets.NEXT_PUBLIC_SUPABASE_URL }}
   NEXT_PUBLIC_SUPABASE_ANON_KEY: ${{ secrets.NEXT_PUBLIC_SUPABASE_ANON_KEY }}
   
-  # Cerbos configuration  
-  CERBOS_HUB_BUNDLE: ${{ secrets.CERBOS_HUB_BUNDLE || 'stable' }}  # Production uses stable
-  CERBOS_HUB_CLIENT_ID: ${{ secrets.CERBOS_HUB_CLIENT_ID }}
-  CERBOS_HUB_CLIENT_SECRET: ${{ secrets.CERBOS_HUB_CLIENT_SECRET }}
-  CERBOS_HUB_WORKSPACE_SECRET: ${{ secrets.CERBOS_HUB_WORKSPACE_SECRET }}
   
   # GitHub OAuth (for admin portal)
   AUTH_GITHUB_ID: ${{ secrets.AUTH_GITHUB_ID }}

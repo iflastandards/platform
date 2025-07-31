@@ -1,4 +1,4 @@
-import { getCerbosUser } from '@/lib/clerk-cerbos';
+import { getAuthUser } from '@/lib/auth';
 import { redirect } from 'next/navigation';
 import NamespaceManagementClient from './NamespaceManagementClient';
 import { UserButton } from '@clerk/nextjs';
@@ -108,7 +108,7 @@ function isAuthorizedForNamespace(
 
 export default async function NamespaceManagementPage({ params }: PageProps) {
   // Get the user from Clerk via Cerbos bridge
-  const user = await getCerbosUser();
+  const user = await getAuthUser();
 
   // Redirect to sign in if not authenticated (though Clerk middleware should handle this)
   if (!user) {

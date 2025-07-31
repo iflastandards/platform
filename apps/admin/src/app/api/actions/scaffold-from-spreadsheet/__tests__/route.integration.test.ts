@@ -7,7 +7,7 @@
 import { describe, it, expect, beforeEach, vi } from 'vitest';
 import { NextRequest } from 'next/server';
 import { POST, GET } from '../route';
-import { getCerbosUser } from '@/lib/clerk-cerbos';
+import { currentUser } from '@clerk/nextjs/server';
 
 // Mock dependencies at the boundary
 vi.mock('@clerk/nextjs/server', () => ({
@@ -15,15 +15,9 @@ vi.mock('@clerk/nextjs/server', () => ({
     Promise.resolve({
       id: 'test-user-id',
       emailAddresses: [{ emailAddress: 'test@example.com' }],
-    }),
-  ),
-}));
-
-vi.mock('@/lib/clerk-cerbos', () => ({
-  getCerbosUser: vi.fn(() =>
-    Promise.resolve({
-      id: 'test-user-id',
-      roles: ['ifla-admin'],
+      publicMetadata: {
+        roles: ['ifla-admin'],
+      },
     }),
   ),
 }));
@@ -42,7 +36,7 @@ vi.mock('@/lib/services/import-service', () => ({
   },
 }));
 
-describe('Scaffold API - Integration Tests @integration @api', () => {
+describe('Scaffold API - Integration Tests @integration @api @high-priority', () => {
   beforeEach(() => {
     mockJobs.clear();
     vi.clearAllMocks();
@@ -89,10 +83,13 @@ describe('Scaffold API - Integration Tests @integration @api', () => {
     });
 
     it('should check user permissions', async () => {
-      vi.mocked(getCerbosUser).mockResolvedValueOnce({
+      vi.mocked(currentUser).mockResolvedValueOnce({
         id: 'test-user-id',
-        roles: ['lrm-editor'], // No access to isbd
-      });
+        emailAddresses: [{ emailAddress: 'test@example.com' }],
+        publicMetadata: {
+          roles: ['lrm-editor'], // No access to isbd
+        },
+      } as any);
 
       const request = new NextRequest(
         'http://localhost/api/actions/scaffold-from-spreadsheet',

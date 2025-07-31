@@ -1,15 +1,13 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { getCerbosUser } from '@/lib/clerk-cerbos';
 import { ImportService } from '@/lib/services/import-service';
 import { currentUser } from '@clerk/nextjs/server';
 
 export async function POST(request: NextRequest) {
   try {
     // Check authentication
-    const user = await getCerbosUser();
     const clerkUser = await currentUser();
     
-    if (!user || !clerkUser) {
+    if (!clerkUser) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
 
@@ -34,7 +32,7 @@ export async function POST(request: NextRequest) {
     }
 
     // Check user has appropriate role for this namespace
-    const userRoles = user.roles || [];
+    const userRoles = (clerkUser.publicMetadata?.roles as string[]) || [];
     const hasAccess = userRoles.some((role: string) => 
       role === 'ifla-admin' || 
       role === 'site-admin' || 

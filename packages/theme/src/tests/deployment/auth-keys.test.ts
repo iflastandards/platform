@@ -1,12 +1,12 @@
 import { describe, it, expect } from 'vitest';
 
 /**
- * Supabase and Cerbos Key Validation Tests
+ * Authentication Key Validation Tests
  * 
- * Validates that required authentication and authorization keys are available
+ * Validates that required authentication keys are available
  * in the CI environment for successful deployment
  */
-describe('Supabase and Cerbos Keys @unit @deployment', () => {
+describe('Authentication Keys @unit @critical @auth', () => {
   describe('Supabase Configuration', () => {
     it('should have Supabase URL configured', () => {
       if (!process.env.CI) {
@@ -63,49 +63,6 @@ describe('Supabase and Cerbos Keys @unit @deployment', () => {
     });
   });
 
-  describe('Cerbos Configuration', () => {
-    it('should have Cerbos Hub configuration (when not from fork)', () => {
-      if (!process.env.CI) {
-        expect(true).toBe(true);
-        return;
-      }
-
-      // Cerbos keys might be restricted for fork PRs
-      const hasCerbosKeys = !!(
-        process.env.CERBOS_HUB_CLIENT_ID &&
-        process.env.CERBOS_HUB_CLIENT_SECRET &&
-        process.env.CERBOS_HUB_WORKSPACE_SECRET
-      );
-
-      if (!hasCerbosKeys) {
-        console.log('ℹ️  Cerbos keys not available - likely a fork PR (expected security behavior)');
-        console.log('✅ Deployment environment validation: Cerbos access properly restricted for fork PRs');
-        expect(true).toBe(true);
-        return;
-      }
-
-      // Validate each key
-      expect(process.env.CERBOS_HUB_CLIENT_ID).toBeDefined();
-      expect(process.env.CERBOS_HUB_CLIENT_ID).toMatch(/^[A-Z0-9]+$/);
-
-      expect(process.env.CERBOS_HUB_CLIENT_SECRET).toBeDefined();
-      expect(process.env.CERBOS_HUB_CLIENT_SECRET).toMatch(/^cerbos_[A-Za-z0-9]+$/);
-
-      expect(process.env.CERBOS_HUB_WORKSPACE_SECRET).toBeDefined();
-      expect(process.env.CERBOS_HUB_WORKSPACE_SECRET).toMatch(/^CERBOS-[A-Z0-9-]+$/);
-    });
-
-    it('should have Cerbos bundle version configured', () => {
-      if (!process.env.CI) {
-        expect(true).toBe(true);
-        return;
-      }
-
-      // Bundle version should always be available (not a secret)
-      expect(process.env.CERBOS_HUB_BUNDLE).toBeDefined();
-      expect(['latest', 'stable', 'preview']).toContain(process.env.CERBOS_HUB_BUNDLE);
-    });
-  });
 
   describe('Other Required Keys', () => {
     it('should have GitHub auth configuration (when not from fork)', () => {
@@ -164,14 +121,6 @@ describe('Supabase and Cerbos Keys @unit @deployment', () => {
         console.log(`✅ Using preview Supabase instance: ${process.env.NEXT_PUBLIC_SUPABASE_URL}`);
       }
 
-      // Cerbos bundle might differ by environment
-      if (process.env.CERBOS_HUB_BUNDLE) {
-        if (docsEnv === 'production') {
-          expect(['stable', 'latest']).toContain(process.env.CERBOS_HUB_BUNDLE);
-        } else if (docsEnv === 'preview') {
-          expect(['preview', 'latest', 'stable']).toContain(process.env.CERBOS_HUB_BUNDLE);
-        }
-      }
     });
   });
 });

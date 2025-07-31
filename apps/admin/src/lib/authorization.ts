@@ -1,10 +1,9 @@
 /**
  * Authorization utilities for the IFLA Standards Admin application
- * Implements the authorization model defined in docs/admin-authorization-model.md
+ * Simplified version without Cerbos - uses Clerk user metadata for role checking
  */
 
 import { currentUser } from '@clerk/nextjs/server';
-import cerbos from './cerbos';
 
 // Types for our authorization model
 export interface UserRoles {
@@ -31,7 +30,7 @@ export interface AuthContext {
   roles: UserRoles;
 }
 
-// Resource types for Cerbos checks
+// Resource types for authorization checks
 export type ResourceType = 
   | 'reviewGroup'
   | 'namespace'
@@ -93,6 +92,8 @@ export async function getAuthContext(): Promise<AuthContext | null> {
 
 /**
  * Check if a user can perform an action on a resource
+ * TODO: Implement proper role-based authorization without Cerbos
+ * For now, this is a simplified version that checks basic permissions
  */
 export async function canPerformAction<T extends ResourceType>(
   resourceType: T,
@@ -105,49 +106,33 @@ export async function canPerformAction<T extends ResourceType>(
   // Superadmins can do anything
   if (authContext.roles.system === 'superadmin') return true;
 
-  // Prepare principal for Cerbos
-  const principal = {
-    id: authContext.userId,
-    roles: getPrincipalRoles(authContext),
-    attr: {
-      email: authContext.email,
-      reviewGroupAdmin: authContext.roles.reviewGroups.map(rg => rg.reviewGroupId),
-      teams: authContext.roles.teams,
-      translations: authContext.roles.translations,
-    },
-  };
-
-  // Prepare resource for Cerbos
-  const resource = {
-    kind: 'admin',
-    id: resourceAttributes?.id || 'new',
-    attr: {
-      ...resourceAttributes,
-      resourceType,
-    },
-  };
-
-  // Check with Cerbos
-  const decision = await cerbos.checkResource({
-    principal,
-    resource,
-    actions: [`${resourceType}:${action}`],
-  });
-
-  return decision.isAllowed(`${resourceType}:${action}`) ?? false;
-}
-
-/**
- * Get all principal roles for Cerbos
- */
-function getPrincipalRoles(authContext: AuthContext): string[] {
-  const roles = ['user'];
-  
-  if (authContext.roles.system === 'superadmin') {
-    roles.push('superadmin');
+  // TODO: Implement proper permission checking based on resource type and action
+  // For now, allow authenticated users to read, but restrict write operations
+  const readActions = ['read', 'list'];
+  if (readActions.includes(action as string)) {
+    return true;
   }
-  
-  return roles;
+
+  // Check if user is review group admin
+  if (authContext.roles.reviewGroups.length > 0) {
+    // Review group admins can manage their review groups
+    if (resourceAttributes?.reviewGroupId) {
+      return authContext.roles.reviewGroups.some(
+        rg => rg.reviewGroupId === resourceAttributes.reviewGroupId
+      );
+    }
+    return true;
+  }
+
+  // Check team membership for namespace operations
+  if (resourceAttributes?.namespaceId) {
+    return authContext.roles.teams.some(team =>
+      team.namespaces.includes(resourceAttributes.namespaceId)
+    );
+  }
+
+  // Default deny
+  return false;
 }
 
 /**
