@@ -10,7 +10,7 @@
     "standards": "./dist/index.js"
   },
   "scripts": {
-    "build": "tsc -p tsconfig.json",
+    "build": "./build.sh",
     "dev": "ts-node src/index.ts",
     "test": "echo \"No tests implemented yet for standards-cli\" && exit 0"
   },

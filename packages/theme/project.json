@@ -15,9 +15,8 @@
     "build": {
       "executor": "nx:run-commands",
       "options": {
-        "commands": ["pnpm exec tsup", "npx tsc --project tsconfig.declarations.json"],
-        "cwd": "packages/theme",
-        "parallel": false
+        "command": "./build.sh",
+        "cwd": "packages/theme"
       },
       "outputs": ["{projectRoot}/dist"],
       "inputs": [
