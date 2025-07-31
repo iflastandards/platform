@@ -157,6 +157,7 @@ pnpm lint
 - **Build Regression**: Automated site build validation
 - **Visual Regression**: Screenshot comparison testing
 - **Performance**: Nx caching and parallel execution
+- **AI Testing Guide**: See [`developer_notes/test-first-implementation-guide.md`](developer_notes/test-first-implementation-guide.md) for comprehensive AI assistant testing patterns
 
 ## 🛠️ Development Workflow
 
@@ -257,21 +258,9 @@ Configuration is centralized in `packages/theme/src/config/siteConfig.ts`.
 - **Production**: https://www.iflastandards.info/
 - **Vercel Previews**: Automatic for preview branch commits
 
-## 🤝 Contributing
+### Contributing
 
-1. Fork the repository
-2. Create a feature branch
-3. Follow the development workflow
-4. Ensure all tests pass
-5. Submit a pull request to the `preview` branch
-
-### Code Standards
-
-- Use TypeScript for all new code
-- Follow ESLint and Prettier configurations
-- Write tests for new features
-- Maintain accessibility compliance (WCAG 2.1 AA)
-- Use semantic commit messages
+For detailed contributing guidelines, please refer to our [CONTRIBUTING.md](CONTRIBUTING.md) document.
 
 ## 📊 Monitoring & Analytics
 

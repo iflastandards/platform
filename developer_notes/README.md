@@ -26,12 +26,13 @@ This directory contains detailed documentation for developers working on the IFL
 - **`admin-portal-testing.md`** - Complete testing guide for Next.js admin portal
 - **`rbac-implementation-plan.md`** - Role-based access control with Cerbos
 
-### Testing and Validation
+### 🧪 Testing
 - **`build-regression-testing.md`** - Comprehensive build regression testing strategy
 - **`testing-vocabulary-pages.md`** - Testing vocabulary page functionality
 - **`vocabulary-comparison-testing.md`** - Testing vocabulary server responses
 - **`url-validation-guide.md`** - URL validation and link checking
 - **`link-validation-organization.md`** - Link validation system organization
+- **`test-first-implementation-guide.md`** - **Comprehensive AI Testing Guide** - Test-driven development patterns, component testing with MUI, API testing, and E2E strategies for AI assistants
 
 ### Development Tools
 - **`dev-servers-helpers.md`** - Complete guide for using the `@ifla/dev-servers` package and `pnpm dev:servers` command

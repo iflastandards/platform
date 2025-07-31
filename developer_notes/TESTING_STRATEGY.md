@@ -322,3 +322,13 @@ pnpm nx:cache:clear        # Clear cache if stale
 7. **Environment Aware**: CI tests validate the correct deployment environment
 
 This approach ensures high confidence in deployments while minimizing CI compute costs through smart local validation and targeted cloud testing.
+
+## AI Testing Guide
+
+For AI assistants working on this project, see the [Test-First Implementation Guide](test-first-implementation-guide.md) for:
+- Comprehensive test-driven development patterns
+- Component testing strategies with MUI and React Testing Library
+- API route testing with Next.js
+- E2E testing patterns with Playwright
+- Common pitfalls and debugging techniques
+- Step-by-step implementation workflows

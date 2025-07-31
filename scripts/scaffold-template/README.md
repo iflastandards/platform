@@ -153,6 +153,12 @@ When making changes that should apply to all future sites:
 - **Nx Workspace**: Build system integration and caching
 - **Docusaurus v3.8**: Latest features and optimizations
 
+## Testing
+
+For comprehensive testing strategies and AI-assisted development, see:
+- **[Test-First Implementation Guide](../../developer_notes/test-first-implementation-guide.md)** - Complete testing patterns for AI assistants
+- **[Testing Strategy](../../developer_notes/TESTING_STRATEGY.md)** - Five-phase testing approach for the entire platform
+
 ## Notes
 
 - **ISBD Pattern**: Template structure matches current ISBD site for consistency

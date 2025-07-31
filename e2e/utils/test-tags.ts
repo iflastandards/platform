@@ -8,9 +8,11 @@
  */
 export const TestTags = {
   // Test level tags
+  UNIT: '@unit',
   SMOKE: '@smoke',
   INTEGRATION: '@integration',
   E2E: '@e2e',
+  ENV: '@env',
   
   // Priority tags
   CRITICAL: '@critical',
@@ -70,6 +72,11 @@ export function testWithTags(title: string, ...tags: string[]): string {
 export class TestTagBuilder {
   private tags: Set<string> = new Set();
   
+  unit(): this {
+    this.tags.add(TestTags.UNIT);
+    return this;
+  }
+  
   smoke(): this {
     this.tags.add(TestTags.SMOKE);
     return this;
@@ -82,6 +89,11 @@ export class TestTagBuilder {
   
   e2e(): this {
     this.tags.add(TestTags.E2E);
+    return this;
+  }
+  
+  env(): this {
+    this.tags.add(TestTags.ENV);
     return this;
   }
   
