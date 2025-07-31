@@ -53,7 +53,7 @@ vi.mock('csv-stringify/sync', () => ({
   ),
 }));
 
-describe('AdoptionService', () => {
+describe('AdoptionService @unit', () => {
   let service: AdoptionService;
   const mockEnv = process.env;
 

@@ -4,7 +4,7 @@ import {
   SERVER_CONFIGS,
 } from '../../utils/test-server-manager';
 
-describe('CORS Integration (Server-Dependent)', () => {
+describe('CORS Integration (Server-Dependent) @unit', () => {
   const adminBaseUrl = `http://localhost:${SERVER_CONFIGS.ADMIN.port}/admin`;
   const portalOrigin = `http://localhost:${SERVER_CONFIGS.PORTAL.port}`;
 

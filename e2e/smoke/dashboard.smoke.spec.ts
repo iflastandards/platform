@@ -6,7 +6,7 @@
 import { test, expect, smokeTest } from '../utils/tagged-test';
 import { TestData } from '../fixtures/test-data.fixture';
 
-test.describe('Dashboard Smoke Tests @smoke @dashboard @ui', () => {
+test.describe('Dashboard Smoke Tests @smoke @dashboard @ui @critical @navigation', () => {
   test.beforeEach(async ({ page }) => {
     // Navigate to portal homepage
     await page.goto('/');

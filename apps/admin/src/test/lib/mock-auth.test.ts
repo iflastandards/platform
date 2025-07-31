@@ -1,7 +1,7 @@
 import { describe, it, expect, beforeEach } from 'vitest';
 import { createUser, getUser } from '@/app/lib/mock-auth';
 
-describe('Mock Authentication', () => {
+describe('Mock Authentication @unit @critical @authentication @security', () => {
   beforeEach(() => {
     // Clear any existing mock users between tests
     // Note: In the actual implementation, we might need to expose a clear function

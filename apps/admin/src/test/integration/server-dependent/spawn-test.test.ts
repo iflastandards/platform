@@ -1,7 +1,7 @@
 import { describe, it } from 'vitest';
 import { spawn } from 'child_process';
 
-describe('Spawn Test', () => {
+describe('Spawn Test @unit', () => {
   it('should be able to spawn admin server process', async () => {
     console.log('Testing process spawn...');
 

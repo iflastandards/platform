@@ -27,8 +27,8 @@
 
 import { e2eTest, expect } from '../e2e/utils/tagged-test';
 
-e2eTest.describe('User Journey - Complete Workflow', () => {
-  e2eTest('User can navigate from login to dashboard', async ({ page }) => {
+e2eTest.describe('User Journey - Complete Workflow @login-flow', () => {
+  e2eTest('User can navigate from login to dashboard @critical @authentication @navigation', async ({ page }) => {
     // Load login page
     await page.goto('/login');
     

@@ -14,7 +14,7 @@ const mockEnv = {
   ANTHROPIC_API_KEY: 'test-anthropic-key'
 };
 
-describe('check-mediatype-languages.mjs', () => {
+describe('check-mediatype-languages.mjs @unit', () => {
   const scriptPath = getScriptPath('check-mediatype-languages.mjs');
   const { workspaceRoot, tmpDir } = setupTestPaths();
 

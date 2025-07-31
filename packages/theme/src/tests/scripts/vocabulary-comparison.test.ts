@@ -10,7 +10,7 @@ describe.skip('VocabularyComparisonTool', () => {
     vi.restoreAllMocks();
   });
 
-  describe('Constructor', () => {
+  describe('Constructor @unit @api @validation', () => {
     it('should initialize with required parameters', () => {
       const tool = new VocabularyComparisonTool(mockApiKey, mockSpreadsheetId);
       expect(tool.apiKey).toBe(mockApiKey);

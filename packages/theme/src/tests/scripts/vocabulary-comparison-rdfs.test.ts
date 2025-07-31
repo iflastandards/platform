@@ -23,7 +23,7 @@ describe.skip('VocabularyComparisonTool RDFS Support', () => {
     vi.clearAllMocks();
   });
 
-  describe('RDFS Element Parsing', () => {
+  describe('RDFS Element Parsing @unit @api @validation', () => {
     it('should parse RDFS classes from RDF', () => {
       const rdfText = `
                 <rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"

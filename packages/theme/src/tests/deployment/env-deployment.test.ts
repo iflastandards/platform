@@ -4,7 +4,7 @@ import { describe, it, expect } from 'vitest';
  * Environment-specific deployment tests
  * Validates that the correct environment is set for preview vs production
  */
-describe('Deployment Environment Configuration', () => {
+describe('Deployment Environment Configuration @unit @deployment', () => {
   it('should skip in non-CI environments', () => {
     if (!process.env.CI) {
       expect(true).toBe(true);

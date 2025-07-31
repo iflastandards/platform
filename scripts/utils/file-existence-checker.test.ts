@@ -17,7 +17,7 @@ vi.mock('fs/promises', () => {
   };
 });
 
-describe('File Existence Checker', () => {
+describe('File Existence Checker @unit', () => {
   beforeEach(() => {
     vi.resetAllMocks();
   });

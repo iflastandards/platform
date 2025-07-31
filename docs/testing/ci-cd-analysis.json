@@ -1,0 +1,1495 @@
+{
+  "workflows": [
+    {
+      "filename": "ci-env-only.yml",
+      "name": "CI Environment Tests",
+      "triggers": {
+        "push": {
+          "branches": [
+            "main",
+            "preview"
+          ]
+        },
+        "pull_request": null
+      },
+      "jobs": [
+        "env-tests"
+      ],
+      "testCommands": [
+        "pnpm test",
+        "npm test",
+        "pnpm test:ci:env"
+      ],
+      "usesAffected": true,
+      "usesParallel": true,
+      "usesTags": false,
+      "hasPhaseBasedTesting": false,
+      "optimizationScore": 45,
+      "issues": [
+        {
+          "job": "env-tests",
+          "step": "Run CI Environment Tests",
+          "issue": "Missing affected optimization",
+          "suggestion": "Consider using nx affected for faster builds"
+        }
+      ]
+    },
+    {
+      "filename": "nx-optimized-preview.yml",
+      "name": "Nx Optimized Preview Deploy",
+      "triggers": {
+        "push": {
+          "branches": [
+            "preview"
+          ]
+        },
+        "workflow_dispatch": null
+      },
+      "jobs": [
+        "setup",
+        "build-affected",
+        "build-all-sites",
+        "deploy",
+        "cleanup"
+      ],
+      "testCommands": [],
+      "usesAffected": true,
+      "usesParallel": true,
+      "usesTags": false,
+      "hasPhaseBasedTesting": false,
+      "optimizationScore": 65,
+      "issues": []
+    },
+    {
+      "filename": "nx-optimized-production.yml",
+      "name": "Nx Optimized Production Deploy",
+      "triggers": {
+        "push": {
+          "branches": [
+            "main"
+          ]
+        },
+        "workflow_dispatch": null
+      },
+      "jobs": [
+        "validate-source",
+        "production-build",
+        "security-scan",
+        "deploy-production",
+        "post-deploy"
+      ],
+      "testCommands": [
+        "nx run-many --target=test",
+        "nx run platform:test",
+        "playwright test",
+        "pnpm dlx nx-cloud start-ci-run \\\n  --distribute-on=\"8 linux-medium-js\" \\\n  --stop-agents-after=\"e2e\" \\\n  --require-explicit-completion \\\n  --with-env-vars=\"DOCS_ENV,NODE_OPTIONS\"\n  \n",
+        "echo \"🔍 Running production quality checks...\"\n\n# Type checking\nnpx nx run-many --target=typecheck --all --parallel=4\n\n# Linting with strict rules\nnpx nx run-many --target=lint --all --parallel=4\n\n# Start headless servers for tests\npnpm dev:headless\n\n# Run unit tests\nnpx nx run-many --target=test --all --parallel=4\n",
+        "echo \"📋 Validating production builds...\"\n\n# Run build validation tests\nDOCS_ENV=production npx nx run platform:test:post-build\n\n# Check bundle sizes\nnode scripts/analyze-bundle-sizes.js --max-size 200\n\n# Validate all links\nnode scripts/validate-site-links.js --env production\n",
+        "echo \"🧪 Running production smoke tests...\"\n\n# Start local server\nnpx http-server _site -p 8080 &\nSERVER_PID=$!\n\n# Wait for server\nsleep 5\n\n# Run smoke tests\nnpx playwright test e2e/production-smoke.spec.ts\n\n# Cleanup\nkill $SERVER_PID\n"
+      ],
+      "usesAffected": false,
+      "usesParallel": true,
+      "usesTags": false,
+      "hasPhaseBasedTesting": true,
+      "optimizationScore": 35,
+      "issues": [
+        {
+          "job": "production-build",
+          "step": "Start Nx Cloud Production Run",
+          "issue": "Missing parallelization",
+          "suggestion": "Add --parallel flag for faster execution"
+        },
+        {
+          "job": "production-build",
+          "step": "Run production quality checks",
+          "issue": "Missing affected optimization",
+          "suggestion": "Consider using nx affected for faster builds"
+        },
+        {
+          "job": "production-build",
+          "step": "Run production build validation",
+          "issue": "Missing affected optimization",
+          "suggestion": "Consider using nx affected for faster builds"
+        },
+        {
+          "job": "production-build",
+          "step": "Run production build validation",
+          "issue": "Missing parallelization",
+          "suggestion": "Add --parallel flag for faster execution"
+        },
+        {
+          "job": "production-build",
+          "step": "Production smoke tests",
+          "issue": "Missing affected optimization",
+          "suggestion": "Consider using nx affected for faster builds"
+        }
+      ]
+    },
+    {
+      "filename": "nx-pr-validation.yml",
+      "name": "PR Validation",
+      "triggers": {
+        "pull_request": {
+          "types": [
+            "opened",
+            "synchronize",
+            "reopened"
+          ]
+        }
+      },
+      "jobs": [
+        "validate"
+      ],
+      "testCommands": [
+        "nx affected -t test",
+        "pnpm nx affected -t lint --parallel=4",
+        "pnpm nx affected -t typecheck --parallel=4",
+        "pnpm nx affected -t test --parallel=4 --coverage"
+      ],
+      "usesAffected": true,
+      "usesParallel": true,
+      "usesTags": false,
+      "hasPhaseBasedTesting": false,
+      "optimizationScore": 65,
+      "issues": []
+    },
+    {
+      "filename": "site-validation.yml",
+      "name": "Site Validation",
+      "triggers": {
+        "workflow_dispatch": {
+          "inputs": {
+            "environment": {
+              "description": "Environment to test",
+              "required": true,
+              "default": "development",
+              "type": "choice",
+              "options": [
+                "local",
+                "development",
+                "preview",
+                "production"
+              ]
+            },
+            "test_affected_only": {
+              "description": "Test only affected sites (faster)",
+              "required": false,
+              "default": true,
+              "type": "boolean"
+            }
+          }
+        },
+        "workflow_call": {
+          "inputs": {
+            "environment": {
+              "description": "Environment to test",
+              "required": true,
+              "type": "string"
+            },
+            "test_affected_only": {
+              "description": "Test only affected sites",
+              "required": false,
+              "default": true,
+              "type": "boolean"
+            }
+          }
+        }
+      },
+      "jobs": [
+        "validate-sites",
+        "validate-production"
+      ],
+      "testCommands": [
+        "playwright test",
+        "if [ \"${{ inputs.test_affected_only }}\" = \"true\" ] && [ \"${{ inputs.environment }}\" != \"production\" ]; then\n  echo \"Detecting affected sites...\"\n  affected=$(nx show projects --affected --type=app | tr '\\n' ' ')\n  if [ -z \"$affected\" ]; then\n    echo \"No affected sites detected. Skipping validation.\"\n    echo \"has-sites=false\" >> $GITHUB_OUTPUT\n  else\n    echo \"Affected sites: $affected\"\n    echo \"sites=$affected\" >> $GITHUB_OUTPUT\n    echo \"has-sites=true\" >> $GITHUB_OUTPUT\n  fi\nelse\n  echo \"Testing all sites...\"\n  all_sites=$(nx show projects --type=app | tr '\\n' ' ')\n  echo \"sites=$all_sites\" >> $GITHUB_OUTPUT\n  echo \"has-sites=true\" >> $GITHUB_OUTPUT\nfi\n",
+        "if [ \"${{ inputs.test_affected_only }}\" = \"true\" ]; then\n  echo \"Building affected sites only...\"\n  nx affected --target=build --parallel=1 --configuration=local\nelse\n  echo \"Building all sites...\"\n  nx run-many --target=build --all --parallel=1 --configuration=local\nfi\n",
+        "pnpm exec playwright install --with-deps",
+        "# Run Playwright tests as the only step without manual server start\nif [ \"${{ inputs.test_affected_only }}\" = \"true\" ] && [ \"${{ inputs.environment }}\" != \"production\" ]; then\n  echo \"Running validation for affected sites only...\"\n  SITES=\"${{ steps.sites.outputs.sites }}\" DOCS_ENV=${{ inputs.environment }} \\\n    pnpm exec playwright test e2e/site-validation-affected.spec.ts\nelse\n  echo \"Running validation for all sites...\"\n  DOCS_ENV=${{ inputs.environment }} \\\n    pnpm exec nx run standards-dev:e2e:site-validation\nfi\n",
+        "echo \"## Site Validation Summary\" >> $GITHUB_STEP_SUMMARY\necho \"\" >> $GITHUB_STEP_SUMMARY\necho \"**Environment:** ${{ inputs.environment }}\" >> $GITHUB_STEP_SUMMARY\necho \"**Mode:** ${{ inputs.test_affected_only && 'Affected sites only' || 'All sites' }}\" >> $GITHUB_STEP_SUMMARY\necho \"\" >> $GITHUB_STEP_SUMMARY\n\nif [ \"${{ inputs.test_affected_only }}\" = \"true\" ]; then\n  echo \"**Sites tested:** ${{ steps.sites.outputs.sites }}\" >> $GITHUB_STEP_SUMMARY\nelse\n  echo \"**Sites tested:** All sites in workspace\" >> $GITHUB_STEP_SUMMARY\nfi\n"
+      ],
+      "usesAffected": true,
+      "usesParallel": true,
+      "usesTags": false,
+      "hasPhaseBasedTesting": false,
+      "optimizationScore": 45,
+      "issues": [
+        {
+          "job": "validate-sites",
+          "step": "Determine which sites to build/test",
+          "issue": "Missing parallelization",
+          "suggestion": "Add --parallel flag for faster execution"
+        },
+        {
+          "job": "validate-sites",
+          "step": "Run site validation tests",
+          "issue": "Missing parallelization",
+          "suggestion": "Add --parallel flag for faster execution"
+        }
+      ]
+    }
+  ],
+  "testingPatterns": [
+    {
+      "name": "build:newtest",
+      "command": "nx build newtest",
+      "usesAffected": false,
+      "usesParallel": false,
+      "usesTags": false,
+      "phase": "unknown"
+    },
+    {
+      "name": "check:language-tags:ai:test",
+      "command": "node scripts/check-mediatype-languages.mjs --ai --test",
+      "usesAffected": false,
+      "usesParallel": false,
+      "usesTags": false,
+      "phase": "unknown"
+    },
+    {
+      "name": "ci:test",
+      "command": "pnpm lint && pnpm run test",
+      "usesAffected": false,
+      "usesParallel": false,
+      "usesTags": false,
+      "phase": "ci"
+    },
+    {
+      "name": "ci:test:essential",
+      "command": "pnpm typecheck && pnpm lint --quiet && pnpm test --run && node scripts/test-site-builds.js --site all --env local --skip-build",
+      "usesAffected": false,
+      "usesParallel": false,
+      "usesTags": false,
+      "phase": "ci"
+    },
+    {
+      "name": "lint:test-rules",
+      "command": "node scripts/test-linting-rules.js",
+      "usesAffected": false,
+      "usesParallel": false,
+      "usesTags": false,
+      "phase": "unknown"
+    },
+    {
+      "name": "lint:tests",
+      "command": "eslint '**/*.test.{js,jsx,ts,tsx}' '**/*.spec.{js,jsx,ts,tsx}' '**/tests/**/*.{js,jsx,ts,tsx}' '**/e2e/**/*.{js,jsx,ts,tsx}'",
+      "usesAffected": false,
+      "usesParallel": false,
+      "usesTags": false,
+      "phase": "unknown"
+    },
+    {
+      "name": "nx:monitor:test",
+      "command": "node scripts/nx-cloud-monitor.js test",
+      "usesAffected": false,
+      "usesParallel": false,
+      "usesTags": false,
+      "phase": "unknown"
+    },
+    {
+      "name": "serve:newtest",
+      "command": "pnpm stop:newtest && docusaurus serve standards/newtest --port 3008",
+      "usesAffected": false,
+      "usesParallel": false,
+      "usesTags": false,
+      "phase": "unknown"
+    },
+    {
+      "name": "start:newtest",
+      "command": "pnpm stop:newtest && DOCS_ENV=local docusaurus start standards/newtest --port 3008",
+      "usesAffected": false,
+      "usesParallel": false,
+      "usesTags": false,
+      "phase": "unknown"
+    },
+    {
+      "name": "stop:newtest",
+      "command": "lsof -ti:3008 | xargs kill -9 2>/dev/null || true",
+      "usesAffected": false,
+      "usesParallel": false,
+      "usesTags": false,
+      "phase": "unknown"
+    },
+    {
+      "name": "test",
+      "command": "node scripts/test-with-daemon.js",
+      "usesAffected": false,
+      "usesParallel": false,
+      "usesTags": false,
+      "phase": "unknown"
+    },
+    {
+      "name": "test:nx",
+      "command": "node scripts/nx-test.js",
+      "usesAffected": false,
+      "usesParallel": false,
+      "usesTags": false,
+      "phase": "unknown"
+    },
+    {
+      "name": "test:vitest",
+      "command": "vitest run --config vitest.config.nx.ts",
+      "usesAffected": false,
+      "usesParallel": false,
+      "usesTags": false,
+      "phase": "unknown"
+    },
+    {
+      "name": "test:no-daemon",
+      "command": "nx affected --target=test --parallel=3",
+      "usesAffected": true,
+      "usesParallel": true,
+      "usesTags": false,
+      "phase": "unknown"
+    },
+    {
+      "name": "test:admin",
+      "command": "nx test admin",
+      "usesAffected": false,
+      "usesParallel": false,
+      "usesTags": false,
+      "phase": "unknown"
+    },
+    {
+      "name": "test:admin:coverage",
+      "command": "nx run admin:test:coverage",
+      "usesAffected": false,
+      "usesParallel": false,
+      "usesTags": false,
+      "phase": "unknown"
+    },
+    {
+      "name": "test:admin:e2e",
+      "command": "nx run admin:e2e",
+      "usesAffected": false,
+      "usesParallel": false,
+      "usesTags": false,
+      "phase": "comprehensive"
+    },
+    {
+      "name": "test:admin:integration",
+      "command": "nx run admin:test:integration",
+      "usesAffected": false,
+      "usesParallel": false,
+      "usesTags": false,
+      "phase": "comprehensive"
+    },
+    {
+      "name": "test:admin:roles",
+      "command": "node scripts/test-admin-roles.js",
+      "usesAffected": false,
+      "usesParallel": false,
+      "usesTags": false,
+      "phase": "unknown"
+    },
+    {
+      "name": "test:admin:unit",
+      "command": "nx run admin:test:unit",
+      "usesAffected": false,
+      "usesParallel": false,
+      "usesTags": false,
+      "phase": "selective"
+    },
+    {
+      "name": "test:admin:watch",
+      "command": "nx run admin:test:watch",
+      "usesAffected": false,
+      "usesParallel": false,
+      "usesTags": false,
+      "phase": "unknown"
+    },
+    {
+      "name": "test:affected",
+      "command": "nx affected --target=test --parallel=3",
+      "usesAffected": true,
+      "usesParallel": true,
+      "usesTags": false,
+      "phase": "unknown"
+    },
+    {
+      "name": "test:all",
+      "command": "nx run-many --target=test --all --parallel=6",
+      "usesAffected": false,
+      "usesParallel": true,
+      "usesTags": false,
+      "phase": "unknown"
+    },
+    {
+      "name": "test:builds",
+      "command": "node scripts/test-site-builds.js",
+      "usesAffected": false,
+      "usesParallel": false,
+      "usesTags": false,
+      "phase": "unknown"
+    },
+    {
+      "name": "test:builds:all",
+      "command": "node scripts/test-site-builds.js --site all",
+      "usesAffected": false,
+      "usesParallel": false,
+      "usesTags": false,
+      "phase": "unknown"
+    },
+    {
+      "name": "test:builds:config",
+      "command": "node scripts/test-site-builds.js --skip-build",
+      "usesAffected": false,
+      "usesParallel": false,
+      "usesTags": false,
+      "phase": "unknown"
+    },
+    {
+      "name": "test:builds:critical",
+      "command": "node scripts/test-site-builds.js --site portal --env production && node scripts/test-site-builds.js --site ISBDM --env production",
+      "usesAffected": false,
+      "usesParallel": false,
+      "usesTags": false,
+      "phase": "unknown"
+    },
+    {
+      "name": "test:builds:portal",
+      "command": "node scripts/test-site-builds.js --site portal",
+      "usesAffected": false,
+      "usesParallel": false,
+      "usesTags": false,
+      "phase": "unknown"
+    },
+    {
+      "name": "test:builds:production",
+      "command": "node scripts/test-site-builds.js --site all --env production",
+      "usesAffected": false,
+      "usesParallel": false,
+      "usesTags": false,
+      "phase": "unknown"
+    },
+    {
+      "name": "test:ci",
+      "command": "pnpm test:ci:env",
+      "usesAffected": false,
+      "usesParallel": false,
+      "usesTags": false,
+      "phase": "ci"
+    },
+    {
+      "name": "test:ci:env",
+      "command": "node scripts/ci-env-tests.js",
+      "usesAffected": false,
+      "usesParallel": false,
+      "usesTags": false,
+      "phase": "ci"
+    },
+    {
+      "name": "test:ci:env:only",
+      "command": "vitest run --config vitest.config.ci-env.ts",
+      "usesAffected": false,
+      "usesParallel": false,
+      "usesTags": false,
+      "phase": "ci"
+    },
+    {
+      "name": "test:ci:config",
+      "command": "node scripts/test-site-builds.js --site all --env production --skip-build",
+      "usesAffected": false,
+      "usesParallel": false,
+      "usesTags": false,
+      "phase": "ci"
+    },
+    {
+      "name": "test:ci:connectivity",
+      "command": "pnpm vitest run --config vitest.config.ci.ts packages/theme/src/tests/deployment/external-services.test.ts",
+      "usesAffected": false,
+      "usesParallel": false,
+      "usesTags": false,
+      "phase": "ci"
+    },
+    {
+      "name": "test:comprehensive",
+      "command": "nx run-many --targets=typecheck,lint,test,build --all --parallel=3 && nx run platform:e2e",
+      "usesAffected": false,
+      "usesParallel": true,
+      "usesTags": false,
+      "phase": "comprehensive"
+    },
+    {
+      "name": "test:validate-placement",
+      "command": "node scripts/validate-test-placement.js",
+      "usesAffected": false,
+      "usesParallel": false,
+      "usesTags": false,
+      "phase": "unknown"
+    },
+    {
+      "name": "test:comprehensive:builds",
+      "command": "nx run-many --target=build --all --parallel=3 && node scripts/test-site-builds.js --site all --env production && pnpm test:post-build:local",
+      "usesAffected": false,
+      "usesParallel": true,
+      "usesTags": false,
+      "phase": "comprehensive"
+    },
+    {
+      "name": "test:comprehensive:e2e",
+      "command": "nx run platform:e2e && nx run-many --target=e2e --all",
+      "usesAffected": false,
+      "usesParallel": false,
+      "usesTags": false,
+      "phase": "comprehensive"
+    },
+    {
+      "name": "test:comprehensive:unit",
+      "command": "nx run-many --target=test --all --parallel=3",
+      "usesAffected": false,
+      "usesParallel": true,
+      "usesTags": false,
+      "phase": "comprehensive"
+    },
+    {
+      "name": "test:ci:smoke",
+      "command": "nx run-many --target=test:smoke --all --parallel=4",
+      "usesAffected": false,
+      "usesParallel": true,
+      "usesTags": false,
+      "phase": "smoke"
+    },
+    {
+      "name": "test:ci:integration",
+      "command": "nx run-many --target=test:integration:e2e --all --parallel=2",
+      "usesAffected": false,
+      "usesParallel": true,
+      "usesTags": false,
+      "phase": "ci"
+    },
+    {
+      "name": "test:ci:e2e",
+      "command": "nx run-many --target=test:e2e:full --all --parallel=1",
+      "usesAffected": false,
+      "usesParallel": true,
+      "usesTags": false,
+      "phase": "ci"
+    },
+    {
+      "name": "test:ci:quick",
+      "command": "pnpm test:ci:smoke",
+      "usesAffected": false,
+      "usesParallel": false,
+      "usesTags": false,
+      "phase": "ci"
+    },
+    {
+      "name": "test:ci:standard",
+      "command": "pnpm test:ci:smoke && pnpm test:ci:integration",
+      "usesAffected": false,
+      "usesParallel": false,
+      "usesTags": false,
+      "phase": "ci"
+    },
+    {
+      "name": "test:ci:full",
+      "command": "pnpm test:ci:smoke && pnpm test:ci:integration && pnpm test:ci:e2e",
+      "usesAffected": false,
+      "usesParallel": false,
+      "usesTags": false,
+      "phase": "ci"
+    },
+    {
+      "name": "test:coverage",
+      "command": "pnpm test --coverage",
+      "usesAffected": false,
+      "usesParallel": false,
+      "usesTags": false,
+      "phase": "unknown"
+    },
+    {
+      "name": "test:e2e",
+      "command": "node scripts/e2e-site-oriented.js",
+      "usesAffected": false,
+      "usesParallel": false,
+      "usesTags": false,
+      "phase": "comprehensive"
+    },
+    {
+      "name": "test:e2e:legacy",
+      "command": "nx run platform:e2e",
+      "usesAffected": false,
+      "usesParallel": false,
+      "usesTags": false,
+      "phase": "comprehensive"
+    },
+    {
+      "name": "test:e2e:pre-push",
+      "command": "nx run platform:e2e:pre-push",
+      "usesAffected": false,
+      "usesParallel": false,
+      "usesTags": false,
+      "phase": "pre-push"
+    },
+    {
+      "name": "test:e2e:affected",
+      "command": "nx affected --target=e2e",
+      "usesAffected": true,
+      "usesParallel": false,
+      "usesTags": false,
+      "phase": "comprehensive"
+    },
+    {
+      "name": "test:e2e:all",
+      "command": "node scripts/e2e-site-oriented.js --all",
+      "usesAffected": false,
+      "usesParallel": false,
+      "usesTags": false,
+      "phase": "comprehensive"
+    },
+    {
+      "name": "test:e2e:all:legacy",
+      "command": "nx run-many --target=e2e --all",
+      "usesAffected": false,
+      "usesParallel": false,
+      "usesTags": false,
+      "phase": "comprehensive"
+    },
+    {
+      "name": "test:e2e:admin",
+      "command": "node scripts/e2e-site-oriented.js --site admin",
+      "usesAffected": false,
+      "usesParallel": false,
+      "usesTags": false,
+      "phase": "comprehensive"
+    },
+    {
+      "name": "test:e2e:portal",
+      "command": "nx run portal:e2e",
+      "usesAffected": false,
+      "usesParallel": false,
+      "usesTags": false,
+      "phase": "comprehensive"
+    },
+    {
+      "name": "test:e2e:chrome",
+      "command": "node scripts/e2e-site-oriented.js --browser chromium",
+      "usesAffected": false,
+      "usesParallel": false,
+      "usesTags": false,
+      "phase": "comprehensive"
+    },
+    {
+      "name": "test:e2e:firefox:legacy",
+      "command": "node scripts/e2e-site-oriented.js --browser firefox",
+      "usesAffected": false,
+      "usesParallel": false,
+      "usesTags": false,
+      "phase": "comprehensive"
+    },
+    {
+      "name": "test:e2e:isbdm",
+      "command": "nx run isbdm:e2e",
+      "usesAffected": false,
+      "usesParallel": false,
+      "usesTags": false,
+      "phase": "comprehensive"
+    },
+    {
+      "name": "test:e2e:lrm",
+      "command": "nx run lrm:e2e",
+      "usesAffected": false,
+      "usesParallel": false,
+      "usesTags": false,
+      "phase": "comprehensive"
+    },
+    {
+      "name": "test:e2e:sharded",
+      "command": "SHARD_CURRENT=1 SHARD_TOTAL=4 npx nx playwright:e2e",
+      "usesAffected": false,
+      "usesParallel": false,
+      "usesTags": false,
+      "phase": "comprehensive"
+    },
+    {
+      "name": "test:e2e:ui",
+      "command": "nx run platform:e2e:ui",
+      "usesAffected": false,
+      "usesParallel": false,
+      "usesTags": false,
+      "phase": "comprehensive"
+    },
+    {
+      "name": "test:e2e:smoke",
+      "command": "nx run platform:test:smoke",
+      "usesAffected": false,
+      "usesParallel": false,
+      "usesTags": false,
+      "phase": "smoke"
+    },
+    {
+      "name": "test:e2e:smoke:affected",
+      "command": "nx affected --target=test:smoke",
+      "usesAffected": true,
+      "usesParallel": false,
+      "usesTags": false,
+      "phase": "smoke"
+    },
+    {
+      "name": "test:e2e:integration",
+      "command": "nx run platform:test:integration:e2e",
+      "usesAffected": false,
+      "usesParallel": false,
+      "usesTags": false,
+      "phase": "comprehensive"
+    },
+    {
+      "name": "test:e2e:integration:affected",
+      "command": "nx affected --target=test:integration:e2e",
+      "usesAffected": true,
+      "usesParallel": false,
+      "usesTags": false,
+      "phase": "comprehensive"
+    },
+    {
+      "name": "test:e2e:full",
+      "command": "nx run platform:test:e2e:full",
+      "usesAffected": false,
+      "usesParallel": false,
+      "usesTags": false,
+      "phase": "comprehensive"
+    },
+    {
+      "name": "test:e2e:full:affected",
+      "command": "nx affected --target=test:e2e:full",
+      "usesAffected": true,
+      "usesParallel": false,
+      "usesTags": false,
+      "phase": "comprehensive"
+    },
+    {
+      "name": "test:e2e:tags",
+      "command": "node e2e/utils/test-runner.ts",
+      "usesAffected": false,
+      "usesParallel": false,
+      "usesTags": false,
+      "phase": "comprehensive"
+    },
+    {
+      "name": "test:e2e:categorize",
+      "command": "node e2e/utils/test-categorizer.ts",
+      "usesAffected": false,
+      "usesParallel": false,
+      "usesTags": false,
+      "phase": "comprehensive"
+    },
+    {
+      "name": "test:e2e:critical",
+      "command": "pnpm test:e2e:tags critical",
+      "usesAffected": false,
+      "usesParallel": false,
+      "usesTags": true,
+      "phase": "comprehensive"
+    },
+    {
+      "name": "test:e2e:auth",
+      "command": "pnpm test:e2e:tags auth",
+      "usesAffected": false,
+      "usesParallel": false,
+      "usesTags": true,
+      "phase": "comprehensive"
+    },
+    {
+      "name": "test:e2e:rbac",
+      "command": "pnpm test:e2e:tags rbac",
+      "usesAffected": false,
+      "usesParallel": false,
+      "usesTags": true,
+      "phase": "comprehensive"
+    },
+    {
+      "name": "test:e2e:perf",
+      "command": "pnpm test:e2e:tags performance",
+      "usesAffected": false,
+      "usesParallel": false,
+      "usesTags": true,
+      "phase": "comprehensive"
+    },
+    {
+      "name": "test:e2e:browsers",
+      "command": "npx playwright test --config=playwright.config.browsers.ts",
+      "usesAffected": false,
+      "usesParallel": false,
+      "usesTags": false,
+      "phase": "comprehensive"
+    },
+    {
+      "name": "test:e2e:browsers:smoke",
+      "command": "npx playwright test --config=playwright.config.browsers.ts --grep @smoke",
+      "usesAffected": false,
+      "usesParallel": false,
+      "usesTags": true,
+      "phase": "smoke"
+    },
+    {
+      "name": "test:e2e:firefox",
+      "command": "npx playwright test --project=firefox",
+      "usesAffected": false,
+      "usesParallel": false,
+      "usesTags": false,
+      "phase": "comprehensive"
+    },
+    {
+      "name": "test:e2e:safari",
+      "command": "npx playwright test --project=webkit",
+      "usesAffected": false,
+      "usesParallel": false,
+      "usesTags": false,
+      "phase": "comprehensive"
+    },
+    {
+      "name": "test:e2e:edge",
+      "command": "npx playwright test --project=edge",
+      "usesAffected": false,
+      "usesParallel": false,
+      "usesTags": false,
+      "phase": "comprehensive"
+    },
+    {
+      "name": "test:e2e:webkit",
+      "command": "npx playwright test --project=webkit",
+      "usesAffected": false,
+      "usesParallel": false,
+      "usesTags": false,
+      "phase": "comprehensive"
+    },
+    {
+      "name": "test:e2e:mobile",
+      "command": "npx playwright test --project=mobile-chrome --project=mobile-safari",
+      "usesAffected": false,
+      "usesParallel": false,
+      "usesTags": false,
+      "phase": "comprehensive"
+    },
+    {
+      "name": "test:explain-strategy",
+      "command": "node scripts/explain-testing-strategy.js",
+      "usesAffected": false,
+      "usesParallel": false,
+      "usesTags": false,
+      "phase": "unknown"
+    },
+    {
+      "name": "test:list",
+      "command": "node scripts/list-test-commands.js",
+      "usesAffected": false,
+      "usesParallel": false,
+      "usesTags": false,
+      "phase": "unknown"
+    },
+    {
+      "name": "test:help",
+      "command": "node scripts/list-test-commands.js",
+      "usesAffected": false,
+      "usesParallel": false,
+      "usesTags": false,
+      "phase": "unknown"
+    },
+    {
+      "name": "test:full",
+      "command": "pnpm typecheck && pnpm lint --quiet && pnpm test && pnpm test:builds:config",
+      "usesAffected": false,
+      "usesParallel": false,
+      "usesTags": false,
+      "phase": "unknown"
+    },
+    {
+      "name": "test:mark-run",
+      "command": "node scripts/mark-tests-run.js",
+      "usesAffected": false,
+      "usesParallel": false,
+      "usesTags": false,
+      "phase": "unknown"
+    },
+    {
+      "name": "test:performance",
+      "command": "npx nx playwright:e2e e2e/performance.spec.ts",
+      "usesAffected": false,
+      "usesParallel": false,
+      "usesTags": false,
+      "phase": "unknown"
+    },
+    {
+      "name": "test:portal:e2e",
+      "command": "./scripts/test-portal-builds.sh",
+      "usesAffected": false,
+      "usesParallel": false,
+      "usesTags": false,
+      "phase": "comprehensive"
+    },
+    {
+      "name": "test:portal:optimized",
+      "command": "./scripts/test-portal-builds-optimized.sh",
+      "usesAffected": false,
+      "usesParallel": false,
+      "usesTags": false,
+      "phase": "unknown"
+    },
+    {
+      "name": "test:post-build",
+      "command": "DOCS_ENV=${DOCS_ENV:-local} nx playwright:e2e e2e/post-build-validation.spec.ts",
+      "usesAffected": false,
+      "usesParallel": false,
+      "usesTags": false,
+      "phase": "unknown"
+    },
+    {
+      "name": "test:post-build:local",
+      "command": "DOCS_ENV=local nx playwright:e2e e2e/post-build-validation.spec.ts",
+      "usesAffected": false,
+      "usesParallel": false,
+      "usesTags": false,
+      "phase": "unknown"
+    },
+    {
+      "name": "test:post-build:preview",
+      "command": "DOCS_ENV=preview nx playwright:e2e e2e/post-build-validation.spec.ts",
+      "usesAffected": false,
+      "usesParallel": false,
+      "usesTags": false,
+      "phase": "unknown"
+    },
+    {
+      "name": "test:post-build:production",
+      "command": "DOCS_ENV=production nx playwright:e2e e2e/post-build-validation.spec.ts",
+      "usesAffected": false,
+      "usesParallel": false,
+      "usesTags": false,
+      "phase": "unknown"
+    },
+    {
+      "name": "test:pre-commit",
+      "command": "node scripts/pre-commit-check-optimized.js",
+      "usesAffected": false,
+      "usesParallel": false,
+      "usesTags": false,
+      "phase": "pre-commit"
+    },
+    {
+      "name": "test:pre-commit:original",
+      "command": "node scripts/pre-commit-check.js",
+      "usesAffected": false,
+      "usesParallel": false,
+      "usesTags": false,
+      "phase": "pre-commit"
+    },
+    {
+      "name": "test:pre-commit:smart",
+      "command": "node scripts/pre-commit-check-smart.js",
+      "usesAffected": false,
+      "usesParallel": false,
+      "usesTags": false,
+      "phase": "pre-commit"
+    },
+    {
+      "name": "test:pre-commit:fast",
+      "command": "node scripts/pre-commit-check-fast.js",
+      "usesAffected": false,
+      "usesParallel": false,
+      "usesTags": false,
+      "phase": "pre-commit"
+    },
+    {
+      "name": "test:pre-commit:strict",
+      "command": "nx affected --targets=typecheck,lint,test:unit --parallel=3 && node scripts/test-site-builds-affected.js --env local --skip-build",
+      "usesAffected": true,
+      "usesParallel": true,
+      "usesTags": false,
+      "phase": "pre-commit"
+    },
+    {
+      "name": "test:pre-commit:smoke",
+      "command": "nx affected --targets=typecheck,lint --parallel=3 && pnpm test:e2e:smoke:affected",
+      "usesAffected": true,
+      "usesParallel": true,
+      "usesTags": false,
+      "phase": "smoke"
+    },
+    {
+      "name": "test:pre-push",
+      "command": "pnpm test:pre-commit && pnpm test:builds:critical",
+      "usesAffected": false,
+      "usesParallel": false,
+      "usesTags": false,
+      "phase": "pre-push"
+    },
+    {
+      "name": "test:pre-push:integration",
+      "command": "pnpm test:pre-commit && pnpm test:e2e:integration:affected && pnpm test:builds:critical",
+      "usesAffected": true,
+      "usesParallel": false,
+      "usesTags": false,
+      "phase": "pre-push"
+    },
+    {
+      "name": "test:pre-push:fast",
+      "command": "./scripts/nx-pre-push-fast.sh",
+      "usesAffected": false,
+      "usesParallel": false,
+      "usesTags": false,
+      "phase": "pre-push"
+    },
+    {
+      "name": "test:pre-push:flexible",
+      "command": "node scripts/pre-push-check.js",
+      "usesAffected": false,
+      "usesParallel": false,
+      "usesTags": false,
+      "phase": "pre-push"
+    },
+    {
+      "name": "test:pre-push:nx",
+      "command": "nx affected --target=lint && nx affected --target=typecheck && nx affected --target=test && nx affected --target=build",
+      "usesAffected": true,
+      "usesParallel": false,
+      "usesTags": false,
+      "phase": "pre-push"
+    },
+    {
+      "name": "test:pre-push:nx:smart",
+      "command": "./scripts/nx-pre-push.sh",
+      "usesAffected": false,
+      "usesParallel": false,
+      "usesTags": false,
+      "phase": "pre-push"
+    },
+    {
+      "name": "test:pre-push:optimized",
+      "command": "./.husky/pre-push-optimized",
+      "usesAffected": false,
+      "usesParallel": false,
+      "usesTags": false,
+      "phase": "pre-push"
+    },
+    {
+      "name": "test:pre-push:reminder",
+      "command": "./.husky/pre-push-reminder",
+      "usesAffected": false,
+      "usesParallel": false,
+      "usesTags": false,
+      "phase": "pre-push"
+    },
+    {
+      "name": "test:pre-push:smart",
+      "command": "./.husky/pre-push-smart",
+      "usesAffected": false,
+      "usesParallel": false,
+      "usesTags": false,
+      "phase": "pre-push"
+    },
+    {
+      "name": "test:pre-push:with-e2e",
+      "command": "node -e \"const fs=require('fs'); const cfg=JSON.parse(fs.readFileSync('.prepushrc.json')); cfg.runE2E=true; fs.writeFileSync('.prepushrc.json', JSON.stringify(cfg,null,2)); console.log('E2E enabled for this run');\" && node scripts/pre-push-check.js",
+      "usesAffected": false,
+      "usesParallel": false,
+      "usesTags": false,
+      "phase": "pre-push"
+    },
+    {
+      "name": "test:regression",
+      "command": "nx run platform:regression:full",
+      "usesAffected": false,
+      "usesParallel": false,
+      "usesTags": false,
+      "phase": "unknown"
+    },
+    {
+      "name": "test:regression:affected",
+      "command": "node scripts/test-site-builds-optimized.js --affected-only",
+      "usesAffected": true,
+      "usesParallel": false,
+      "usesTags": false,
+      "phase": "unknown"
+    },
+    {
+      "name": "test:regression:fast",
+      "command": "node scripts/test-site-builds-optimized.js --mode fast --skip-build",
+      "usesAffected": false,
+      "usesParallel": false,
+      "usesTags": false,
+      "phase": "unknown"
+    },
+    {
+      "name": "test:regression:nx:fast",
+      "command": "nx run platform:regression:fast",
+      "usesAffected": false,
+      "usesParallel": false,
+      "usesTags": false,
+      "phase": "unknown"
+    },
+    {
+      "name": "test:regression:optimized",
+      "command": "node scripts/test-site-builds-optimized.js --mode smart",
+      "usesAffected": false,
+      "usesParallel": false,
+      "usesTags": false,
+      "phase": "unknown"
+    },
+    {
+      "name": "test:scripts",
+      "command": "nx test scripts",
+      "usesAffected": false,
+      "usesParallel": false,
+      "usesTags": false,
+      "phase": "unknown"
+    },
+    {
+      "name": "test:scripts:affected",
+      "command": "nx affected --target=test --projects=scripts",
+      "usesAffected": true,
+      "usesParallel": false,
+      "usesTags": false,
+      "phase": "unknown"
+    },
+    {
+      "name": "test:scripts:all",
+      "command": "nx run scripts:test",
+      "usesAffected": false,
+      "usesParallel": false,
+      "usesTags": false,
+      "phase": "unknown"
+    },
+    {
+      "name": "test:scripts:coverage",
+      "command": "nx run scripts:test:coverage",
+      "usesAffected": false,
+      "usesParallel": false,
+      "usesTags": false,
+      "phase": "unknown"
+    },
+    {
+      "name": "test:scripts:file",
+      "command": "nx run scripts:test:specific --",
+      "usesAffected": false,
+      "usesParallel": false,
+      "usesTags": false,
+      "phase": "unknown"
+    },
+    {
+      "name": "test:scripts:watch",
+      "command": "nx run scripts:test:watch",
+      "usesAffected": false,
+      "usesParallel": false,
+      "usesTags": false,
+      "phase": "unknown"
+    },
+    {
+      "name": "test:dev-servers",
+      "command": "nx run @ifla/dev-servers:test:on-demand",
+      "usesAffected": false,
+      "usesParallel": false,
+      "usesTags": true,
+      "phase": "unknown"
+    },
+    {
+      "name": "test:servers",
+      "command": "tsx scripts/test-server-manager.ts",
+      "usesAffected": false,
+      "usesParallel": false,
+      "usesTags": false,
+      "phase": "unknown"
+    },
+    {
+      "name": "test:servers:smoke",
+      "command": "tsx scripts/test-server-manager.ts start --test-type smoke:all",
+      "usesAffected": false,
+      "usesParallel": false,
+      "usesTags": false,
+      "phase": "smoke"
+    },
+    {
+      "name": "test:servers:integration",
+      "command": "tsx scripts/test-server-manager.ts start --test-type integration:all",
+      "usesAffected": false,
+      "usesParallel": false,
+      "usesTags": false,
+      "phase": "comprehensive"
+    },
+    {
+      "name": "test:servers:stop",
+      "command": "tsx scripts/test-server-manager.ts stop",
+      "usesAffected": false,
+      "usesParallel": false,
+      "usesTags": false,
+      "phase": "unknown"
+    },
+    {
+      "name": "test:ui",
+      "command": "nx test --ui",
+      "usesAffected": false,
+      "usesParallel": false,
+      "usesTags": false,
+      "phase": "unknown"
+    },
+    {
+      "name": "test:visual",
+      "command": "npx nx playwright:e2e e2e/visual-regression-enhanced.spec.ts",
+      "usesAffected": false,
+      "usesParallel": false,
+      "usesTags": false,
+      "phase": "unknown"
+    },
+    {
+      "name": "test:visual-regression",
+      "command": "nx playwright:e2e --config=playwright-snapshots.config.ts",
+      "usesAffected": false,
+      "usesParallel": false,
+      "usesTags": false,
+      "phase": "unknown"
+    },
+    {
+      "name": "test:visual:update",
+      "command": "npx nx playwright:e2e e2e/visual-regression-enhanced.spec.ts --update-snapshots",
+      "usesAffected": false,
+      "usesParallel": false,
+      "usesTags": false,
+      "phase": "unknown"
+    },
+    {
+      "name": "test:watch",
+      "command": "nx test --watch",
+      "usesAffected": false,
+      "usesParallel": false,
+      "usesTags": false,
+      "phase": "unknown"
+    },
+    {
+      "name": "test:validate-tagging",
+      "command": "node scripts/validate-test-tagging.js",
+      "usesAffected": false,
+      "usesParallel": false,
+      "usesTags": false,
+      "phase": "unknown"
+    },
+    {
+      "name": "audit:testing",
+      "command": "node scripts/testing-audit-quarterly.js",
+      "usesAffected": false,
+      "usesParallel": false,
+      "usesTags": false,
+      "phase": "unknown"
+    },
+    {
+      "name": "test:affected:unit",
+      "command": "pnpm test:affected --grep '@unit'",
+      "usesAffected": true,
+      "usesParallel": false,
+      "usesTags": true,
+      "phase": "selective"
+    },
+    {
+      "name": "test:affected:integration",
+      "command": "pnpm test:affected --grep '@integration'",
+      "usesAffected": true,
+      "usesParallel": false,
+      "usesTags": true,
+      "phase": "comprehensive"
+    },
+    {
+      "name": "test:affected:critical",
+      "command": "pnpm test:affected --grep '@critical'",
+      "usesAffected": true,
+      "usesParallel": false,
+      "usesTags": true,
+      "phase": "unknown"
+    },
+    {
+      "name": "test:by-tag",
+      "command": "node scripts/run-tests-by-tag.js",
+      "usesAffected": false,
+      "usesParallel": false,
+      "usesTags": false,
+      "phase": "unknown"
+    },
+    {
+      "name": "test:unit",
+      "command": "pnpm test:by-tag --tags @unit",
+      "usesAffected": false,
+      "usesParallel": false,
+      "usesTags": true,
+      "phase": "selective"
+    },
+    {
+      "name": "test:integration",
+      "command": "pnpm test:by-tag --tags @integration",
+      "usesAffected": false,
+      "usesParallel": false,
+      "usesTags": true,
+      "phase": "comprehensive"
+    },
+    {
+      "name": "test:security",
+      "command": "pnpm test:by-tag --tags @security",
+      "usesAffected": false,
+      "usesParallel": false,
+      "usesTags": true,
+      "phase": "unknown"
+    },
+    {
+      "name": "test:api",
+      "command": "pnpm test:by-tag --tags @api",
+      "usesAffected": false,
+      "usesParallel": false,
+      "usesTags": true,
+      "phase": "unknown"
+    },
+    {
+      "name": "test:validation",
+      "command": "pnpm test:by-tag --tags @validation",
+      "usesAffected": false,
+      "usesParallel": false,
+      "usesTags": true,
+      "phase": "unknown"
+    },
+    {
+      "name": "test:rbac",
+      "command": "pnpm test:by-tag --tags @rbac",
+      "usesAffected": false,
+      "usesParallel": false,
+      "usesTags": true,
+      "phase": "unknown"
+    },
+    {
+      "name": "test:ci:affected",
+      "command": "nx affected --target=test --parallel=6 --maxParallel=6",
+      "usesAffected": true,
+      "usesParallel": true,
+      "usesTags": false,
+      "phase": "ci"
+    },
+    {
+      "name": "test:ci:critical",
+      "command": "pnpm test:by-tag --tags @critical --parallel",
+      "usesAffected": false,
+      "usesParallel": true,
+      "usesTags": true,
+      "phase": "ci"
+    },
+    {
+      "name": "test:dev",
+      "command": "nx affected --target=test --parallel=3 --watch",
+      "usesAffected": true,
+      "usesParallel": true,
+      "usesTags": false,
+      "phase": "unknown"
+    },
+    {
+      "name": "test:dev:unit",
+      "command": "pnpm test:dev --grep '@unit'",
+      "usesAffected": false,
+      "usesParallel": false,
+      "usesTags": true,
+      "phase": "selective"
+    },
+    {
+      "name": "test:dev:changed",
+      "command": "vitest --changed --run",
+      "usesAffected": false,
+      "usesParallel": false,
+      "usesTags": false,
+      "phase": "unknown"
+    },
+    {
+      "name": "test:fast",
+      "command": "nx affected --target=test --parallel=6 --skip-nx-cache=false",
+      "usesAffected": true,
+      "usesParallel": true,
+      "usesTags": false,
+      "phase": "unknown"
+    },
+    {
+      "name": "test:fast:unit",
+      "command": "pnpm test:fast --grep '@unit'",
+      "usesAffected": false,
+      "usesParallel": false,
+      "usesTags": true,
+      "phase": "selective"
+    },
+    {
+      "name": "test:fast:critical",
+      "command": "pnpm test:fast --grep '@critical'",
+      "usesAffected": false,
+      "usesParallel": false,
+      "usesTags": true,
+      "phase": "unknown"
+    },
+    {
+      "name": "test:comprehensive:affected",
+      "command": "nx affected --targets=typecheck,lint,test,build --parallel=6",
+      "usesAffected": true,
+      "usesParallel": true,
+      "usesTags": false,
+      "phase": "comprehensive"
+    },
+    {
+      "name": "test:comprehensive:smart",
+      "command": "pnpm test:comprehensive:affected && pnpm test:e2e:affected",
+      "usesAffected": true,
+      "usesParallel": false,
+      "usesTags": false,
+      "phase": "comprehensive"
+    }
+  ],
+  "optimizationOpportunities": [
+    {
+      "type": "workflow",
+      "target": "ci-env-only.yml",
+      "currentScore": 45,
+      "improvements": [
+        "Consider using nx affected for faster builds"
+      ],
+      "priority": "HIGH"
+    },
+    {
+      "type": "workflow",
+      "target": "nx-optimized-preview.yml",
+      "currentScore": 65,
+      "improvements": [],
+      "priority": "MEDIUM"
+    },
+    {
+      "type": "workflow",
+      "target": "nx-optimized-production.yml",
+      "currentScore": 35,
+      "improvements": [
+        "Add --parallel flag for faster execution",
+        "Consider using nx affected for faster builds",
+        "Consider using nx affected for faster builds",
+        "Add --parallel flag for faster execution",
+        "Consider using nx affected for faster builds"
+      ],
+      "priority": "HIGH"
+    },
+    {
+      "type": "workflow",
+      "target": "nx-pr-validation.yml",
+      "currentScore": 65,
+      "improvements": [],
+      "priority": "MEDIUM"
+    },
+    {
+      "type": "workflow",
+      "target": "site-validation.yml",
+      "currentScore": 45,
+      "improvements": [
+        "Add --parallel flag for faster execution",
+        "Add --parallel flag for faster execution"
+      ],
+      "priority": "HIGH"
+    },
+    {
+      "type": "tag-based",
+      "target": "Test execution",
+      "improvements": [
+        "Implement tag-based test filtering in CI",
+        "Use @critical, @smoke, @unit tags for selective execution",
+        "Create tag-specific CI workflows"
+      ],
+      "priority": "HIGH"
+    }
+  ],
+  "tagUsage": [],
+  "affectedUsage": [],
+  "parallelization": [],
+  "phaseCompliance": []
+}

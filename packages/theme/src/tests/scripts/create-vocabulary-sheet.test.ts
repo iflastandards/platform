@@ -27,7 +27,7 @@ vi.mock('readline', () => ({
   }))
 }));
 
-describe('create-vocabulary-sheet', () => {
+describe('create-vocabulary-sheet @unit @api @validation', () => {
   let mockSheets: any;
   let mockDrive: any;
   let mockAuth: any;

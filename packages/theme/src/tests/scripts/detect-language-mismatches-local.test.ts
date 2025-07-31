@@ -23,7 +23,7 @@ vi.mock('langdetect-ts', () => ({
   detectLanguage: mockDetectLanguage
 }));
 
-describe('detect-language-mismatches-local.js', () => {
+describe('detect-language-mismatches-local.js @unit', () => {
   const testDataDir = path.join(__dirname, 'test-data');
   
   beforeEach(async () => {

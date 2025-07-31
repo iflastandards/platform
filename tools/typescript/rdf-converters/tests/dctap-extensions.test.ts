@@ -3,7 +3,7 @@ import { execSync } from 'child_process';
 import * as fs from 'fs';
 import * as path from 'path';
 
-describe('DCTAP Extensions', () => {
+describe('DCTAP Extensions @unit', () => {
   const fixturesDir = path.join(__dirname, 'fixtures', 'dctap-extensions');
   const tempDir = '/tmp/rdf-converters-tests';
   const scriptPath = path.join(__dirname, '..', 'src', 'rdf-to-csv.ts');

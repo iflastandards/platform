@@ -69,7 +69,7 @@ const mockIFLAData: IFLAReportData = {
   },
 };
 
-describe('IFLA Report Data Parser', () => {
+describe('IFLA Report Data Parser @unit', () => {
   describe('transformElementSet', () => {
     it('should transform element set data correctly', () => {
       const result = transformElementSet(

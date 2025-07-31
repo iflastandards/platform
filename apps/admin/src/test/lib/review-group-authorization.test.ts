@@ -21,7 +21,7 @@ vi.mock('@/lib/cerbos', () => ({
  * with "namespace" being the technical term and "review group" being
  * the organizational term.
  */
-describe('Review Group (RG) Authorization', () => {
+describe('Review Group (RG) Authorization @unit @critical @authentication @security', () => {
   beforeEach(() => {
     vi.clearAllMocks();
   });

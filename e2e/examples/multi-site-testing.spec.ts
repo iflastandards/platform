@@ -5,7 +5,7 @@ import { getAdminPortalConfig } from '../../packages/theme/src/config/siteConfig
 const adminConfig = getAdminPortalConfig('local');
 
 // Example: Testing multiple documentation sites
-test.describe('Multi-Site E2E Tests', () => {
+test.describe('Multi-Site E2E Tests @e2e', () => {
   // Test different sites with their specific ports
   const sites = [
     { name: 'portal', url: 'http://localhost:3000' },

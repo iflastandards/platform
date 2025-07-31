@@ -11,7 +11,7 @@ vi.mock('@cerbos/grpc', () => ({
   })),
 }));
 
-describe('Cerbos Integration', () => {
+describe('Cerbos Integration @unit', () => {
   let cerbosClient: any;
 
   beforeEach(() => {

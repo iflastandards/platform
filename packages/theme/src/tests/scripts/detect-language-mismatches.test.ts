@@ -40,7 +40,7 @@ vi.mock('langdetect', () => ({
   }
 }));
 
-describe('detect-language-mismatches.js', () => {
+describe('detect-language-mismatches.js @unit', () => {
   beforeEach(() => {
     vi.clearAllMocks();
   });

@@ -11,7 +11,7 @@ vi.mock('fs', () => ({
   readFileSync: vi.fn(),
 }));
 
-describe('PageTemplateGenerator Enhanced Methods', () => {
+describe('PageTemplateGenerator Enhanced Methods @unit', () => {
   // Sample test data
   const mockVocabulary: Vocabulary = {
     id: 'test-vocabulary',

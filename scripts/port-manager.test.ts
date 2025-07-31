@@ -3,7 +3,7 @@ import { describe, it, expect } from 'vitest';
 // Import the port manager directly
 const portManager = require('./utils/port-manager.js');
 
-describe('Port Manager CLI Detection/Kill Logic', () => {
+describe('Port Manager CLI Detection/Kill Logic @unit @utility', () => {
   // Test the data structures and configuration
   describe('SITE_PORTS configuration', () => {
     it('should have all expected sites with correct ports', () => {

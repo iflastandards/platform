@@ -2,7 +2,7 @@ import { e2eTest, expect, type Page } from '../../utils/tagged-test';
 
 const PAGE_URL = 'http://localhost:3001/ISBDM/docs/examples/sensory-test-vocabulary/';
 
-e2eTest.describe('Sensory Test Vocabulary Page - E2E Tests @standards @vocabulary @isbdm', () => {
+e2eTest.describe('Sensory Test Vocabulary Page - E2E Tests @standards @vocabulary @isbdm @e2e @api @validation', () => {
   let page: Page;
 
   e2eTest.beforeEach(async ({ page: testPage }) => {

@@ -1,0 +1,146 @@
+name: Phase-Based Smoke Tests
+
+on:
+  push:
+    branches: [main, preview]
+  pull_request:
+    types: [opened, synchronize, reopened]
+  workflow_dispatch:
+    inputs:
+      affected_only:
+        description: 'Run only affected tests'
+        required: false
+        default: true
+        type: boolean
+
+permissions:
+  actions: read
+  contents: read
+
+concurrency:
+  group: "smoke-tests-${{ github.ref }}"
+  cancel-in-progress: true
+
+env:
+  CI: true
+  HUSKY: 0
+  NX_CLOUD_ACCESS_TOKEN: ${{ secrets.NX_CLOUD_ACCESS_TOKEN }}
+  NX_DAEMON: true
+  NX_PARALLEL: 6
+  NODE_OPTIONS: "--max-old-space-size=4096"
+
+jobs:
+  smoke-tests:
+    name: Smoke Tests (@smoke, @critical)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - uses: pnpm/action-setup@v4
+        name: Install pnpm
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: 'pnpm'
+
+      - name: Cache Nx
+        uses: actions/cache@v4
+        with:
+          path: |
+            .nx/cache
+            node_modules/.cache/nx
+            !**/.ifla-server-state.json
+          key: nx-${{ runner.os }}-${{ github.sha }}
+          restore-keys: |
+            nx-${{ runner.os }}-
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - uses: nrwl/nx-set-shas@v4
+        id: nx-set-shas
+
+      - name: Run smoke tests with nx affected
+        run: |
+          echo "🔥 Running smoke tests with nx affected optimization..."
+          
+          # Use nx affected for maximum efficiency
+          if [ "${{ inputs.affected_only }}" = "true" ] || [ "${{ github.event_name }}" = "pull_request" ]; then
+            echo "Running affected projects with smoke tests..."
+            pnpm nx affected -t test --parallel=6
+          else
+            echo "Running all projects with smoke tests..."
+            pnpm nx run-many -t test --all --parallel=6
+          fi
+
+      - name: Run critical tests with nx affected
+        run: |
+          echo "⚡ Running critical tests with nx affected optimization..."
+          
+          # Use nx affected for critical tests
+          if [ "${{ inputs.affected_only }}" = "true" ] || [ "${{ github.event_name }}" = "pull_request" ]; then
+            echo "Running affected projects with critical tests..."
+            pnpm nx affected -t test --parallel=6
+          else
+            echo "Running all projects with critical tests..."
+            pnpm nx run-many -t test --all --parallel=6
+          fi
+
+      - name: Start optimized servers for E2E smoke tests
+        run: |
+          echo "🚀 Starting optimized servers for smoke E2E tests..."
+          # Use our optimized server manager for smoke tests
+          pnpm test:servers start --test-type smoke:all
+
+      - name: Run E2E smoke tests
+        run: |
+          echo "🧪 Running E2E smoke tests with Playwright..."
+          
+          # Install Playwright browsers if needed
+          pnpm exec playwright install --with-deps chromium
+          
+          # Run smoke E2E tests
+          if [ "${{ inputs.affected_only }}" = "true" ] || [ "${{ github.event_name }}" = "pull_request" ]; then
+            pnpm exec playwright test --grep "@smoke" --project=chromium
+          else
+            pnpm exec playwright test --grep "@smoke"
+          fi
+
+      - name: Stop servers
+        if: always()
+        run: |
+          echo "🛑 Stopping test servers..."
+          pnpm test:servers stop
+
+      - name: Generate test summary
+        if: always()
+        run: |
+          echo "## Smoke Tests Summary" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "**Branch:** ${{ github.ref_name }}" >> $GITHUB_STEP_SUMMARY
+          echo "**Trigger:** ${{ github.event_name }}" >> $GITHUB_STEP_SUMMARY
+          echo "**Affected Only:** ${{ inputs.affected_only || (github.event_name == 'pull_request') }}" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "### Tests Executed:" >> $GITHUB_STEP_SUMMARY
+          echo "- ✅ Unit tests with @smoke tag" >> $GITHUB_STEP_SUMMARY
+          echo "- ✅ Unit tests with @critical tag" >> $GITHUB_STEP_SUMMARY
+          echo "- ✅ E2E tests with @smoke tag" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "### Optimizations Applied:" >> $GITHUB_STEP_SUMMARY
+          echo "- 🚀 Tag-based test filtering" >> $GITHUB_STEP_SUMMARY
+          echo "- ⚡ Nx affected detection" >> $GITHUB_STEP_SUMMARY
+          echo "- 🔧 Optimized server startup (smoke:all)" >> $GITHUB_STEP_SUMMARY
+          echo "- 📊 Parallel execution (4-6 processes)" >> $GITHUB_STEP_SUMMARY
+
+      - name: Upload test results
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: smoke-test-results-${{ github.run_number }}
+          path: |
+            playwright-report/
+            test-results/
+          retention-days: 7

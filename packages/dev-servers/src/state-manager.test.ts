@@ -42,7 +42,7 @@ const mockExistsSync = existsSync as MockedFunction<typeof existsSync>;
 const mockProcessKill = vi.spyOn(process, 'kill');
 mockProcessKill.mockImplementation(() => true);
 
-describe('state-manager', () => {
+describe('state-manager @unit', () => {
   beforeEach(() => {
     vi.clearAllMocks();
     // Reset all mocks to their default implementations

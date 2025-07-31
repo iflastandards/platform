@@ -11,16 +11,18 @@ const sites = [
   { name: 'unimarc', url: 'http://localhost:3006', path: '/unimarc/' },
 ];
 
-for (const site of sites) {
-  test(`${site.name} homepage visual regression`, async ({ page }) => {
-    await page.goto(`${site.url}${site.path}`);
-    await page.waitForLoadState('networkidle');
-    await expect(page).toHaveScreenshot(`${site.name}-homepage.png`);
-  });
+test.describe('Visual Regression Tests @e2e @visual', () => {
+  for (const site of sites) {
+    test(`${site.name} homepage visual regression`, async ({ page }) => {
+      await page.goto(`${site.url}${site.path}`);
+      await page.waitForLoadState('networkidle');
+      await expect(page).toHaveScreenshot(`${site.name}-homepage.png`);
+    });
 
-  test(`${site.name} docs page visual regression`, async ({ page }) => {
-    await page.goto(`${site.url}${site.path}docs/intro`);
-    await page.waitForLoadState('networkidle');
-    await expect(page).toHaveScreenshot(`${site.name}-docs.png`);
-  });
-}
+    test(`${site.name} docs page visual regression`, async ({ page }) => {
+      await page.goto(`${site.url}${site.path}docs/intro`);
+      await page.waitForLoadState('networkidle');
+      await expect(page).toHaveScreenshot(`${site.name}-docs.png`);
+    });
+  }
+});

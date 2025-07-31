@@ -43,7 +43,7 @@ global.fetch = mockFetch;
  * EXAMPLE: Testing IFLA Vocabulary Import Service Integration
  * Validates the complete workflow from spreadsheet validation to data storage
  */
-integrationTest.describe('Vocabulary Import Service Integration @integration', () => {
+integrationTest.describe('Vocabulary Import Service Integration @integration @api', () => {
   beforeEach(() => {
     vi.clearAllMocks();
     
@@ -78,7 +78,7 @@ integrationTest.describe('Vocabulary Import Service Integration @integration', (
     });
   });
   
-  integrationTest('should complete vocabulary import workflow', async () => {
+  integrationTest('should complete vocabulary import workflow @critical @happy-path', async () => {
     // Step 1: Validate spreadsheet structure
     const validationResponse = await fetch('/api/vocabulary/validate', {
       method: 'POST',
@@ -115,7 +115,7 @@ integrationTest.describe('Vocabulary Import Service Integration @integration', (
     expect(mockFetch).toHaveBeenNthCalledWith(2, '/api/vocabulary/import', expect.any(Object));
   });
   
-  integrationTest('should handle validation failures gracefully', async () => {
+  integrationTest('should handle validation failures gracefully @error-handling', async () => {
     // Override mock for this test to return validation errors
     mockFetch.mockImplementationOnce(() => Promise.resolve({
       ok: false,

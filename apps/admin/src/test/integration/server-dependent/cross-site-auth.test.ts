@@ -1,7 +1,7 @@
 import { describe, it, expect, beforeAll, afterAll } from 'vitest';
 import { testServerManager } from '../../utils/test-server-manager';
 
-describe('Cross-Site Authentication (Server-Dependent)', () => {
+describe('Cross-Site Authentication (Server-Dependent) @unit @critical @authentication @security', () => {
   const adminBaseUrl = testServerManager.getServerUrl('admin');
   const newtestBaseUrl = testServerManager.getServerUrl('newtest');
 

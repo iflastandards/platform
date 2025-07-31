@@ -3,7 +3,7 @@ import { execSync } from 'child_process';
 import * as fs from 'fs';
 import * as path from 'path';
 
-describe('RDF to MDX Pipeline', () => {
+describe('RDF to MDX Pipeline @unit', () => {
   const scriptPath = path.join(__dirname, '..', 'src', 'rdf-to-mdx-pipeline.ts');
   const fixturesDir = path.join(__dirname, 'fixtures');
   const tempDir = '/tmp/rdf-to-mdx-pipeline-tests';

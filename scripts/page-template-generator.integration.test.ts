@@ -48,7 +48,7 @@ vi.mock('./utils/file-existence-checker', () => ({
   generateMissingFilesReport: mockGenerateMissingFilesReport,
 }));
 
-describe('Page Template Generator Integration Tests', () => {
+describe('Page Template Generator Integration Tests @integration', () => {
   // Sample test data
   const mockConfig: SiteConfiguration = {
     namespace: 'test-integration',

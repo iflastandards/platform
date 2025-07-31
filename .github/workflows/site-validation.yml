@@ -94,7 +94,7 @@ jobs:
         run: |
           if [ "${{ inputs.test_affected_only }}" = "true" ]; then
             echo "Building affected sites only..."
-            nx affected --target=build --parallel=1 --configuration=local
+            nx affected --target=build --parallel=4 --configuration=local
           else
             echo "Building all sites..."
             nx run-many --target=build --all --parallel=1 --configuration=local

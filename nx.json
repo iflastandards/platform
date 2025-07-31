@@ -10,7 +10,7 @@
       "!{projectRoot}/.docusaurus/**/*",
       "!{projectRoot}/build/**/*",
       "!{projectRoot}/dist/**/*",
- "!{projectRoot}/node_modules/**/*",
+      "!{projectRoot}/node_modules/**/*",
       "!{workspaceRoot}/**/.ifla-server-state.json",
       "sharedGlobals"
     ],
@@ -104,17 +104,34 @@
       "{projectRoot}/**/*.integration.*",
       "{workspaceRoot}/playwright.config.integration.ts",
       "{workspaceRoot}/playwright.config.base.ts"
+    ],
+    "taggedTestInputs": [
+      "{projectRoot}/**/*.test.*",
+      "{projectRoot}/**/*.spec.*",
+      "{workspaceRoot}/scripts/test-tagging-analyzer.js",
+      "{workspaceRoot}/scripts/validate-test-tags.js"
     ]
   },
   "targetDefaults": {
     "build": {
-      "dependsOn": ["^build"],
-      "inputs": ["buildInputs", "^buildInputs", "sharedGlobals"],
-      "outputs": ["{projectRoot}/build", "{projectRoot}/dist"],
+      "dependsOn": [
+        "^build"
+      ],
+      "inputs": [
+        "buildInputs",
+        "^buildInputs",
+        "sharedGlobals"
+      ],
+      "outputs": [
+        "{projectRoot}/build",
+        "{projectRoot}/dist"
+      ],
       "cache": true
     },
     "test": {
-      "dependsOn": ["^build"],
+      "dependsOn": [
+        "^build"
+      ],
       "inputs": [
         "testInputs",
         "^testInputs",
@@ -122,16 +139,24 @@
           "runtime": "node -v"
         }
       ],
-      "outputs": ["{projectRoot}/coverage", "{projectRoot}/test-results"],
+      "outputs": [
+        "{projectRoot}/coverage",
+        "{projectRoot}/test-results"
+      ],
       "cache": true
     },
     "lint": {
-      "inputs": ["default", "^default"],
+      "inputs": [
+        "default",
+        "^default"
+      ],
       "outputs": [],
       "cache": true
     },
     "typecheck": {
-      "dependsOn": ["^build"],
+      "dependsOn": [
+        "^build"
+      ],
       "cache": true,
       "inputs": [
         "default",
@@ -147,18 +172,34 @@
     },
     "@nx/js:tsc": {
       "cache": true,
-      "dependsOn": ["^build"],
-      "inputs": ["production", "^production"]
+      "dependsOn": [
+        "^build"
+      ],
+      "inputs": [
+        "production",
+        "^production"
+      ]
     },
     "build:tsc": {
       "cache": true,
-      "dependsOn": ["^build"],
-      "inputs": ["production", "^production"]
+      "dependsOn": [
+        "^build"
+      ],
+      "inputs": [
+        "production",
+        "^production"
+      ]
     },
     "e2e": {
       "cache": true,
-      "dependsOn": ["build"],
-      "inputs": ["e2eInputs", "^buildInputs"],
+      "dependsOn": [
+        "build"
+      ],
+      "inputs": [
+        "e2eInputs",
+        "^buildInputs",
+        "testInputs"
+      ],
       "outputs": [
         "{projectRoot}/test-results",
         "{projectRoot}/playwright-report",
@@ -166,24 +207,43 @@
         "{workspaceRoot}/playwright-report"
       ],
       "options": {
-        "cacheableOperations": ["e2e"]
+        "cacheableOperations": [
+          "e2e"
+        ]
       }
     },
     "test:unit": {
       "cache": true,
-      "outputs": ["{projectRoot}/coverage", "{projectRoot}/test-results"],
-      "inputs": ["testInputs", "sharedGlobals"]
+      "outputs": [
+        "{projectRoot}/coverage",
+        "{projectRoot}/test-results"
+      ],
+      "inputs": [
+        "testInputs",
+        "sharedGlobals"
+      ]
     },
     "test:integration": {
       "cache": true,
-      "outputs": ["{projectRoot}/coverage", "{projectRoot}/test-results"],
-      "inputs": ["testInputs", "sharedGlobals"]
+      "outputs": [
+        "{projectRoot}/coverage",
+        "{projectRoot}/test-results"
+      ],
+      "inputs": [
+        "testInputs",
+        "sharedGlobals"
+      ]
     },
     "test:smoke": {
       "executor": "@nx/playwright:playwright",
       "cache": true,
-      "dependsOn": ["build"],
-      "inputs": ["smokeTestInputs", "^buildInputs"],
+      "dependsOn": [
+        "build"
+      ],
+      "inputs": [
+        "smokeTestInputs",
+        "^buildInputs"
+      ],
       "outputs": [
         "{workspaceRoot}/tmp/playwright-results/smoke",
         "{workspaceRoot}/output/playwright-report/smoke"
@@ -195,8 +255,13 @@
     "test:integration:e2e": {
       "executor": "@nx/playwright:playwright",
       "cache": true,
-      "dependsOn": ["build"],
-      "inputs": ["integrationTestInputs", "^buildInputs"],
+      "dependsOn": [
+        "build"
+      ],
+      "inputs": [
+        "integrationTestInputs",
+        "^buildInputs"
+      ],
       "outputs": [
         "{workspaceRoot}/tmp/playwright-results/integration",
         "{workspaceRoot}/output/playwright-report/integration"
@@ -208,8 +273,13 @@
     "test:e2e:full": {
       "executor": "@nx/playwright:playwright",
       "cache": true,
-      "dependsOn": ["build"],
-      "inputs": ["e2eInputs", "^buildInputs"],
+      "dependsOn": [
+        "build"
+      ],
+      "inputs": [
+        "e2eInputs",
+        "^buildInputs"
+      ],
       "outputs": [
         "{workspaceRoot}/tmp/playwright-results/e2e",
         "{workspaceRoot}/output/playwright-report/e2e"
@@ -223,7 +293,9 @@
     },
     "prepare": {
       "cache": true,
-      "dependsOn": ["^build"]
+      "dependsOn": [
+        "^build"
+      ]
     }
   },
   "plugins": [
@@ -276,8 +348,20 @@
   "useInferencePlugins": true,
   "defaultTasksRunnerOptions": {
     "parallel": 8,
-    "cacheableOperations": ["build", "test", "lint", "typecheck", "e2e", "test:smoke", "test:integration:e2e", "test:e2e:full"],
-    "runtimeCacheInputs": ["node -v", "pnpm --version"],
+    "cacheableOperations": [
+      "build",
+      "test",
+      "lint",
+      "typecheck",
+      "e2e",
+      "test:smoke",
+      "test:integration:e2e",
+      "test:e2e:full"
+    ],
+    "runtimeCacheInputs": [
+      "node -v",
+      "pnpm --version"
+    ],
     "remoteCache": {
       "enabled": true,
       "silent": false

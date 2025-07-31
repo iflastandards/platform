@@ -3,6 +3,7 @@ import tseslint from 'typescript-eslint';
 import pluginReact from 'eslint-plugin-react';
 import hooksPlugin from 'eslint-plugin-react-hooks';
 import unusedImports from 'eslint-plugin-unused-imports';
+import * as mdxPlugin from 'eslint-plugin-mdx';
 
 export default [
   {
@@ -36,7 +37,7 @@ export default [
     ],
   },
   {
-    files: ['**/*.{js,mjs,cjs,jsx,mjsx,ts,tsx,mtsx}'],
+    files: ['**/*.{js,mjs,cjs,jsx,mjsx,ts,tsx,mtsx,md,mdx}'],
     languageOptions: {
       ecmaVersion: 2020,
       sourceType: 'module',
@@ -60,8 +61,11 @@ export default [
       'react-hooks': hooksPlugin,
       '@typescript-eslint': tseslint.plugin,
       'unused-imports': unusedImports,
+      'mdx': mdxPlugin,
     },
+    processor: mdxPlugin.createRemarkProcessor({ lintCodeBlocks: true }),
     rules: {
+      ...mdxPlugin.configs.recommended.rules,
       ...tseslint.configs.recommended.rules,
       'react/react-in-jsx-scope': 'off',
       'react/prop-types': 'off',

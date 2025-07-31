@@ -29,7 +29,7 @@ vi.mock('child_process', async (importOriginal) => {
 });
 
 
-describe('Browser Override Selection', () => {
+describe('Browser Override Selection @unit', () => {
 
   beforeEach(() => {
     vi.clearAllMocks();

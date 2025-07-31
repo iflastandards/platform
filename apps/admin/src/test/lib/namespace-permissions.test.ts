@@ -12,7 +12,7 @@ vi.mock('@/lib/cerbos', () => ({
   default: mockCerbos,
 }));
 
-describe('Namespace (Review Group) Permissions', () => {
+describe('Namespace (Review Group) Permissions @unit', () => {
   beforeEach(() => {
     vi.clearAllMocks();
   });

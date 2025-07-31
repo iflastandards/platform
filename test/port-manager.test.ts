@@ -26,7 +26,7 @@ mockExecSync.mockImplementation(mockExecSyncImplementation);
 
 
 
-describe('port-manager utilities', () => {
+describe('port-manager utilities @unit @utility', () => {
   beforeEach(() => {
     vi.clearAllMocks();
   });

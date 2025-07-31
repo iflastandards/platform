@@ -10,7 +10,7 @@ const STANDARDS = [
 ];
 
 STANDARDS.forEach(({ name, port, path }) => {
-  smokeTest.describe(`${name} - Smoke Tests @standards`, () => {
+  smokeTest.describe(`${name} - Smoke Tests @standards @smoke`, () => {
     smokeTest(`should load ${name} homepage @critical`, async ({ page }) => {
       await page.goto(`http://localhost:${port}${path}`);
       

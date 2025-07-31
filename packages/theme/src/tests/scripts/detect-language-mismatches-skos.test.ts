@@ -27,7 +27,7 @@ vi.mock('langdetect', () => ({
   }
 }));
 
-describe('detect-language-mismatches-skos.js', () => {
+describe('detect-language-mismatches-skos.js @unit', () => {
   const testDataDir = path.join(__dirname, 'test-skos-data');
   
   beforeEach(async () => {

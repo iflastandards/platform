@@ -8,7 +8,7 @@ const productionAdminConfig = getAdminPortalConfig('production');
 // Mock the session API route handler
 const mockSessionHandler = vi.fn();
 
-describe('Session Management', () => {
+describe('Session Management @unit', () => {
   beforeEach(() => {
     // Reset mocks
     mockSessionHandler.mockClear();

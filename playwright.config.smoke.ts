@@ -10,6 +10,9 @@ import { baseConfig, createTagConfig } from './playwright.config.base';
 export default defineConfig({
   ...baseConfig,
   
+  // Use targeted server setup for smoke tests
+  globalSetup: './e2e/global-setup.smoke.ts',
+  
   // Only run tests tagged with @smoke
   grep: /@smoke/,
   

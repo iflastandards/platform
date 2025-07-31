@@ -14,7 +14,7 @@ vi.mock('googleapis', () => ({
   }
 }));
 
-describe('create-vocabulary-sheet-action', () => {
+describe('create-vocabulary-sheet-action @unit @api @validation', () => {
   let mockSheets: any;
   let mockDrive: any;
   let mockAuth: any;

@@ -11,7 +11,7 @@ vi.mock('fs', () => ({
   readFileSync: vi.fn(),
 }));
 
-describe('PageTemplateGenerator', () => {
+describe('PageTemplateGenerator @unit', () => {
   // Sample test data
   const mockElementSet: ElementSet = {
     id: 'test-element-set',

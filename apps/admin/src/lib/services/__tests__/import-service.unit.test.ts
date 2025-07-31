@@ -63,7 +63,7 @@ beforeEach(() => {
   });
 });
 
-describe('ImportService - Fast Unit Tests', () => {
+describe('ImportService - Fast Unit Tests @unit @api @validation', () => {
   beforeEach(() => {
     vi.clearAllMocks();
   });

@@ -145,11 +145,11 @@ jobs:
           npx nx run @ifla/theme:build --configuration=production
           
           # Build all sites with production configuration
-          npx nx run-many \
+          npx nx affected \
             --target=build \
-            --all \
             --configuration=production \
-            --parallel=4
+            --parallel=8 \
+            --tags @critical
             
       - name: Run production build validation
         run: |

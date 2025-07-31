@@ -29,7 +29,7 @@
 
 import { describe, it, expect } from 'vitest';
 
-describe('Environment Configuration', () => {
+describe('Environment Configuration @unit', () => {
   it('should have valid API credentials in production', () => {
     if (process.env.NODE_ENV === 'production') {
       expect(process.env.API_KEY).toBeDefined();

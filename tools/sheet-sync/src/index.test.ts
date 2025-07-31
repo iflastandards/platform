@@ -64,7 +64,7 @@ vi.mock('commander', () => ({
   })),
 }));
 
-describe('SheetSync', () => {
+describe('SheetSync @unit', () => {
   let sheetSync: SheetSync;
 
   beforeEach(() => {

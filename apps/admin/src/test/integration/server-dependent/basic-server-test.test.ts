@@ -1,7 +1,7 @@
 import { describe, it, expect } from 'vitest';
 import { testServerManager } from '../../utils/test-server-manager';
 
-describe('Basic Server Test', () => {
+describe('Basic Server Test @unit', () => {
   it('should be able to start and stop admin server', async () => {
     console.log('Starting basic server test...');
 

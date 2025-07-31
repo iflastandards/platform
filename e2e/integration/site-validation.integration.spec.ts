@@ -35,7 +35,7 @@ const ALLOWED_EXTERNAL_DOMAINS = [
   'creativecommons.org',
 ];
 
-integrationTest.describe('Site Validation Tests @sites @validation', () => {
+integrationTest.describe('Site Validation Tests @sites @validation @integration', () => {
   // Test each site
   Object.entries(sites).forEach(([siteKey, siteConfigs]) => {
     const siteConfig = siteConfigs[currentEnv];

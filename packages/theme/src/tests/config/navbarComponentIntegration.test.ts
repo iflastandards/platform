@@ -3,7 +3,7 @@ import { execSync } from 'child_process';
 import fs from 'fs';
 import path from 'path';
 
-describe('Navbar Component Integration', () => {
+describe('Navbar Component Integration @unit', () => {
   describe('Central Theme Components', () => {
     it('should have AuthDropdownNavbarItem components in central theme', () => {
       const centralThemeComponentsPath = path.resolve('packages/theme/dist/theme/NavbarItem');

@@ -1,6 +1,6 @@
 import { smokeTest, expect } from '../utils/tagged-test';
 
-smokeTest.describe('Portal - Smoke Tests @portal @critical', () => {
+smokeTest.describe('Portal - Smoke Tests @portal @critical @smoke', () => {
   smokeTest('should load portal homepage', async ({ page }) => {
     await page.goto('/');
     

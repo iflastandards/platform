@@ -18,7 +18,7 @@ const testPages = [
   { path: '/FRBR/', name: 'frbr-home' }
 ];
 
-e2eTest.describe('Enhanced Visual Regression Testing @visual @slow', () => {
+e2eTest.describe('Enhanced Visual Regression Testing @visual @slow @e2e', () => {
   for (const viewport of viewports) {
     e2eTest.describe(`${viewport.name} viewport (${viewport.width}x${viewport.height})`, () => {
       e2eTest.beforeEach(async ({ page }) => {

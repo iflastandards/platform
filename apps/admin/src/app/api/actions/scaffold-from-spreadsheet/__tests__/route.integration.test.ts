@@ -42,7 +42,7 @@ vi.mock('@/lib/services/import-service', () => ({
   },
 }));
 
-describe('Scaffold API - Integration Tests', () => {
+describe('Scaffold API - Integration Tests @integration @api', () => {
   beforeEach(() => {
     mockJobs.clear();
     vi.clearAllMocks();

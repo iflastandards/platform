@@ -65,7 +65,7 @@ describe.skip('dev-servers', () => {
     vi.restoreAllMocks();
   });
 
-  describe('startServers', () => {
+  describe('startServers @unit', () => {
     it('should start servers for specified sites', async () => {
       // Mock successful health check
       (global.fetch as any).mockResolvedValue({ ok: true });

@@ -3,7 +3,7 @@ import path from 'path';
 import fs from 'fs';
 import { findWorkspaceRoot, getScriptPath, getWorkspacePath, setupTestPaths } from './workspaceUtils';
 
-describe('workspaceUtils', () => {
+describe('workspaceUtils @unit', () => {
   describe('findWorkspaceRoot', () => {
     it('should find the workspace root directory', () => {
       const workspaceRoot = findWorkspaceRoot();

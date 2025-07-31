@@ -9,7 +9,7 @@ import * as path from 'path';
  * They do NOT test application functionality
  */
 
-describe('CI Configuration Validation', () => {
+describe('CI Configuration Validation @unit @deployment', () => {
   it('should skip in non-CI environments', () => {
     if (!process.env.CI) {
       expect(true).toBe(true);

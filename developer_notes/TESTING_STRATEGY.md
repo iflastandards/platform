@@ -4,6 +4,14 @@
 
 This document outlines the five distinct test phases that organize all testing activities in the IFLA Standards monorepo. Our testing strategy is designed to catch issues at the earliest possible stage while minimizing CI costs, with tests progressively validating more aspects as code moves from development to deployment.
 
+## 🎯 Implementation Status
+
+**Phase 1 Tagging Implementation**: ✅ **COMPLETE** (2025-07-31)
+- All 77 test files now have proper category tags (@unit, @integration, @e2e, @smoke)
+- 44.2% have functional tags (@api, @validation, @security, etc.)
+- 26.0% have priority tags (@critical, @happy-path, @error-handling)
+- Tag-based test execution now available for selective testing
+
 ## Phase 1: Selective Tests (On-Demand Development)
 
 **Purpose**: Individual testing for focused development work and TDD
@@ -25,6 +33,13 @@ nx affected --target=test --parallel=3 # Parallel execution
 
 # All unit tests (when needed)
 nx run-many --target=test --all        # All projects
+
+# 🎯 Tag-based test selection (NEW - Phase 1 Complete)
+pnpm test --grep "@unit"              # Run only unit tests
+pnpm test --grep "@critical"          # Run critical tests only
+pnpm test --grep "@security"          # Run security-related tests
+pnpm test --grep "@api.*@validation"  # Run API validation tests
+pnpm test --grep "@rbac"              # Run RBAC tests
 ```
 
 ### UI Tests (Playwright Multi-Browser)
@@ -42,6 +57,14 @@ npx playwright test e2e/vocabulary-functionality.spec.ts
 npx playwright test --project=admin-portal    # All admin portal E2E tests
 npx playwright test e2e/admin-portal/auth.e2e.test.ts
 npx playwright test e2e/admin-portal/site-management-workflow.e2e.test.ts
+
+# 🎯 Tag-based Playwright test selection (NEW - Phase 1 Complete)
+npx playwright test --grep "@smoke"          # Run smoke tests only
+npx playwright test --grep "@e2e"            # Run all E2E tests
+npx playwright test --grep "@critical"       # Run critical E2E tests
+npx playwright test --grep "@authentication" # Run auth-related tests
+npx playwright test --grep "@navigation"     # Run navigation tests
+npx playwright test --grep-invert "@local-only" # Skip local-only tests
 
 # Debug mode
 npx playwright test --debug

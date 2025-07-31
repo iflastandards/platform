@@ -1,7 +1,7 @@
 import { e2eTest, expect } from '../../utils/tagged-test';
 
 // Performance testing for core pages and functionality
-e2eTest.describe('Performance Testing @performance @slow', () => {
+e2eTest.describe('Performance Testing @performance @slow @e2e', () => {
   e2eTest('Portal homepage loads within performance budget @critical', async ({ page }) => {
     const startTime = Date.now();
     

@@ -11,7 +11,7 @@ vi.mock('fs', () => ({
   readFileSync: vi.fn(),
 }));
 
-describe('Page Template Generator Integration', () => {
+describe('Page Template Generator Integration @unit', () => {
   // Sample test data
   const mockConfig: SiteConfiguration = {
     namespace: 'test-integration',

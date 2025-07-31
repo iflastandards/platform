@@ -5,7 +5,7 @@ import { describe, it, expect } from 'vitest';
 
 
 // Test the actual business logic, not the mocks
-describe('create-vocabulary-sheet - Business Logic Tests', () => {
+describe('create-vocabulary-sheet - Business Logic Tests @unit @api @validation', () => {
   // Test data
   const testConfig = {
     profileType: 'values' as const,

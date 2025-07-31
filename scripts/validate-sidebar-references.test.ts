@@ -36,7 +36,7 @@ vi.mock('fs/promises', () => {
   };
 });
 
-describe('Sidebar References Validation Integration', () => {
+describe('Sidebar References Validation Integration @unit', () => {
   it('should validate sidebar references and identify missing files', async () => {
     // Setup
     const validator = new FileStructureValidator('standards');

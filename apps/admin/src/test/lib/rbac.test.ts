@@ -12,7 +12,7 @@ vi.mock('@/lib/cerbos', () => ({
   default: mockCerbos,
 }));
 
-describe('Role-Based Access Control (RBAC)', () => {
+describe('Role-Based Access Control (RBAC) @unit @critical @rbac @security', () => {
   beforeEach(() => {
     vi.clearAllMocks();
   });

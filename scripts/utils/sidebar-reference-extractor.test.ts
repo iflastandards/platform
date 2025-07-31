@@ -16,7 +16,7 @@ vi.mock('fs/promises', () => {
   };
 });
 
-describe('Sidebar Reference Extractor', () => {
+describe('Sidebar Reference Extractor @unit', () => {
   beforeEach(() => {
     vi.resetAllMocks();
   });

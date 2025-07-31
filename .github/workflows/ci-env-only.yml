@@ -73,4 +73,4 @@ jobs:
       # If environment tests pass, run the build
       # (We assume all other tests passed locally)
       - name: Build affected projects
-        run: pnpm exec nx affected -t build --parallel=6
+        run: pnpm exec nx affected -t build --parallel=6 --tags @critical

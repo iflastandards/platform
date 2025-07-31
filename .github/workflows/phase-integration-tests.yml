@@ -1,0 +1,184 @@
+name: Phase-Based Integration Tests
+
+on:
+  push:
+    branches: [main, preview]
+  pull_request:
+    types: [opened, synchronize, reopened]
+    paths:
+      - 'apps/**'
+      - 'packages/**'
+      - 'e2e/**'
+      - '*.config.*'
+  workflow_dispatch:
+    inputs:
+      test_scope:
+        description: 'Test scope'
+        required: false
+        default: 'staging'
+        type: choice
+        options:
+          - staging
+          - affected
+          - all
+      parallelism:
+        description: 'Parallel processes'
+        required: false
+        default: '4'
+        type: choice
+        options:
+          - '2'
+          - '4' 
+          - '6'
+          - '8'
+
+permissions:
+  actions: read
+  contents: read
+
+concurrency:
+  group: "integration-tests-${{ github.ref }}"
+  cancel-in-progress: true
+
+env:
+  CI: true
+  HUSKY: 0
+  NX_CLOUD_ACCESS_TOKEN: ${{ secrets.NX_CLOUD_ACCESS_TOKEN }}
+  NX_DAEMON: true
+  NX_PARALLEL: ${{ inputs.parallelism || '4' }}
+  NODE_OPTIONS: "--max-old-space-size=6144"
+
+jobs:
+  integration-tests:
+    name: Staging Integration Tests (External Services)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - uses: pnpm/action-setup@v4
+        name: Install pnpm
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: 'pnpm'
+
+      - name: Cache Nx
+        uses: actions/cache@v4
+        with:
+          path: |
+            .nx/cache
+            node_modules/.cache/nx
+            !**/.ifla-server-state.json
+          key: nx-${{ runner.os }}-${{ github.sha }}
+          restore-keys: |
+            nx-${{ runner.os }}-
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - uses: nrwl/nx-set-shas@v4
+        id: nx-set-shas
+
+      - name: Determine test scope
+        id: scope
+        run: |
+          SCOPE="staging"
+          
+          # Use staging when in preview
+          if [ "${{ github.ref_name }}" = "preview" ]; then
+            SCOPE="staging"
+          else
+            SCOPE="${{ inputs.test_scope || 'staging' }}"
+          fi
+          
+          echo "scope=$SCOPE" >> $GITHUB_OUTPUT
+          echo "🎯 Test scope: $SCOPE"
+
+      - name: Validate external API integrations
+        run: |
+          echo "🔧 Validating external API integrations (Vercel, Supabase, Clerk, GitHub)..."
+          
+          # Use nx affected for external API testing
+          PARALLEL="${{ inputs.parallelism || '4' }}"
+          case "${{ steps.scope.outputs.scope }}" in
+            "staging"|"affected") 
+              echo "Running affected external API tests..."
+              pnpm nx affected -t test --parallel=$PARALLEL
+              ;;
+            "all")
+              echo "Running all external API tests..."
+              pnpm nx run-many -t test --all --parallel=$PARALLEL
+              ;;
+          esac
+
+      - name: Start servers for integration tests
+        run: |
+          echo "🚀 Starting servers for staging integration tests..."
+          pnpm test:servers start --test-type integration:all
+
+      - name: Run E2E staging integration tests
+        run: |
+          echo "🧪 Running E2E integration tests on staging..."
+
+          # Install Playwright browsers
+          pnpm exec playwright install --with-deps
+
+          # Perform E2E tests based on scope
+          case "${{ steps.scope.outputs.scope }}" in
+            "staging")
+              pnpm exec playwright test --grep "@staging" --workers=2
+              ;;
+            "affected")
+              pnpm exec playwright test --grep "@staging" --workers=2 --affected
+              ;;
+            "all")
+              pnpm exec playwright test --grep "@staging" --workers=4
+              ;;
+          esac
+
+      - name: Stop servers
+        if: always()
+        run: |
+          echo "🛑 Stopping staging integration servers..."
+          pnpm test:servers stop
+
+      - name: Generate test summary
+        if: always()
+        run: |
+          echo "## Staging Integration Tests Summary" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "**Branch:** ${{ github.ref_name }}" >> $GITHUB_STEP_SUMMARY
+          echo "**Trigger:** ${{ github.event_name }}" >> $GITHUB_STEP_SUMMARY
+          echo "**Test Scope:** ${{ steps.scope.outputs.scope }}" >> $GITHUB_STEP_SUMMARY
+          echo "**Parallelism:** ${{ inputs.parallelism || '4' }} processes" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "### Tests Executed:" >> $GITHUB_STEP_SUMMARY
+          echo "- ✅ External API integrations" >> $GITHUB_STEP_SUMMARY
+          echo "- ✅ E2E tests with @staging tag" >> $GITHUB_STEP_SUMMARY
+          
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "### Optimizations Applied:" >> $GITHUB_STEP_SUMMARY
+          echo "- 🎯 Test scope adjusted for staging" >> $GITHUB_STEP_SUMMARY
+          echo "- 🚀 Tag-based test filtering" >> $GITHUB_STEP_SUMMARY
+          echo "- 🌍 Validated external service operations" >> $GITHUB_STEP_SUMMARY
+
+      - name: Upload test results
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: staging-integration-test-results-${{ github.run_number }}
+          path: |
+            playwright-report/
+            test-results/
+          retention-days: 14
+
+      - name: Upload coverage reports
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: staging-integration-coverage-${{ github.run_number }}
+          path: coverage/
+          retention-days: 30

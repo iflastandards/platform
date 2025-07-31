@@ -22,7 +22,7 @@ vi.mock('googleapis', () => ({
 
 vi.mock('fs');
 
-describe('Vocabulary Creation Integration Tests', () => {
+describe('Vocabulary Creation Integration Tests @unit @api @validation', () => {
   let mockAuth: any;
   let mockSheets: any;
   let mockDrive: any;

@@ -303,6 +303,7 @@ export async function startServers(opts: StartServerOptions = {}): Promise<Serve
     
     const proc = spawn('nx', nxCommand, {
       stdio: ['ignore', 'pipe', 'pipe'],
+      detached: true, // Allow process to run independently
       env: { 
         ...process.env, 
         DOCS_ENV: process.env.DOCS_ENV || 'local',

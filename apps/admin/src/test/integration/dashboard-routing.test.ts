@@ -1,7 +1,7 @@
 import { describe, it, expect } from 'vitest';
 import { getMockGitHubData } from '@/lib/github-mock-service';
 
-describe('Dashboard Routing with Real Clerk Users', () => {
+describe('Dashboard Routing with Real Clerk Users @unit @critical @navigation', () => {
   // Test users with their expected dashboards
   const testUsers = [
     {

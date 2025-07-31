@@ -1,6 +1,6 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
 
-describe('GitHub OAuth Flow', () => {
+describe('GitHub OAuth Flow @unit @critical @authentication @security', () => {
   const mockFetch = vi.fn();
   
   beforeEach(() => {

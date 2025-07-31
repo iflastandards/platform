@@ -6,6 +6,18 @@ cd "$(git rev-parse --show-toplevel)" || exit
 # Uses the new organized test structure
 echo "🔍 Running Group 3: Pre-commit tests..."
 
+# First, validate test file tagging and naming conventions
+echo "📋 Validating test file tagging..."
+node scripts/validate-test-tagging.js
+
+if [ $? -ne 0 ]; then
+  echo "❌ Test tagging validation failed. Please fix and try again."
+  echo "ℹ️  Refer to developer_notes/IFLA-Standards-Testing-Guide.md for guidance."
+  exit 1
+fi
+
+echo "✅ Test tagging validation passed!"
+
 # Use the optimized pre-commit command from package.json
 pnpm test:pre-commit
 

@@ -39,9 +39,8 @@ export default defineConfig({
     },
   },
   
-  // Global setup for integration tests (database seeding, etc.)
-  globalSetup: require.resolve('./e2e/playwright/integration-setup'),
-  globalTeardown: require.resolve('./e2e/playwright/integration-teardown'),
+  // Global setup for integration tests (targeted server startup)
+  globalSetup: './e2e/global-setup.integration.ts',
   
   // Default to Chrome only for integration tests
   // Use playwright.config.browsers.ts for multi-browser testing

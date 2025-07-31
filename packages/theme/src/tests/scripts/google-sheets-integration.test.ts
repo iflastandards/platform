@@ -1,7 +1,7 @@
 import { describe, it, expect } from 'vitest';
 
 // Real integration tests that test actual logic, not just mocks
-describe('Google Sheets Integration - Real Logic Tests', () => {
+describe('Google Sheets Integration - Real Logic Tests @unit', () => {
   describe('Service Account Authentication', () => {
     it('should correctly parse base64-encoded credentials', () => {
       const testCredentials = {

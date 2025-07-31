@@ -5,7 +5,7 @@ import {
   type Environment,
 } from '../../config/siteConfig';
 
-describe('getSiteConfig', () => {
+describe('getSiteConfig @unit', () => {
   describe('basic functionality', () => {
     it('should return correct config for portal in local environment', () => {
       const config = getSiteConfig('portal', 'local');

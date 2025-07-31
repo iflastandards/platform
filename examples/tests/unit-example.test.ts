@@ -112,7 +112,7 @@ class IFLAElementValidator {
 }
 
 // UNIT TESTS START HERE
-describe('IFLAElementValidator - Unit Tests @unit', () => {
+describe('IFLAElementValidator - Unit Tests @unit @validation', () => {
   let validator: IFLAElementValidator;
   
   beforeEach(() => {
