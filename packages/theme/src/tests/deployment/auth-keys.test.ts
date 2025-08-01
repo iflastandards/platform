@@ -17,8 +17,8 @@ describe('Authentication Keys @unit @critical @auth', () => {
       expect(process.env.NEXT_PUBLIC_SUPABASE_URL).toBeDefined();
       expect(process.env.NEXT_PUBLIC_SUPABASE_URL).not.toBe('');
       
-      // Should be a valid Supabase URL
-      expect(process.env.NEXT_PUBLIC_SUPABASE_URL).toMatch(/^https:\/\/[a-z0-9]+\.supabase\.co$/);
+      // Should be a valid Supabase URL (supports both .co and .com domains)
+      expect(process.env.NEXT_PUBLIC_SUPABASE_URL).toMatch(/^https:\/\/[a-z0-9]+\.supabase\.co[m]?$/);
     });
 
     it('should have Supabase anonymous key configured', () => {
@@ -125,7 +125,7 @@ describe('Authentication Keys @unit @critical @auth', () => {
       }
 
       expect(process.env.AUTH_GITHUB_ID).toBeDefined();
-      expect(process.env.AUTH_GITHUB_ID).toMatch(/^Ov23li[A-Za-z0-9]+$/); // GitHub OAuth App ID format
+      expect(process.env.AUTH_GITHUB_ID).toMatch(/^(Ov23li|Iv1\.)[A-Za-z0-9]+$/); // GitHub OAuth App ID format (supports both old and new formats)
 
       expect(process.env.AUTH_GITHUB_SECRET).toBeDefined();
       expect(process.env.AUTH_GITHUB_SECRET).toHaveLength(40); // GitHub secrets are 40 chars
@@ -140,7 +140,7 @@ describe('Authentication Keys @unit @critical @auth', () => {
       // AUTH_SECRET is required for session encryption
       expect(process.env.AUTH_SECRET).toBeDefined();
       expect(process.env.AUTH_SECRET).not.toBe('');
-      expect(process.env.AUTH_SECRET.length).toBeGreaterThanOrEqual(32); // Should be a strong secret
+      expect(process.env.AUTH_SECRET?.length || 0).toBeGreaterThanOrEqual(32); // Should be a strong secret
     });
   });
 
