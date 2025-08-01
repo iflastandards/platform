@@ -39,6 +39,7 @@ jobs:
   env-tests:
     name: Environment-Specific Tests
     runs-on: ubuntu-latest
+    environment: Preview
     steps:
       - uses: actions/checkout@v4
         with:

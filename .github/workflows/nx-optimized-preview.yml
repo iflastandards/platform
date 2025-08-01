@@ -58,6 +58,7 @@ jobs:
   setup:
     name: Setup and Distribute
     runs-on: ubuntu-latest
+    environment: Preview
     outputs:
       base: ${{ steps.nx-set-shas.outputs.base }}
       head: ${{ steps.nx-set-shas.outputs.head }}
@@ -124,6 +125,7 @@ jobs:
     name: Build Affected Projects
     needs: setup
     runs-on: ubuntu-latest
+    environment: Preview
     strategy:
       matrix:
         partition: [1, 2, 3]
@@ -167,6 +169,7 @@ jobs:
     name: Build All Sites for GitHub Pages
     needs: [setup, build-affected]
     runs-on: ubuntu-latest
+    environment: Preview
     steps:
       - uses: actions/checkout@v4
         with:

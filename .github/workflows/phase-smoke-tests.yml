@@ -33,6 +33,7 @@ jobs:
   smoke-tests:
     name: Smoke Tests (@smoke, @critical)
     runs-on: ubuntu-latest
+    environment: Preview
     steps:
       - uses: actions/checkout@v4
         with:
