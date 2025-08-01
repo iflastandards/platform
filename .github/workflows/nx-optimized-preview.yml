@@ -133,9 +133,6 @@ jobs:
     needs: setup
     runs-on: ubuntu-latest
     environment: Preview
-    strategy:
-      matrix:
-        partition: [1, 2, 3]
     steps:
       - uses: actions/checkout@v4
         with:
@@ -161,16 +158,15 @@ jobs:
           cp .npmrc.ci .npmrc
           pnpm install --frozen-lockfile
           
-      - name: Build affected projects (partition ${{ matrix.partition }})
+      - name: Build affected projects
         run: |
-          # Build affected projects with partition strategy
+          # Build affected projects without partition strategy (not supported in Nx 21.3.8)
           npx nx affected \
             --target=build \
             --base=${{ needs.setup.outputs.base }} \
             --head=${{ needs.setup.outputs.head }} \
-            --parallel=2 \
-            --nxBail \
-            --partition=${{ matrix.partition }}/3
+            --parallel=3 \
+            --nxBail
 
   build-all-sites:
     name: Build All Sites for GitHub Pages
