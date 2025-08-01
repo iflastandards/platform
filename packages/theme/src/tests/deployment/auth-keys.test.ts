@@ -64,6 +64,47 @@ describe('Authentication Keys @unit @critical @auth', () => {
   });
 
 
+  describe('Clerk Authentication', () => {
+    it('should have Clerk publishable key configured', () => {
+      if (!process.env.CI) {
+        expect(true).toBe(true);
+        return;
+      }
+
+      expect(process.env.NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY).toBeDefined();
+      expect(process.env.NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY).not.toBe('');
+      
+      // Clerk publishable keys start with pk_test_ or pk_live_
+      expect(process.env.NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY).toMatch(/^pk_(test|live)_[A-Za-z0-9]+$/);
+    });
+
+    it('should have Clerk secret key configured', () => {
+      if (!process.env.CI) {
+        expect(true).toBe(true);
+        return;
+      }
+
+      expect(process.env.CLERK_SECRET_KEY).toBeDefined();
+      expect(process.env.CLERK_SECRET_KEY).not.toBe('');
+      
+      // Clerk secret keys start with sk_test_ or sk_live_
+      expect(process.env.CLERK_SECRET_KEY).toMatch(/^sk_(test|live)_[A-Za-z0-9]+$/);
+    });
+
+    it('should have Clerk URLs configured correctly', () => {
+      if (!process.env.CI) {
+        expect(true).toBe(true);
+        return;
+      }
+
+      // These should be hardcoded in the workflow, not secrets
+      expect(process.env.NEXT_PUBLIC_CLERK_SIGN_IN_URL).toBe('/admin/sign-in');
+      expect(process.env.NEXT_PUBLIC_CLERK_SIGN_UP_URL).toBe('/admin/sign-up');
+      expect(process.env.NEXT_PUBLIC_CLERK_SIGN_IN_FALLBACK_REDIRECT_URL).toBe('/admin/api/auth/callback');
+      expect(process.env.NEXT_PUBLIC_CLERK_SIGN_UP_FALLBACK_REDIRECT_URL).toBe('/admin/api/auth/callback');
+    });
+  });
+
   describe('Other Required Keys', () => {
     it('should have GitHub auth configuration (when not from fork)', () => {
       if (!process.env.CI) {
