@@ -90,33 +90,8 @@ jobs:
             pnpm nx run-many -t test --all --parallel=6
           fi
 
-      # TODO: Fix E2E smoke tests to test against deployed GitHub Pages sites
-      # instead of starting local development servers in CI
-      # - name: Start optimized servers for E2E smoke tests
-      #   run: |
-      #     echo "🚀 Starting optimized servers for smoke E2E tests..."
-      #     # Use our optimized server manager for smoke tests
-      #     pnpm test:servers start --test-type smoke:all
-
-      # - name: Run E2E smoke tests
-      #   run: |
-      #     echo "🧪 Running E2E smoke tests with Playwright..."
-      #     
-      #     # Install Playwright browsers if needed
-      #     pnpm exec playwright install --with-deps chromium
-      #     
-      #     # Run smoke E2E tests
-      #     if [ "${{ inputs.affected_only }}" = "true" ] || [ "${{ github.event_name }}" = "pull_request" ]; then
-      #       pnpm exec playwright test --grep "@smoke" --project=chromium
-      #     else
-      #       pnpm exec playwright test --grep "@smoke"
-      #     fi
-
-      # - name: Stop servers
-      #   if: always()
-      #   run: |
-      #     echo "🛑 Stopping test servers..."
-      #     pnpm test:servers stop
+      # E2E smoke tests have been moved to smoke-tests-post-deploy.yml
+      # They now run after deployment to test against live GitHub Pages sites
 
       - name: Generate test summary
         if: always()
@@ -130,7 +105,7 @@ jobs:
           echo "### Tests Executed:" >> $GITHUB_STEP_SUMMARY
           echo "- ✅ Unit tests with @smoke tag" >> $GITHUB_STEP_SUMMARY
           echo "- ✅ Unit tests with @critical tag" >> $GITHUB_STEP_SUMMARY
-          echo "- ⏸️  E2E tests with @smoke tag (temporarily disabled - needs fix for GitHub Pages testing)" >> $GITHUB_STEP_SUMMARY
+          echo "- ✅ E2E tests moved to post-deployment workflow (smoke-tests-post-deploy.yml)" >> $GITHUB_STEP_SUMMARY
           echo "" >> $GITHUB_STEP_SUMMARY
           echo "### Optimizations Applied:" >> $GITHUB_STEP_SUMMARY
           echo "- 🚀 Tag-based test filtering" >> $GITHUB_STEP_SUMMARY

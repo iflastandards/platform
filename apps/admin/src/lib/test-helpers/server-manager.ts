@@ -234,7 +234,7 @@ export class TestServerManager {
           return;
         }
       } catch (error) {
-        console.log(`Health check for ${config.name} failed: ${error.message}`);
+        console.log(`Health check for ${config.name} failed: ${error instanceof Error ? error.message : String(error)}`);
         // Server not ready yet, continue waiting
       }
 
@@ -280,9 +280,10 @@ export const SERVER_CONFIGS = {
       NODE_ENV: 'test',
       NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY: '',
       CLERK_SECRET_KEY: '',
-          NEXT_PUBLIC_CLERK_SIGN_IN_URL: '/sign-in',
-          NEXT_PUBLIC_CLERK_AFTER_SIGN_IN_URL: '/dashboard',
-      NEXT_PUBLIC_CERBOS_PDP_URL: 'http://localhost:3593',
+      NEXT_PUBLIC_CLERK_SIGN_IN_URL: '/admin/sign-in',
+      NEXT_PUBLIC_CLERK_SIGN_UP_URL: '/admin/sign-up',
+      NEXT_PUBLIC_CLERK_SIGN_IN_FALLBACK_REDIRECT_URL: '/admin/api/auth/callback',
+      NEXT_PUBLIC_CLERK_SIGN_UP_FALLBACK_REDIRECT_URL: '/admin/api/auth/callback',
       PATH: process.env.PATH, // Use current PATH to find correct node
     },
   } as ServerConfig,

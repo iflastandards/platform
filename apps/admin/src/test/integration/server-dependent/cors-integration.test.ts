@@ -2,9 +2,9 @@ import { describe, it, expect, beforeAll, afterAll } from 'vitest';
 import {
   testServerManager,
   SERVER_CONFIGS,
-} from '../../utils/test-server-manager';
+} from '../../../lib/test-helpers/server-manager';
 
-describe('CORS Integration (Server-Dependent) @unit', () => {
+describe('CORS Integration (Server-Dependent) @unit @api @admin @low-priority', () => {
   const adminBaseUrl = `http://localhost:${SERVER_CONFIGS.ADMIN.port}/admin`;
   const portalOrigin = `http://localhost:${SERVER_CONFIGS.PORTAL.port}`;
 

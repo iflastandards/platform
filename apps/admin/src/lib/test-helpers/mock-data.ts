@@ -1,5 +1,5 @@
 // Mock data for testing
-export const mockCerbosUser = {
+export const mockAuthUser = {
   id: 'test-user-id',
   name: 'Test User',
   email: 'test@example.com',

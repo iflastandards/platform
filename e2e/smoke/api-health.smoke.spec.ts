@@ -7,10 +7,12 @@ import { test, expect, smokeTest } from '../utils/tagged-test';
 import { TestData } from '../fixtures/test-data.fixture';
 
 test.describe('API Health Smoke Tests @smoke @api @critical', () => {
-  const baseUrl = process.env.BASE_URL || 'http://localhost:3007';
+  // Use ADMIN_BASE_URL from environment or construct from BASE_URL
+  const adminUrl = process.env.ADMIN_BASE_URL || process.env.ADMIN_URL || 
+    (process.env.BASE_URL ? `${process.env.BASE_URL}/admin` : 'http://localhost:3007/admin');
 
   smokeTest('should respond to health check endpoint', async ({ request }) => {
-    const response = await request.get(`${baseUrl}/admin/api/health`);
+    const response = await request.get(`${adminUrl}/api/health`);
     
     // Should return success status
     expect(response.status()).toBeLessThan(400);
@@ -25,7 +27,7 @@ test.describe('API Health Smoke Tests @smoke @api @critical', () => {
   });
 
   smokeTest('should respond to auth session endpoint', async ({ request }) => {
-    const response = await request.get(`${baseUrl}/admin/api/auth/session`);
+    const response = await request.get(`${adminUrl}/api/auth/session`);
     
     // Should return a response (might be 401 if not authenticated)
     expect([200, 401, 403]).toContain(response.status());
@@ -36,7 +38,7 @@ test.describe('API Health Smoke Tests @smoke @api @critical', () => {
   });
 
   smokeTest('should respond to vocabularies endpoint', async ({ request }) => {
-    const response = await request.get(`${baseUrl}/admin/api/vocabularies`);
+    const response = await request.get(`${adminUrl}/api/vocabularies`);
     
     // Should return a response (might be 401 if not authenticated)
     expect([200, 401, 403]).toContain(response.status());
@@ -49,14 +51,14 @@ test.describe('API Health Smoke Tests @smoke @api @critical', () => {
   });
 
   smokeTest('should handle 404 for non-existent endpoints', async ({ request }) => {
-    const response = await request.get(`${baseUrl}/admin/api/non-existent-endpoint-${Date.now()}`);
+    const response = await request.get(`${adminUrl}/api/non-existent-endpoint-${Date.now()}`);
     
     // Should return 404
     expect(response.status()).toBe(404);
   });
 
   smokeTest('should include CORS headers', async ({ request }) => {
-    const response = await request.get(`${baseUrl}/admin/api/health`);
+    const response = await request.get(`${adminUrl}/api/health`);
     
     // Should have CORS headers (if configured)
     const headers = response.headers();
@@ -73,7 +75,7 @@ test.describe('API Health Smoke Tests @smoke @api @critical', () => {
   });
 
   smokeTest('should handle HEAD requests', async ({ request }) => {
-    const response = await request.head(`${baseUrl}/admin/api/health`);
+    const response = await request.head(`${adminUrl}/api/health`);
     
     // Should return success status
     expect(response.status()).toBeLessThan(400);

@@ -165,7 +165,7 @@ export default function AdminDashboard({ userRoles: _userRoles, userName: _userN
 
   const systemStatus = [
     { service: 'GitHub API', status: 'online' as const },
-    { service: 'Cerbos PDP', status: 'online' as const },
+    { service: 'Clerk Auth', status: 'online' as const },
     { service: 'Vocabulary Server', status: 'online' as const },
     { service: 'Build System', status: 'online' as const },
   ];

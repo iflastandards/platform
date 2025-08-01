@@ -1,0 +1,260 @@
+name: Smoke Tests - Post Deployment
+
+on:
+  workflow_run:
+    workflows: ["Nx Optimized Preview Deploy"]
+    types: [completed]
+    branches: [preview]
+  workflow_dispatch:
+    inputs:
+      environment:
+        description: 'Environment to test'
+        required: true
+        default: 'preview'
+        type: choice
+        options:
+          - preview
+          - production
+
+permissions:
+  actions: read
+  contents: read
+  pages: read
+
+env:
+  CI: true
+  HUSKY: 0
+  NX_CLOUD_ACCESS_TOKEN: ${{ secrets.NX_CLOUD_ACCESS_TOKEN }}
+  PLAYWRIGHT_SKIP_BROWSER_DOWNLOAD: 1
+
+jobs:
+  smoke-tests:
+    name: E2E Smoke Tests on Deployed Sites
+    runs-on: ubuntu-latest
+    if: ${{ github.event.workflow_run.conclusion == 'success' || github.event_name == 'workflow_dispatch' }}
+    environment: ${{ inputs.environment || 'Preview' }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - uses: pnpm/action-setup@v4
+        name: Install pnpm
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: 'pnpm'
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Install Playwright browsers
+        run: pnpm exec playwright install --with-deps chromium
+
+      - name: Set environment URLs
+        run: |
+          if [ "${{ inputs.environment || 'preview' }}" = "production" ]; then
+            echo "BASE_URL=https://www.iflastandards.info" >> $GITHUB_ENV
+            echo "ADMIN_URL=https://www.iflastandards.info/admin" >> $GITHUB_ENV
+            echo "DOCS_ENV=production" >> $GITHUB_ENV
+          else
+            echo "BASE_URL=https://iflastandards.github.io/platform" >> $GITHUB_ENV
+            echo "ADMIN_URL=https://iflastandards.github.io/platform/admin" >> $GITHUB_ENV
+            echo "DOCS_ENV=preview" >> $GITHUB_ENV
+          fi
+
+      - name: Wait for deployment to be ready
+        run: |
+          echo "Waiting for deployment to be ready..."
+          # Give GitHub Pages some time to fully deploy
+          sleep 30
+          
+          # Check if the portal is accessible
+          max_attempts=10
+          attempt=1
+          while [ $attempt -le $max_attempts ]; do
+            echo "Attempt $attempt of $max_attempts..."
+            if curl -s -o /dev/null -w "%{http_code}" "$BASE_URL" | grep -q "200\|301\|302"; then
+              echo "✅ Deployment is ready!"
+              break
+            else
+              echo "⏳ Deployment not ready yet, waiting..."
+              sleep 30
+              attempt=$((attempt + 1))
+            fi
+          done
+          
+          if [ $attempt -gt $max_attempts ]; then
+            echo "❌ Deployment did not become ready in time"
+            exit 1
+          fi
+
+      - name: Run portal smoke tests
+        run: |
+          echo "🧪 Running portal smoke tests against $BASE_URL"
+          pnpm exec playwright test e2e/smoke/portal.smoke.spec.ts \
+            --project=chromium \
+            --reporter=list
+
+      - name: Run standards site smoke tests
+        run: |
+          echo "🧪 Running standards site smoke tests"
+          pnpm exec playwright test e2e/smoke/standards.smoke.spec.ts \
+            --project=chromium \
+            --reporter=list
+
+      - name: Run admin portal smoke tests
+        run: |
+          echo "🧪 Running admin portal smoke tests against $ADMIN_URL"
+          ADMIN_BASE_URL="$ADMIN_URL" pnpm exec playwright test e2e/smoke/dashboard.smoke.spec.ts \
+            --project=chromium \
+            --reporter=list
+        continue-on-error: true  # Admin tests might fail if auth is not configured
+
+      - name: Run API health checks
+        run: |
+          echo "🏥 Running API health checks"
+          pnpm exec playwright test e2e/smoke/api-health.smoke.spec.ts \
+            --project=chromium \
+            --reporter=list
+        continue-on-error: true  # API tests might fail if backend is not deployed
+
+      - name: Generate test summary
+        if: always()
+        run: |
+          echo "## Smoke Tests Summary - Post Deployment" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "**Environment:** ${{ inputs.environment || 'preview' }}" >> $GITHUB_STEP_SUMMARY
+          echo "**Portal URL:** $BASE_URL" >> $GITHUB_STEP_SUMMARY
+          echo "**Admin URL:** $ADMIN_URL" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "### Tests Executed:" >> $GITHUB_STEP_SUMMARY
+          echo "- Portal homepage and navigation" >> $GITHUB_STEP_SUMMARY
+          echo "- Standards sites accessibility" >> $GITHUB_STEP_SUMMARY
+          echo "- Admin portal (if configured)" >> $GITHUB_STEP_SUMMARY
+          echo "- API health checks (if available)" >> $GITHUB_STEP_SUMMARY
+
+      - name: Upload test results
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: smoke-test-results-deployed-${{ github.run_number }}
+          path: |
+            playwright-report/
+            test-results/
+          retention-days: 7
+
+  visual-regression:
+    name: Visual Regression Tests
+    runs-on: ubuntu-latest
+    if: ${{ github.event.workflow_run.conclusion == 'success' || github.event_name == 'workflow_dispatch' }}
+    environment: ${{ inputs.environment || 'Preview' }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: pnpm/action-setup@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: 'pnpm'
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Install Playwright browsers
+        run: pnpm exec playwright install --with-deps chromium
+
+      - name: Set environment URLs
+        run: |
+          if [ "${{ inputs.environment || 'preview' }}" = "production" ]; then
+            echo "BASE_URL=https://www.iflastandards.info" >> $GITHUB_ENV
+          else
+            echo "BASE_URL=https://iflastandards.github.io/platform" >> $GITHUB_ENV
+          fi
+
+      - name: Run visual regression tests
+        run: |
+          echo "📸 Running visual regression tests against $BASE_URL"
+          if [ -f "e2e/visual-regression.spec.ts" ]; then
+            pnpm exec playwright test e2e/visual-regression.spec.ts \
+              --project=chromium \
+              --reporter=list
+          else
+            echo "⚠️ Visual regression tests not found - skipping"
+          fi
+        continue-on-error: true  # Visual tests might have acceptable differences
+
+      - name: Upload visual diff artifacts
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: visual-regression-results-${{ github.run_number }}
+          path: |
+            playwright-report/
+            test-results/
+            **/*-diff.png
+            **/*-actual.png
+          retention-days: 7
+
+  performance-monitoring:
+    name: Performance Monitoring
+    runs-on: ubuntu-latest
+    if: ${{ github.event.workflow_run.conclusion == 'success' || github.event_name == 'workflow_dispatch' }}
+    environment: ${{ inputs.environment || 'Preview' }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: pnpm/action-setup@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: 'pnpm'
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Install Playwright browsers
+        run: pnpm exec playwright install --with-deps chromium
+
+      - name: Set environment URLs
+        run: |
+          if [ "${{ inputs.environment || 'preview' }}" = "production" ]; then
+            echo "BASE_URL=https://www.iflastandards.info" >> $GITHUB_ENV
+          else
+            echo "BASE_URL=https://iflastandards.github.io/platform" >> $GITHUB_ENV
+          fi
+
+      - name: Run performance tests
+        run: |
+          echo "⚡ Running performance tests against $BASE_URL"
+          if [ -f "e2e/performance.spec.ts" ]; then
+            pnpm exec playwright test e2e/performance.spec.ts \
+              --project=chromium \
+              --reporter=list
+          else
+            echo "⚠️ Performance tests not found - skipping"
+          fi
+
+      - name: Generate performance report
+        if: always()
+        run: |
+          echo "## Performance Test Results" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "**Environment:** ${{ inputs.environment || 'preview' }}" >> $GITHUB_STEP_SUMMARY
+          echo "**URL:** $BASE_URL" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "Performance metrics will be displayed here once tests complete." >> $GITHUB_STEP_SUMMARY
+
+      - name: Upload performance results
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: performance-results-${{ github.run_number }}
+          path: |
+            playwright-report/
+            test-results/
+            performance-metrics.json
+          retention-days: 7

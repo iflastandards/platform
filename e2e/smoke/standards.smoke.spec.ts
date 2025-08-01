@@ -1,18 +1,18 @@
 import { smokeTest, expect } from '../utils/tagged-test';
 
 const STANDARDS = [
-  { name: 'LRM', port: 3002, path: '/LRM/' },
-  { name: 'ISBDM', port: 3001, path: '/ISBDM/' },
-  { name: 'FRBR', port: 3003, path: '/FRBR/' },
-  { name: 'isbd', port: 3004, path: '/isbd/' },
-  { name: 'muldicat', port: 3005, path: '/muldicat/' },
-  { name: 'unimarc', port: 3006, path: '/unimarc/' },
+  { name: 'LRM', path: '/LRM/' },
+  { name: 'ISBDM', path: '/ISBDM/' },
+  { name: 'FRBR', path: '/FRBR/' },
+  { name: 'isbd', path: '/isbd/' },
+  { name: 'muldicat', path: '/muldicat/' },
+  { name: 'unimarc', path: '/unimarc/' },
 ];
 
-STANDARDS.forEach(({ name, port, path }) => {
+STANDARDS.forEach(({ name, path }) => {
   smokeTest.describe(`${name} - Smoke Tests @standards @smoke`, () => {
-    smokeTest(`should load ${name} homepage @critical`, async ({ page }) => {
-      await page.goto(`http://localhost:${port}${path}`);
+    smokeTest(`should load ${name} homepage @critical`, async ({ page, baseURL }) => {
+      await page.goto(`${baseURL}${path}`);
       
       // Wait for page to load
       await page.waitForLoadState('networkidle');
@@ -27,8 +27,8 @@ STANDARDS.forEach(({ name, port, path }) => {
       await expect(page.locator('main')).toBeVisible();
     });
 
-    smokeTest(`should have working navigation in ${name} @ui`, async ({ page }) => {
-      await page.goto(`http://localhost:${port}${path}`);
+    smokeTest(`should have working navigation in ${name} @ui`, async ({ page, baseURL }) => {
+      await page.goto(`${baseURL}${path}`);
       await page.waitForLoadState('networkidle');
       
       // Check that navigation exists
@@ -41,8 +41,8 @@ STANDARDS.forEach(({ name, port, path }) => {
       expect(linkCount).toBeGreaterThan(0);
     });
 
-    smokeTest(`should have vocabulary tables in ${name} @vocabulary`, async ({ page }) => {
-      await page.goto(`http://localhost:${port}${path}`);
+    smokeTest(`should have vocabulary tables in ${name} @vocabulary`, async ({ page, baseURL }) => {
+      await page.goto(`${baseURL}${path}`);
       await page.waitForLoadState('networkidle');
       
       // Look for vocabulary-related content

@@ -323,8 +323,6 @@
   "dependencies": {
     "@anthropic-ai/sdk": "^0.57.0",
     "@auth/core": "^0.40.0",
-    "@cerbos/grpc": "^0.22.1",
-    "@cerbos/http": "^0.22.1",
     "@clerk/nextjs": "latest",
     "@docusaurus/core": "3.8.1",
     "@docusaurus/plugin-client-redirects": "^3.8.1",

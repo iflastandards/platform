@@ -2,7 +2,7 @@ import React from 'react';
 import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest';
 import { render, screen, fireEvent, waitFor } from '@testing-library/react';
 import NamespaceManagementClient from '../../app/(authenticated)/dashboard/[siteKey]/NamespaceManagementClient';
-import { setupFetchMock, cleanupFetchMock } from '../mocks/api';
+import { setupFetchMock, cleanupFetchMock } from '../../lib/test-helpers/api-mocks';
 
 vi.mock('@clerk/nextjs', () => ({
   ClerkProvider: ({ children }: { children: React.ReactNode }) => children,
@@ -33,7 +33,7 @@ vi.mock('next/navigation', () => ({
   useParams: () => ({ siteKey: 'newtest' }),
 }));
 
-describe('NamespaceManagementClient', () => {
+describe('NamespaceManagementClient @unit @ui @dashboard @low-priority', () => {
   const defaultProps = {
     namespaceTitle: 'Test Namespace',
     namespaceCode: 'TEST',

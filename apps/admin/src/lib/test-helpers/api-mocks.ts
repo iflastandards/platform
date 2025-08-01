@@ -4,7 +4,7 @@ import {
   mockGitHubData,
   createMockResponse,
   createMockError,
-} from '../fixtures/mockData';
+} from '../../lib/test-helpers/mock-data';
 
 // Mock fetch responses
 export const mockApiResponses = {

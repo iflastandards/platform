@@ -1,7 +1,7 @@
 import { describe, it } from 'vitest';
 import { spawn } from 'child_process';
 
-describe('Spawn Test @unit', () => {
+describe('Spawn Test @integration @admin @api @low-priority', () => {
   it('should be able to spawn admin server process', async () => {
     console.log('Testing process spawn...');
 
@@ -9,11 +9,12 @@ describe('Spawn Test @unit', () => {
       cwd: '/Users/jonphipps/Code/IFLA/standards-dev',
       env: {
         ...process.env,
-        NEXTAUTH_URL: 'http://localhost:3007',
-        NEXTAUTH_SECRET: 'test-secret',
-        GITHUB_ID: 'test-id',
-        GITHUB_SECRET: 'test-secret',
-        NEXT_PUBLIC_CERBOS_PDP_URL: 'http://localhost:3593',
+        NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY: 'test-pk',
+        CLERK_SECRET_KEY: 'test-sk',
+        NEXT_PUBLIC_CLERK_SIGN_IN_URL: '/admin/sign-in',
+        NEXT_PUBLIC_CLERK_SIGN_UP_URL: '/admin/sign-up',
+        NEXT_PUBLIC_CLERK_SIGN_IN_FALLBACK_REDIRECT_URL: '/admin/api/auth/callback',
+        NEXT_PUBLIC_CLERK_SIGN_UP_FALLBACK_REDIRECT_URL: '/admin/api/auth/callback',
       },
       stdio: ['ignore', 'pipe', 'pipe'],
     });

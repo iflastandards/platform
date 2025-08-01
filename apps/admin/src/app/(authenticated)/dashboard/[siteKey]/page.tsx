@@ -107,7 +107,7 @@ function isAuthorizedForNamespace(
 }
 
 export default async function NamespaceManagementPage({ params }: PageProps) {
-  // Get the user from Clerk via Cerbos bridge
+  // Get the user from Clerk authentication
   const user = await getAuthUser();
 
   // Redirect to sign in if not authenticated (though Clerk middleware should handle this)
