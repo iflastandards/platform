@@ -5,7 +5,8 @@ import * as fs from 'fs';
 import * as path from 'path';
 import { parse } from 'csv-parse/sync';
 import { google } from 'googleapis';
-import { utils as xlsxUtils, write as xlsxWrite, WorkBook, WorkSheet } from 'xlsx';
+import { createSpreadsheetAPI, UnifiedSpreadsheetAPI } from '@ifla/unified-spreadsheet';
+import type { Workbook, Sheet, Row } from '@ifla/unified-spreadsheet';
 
 export interface VocabularyInfo {
   name: string;
@@ -35,9 +36,28 @@ export interface SpreadsheetConfig {
 
 export class SpreadsheetAPI {
   private config: SpreadsheetConfig;
+  private unifiedAPI: UnifiedSpreadsheetAPI;
 
   constructor(config: SpreadsheetConfig) {
     this.config = config;
+    // Initialize unified API with Google auth if available
+    this.unifiedAPI = createSpreadsheetAPI({
+      googleAuth: process.env.GSHEETS_SA_KEY ? this.createGoogleAuth() : undefined
+    });
+  }
+
+  private createGoogleAuth() {
+    const credentials = JSON.parse(
+      Buffer.from(process.env.GSHEETS_SA_KEY!, 'base64').toString('utf8')
+    );
+
+    return new google.auth.GoogleAuth({
+      credentials,
+      scopes: [
+        'https://www.googleapis.com/auth/spreadsheets',
+        'https://www.googleapis.com/auth/drive.file'
+      ]
+    });
   }
 
   /**
@@ -267,7 +287,7 @@ export class SpreadsheetAPI {
   }
 
   /**
-   * Create Excel workbooks
+   * Create Excel workbooks using unified API
    */
   async createExcelWorkbooks(workbookGroups: WorkbookGroup[]): Promise<string[]> {
     const outputPaths: string[] = [];
@@ -276,40 +296,66 @@ export class SpreadsheetAPI {
     for (const group of workbookGroups) {
       console.log(`\n📊 Creating Excel workbook: ${group.title}`);
       
-      const workbook: WorkBook = xlsxUtils.book_new();
+      // Create unified workbook structure
+      const sheets: Sheet[] = [];
       
       // Create index sheet
-      const indexData = [
-        ['Vocabulary Name', 'Title', 'Description', 'Directory', 'Row Count', 'Languages', 'Sheet Name']
-      ];
+      const indexHeaders = ['Vocabulary Name', 'Title', 'Description', 'Directory', 'Row Count', 'Languages', 'Sheet Name'];
+      const indexData: Row[] = [];
       
       group.vocabularies.forEach(vocab => {
-        indexData.push([
-          vocab.name,
-          vocab.title,
-          vocab.description,
-          vocab.relativeDir,
-          vocab.rowCount.toString(),
-          vocab.languages.join(', '),
-          vocab.name
-        ]);
+        indexData.push({
+          'Vocabulary Name': vocab.name,
+          'Title': vocab.title,
+          'Description': vocab.description,
+          'Directory': vocab.relativeDir,
+          'Row Count': vocab.rowCount.toString(),
+          'Languages': vocab.languages.join(', '),
+          'Sheet Name': vocab.name
+        });
       });
       
-      const indexSheet = xlsxUtils.aoa_to_sheet(indexData);
-      xlsxUtils.book_append_sheet(workbook, indexSheet, 'Index');
+      sheets.push({
+        name: 'Index',
+        headers: indexHeaders,
+        data: indexData
+      });
 
       // Create vocabulary sheets
       for (const vocab of group.vocabularies) {
         const csvData = await this.loadCSVData(vocab.csvPath);
-        const worksheet = this.createWorksheet(csvData, vocab.headers);
-        xlsxUtils.book_append_sheet(workbook, worksheet, vocab.name.substring(0, 31)); // Excel sheet name limit
+        const sheetData: Row[] = csvData.map(row => {
+          const rowData: Row = {};
+          vocab.headers.forEach(header => {
+            rowData[header] = row[header] || '';
+          });
+          return rowData;
+        });
+        
+        sheets.push({
+          name: vocab.name.substring(0, 31), // Excel sheet name limit
+          headers: vocab.headers,
+          data: sheetData
+        });
         
         console.log(`   📝 Added sheet: ${vocab.name} (${vocab.rowCount} rows)`);
       }
 
+      // Create workbook and write using unified API
+      const workbook: Workbook = {
+        sheets,
+        metadata: {
+          title: `${this.config.name} - ${group.title}`,
+          author: 'IFLA Standards Platform',
+          created: new Date()
+        }
+      };
+
       const outputPath = path.join(this.config.outputDir, `${this.config.name}-${group.name}.xlsx`);
-      const buffer = xlsxWrite(workbook, { type: 'buffer', bookType: 'xlsx' });
-      fs.writeFileSync(outputPath, buffer);
+      await this.unifiedAPI.write(workbook, {
+        type: 'xlsx',
+        path: outputPath
+      });
       
       outputPaths.push(outputPath);
       console.log(`   ✅ Created: ${outputPath}`);
@@ -319,302 +365,95 @@ export class SpreadsheetAPI {
   }
 
   /**
-   * Create Google Sheets workbooks
+   * Create Google Sheets workbooks using unified API
    */
   async createGoogleWorkbooks(workbookGroups: WorkbookGroup[]): Promise<string[]> {
-    const credentials = JSON.parse(
-      Buffer.from(process.env.GSHEETS_SA_KEY!, 'base64').toString('utf8')
-    );
+    if (!process.env.GSHEETS_SA_KEY) {
+      throw new Error('GSHEETS_SA_KEY environment variable not set for Google Sheets');
+    }
 
-    const auth = new google.auth.GoogleAuth({
-      credentials,
-      scopes: [
-        'https://www.googleapis.com/auth/spreadsheets',
-        'https://www.googleapis.com/auth/drive.file'
-      ]
-    });
+    const googleAdapter = this.unifiedAPI.getAdapters().google;
+    if (!googleAdapter) {
+      throw new Error('Google Sheets adapter not initialized');
+    }
 
-    const sheets = google.sheets({ version: 'v4', auth });
-    const drive = google.drive({ version: 'v3', auth });
-    
     const spreadsheetIds: string[] = [];
 
     for (const group of workbookGroups) {
       console.log(`\n📊 Creating Google Sheets workbook: ${group.title}`);
       
-      // Create spreadsheet
-      const workbookName = `${this.config.name}-${group.name}`;
-      const createResponse = await drive.files.create({
-        requestBody: {
-          name: workbookName,
-          mimeType: 'application/vnd.google-apps.spreadsheet',
-        },
-        fields: 'id',
+      // Create unified workbook structure
+      const sheets: Sheet[] = [];
+      
+      // Create index sheet
+      const indexHeaders = ['Vocabulary Name', 'Title', 'Description', 'Directory', 'Row Count', 'Languages'];
+      const indexData: Row[] = [];
+      
+      group.vocabularies.forEach(vocab => {
+        indexData.push({
+          'Vocabulary Name': vocab.name,
+          'Title': vocab.title,
+          'Description': vocab.description,
+          'Directory': vocab.relativeDir,
+          'Row Count': vocab.rowCount.toString(),
+          'Languages': vocab.languages.join(', ')
+        });
       });
-
-      const spreadsheetId = createResponse.data.id!;
-      spreadsheetIds.push(spreadsheetId);
-
-      // Create index sheet first
-      await this.createGoogleIndexSheet(sheets, spreadsheetId, group);
+      
+      sheets.push({
+        name: 'Index',
+        headers: indexHeaders,
+        data: indexData,
+        metadata: {
+          frozenRows: 1,
+          frozenColumns: 1,
+          columnWidths: new Array(indexHeaders.length).fill(80)
+        }
+      });
 
       // Create vocabulary sheets
       for (const vocab of group.vocabularies) {
-        await this.createGoogleVocabularySheet(sheets, spreadsheetId, vocab);
+        const csvData = await this.loadCSVData(vocab.csvPath);
+        const sheetData: Row[] = csvData.map(row => {
+          const rowData: Row = {};
+          vocab.headers.forEach(header => {
+            rowData[header] = row[header] || '';
+          });
+          return rowData;
+        });
+        
+        sheets.push({
+          name: vocab.name,
+          headers: vocab.headers,
+          data: sheetData,
+          metadata: {
+            frozenRows: 1,
+            frozenColumns: 1,
+            columnWidths: new Array(vocab.headers.length).fill(80)
+          }
+        });
+        
         console.log(`   📝 Added sheet: ${vocab.name} (${vocab.rowCount} rows)`);
       }
 
-      // Remove default Sheet1
-      const spreadsheet = await sheets.spreadsheets.get({ spreadsheetId });
-      const defaultSheet = spreadsheet.data.sheets?.find(s => s.properties?.title === 'Sheet1');
-      if (defaultSheet) {
-        await sheets.spreadsheets.batchUpdate({
-          spreadsheetId,
-          requestBody: {
-            requests: [{
-              deleteSheet: {
-                sheetId: defaultSheet.properties?.sheetId
-              }
-            }]
-          }
-        });
-      }
+      // Create workbook
+      const workbook: Workbook = {
+        sheets,
+        metadata: {
+          title: `${this.config.name}-${group.name}`,
+          author: 'IFLA Standards Platform',
+          created: new Date()
+        }
+      };
+
+      // Create Google Sheets document
+      const spreadsheetId = await googleAdapter.create(workbook.metadata?.title || 'Untitled', workbook);
+      spreadsheetIds.push(spreadsheetId);
 
       console.log(`   ✅ Created: https://docs.google.com/spreadsheets/d/${spreadsheetId}`);
     }
 
     return spreadsheetIds;
-  }
-
-  private async createGoogleIndexSheet(sheets: any, spreadsheetId: string, group: WorkbookGroup) {
-    // Add index sheet
-    const addIndexResponse = await sheets.spreadsheets.batchUpdate({
-      spreadsheetId,
-      requestBody: {
-        requests: [{
-          addSheet: {
-            properties: {
-              title: 'Index',
-              index: 0
-            }
-          }
-        }]
-      }
-    });
-
-    const indexSheetId = addIndexResponse.data.replies[0].addSheet.properties.sheetId;
-
-    // Populate index
-    const indexRows = [
-      ['Vocabulary Name', 'Title', 'Description', 'Directory', 'Row Count', 'Languages', 'Link']
-    ];
-
-    const spreadsheet = await sheets.spreadsheets.get({ spreadsheetId });
-    
-    group.vocabularies.forEach(vocab => {
-      const sheetId = spreadsheet.data.sheets?.find((s: any) => s.properties?.title === vocab.name)?.properties?.sheetId || 0;
-      const link = `https://docs.google.com/spreadsheets/d/${spreadsheetId}/edit#gid=${sheetId}`;
-      
-      indexRows.push([
-        vocab.name,
-        vocab.title,
-        vocab.description,
-        vocab.relativeDir,
-        vocab.rowCount.toString(),
-        vocab.languages.join(', '),
-        link
-      ]);
-    });
-
-    await sheets.spreadsheets.values.update({
-      spreadsheetId,
-      range: 'Index!A1',
-      valueInputOption: 'RAW',
-      requestBody: { values: indexRows }
-    });
-
-    // Format index sheet
-    const indexColumnCount = 7;
-    await sheets.spreadsheets.batchUpdate({
-      spreadsheetId,
-      requestBody: {
-        requests: [
-          // Set column width to 80 pixels
-          {
-            updateDimensionProperties: {
-              range: {
-                sheetId: indexSheetId,
-                dimension: 'COLUMNS',
-                startIndex: 0,
-                endIndex: indexColumnCount
-              },
-              properties: {
-                pixelSize: 80
-              },
-              fields: 'pixelSize'
-            }
-          },
-          // Format all cells: wrap text, top alignment
-          {
-            repeatCell: {
-              range: {
-                sheetId: indexSheetId,
-                startRowIndex: 0,
-                endRowIndex: indexRows.length,
-                startColumnIndex: 0,
-                endColumnIndex: indexColumnCount
-              },
-              cell: {
-                userEnteredFormat: {
-                  wrapStrategy: 'WRAP',
-                  verticalAlignment: 'TOP'
-                }
-              },
-              fields: 'userEnteredFormat.wrapStrategy,userEnteredFormat.verticalAlignment'
-            }
-          },
-          // Bold header row
-          {
-            repeatCell: {
-              range: {
-                sheetId: indexSheetId,
-                startRowIndex: 0,
-                endRowIndex: 1,
-                startColumnIndex: 0,
-                endColumnIndex: indexColumnCount
-              },
-              cell: {
-                userEnteredFormat: {
-                  textFormat: {
-                    bold: true
-                  }
-                }
-              },
-              fields: 'userEnteredFormat.textFormat.bold'
-            }
-          },
-          // Freeze header row and first column
-          {
-            updateSheetProperties: {
-              properties: {
-                sheetId: indexSheetId,
-                gridProperties: {
-                  frozenRowCount: 1,
-                  frozenColumnCount: 1
-                }
-              },
-              fields: 'gridProperties.frozenRowCount,gridProperties.frozenColumnCount'
-            }
-          }
-        ]
-      }
-    });
-  }
-
-  private async createGoogleVocabularySheet(sheets: any, spreadsheetId: string, vocab: VocabularyInfo) {
-    // Create sheet
-    const addSheetResponse = await sheets.spreadsheets.batchUpdate({
-      spreadsheetId,
-      requestBody: {
-        requests: [{
-          addSheet: {
-            properties: {
-              title: vocab.name
-            }
-          }
-        }]
-      }
-    });
-
-    const sheetId = addSheetResponse.data.replies[0].addSheet.properties.sheetId;
-
-    // Load and add data
-    const csvData = await this.loadCSVData(vocab.csvPath);
-    const rows = [vocab.headers, ...csvData.map(row => vocab.headers.map(header => row[header] || ''))];
-
-    await sheets.spreadsheets.values.update({
-      spreadsheetId,
-      range: `${vocab.name}!A1`,
-      valueInputOption: 'RAW',
-      requestBody: { values: rows }
-    });
-
-    // Format columns and cells
-    const columnCount = vocab.headers.length;
-    await sheets.spreadsheets.batchUpdate({
-      spreadsheetId,
-      requestBody: {
-        requests: [
-          // Set column width to 80 pixels
-          {
-            updateDimensionProperties: {
-              range: {
-                sheetId: sheetId,
-                dimension: 'COLUMNS',
-                startIndex: 0,
-                endIndex: columnCount
-              },
-              properties: {
-                pixelSize: 80
-              },
-              fields: 'pixelSize'
-            }
-          },
-          // Format all cells: wrap text, top alignment
-          {
-            repeatCell: {
-              range: {
-                sheetId: sheetId,
-                startRowIndex: 0,
-                endRowIndex: rows.length,
-                startColumnIndex: 0,
-                endColumnIndex: columnCount
-              },
-              cell: {
-                userEnteredFormat: {
-                  wrapStrategy: 'WRAP',
-                  verticalAlignment: 'TOP'
-                }
-              },
-              fields: 'userEnteredFormat.wrapStrategy,userEnteredFormat.verticalAlignment'
-            }
-          },
-          // Bold header row
-          {
-            repeatCell: {
-              range: {
-                sheetId: sheetId,
-                startRowIndex: 0,
-                endRowIndex: 1,
-                startColumnIndex: 0,
-                endColumnIndex: columnCount
-              },
-              cell: {
-                userEnteredFormat: {
-                  textFormat: {
-                    bold: true
-                  }
-                }
-              },
-              fields: 'userEnteredFormat.textFormat.bold'
-            }
-          },
-          // Freeze header row
-          {
-            updateSheetProperties: {
-              properties: {
-                sheetId: sheetId,
-                gridProperties: {
-                  frozenRowCount: 1,
-                  frozenColumnCount: 1
-                }
-              },
-              fields: 'gridProperties.frozenRowCount,gridProperties.frozenColumnCount'
-            }
-          }
-        ]
-      }
-    });
   }
 
   private async loadCSVData(csvPath: string): Promise<any[]> {
@@ -626,10 +465,6 @@ export class SpreadsheetAPI {
     });
   }
 
-  private createWorksheet(csvData: any[], headers: string[]): WorkSheet {
-    const wsData = [headers, ...csvData.map(row => headers.map(header => row[header] || ''))];
-    return xlsxUtils.aoa_to_sheet(wsData);
-  }
 }
 
 // CLI interface

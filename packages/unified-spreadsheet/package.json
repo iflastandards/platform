@@ -1,0 +1,33 @@
+{
+  "name": "@ifla/unified-spreadsheet",
+  "version": "1.0.0",
+  "description": "Unified API for CSV, XLSX, and Google Sheets operations with DCTAP validation",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "scripts": {
+    "build": "tsc",
+    "test": "vitest run",
+    "test:watch": "vitest watch",
+    "test:coverage": "vitest run --coverage",
+    "lint": "eslint src --ext .ts,.tsx",
+    "clean": "rimraf dist"
+  },
+  "keywords": [
+    "spreadsheet",
+    "excel",
+    "csv",
+    "google-sheets",
+    "dctap",
+    "rdf"
+  ],
+  "author": "IFLA Standards Development",
+  "license": "MIT",
+  "files": [
+    "dist",
+    "README.md"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/iflastandards/platform"
+  }
+}

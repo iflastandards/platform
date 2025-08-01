@@ -15,10 +15,12 @@
     "noEmit": true,
     "resolveJsonModule": true,
     "allowSyntheticDefaultImports": true,
-    "baseUrl": ".",
+    "baseUrl": "..",
     "paths": {
-      "@/*": ["./*"],
-      "@utils/*": ["./utils/*"]
+      "@/*": ["./scripts/*"],
+      "@utils/*": ["./scripts/utils/*"],
+      "@ifla/unified-spreadsheet": ["./packages/unified-spreadsheet/src/index.ts"],
+      "@ifla/unified-spreadsheet/*": ["./packages/unified-spreadsheet/src/*"]
     }
   },
   "include": [

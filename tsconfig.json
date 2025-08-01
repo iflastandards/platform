@@ -39,6 +39,8 @@
       "@ifla/theme/theme/*": ["./packages/theme/src/theme/*"],
       "@ifla/theme/utils": ["./packages/theme/src/utils/index.ts"],
       "@ifla/theme/utils/*": ["./packages/theme/src/utils/*"],
+      "@ifla/unified-spreadsheet": ["./packages/unified-spreadsheet/src/index.ts"],
+      "@ifla/unified-spreadsheet/*": ["./packages/unified-spreadsheet/src/*"],
       "@site/*": ["./*"],
       "@site/plugins/*": ["./plugins/*"],
       "@theme/*": ["./src/theme/*", "./.docusaurus/theme-fallback/*"]

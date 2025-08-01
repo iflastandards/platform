@@ -1,0 +1,40 @@
+{
+  "name": "unified-spreadsheet",
+  "$schema": "../../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "packages/unified-spreadsheet/src",
+  "projectType": "library",
+  "targets": {
+    "build": {
+      "executor": "@nx/js:tsc",
+      "outputs": ["{options.outputPath}"],
+      "options": {
+        "outputPath": "dist/packages/unified-spreadsheet",
+        "main": "packages/unified-spreadsheet/src/index.ts",
+        "tsConfig": "packages/unified-spreadsheet/tsconfig.json",
+        "assets": ["packages/unified-spreadsheet/*.md"]
+      }
+    },
+    "lint": {
+      "executor": "@nx/eslint:lint",
+      "outputs": ["{options.outputFile}"],
+      "options": {
+        "lintFilePatterns": ["packages/unified-spreadsheet/**/*.ts"]
+      }
+    },
+    "test": {
+      "executor": "@nx/vite:test",
+      "outputs": ["{options.reportsDirectory}"],
+      "options": {
+        "passWithNoTests": true,
+        "reportsDirectory": "../../coverage/packages/unified-spreadsheet"
+      }
+    },
+    "typecheck": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "tsc --noEmit -p packages/unified-spreadsheet/tsconfig.json"
+      }
+    }
+  },
+  "tags": ["type:library", "scope:shared"]
+}
