@@ -110,6 +110,7 @@
     "ports:kill": "node scripts/utils/port-manager.js all",
     "ports:kill:site": "node scripts/utils/port-manager.js site",
     "ports:kill:verbose": "node scripts/utils/port-manager.js all --verbose",
+    "postinstall": "node scripts/ensure-git-hooks.js",
     "profile-copy": "tsx tools/profile-copy.ts",
     "rdf:folder-to-csv": "tsx tools/typescript/rdf-converters/src/rdf-folder-to-csv.ts",
     "rdf:to-csv": "tsx tools/typescript/rdf-converters/src/rdf-to-csv.ts",
