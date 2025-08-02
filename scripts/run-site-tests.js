@@ -35,10 +35,22 @@ if (!site || !siteConfigs[site.toLowerCase()]) {
 const config = siteConfigs[site.toLowerCase()];
 console.log(`🧪 Running ${testType} tests for ${site}...`);
 
+// Enhanced execSync wrapper to ensure proper EventEmitter limits
+function safeExecSync(command, options = {}) {
+  const defaultOptions = {
+    env: {
+      ...process.env,
+      NODE_OPTIONS: '--max-listeners=0 --max-old-space-size=4096'
+    },
+    ...options
+  };
+  return execSync(command, defaultOptions);
+}
+
 // Kill the port first
 console.log(`🧹 Cleaning port ${config.port}...`);
 try {
-  execSync(`lsof -ti:${config.port} | xargs kill -9`, { stdio: 'pipe' });
+  safeExecSync(`lsof -ti:${config.port} | xargs kill -9`, { stdio: 'pipe' });
 } catch (e) {
   // Port might not be in use
 }
@@ -47,7 +59,11 @@ try {
 console.log(`🚀 Starting ${site} server on port ${config.port}...`);
 const serverProcess = require('child_process').spawn('pnpm', ['exec', ...config.command.split(' ')], {
   detached: false,
-  stdio: 'pipe'
+  stdio: 'pipe',
+  env: {
+    ...process.env,
+    NODE_OPTIONS: '--max-listeners=0 --max-old-space-size=4096'
+  }
 });
 
 // Wait for server to be ready
@@ -62,7 +78,7 @@ for (let i = 0; i < maxAttempts; i++) {
       ? `http://localhost:${config.port}/admin/api/health`
       : `http://localhost:${config.port}`;
     
-    execSync(`curl -s -o /dev/null -w "%{http_code}" ${checkUrl} | grep -q "200\\|301\\|302"`, {
+    safeExecSync(`curl -s -o /dev/null -w "%{http_code}" ${checkUrl} | grep -q "200\\|301\\|302"`, {
       stdio: 'pipe'
     });
     ready = true;
@@ -71,7 +87,7 @@ for (let i = 0; i < maxAttempts; i++) {
     if (i % 5 === 0 && i > 0) {
       console.log(`  Still waiting... (${i}/${maxAttempts})`);
     }
-    execSync('sleep 1', { stdio: 'pipe' });
+    safeExecSync('sleep 1', { stdio: 'pipe' });
   }
 }
 
@@ -110,7 +126,7 @@ console.log(`📝 Running: ${testCommand}`);
 // Run tests
 let exitCode = 0;
 try {
-  execSync(testCommand, { 
+  safeExecSync(testCommand, { 
     stdio: 'inherit', 
     timeout: 600000 // 10 minutes timeout
   });
@@ -126,7 +142,7 @@ serverProcess.kill();
 
 // Kill the port again to be sure
 try {
-  execSync(`lsof -ti:${config.port} | xargs kill -9`, { stdio: 'pipe' });
+  safeExecSync(`lsof -ti:${config.port} | xargs kill -9`, { stdio: 'pipe' });
 } catch (e) {
   // Ignore
 }

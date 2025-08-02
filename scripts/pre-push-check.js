@@ -7,12 +7,24 @@
 
 // Increase EventEmitter listener limit to handle multiple concurrent processes
 process.setMaxListeners(0); // 0 = unlimited listeners
-require('events').EventEmitter.defaultMaxListeners = 30; // Or a high number like 30
+require('events').EventEmitter.defaultMaxListeners = 30;
 
-const { execSync } = require('child_process');
+const { execSync, spawn } = require('child_process');
 const fs = require('fs');
 const path = require('path');
 const { ensureDaemon } = require('./ensure-nx-daemon');
+
+// Enhanced execSync wrapper to ensure proper EventEmitter limits
+function safeExecSync(command, options = {}) {
+  const defaultOptions = {
+    env: {
+      ...process.env,
+      NODE_OPTIONS: '--max-listeners=0 --max-old-space-size=4096'
+    },
+    ...options
+  };
+  return execSync(command, defaultOptions);
+}
 
 // Load configuration
 const configPath = path.join(__dirname, '..', '.prepushrc.json');
@@ -45,7 +57,7 @@ ensureDaemon();
 // Get affected projects
 function getAffectedProjects() {
   try {
-    const output = execSync('pnpm nx show projects --affected --type=app --skip-nx-cache', {
+    const output = safeExecSync('pnpm nx show projects --affected --type=app --skip-nx-cache', {
       encoding: 'utf8',
       stdio: 'pipe'
     });
@@ -114,7 +126,7 @@ if (config.runTests) {
   console.log('📋 Running affected tests...');
   try {
     // Run all affected tests
-    execSync(`pnpm nx affected --target=test --parallel=${config.parallelJobs} --skip-nx-cache`, {
+    safeExecSync(`pnpm nx affected --target=test --parallel=${config.parallelJobs} --skip-nx-cache`, {
       stdio: 'inherit',
       encoding: 'utf8',
       timeout: 600000 // 10 minutes timeout
@@ -127,7 +139,7 @@ if (config.runTests) {
   
   // Run integration tests specifically if they exist
   try {
-    execSync(`pnpm nx affected --target=test:integration --parallel=${config.parallelJobs} --skip-nx-cache`, {
+    safeExecSync(`pnpm nx affected --target=test:integration --parallel=${config.parallelJobs} --skip-nx-cache`, {
       stdio: 'pipe',
       encoding: 'utf8',
       timeout: 600000 // 10 minutes timeout
@@ -143,7 +155,7 @@ if (config.runTests) {
 if (config.runBuilds) {
   console.log('📋 Running affected builds (production readiness)...');
   try {
-    execSync(`pnpm nx affected --target=build --parallel=${config.parallelJobs} --skip-nx-cache`, {
+    safeExecSync(`pnpm nx affected --target=build --parallel=${config.parallelJobs} --skip-nx-cache`, {
       stdio: 'inherit',
       encoding: 'utf8',
       timeout: 600000 // 10 minutes timeout
@@ -172,14 +184,14 @@ if (shouldRunSmokeTests()) {
     try {
       // Kill ports before each test to ensure clean state
       try {
-        execSync('pnpm ports:kill', { stdio: 'pipe', encoding: 'utf8' });
-        execSync('sleep 1', { stdio: 'pipe' });
+        safeExecSync('pnpm ports:kill', { stdio: 'pipe', encoding: 'utf8' });
+        safeExecSync('sleep 1', { stdio: 'pipe' });
       } catch (portError) {
         // Ignore port cleanup errors
       }
       
       // Run smoke test for this specific site with its own server
-      execSync(`node scripts/run-site-tests.js ${site} smoke`, {
+      safeExecSync(`node scripts/run-site-tests.js ${site} smoke`, {
         stdio: 'inherit',
         encoding: 'utf8'
       });
@@ -205,7 +217,7 @@ if (shouldRunAdminTests()) {
   
   // Run admin unit and integration tests
   try {
-    execSync('pnpm nx run admin:test --skip-nx-cache', {
+    safeExecSync('pnpm nx run admin:test --skip-nx-cache', {
       stdio: 'inherit',
       encoding: 'utf8',
       timeout: 600000 // 10 minutes timeout
@@ -220,7 +232,7 @@ if (shouldRunAdminTests()) {
   if (config.runAdminTests) {
     try {
       console.log('📋 Running admin server-dependent tests...');
-      execSync('pnpm nx run admin:test:server-dependent --skip-nx-cache', {
+      safeExecSync('pnpm nx run admin:test:server-dependent --skip-nx-cache', {
         stdio: 'inherit',
         encoding: 'utf8',
         timeout: 600000 // 10 minutes timeout
@@ -248,14 +260,14 @@ if (shouldRunE2E) {
     try {
       // Kill ports before each test
       try {
-        execSync('pnpm ports:kill', { stdio: 'pipe', encoding: 'utf8' });
-        execSync('sleep 1', { stdio: 'pipe' });
+        safeExecSync('pnpm ports:kill', { stdio: 'pipe', encoding: 'utf8' });
+        safeExecSync('sleep 1', { stdio: 'pipe' });
       } catch (portError) {
         // Ignore port cleanup errors
       }
       
       // Run E2E test for this specific app with its own server
-      execSync(`node scripts/run-site-tests.js ${app} e2e`, {
+      safeExecSync(`node scripts/run-site-tests.js ${app} e2e`, {
         stdio: 'inherit',
         encoding: 'utf8'
       });

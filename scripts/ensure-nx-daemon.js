@@ -5,6 +5,10 @@
  * This improves performance significantly for all Nx operations
  */
 
+// Increase EventEmitter listener limit to handle daemon processes
+process.setMaxListeners(0); // 0 = unlimited listeners
+require('events').EventEmitter.defaultMaxListeners = 30;
+
 const { execSync, spawn } = require('child_process');
 
 // Simple color functions for terminal output
@@ -18,7 +22,11 @@ function isDaemonRunning() {
   try {
     const result = execSync('pnpm nx daemon --status', { 
       encoding: 'utf8',
-      stdio: ['pipe', 'pipe', 'pipe'] 
+      stdio: ['pipe', 'pipe', 'pipe'],
+      env: {
+        ...process.env,
+        NODE_OPTIONS: '--max-listeners=0 --max-old-space-size=4096'
+      }
     });
     return result.includes('Daemon is running') || result.includes('Process ID');
   } catch (error) {
@@ -32,7 +40,11 @@ function startDaemon() {
     // Start daemon in background
     execSync('pnpm nx daemon --start', { 
       stdio: 'inherit',
-      detached: true 
+      detached: true,
+      env: {
+        ...process.env,
+        NODE_OPTIONS: '--max-listeners=0 --max-old-space-size=4096'
+      }
     });
     
     // Give it a moment to start
