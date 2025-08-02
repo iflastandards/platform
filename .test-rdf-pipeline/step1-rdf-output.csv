@@ -1,0 +1,2 @@
+uri,uri,rdf:type,rdfs:label@en,rdfs:label@es,skos:definition@en,skos:definition@es,skos:prefLabel@en,skos:scopeNote@en,skos:scopeNote@es,skos:note@en,reg:status,reg:name@en,reg:hasSubClass[csv],reg:hasSubproperty[csv],reg:hasUnconstrained,rdfs:domain,rdfs:range,rdfs:isDefinedBy,rdfs:subClassOf[csv],rdfs:subPropertyOf[csv],owl:inverseOf[csv],dc:title@en,foaf:homepage
+isbd:P1001,,rdf:Property,has content form,tiene forma del contenido,,,,,,,,,,,,isbd:C2001,rdfs:Literal,,,,,,
