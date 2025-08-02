@@ -314,7 +314,7 @@
     "test:dev": "nx affected --target=test --parallel=3 --watch",
     "test:dev:unit": "pnpm test:dev --grep '@unit'",
     "test:dev:changed": "vitest --changed --run",
-    "test:fast": "nx affected --target=test --parallel=6 --skip-nx-cache=false",
+    "test:fast": "pnpm nx affected --target=test --parallel=6 --skip-nx-cache",
     "test:fast:unit": "pnpm test:fast --grep '@unit'",
     "test:fast:critical": "pnpm test:fast --grep '@critical'",
     "test:comprehensive:affected": "nx affected --targets=typecheck,lint,test,build --parallel=6",

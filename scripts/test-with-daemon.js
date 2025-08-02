@@ -13,7 +13,7 @@ ensureDaemon();
 
 // Execute the test command
 try {
-execSync('pnpm dev:headless && nx affected --target=test --parallel=3', {
+execSync('pnpm dev:headless && pnpm nx affected --target=test --parallel=3 --skip-nx-cache', {
     stdio: 'inherit',
     env: process.env
   });

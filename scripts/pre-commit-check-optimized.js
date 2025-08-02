@@ -21,14 +21,13 @@ let hasErrors = false;
 console.log('📋 Running affected typecheck and tests...');
 try {
   execSync(
-    'pnpm nx affected --targets=typecheck,test --parallel=10',
+    'pnpm nx affected --targets=typecheck,test --parallel=10 --skip-nx-cache',
     {
       stdio: 'inherit',
       encoding: 'utf8',
       env: {
         ...process.env,
         NODE_OPTIONS: '--max-old-space-size=4096',
-        NX_SKIP_NX_CACHE: 'false',
         NX_DAEMON: 'true'
       }
     }
@@ -70,7 +69,7 @@ if (hasErrors) {
 } else {
   console.log('✅ Pre-commit checks passed!\n');
   console.log('💡 Performance tips:');
-  console.log('   - Nx cache is being used effectively');
+  console.log('   - Tests run with --skip-nx-cache for reliable results');
   console.log('   - Keep daemon running: pnpm nx:daemon:start');
   console.log('   - For urgent commits: git commit --no-verify\n');
   process.exit(0);

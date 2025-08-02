@@ -41,7 +41,7 @@ ensureDaemon();
 // Get affected projects
 function getAffectedProjects() {
   try {
-    const output = execSync('pnpm nx show projects --affected --type=app', {
+    const output = execSync('pnpm nx show projects --affected --type=app --skip-nx-cache', {
       encoding: 'utf8',
       stdio: 'pipe'
     });
@@ -110,7 +110,7 @@ if (config.runTests) {
   console.log('📋 Running affected tests...');
   try {
     // Run all affected tests
-    execSync(`pnpm nx affected --target=test --parallel=${config.parallelJobs}`, {
+    execSync(`pnpm nx affected --target=test --parallel=${config.parallelJobs} --skip-nx-cache`, {
       stdio: 'inherit',
       encoding: 'utf8'
     });
@@ -122,7 +122,7 @@ if (config.runTests) {
   
   // Run integration tests specifically if they exist
   try {
-    execSync(`pnpm nx affected --target=test:integration --parallel=${config.parallelJobs}`, {
+    execSync(`pnpm nx affected --target=test:integration --parallel=${config.parallelJobs} --skip-nx-cache`, {
       stdio: 'pipe',
       encoding: 'utf8'
     });
@@ -137,7 +137,7 @@ if (config.runTests) {
 if (config.runBuilds) {
   console.log('📋 Running affected builds (production readiness)...');
   try {
-    execSync(`pnpm nx affected --target=build --parallel=${config.parallelJobs}`, {
+    execSync(`pnpm nx affected --target=build --parallel=${config.parallelJobs} --skip-nx-cache`, {
       stdio: 'inherit',
       encoding: 'utf8'
     });
@@ -198,7 +198,7 @@ if (shouldRunAdminTests()) {
   
   // Run admin unit and integration tests
   try {
-    execSync('nx run admin:test', {
+    execSync('pnpm nx run admin:test --skip-nx-cache', {
       stdio: 'inherit',
       encoding: 'utf8'
     });
@@ -212,7 +212,7 @@ if (shouldRunAdminTests()) {
   if (config.runAdminTests) {
     try {
       console.log('📋 Running admin server-dependent tests...');
-      execSync('nx run admin:test:server-dependent', {
+      execSync('pnpm nx run admin:test:server-dependent --skip-nx-cache', {
         stdio: 'inherit',
         encoding: 'utf8'
       });
