@@ -192,3 +192,14 @@ The core issue stems from the interaction between:
 - Build artifact management
 
 By disabling Nx cache for typechecks and implementing proper cleanup procedures, we ensure consistent and reliable type checking across all environments.
+
+## Git Hook Setup
+
+If pre-commit hooks are not running, ensure they are properly linked:
+```bash
+# Create symlink for pre-commit hook
+ln -sf ../../.husky/pre-commit .git/hooks/pre-commit
+
+# Verify the hook is linked
+ls -la .git/hooks/pre-commit
+```
