@@ -157,11 +157,16 @@
       "dependsOn": [
         "^build"
       ],
-      "cache": true,
+      "cache": false,
       "inputs": [
         "default",
         "{projectRoot}/tsconfig.json",
-        "{workspaceRoot}/tsconfig.json"
+        "{projectRoot}/tsconfig.*.json",
+        "{workspaceRoot}/tsconfig.json",
+        "{workspaceRoot}/tsconfig.base.json"
+      ],
+      "outputs": [
+        "{workspaceRoot}/tmp/typecheck-{projectName}.done"
       ]
     },
     "serve": {
