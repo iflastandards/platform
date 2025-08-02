@@ -7,7 +7,18 @@
 
 // Increase EventEmitter listener limit to handle daemon processes
 process.setMaxListeners(0); // 0 = unlimited listeners
-require('events').EventEmitter.defaultMaxListeners = 30;
+const EventEmitter = require('events');
+EventEmitter.defaultMaxListeners = 50;
+
+// Capture and suppress specific EventEmitter warnings if needed
+const originalEmit = process.emit;
+process.emit = function (name, data, ...args) {
+  if (name === 'warning' && data && data.name === 'MaxListenersExceededWarning') {
+    // Suppress the warning - we've already handled it
+    return false;
+  }
+  return originalEmit.apply(process, [name, data, ...args]);
+};
 
 const { execSync, spawn } = require('child_process');
 
@@ -25,7 +36,7 @@ function isDaemonRunning() {
       stdio: ['pipe', 'pipe', 'pipe'],
       env: {
         ...process.env,
-        NODE_OPTIONS: '--max-listeners=0 --max-old-space-size=4096'
+        NODE_OPTIONS: '--max-old-space-size=4096'
       }
     });
     return result.includes('Daemon is running') || result.includes('Process ID');
@@ -43,7 +54,7 @@ function startDaemon() {
       detached: true,
       env: {
         ...process.env,
-        NODE_OPTIONS: '--max-listeners=0 --max-old-space-size=4096'
+        NODE_OPTIONS: '--max-old-space-size=4096'
       }
     });
     

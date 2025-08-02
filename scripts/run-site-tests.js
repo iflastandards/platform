@@ -6,7 +6,18 @@
 
 // Increase EventEmitter listener limit to handle server processes
 process.setMaxListeners(0); // 0 = unlimited listeners
-require('events').EventEmitter.defaultMaxListeners = 30;
+const EventEmitter = require('events');
+EventEmitter.defaultMaxListeners = 50;
+
+// Capture and suppress specific EventEmitter warnings if needed
+const originalEmit = process.emit;
+process.emit = function (name, data, ...args) {
+  if (name === 'warning' && data && data.name === 'MaxListenersExceededWarning') {
+    // Suppress the warning - we've already handled it
+    return false;
+  }
+  return originalEmit.apply(process, [name, data, ...args]);
+};
 
 const { execSync } = require('child_process');
 const path = require('path');
@@ -40,10 +51,16 @@ function safeExecSync(command, options = {}) {
   const defaultOptions = {
     env: {
       ...process.env,
-      NODE_OPTIONS: '--max-listeners=0 --max-old-space-size=4096'
+      NODE_OPTIONS: '--max-old-space-size=4096'
     },
     ...options
   };
+  
+  // Set EventEmitter limits in the current process
+  if (typeof process.setMaxListeners === 'function') {
+    process.setMaxListeners(0);
+  }
+  
   return execSync(command, defaultOptions);
 }
 
@@ -62,7 +79,7 @@ const serverProcess = require('child_process').spawn('pnpm', ['exec', ...config.
   stdio: 'pipe',
   env: {
     ...process.env,
-    NODE_OPTIONS: '--max-listeners=0 --max-old-space-size=4096'
+    NODE_OPTIONS: '--max-old-space-size=4096'
   }
 });
 
