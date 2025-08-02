@@ -122,20 +122,20 @@ let testCommand = `SKIP_SERVER_SETUP=true AFFECTED_SITES="${site}" pnpm exec pla
 // Add appropriate test files based on test type
 if (testType === 'smoke') {
   if (site === 'portal') {
-    testCommand += 'e2e/portal-smoke.spec.ts';
+    testCommand += 'e2e/smoke/portal.smoke.spec.ts';
   } else {
     // Use the existing standards-smoke.spec.ts but filter tests using grep
-    testCommand += `e2e/standards-smoke.spec.ts --grep "${site.toUpperCase()}"`;
+    testCommand += `e2e/smoke/standards.smoke.spec.ts --grep "${site.toUpperCase()}"`;
   }
 } else if (testType === 'e2e') {
   if (site === 'admin') {
-    testCommand += 'e2e/admin/**/*.spec.ts e2e/admin-*.spec.ts';
+    testCommand += 'e2e/e2e/admin/**/*.spec.ts e2e/integration/admin-flows.integration.spec.ts';
   } else if (site === 'portal') {
-    // For portal E2E, only run portal-specific tests and portal validation
-    testCommand += `e2e/portal-*.spec.ts e2e/site-validation.spec.ts --grep "portal"`;
+    // For portal E2E, run portal-specific smoke and integration tests
+    testCommand += 'e2e/smoke/portal.smoke.spec.ts e2e/integration/site-validation.integration.spec.ts';
   }
 } else if (testType === 'validation') {
-  testCommand += `e2e/site-validation*.spec.ts --grep "${site}"`;
+  testCommand += `e2e/integration/site-validation.integration.spec.ts --grep "${site}"`;
 }
 
 console.log(`📝 Running: ${testCommand}`);
