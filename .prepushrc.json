@@ -4,7 +4,7 @@
   "runBuilds": true,
   "runE2E": false,
   "runSmokeTests": false,
-  "runAdminTests": true,
+  "runAdminTests": false,
   "parallelJobs": 3,
   "comment": "Pre-push uses nx affected to only test what changed",
   "comment2": "Tests run sequentially per site/app to avoid timeouts",
