@@ -66,3 +66,6 @@ playwright-state-*.json
 
 # Server state files (ephemeral, not for version control)
 **/.ifla-server-state.json
+
+# Test output directories
+.test-rdf-pipeline/

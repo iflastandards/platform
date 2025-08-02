@@ -152,13 +152,14 @@ Quick rules:
 5. **Import utility**: `import { addBasePath } from '@ifla/theme/utils';`
 
 ### Testing Strategy (MANDATORY FOR ALL TESTS)
-1. **AI AGENTS**: MUST read `@developer_notes/AI_TESTING_INSTRUCTIONS.md` before writing any tests
-2. **Pre-commit target**: < 60 seconds (use `nx affected`)
-3. **Use 5-phase strategy**: On-demand → Pre-commit → Pre-push → Comprehensive → CI
-4. **Always use `nx affected`** for development testing
-5. **Parallel execution**: `--parallel=3` for performance
-6. **Speed targets**: On-demand <5s, Pre-commit <60s, Pre-push <180s
-7. **Test placement**: Check `@developer_notes/TEST_PLACEMENT_GUIDE.md` before writing tests
+1. **🚨 ALWAYS run tests as: `pnpm nx test [project] --skip-nx-cache`** - NEVER forget pnpm or skip-nx-cache!
+2. **AI AGENTS**: MUST read `@developer_notes/AI_TESTING_INSTRUCTIONS.md` before writing any tests
+3. **Integration-first philosophy**: We test with real I/O, not mocks - see AI_TESTING_INSTRUCTIONS.md
+4. **Pre-commit target**: < 60 seconds (use `pnpm nx affected --skip-nx-cache`)
+5. **Use 5-phase strategy**: On-demand → Pre-commit → Pre-push → Comprehensive → CI
+6. **Test placement**: Check `@developer_notes/TEST_PLACEMENT_GUIDE.md` before writing tests
+7. **NEVER use bare `nx` commands** - Always prefix with `pnpm`
+8. **NEVER trust nx cache for tests** - Always use `--skip-nx-cache`
 
 ### Critical File References
 - **AI Testing Guide**: `@developer_notes/AI_TESTING_INSTRUCTIONS.md` (MANDATORY for AI agents)

@@ -39,7 +39,18 @@ export class CsvAdapter {
     // Parse headers if present
     let startIndex = 0;
     if (includeHeaders && lines.length > 0) {
-      sheet.headers = this.parseLine(lines[0], delimiter);
+      const rawHeaders = this.parseLine(lines[0], delimiter);
+      // Make headers unique by appending a suffix for duplicates
+      const headerCounts: Record<string, number> = {};
+      sheet.headers = rawHeaders.map(header => {
+        if (!headerCounts[header]) {
+          headerCounts[header] = 1;
+          return header;
+        } else {
+          const count = headerCounts[header]++;
+          return `${header}_${count}`;
+        }
+      });
       startIndex = 1;
     }
 

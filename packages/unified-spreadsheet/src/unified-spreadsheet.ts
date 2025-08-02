@@ -101,6 +101,24 @@ export class UnifiedSpreadsheetAPI {
    */
   async write(workbook: Workbook, target: DataTarget): Promise<void> {
     switch (target.type) {
+      case 'file':
+        if (!target.path) {
+          throw new Error('File path is required for file target');
+        }
+        // Auto-detect format from file extension
+        const ext = target.path.toLowerCase().split('.').pop();
+        if (ext === 'csv') {
+          return this.csvAdapter.write(
+            workbook.sheets[target.sheetIndex || 0], 
+            target.path, 
+            target.options
+          );
+        } else if (ext === 'xlsx' || ext === 'xls') {
+          return this.excelAdapter.write(workbook, target.path, target.options);
+        } else {
+          throw new Error(`Unsupported file extension: ${ext}`);
+        }
+
       case 'xlsx':
         if (!target.path) {
           throw new Error('File path is required for XLSX target');
@@ -252,7 +270,7 @@ export class UnifiedSpreadsheetAPI {
     ) {
       return this.excelAdapter.read(path);
     } else {
-      throw new Error(`Unsupported file type: ${extension || mimeType}`);
+      throw new Error(`Unsupported file extension: ${extension || mimeType}`);
     }
   }
 

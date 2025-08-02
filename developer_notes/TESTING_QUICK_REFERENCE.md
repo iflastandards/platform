@@ -1,25 +1,24 @@
 # Testing Quick Reference
 
-**Purpose**: Concise testing guide for developers and AI agents working on the IFLA Standards Platform.
+**Purpose**: Concise testing guide for developers and AI agents working on the IFLA Standards Platform. We follow an **integration-first testing philosophy** - preferring real I/O and actual data over mocks.
 
 ## 🎯 Test Decision Tree (30 Seconds)
 
 ```
 Need to write a test?
 ├─ Uses env vars/external services? → @env test in tests/deployment/
-├─ Tests multiple components? → @integration test (*.integration.test.ts)
 ├─ Tests user workflow in browser? → @e2e test in e2e/
-└─ Otherwise → @unit test next to source file
+├─ Uses files/DB/multiple components? → @integration test (DEFAULT)
+└─ Pure function only? → @unit test (RARE)
 ```
 
 ## 📋 Required Tags
 
 ### Category (Pick ONE)
-- `@unit` - Isolated tests
-- `@integration` - Multi-component tests  
+- `@integration` - **DEFAULT**: Multiple components with real I/O
 - `@e2e` - Browser automation tests
-- `@smoke` - Critical path tests
-- `@env` - Environment config tests
+- `@env` - Environment/deployment tests
+- `@unit` - Pure functions only (rare)
 
 ### Add Functional Tags
 - `@api`, `@auth`, `@rbac`, `@ui`, `@validation`, `@security`, `@performance`, `@a11y`
@@ -29,73 +28,112 @@ Need to write a test?
 
 ## 🚀 Key Commands
 
-```bash
-# Most common - run affected tests
-nx affected --target=test --parallel=3
+**🚨 CRITICAL: ALWAYS use `pnpm nx test [project] --skip-nx-cache`**
 
-# Test specific project
-nx test @ifla/theme --watch
+```bash
+# ✅ CORRECT FORMAT (ALWAYS USE THIS):
+pnpm nx test unified-spreadsheet --skip-nx-cache
+pnpm nx test @ifla/theme --skip-nx-cache
+pnpm nx test portal --skip-nx-cache
+
+# ❌ WRONG (NEVER USE THESE):
+nx test unified-spreadsheet                    # Missing pnpm and cache skip
+pnpm nx test unified-spreadsheet              # Missing cache skip
+nx test unified-spreadsheet --skip-nx-cache   # Missing pnpm
+
+# Run affected tests
+pnpm nx affected --target=test --parallel=3 --skip-nx-cache
 
 # Run by tag
-pnpm test --grep "@unit"
+pnpm test --grep "@integration"
 pnpm test --grep "@critical"
-pnpm test --grep "@auth.*@integration"
 
 # E2E tests
-npx playwright test --grep "@smoke"
+pnpm playwright test --grep "@critical"
 ```
 
 ## 📁 File Placement
 
 ```
-src/
-├── components/
-│   ├── Button.tsx
-│   ├── Button.test.tsx              # @unit
-│   └── Button.integration.test.tsx  # @integration
-└── tests/
-    ├── integration/                 # @integration
-    └── deployment/                  # @env
-e2e/                                # @e2e
+packages/[package-name]/
+├── src/
+│   └── components/
+│       └── Button.tsx
+├── tests/
+│   ├── integration/                     # Most tests go here
+│   │   └── button.integration.test.tsx  # @integration (DEFAULT)
+│   ├── unit/                           # Rare - pure functions only
+│   │   └── utils.test.ts               # @unit
+│   └── deployment/                     # CI-only tests
+│       └── env-api.test.ts             # @env
+└── e2e/
+    └── button-workflow.e2e.test.ts     # @e2e
 ```
 
 ## ⏱️ Performance Targets
 
-- **Unit**: <5s per file
-- **Integration**: <30s per suite
+- **Integration**: <30s per file (primary test type)
 - **E2E**: <60s per workflow
+- **Unit**: <5s per file (rare)
 - **Pre-commit total**: <60s
 - **Pre-push total**: <180s
 
 ## 🔧 Test Phases
 
-1. **Pre-commit** (Auto): Typecheck + Lint + Unit tests
-2. **Pre-push** (Auto): Integration + E2E (if needed) + Builds
+1. **Pre-commit** (Auto): Typecheck + Lint + Fast integration tests
+2. **Pre-push** (Auto): All integration + E2E (if needed) + Builds
 3. **CI** (Auto): Environment tests only
 
-## 📝 Test Template
+## 📝 Integration Test Template (Primary)
 
 ```typescript
-// Component.test.tsx
-describe('Component @unit @ui', () => {
-  it('should render correctly', () => {
-    render(<Component />);
-    expect(screen.getByRole('button')).toBeInTheDocument();
+// feature.integration.test.ts
+describe('Feature @integration @api', () => {
+  const testDir = path.join(__dirname, '.test-output');
+  
+  beforeEach(async () => {
+    await fs.mkdir(testDir, { recursive: true });
+  });
+  
+  afterEach(async () => {
+    await fs.rm(testDir, { recursive: true, force: true });
+  });
+  
+  it('should process real files', async () => {
+    // Create real test file
+    const csvPath = path.join(testDir, 'test.csv');
+    await fs.writeFile(csvPath, 'header\nvalue');
+    
+    // Test with real I/O
+    const result = await processFile(csvPath);
+    
+    // Verify actual results
+    expect(result.rows).toBe(1);
   });
 });
 ```
 
 ## 🤖 AI Agent Tips
 
-1. **Always tag tests** - Use decision tree above
-2. **Mock dependencies** in unit tests
-3. **Use fixtures** for test data
-4. **One concept per test**
-5. **Run affected only** - Don't use --all
+1. **🚨 ALWAYS use `pnpm nx test [project] --skip-nx-cache`** - Never forget!
+2. **Default to integration tests** - Use real I/O, not mocks
+3. **Create real test files** - Use temp directories and clean up
+4. **Test the full flow** - Input → Processing → Output
+5. **Use fixtures for consistency** - Store in `tests/fixtures/`
+6. **Never use bare `nx` commands** - Always prefix with `pnpm`
+7. **Never trust cache** - Always use `--skip-nx-cache`
+
+## 💡 Philosophy
+
+We believe in testing code the way it runs in production:
+- ✅ Real file I/O operations
+- ✅ Actual test databases
+- ✅ Multiple components working together
+- ✅ Real error conditions
+- ❌ Avoid mocks unless absolutely necessary
 
 ## 🔗 Full Documentation
 
-- **Comprehensive Guide**: `/system-design-docs/06-testing-strategy-comprehensive.md`
-- **AI Instructions**: `/developer_notes/AI_TESTING_INSTRUCTIONS.md`
+- **Integration-First Guide**: `/developer_notes/AI_TESTING_INSTRUCTIONS.md`
 - **Templates**: `/developer_notes/TEST_TEMPLATES.md`
-- **Placement Guide**: `/developer_notes/TEST_PLACEMENT_GUIDE.md`
+- **Comprehensive Strategy**: `/system-design-docs/06-testing-strategy-comprehensive.md`

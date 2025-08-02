@@ -49,6 +49,12 @@ export class ExcelJSAdapter {
     // Use streaming for better performance
     const stream = createWriteStream(path);
     await excelWorkbook.xlsx.write(stream);
+    
+    // Ensure stream is properly closed
+    await new Promise<void>((resolve, reject) => {
+      stream.on('finish', resolve);
+      stream.on('error', reject);
+    });
   }
 
   /**
@@ -124,9 +130,10 @@ export class ExcelJSAdapter {
       });
 
       // Add metadata
+      const firstView = worksheet.views && worksheet.views.length > 0 ? worksheet.views[0] : null;
       sheet.metadata = {
-        frozenRows: worksheet.views[0]?.state === 'frozen' ? worksheet.views[0].ySplit : undefined,
-        frozenColumns: worksheet.views[0]?.state === 'frozen' ? worksheet.views[0].xSplit : undefined,
+        frozenRows: firstView?.state === 'frozen' ? firstView.ySplit : undefined,
+        frozenColumns: firstView?.state === 'frozen' ? firstView.xSplit : undefined,
         columnWidths: Array.from({ length: worksheet.columnCount }, (_, i) => 
           worksheet.getColumn(i + 1).width || 10
         )

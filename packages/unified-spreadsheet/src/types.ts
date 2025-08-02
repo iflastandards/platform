@@ -12,7 +12,7 @@ export interface DataSource {
 }
 
 export interface DataTarget {
-  type: 'xlsx' | 'csv' | 'googleSheets';
+  type: 'file' | 'xlsx' | 'csv' | 'googleSheets';
   path?: string;
   spreadsheetId?: string;
   sheetIndex?: number;
