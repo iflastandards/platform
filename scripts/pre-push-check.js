@@ -5,6 +5,10 @@
  * Includes smoke tests, admin tests, and API tests based on affected projects
  */
 
+// Increase EventEmitter listener limit to handle multiple concurrent processes
+process.setMaxListeners(0); // 0 = unlimited listeners
+require('events').EventEmitter.defaultMaxListeners = 30; // Or a high number like 30
+
 const { execSync } = require('child_process');
 const fs = require('fs');
 const path = require('path');
@@ -112,7 +116,8 @@ if (config.runTests) {
     // Run all affected tests
     execSync(`pnpm nx affected --target=test --parallel=${config.parallelJobs} --skip-nx-cache`, {
       stdio: 'inherit',
-      encoding: 'utf8'
+      encoding: 'utf8',
+      timeout: 600000 // 10 minutes timeout
     });
     console.log('✅ Affected tests passed\n');
   } catch (error) {
@@ -124,7 +129,8 @@ if (config.runTests) {
   try {
     execSync(`pnpm nx affected --target=test:integration --parallel=${config.parallelJobs} --skip-nx-cache`, {
       stdio: 'pipe',
-      encoding: 'utf8'
+      encoding: 'utf8',
+      timeout: 600000 // 10 minutes timeout
     });
     console.log('✅ Integration tests passed\n');
   } catch (error) {
@@ -139,7 +145,8 @@ if (config.runBuilds) {
   try {
     execSync(`pnpm nx affected --target=build --parallel=${config.parallelJobs} --skip-nx-cache`, {
       stdio: 'inherit',
-      encoding: 'utf8'
+      encoding: 'utf8',
+      timeout: 600000 // 10 minutes timeout
     });
     console.log('✅ All affected builds passed\n');
   } catch (error) {
@@ -200,7 +207,8 @@ if (shouldRunAdminTests()) {
   try {
     execSync('pnpm nx run admin:test --skip-nx-cache', {
       stdio: 'inherit',
-      encoding: 'utf8'
+      encoding: 'utf8',
+      timeout: 600000 // 10 minutes timeout
     });
     console.log('✅ Admin tests passed\n');
   } catch (error) {
@@ -214,7 +222,8 @@ if (shouldRunAdminTests()) {
       console.log('📋 Running admin server-dependent tests...');
       execSync('pnpm nx run admin:test:server-dependent --skip-nx-cache', {
         stdio: 'inherit',
-        encoding: 'utf8'
+        encoding: 'utf8',
+        timeout: 600000 // 10 minutes timeout
       });
       console.log('✅ Admin server-dependent tests passed\n');
     } catch (error) {

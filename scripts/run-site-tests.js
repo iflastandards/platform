@@ -4,6 +4,10 @@
  * Run tests for a specific site with its own server
  */
 
+// Increase EventEmitter listener limit to handle server processes
+process.setMaxListeners(0); // 0 = unlimited listeners
+require('events').EventEmitter.defaultMaxListeners = 30;
+
 const { execSync } = require('child_process');
 const path = require('path');
 
@@ -106,7 +110,10 @@ console.log(`📝 Running: ${testCommand}`);
 // Run tests
 let exitCode = 0;
 try {
-  execSync(testCommand, { stdio: 'inherit' });
+  execSync(testCommand, { 
+    stdio: 'inherit', 
+    timeout: 600000 // 10 minutes timeout
+  });
   console.log(`✅ ${site} tests passed`);
 } catch (error) {
   console.log(`❌ ${site} tests failed`);
