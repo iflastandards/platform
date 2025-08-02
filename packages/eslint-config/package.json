@@ -1,0 +1,44 @@
+{
+  "name": "@ifla/eslint-config",
+  "version": "1.0.0",
+  "description": "Shared ESLint configuration for IFLA Standards monorepo",
+  "type": "module",
+  "main": "./index.mjs",
+  "exports": {
+    ".": "./index.mjs",
+    "./base": "./configs/base.mjs",
+    "./typescript": "./configs/typescript.mjs",
+    "./react": "./configs/react.mjs",
+    "./next": "./configs/next.mjs",
+    "./docusaurus": "./configs/docusaurus.mjs",
+    "./test": "./configs/test.mjs"
+  },
+  "files": [
+    "index.mjs",
+    "configs/",
+    "utils/"
+  ],
+  "scripts": {
+    "test": "echo 'No test fixtures created yet for eslint-config package' && exit 0"
+  },
+  "dependencies": {
+    "@docusaurus/eslint-plugin": "^3.8.1",
+    "@typescript-eslint/eslint-plugin": "^8.38.0",
+    "@typescript-eslint/parser": "^8.38.0",
+    "eslint-plugin-mdx": "^3.6.2",
+    "eslint-plugin-react": "^7.37.5",
+    "eslint-plugin-react-hooks": "5.2.0",
+    "eslint-plugin-unused-imports": "^4.1.4",
+    "globals": "^15.0.0",
+    "typescript-eslint": "^8.38.0"
+  },
+  "peerDependencies": {
+    "eslint": "^9.32.0",
+    "typescript": ">=5.0.0"
+  },
+  "peerDependenciesMeta": {
+    "typescript": {
+      "optional": true
+    }
+  }
+}
