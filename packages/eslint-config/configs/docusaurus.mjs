@@ -1,5 +1,5 @@
 import docusaurusPlugin from '@docusaurus/eslint-plugin';
-import mdxPlugin from 'eslint-plugin-mdx';
+import * as mdxPlugin from 'eslint-plugin-mdx';
 
 /**
  * Docusaurus-specific ESLint configuration

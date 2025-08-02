@@ -45,9 +45,10 @@
     "**/*.jsx",
     "**/*.ts",
     "**/*.tsx",
+    "../../dist/apps/admin/.next/types/**/*.ts",
     "next-auth-types.d.ts",
     "next-env.d.ts",
-    "../../dist/apps/admin/.next/types/**/*.ts"
+    ".next/types/**/*.ts"
   ],
   "exclude": [
     "node_modules",

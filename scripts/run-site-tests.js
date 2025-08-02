@@ -129,7 +129,8 @@ if (testType === 'smoke') {
   }
 } else if (testType === 'e2e') {
   if (site === 'admin') {
-    testCommand += 'e2e/e2e/admin/**/*.spec.ts e2e/integration/admin-flows.integration.spec.ts';
+    // Use explicit file paths to avoid glob pattern issues in playwright
+    testCommand += 'e2e/e2e/admin/dashboard.auth.spec.ts e2e/e2e/admin/superadmin-dashboard.e2e.spec.ts e2e/integration/admin-flows.integration.spec.ts';
   } else if (site === 'portal') {
     // For portal E2E, run portal-specific smoke and integration tests
     testCommand += 'e2e/smoke/portal.smoke.spec.ts e2e/integration/site-validation.integration.spec.ts';

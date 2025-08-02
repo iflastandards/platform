@@ -1,4 +1,4 @@
-import { integrationTest, expect } from '../utils/tagged-test';
+import { test, expect, describe } from '../utils/tagged-test';
 import { DocsEnv, sites } from '../utils/siteConfig';
 
 // Determine the current environment from env variable or default to localhost
@@ -35,14 +35,14 @@ const ALLOWED_EXTERNAL_DOMAINS = [
   'creativecommons.org',
 ];
 
-integrationTest.describe('Site Validation Tests @sites @validation @integration', () => {
+describe('Site Validation Tests', '@sites @validation @integration', () => {
   // Test each site
   Object.entries(sites).forEach(([siteKey, siteConfigs]) => {
     const siteConfig = siteConfigs[currentEnv];
     const baseUrl = siteConfig.url + siteConfig.baseUrl;
 
-    integrationTest.describe(`${siteKey} site validation`, () => {
-      integrationTest.beforeEach(async ({ page }) => {
+    describe(`${siteKey} site validation`, '@integration', () => {
+      test.beforeEach(async ({ page }) => {
         // Navigate to the specific site's home page
         // For localhost, we need to ensure we're using the right port
         const fullUrl = currentEnv === DocsEnv.Localhost && siteConfig.port 
@@ -53,7 +53,7 @@ integrationTest.describe('Site Validation Tests @sites @validation @integration'
         await page.waitForLoadState('networkidle');
       });
 
-      integrationTest(`should validate navigation structure for ${siteKey} @critical`, async ({ page }) => {
+      test(`should validate navigation structure for ${siteKey} @critical @integration`, async ({ page }) => {
         // Check main navigation exists
         const nav = page.locator('nav').first();
         await expect(nav).toBeVisible();
@@ -75,7 +75,7 @@ integrationTest.describe('Site Validation Tests @sites @validation @integration'
         }
       });
 
-      integrationTest(`should validate footer links for ${siteKey}`, async ({ page }) => {
+      test(`should validate footer links for ${siteKey} @integration`, async ({ page }) => {
         // Check footer exists
         const footer = page.locator('footer').first();
         await expect(footer).toBeVisible();
@@ -98,7 +98,7 @@ integrationTest.describe('Site Validation Tests @sites @validation @integration'
         }
       });
 
-      integrationTest(`should validate page metadata for ${siteKey}`, async ({ page }) => {
+      test(`should validate page metadata for ${siteKey} @integration`, async ({ page }) => {
         // Check title
         await expect(page).toHaveTitle(/.+/); // Should have a non-empty title
         
@@ -111,7 +111,7 @@ integrationTest.describe('Site Validation Tests @sites @validation @integration'
         expect(ogTitle).toBeTruthy();
       });
 
-      integrationTest(`should validate accessibility basics for ${siteKey} @accessibility`, async ({ page }) => {
+      test(`should validate accessibility basics for ${siteKey} @accessibility @integration`, async ({ page }) => {
         // Check for lang attribute
         const htmlLang = await page.locator('html').getAttribute('lang');
         expect(htmlLang).toBeTruthy();
