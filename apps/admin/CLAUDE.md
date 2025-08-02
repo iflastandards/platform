@@ -470,6 +470,34 @@ test('page is accessible', async () => {
 
 ---
 
+## 🧪 Testing Admin App Features
+
+### Test Types
+1. **Unit Tests**: `src/test/components/` - Test components in isolation
+2. **Integration Tests**: `src/test/integration/` - Test with real I/O (files, DB)
+3. **Server-Dependent Tests**: `src/test/integration/server-dependent/` - Tests requiring running servers
+4. **E2E Tests**: `e2e/admin/` - Full browser automation tests
+
+### Running Tests
+```bash
+# Run all tests (unit + integration, NO server-dependent)
+nx test admin
+
+# Run only integration tests (NO server-dependent)
+nx test:integration admin
+
+# Run server-dependent tests (starts servers)
+nx test:server-dependent admin
+
+# Run E2E tests
+nx e2e admin
+```
+
+### Important: Server-Dependent Tests
+Some tests require the admin server to be running. These are isolated in `src/test/integration/server-dependent/` to prevent hanging during regular test runs. See [Server-Dependent Testing Guide](../../developer_notes/SERVER_DEPENDENT_TESTING.md) for details.
+
+---
+
 ## 💡 Admin Development Tips
 
 1. **Always import addBasePath** at the top of files that make API calls
@@ -478,6 +506,7 @@ test('page is accessible', async () => {
 4. **Use App Router patterns** - Not Pages Router
 5. **Tailwind for styling** - Avoid inline styles when possible
 6. **Check the network tab** - If API calls fail, check if basePath is missing
+7. **Test organization** - Keep server-dependent tests separate to avoid CI issues
 
 ---
 
