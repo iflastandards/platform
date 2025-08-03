@@ -1,0 +1,37 @@
+{
+  "name": "@ifla/rdf-converters",
+  "$schema": "../../../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "tools/typescript/rdf-converters/src",
+  "projectType": "library",
+  "tags": ["tools"],
+  "targets": {
+    "build": {
+      "executor": "@nx/js:tsc",
+      "outputs": ["{options.outputPath}"],
+      "options": {
+        "outputPath": "dist/tools/typescript/rdf-converters",
+        "main": "tools/typescript/rdf-converters/src/index.ts",
+        "tsConfig": "tools/typescript/rdf-converters/tsconfig.json",
+        "assets": []
+      }
+    },
+    "test": {
+      "executor": "@nx/vite:test",
+      "outputs": ["{workspaceRoot}/coverage/{projectRoot}"],
+      "options": {
+        "passWithNoTests": true,
+        "reportsDirectory": "../../../coverage/tools/typescript/rdf-converters"
+      },
+      "configurations": {
+        "ci": {
+          "ci": true,
+          "codeCoverage": true
+        }
+      }
+    },
+    "lint": {
+      "executor": "@nx/eslint:lint",
+      "outputs": ["{options.outputFile}"]
+    }
+  }
+}
