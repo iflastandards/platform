@@ -209,19 +209,18 @@ jobs:
           echo "Note: Skipping tests - assumes Phases 1-4 passed locally"
           
           # Build theme package
-          npx nx run @ifla/theme:build
+          pnpm nx run @ifla/theme:build
           
           # Build all documentation sites for production
-          npx nx run-many \
+          pnpm nx run-many \
             --target=build \
             --projects=portal,isbdm,lrm,frbr,isbd,muldicat,unimarc \
             --parallel=4
             
-      - name: Build admin for production
+        - name: Build admin for production
         run: |
           echo "🏗️ Building admin app for production..."
-          npx nx build admin
-          
+          pnpm nx build admin          
       - name: Create production deployment structure
         run: |
           echo "📦 Creating production deployment structure..."
