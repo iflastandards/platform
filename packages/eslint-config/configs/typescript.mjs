@@ -65,11 +65,8 @@ export default [
       '@typescript-eslint/no-unsafe-call': 'off',
       '@typescript-eslint/no-unsafe-return': 'off',
       
-      // Best practices
-      '@typescript-eslint/prefer-nullish-coalescing': 'error',
-      '@typescript-eslint/prefer-optional-chain': 'error',
+      // Best practices (non-type-aware rules only)
       '@typescript-eslint/prefer-as-const': 'error',
-      '@typescript-eslint/no-unnecessary-type-assertion': 'warn',
       '@typescript-eslint/no-inferrable-types': ['error', {
         ignoreParameters: true,
         ignoreProperties: true,

@@ -15,9 +15,7 @@ export default [
       '@docusaurus': docusaurusPlugin,
     },
     rules: {
-      // MDX specific rules
-      'mdx/no-unescaped-entities': 'warn',
-      'mdx/no-unused-expressions': 'error',
+      // MDX specific rules (disabled due to plugin compatibility issues)
       
       // Docusaurus specific
       '@docusaurus/no-untranslated-text': 'off', // Too restrictive for development
@@ -63,7 +61,7 @@ export default [
   {
     files: ['**/blog/**/*.{md,mdx}'],
     rules: {
-      'mdx/no-unescaped-entities': 'off', // Common in blog posts
+      // Relaxed rules for blog posts
     },
   },
 ];
