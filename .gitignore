@@ -71,3 +71,4 @@ playwright-state-*.json
 
 # Test output directories
 .test-rdf-pipeline/
+!/ifla_server_link/

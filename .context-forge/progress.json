@@ -1,0 +1,55 @@
+[
+  {
+    "id": "mdvtt7e618jxo8wgy",
+    "command": "init",
+    "operation": "Project initialization",
+    "status": "failed",
+    "projectPath": "/Users/jonphipps/Code/IFLA/standards-dev",
+    "startTime": "2025-08-03T15:18:23.406Z",
+    "endTime": "2025-08-03T15:18:34.876Z",
+    "duration": 11470,
+    "metadata": {
+      "aiEnabled": false,
+      "targetIDEs": [
+        "claude"
+      ],
+      "errors": [
+        "Operation cancelled by user"
+      ]
+    },
+    "steps": []
+  },
+  {
+    "id": "mdvttne1mezgozj3l",
+    "command": "init",
+    "operation": "Project initialization",
+    "status": "completed",
+    "startTime": "2025-08-03T15:18:44.137Z",
+    "projectPath": "/Users/jonphipps/Code/IFLA/standards-dev",
+    "metadata": {
+      "aiEnabled": false,
+      "targetIDEs": [
+        "claude"
+      ],
+      "filesGenerated": 22
+    },
+    "steps": [
+      {
+        "id": "mdvttpctmy54pye5p",
+        "name": "Interactive setup wizard",
+        "status": "completed",
+        "startTime": "2025-08-03T15:18:46.685Z",
+        "endTime": "2025-08-03T15:30:02.704Z"
+      },
+      {
+        "id": "mdvu86z69nzhr6ym6",
+        "name": "Generate documentation",
+        "status": "completed",
+        "startTime": "2025-08-03T15:30:02.706Z",
+        "endTime": "2025-08-03T15:30:02.790Z"
+      }
+    ],
+    "endTime": "2025-08-03T15:30:02.791Z",
+    "duration": 678654
+  }
+]
