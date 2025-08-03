@@ -145,7 +145,7 @@ jobs:
             "package.json"
             "nx.json"
             "apps/admin"
-            "standards/portal"
+            "portal"
             "packages/theme"
           )
           
