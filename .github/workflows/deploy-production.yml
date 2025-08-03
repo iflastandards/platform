@@ -215,10 +215,9 @@ jobs:
           pnpm nx run-many \
             --target=build \
             --projects=portal,isbdm,lrm,frbr,isbd,muldicat,unimarc \
-            --parallel=4
-            
-        - name: Build admin for production
-        run: |
+             --parallel=4
+             
+       - name: Build admin for production        run: |
           echo "🏗️ Building admin app for production..."
           pnpm nx build admin          
       - name: Create production deployment structure
