@@ -1,9 +1,9 @@
 {
-  "name": "@ifla/eslint-config",
+  "name": "eslint-config",
   "$schema": "../../node_modules/nx/schemas/project-schema.json",
-  "sourceRoot": "packages/eslint-config",
+  "sourceRoot": "packages/eslint-config/src",
   "projectType": "library",
-  "tags": [],
+  "tags": ["scope:shared", "type:config"],
   "targets": {
     "lint": {
       "executor": "@nx/eslint:lint",

@@ -1,7 +1,7 @@
 /**
  * ESLint configuration for the Portal Docusaurus site
- * Extends the shared configuration with Docusaurus-specific rules
+ * Uses the shared configuration
  */
-import { docusaurus } from '@ifla/eslint-config';
+import config from '@ifla/eslint-config';
 
-export default docusaurus;
+export default config;

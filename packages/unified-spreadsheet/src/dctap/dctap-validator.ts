@@ -9,7 +9,6 @@ import type {
   Row,
   CellValue,
   DctapProfile,
-  DctapShape,
   DctapProperty,
   ValidationError
 } from '../types';

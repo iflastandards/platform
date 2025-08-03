@@ -1,7 +1,7 @@
 /**
  * ESLint configuration for the sheet-sync tool
- * Uses the Node.js preset for backend tools
+ * Uses the shared configuration
  */
-import { node } from '@ifla/eslint-config';
+import config from '@ifla/eslint-config';
 
-export default node;
+export default config;

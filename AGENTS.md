@@ -22,6 +22,14 @@ Essential guidance for coding agents working in this IFLA Standards monorepo.
 - **Error handling**: Use proper TypeScript error types, avoid generic catches
 - **Comments**: DO NOT ADD comments unless explicitly requested
 
+## ESLint Configuration
+- **Centralized config**: All projects use `@ifla/eslint-config` shared package
+- **Root config**: `eslint.config.mjs` imports from `@ifla/eslint-config`
+- **Project configs**: Individual projects import the shared config with `import config from '@ifla/eslint-config'`
+- **Consistent rules**: Same linting behavior across all projects (admin, docs, packages)
+- **Test-specific rules**: Relaxed rules for test files (allows `any`, console logs, longer functions)
+- **Auto-fix**: Use `pnpm lint:fix` to automatically fix unused imports and other fixable issues
+
 ## Critical Rules
 - **NEVER** use `any` without eslint-disable comment
 - **ALWAYS** run `pnpm typecheck && pnpm lint` after edits
