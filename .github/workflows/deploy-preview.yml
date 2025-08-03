@@ -227,10 +227,11 @@ jobs:
           node-version: 22
           cache: 'pnpm'
           
-       - name: Install dependencies
-         run: pnpm install --frozen-lockfile
-         
-       - name: Build admin app (no testing - assumes local validation passed)        run: |
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+        
+      - name: Build admin app (no testing - assumes local validation passed)
+        run: |
           echo "🏗️ Building admin app for preview..."
           pnpm nx build admin          
       - name: Deploy to Vercel
