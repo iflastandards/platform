@@ -385,7 +385,7 @@ The project has optimized GitHub Actions workflows:
 - **Environment variables**: Use `.env.nx` for Nx-specific optimizations
 - **Health check**: Run `pnpm health` to verify system configuration
 
-### Deployment Workflow
+### Deployment Workflow (Phase 5 Compliant)
 
 #### Branch Strategy
 1. **Development**: Work on feature branches
@@ -395,13 +395,21 @@ The project has optimized GitHub Actions workflows:
 #### Deployment URLs
 - **Preview**: https://iflastandards.github.io/platform/
 - **Production**: https://www.iflastandards.info/
-- **Vercel Previews**: Automatic for each preview branch commit
+- **Admin Preview**: https://admin-preview.iflastandards.info
+- **Admin Production**: https://admin.iflastandards.info
 
-#### Build Process
-1. **Unified build**: Scripts create a single deployment directory
-2. **Environment-specific**: Different configurations for preview/production
-3. **Validation**: Automated checks before deployment
-4. **Caching**: Aggressive caching for faster builds
+#### Phase 5 CI/CD Process
+1. **Environment Validation**: API tokens, environment variables, service connectivity
+2. **Build and Deploy**: Assumes code quality validated locally (Phases 1-4)
+3. **Post-Deployment Validation**: Health checks on deployed infrastructure
+4. **No Code Testing**: CI focuses only on environment-specific aspects
+
+#### ⚠️ Critical Developer Requirement
+**All code quality validation must happen locally before pushing:**
+- ✅ Pre-commit hooks must pass (Phase 2)
+- ✅ Pre-push hooks must pass (Phase 3)
+- ✅ Never bypass with `--no-verify` unless emergency
+- ✅ CI assumes your code is already validated
 
 ---
 

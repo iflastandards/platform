@@ -1,0 +1,296 @@
+name: Nx Optimized Production Deploy
+# Optimized for main branch deployment to www.iflastandards.info
+# Only runs on PR merge from preview to main
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+  actions: read
+
+concurrency:
+  group: "production-deploy"
+  cancel-in-progress: false  # Never cancel production deploys
+
+env:
+  # CI environment
+  CI: true
+  HUSKY: 0
+  
+  # Nx Cloud configuration
+  # PUBLIC REPO: Use read-only token for security
+  NX_CLOUD_ACCESS_TOKEN: ${{ secrets.NX_CLOUD_ACCESS_TOKEN }}
+  NX_CLOUD_DISTRIBUTED_EXECUTION: true
+  NX_CLOUD_DISTRIBUTED_EXECUTION_AGENT_COUNT: 8
+  NX_BRANCH: ${{ github.head_ref || github.ref_name }}
+  
+  # Nx optimizations for production
+  NX_DAEMON: true
+  NX_PARALLEL: 8
+  NX_SKIP_NX_CACHE: false
+  
+  # Production environment
+  DOCS_ENV: production
+  NODE_OPTIONS: "--max-old-space-size=12288"
+  
+  # Strict production settings
+  FROZEN_LOCKFILE: true
+  STRICT_PEER_DEPENDENCIES: true
+  
+  # Supabase configuration
+  NEXT_PUBLIC_SUPABASE_URL: ${{ secrets.NEXT_PUBLIC_SUPABASE_URL }}
+  NEXT_PUBLIC_SUPABASE_ANON_KEY: ${{ secrets.NEXT_PUBLIC_SUPABASE_ANON_KEY }}
+  
+  
+  # GitHub OAuth (for admin portal)
+  AUTH_GITHUB_ID: ${{ secrets.AUTH_GITHUB_ID }}
+  AUTH_GITHUB_SECRET: ${{ secrets.AUTH_GITHUB_SECRET }}
+  AUTH_SECRET: ${{ secrets.AUTH_SECRET }}
+  
+  # Google Sheets
+  GOOGLE_SHEETS_API_KEY: ${{ secrets.GOOGLE_SHEETS_API_KEY }}
+  GSHEETS_SA_KEY: ${{ secrets.GSHEETS_SA_KEY }}
+
+jobs:
+  validate-source:
+    name: Validate PR from Preview
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 2
+          
+      - name: Verify merge from preview
+        run: |
+          # Get the merge commit parent
+          MERGE_PARENT=$(git rev-parse HEAD^2 2>/dev/null || echo "")
+          
+          if [ -z "$MERGE_PARENT" ]; then
+            echo "⚠️  Not a merge commit, checking if direct push is allowed..."
+            # Add logic here to check if this is an emergency hotfix
+          else
+            # Verify the merge is from preview branch
+            PARENT_BRANCH=$(git name-rev --name-only $MERGE_PARENT)
+            if [[ ! "$PARENT_BRANCH" =~ "preview" ]]; then
+              echo "❌ Production can only be updated from preview branch"
+              exit 1
+            fi
+          fi
+          
+          echo "✅ Valid production deployment source"
+
+  production-build:
+    name: Production Build with Full Validation
+    needs: validate-source
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          
+      - uses: pnpm/action-setup@v4
+        
+      - name: Start Nx Cloud Production Run
+        run: |
+          pnpm dlx nx-cloud start-ci-run \
+            --distribute-on="8 linux-medium-js" \
+            --stop-agents-after="e2e" \
+            --require-explicit-completion \
+            --with-env-vars="DOCS_ENV,NODE_OPTIONS"
+            
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: 'pnpm'
+          
+      - name: Production dependency install
+        run: |
+          # Use frozen lockfile for production
+          cp .npmrc.ci .npmrc
+          pnpm install --frozen-lockfile --strict-peer-dependencies
+          
+      - uses: nrwl/nx-set-shas@v4
+        
+      - name: Run production quality checks
+        run: |
+          echo "🔍 Running production quality checks..."
+          
+          # Type checking
+          npx nx run-many --target=typecheck --all --parallel=4
+          
+          # Linting with strict rules
+          npx nx run-many --target=lint --all --parallel=4
+          
+          # Start headless servers for tests
+          pnpm dev:headless
+          
+          # Run unit tests
+          npx nx run-many --target=test --all --parallel=4
+          
+      - name: Build all sites for production
+        run: |
+          echo "🏗️ Building all sites for production..."
+          
+          # Build theme first (dependency)
+          npx nx run @ifla/theme:build --configuration=production
+          
+          # Build all sites with production configuration
+          npx nx affected \
+            --target=build \
+            --configuration=production \
+            --parallel=8 \
+            --tags @critical
+            
+      - name: Run production build validation
+        run: |
+          echo "📋 Validating production builds..."
+          
+          # Run build validation tests
+          DOCS_ENV=production npx nx run platform:test:post-build
+          
+          # Check bundle sizes
+          node scripts/analyze-bundle-sizes.js --max-size 200
+          
+          # Validate all links
+          node scripts/validate-site-links.js --env production
+          
+      - name: Create production deployment
+        run: |
+          echo "📦 Creating production deployment..."
+          
+          # Create production build structure
+          node scripts/create-unified-build.js --env production --validate
+          
+          # Add production-specific files
+          echo "www.iflastandards.info" > _site/CNAME
+          touch _site/.nojekyll
+          
+          # Add security headers file for Cloudflare
+          cat > _site/_headers << EOF
+          /*
+            X-Frame-Options: DENY
+            X-Content-Type-Options: nosniff
+            Referrer-Policy: strict-origin-when-cross-origin
+            Permissions-Policy: camera=(), microphone=(), geolocation=()
+          EOF
+          
+      - name: Production smoke tests
+        run: |
+          echo "🧪 Running production smoke tests..."
+          
+          # Start local server
+          npx http-server _site -p 8080 &
+          SERVER_PID=$!
+          
+          # Wait for server
+          sleep 5
+          
+          # Run smoke tests
+          npx playwright test e2e/production-smoke.spec.ts
+          
+          # Cleanup
+          kill $SERVER_PID
+          
+      - name: Upload production artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: ./_site
+          retention-days: 30
+
+  security-scan:
+    name: Security Scan
+    needs: production-build
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      
+      - name: Run security audit
+        run: |
+          pnpm audit --audit-level=moderate
+          
+      - name: License check
+        run: |
+          pnpm licenses list --prod
+          
+      - name: Dependency check
+        uses: dependency-check/Dependency-Check_Action@main
+        with:
+          project: 'ifla-standards'
+          path: '.'
+          format: 'HTML'
+
+  deploy-production:
+    name: Deploy to Production
+    needs: [production-build, security-scan]
+    runs-on: ubuntu-latest
+    environment:
+      name: production
+      url: https://www.iflastandards.info
+    steps:
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
+        
+      - name: Verify deployment
+        run: |
+          echo "🔍 Verifying production deployment..."
+          
+          # Wait for deployment to propagate
+          sleep 30
+          
+          # Check key URLs
+          for url in \
+            "https://www.iflastandards.info" \
+            "https://www.iflastandards.info/ISBDM" \
+            "https://www.iflastandards.info/LRM"; do
+            
+            STATUS=$(curl -s -o /dev/null -w "%{http_code}" "$url")
+            if [ "$STATUS" != "200" ]; then
+              echo "❌ Failed to verify $url (status: $STATUS)"
+              exit 1
+            fi
+            echo "✅ Verified: $url"
+          done
+          
+      - name: Notify Nx Cloud
+        run: |
+          pnpm dlx nx-cloud record-deployment \
+            --environment=production \
+            --url=https://www.iflastandards.info \
+            --status=success
+        continue-on-error: true
+
+  post-deploy:
+    name: Post-Deployment Tasks
+    needs: deploy-production
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      
+      - name: Clear CDN cache
+        run: |
+          # Add CDN cache purge if using Cloudflare/other CDN
+          echo "🔄 CDN cache purge would run here"
+          
+      - name: Update monitoring
+        run: |
+          # Update monitoring/alerting systems
+          echo "📊 Monitoring update would run here"
+          
+      - name: Create release
+        uses: actions/create-release@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          tag_name: prod-${{ github.run_number }}
+          release_name: Production Release ${{ github.run_number }}
+          body: |
+            Production deployment from preview branch
+            Commit: ${{ github.sha }}
+          draft: false
+          prerelease: false

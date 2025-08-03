@@ -23,7 +23,7 @@ mkdir -p packages/eslint-config
 # Create package.json
 cat > packages/eslint-config/package.json << 'EOF'
 {
-  "name": "@your-org/eslint-config",
+  "name": "@ifla/eslint-config",
   "version": "1.0.0",
   "description": "Shared ESLint configuration",
   "type": "module",
@@ -56,7 +56,7 @@ EOF
 # Create Nx project configuration
 cat > packages/eslint-config/project.json << 'EOF'
 {
-  "name": "@your-org/eslint-config",
+  "name": "@ifla/eslint-config",
   "$schema": "../../node_modules/nx/schemas/project-schema.json",
   "sourceRoot": "packages/eslint-config",
   "projectType": "library",
@@ -283,14 +283,14 @@ Add the shared config as a workspace dependency:
 
 ```bash
 # Add to root package.json dependencies
-pnpm add @your-org/eslint-config --workspace-root
+pnpm add @ifla/eslint-config --workspace-root
 ```
 
 ### Step 9: Create Root ESLint Config
 
 ```bash
 cat > eslint.config.mjs << 'EOF'
-import { typescript } from '@your-org/eslint-config';
+import { typescript } from '@ifla/eslint-config';
 
 export default typescript;
 EOF
@@ -303,7 +303,7 @@ For each workspace, create an appropriate config:
 ```bash
 # Next.js app
 cat > apps/your-app/eslint.config.mjs << 'EOF'
-import { react } from '@your-org/eslint-config';
+import { react } from '@ifla/eslint-config';
 
 export default [
   ...react,
@@ -319,7 +319,7 @@ EOF
 
 # Library package
 cat > packages/your-lib/eslint.config.mjs << 'EOF'
-import { typescript } from '@your-org/eslint-config';
+import { typescript } from '@ifla/eslint-config';
 
 export default typescript;
 EOF
@@ -466,7 +466,7 @@ export const yourPreset = createPreset([
 
 ```javascript
 // In workspace eslint.config.mjs
-import { react } from '@your-org/eslint-config';
+import { react } from '@ifla/eslint-config';
 
 export default [
   ...react,

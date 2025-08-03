@@ -4,7 +4,9 @@
 
 This comprehensive guide provides AI assistants with detailed instructions for writing tests within the IFLA Standards Platform. It emphasizes our **integration-first testing philosophy** where we prioritize real-world testing with actual data, files, and services over mocked unit tests.
 
-The guide ensures consistent test tagging, proper placement within the established 5-level testing strategy, and maintains alignment with the project's performance targets and architectural patterns.
+The guide ensures consistent test tagging, proper placement within our **5-phase testing strategy**, and maintains alignment with the project's performance targets and architectural patterns.
+
+**📋 Quick Reference**: See [TESTING_STRATEGY.md](./TESTING_STRATEGY.md) for the complete 5-phase testing approach that organizes all testing activities from development to deployment.
 
 ## Testing Philosophy
 
@@ -35,27 +37,38 @@ We classify tests based on their execution phase and dependencies:
 
 ***
 
-## Five-Level Testing Strategy
+## 5-Phase Testing Strategy Integration
 
-### 1. Selective Tests (Development Focus)
+Our testing approach follows a **5-phase strategy** that progressively validates code from development to deployment:
 
-Fast feedback during active development using `nx affected` to run only changed projects. Optimized for TDD workflows with <30 second execution times. Primarily integration tests for the code being actively developed.
+### Phase 1: Selective Tests (Development Focus)
+- **Purpose**: Individual testing for focused development work and TDD
+- **When**: During active development, debugging, feature work  
+- **Speed**: < 30 seconds per test file
+- **Commands**: `nx test {project}`, `pnpm test --grep "@unit"`, `pnpm test --grep "@critical"`
 
-### 2. Pre-Commit Tests (Automated Git Hook)
+### Phase 2: Pre-Commit Tests (Automated Git Hook)
+- **Purpose**: Fast feedback loop preventing broken commits
+- **When**: Automatically on every `git commit`
+- **Speed**: < 60 seconds for typical changes
+- **What runs**: TypeScript, ESLint, unit tests (affected only)
 
-Quick validation that prevents broken commits by running essential typecheck, lint, and fast integration tests on affected projects only. Executes in <60 seconds with parallel processing. Serves as the first automated quality gate.
+### Phase 3: Pre-Push Tests (Automated Git Hook)  
+- **Purpose**: Integration tests and deployment readiness validation
+- **When**: Automatically on every `git push`
+- **Speed**: < 180 seconds
+- **What runs**: Integration tests, builds, E2E (if portal/admin affected)
 
-### 3. Pre-Push Tests (Automated Git Hook)
+### Phase 4: Comprehensive Tests (Manual/Release)
+- **Purpose**: Full validation before major releases
+- **When**: Release preparation, major refactoring validation
+- **Speed**: < 300 seconds
+- **Commands**: `pnpm test:comprehensive`
 
-Ensures deployment readiness by running comprehensive integration tests, E2E tests (when needed), and build validation. Targets <180 seconds execution time and focuses on inter-component compatibility and system integration.
-
-### 4. Comprehensive Tests (Manual/Release)
-
-Full validation suite for major releases covering all test types, performance regression, visual testing, and cross-browser compatibility. Includes long-running integration tests and extensive E2E scenarios.
-
-### 5. CI Environment Tests (Automated Pipeline)
-
-Validates deployment environments, external service connectivity, API token authentication, and infrastructure-specific configurations. Tests functionality that requires actual deployed environments.
+### Phase 5: CI Environment Tests (Automated Pipeline)
+- **Purpose**: Validate deployment environment, secrets, infrastructure ONLY
+- **When**: GitHub Actions CI pipeline
+- **What runs**: Environment variables, API tokens, external service connectivity
 
 ***
 
@@ -89,29 +102,38 @@ packages/[package-name]/
 | E2E | `*.e2e.test.ts` | `user-workflow.e2e.test.ts` |
 | Environment | `env-*.test.ts` | `env-deployment.test.ts` |
 
-### Tagging System
+### Tagging System (Phase 1 Complete ✅)
+
+Our comprehensive tagging system enables phase-aware test execution:
 
 ```typescript
-// Integration test tags
-describe('Feature @integration @api', () => {
-  // Tests multiple components with real I/O
+// Category Tags (Required - Pick ONE)
+describe('Feature @integration @api @validation', () => {
+  // Integration test with functional tags
 });
 
-// Unit test tags (rare)
 describe('Pure Function @unit', () => {
-  // Tests isolated logic without dependencies
+  // Unit test (rare - use sparingly)
 });
 
-// E2E test tags
-test('User Workflow @e2e @critical', async ({ page }) => {
-  // Tests complete user journey
+test('User Workflow @e2e @critical @authentication', async ({ page }) => {
+  // E2E test with priority and functional tags
 });
 
-// Environment test tags
 describe('Deployment @env @ci-only', () => {
-  // Tests infrastructure and deployment
+  // Environment test (CI only)
+});
+
+// Smoke tests (Phase 2 - Pre-commit)
+describe('Core Functionality @smoke @critical', () => {
+  // Essential functionality tests
 });
 ```
+
+**Tag Categories**:
+- **Category** (required): `@unit`, `@integration`, `@e2e`, `@smoke`, `@env`
+- **Functional**: `@api`, `@auth`, `@rbac`, `@ui`, `@validation`, `@security`, `@performance`
+- **Priority**: `@critical`, `@happy-path`, `@error-handling`, `@edge-case`
 
 ***
 
@@ -373,49 +395,69 @@ export default defineConfig({
 });
 ```
 
-### Test Script Configuration
+### Phase-Aware Test Commands
 
-**🚨 CRITICAL FOR AI AGENTS: ALWAYS use `pnpm nx test [project] --skip-nx-cache`**
+**🚨 CRITICAL FOR AI AGENTS: Use phase-appropriate commands**
 
-```json
-{
-  "scripts": {
-    "test": "pnpm test:affected",
-    "test:affected": "nx affected --target=test",
-    "test:integration": "nx affected --target=test --projects=tag:integration",
-    "test:e2e": "nx affected --target=e2e",
-    "test:all": "nx run-many --target=test"
-  }
-}
-```
-
-### ❗ MANDATORY Test Execution Format
-
+#### Phase 1: Selective Testing (Development)
 ```bash
-# ✅ ALWAYS USE THIS FORMAT:
+# ✅ PREFERRED - Individual project testing:
 pnpm nx test unified-spreadsheet --skip-nx-cache
 pnpm nx test @ifla/theme --skip-nx-cache
 pnpm nx test portal --skip-nx-cache
 
-# ❌ NEVER USE THESE:
-nx test unified-spreadsheet              # Missing pnpm and cache skip
-pnpm nx test unified-spreadsheet        # Missing cache skip  
-nx test unified-spreadsheet --skip-nx-cache  # Missing pnpm
+# ✅ Tag-based selection (NEW):
+pnpm test --grep "@unit"              # Unit tests only
+pnpm test --grep "@critical"          # Critical tests only
+pnpm test --grep "@api.*@validation"  # API validation tests
+pnpm test --grep "@integration"       # Integration tests only
+
+# ✅ Affected testing:
+pnpm test                             # nx affected --target=test
 ```
 
-**AI AGENTS: This is non-negotiable. You MUST use both `pnpm` and `--skip-nx-cache` for ALL test runs.**
+#### Phase 2-3: Automated (Pre-commit/Pre-push)
+```bash
+# These run automatically via git hooks, but can be triggered manually:
+pnpm test:pre-commit                  # Phase 2 equivalent
+pnpm test:pre-push                    # Phase 3 equivalent
+```
+
+#### Phase 4: Comprehensive Testing
+```bash
+# ✅ Full validation:
+pnpm test:comprehensive               # All tests, parallelized
+pnpm test:comprehensive:unit          # All unit tests
+pnpm test:comprehensive:e2e           # All E2E tests
+```
+
+#### Phase 5: CI Environment (Automated)
+```bash
+# CI-only commands (environment-specific):
+pnpm test:ci:env                      # Environment validation only
+```
+
+**❗ MANDATORY Format**: Always use `pnpm` prefix and `--skip-nx-cache` for individual project tests.
 
 ***
 
-## Performance Guidelines
+## Performance Guidelines (Phase-Aligned)
+
+### Phase-Specific Performance Targets
+
+* **Phase 1 (Selective)**: < 30 seconds per test file
+* **Phase 2 (Pre-commit)**: < 60 seconds total
+* **Phase 3 (Pre-push)**: < 180 seconds total  
+* **Phase 4 (Comprehensive)**: < 300 seconds total
+* **Phase 5 (CI Environment)**: < 180 seconds total
 
 ### Integration Test Performance
 
-* Target: <30 seconds per test file
 * Use test fixtures instead of generating data
 * Clean up test files after each test
-* Use parallel execution when possible
+* Use parallel execution when possible (`--parallel=3`)
 * Share expensive setup between tests
+* Leverage Nx affected detection for faster feedback
 
 ### Optimization Techniques
 

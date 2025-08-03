@@ -2,9 +2,13 @@
 
 Copy these templates when creating new tests to ensure proper placement and structure. Our testing philosophy prioritizes **integration tests with real I/O** over mocked unit tests.
 
-## Integration Test Template (Primary - Pre-commit/Pre-push)
+**📋 Phase Context**: These templates align with our [5-phase testing strategy](./TESTING_STRATEGY.md) - use the appropriate template based on which phase your test belongs to.
 
-This is our primary test type. Use for testing multiple components working together with real file I/O, databases, and services.
+## Integration Test Template (Primary - Phase 1/3)
+
+**Phase Context**: Phase 1 (Selective) and Phase 3 (Pre-push)  
+**Performance Target**: < 30 seconds per file  
+**Purpose**: Testing multiple components working together with real file I/O, databases, and services.
 
 ```typescript
 // ComponentName.integration.test.tsx or serviceName.integration.test.ts
@@ -13,7 +17,7 @@ import { ServiceName } from '../../src/ServiceName';
 import * as fs from 'node:fs/promises';
 import * as path from 'node:path';
 
-describe('ServiceName @integration @api', () => {
+describe('ServiceName @integration @api @validation', () => {
   const testDir = path.join(__dirname, '.test-output');
   let service: ServiceName;
 
@@ -55,9 +59,11 @@ describe('ServiceName @integration @api', () => {
 });
 ```
 
-## Unit Test Template (Rare - Pre-commit)
+## Unit Test Template (Rare - Phase 2)
 
-Only use for pure functions without external dependencies. Most code should be tested with integration tests.
+**Phase Context**: Phase 2 (Pre-commit)  
+**Performance Target**: < 5 seconds per file  
+**Purpose**: Only use for pure functions without external dependencies. Most code should be tested with integration tests.
 
 ```typescript
 // utils.test.ts
@@ -77,9 +83,11 @@ describe('Utility Functions @unit', () => {
 });
 ```
 
-## E2E Test Template (Pre-push, smart trigger)
+## E2E Test Template (Phase 3 - Smart Trigger)
 
-For testing complete user workflows through the browser.
+**Phase Context**: Phase 3 (Pre-push) - Auto-triggers when portal/admin affected  
+**Performance Target**: < 60 seconds per workflow  
+**Purpose**: Testing complete user workflows through the browser.
 
 ```typescript
 // e2e/feature-name.e2e.test.ts
@@ -126,9 +134,11 @@ test.describe('Feature Name E2E @e2e @critical', () => {
 });
 ```
 
-## Environment Test Template (CI only)
+## Environment Test Template (Phase 5 - CI Only)
 
-For testing deployment configuration and external service connectivity.
+**Phase Context**: Phase 5 (CI Environment Tests)  
+**Performance Target**: < 30 seconds per service  
+**Purpose**: Testing deployment configuration and external service connectivity.
 
 ```typescript
 // tests/deployment/env-feature.test.ts
@@ -261,14 +271,21 @@ export function renderWithProviders(ui: ReactElement) {
 }
 ```
 
-## Quick Decision Helper
+## Quick Decision Helper (Phase-Aware)
 
 When writing a test, ask in order:
 
-1. **Environment-specific?** → `env-*.test.ts` in `tests/deployment/`
-2. **User workflow?** → `*.e2e.test.ts` in `e2e/`
-3. **Uses files/DB/services?** → `*.integration.test.ts` in `tests/integration/` (DEFAULT)
-4. **Pure function only?** → `*.test.ts` in `tests/unit/` (RARE)
+1. **Environment-specific?** → `env-*.test.ts` in `tests/deployment/` (Phase 5 - CI)
+2. **User workflow?** → `*.e2e.test.ts` in `e2e/` (Phase 3 - Pre-push)
+3. **Uses files/DB/services?** → `*.integration.test.ts` in `tests/integration/` (Phase 1/3 - DEFAULT)
+4. **Pure function only?** → `*.test.ts` in `tests/unit/` (Phase 2 - Pre-commit, RARE)
+
+**Phase Execution**:
+- **Phase 1**: Individual project testing during development
+- **Phase 2**: Pre-commit (unit tests, typecheck, lint)
+- **Phase 3**: Pre-push (integration tests, builds, smart E2E)
+- **Phase 4**: Comprehensive (manual, all tests)
+- **Phase 5**: CI environment (deployment validation only)
 
 ## File Location Examples
 

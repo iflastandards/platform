@@ -1,4 +1,6 @@
-name: CI Environment Tests
+name: Phase 5 - CI Environment Tests Only
+# Phase 5: Environment-specific validation only
+# Assumes all code quality tests (Phases 1-4) passed locally
 
 on:
   push:
@@ -17,41 +19,16 @@ env:
   NODE_ENV: production  # Always production for optimized builds
   # Set DOCS_ENV based on branch - preview for preview branch, production for main
   DOCS_ENV: ${{ github.ref == 'refs/heads/main' && 'production' || 'preview' }}
-  # Environment variables that CI tests will validate
-  GOOGLE_SHEETS_API_KEY: ${{ secrets.GOOGLE_SHEETS_API_KEY }}
-  GSHEETS_SA_KEY: ${{ secrets.GSHEETS_SA_KEY }}
-  GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-  
-  # Supabase configuration
-  NEXT_PUBLIC_SUPABASE_URL: ${{ secrets.NEXT_PUBLIC_SUPABASE_URL }}
-  NEXT_PUBLIC_SUPABASE_ANON_KEY: ${{ secrets.NEXT_PUBLIC_SUPABASE_ANON_KEY }}
-  
-  # Clerk Auth (for admin portal)
-  NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY: ${{ secrets.NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY }}
-  CLERK_SECRET_KEY: ${{ secrets.CLERK_SECRET_KEY }}
-  NEXT_PUBLIC_CLERK_SIGN_IN_URL: /admin/sign-in
-  NEXT_PUBLIC_CLERK_SIGN_UP_URL: /admin/sign-up
-  NEXT_PUBLIC_CLERK_SIGN_IN_FALLBACK_REDIRECT_URL: /admin/api/auth/callback
-  NEXT_PUBLIC_CLERK_SIGN_UP_FALLBACK_REDIRECT_URL: /admin/api/auth/callback
-  
-  # GitHub OAuth (for admin portal)
-  AUTH_GITHUB_ID: ${{ secrets.AUTH_GITHUB_ID }}
-  AUTH_GITHUB_SECRET: ${{ secrets.AUTH_GITHUB_SECRET }}
-  AUTH_SECRET: ${{ secrets.AUTH_SECRET }}
-  
-  # Nx Cloud
-  NX_CLOUD_ACCESS_TOKEN: ${{ secrets.NX_CLOUD_ACCESS_TOKEN }}
 
 jobs:
-  env-tests:
-    name: Environment-Specific Tests
+  phase5-env-tests:
+    name: Phase 5 - Environment Validation Only
     runs-on: ubuntu-latest
-    environment: Preview
+    environment: ${{ github.ref == 'refs/heads/main' && 'Production' || 'Preview' }}
     steps:
       - uses: actions/checkout@v4
         with:
-          filter: tree:0
-          fetch-depth: 0
+          fetch-depth: 1  # Shallow clone for speed
 
       - uses: pnpm/action-setup@v4
         name: Install pnpm
@@ -60,21 +37,171 @@ jobs:
 
       - uses: actions/setup-node@v4
         with:
-          node-version: 20
+          node-version: 22
           cache: 'pnpm'
 
-      - run: pnpm install --frozen-lockfile
+      - name: Install dependencies (minimal for env tests)
+        run: pnpm install --frozen-lockfile --ignore-scripts
 
-      # Run ONLY environment-specific tests
-      # These tests validate:
-      # - Environment variables are present
-      # - API tokens are valid
-      # - External services are reachable
-      # - CI-specific paths and permissions
-      - name: Run CI Environment Tests
-        run: pnpm test:ci:env
-        
-      # If environment tests pass, run the build
-      # (We assume all other tests passed locally)
-      - name: Build affected projects
-        run: pnpm exec nx affected -t build --parallel=6 --tags @critical
+      # Phase 5: ONLY environment-specific tests
+      - name: Phase 5 - Environment Variable Validation
+        run: |
+          echo "🔐 Phase 5: Validating environment variables..."
+          
+          # Required environment variables
+          required_vars=(
+            "NEXT_PUBLIC_SUPABASE_URL"
+            "NEXT_PUBLIC_SUPABASE_ANON_KEY"
+            "NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY"
+            "CLERK_SECRET_KEY"
+            "GITHUB_TOKEN"
+          )
+          
+          missing=()
+          for var in "${required_vars[@]}"; do
+            if [[ -z "${!var}" ]]; then
+              missing+=("$var")
+            fi
+          done
+          
+          if [ ${#missing[@]} -gt 0 ]; then
+            echo "❌ Missing required environment variables:"
+            printf '%s\n' "${missing[@]}"
+            exit 1
+          fi
+          
+          echo "✅ All required environment variables present"
+          
+      - name: Phase 5 - API Token Validation
+        run: |
+          echo "🔑 Phase 5: Validating API tokens..."
+          
+          # Test Supabase connection
+          if ! curl -s -f "$NEXT_PUBLIC_SUPABASE_URL/rest/v1/" \
+            -H "apikey: $NEXT_PUBLIC_SUPABASE_ANON_KEY" > /dev/null; then
+            echo "❌ Supabase API token validation failed"
+            exit 1
+          fi
+          echo "✅ Supabase API token valid"
+          
+          # Test GitHub API access
+          if ! curl -s -f "https://api.github.com/user" \
+            -H "Authorization: token $GITHUB_TOKEN" > /dev/null; then
+            echo "❌ GitHub API token validation failed"
+            exit 1
+          fi
+          echo "✅ GitHub API token valid"
+          
+      - name: Phase 5 - External Service Connectivity
+        run: |
+          echo "🌐 Phase 5: Testing external service connectivity..."
+          
+          # Test external services reachable from CI
+          services=(
+            "https://api.github.com"
+            "https://clerk.com"
+            "$NEXT_PUBLIC_SUPABASE_URL"
+          )
+          
+          for service in "${services[@]}"; do
+            if curl -s -f --max-time 10 "$service" > /dev/null; then
+              echo "✅ $service reachable"
+            else
+              echo "❌ $service not reachable"
+              exit 1
+            fi
+          done
+          
+      - name: Phase 5 - CI-Specific Path Validation
+        run: |
+          echo "📁 Phase 5: Validating CI-specific paths and permissions..."
+          
+          # Check workspace structure
+          required_paths=(
+            "package.json"
+            "nx.json"
+            "apps/admin"
+            "standards/portal"
+            "packages/theme"
+          )
+          
+          for path in "${required_paths[@]}"; do
+            if [ ! -e "$path" ]; then
+              echo "❌ Required path not found: $path"
+              exit 1
+            fi
+          done
+          
+          echo "✅ All required paths exist"
+          
+          # Check write permissions for CI
+          if ! touch test-write-permission; then
+            echo "❌ CI environment lacks write permissions"
+            exit 1
+          fi
+          rm -f test-write-permission
+          echo "✅ CI write permissions verified"
+          
+      - name: Phase 5 - Node.js Environment Validation
+        run: |
+          echo "🟢 Phase 5: Validating Node.js environment..."
+          
+          # Check Node.js version
+          node_version=$(node --version)
+          echo "Node.js version: $node_version"
+          
+          # Check pnpm version
+          pnpm_version=$(pnpm --version)
+          echo "pnpm version: $pnpm_version"
+          
+          # Check available memory
+          echo "Available memory: $(free -h | grep '^Mem:' | awk '{print $7}')"
+          
+          # Check disk space
+          echo "Available disk space: $(df -h . | tail -1 | awk '{print $4}')"
+          
+          echo "✅ Node.js environment validated"
+          
+      # Phase 5: Summary
+      - name: Phase 5 - Environment Test Summary
+        run: |
+          echo "## Phase 5 - Environment Test Results ✅" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "**Environment**: ${{ github.ref == 'refs/heads/main' && 'Production' || 'Preview' }}" >> $GITHUB_STEP_SUMMARY
+          echo "**Branch**: ${{ github.ref_name }}" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "### Validated:" >> $GITHUB_STEP_SUMMARY
+          echo "- ✅ Environment variables present and valid" >> $GITHUB_STEP_SUMMARY
+          echo "- ✅ API tokens authenticated successfully" >> $GITHUB_STEP_SUMMARY
+          echo "- ✅ External services reachable from CI" >> $GITHUB_STEP_SUMMARY
+          echo "- ✅ CI-specific paths and permissions verified" >> $GITHUB_STEP_SUMMARY
+          echo "- ✅ Node.js environment configured correctly" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "**Note**: This workflow only validates environment-specific aspects." >> $GITHUB_STEP_SUMMARY
+          echo "Code quality, tests, and builds are validated locally in Phases 1-4." >> $GITHUB_STEP_SUMMARY
+          
+    env:
+      # Environment variables that CI tests will validate
+      GOOGLE_SHEETS_API_KEY: ${{ secrets.GOOGLE_SHEETS_API_KEY }}
+      GSHEETS_SA_KEY: ${{ secrets.GSHEETS_SA_KEY }}
+      GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      
+      # Supabase configuration
+      NEXT_PUBLIC_SUPABASE_URL: ${{ secrets.NEXT_PUBLIC_SUPABASE_URL }}
+      NEXT_PUBLIC_SUPABASE_ANON_KEY: ${{ secrets.NEXT_PUBLIC_SUPABASE_ANON_KEY }}
+      
+      # Clerk Auth (for admin portal)
+      NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY: ${{ secrets.NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY }}
+      CLERK_SECRET_KEY: ${{ secrets.CLERK_SECRET_KEY }}
+      NEXT_PUBLIC_CLERK_SIGN_IN_URL: /admin/sign-in
+      NEXT_PUBLIC_CLERK_SIGN_UP_URL: /admin/sign-up
+      NEXT_PUBLIC_CLERK_SIGN_IN_FALLBACK_REDIRECT_URL: /admin/api/auth/callback
+      NEXT_PUBLIC_CLERK_SIGN_UP_FALLBACK_REDIRECT_URL: /admin/api/auth/callback
+      
+      # GitHub OAuth (for admin portal)
+      AUTH_GITHUB_ID: ${{ secrets.AUTH_GITHUB_ID }}
+      AUTH_GITHUB_SECRET: ${{ secrets.AUTH_GITHUB_SECRET }}
+      AUTH_SECRET: ${{ secrets.AUTH_SECRET }}
+      
+      # Nx Cloud
+      NX_CLOUD_ACCESS_TOKEN: ${{ secrets.NX_CLOUD_ACCESS_TOKEN }}

@@ -1,0 +1,499 @@
+name: Deploy Production
+# Production deployment pipeline triggered by PR from preview → main
+# Includes stricter validation and production-specific checks
+
+on:
+  pull_request:
+    branches: [main]
+    types: [opened, synchronize, reopened]
+    paths-ignore:
+      - '**.md'
+      - 'docs/**'
+      - '.vscode/**'
+      - '.idea/**'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+  actions: read
+  pull-requests: write
+
+concurrency:
+  group: "production-deploy-${{ github.head_ref || github.ref }}"
+  cancel-in-progress: true
+
+env:
+  # CI environment
+  CI: true
+  HUSKY: 0
+  
+  # Nx configuration
+  NX_CLOUD_ACCESS_TOKEN: ${{ secrets.NX_CLOUD_ACCESS_TOKEN }}
+  NX_DAEMON: true
+  NX_PARALLEL: 6
+  
+  # Production environment
+  DOCS_ENV: production
+  NODE_OPTIONS: "--max-old-space-size=8192"
+  
+  # GitHub API
+  GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+jobs:
+  # Step 1: Validate PR is from preview branch
+  validate-pr:
+    name: Validate PR Source
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check PR source branch
+        run: |
+          if [[ "${{ github.head_ref }}" != "preview" ]]; then
+            echo "❌ Production deployments must come from preview branch"
+            echo "Current branch: ${{ github.head_ref }}"
+            exit 1
+          fi
+          echo "✅ PR is from preview branch"
+          
+      - name: Check PR approval status
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const { data: pr } = await github.rest.pulls.get({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              pull_number: context.issue.number
+            });
+            
+            console.log(`PR #${pr.number}: ${pr.title}`);
+            console.log(`State: ${pr.state}`);
+            console.log(`Mergeable: ${pr.mergeable}`);
+            
+            if (pr.mergeable === false) {
+              core.setFailed('PR has conflicts that must be resolved');
+            }
+
+  # Step 2: Production config validation
+  validate-configs:
+    name: Validate Production Configs
+    needs: validate-pr
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.head_ref }}
+          
+      - uses: pnpm/action-setup@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: 'pnpm'
+          
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+        
+      - name: Validate all production configs
+        run: |
+          echo "🔍 Validating production configurations..."
+          
+          # Validate Docusaurus configs
+          for site in portal isbdm lrm frbr isbd muldicat unimarc; do
+            echo "Checking $site..."
+            node scripts/validate-docusaurus-configs.js --site $site --env production --strict
+          done
+          
+          # Validate admin basePath
+          echo "Checking admin app..."
+          node scripts/check-basepath-compliance.js --strict
+          
+          # Check for debug code
+          echo "Checking for debug code..."
+          if grep -r "console\.log\|debugger\|TODO\|FIXME" --include="*.js" --include="*.ts" --include="*.tsx" apps/admin/src; then
+            echo "⚠️ Found debug code in admin app"
+          fi
+
+  # Step 3: Build all sites with production config
+  build-all:
+    name: Build All Projects
+    needs: validate-configs
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        include:
+          - project: portal
+            type: docusaurus
+          - project: isbdm
+            type: docusaurus
+          - project: lrm
+            type: docusaurus
+          - project: frbr
+            type: docusaurus
+          - project: isbd
+            type: docusaurus
+          - project: muldicat
+            type: docusaurus
+          - project: unimarc
+            type: docusaurus
+          - project: admin
+            type: nextjs
+      fail-fast: true  # Stop on first failure for production
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.head_ref }}
+          
+      - uses: pnpm/action-setup@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: 'pnpm'
+          
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+        
+      - name: Build theme if needed
+        if: matrix.type == 'docusaurus'
+        run: |
+          if [ ! -d "packages/theme/dist" ]; then
+            npx nx run @ifla/theme:build
+          fi
+          
+      - name: Build ${{ matrix.project }}
+        run: |
+          echo "🏗️ Building ${{ matrix.project }} for production..."
+          npx nx build ${{ matrix.project }}
+          
+      - name: Validate build output
+        run: |
+          if [[ "${{ matrix.type }}" == "docusaurus" ]]; then
+            if [[ "${{ matrix.project }}" == "portal" ]]; then
+              BUILD_DIR="portal/build"
+            else
+              BUILD_DIR="standards/${{ matrix.project }}/build"
+            fi
+          else
+            BUILD_DIR="apps/admin/.next"
+          fi
+          
+          if [ ! -d "$BUILD_DIR" ]; then
+            echo "❌ Build directory not found: $BUILD_DIR"
+            exit 1
+          fi
+          
+          echo "✅ Build output validated"
+          
+      - name: Upload build artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: prod-build-${{ matrix.project }}
+          path: |
+            standards/${{ matrix.project }}/build/
+            portal/build/
+            apps/admin/.next/
+          if-no-files-found: error
+
+  # Step 4: Security and compliance checks
+  security-checks:
+    name: Security & Compliance
+    needs: build-all
+    runs-on: ubuntu-latest
+    environment: Production
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.head_ref }}
+          
+      - name: Check production secrets
+        run: |
+          echo "🔐 Validating production secrets..."
+          
+          required_secrets=(
+            "NEXT_PUBLIC_SUPABASE_URL"
+            "NEXT_PUBLIC_SUPABASE_ANON_KEY"
+            "NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY"
+            "CLERK_SECRET_KEY"
+            "AUTH_GITHUB_ID"
+            "AUTH_GITHUB_SECRET"
+            "AUTH_SECRET"
+            "VERCEL_TOKEN"
+            "VERCEL_ORG_ID"
+            "VERCEL_PROJECT_ID"
+          )
+          
+          missing=()
+          for secret in "${required_secrets[@]}"; do
+            if [[ -z "${!secret}" ]]; then
+              missing+=("$secret")
+            fi
+          done
+          
+          if [ ${#missing[@]} -gt 0 ]; then
+            echo "❌ Missing required production secrets:"
+            printf '%s\n' "${missing[@]}"
+            exit 1
+          fi
+          
+          echo "✅ All production secrets present"
+          
+      - name: Security audit
+        run: |
+          echo "🛡️ Running security audit..."
+          pnpm audit --audit-level=high || true
+          
+      - name: License check
+        run: |
+          echo "📜 Checking licenses..."
+          # Add license checking if needed
+    env:
+      NEXT_PUBLIC_SUPABASE_URL: ${{ secrets.NEXT_PUBLIC_SUPABASE_URL }}
+      NEXT_PUBLIC_SUPABASE_ANON_KEY: ${{ secrets.NEXT_PUBLIC_SUPABASE_ANON_KEY }}
+      NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY: ${{ secrets.NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY }}
+      CLERK_SECRET_KEY: ${{ secrets.CLERK_SECRET_KEY }}
+      AUTH_GITHUB_ID: ${{ secrets.AUTH_GITHUB_ID }}
+      AUTH_GITHUB_SECRET: ${{ secrets.AUTH_GITHUB_SECRET }}
+      AUTH_SECRET: ${{ secrets.AUTH_SECRET }}
+      VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
+      VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
+      VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }}
+
+  # Step 5: Deploy to production environments
+  deploy-production:
+    name: Deploy to Production
+    needs: [build-all, security-checks]
+    runs-on: ubuntu-latest
+    environment:
+      name: production
+      url: https://www.iflastandards.info
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.head_ref }}
+          
+      - name: Download all build artifacts
+        uses: actions/download-artifact@v4
+        with:
+          pattern: prod-build-*
+          
+      - name: Create production build directory
+        run: |
+          echo "📦 Creating production build directory..."
+          
+          # Create root structure (no /platform subdirectory for production)
+          mkdir -p _site
+          
+          # Copy portal to root
+          if [ -d "prod-build-portal/portal/build" ]; then
+            cp -r prod-build-portal/portal/build/* _site/
+          fi
+          
+          # Copy each standard site
+          for site in isbdm lrm frbr isbd muldicat unimarc; do
+            if [ -d "prod-build-$site/standards/$site/build" ]; then
+              mkdir -p _site/$site
+              cp -r prod-build-$site/standards/$site/build/* _site/$site/
+            fi
+          done
+          
+          # Production domain CNAME
+          echo "www.iflastandards.info" > _site/CNAME
+          touch _site/.nojekyll
+          
+      - name: Deploy to GitHub Pages
+        run: |
+          echo "🚀 Deploying to production..."
+          # Note: Actual deployment would happen on merge
+          # This is a validation step
+          
+      - name: Deploy admin to Vercel Production
+        uses: amondnet/vercel-action@v25
+        with:
+          vercel-token: ${{ secrets.VERCEL_TOKEN }}
+          vercel-org-id: ${{ secrets.VERCEL_ORG_ID }}
+          vercel-project-id: ${{ secrets.VERCEL_PROJECT_ID }}
+          working-directory: ./apps/admin
+          scope: ${{ secrets.VERCEL_ORG_ID }}
+          vercel-args: '--prod'
+          alias-domains: |
+            admin.iflastandards.info
+        id: vercel-deployment
+
+  # Step 6: Production health checks
+  production-health-checks:
+    name: Production Health Checks
+    needs: deploy-production
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        include:
+          - service: "Production Site"
+            url: "https://www.iflastandards.info"
+            expected_status: 200
+            
+          - service: "ISBDM"
+            url: "https://www.iflastandards.info/ISBDM/"
+            expected_status: 200
+            
+          - service: "Admin Portal"
+            url: "https://admin.iflastandards.info/admin"
+            expected_status: 200
+            
+          - service: "Admin API"
+            url: "https://admin.iflastandards.info/admin/api/health"
+            expected_status: 200
+            
+      fail-fast: false
+    steps:
+      - uses: actions/checkout@v4
+      
+      - name: Health check ${{ matrix.service }}
+        run: |
+          echo "🔍 Checking ${{ matrix.service }}..."
+          
+          # Wait for deployment propagation
+          sleep 60
+          
+          # Try up to 5 times for production
+          for i in {1..5}; do
+            status=$(curl -s -o /dev/null -w "%{http_code}" "${{ matrix.url }}" || echo "000")
+            echo "Attempt $i: HTTP status $status"
+            
+            if [ "$status" -eq "${{ matrix.expected_status }}" ]; then
+              echo "✅ ${{ matrix.service }} is healthy"
+              exit 0
+            fi
+            
+            [ $i -lt 5 ] && sleep 20
+          done
+          
+          echo "❌ ${{ matrix.service }} health check failed"
+          exit 1
+
+  # Step 7: Full API integration tests
+  api-integration-tests:
+    name: API Integration Tests
+    needs: production-health-checks
+    runs-on: ubuntu-latest
+    environment: Production
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.head_ref }}
+          
+      - uses: pnpm/action-setup@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: 'pnpm'
+          
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+        
+      - name: Run API integration tests
+        run: |
+          echo "🧪 Running production API tests..."
+          
+          # Test Supabase connection
+          node scripts/api-health-checks.js \
+            --service supabase \
+            --env production \
+            --url "${{ secrets.NEXT_PUBLIC_SUPABASE_URL }}"
+            
+          # Test Clerk auth
+          node scripts/api-health-checks.js \
+            --service clerk \
+            --env production
+            
+          # Test GitHub API integration
+          node scripts/api-health-checks.js \
+            --service github \
+            --env production \
+            --token "${{ secrets.GITHUB_TOKEN }}"
+            
+      - name: Generate test report
+        if: always()
+        run: |
+          echo "📊 Generating API test report..."
+          node scripts/collect-build-artifacts.js --type api-tests > api-test-report.md
+          
+      - name: Upload test report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: api-test-report
+          path: api-test-report.md
+    env:
+      NEXT_PUBLIC_SUPABASE_URL: ${{ secrets.NEXT_PUBLIC_SUPABASE_URL }}
+      NEXT_PUBLIC_SUPABASE_ANON_KEY: ${{ secrets.NEXT_PUBLIC_SUPABASE_ANON_KEY }}
+      NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY: ${{ secrets.NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY }}
+
+  # Final production readiness summary
+  production-summary:
+    name: Production Readiness Summary
+    needs: [deploy-production, production-health-checks, api-integration-tests]
+    if: always()
+    runs-on: ubuntu-latest
+    steps:
+      - name: Create deployment summary
+        run: |
+          cat > production-summary.md << 'EOF'
+          # 🚀 Production Deployment Summary
+          
+          ## PR Information
+          - PR: #${{ github.event.pull_request.number }}
+          - Title: ${{ github.event.pull_request.title }}
+          - Author: @${{ github.event.pull_request.user.login }}
+          
+          ## Deployment Status
+          
+          ### ✅ Completed Steps
+          - Source branch validation
+          - Configuration validation
+          - Security checks
+          - All projects built successfully
+          - Health checks passed
+          
+          ## 🌐 Production URLs
+          
+          ### Documentation Sites
+          - Main: https://www.iflastandards.info
+          - ISBDM: https://www.iflastandards.info/ISBDM/
+          - LRM: https://www.iflastandards.info/LRM/
+          - FRBR: https://www.iflastandards.info/FRBR/
+          - ISBD: https://www.iflastandards.info/isbd/
+          - MulDiCat: https://www.iflastandards.info/muldicat/
+          - UNIMARC: https://www.iflastandards.info/unimarc/
+          
+          ### Admin Portal
+          - Admin: https://admin.iflastandards.info
+          
+          ## 📋 Checklist for Merge
+          
+          - [ ] All CI checks passed
+          - [ ] Production health checks verified
+          - [ ] API integration tests passed
+          - [ ] No security vulnerabilities
+          - [ ] PR approved by maintainers
+          - [ ] Deployment URLs accessible
+          
+          ---
+          🕐 Ready at: $(date -u '+%Y-%m-%d %H:%M:%S UTC')
+          EOF
+          
+      - name: Comment on PR
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const fs = require('fs');
+            const summary = fs.readFileSync('production-summary.md', 'utf8');
+            
+            github.rest.issues.createComment({
+              issue_number: context.issue.number,
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              body: summary
+            });
+            
+      - name: Add to job summary
+        run: |
+          cat production-summary.md >> $GITHUB_STEP_SUMMARY

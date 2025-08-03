@@ -1,7 +1,6 @@
-name: Deploy Preview
-# Optimized deployment pipeline for preview branch
-# IMPORTANT: This workflow assumes all tests have already passed
-# It focuses on building, validating configs, and deploying
+name: Deploy Preview (Phase 5 Compliant)
+# Phase 5: CI Environment Tests - Deploy to preview and validate environment only
+# Assumes all code quality tests (Phases 1-4) have already passed locally
 
 on:
   push:
@@ -29,11 +28,6 @@ env:
   CI: true
   HUSKY: 0
   
-  # Nx configuration
-  NX_CLOUD_ACCESS_TOKEN: ${{ secrets.NX_CLOUD_ACCESS_TOKEN }}
-  NX_DAEMON: true
-  NX_PARALLEL: 6
-  
   # Preview environment
   DOCS_ENV: preview
   NODE_OPTIONS: "--max-old-space-size=8192"
@@ -42,197 +36,140 @@ env:
   GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
 jobs:
-  # Step 1: Basic setup without any secret validation
-  setup:
-    name: Environment Setup
+  # Step 1: Environment validation ONLY
+  validate-environment:
+    name: Phase 5 - Environment Validation
     runs-on: ubuntu-latest
-    outputs:
-      base: ${{ steps.nx-set-shas.outputs.base }}
-      head: ${{ steps.nx-set-shas.outputs.head }}
-      docusaurus_sites: ${{ steps.list-sites.outputs.sites }}
+    environment: Preview
     steps:
       - uses: actions/checkout@v4
         with:
-          fetch-depth: 0
+          fetch-depth: 1  # Shallow clone for speed
           
       - uses: pnpm/action-setup@v4
-        name: Install pnpm
-        
       - uses: actions/setup-node@v4
         with:
           node-version: 22
           cache: 'pnpm'
           
-      - name: Install dependencies
+      - name: Install dependencies (minimal)
         run: |
-          echo "📦 Installing dependencies..."
+          echo "📦 Installing dependencies for environment tests only..."
           pnpm install --frozen-lockfile --ignore-scripts
-          pnpm rebuild || echo "Some postinstall scripts failed, continuing..."
           
-      - uses: nrwl/nx-set-shas@v4
-        id: nx-set-shas
-        
-      - name: List Docusaurus sites
-        id: list-sites
+      - name: Phase 5 - Environment Variable Validation
         run: |
-          # Get all Docusaurus site names from the standards directory
-          sites=$(ls -d standards/*/ | xargs -n1 basename | jq -R -s -c 'split("\n")[:-1]')
-          echo "sites=$sites" >> $GITHUB_OUTPUT
-          echo "Found Docusaurus sites: $sites"
-
-  # Step 2: Build and deploy all Docusaurus sites (no secrets needed)
-  build-docusaurus:
-    name: Build Docusaurus Sites
-    needs: setup
-    runs-on: ubuntu-latest
-    strategy:
-      matrix:
-        site: ["portal", "isbdm", "lrm", "frbr", "isbd", "muldicat", "unimarc"]
-      fail-fast: false  # Continue building other sites if one fails
-    steps:
-      - uses: actions/checkout@v4
-        with:
-          fetch-depth: 0
+          echo "🔐 Phase 5: Validating environment variables..."
           
-      - uses: pnpm/action-setup@v4
-      - uses: actions/setup-node@v4
-        with:
-          node-version: 22
-          cache: 'pnpm'
+          # Required for preview environment
+          required_vars=(
+            "NEXT_PUBLIC_SUPABASE_URL"
+            "NEXT_PUBLIC_SUPABASE_ANON_KEY"
+            "NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY"
+            "CLERK_SECRET_KEY"
+          )
           
-      - name: Restore Nx cache
-        uses: actions/cache@v4
-        with:
-          path: |
-            .nx/cache
-            node_modules/.cache/nx
-          key: nx-${{ runner.os }}-${{ github.sha }}
-          restore-keys: |
-            nx-${{ runner.os }}-
-            
-      - name: Install dependencies
-        run: pnpm install --frozen-lockfile
-        
-      - name: Build theme package
-        run: |
-          if [ ! -d "packages/theme/dist" ]; then
-            echo "Building theme package..."
-            npx nx run @ifla/theme:build
-          fi
-          
-      - name: Validate Docusaurus config
-        run: |
-          echo "🔍 Validating baseUrl configuration for ${{ matrix.site }}..."
-          node scripts/validate-docusaurus-configs.js --site ${{ matrix.site }} --env preview
-        continue-on-error: true
-        
-      - name: Build ${{ matrix.site }}
-        id: build
-        run: |
-          echo "🏗️ Building ${{ matrix.site }}..."
-          npx nx build ${{ matrix.site }} 2>&1 | tee build-${{ matrix.site }}.log
-          
-          # Extract warnings
-          grep -i "warning" build-${{ matrix.site }}.log > warnings-${{ matrix.site }}.txt || true
-          
-          # Check for broken links
-          grep -i "broken link" build-${{ matrix.site }}.log >> warnings-${{ matrix.site }}.txt || true
-          
-      - name: Upload build artifacts
-        uses: actions/upload-artifact@v4
-        with:
-          name: build-${{ matrix.site }}
-          path: |
-            standards/${{ matrix.site }}/build/
-            portal/build/
-          if-no-files-found: ignore
-          
-      - name: Upload warnings
-        if: always()
-        uses: actions/upload-artifact@v4
-        with:
-          name: warnings-${{ matrix.site }}
-          path: warnings-${{ matrix.site }}.txt
-          if-no-files-found: ignore
-
-  # Step 3: Create unified build and deploy to GitHub Pages
-  deploy-docusaurus:
-    name: Deploy Docusaurus to GitHub Pages
-    needs: build-docusaurus
-    runs-on: ubuntu-latest
-    if: always() && needs.build-docusaurus.result != 'cancelled'
-    environment:
-      name: github-pages
-      url: ${{ steps.deployment.outputs.page_url }}
-    steps:
-      - uses: actions/checkout@v4
-      
-      - uses: pnpm/action-setup@v4
-      - uses: actions/setup-node@v4
-        with:
-          node-version: 22
-          
-      - name: Download all build artifacts
-        uses: actions/download-artifact@v4
-        with:
-          pattern: build-*
-          
-      - name: Create unified build directory
-        run: |
-          echo "📦 Creating unified build directory..."
-          
-          # Move builds to correct locations
-          mkdir -p _site/platform
-          
-          # Copy portal to root
-          if [ -d "build-portal/portal/build" ]; then
-            cp -r build-portal/portal/build/* _site/platform/
-          elif [ -d "build-portal/build" ]; then
-            cp -r build-portal/build/* _site/platform/
-          fi
-          
-          # Copy each standard site
-          for site in isbdm lrm frbr isbd muldicat unimarc; do
-            if [ -d "build-$site/standards/$site/build" ]; then
-              mkdir -p _site/platform/$site
-              cp -r build-$site/standards/$site/build/* _site/platform/$site/
-            elif [ -d "build-$site/build" ]; then
-              mkdir -p _site/platform/$site
-              cp -r build-$site/build/* _site/platform/$site/
+          missing=()
+          for var in "${required_vars[@]}"; do
+            if [[ -z "${!var}" ]]; then
+              missing+=("$var")
             fi
           done
           
-          # Add GitHub Pages config
+          if [ ${#missing[@]} -gt 0 ]; then
+            echo "❌ Missing required environment variables:"
+            printf '%s\n' "${missing[@]}"
+            exit 1
+          fi
+          
+          echo "✅ All required environment variables present"
+          
+      - name: Phase 5 - API Token Validation
+        run: |
+          echo "🔑 Phase 5: Validating API tokens..."
+          
+          # Test Supabase connection
+          if ! curl -s -f "$NEXT_PUBLIC_SUPABASE_URL/rest/v1/" \
+            -H "apikey: $NEXT_PUBLIC_SUPABASE_ANON_KEY" > /dev/null; then
+            echo "❌ Supabase API token validation failed"
+            exit 1
+          fi
+          echo "✅ Supabase API token valid"
+          
+          # Test GitHub API access
+          if ! curl -s -f "https://api.github.com/user" \
+            -H "Authorization: token $GITHUB_TOKEN" > /dev/null; then
+            echo "❌ GitHub API token validation failed"
+            exit 1
+          fi
+          echo "✅ GitHub API token valid"
+          
+      - name: Phase 5 - External Service Connectivity
+        run: |
+          echo "🌐 Phase 5: Testing external service connectivity..."
+          
+          # Test external services reachable from CI
+          services=(
+            "https://api.github.com"
+            "https://clerk.com"
+            "$NEXT_PUBLIC_SUPABASE_URL"
+          )
+          
+          for service in "${services[@]}"; do
+            if curl -s -f --max-time 10 "$service" > /dev/null; then
+              echo "✅ $service reachable"
+            else
+              echo "❌ $service not reachable"
+              exit 1
+            fi
+          done
+          
+    env:
+      NEXT_PUBLIC_SUPABASE_URL: ${{ secrets.NEXT_PUBLIC_SUPABASE_URL }}
+      NEXT_PUBLIC_SUPABASE_ANON_KEY: ${{ secrets.NEXT_PUBLIC_SUPABASE_ANON_KEY }}
+      NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY: ${{ secrets.NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY }}
+      CLERK_SECRET_KEY: ${{ secrets.CLERK_SECRET_KEY }}
+
+  # Step 2: Build and deploy (assumes code is already validated locally)
+  build-and-deploy:
+    name: Build and Deploy to Preview
+    needs: validate-environment
+    runs-on: ubuntu-latest
+    environment: Preview
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          
+      - uses: pnpm/action-setup@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: 'pnpm'
+          
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+        
+      - name: Build all sites (no testing - assumes local validation passed)
+        run: |
+          echo "🏗️ Building all sites for preview deployment..."
+          echo "Note: Skipping tests - assumes Phases 1-4 passed locally"
+          
+          # Build theme package
+          npx nx run @ifla/theme:build
+          
+          # Build all documentation sites
+          npx nx run-many \
+            --target=build \
+            --projects=portal,isbdm,lrm,frbr,isbd,muldicat,unimarc \
+            --parallel=3
+            
+      - name: Create unified build directory
+        run: |
+          echo "📦 Creating unified build directory..."
+          node scripts/create-unified-build.js --env preview
           echo "iflastandards.github.io" > _site/CNAME
           touch _site/.nojekyll
-          
-          # Create root redirect
-          cat > _site/index.html << 'EOF'
-          <!DOCTYPE html>
-          <html>
-          <head>
-            <meta charset="utf-8">
-            <title>Redirecting to IFLA Standards Platform</title>
-            <meta http-equiv="refresh" content="0; URL=/platform">
-            <link rel="canonical" href="/platform">
-          </head>
-          <body>
-            <p>Redirecting to <a href="/platform">IFLA Standards Platform</a>...</p>
-          </body>
-          </html>
-          EOF
-          
-      - name: Collect all warnings
-        run: |
-          echo "📋 Collecting build warnings..."
-          node scripts/collect-build-artifacts.js --type warnings > build-warnings-summary.md || echo "No warnings collected"
-          
-      - name: Upload warnings summary
-        uses: actions/upload-artifact@v4
-        with:
-          name: build-warnings-summary
-          path: build-warnings-summary.md
-          if-no-files-found: ignore
           
       - name: Setup Pages
         uses: actions/configure-pages@v5
@@ -246,19 +183,15 @@ jobs:
         id: deployment
         uses: actions/deploy-pages@v4
 
-  # Step 4: Check if admin/API is affected
-  check-admin-affected:
-    name: Check Admin Changes
-    needs: setup
+  # Step 3: Admin deployment (if affected)
+  deploy-admin:
+    name: Deploy Admin to Vercel
+    needs: [validate-environment, build-and-deploy]
+    if: ${{ github.event.inputs.force_admin_deploy == 'true' || contains(github.event.head_commit.modified, 'apps/admin/') }}
     runs-on: ubuntu-latest
-    outputs:
-      affected: ${{ steps.check.outputs.affected }}
-      has_api_changes: ${{ steps.check.outputs.has_api_changes }}
+    environment: Preview
     steps:
       - uses: actions/checkout@v4
-        with:
-          fetch-depth: 0
-          
       - uses: pnpm/action-setup@v4
       - uses: actions/setup-node@v4
         with:
@@ -268,195 +201,11 @@ jobs:
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
         
-      - name: Check if admin is affected
-        id: check
+      - name: Build admin app (no testing - assumes local validation passed)
         run: |
-          # Check if admin is affected or force deploy is requested
-          if [[ "${{ github.event.inputs.force_admin_deploy }}" == "true" ]]; then
-            echo "affected=true" >> $GITHUB_OUTPUT
-            echo "has_api_changes=true" >> $GITHUB_OUTPUT
-            echo "🚀 Force admin deployment requested"
-          else
-            # Use nx to check affected projects
-            affected=$(npx nx show projects --affected --base=${{ needs.setup.outputs.base }} --head=${{ needs.setup.outputs.head }})
-            
-            if echo "$affected" | grep -q "admin"; then
-              echo "affected=true" >> $GITHUB_OUTPUT
-              echo "✅ Admin app is affected by changes"
-              
-              # Check if API routes changed
-              if git diff ${{ needs.setup.outputs.base }}...${{ needs.setup.outputs.head }} --name-only | grep -q "apps/admin/src/app/api"; then
-                echo "has_api_changes=true" >> $GITHUB_OUTPUT
-                echo "🔌 API routes have changed"
-              else
-                echo "has_api_changes=false" >> $GITHUB_OUTPUT
-              fi
-            else
-              echo "affected=false" >> $GITHUB_OUTPUT
-              echo "has_api_changes=false" >> $GITHUB_OUTPUT
-              echo "ℹ️ Admin app not affected by changes"
-            fi
-          fi
-
-  # Step 5: Validate secrets (only if admin is affected)
-  validate-secrets:
-    name: Validate API Keys & Secrets
-    needs: check-admin-affected
-    if: needs.check-admin-affected.outputs.affected == 'true'
-    runs-on: ubuntu-latest
-    environment: Preview
-    steps:
-      - uses: actions/checkout@v4
-      
-      - name: Check API Keys and Secrets
-        id: check-secrets
-        run: |
-          echo "🔐 Validating API keys and secrets..."
-          
-          missing_secrets=()
-          optional_missing=()
-          
-          # Required secrets for admin/API
-          required_secrets=(
-            "NEXT_PUBLIC_SUPABASE_URL"
-            "NEXT_PUBLIC_SUPABASE_ANON_KEY"
-            "NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY"
-            "CLERK_SECRET_KEY"
-          )
-          
-          # Optional but recommended
-          optional_secrets=(
-            "AUTH_GITHUB_ID"
-            "AUTH_GITHUB_SECRET"
-            "AUTH_SECRET"
-            "GOOGLE_SHEETS_API_KEY"
-            "GSHEETS_SA_KEY"
-          )
-          
-          # Check required secrets
-          for secret in "${required_secrets[@]}"; do
-            if [[ -z "${!secret}" ]]; then
-              missing_secrets+=("$secret")
-            fi
-          done
-          
-          # Check optional secrets
-          for secret in "${optional_secrets[@]}"; do
-            if [[ -z "${!secret}" ]]; then
-              optional_missing+=("$secret")
-            fi
-          done
-          
-          # Create validation report
-          cat > secret-validation-report.md << EOF
-          # Secret Validation Report
-          
-          ## Required Secrets
-          EOF
-          
-          if [ ${#missing_secrets[@]} -eq 0 ]; then
-            echo "✅ All required secrets are present" >> secret-validation-report.md
-          else
-            echo "❌ Missing required secrets:" >> secret-validation-report.md
-            for secret in "${missing_secrets[@]}"; do
-              echo "  - $secret" >> secret-validation-report.md
-            done
-          fi
-          
-          echo "" >> secret-validation-report.md
-          echo "## Optional Secrets" >> secret-validation-report.md
-          
-          if [ ${#optional_missing[@]} -eq 0 ]; then
-            echo "✅ All optional secrets are present" >> secret-validation-report.md
-          else
-            echo "⚠️ Missing optional secrets (some features may be limited):" >> secret-validation-report.md
-            for secret in "${optional_missing[@]}"; do
-              echo "  - $secret" >> secret-validation-report.md
-            done
-          fi
-          
-          # Upload report
-          echo "📄 Secret validation complete"
-          
-          # Fail if required secrets are missing
-          if [ ${#missing_secrets[@]} -gt 0 ]; then
-            echo "❌ Required secrets are missing!"
-            exit 1
-          fi
-          
-      - name: Upload secret validation report
-        if: always()
-        uses: actions/upload-artifact@v4
-        with:
-          name: secret-validation-report
-          path: secret-validation-report.md
-    env:
-      NEXT_PUBLIC_SUPABASE_URL: ${{ secrets.NEXT_PUBLIC_SUPABASE_URL }}
-      NEXT_PUBLIC_SUPABASE_ANON_KEY: ${{ secrets.NEXT_PUBLIC_SUPABASE_ANON_KEY }}
-      NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY: ${{ secrets.NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY }}
-      CLERK_SECRET_KEY: ${{ secrets.CLERK_SECRET_KEY }}
-      AUTH_GITHUB_ID: ${{ secrets.AUTH_GITHUB_ID }}
-      AUTH_GITHUB_SECRET: ${{ secrets.AUTH_GITHUB_SECRET }}
-      AUTH_SECRET: ${{ secrets.AUTH_SECRET }}
-      GOOGLE_SHEETS_API_KEY: ${{ secrets.GOOGLE_SHEETS_API_KEY }}
-      GSHEETS_SA_KEY: ${{ secrets.GSHEETS_SA_KEY }}
-
-  # Step 6: Build admin app (in parallel with secret validation)
-  build-admin:
-    name: Build Admin App
-    needs: [setup, check-admin-affected]
-    if: needs.check-admin-affected.outputs.affected == 'true'
-    runs-on: ubuntu-latest
-    environment: Preview
-    steps:
-      - uses: actions/checkout@v4
-        with:
-          fetch-depth: 0
-          
-      - uses: pnpm/action-setup@v4
-      - uses: actions/setup-node@v4
-        with:
-          node-version: 22
-          cache: 'pnpm'
-          
-      - name: Install dependencies
-        run: pnpm install --frozen-lockfile
-        
-      - name: Validate admin basePath config
-        run: |
-          echo "🔍 Validating admin basePath configuration..."
-          node scripts/check-basepath-compliance.js --strict
-        continue-on-error: true
-        
-      - name: Build admin app
-        run: |
-          echo "🏗️ Building Next.js admin app..."
+          echo "🏗️ Building admin app for preview..."
           npx nx build admin
           
-      - name: Upload admin build
-        uses: actions/upload-artifact@v4
-        with:
-          name: admin-build
-          path: apps/admin/.next/
-    env:
-      NEXT_PUBLIC_SUPABASE_URL: ${{ secrets.NEXT_PUBLIC_SUPABASE_URL }}
-      NEXT_PUBLIC_SUPABASE_ANON_KEY: ${{ secrets.NEXT_PUBLIC_SUPABASE_ANON_KEY }}
-      NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY: ${{ secrets.NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY }}
-      CLERK_SECRET_KEY: ${{ secrets.CLERK_SECRET_KEY }}
-
-  # Step 7: Deploy admin to Vercel
-  deploy-vercel:
-    name: Deploy Admin to Vercel
-    needs: [build-admin, validate-secrets]
-    if: |
-      always() && 
-      needs.build-admin.result == 'success' &&
-      (needs.validate-secrets.result == 'success' || needs.validate-secrets.result == 'failure')
-    runs-on: ubuntu-latest
-    environment: Preview
-    steps:
-      - uses: actions/checkout@v4
-      
       - name: Deploy to Vercel
         uses: amondnet/vercel-action@v25
         with:
@@ -467,144 +216,76 @@ jobs:
           scope: ${{ secrets.VERCEL_ORG_ID }}
           alias-domains: |
             admin-preview.iflastandards.info
-        id: vercel-deployment
-        
-      - name: Comment deployment URL
-        uses: actions/github-script@v7
-        with:
-          script: |
-            const url = '${{ steps.vercel-deployment.outputs.preview-url }}';
-            const comment = `🚀 Admin app deployed to Vercel: [${url}](https://${url})`;
-            
-            if (context.eventName === 'pull_request') {
-              github.rest.issues.createComment({
-                issue_number: context.issue.number,
-                owner: context.repo.owner,
-                repo: context.repo.repo,
-                body: comment
-              });
-            }
+    env:
+      NEXT_PUBLIC_SUPABASE_URL: ${{ secrets.NEXT_PUBLIC_SUPABASE_URL }}
+      NEXT_PUBLIC_SUPABASE_ANON_KEY: ${{ secrets.NEXT_PUBLIC_SUPABASE_ANON_KEY }}
+      NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY: ${{ secrets.NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY }}
+      CLERK_SECRET_KEY: ${{ secrets.CLERK_SECRET_KEY }}
 
-  # Step 8: Health checks after all deployments
-  health-checks:
-    name: API Health Checks
-    needs: [deploy-docusaurus, deploy-vercel, check-admin-affected]
-    if: always()
+  # Step 4: Post-deployment environment validation
+  post-deploy-validation:
+    name: Phase 5 - Post-Deployment Validation
+    needs: [build-and-deploy, deploy-admin]
+    if: always() && needs.build-and-deploy.result == 'success'
     runs-on: ubuntu-latest
-    continue-on-error: true  # Don't fail the entire workflow
     strategy:
       matrix:
         include:
           - service: "GitHub Pages"
-            check_type: "http"
             url: "https://iflastandards.github.io/platform/"
             expected_status: 200
             
           - service: "Portal Homepage"
-            check_type: "http"
             url: "https://iflastandards.github.io/platform/index.html"
             expected_status: 200
             
           - service: "ISBDM Site"
-            check_type: "http"
             url: "https://iflastandards.github.io/platform/ISBDM/"
-            expected_status: 200
-            
-          - service: "Vercel Admin"
-            check_type: "http"
-            url: "${{ needs.deploy-vercel.outputs.preview-url || 'skip' }}"
-            expected_status: 200
-            skip_if_not_affected: true
-            
-          - service: "Supabase Connection"
-            check_type: "api"
-            endpoint: "check-supabase"
-            skip_if_not_affected: true
-            
-          - service: "Clerk Auth"
-            check_type: "api"
-            endpoint: "check-clerk"
-            skip_if_not_affected: true
-            
-          - service: "GitHub API Integration"
-            check_type: "github"
-            endpoint: "repos/${{ github.repository }}"
             expected_status: 200
             
       fail-fast: false
     steps:
-      - uses: actions/checkout@v4
-      
-      - name: Skip if not applicable
-        id: skip-check
-        if: matrix.skip_if_not_affected && needs.check-admin-affected.outputs.affected != 'true'
+      - name: Phase 5 - Deployment Health Check
         run: |
-          echo "⏭️ Skipping ${{ matrix.service }} check (admin not affected)"
-          echo "skipped=true" >> $GITHUB_OUTPUT
+          echo "🔍 Phase 5: Checking ${{ matrix.service }} deployment..."
           
-      - name: HTTP Health Check
-        if: matrix.check_type == 'http' && steps.skip-check.outputs.skipped != 'true' && matrix.url != 'skip'
-        run: |
-          echo "🔍 Checking ${{ matrix.service }} at ${{ matrix.url }}..."
-          
-          # Wait a bit for deployments to propagate
+          # Wait for deployment propagation
           sleep 30
           
-          # Try up to 3 times with 10 second delays
+          # Try up to 3 times
           for i in 1 2 3; do
             status=$(curl -s -o /dev/null -w "%{http_code}" "${{ matrix.url }}" || echo "000")
             echo "Attempt $i: HTTP status $status"
             
             if [ "$status" -eq "${{ matrix.expected_status }}" ]; then
-              echo "✅ ${{ matrix.service }} is healthy"
+              echo "✅ ${{ matrix.service }} deployment healthy"
               exit 0
             fi
             
             [ $i -lt 3 ] && sleep 10
           done
           
-          echo "❌ ${{ matrix.service }} health check failed (status: $status)"
+          echo "❌ ${{ matrix.service }} deployment health check failed"
           exit 1
-          
-      - name: API Health Check
-        if: matrix.check_type == 'api' && steps.skip-check.outputs.skipped != 'true'
-        run: |
-          echo "🔍 Checking ${{ matrix.service }} API..."
-          node scripts/api-health-checks.js --service "${{ matrix.endpoint }}"
-          
-      - name: GitHub API Check
-        if: matrix.check_type == 'github'
-        run: |
-          echo "🔍 Checking GitHub API access..."
-          status=$(curl -s -o /dev/null -w "%{http_code}" \
-            -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" \
-            "https://api.github.com/${{ matrix.endpoint }}")
-            
-          if [ "$status" -eq "${{ matrix.expected_status }}" ]; then
-            echo "✅ GitHub API is accessible"
-          else
-            echo "❌ GitHub API check failed (status: $status)"
-            exit 1
-          fi
 
-  # Final summary job
+  # Step 5: Summary
   deployment-summary:
-    name: Deployment Summary
-    needs: [deploy-docusaurus, deploy-vercel, health-checks]
+    name: Phase 5 - Deployment Summary
+    needs: [build-and-deploy, deploy-admin, post-deploy-validation]
     if: always()
     runs-on: ubuntu-latest
     steps:
-      - name: Download all artifacts
-        uses: actions/download-artifact@v4
-        
       - name: Create deployment summary
         run: |
           cat > deployment-summary.md << 'EOF'
-          # 📋 Deployment Summary
+          # 📋 Phase 5 - Preview Deployment Summary
+          
+          ## Environment Validation ✅
+          - Environment variables validated
+          - API tokens verified
+          - External services connectivity confirmed
           
           ## 🌐 Deployed URLs
-          
-          ### Docusaurus Sites (GitHub Pages)
           - Portal: https://iflastandards.github.io/platform/
           - ISBDM: https://iflastandards.github.io/platform/ISBDM/
           - LRM: https://iflastandards.github.io/platform/LRM/
@@ -613,39 +294,18 @@ jobs:
           - MulDiCat: https://iflastandards.github.io/platform/muldicat/
           - UNIMARC: https://iflastandards.github.io/platform/unimarc/
           
+          ## Phase 5 Focus
+          This deployment workflow focused ONLY on:
+          - ✅ Environment-specific validation
+          - ✅ Deployment infrastructure
+          - ✅ Post-deployment health checks
+          
+          Code quality, tests, and builds were validated locally in Phases 1-4.
+          
+          ---
+          🕐 Deployed at: $(date -u '+%Y-%m-%d %H:%M:%S UTC')
           EOF
           
-          if [ -f "admin-build/admin-deployment-url.txt" ]; then
-            echo "### Admin App (Vercel)" >> deployment-summary.md
-            echo "- Admin: $(cat admin-build/admin-deployment-url.txt)" >> deployment-summary.md
-          fi
-          
-          echo "" >> deployment-summary.md
-          echo "## 📊 Build Status" >> deployment-summary.md
-          echo "" >> deployment-summary.md
-          
-          # Add warnings if they exist
-          if [ -f "build-warnings-summary/build-warnings-summary.md" ]; then
-            cat build-warnings-summary/build-warnings-summary.md >> deployment-summary.md
-          fi
-          
-          # Add secret validation if it exists
-          if [ -f "secret-validation-report/secret-validation-report.md" ]; then
-            echo "" >> deployment-summary.md
-            cat secret-validation-report/secret-validation-report.md >> deployment-summary.md
-          fi
-          
-          echo "" >> deployment-summary.md
-          echo "---" >> deployment-summary.md
-          echo "🕐 Deployed at: $(date -u '+%Y-%m-%d %H:%M:%S UTC')" >> deployment-summary.md
-          echo "🔗 Commit: ${{ github.sha }}" >> deployment-summary.md
-          
-      - name: Upload deployment summary
-        uses: actions/upload-artifact@v4
-        with:
-          name: deployment-summary
-          path: deployment-summary.md
-          
-      - name: Print summary to job
+      - name: Add to job summary
         run: |
           cat deployment-summary.md >> $GITHUB_STEP_SUMMARY

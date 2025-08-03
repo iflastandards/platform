@@ -173,9 +173,24 @@ pnpm test:ci:env
 # - CI-specific path and permission validation
 # - Build environment configuration checks
 
-# Affected builds for deployment (after env tests pass)
-nx affected --target=build --parallel=6
+# NO CODE TESTING - assumes Phases 1-4 passed locally
+# Builds happen for deployment only, not for testing
 ```
+
+### Updated CI/CD Workflows (Phase 5 Compliant)
+
+#### Preview Deployment (`deploy-preview.yml`)
+- ✅ **Environment validation**: API tokens, environment variables, service connectivity
+- ✅ **Build and deploy**: GitHub Pages + Vercel (if admin affected)
+- ✅ **Post-deployment validation**: Health checks on deployed sites
+- ❌ **Skips**: TypeScript, ESLint, unit tests, integration tests
+
+#### Production Deployment (`deploy-production.yml`)
+- ✅ **PR validation**: Must be from preview → main branch
+- ✅ **Production environment validation**: Production secrets, API tokens
+- ✅ **Secure deployment**: Production GitHub Pages + Vercel
+- ✅ **Production health checks**: Full production API integration validation
+- ❌ **Skips**: All code quality checks (assumes local validation)
 
 ### What CI Tests Specifically
 - ✅ Environment variables exist and are valid format
@@ -200,6 +215,15 @@ nx affected --target=build --parallel=6
 - ❌ Business logic (validated in pre-commit/pre-push)
 - ❌ Code quality (validated in pre-commit)
 - ❌ E2E tests (validated in pre-push when needed)
+
+### ⚠️ CRITICAL: Local Validation Required
+**The CI/CD pipeline assumes all Phases 1-4 have passed locally.** If you bypass local git hooks or push code that hasn't been validated locally, the deployment may succeed but the code may be broken.
+
+**Developer Responsibility**: 
+- ✅ Always run `pnpm test` before pushing
+- ✅ Ensure pre-commit hooks are enabled
+- ✅ Let pre-push hooks complete successfully
+- ✅ Never use `--no-verify` unless absolutely necessary
 
 ### Speed Targets
 - **Target time**: < 180 seconds total

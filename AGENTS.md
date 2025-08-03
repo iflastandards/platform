@@ -34,8 +34,15 @@ Essential guidance for coding agents working in this IFLA Standards monorepo.
 - **NEVER** use `any` without eslint-disable comment
 - **ALWAYS** run `pnpm typecheck && pnpm lint` after edits
 - **ALWAYS** fix code to pass tests, never fix tests to pass
+- **ALWAYS** ensure local validation (Phases 1-4) passes before pushing
 - Use `workspaceUtils` in integration tests, not `process.cwd()`
 - Include `experimental_faster: true` in all `docusaurus.config.ts` files
+
+## Phase 5 CI/CD Compliance
+- **CI/CD focuses ONLY on environment validation** - no code testing
+- **All code quality validation must happen locally** (Phases 1-4)
+- **Never bypass git hooks** with `--no-verify` unless absolute emergency
+- **Understand**: CI assumes your code is already validated locally
 
 ## Server-Dependent Testing
 - **Location**: `apps/admin/src/test/integration/server-dependent/`

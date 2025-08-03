@@ -1,0 +1,292 @@
+name: Nx Optimized Preview Deploy
+# Optimized for preview branch deployment to GitHub Pages
+# Leverages Nx Cloud for distributed builds and caching
+
+on:
+  push:
+    branches: [preview]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+  actions: read
+
+concurrency:
+  group: "preview-deploy-${{ github.ref }}"
+  cancel-in-progress: true
+
+env:
+  # CI environment
+  CI: true
+  HUSKY: 0
+  
+  # Nx Cloud configuration
+  # PUBLIC REPO: Use read-only token for security
+  NX_CLOUD_ACCESS_TOKEN: ${{ secrets.NX_CLOUD_ACCESS_TOKEN }}
+  NX_CLOUD_DISTRIBUTED_EXECUTION: true
+  NX_CLOUD_DISTRIBUTED_EXECUTION_AGENT_COUNT: 6
+  NX_BRANCH: ${{ github.head_ref || github.ref_name }}
+  
+  # Nx optimizations
+  NX_DAEMON: true
+  NX_PARALLEL: 6
+  
+  # Preview environment
+  DOCS_ENV: preview
+  NODE_OPTIONS: "--max-old-space-size=8192"
+  
+  # pnpm settings
+  FROZEN_LOCKFILE: true
+  
+  # Supabase configuration
+  NEXT_PUBLIC_SUPABASE_URL: ${{ secrets.NEXT_PUBLIC_SUPABASE_URL }}
+  NEXT_PUBLIC_SUPABASE_ANON_KEY: ${{ secrets.NEXT_PUBLIC_SUPABASE_ANON_KEY }}
+  
+  # Clerk Auth (for admin portal)
+  NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY: ${{ secrets.NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY }}
+  CLERK_SECRET_KEY: ${{ secrets.CLERK_SECRET_KEY }}
+  NEXT_PUBLIC_CLERK_SIGN_IN_URL: /admin/sign-in
+  NEXT_PUBLIC_CLERK_SIGN_UP_URL: /admin/sign-up
+  NEXT_PUBLIC_CLERK_SIGN_IN_FALLBACK_REDIRECT_URL: /admin/api/auth/callback
+  NEXT_PUBLIC_CLERK_SIGN_UP_FALLBACK_REDIRECT_URL: /admin/api/auth/callback
+  
+  # GitHub OAuth (for admin portal)
+  AUTH_GITHUB_ID: ${{ secrets.AUTH_GITHUB_ID }}
+  AUTH_GITHUB_SECRET: ${{ secrets.AUTH_GITHUB_SECRET }}
+  AUTH_SECRET: ${{ secrets.AUTH_SECRET }}
+  
+  # Google Sheets
+  GOOGLE_SHEETS_API_KEY: ${{ secrets.GOOGLE_SHEETS_API_KEY }}
+  GSHEETS_SA_KEY: ${{ secrets.GSHEETS_SA_KEY }}
+
+jobs:
+  setup:
+    name: Setup and Distribute
+    runs-on: ubuntu-latest
+    environment: Preview
+    outputs:
+      base: ${{ steps.nx-set-shas.outputs.base }}
+      head: ${{ steps.nx-set-shas.outputs.head }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          
+      - uses: pnpm/action-setup@v4
+        name: Install pnpm
+        
+      - name: Start Nx Cloud CI Run
+        run: |
+          pnpm dlx nx-cloud start-ci-run \
+            --distribute-on="6 linux-medium-js" \
+            --stop-agents-after="build" \
+            --with-env-vars="DOCS_ENV,NODE_OPTIONS"
+            
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: 'pnpm'
+          
+      - name: Cache Nx
+        uses: actions/cache@v4
+        with:
+          path: |
+            .nx/cache
+            node_modules/.cache/nx
+            !**/.ifla-server-state.json
+          key: nx-${{ runner.os }}-${{ github.sha }}
+          restore-keys: |
+            nx-${{ runner.os }}-
+            
+      - name: Install dependencies with CI config
+        run: |
+          cp .npmrc.ci .npmrc
+          # Disable Nx daemon during install to prevent hanging
+          export NX_DAEMON=false
+          export NX_SKIP_NX_CACHE=true
+          # Install dependencies without running postinstall scripts
+          echo "📦 Installing dependencies without postinstall scripts..."
+          pnpm install --frozen-lockfile --ignore-scripts --reporter=append-only
+          
+          # Run postinstall scripts with timeout, allowing failures
+          echo "🔧 Running postinstall scripts with timeout..."
+          timeout 300 pnpm rebuild || {
+            echo "⚠️ Some postinstall scripts failed or timed out, but continuing..."
+            echo "This is often okay as packages have fallbacks for missing native binaries"
+          }
+          
+      - uses: nrwl/nx-set-shas@v4
+        id: nx-set-shas
+        
+      - name: Optimize Nx for CI
+        run: |
+          # Start Nx daemon for faster execution
+          npx nx daemon --start
+          
+          # Warm up cache with affected calculation
+          npx nx show projects --affected --base=${{ steps.nx-set-shas.outputs.base }}
+
+  build-affected:
+    name: Build Affected Projects
+    needs: setup
+    runs-on: ubuntu-latest
+    environment: Preview
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          
+      - uses: pnpm/action-setup@v4
+      
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: 'pnpm'
+          
+      - name: Restore Nx cache
+        uses: actions/cache@v4
+        with:
+          path: |
+            .nx/cache
+            node_modules/.cache/nx
+          key: nx-${{ runner.os }}-${{ github.sha }}
+          
+      - name: Install dependencies
+        run: |
+          cp .npmrc.ci .npmrc
+          pnpm install --frozen-lockfile
+          
+      - name: Build affected projects
+        run: |
+          # Build affected projects without partition strategy (not supported in Nx 21.3.8)
+          npx nx affected \
+            --target=build \
+            --base=${{ needs.setup.outputs.base }} \
+            --head=${{ needs.setup.outputs.head }} \
+            --parallel=3 \
+            --nxBail
+
+  build-all-sites:
+    name: Build All Sites for GitHub Pages
+    needs: [setup, build-affected]
+    runs-on: ubuntu-latest
+    environment: Preview
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          
+      - uses: pnpm/action-setup@v4
+      
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: 'pnpm'
+          
+      - name: Setup Pages
+        uses: actions/configure-pages@v5
+        
+      - name: Restore build cache
+        uses: actions/cache@v4
+        with:
+          path: |
+            .nx/cache
+            node_modules/.cache/nx
+            portal/build
+            standards/*/build
+            packages/*/dist
+            !**/.ifla-server-state.json
+          key: nx-builds-${{ runner.os }}-${{ github.sha }}
+          restore-keys: |
+            nx-builds-${{ runner.os }}-
+            
+      - name: Install dependencies
+        run: |
+          cp .npmrc.ci .npmrc
+          pnpm install --frozen-lockfile
+          
+      - name: Build theme if needed
+        run: |
+          if [ ! -d "packages/theme/dist" ]; then
+            echo "Building theme package..."
+            npx nx run @ifla/theme:build
+          fi
+          
+      - name: Build all sites with Nx optimization
+        run: |
+          echo "🏗️ Building all sites for preview environment..."
+          
+          # Use Nx to build all sites with caching
+          npx nx run-many \
+            --target=build \
+            --projects=portal,isbdm,lrm,frbr,isbd,muldicat,unimarc \
+            --parallel=3 \
+            --skipNxCache=false
+            
+      - name: Create unified build directory
+        run: |
+          echo "📦 Creating unified build directory for GitHub Pages..."
+          
+          # Create the unified site structure
+          node scripts/create-unified-build.js --env preview
+          
+          # Add GitHub Pages config
+          echo "iflastandards.github.io" > _site/CNAME
+          touch _site/.nojekyll
+          
+          # Create index redirect if needed
+          if [ ! -f "_site/index.html" ]; then
+            cp portal/build/index.html _site/index.html || true
+          fi
+          
+      - name: Validate build output
+        run: |
+          echo "🔍 Validating build output..."
+          
+          # Check critical paths exist
+          for path in index.html platform/index.html platform/ISBDM/index.html; do
+            if [ ! -f "_site/$path" ]; then
+              echo "❌ Missing critical file: $path"
+              exit 1
+            fi
+          done
+          
+          echo "✅ Build validation passed"
+          
+      - name: Upload Pages artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: ./_site
+
+  deploy:
+    name: Deploy to GitHub Pages
+    needs: build-all-sites
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
+        
+      - name: Notify Nx Cloud of deployment
+        run: |
+          curl -X POST https://cloud.nx.app/api/runs/$NX_RUN_ID/deployment \
+            -H "Authorization: Bearer ${{ secrets.NX_CLOUD_ACCESS_TOKEN }}" \
+            -H "Content-Type: application/json" \
+            -d '{"status": "success", "url": "${{ steps.deployment.outputs.page_url }}"}'
+        continue-on-error: true
+
+  cleanup:
+    name: Cleanup Nx Cloud Agents
+    needs: [build-all-sites, deploy]
+    if: always()
+    runs-on: ubuntu-latest
+    steps:
+      - name: Stop Nx Cloud agents
+        run: |
+          pnpm dlx nx-cloud stop-all-agents
+        continue-on-error: true

@@ -1,6 +1,8 @@
 # Testing Quick Reference
 
-**Purpose**: Concise testing guide for developers and AI agents working on the IFLA Standards Platform. We follow an **integration-first testing philosophy** - preferring real I/O and actual data over mocks.
+**Purpose**: Concise testing guide for developers and AI agents working on the IFLA Standards Platform. We follow an **integration-first testing philosophy** within a **5-phase testing strategy** - preferring real I/O and actual data over mocks.
+
+**📋 Full Strategy**: See [TESTING_STRATEGY.md](./TESTING_STRATEGY.md) for complete 5-phase approach.
 
 ## 🎯 Test Decision Tree (30 Seconds)
 
@@ -26,29 +28,43 @@ Need to write a test?
 ### Add Priority (Optional)
 - `@critical`, `@happy-path`, `@error-handling`, `@edge-case`
 
-## 🚀 Key Commands
+## 🚀 Phase-Aware Commands
 
-**🚨 CRITICAL: ALWAYS use `pnpm nx test [project] --skip-nx-cache`**
-
+### Phase 1: Selective Testing (Development)
 ```bash
-# ✅ CORRECT FORMAT (ALWAYS USE THIS):
+# ✅ Individual project testing:
 pnpm nx test unified-spreadsheet --skip-nx-cache
 pnpm nx test @ifla/theme --skip-nx-cache
 pnpm nx test portal --skip-nx-cache
 
-# ❌ WRONG (NEVER USE THESE):
-nx test unified-spreadsheet                    # Missing pnpm and cache skip
-pnpm nx test unified-spreadsheet              # Missing cache skip
-nx test unified-spreadsheet --skip-nx-cache   # Missing pnpm
+# ✅ Tag-based selection:
+pnpm test --grep "@unit"              # Unit tests only
+pnpm test --grep "@integration"       # Integration tests only
+pnpm test --grep "@critical"          # Critical tests only
+pnpm test --grep "@api.*@validation"  # API validation tests
 
-# Run affected tests
-pnpm nx affected --target=test --parallel=3 --skip-nx-cache
+# ✅ Affected testing:
+pnpm test                             # nx affected --target=test
+```
 
-# Run by tag
-pnpm test --grep "@integration"
-pnpm test --grep "@critical"
+### Phase 2-3: Automated (Git Hooks)
+```bash
+# These run automatically, but can be triggered manually:
+pnpm test:pre-commit                  # Phase 2 equivalent
+pnpm test:pre-push                    # Phase 3 equivalent
+```
 
-# E2E tests
+### Phase 4: Comprehensive Testing
+```bash
+pnpm test:comprehensive               # All tests, parallelized
+pnpm test:comprehensive:unit          # All unit tests
+pnpm test:comprehensive:e2e           # All E2E tests
+```
+
+### Phase 5: CI Environment (Automated)
+```bash
+# E2E tests (Playwright)
+pnpm playwright test --grep "@smoke"
 pnpm playwright test --grep "@critical"
 ```
 
@@ -70,19 +86,36 @@ packages/[package-name]/
     └── button-workflow.e2e.test.ts     # @e2e
 ```
 
-## ⏱️ Performance Targets
+## ⏱️ Performance Targets (Phase-Aligned)
 
+- **Phase 1 (Selective)**: < 30s per test file
+- **Phase 2 (Pre-commit)**: < 60s total
+- **Phase 3 (Pre-push)**: < 180s total
+- **Phase 4 (Comprehensive)**: < 300s total
+- **Phase 5 (CI Environment)**: < 180s total
+
+### Test Type Targets
 - **Integration**: <30s per file (primary test type)
 - **E2E**: <60s per workflow
 - **Unit**: <5s per file (rare)
-- **Pre-commit total**: <60s
-- **Pre-push total**: <180s
 
-## 🔧 Test Phases
+## 🔧 5-Phase Testing Strategy
 
-1. **Pre-commit** (Auto): Typecheck + Lint + Fast integration tests
-2. **Pre-push** (Auto): All integration + E2E (if needed) + Builds
-3. **CI** (Auto): Environment tests only
+1. **Phase 1 - Selective** (Development): Individual project testing, tag-based selection
+2. **Phase 2 - Pre-commit** (Auto): Typecheck + Lint + Unit tests (affected only)
+3. **Phase 3 - Pre-push** (Auto): Integration tests + Builds + Smart E2E
+4. **Phase 4 - Comprehensive** (Manual): Full validation for releases
+5. **Phase 5 - CI Environment** (Auto): Environment validation only
+
+### Quality Commands
+```bash
+# Linting (use with testing)
+pnpm lint                    # Lint affected files
+pnpm lint:fix               # Auto-fix linting issues
+
+# Type checking
+pnpm typecheck              # TypeScript validation
+```
 
 ## 📝 Integration Test Template (Primary)
 
