@@ -347,13 +347,11 @@
   "cli": {
     "analytics": false
   },
-  "parallel": 8,
-  "cacheDirectory": ".nx/cache",
+    "parallel": 6,  "cacheDirectory": ".nx/cache",
   "useDaemonProcess": true,
   "useInferencePlugins": true,
   "defaultTasksRunnerOptions": {
-    "parallel": 8,
-    "cacheableOperations": [
+  "parallel": 6,    "cacheableOperations": [
       "build",
       "test",
       "lint",
