@@ -126,9 +126,9 @@ jobs:
             echo "Note: Continuing deployment as this may be a network issue"
           fi
           
-          # Test GitHub API access
+          # Test GitHub API access (use repo endpoint which GitHub Actions token can access)
           github_response=$(curl -s -w "%{http_code}" -o /tmp/github_response.txt \
-            "https://api.github.com/user" \
+            "https://api.github.com/repos/$GITHUB_REPOSITORY" \
             -H "Authorization: token $GITHUB_TOKEN" \
             --max-time 30 || echo "000")
           
