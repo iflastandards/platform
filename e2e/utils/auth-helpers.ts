@@ -1,5 +1,5 @@
 import { BrowserContext } from '@playwright/test';
-import { seedClerkAuth, clearClerkAuth, getAvailableTestUsers, isValidTestUser } from './clerk-auth';
+import { seedClerkAuth, clearClerkAuth, isValidTestUser } from './clerk-auth';
 
 // Pre-defined test users based on real Clerk test users
 // These correspond to actual users in Clerk's development environment

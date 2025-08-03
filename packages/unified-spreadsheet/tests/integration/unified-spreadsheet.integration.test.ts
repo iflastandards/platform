@@ -3,11 +3,9 @@
  * Comprehensive integration tests for UnifiedSpreadsheetAPI
  */
 
-import { describe, test, expect, beforeEach, afterEach, vi } from 'vitest';
+import { describe, test, expect, beforeEach, afterEach } from 'vitest';
 import { UnifiedSpreadsheetAPI } from '../../src/unified-spreadsheet';
-import { ExcelJSAdapter } from '../../src/adapters/exceljs-adapter';
-import { CsvAdapter } from '../../src/adapters/csv-adapter';
-import type { Workbook, Sheet, Row } from '../../src/types';
+import type { Workbook } from '../../src/types';
 import * as fs from 'node:fs/promises';
 import * as path from 'node:path';
 import { fileURLToPath } from 'node:url';

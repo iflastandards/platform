@@ -33,7 +33,7 @@
  */
 
 import { integrationTest, expect } from '../utils/tagged-test';
-import { describe, it, beforeEach, vi } from 'vitest';
+import { beforeEach, vi } from 'vitest';
 
 // Mock external services for integration testing
 const mockFetch = vi.fn();

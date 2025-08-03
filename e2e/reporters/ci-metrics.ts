@@ -3,7 +3,7 @@
  * Collects and reports metrics for CI/CD pipeline optimization
  */
 
-import { Reporter, TestCase, TestResult, FullResult, Suite } from '@playwright/test/reporter';
+import { Reporter, TestCase, TestResult, FullResult } from '@playwright/test/reporter';
 import * as fs from 'fs';
 import * as path from 'path';
 

@@ -1,5 +1,4 @@
 import { Page, BrowserContext, expect } from '@playwright/test';
-import { addBasePath } from '@ifla/theme/utils';
 
 /**
  * Helper utilities for Playwright tests

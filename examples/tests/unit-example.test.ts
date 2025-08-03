@@ -34,7 +34,7 @@
  * - Can run in any environment without setup
  */
 
-import { describe, it, expect, vi, beforeEach } from 'vitest';
+import { describe, it, expect, beforeEach } from 'vitest';
 
 // Example service being tested (this would be imported from your actual code)
 interface ValidationResult {

@@ -1,5 +1,5 @@
 import { describe, it, expect, beforeEach, afterEach, vi, MockedFunction } from 'vitest';
-import type { ServerStateFile, ServerInfo, ServerMode } from './types';
+import type { ServerStateFile, ServerInfo } from './types';
 
 // Mock fs functions completely to avoid real file system access
 vi.mock('fs', async (importOriginal) => {

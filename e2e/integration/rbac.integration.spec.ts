@@ -3,8 +3,7 @@
  * Tests for Role-Based Access Control across services
  */
 
-import { test, expect, integrationTest } from '../utils/tagged-test';
-import { TestData } from '../fixtures/test-data.fixture';
+import { test, integrationTest } from '../utils/tagged-test';
 import { tags } from '../utils/test-tags';
 
 test.describe('RBAC Integration Tests @integration @rbac @auth @critical @security', () => {

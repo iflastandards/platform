@@ -4,7 +4,6 @@
  */
 
 import { test, expect, integrationTest } from '../utils/tagged-test';
-import { TestData } from '../fixtures/test-data.fixture';
 import { tags } from '../utils/test-tags';
 
 test.describe('Admin Flows Integration Tests @integration @admin @ui', () => {

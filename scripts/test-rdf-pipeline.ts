@@ -5,7 +5,7 @@
  * Tests the complete flow: RDF → CSV → Spreadsheet → CSV → RDF → Docusaurus
  */
 
-import { createSpreadsheetAPI, UnifiedSpreadsheetAPI } from '@ifla/unified-spreadsheet';
+import { createSpreadsheetAPI } from '@ifla/unified-spreadsheet';
 import * as fs from 'fs/promises';
 import * as path from 'path';
 import { execSync } from 'child_process';

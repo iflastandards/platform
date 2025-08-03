@@ -1,4 +1,4 @@
-import { Page, BrowserContext } from '@playwright/test';
+import { BrowserContext } from '@playwright/test';
 import { addBasePath } from '@ifla/theme/utils';
 
 interface ClerkTestUser {

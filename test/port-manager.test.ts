@@ -1,5 +1,5 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest';
-import { killPort, killPorts, waitForPortFree, SITE_PORTS } from './utils/port-manager';
+import { killPort, killPorts, SITE_PORTS } from './utils/port-manager';
 import { execSync } from 'child_process';
 
 vi.mock('child_process', () => ({

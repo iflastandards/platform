@@ -4,7 +4,6 @@
  */
 
 import { test, expect, smokeTest } from '../utils/tagged-test';
-import { TestData } from '../fixtures/test-data.fixture';
 
 test.describe('Authentication Smoke Tests @smoke @auth @critical @authentication @security', () => {
   test.beforeEach(async ({ page }) => {

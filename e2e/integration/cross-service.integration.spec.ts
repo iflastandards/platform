@@ -4,7 +4,6 @@
  */
 
 import { test, expect, integrationTest } from '../utils/tagged-test';
-import { TestData } from '../fixtures/test-data.fixture';
 
 test.describe('Cross-Service Integration Tests @integration @api', () => {
   integrationTest('vocabulary changes should sync across services', async ({ page, request, context }) => {

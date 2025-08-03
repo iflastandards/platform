@@ -4,7 +4,6 @@
  */
 
 import { chromium, FullConfig } from '@playwright/test';
-import { spawn } from 'child_process';
 import { promisify } from 'util';
 
 const execFile = promisify(require('child_process').execFile);

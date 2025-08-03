@@ -5,7 +5,7 @@
 
 import { describe, test, expect, beforeEach, afterEach } from 'vitest';
 import { CsvAdapter } from '../../src/adapters/csv-adapter';
-import type { Sheet, Row } from '../../src/types';
+import type { Sheet } from '../../src/types';
 import * as fs from 'node:fs/promises';
 import * as path from 'node:path';
 import { fileURLToPath } from 'node:url';

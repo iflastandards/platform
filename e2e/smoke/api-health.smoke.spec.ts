@@ -4,7 +4,6 @@
  */
 
 import { test, expect, smokeTest } from '../utils/tagged-test';
-import { TestData } from '../fixtures/test-data.fixture';
 
 test.describe('API Health Smoke Tests @smoke @api @critical', () => {
   // Use ADMIN_BASE_URL from environment or construct from BASE_URL

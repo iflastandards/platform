@@ -5,7 +5,7 @@
 
 import { describe, test, expect, beforeEach, afterEach } from 'vitest';
 import { ExcelJSAdapter } from '../../src/adapters/exceljs-adapter';
-import type { Workbook, Sheet, Row, RichCell } from '../../src/types';
+import type { Workbook, Row, RichCell } from '../../src/types';
 import * as fs from 'node:fs/promises';
 import * as path from 'node:path';
 import { fileURLToPath } from 'node:url';
