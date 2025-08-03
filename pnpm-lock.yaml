@@ -661,38 +661,23 @@ importers:
 
   packages/eslint-config:
     dependencies:
-      '@docusaurus/eslint-plugin':
-        specifier: ^3.8.1
-        version: 3.8.1(eslint@9.32.0(jiti@2.5.1))(typescript@5.8.3)
-      '@typescript-eslint/eslint-plugin':
-        specifier: ^8.38.0
-        version: 8.38.0(@typescript-eslint/parser@8.38.0(eslint@9.32.0(jiti@2.5.1))(typescript@5.8.3))(eslint@9.32.0(jiti@2.5.1))(typescript@5.8.3)
-      '@typescript-eslint/parser':
-        specifier: ^8.38.0
-        version: 8.38.0(eslint@9.32.0(jiti@2.5.1))(typescript@5.8.3)
       eslint:
-        specifier: ^9.32.0
+        specifier: ^9.0.0
         version: 9.32.0(jiti@2.5.1)
-      eslint-plugin-mdx:
-        specifier: ^3.6.2
-        version: 3.6.2(eslint@9.32.0(jiti@2.5.1))
       eslint-plugin-react:
-        specifier: ^7.37.5
+        specifier: ^7.37.2
         version: 7.37.5(eslint@9.32.0(jiti@2.5.1))
       eslint-plugin-react-hooks:
-        specifier: 5.2.0
+        specifier: ^5.0.0
         version: 5.2.0(eslint@9.32.0(jiti@2.5.1))
       eslint-plugin-unused-imports:
         specifier: ^4.1.4
         version: 4.1.4(@typescript-eslint/eslint-plugin@8.38.0(@typescript-eslint/parser@8.38.0(eslint@9.32.0(jiti@2.5.1))(typescript@5.8.3))(eslint@9.32.0(jiti@2.5.1))(typescript@5.8.3))(eslint@9.32.0(jiti@2.5.1))
       globals:
-        specifier: ^15.0.0
+        specifier: ^15.14.0
         version: 15.15.0
-      typescript:
-        specifier: '>=5.0.0'
-        version: 5.8.3
       typescript-eslint:
-        specifier: ^8.38.0
+        specifier: ^8.18.2
         version: 8.38.0(eslint@9.32.0(jiti@2.5.1))(typescript@5.8.3)
 
   packages/standards-cli: {}
