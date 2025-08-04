@@ -75,3 +75,6 @@ playwright-state-*.json
 
 # Context Forge API keys
 .context-forge-api
+
+# Build warning reports
+_reports/

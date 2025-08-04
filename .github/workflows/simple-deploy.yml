@@ -42,18 +42,18 @@ jobs:
       - name: Build theme package
         run: pnpm nx build @ifla/theme
         
-      - name: Build all documentation sites
+      - name: Build all documentation sites and collect warnings
         env:
           DOCS_ENV: preview
         run: |
-          echo "🏗️ Building documentation sites..."
-          pnpm nx build portal
-          pnpm nx build isbdm
-          pnpm nx build lrm
-          pnpm nx build frbr
-          pnpm nx build isbd
-          pnpm nx build muldicat
-          pnpm nx build unimarc
+          echo "🏗️ Building documentation sites and collecting warnings..."
+          node scripts/collect-warnings-parallel.js
+          
+          # Check if builds completed (warnings are OK, but builds must succeed)
+          if [ ! -d "portal/build" ] || [ ! -d "standards/isbd/build" ]; then
+            echo "❌ Some builds failed. Check the warnings report."
+            exit 1
+          fi
           
       - name: Skip admin app for now
         run: |
@@ -81,6 +81,14 @@ jobs:
       - name: Setup Pages
         uses: actions/configure-pages@v5
         
+      - name: Upload build warnings report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: build-warnings-report
+          path: _reports/
+          retention-days: 30
+          
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
         with:
@@ -89,3 +97,14 @@ jobs:
       - name: Deploy to GitHub Pages
         id: deployment
         uses: actions/deploy-pages@v4
+        
+      - name: Post deployment warning summary
+        if: always()
+        run: |
+          if [ -f "_reports/build-warnings-summary.md" ]; then
+            echo "## 📊 Build Warnings Report" >> $GITHUB_STEP_SUMMARY
+            echo "" >> $GITHUB_STEP_SUMMARY
+            cat _reports/build-warnings-summary.md >> $GITHUB_STEP_SUMMARY
+            echo "" >> $GITHUB_STEP_SUMMARY
+            echo "📥 [Download Full Report](https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }})" >> $GITHUB_STEP_SUMMARY
+          fi
