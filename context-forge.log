@@ -1,238 +1,139 @@
 # Context Forge Generation Log
-Generated: 2025-08-03T15:30:02.790Z
+Generated: 2025-08-04T14:53:22.810Z
 
 ## Summary
-- **Total Operations**: 52
-- **Successfully Created/Updated**: 51
+- **Total Operations**: 30
+- **Successfully Created/Updated**: 10
 - **Failed**: 0
-- **Skipped**: 1
-- **Success Rate**: 98%
+- **Skipped**: 20
+- **Success Rate**: 33%
 
 ## File Operations
 
-### SKIPPED: CLAUDE.md
+### UPDATED: CLAUDE.md
 - **Full Path**: /Users/jonphipps/Code/IFLA/standards-dev/CLAUDE.md
-- **Description**: Main context file for Claude Code (file already exists)
-- **Timestamp**: 2025-08-03T15:30:02.771Z
-### CREATED: Docs/Implementation.md
+- **Description**: Main context file for Claude Code (retrofit mode)
+- **Timestamp**: 2025-08-04T14:53:22.802Z
+### SKIPPED: Docs/Implementation.md
 - **Full Path**: /Users/jonphipps/Code/IFLA/standards-dev/Docs/Implementation.md
-- **Description**: Staged development plan
-- **Timestamp**: 2025-08-03T15:30:02.772Z
-### CREATED: Docs/project_structure.md
+- **Description**: Staged development plan (file already exists)
+- **Timestamp**: 2025-08-04T14:53:22.802Z
+### SKIPPED: Docs/project_structure.md
 - **Full Path**: /Users/jonphipps/Code/IFLA/standards-dev/Docs/project_structure.md
-- **Description**: Project organization guide
-- **Timestamp**: 2025-08-03T15:30:02.772Z
-### CREATED: Docs/UI_UX_doc.md
+- **Description**: Project organization guide (file already exists)
+- **Timestamp**: 2025-08-04T14:53:22.802Z
+### SKIPPED: Docs/UI_UX_doc.md
 - **Full Path**: /Users/jonphipps/Code/IFLA/standards-dev/Docs/UI_UX_doc.md
-- **Description**: Design specifications
-- **Timestamp**: 2025-08-03T15:30:02.773Z
-### CREATED: Docs/Bug_tracking.md
+- **Description**: Design specifications (file already exists)
+- **Timestamp**: 2025-08-04T14:53:22.803Z
+### SKIPPED: Docs/Bug_tracking.md
 - **Full Path**: /Users/jonphipps/Code/IFLA/standards-dev/Docs/Bug_tracking.md
-- **Description**: Bug tracking template
-- **Timestamp**: 2025-08-03T15:30:02.773Z
-### CREATED: PRPs/ifla-platform-prp.md
-- **Full Path**: /Users/jonphipps/Code/IFLA/standards-dev/PRPs/ifla-platform-prp.md
-- **Description**: Base implementation PRP
-- **Timestamp**: 2025-08-03T15:30:02.774Z
-### CREATED: PRPs/feature-auth-prp.md
-- **Full Path**: /Users/jonphipps/Code/IFLA/standards-dev/PRPs/feature-auth-prp.md
-- **Description**: PRP for User Authentication & Authorization feature
-- **Timestamp**: 2025-08-03T15:30:02.774Z
-### CREATED: PRPs/feature-dashboard-prp.md
-- **Full Path**: /Users/jonphipps/Code/IFLA/standards-dev/PRPs/feature-dashboard-prp.md
-- **Description**: PRP for User Dashboard feature
-- **Timestamp**: 2025-08-03T15:30:02.775Z
-### CREATED: PRPs/feature-crud-prp.md
-- **Full Path**: /Users/jonphipps/Code/IFLA/standards-dev/PRPs/feature-crud-prp.md
-- **Description**: PRP for CRUD Operations feature
-- **Timestamp**: 2025-08-03T15:30:02.775Z
-### CREATED: PRPs/feature-file-upload-prp.md
-- **Full Path**: /Users/jonphipps/Code/IFLA/standards-dev/PRPs/feature-file-upload-prp.md
-- **Description**: PRP for File Upload/Management feature
-- **Timestamp**: 2025-08-03T15:30:02.776Z
-### CREATED: PRPs/feature-realtime-prp.md
-- **Full Path**: /Users/jonphipps/Code/IFLA/standards-dev/PRPs/feature-realtime-prp.md
-- **Description**: PRP for Real-time Updates feature
-- **Timestamp**: 2025-08-03T15:30:02.776Z
-### CREATED: PRPs/feature-email-prp.md
-- **Full Path**: /Users/jonphipps/Code/IFLA/standards-dev/PRPs/feature-email-prp.md
-- **Description**: PRP for Email Notifications feature
-- **Timestamp**: 2025-08-03T15:30:02.776Z
-### CREATED: PRPs/feature-search-prp.md
-- **Full Path**: /Users/jonphipps/Code/IFLA/standards-dev/PRPs/feature-search-prp.md
-- **Description**: PRP for Search Functionality feature
-- **Timestamp**: 2025-08-03T15:30:02.777Z
-### CREATED: PRPs/feature-data-io-prp.md
-- **Full Path**: /Users/jonphipps/Code/IFLA/standards-dev/PRPs/feature-data-io-prp.md
-- **Description**: PRP for Data Io feature
-- **Timestamp**: 2025-08-03T15:30:02.777Z
-### CREATED: PRPs/feature-i18n-prp.md
-- **Full Path**: /Users/jonphipps/Code/IFLA/standards-dev/PRPs/feature-i18n-prp.md
-- **Description**: PRP for I18n feature
-- **Timestamp**: 2025-08-03T15:30:02.777Z
-### CREATED: PRPs/feature-dark-mode-prp.md
-- **Full Path**: /Users/jonphipps/Code/IFLA/standards-dev/PRPs/feature-dark-mode-prp.md
-- **Description**: PRP for Dark Mode feature
-- **Timestamp**: 2025-08-03T15:30:02.778Z
-### CREATED: PRPs/feature-profile-prp.md
-- **Full Path**: /Users/jonphipps/Code/IFLA/standards-dev/PRPs/feature-profile-prp.md
-- **Description**: PRP for Profile feature
-- **Timestamp**: 2025-08-03T15:30:02.778Z
-### CREATED: PRPs/feature-settings-prp.md
-- **Full Path**: /Users/jonphipps/Code/IFLA/standards-dev/PRPs/feature-settings-prp.md
-- **Description**: PRP for Settings feature
-- **Timestamp**: 2025-08-03T15:30:02.778Z
-### CREATED: PRPs/feature-rest-api-prp.md
-- **Full Path**: /Users/jonphipps/Code/IFLA/standards-dev/PRPs/feature-rest-api-prp.md
-- **Description**: PRP for RESTful API feature
-- **Timestamp**: 2025-08-03T15:30:02.779Z
-### CREATED: PRPs/feature-api-docs-prp.md
-- **Full Path**: /Users/jonphipps/Code/IFLA/standards-dev/PRPs/feature-api-docs-prp.md
-- **Description**: PRP for API Documentation feature
-- **Timestamp**: 2025-08-03T15:30:02.780Z
-### CREATED: PRPs/feature-webhooks-prp.md
-- **Full Path**: /Users/jonphipps/Code/IFLA/standards-dev/PRPs/feature-webhooks-prp.md
-- **Description**: PRP for Webhooks feature
-- **Timestamp**: 2025-08-03T15:30:02.780Z
-### CREATED: PRPs/feature-responsive-prp.md
-- **Full Path**: /Users/jonphipps/Code/IFLA/standards-dev/PRPs/feature-responsive-prp.md
-- **Description**: PRP for Responsive feature
-- **Timestamp**: 2025-08-03T15:30:02.780Z
-### CREATED: PRPs/feature-admin-prp.md
-- **Full Path**: /Users/jonphipps/Code/IFLA/standards-dev/PRPs/feature-admin-prp.md
-- **Description**: PRP for Admin Panel feature
-- **Timestamp**: 2025-08-03T15:30:02.781Z
-### CREATED: PRPs/feature-rbac-prp.md
-- **Full Path**: /Users/jonphipps/Code/IFLA/standards-dev/PRPs/feature-rbac-prp.md
-- **Description**: PRP for Rbac feature
-- **Timestamp**: 2025-08-03T15:30:02.781Z
-### CREATED: PRPs/feature-docusaurus-prp.md
-- **Full Path**: /Users/jonphipps/Code/IFLA/standards-dev/PRPs/feature-docusaurus-prp.md
-- **Description**: PRP for docusaurus feature
-- **Timestamp**: 2025-08-03T15:30:02.781Z
-### CREATED: PRPs/feature-rdf-import/export-prp.md
-- **Full Path**: /Users/jonphipps/Code/IFLA/standards-dev/PRPs/feature-rdf-import/export-prp.md
-- **Description**: PRP for RDF import/export feature
-- **Timestamp**: 2025-08-03T15:30:02.782Z
-### CREATED: PRPs/feature-rdf-server-prp.md
-- **Full Path**: /Users/jonphipps/Code/IFLA/standards-dev/PRPs/feature-rdf-server-prp.md
-- **Description**: PRP for RDF server feature
-- **Timestamp**: 2025-08-03T15:30:02.782Z
-### CREATED: .claude/commands/PRPs/prp-create.md
+- **Description**: Bug tracking template (file already exists)
+- **Timestamp**: 2025-08-04T14:53:22.803Z
+### CREATED: PRPs/feature-1-prp.md
+- **Full Path**: /Users/jonphipps/Code/IFLA/standards-dev/PRPs/feature-1-prp.md
+- **Description**: PRP for: Feature 1: RDF export/import roundtrip to docusaurus site from admin app
+- **Timestamp**: 2025-08-04T14:53:22.803Z
+### CREATED: PRPs/feature-2-prp.md
+- **Full Path**: /Users/jonphipps/Code/IFLA/standards-dev/PRPs/feature-2-prp.md
+- **Description**: PRP for: Feature 2: RDF generation from docusaurus front matter
+- **Timestamp**: 2025-08-04T14:53:22.804Z
+### CREATED: PRPs/feature-3-prp.md
+- **Full Path**: /Users/jonphipps/Code/IFLA/standards-dev/PRPs/feature-3-prp.md
+- **Description**: PRP for: Feature 3: tinaCMS integration
+- **Timestamp**: 2025-08-04T14:53:22.804Z
+### SKIPPED: .claude/commands/PRPs/prp-create.md
 - **Full Path**: .claude/commands/PRPs/prp-create.md
-- **Description**: Generate a comprehensive PRP with deep research
-- **Timestamp**: 2025-08-03T15:30:02.782Z
-### CREATED: .claude/commands/PRPs/prp-execute.md
+- **Description**: Generate a comprehensive PRP with deep research (file already exists)
+- **Timestamp**: 2025-08-04T14:53:22.804Z
+### SKIPPED: .claude/commands/PRPs/prp-execute.md
 - **Full Path**: .claude/commands/PRPs/prp-execute.md
-- **Description**: Execute a PRP against the codebase
-- **Timestamp**: 2025-08-03T15:30:02.783Z
-### CREATED: .claude/commands/development/prime-context.md
+- **Description**: Execute a PRP against the codebase (file already exists)
+- **Timestamp**: 2025-08-04T14:53:22.805Z
+### SKIPPED: .claude/commands/development/prime-context.md
 - **Full Path**: .claude/commands/development/prime-context.md
-- **Description**: Prime Claude with intelligent project context and mode switching
-- **Timestamp**: 2025-08-03T15:30:02.783Z
-### CREATED: .claude/commands/PRPs/validate-prp.md
+- **Description**: Prime Claude with intelligent project context and mode switching (file already exists)
+- **Timestamp**: 2025-08-04T14:53:22.805Z
+### SKIPPED: .claude/commands/PRPs/validate-prp.md
 - **Full Path**: .claude/commands/PRPs/validate-prp.md
-- **Description**: Validate a PRP for completeness
-- **Timestamp**: 2025-08-03T15:30:02.784Z
-### CREATED: .claude/commands/development/debug-issue.md
+- **Description**: Validate a PRP for completeness (file already exists)
+- **Timestamp**: 2025-08-04T14:53:22.805Z
+### SKIPPED: .claude/commands/development/debug-issue.md
 - **Full Path**: .claude/commands/development/debug-issue.md
-- **Description**: Debug and find root cause of an issue
-- **Timestamp**: 2025-08-03T15:30:02.784Z
-### CREATED: .claude/commands/quality/review-code.md
+- **Description**: Debug and find root cause of an issue (file already exists)
+- **Timestamp**: 2025-08-04T14:53:22.805Z
+### SKIPPED: .claude/commands/quality/review-code.md
 - **Full Path**: .claude/commands/quality/review-code.md
-- **Description**: Review code for quality and best practices
-- **Timestamp**: 2025-08-03T15:30:02.784Z
-### CREATED: .claude/commands/quality/refactor-code.md
+- **Description**: Review code for quality and best practices (file already exists)
+- **Timestamp**: 2025-08-04T14:53:22.805Z
+### SKIPPED: .claude/commands/quality/refactor-code.md
 - **Full Path**: .claude/commands/quality/refactor-code.md
-- **Description**: Refactor code for better structure
-- **Timestamp**: 2025-08-03T15:30:02.784Z
-### CREATED: .claude/commands/rapid/parallel-prp-create.md
+- **Description**: Refactor code for better structure (file already exists)
+- **Timestamp**: 2025-08-04T14:53:22.806Z
+### SKIPPED: .claude/commands/rapid/parallel-prp-create.md
 - **Full Path**: .claude/commands/rapid/parallel-prp-create.md
-- **Description**: Create multiple PRPs in parallel using subagents
-- **Timestamp**: 2025-08-03T15:30:02.785Z
-### CREATED: .claude/commands/git/smart-commit.md
+- **Description**: Create multiple PRPs in parallel using subagents (file already exists)
+- **Timestamp**: 2025-08-04T14:53:22.806Z
+### SKIPPED: .claude/commands/git/smart-commit.md
 - **Full Path**: .claude/commands/git/smart-commit.md
-- **Description**: Create intelligent git commits
-- **Timestamp**: 2025-08-03T15:30:02.785Z
-### CREATED: .claude/commands/git/create-pr.md
+- **Description**: Create intelligent git commits (file already exists)
+- **Timestamp**: 2025-08-04T14:53:22.806Z
+### SKIPPED: .claude/commands/git/create-pr.md
 - **Full Path**: .claude/commands/git/create-pr.md
-- **Description**: Create comprehensive pull request
-- **Timestamp**: 2025-08-03T15:30:02.785Z
-### CREATED: .claude/commands/Development/checkpoint.md
-- **Full Path**: .claude/commands/Development/checkpoint.md
-- **Description**: Request human verification at critical milestones
-- **Timestamp**: 2025-08-03T15:30:02.785Z
-### CREATED: .claude/commands/Development/should-checkpoint.md
-- **Full Path**: .claude/commands/Development/should-checkpoint.md
-- **Description**: Self-assess if checkpoint is needed
-- **Timestamp**: 2025-08-03T15:30:02.786Z
-### CREATED: .claude/commands/Development/milestone-gate.md
-- **Full Path**: .claude/commands/Development/milestone-gate.md
-- **Description**: Automated checkpoint trigger at milestones
-- **Timestamp**: 2025-08-03T15:30:02.786Z
-### CREATED: .claude/commands/orchestration/orchestrate-project.md
+- **Description**: Create comprehensive pull request (file already exists)
+- **Timestamp**: 2025-08-04T14:53:22.807Z
+### SKIPPED: .claude/commands/orchestration/orchestrate-project.md
 - **Full Path**: .claude/commands/orchestration/orchestrate-project.md
-- **Description**: Deploy autonomous AI team for 24/7 development
-- **Timestamp**: 2025-08-03T15:30:02.786Z
-### CREATED: .claude/commands/orchestration/orchestrate-feature.md
+- **Description**: Deploy autonomous AI team for 24/7 development (file already exists)
+- **Timestamp**: 2025-08-04T14:53:22.807Z
+### SKIPPED: .claude/commands/orchestration/orchestrate-feature.md
 - **Full Path**: .claude/commands/orchestration/orchestrate-feature.md
-- **Description**: Deploy focused team for specific feature
-- **Timestamp**: 2025-08-03T15:30:02.786Z
-### CREATED: .claude/commands/orchestration/orchestrate-status.md
+- **Description**: Deploy focused team for specific feature (file already exists)
+- **Timestamp**: 2025-08-04T14:53:22.807Z
+### SKIPPED: .claude/commands/orchestration/orchestrate-status.md
 - **Full Path**: .claude/commands/orchestration/orchestrate-status.md
-- **Description**: Check orchestration team status
-- **Timestamp**: 2025-08-03T15:30:02.787Z
-### CREATED: .claude/commands/development/feature-status.md
+- **Description**: Check orchestration team status (file already exists)
+- **Timestamp**: 2025-08-04T14:53:22.807Z
+### SKIPPED: .claude/commands/development/feature-status.md
 - **Full Path**: .claude/commands/development/feature-status.md
-- **Description**: Check feature implementation progress
-- **Timestamp**: 2025-08-03T15:30:02.787Z
-### CREATED: .claude/commands/README.md
+- **Description**: Check feature implementation progress (file already exists)
+- **Timestamp**: 2025-08-04T14:53:22.808Z
+### SKIPPED: .claude/commands/README.md
 - **Full Path**: .claude/commands/README.md
-- **Description**: Slash commands documentation
-- **Timestamp**: 2025-08-03T15:30:02.787Z
-### CREATED: PRPs/ai_docs/README.md
+- **Description**: Slash commands documentation (file already exists)
+- **Timestamp**: 2025-08-04T14:53:22.808Z
+### SKIPPED: PRPs/ai_docs/README.md
 - **Full Path**: PRPs/ai_docs/README.md
-- **Description**: AI documentation curation guide
-- **Timestamp**: 2025-08-03T15:30:02.788Z
+- **Description**: AI documentation curation guide (file already exists)
+- **Timestamp**: 2025-08-04T14:53:22.808Z
 ### CREATED: .claude/hooks/README.md
 - **Full Path**: /Users/jonphipps/Code/IFLA/standards-dev/.claude/hooks/README.md
 - **Description**: Claude Code hooks documentation
-- **Timestamp**: 2025-08-03T15:30:02.788Z
+- **Timestamp**: 2025-08-04T14:53:22.808Z
 ### CREATED: .claude/hooks/PreCompact.py
 - **Full Path**: /Users/jonphipps/Code/IFLA/standards-dev/.claude/hooks/PreCompact.py
 - **Description**: Preserves project context before compaction
-- **Timestamp**: 2025-08-03T15:30:02.789Z
+- **Timestamp**: 2025-08-04T14:53:22.809Z
 ### CREATED: .claude/hooks/ContextRotation.py
 - **Full Path**: /Users/jonphipps/Code/IFLA/standards-dev/.claude/hooks/ContextRotation.py
 - **Description**: Manages context window for long development sessions
-- **Timestamp**: 2025-08-03T15:30:02.789Z
+- **Timestamp**: 2025-08-04T14:53:22.809Z
 ### CREATED: .claude/hooks/PreSubmit.py
 - **Full Path**: /Users/jonphipps/Code/IFLA/standards-dev/.claude/hooks/PreSubmit.py
 - **Description**: Validates code quality before submission
-- **Timestamp**: 2025-08-03T15:30:02.789Z
+- **Timestamp**: 2025-08-04T14:53:22.809Z
 ### CREATED: .claude/hooks/PRPTracking.py
 - **Full Path**: /Users/jonphipps/Code/IFLA/standards-dev/.claude/hooks/PRPTracking.py
 - **Description**: Tracks PRP implementation progress
-- **Timestamp**: 2025-08-03T15:30:02.789Z
+- **Timestamp**: 2025-08-04T14:53:22.810Z
 ### CREATED: ai_docs/README.md
 - **Full Path**: /Users/jonphipps/Code/IFLA/standards-dev/ai_docs/README.md
 - **Description**: AI documentation guide
-- **Timestamp**: 2025-08-03T15:30:02.790Z
+- **Timestamp**: 2025-08-04T14:53:22.810Z
 
 ## Directory Structure Created
-- .claude/commands/
-- .claude/commands/Development/
-- .claude/commands/PRPs/
-- .claude/commands/development/
-- .claude/commands/git/
-- .claude/commands/orchestration/
-- .claude/commands/quality/
-- .claude/commands/rapid/
 - .claude/hooks/
-- Docs/
 - PRPs/
-- PRPs/ai_docs/
-- PRPs/feature-rdf-import/
 - ai_docs/
 
 ## Next Steps

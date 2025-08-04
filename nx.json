@@ -43,8 +43,7 @@
       "{projectRoot}/sidebars.js",
       "{projectRoot}/sidebars.ts",
       "{projectRoot}/src/**/*",
-      "{projectRoot}/static/**/*",
-      "{workspaceRoot}/packages/theme/**/*"
+      "{projectRoot}/static/**/*"
     ],
     "docusaurus-no-theme": [
       "{projectRoot}/**/*.{md,mdx}",

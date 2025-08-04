@@ -1,0 +1,1343 @@
+{
+  "graph": {
+    "nodes": {
+      "unified-spreadsheet": {
+        "name": "unified-spreadsheet",
+        "type": "lib",
+        "data": {
+          "root": "packages/unified-spreadsheet",
+          "targets": {
+            "lint": {
+              "executor": "@nx/eslint:lint",
+              "outputs": [
+                "{options.outputFile}"
+              ],
+              "options": {
+                "lintFilePatterns": [
+                  "packages/unified-spreadsheet/**/*.ts"
+                ]
+              },
+              "configurations": {},
+              "parallelism": true,
+              "inputs": [
+                "default",
+                "^default"
+              ],
+              "cache": true
+            },
+            "test": {
+              "executor": "nx:run-commands",
+              "options": {
+                "command": "vitest run",
+                "cwd": "packages/unified-spreadsheet"
+              },
+              "configurations": {},
+              "parallelism": true,
+              "dependsOn": [
+                "^build"
+              ],
+              "inputs": [
+                "testInputs",
+                "^testInputs",
+                {
+                  "runtime": "node -v"
+                }
+              ],
+              "outputs": [
+                "{projectRoot}/coverage",
+                "{projectRoot}/test-results"
+              ],
+              "cache": true
+            },
+            "typecheck": {
+              "executor": "nx:run-commands",
+              "options": {
+                "command": "tsc --noEmit -p packages/unified-spreadsheet/tsconfig.json"
+              },
+              "configurations": {},
+              "parallelism": true,
+              "dependsOn": [
+                "^build"
+              ],
+              "cache": false,
+              "inputs": [
+                "default",
+                "{projectRoot}/tsconfig.json",
+                "{projectRoot}/tsconfig.*.json",
+                "{workspaceRoot}/tsconfig.json",
+                "{workspaceRoot}/tsconfig.base.json"
+              ],
+              "outputs": [
+                "{workspaceRoot}/tmp/typecheck-{projectName}.done"
+              ]
+            },
+            "build-deps": {
+              "dependsOn": [
+                "^build"
+              ],
+              "configurations": {},
+              "options": {},
+              "parallelism": true,
+              "executor": "nx:noop"
+            },
+            "watch-deps": {
+              "continuous": true,
+              "dependsOn": [
+                "build-deps"
+              ],
+              "executor": "nx:run-commands",
+              "options": {
+                "command": "pnpm exec nx watch --projects unified-spreadsheet --includeDependentProjects -- pnpm exec nx build-deps unified-spreadsheet"
+              },
+              "configurations": {},
+              "parallelism": true
+            },
+            "clean": {
+              "executor": "nx:run-script",
+              "options": {
+                "script": "clean"
+              },
+              "metadata": {
+                "scriptContent": "rimraf dist",
+                "runCommand": "pnpm run clean"
+              },
+              "configurations": {},
+              "parallelism": true,
+              "cache": false
+            },
+            "nx-release-publish": {
+              "executor": "@nx/js:release-publish",
+              "dependsOn": [
+                "^nx-release-publish"
+              ],
+              "options": {},
+              "configurations": {},
+              "parallelism": true
+            },
+            "build": {
+              "executor": "@nx/js:tsc",
+              "outputs": [
+                "{options.outputPath}"
+              ],
+              "options": {
+                "outputPath": "dist/packages/unified-spreadsheet",
+                "main": "packages/unified-spreadsheet/src/index.ts",
+                "tsConfig": "packages/unified-spreadsheet/tsconfig.json",
+                "assets": [
+                  "packages/unified-spreadsheet/*.md"
+                ]
+              },
+              "configurations": {},
+              "parallelism": true,
+              "cache": true,
+              "dependsOn": [
+                "^build"
+              ],
+              "inputs": [
+                "production",
+                "^production"
+              ]
+            },
+            "test:watch": {
+              "executor": "nx:run-commands",
+              "options": {
+                "command": "vitest",
+                "cwd": "packages/unified-spreadsheet"
+              },
+              "configurations": {},
+              "parallelism": true
+            },
+            "test:coverage": {
+              "executor": "nx:run-commands",
+              "options": {
+                "command": "vitest run --coverage",
+                "cwd": "packages/unified-spreadsheet"
+              },
+              "configurations": {},
+              "parallelism": true
+            }
+          },
+          "metadata": {
+            "targetGroups": {
+              "NPM Scripts": [
+                "clean"
+              ]
+            },
+            "description": "Unified API for CSV, XLSX, and Google Sheets operations with DCTAP validation",
+            "js": {
+              "packageName": "@ifla/unified-spreadsheet",
+              "packageMain": "dist/index.js",
+              "isInPackageManagerWorkspaces": true
+            }
+          },
+          "name": "unified-spreadsheet",
+          "projectType": "library",
+          "tags": [
+            "npm:public",
+            "npm:spreadsheet",
+            "npm:excel",
+            "npm:csv",
+            "npm:google-sheets",
+            "npm:dctap",
+            "npm:rdf",
+            "type:library",
+            "scope:shared"
+          ],
+          "$schema": "../../node_modules/nx/schemas/project-schema.json",
+          "sourceRoot": "packages/unified-spreadsheet/src",
+          "implicitDependencies": []
+        }
+      },
+      "eslint-config": {
+        "name": "eslint-config",
+        "type": "lib",
+        "data": {
+          "root": "packages/eslint-config",
+          "targets": {
+            "lint": {
+              "executor": "@nx/eslint:lint",
+              "outputs": [
+                "{options.outputFile}"
+              ],
+              "options": {
+                "lintFilePatterns": [
+                  "packages/eslint-config/**/*.{js,mjs,ts}"
+                ]
+              },
+              "configurations": {},
+              "parallelism": true,
+              "inputs": [
+                "default",
+                "^default"
+              ],
+              "cache": true
+            },
+            "nx-release-publish": {
+              "executor": "@nx/js:release-publish",
+              "dependsOn": [
+                "^nx-release-publish"
+              ],
+              "options": {},
+              "configurations": {},
+              "parallelism": true
+            }
+          },
+          "name": "eslint-config",
+          "projectType": "library",
+          "tags": [
+            "npm:public",
+            "npm:eslint",
+            "npm:config",
+            "npm:typescript",
+            "npm:react",
+            "npm:ifla",
+            "scope:shared",
+            "type:config"
+          ],
+          "metadata": {
+            "targetGroups": {},
+            "description": "Shared ESLint configuration for IFLA Standards monorepo",
+            "js": {
+              "packageName": "@ifla/eslint-config",
+              "packageExports": {
+                ".": "./src/index.js"
+              },
+              "packageMain": "src/index.js",
+              "isInPackageManagerWorkspaces": true
+            }
+          },
+          "$schema": "../../node_modules/nx/schemas/project-schema.json",
+          "sourceRoot": "packages/eslint-config/src",
+          "implicitDependencies": []
+        }
+      },
+      "@ifla/dev-servers": {
+        "name": "@ifla/dev-servers",
+        "type": "lib",
+        "data": {
+          "root": "packages/dev-servers",
+          "targets": {
+            "lint": {
+              "executor": "@nx/eslint:lint",
+              "options": {
+                "lintFilePatterns": [
+                  "packages/dev-servers/src/**/*.ts"
+                ]
+              },
+              "inputs": [
+                "{projectRoot}/src/**/*.ts"
+              ],
+              "cache": true,
+              "configurations": {},
+              "parallelism": true,
+              "outputs": []
+            },
+            "test": {
+              "executor": "nx:run-commands",
+              "options": {
+                "command": "vitest run",
+                "cwd": "packages/dev-servers"
+              },
+              "inputs": [
+                "{projectRoot}/src/**/*.ts",
+                "{projectRoot}/vitest.config.ts"
+              ],
+              "cache": true,
+              "configurations": {},
+              "parallelism": true,
+              "dependsOn": [
+                "^build"
+              ],
+              "outputs": [
+                "{projectRoot}/coverage",
+                "{projectRoot}/test-results"
+              ]
+            },
+            "typecheck": {
+              "executor": "nx:run-commands",
+              "options": {
+                "command": "tsc --noEmit",
+                "cwd": "packages/dev-servers"
+              },
+              "inputs": [
+                "{projectRoot}/src/**/*.ts",
+                "{projectRoot}/tsconfig.json"
+              ],
+              "cache": true,
+              "configurations": {},
+              "parallelism": true,
+              "dependsOn": [
+                "^build"
+              ],
+              "outputs": [
+                "{workspaceRoot}/tmp/typecheck-{projectName}.done"
+              ]
+            },
+            "build-deps": {
+              "dependsOn": [
+                "^build"
+              ],
+              "configurations": {},
+              "options": {},
+              "parallelism": true,
+              "executor": "nx:noop"
+            },
+            "watch-deps": {
+              "continuous": true,
+              "dependsOn": [
+                "build-deps"
+              ],
+              "executor": "nx:run-commands",
+              "options": {
+                "command": "pnpm exec nx watch --projects @ifla/dev-servers --includeDependentProjects -- pnpm exec nx build-deps @ifla/dev-servers"
+              },
+              "configurations": {},
+              "parallelism": true
+            },
+            "build": {
+              "executor": "nx:run-commands",
+              "options": {
+                "command": "tsup",
+                "cwd": "packages/dev-servers"
+              },
+              "outputs": [
+                "{projectRoot}/dist"
+              ],
+              "inputs": [
+                "{projectRoot}/src/**/*.ts",
+                "{projectRoot}/tsup.config.ts",
+                "{projectRoot}/package.json",
+                "{projectRoot}/tsconfig.json"
+              ],
+              "cache": true,
+              "configurations": {},
+              "parallelism": true,
+              "dependsOn": [
+                "^build"
+              ]
+            },
+            "clean": {
+              "executor": "nx:run-commands",
+              "options": {
+                "command": "rimraf dist",
+                "cwd": "packages/dev-servers"
+              },
+              "configurations": {},
+              "parallelism": true,
+              "cache": false
+            },
+            "dev": {
+              "executor": "nx:run-commands",
+              "options": {
+                "command": "tsup --watch",
+                "cwd": "packages/dev-servers"
+              },
+              "configurations": {},
+              "parallelism": true
+            },
+            "test:on-demand": {
+              "executor": "nx:run-commands",
+              "options": {
+                "command": "vitest run",
+                "cwd": "packages/dev-servers"
+              },
+              "inputs": [
+                "{projectRoot}/src/**/*.ts",
+                "{projectRoot}/vitest.config.ts"
+              ],
+              "cache": false,
+              "configurations": {},
+              "parallelism": true
+            }
+          },
+          "metadata": {
+            "targetGroups": {},
+            "description": "Lightweight development server utilities for IFLA Standards Platform integration testing",
+            "js": {
+              "packageName": "@ifla/dev-servers",
+              "packageExports": {
+                ".": {
+                  "types": "./dist/index.d.ts",
+                  "import": "./dist/index.mjs",
+                  "require": "./dist/index.js"
+                }
+              },
+              "packageMain": "dist/index.js",
+              "isInPackageManagerWorkspaces": true
+            }
+          },
+          "name": "@ifla/dev-servers",
+          "projectType": "library",
+          "tags": [
+            "npm:private",
+            "npm:ifla",
+            "npm:development",
+            "npm:testing",
+            "npm:servers",
+            "npm:integration",
+            "type:package",
+            "scope:dev-tools"
+          ],
+          "$schema": "../../node_modules/nx/schemas/project-schema.json",
+          "sourceRoot": "packages/dev-servers/src",
+          "implicitDependencies": []
+        }
+      },
+      "@ifla/theme": {
+        "name": "@ifla/theme",
+        "type": "lib",
+        "data": {
+          "root": "packages/theme",
+          "targets": {
+            "lint": {
+              "executor": "@nx/eslint:lint",
+              "options": {
+                "lintFilePatterns": [
+                  "packages/theme/src/**/*.{ts,tsx,js,jsx}",
+                  "packages/theme/*.{ts,tsx,js,jsx}"
+                ]
+              },
+              "inputs": [
+                "default"
+              ],
+              "cache": true,
+              "configurations": {},
+              "parallelism": true,
+              "outputs": []
+            },
+            "build:tsc": {
+              "executor": "nx:run-commands",
+              "options": {
+                "command": "npx tsc --project tsconfig.declarations.json",
+                "cwd": "packages/theme"
+              },
+              "configurations": {},
+              "parallelism": true,
+              "cache": true,
+              "dependsOn": [
+                "^build"
+              ],
+              "inputs": [
+                "production",
+                "^production"
+              ]
+            },
+            "build": {
+              "executor": "nx:run-commands",
+              "options": {
+                "command": "./build.sh",
+                "cwd": "packages/theme"
+              },
+              "outputs": [
+                "{projectRoot}/dist"
+              ],
+              "inputs": [
+                "production",
+                "{projectRoot}/src/**/*",
+                "{projectRoot}/tsup.config.ts",
+                "{projectRoot}/tsconfig.declarations.json",
+                "{projectRoot}/package.json"
+              ],
+              "dependsOn": [],
+              "configurations": {},
+              "parallelism": true,
+              "cache": true
+            },
+            "test": {
+              "executor": "@nx/vite:test",
+              "options": {
+                "config": "vitest.config.nx.ts",
+                "testPathPattern": [
+                  "packages/theme/src/tests",
+                  "packages/theme/src/components/**/__tests__"
+                ],
+                "passWithNoTests": true
+              },
+              "cache": true,
+              "inputs": [
+                "testInputs",
+                "^testInputs"
+              ],
+              "outputs": [
+                "{projectRoot}/coverage",
+                "{projectRoot}/test-results"
+              ],
+              "configurations": {},
+              "parallelism": true,
+              "dependsOn": [
+                "^build"
+              ]
+            },
+            "test:unit": {
+              "executor": "@nx/vite:test",
+              "options": {
+                "config": "vitest.config.nx.ts",
+                "exclude": [
+                  "**/scripts/**",
+                  "**/deployment/**"
+                ],
+                "passWithNoTests": true
+              },
+              "cache": true,
+              "inputs": [
+                "testInputs",
+                "sharedGlobals"
+              ],
+              "outputs": [
+                "{projectRoot}/coverage",
+                "{projectRoot}/test-results"
+              ],
+              "configurations": {},
+              "parallelism": true
+            },
+            "test:integration": {
+              "executor": "@nx/vite:test",
+              "options": {
+                "config": "vitest.config.nx.ts",
+                "include": [
+                  "**/scripts/**",
+                  "**/deployment/**"
+                ]
+              },
+              "cache": true,
+              "inputs": [
+                "testInputs",
+                "sharedGlobals"
+              ],
+              "outputs": [
+                "{projectRoot}/coverage",
+                "{projectRoot}/test-results"
+              ],
+              "configurations": {},
+              "parallelism": true
+            },
+            "typecheck": {
+              "executor": "nx:run-commands",
+              "options": {
+                "command": "tsc --noEmit",
+                "cwd": "packages/theme"
+              },
+              "cache": true,
+              "dependsOn": [
+                "^build"
+              ],
+              "inputs": [
+                "default",
+                "{projectRoot}/tsconfig.json",
+                "{workspaceRoot}/tsconfig.json"
+              ],
+              "configurations": {},
+              "parallelism": true,
+              "outputs": [
+                "{workspaceRoot}/tmp/typecheck-{projectName}.done"
+              ]
+            }
+          },
+          "name": "@ifla/theme",
+          "projectType": "library",
+          "tags": [
+            "npm:private",
+            "library",
+            "theme"
+          ],
+          "metadata": {
+            "targetGroups": {},
+            "js": {
+              "packageName": "@ifla/theme",
+              "packageExports": {
+                ".": {
+                  "types": "./dist/index.d.ts",
+                  "import": "./dist/index.mjs",
+                  "require": "./dist/index.js"
+                },
+                "./styles.css": "./dist/index.css",
+                "./styles": "./dist/index.css",
+                "./components/SiteLink": {
+                  "types": "./dist/components/SiteLink.d.ts",
+                  "import": "./dist/components/SiteLink.mjs",
+                  "require": "./dist/components/SiteLink.js"
+                },
+                "./components/ElementReference": {
+                  "types": "./dist/components/ElementReference.d.ts",
+                  "import": "./dist/components/ElementReference.mjs",
+                  "require": "./dist/components/ElementReference.js"
+                },
+                "./components/SiteManagementLink": {
+                  "types": "./dist/components/SiteManagementLink.d.ts",
+                  "import": "./dist/components/SiteManagementLink.mjs",
+                  "require": "./dist/components/SiteManagementLink.js"
+                },
+                "./hooks/usePrevious": {
+                  "types": "./dist/hooks/usePrevious.d.ts",
+                  "import": "./dist/hooks/usePrevious.mjs",
+                  "require": "./dist/hooks/usePrevious.js"
+                },
+                "./utils": {
+                  "types": "./dist/utils/index.d.ts",
+                  "import": "./dist/utils/index.mjs",
+                  "require": "./dist/utils/index.js"
+                },
+                "./config": {
+                  "types": "./dist/config/index.d.ts",
+                  "import": "./dist/config/index.mjs",
+                  "require": "./dist/config/index.js"
+                },
+                "./config/siteConfig": {
+                  "types": "./dist/config/siteConfig.d.ts",
+                  "import": "./dist/config/siteConfig.mjs",
+                  "require": "./dist/config/siteConfig.js"
+                },
+                "./components": {
+                  "types": "./dist/components/index.d.ts",
+                  "import": "./dist/components/index.mjs",
+                  "require": "./dist/components/index.js"
+                },
+                "./theme/NavbarItem/ComponentTypes": {
+                  "types": "./dist/theme/NavbarItem/ComponentTypes.d.ts",
+                  "import": "./dist/theme/NavbarItem/ComponentTypes.mjs",
+                  "require": "./dist/theme/NavbarItem/ComponentTypes.js"
+                },
+                "./theme/NavbarItem/AuthDropdownNavbarItem": {
+                  "types": "./dist/theme/NavbarItem/AuthDropdownNavbarItem.d.ts",
+                  "import": "./dist/theme/NavbarItem/AuthDropdownNavbarItem.mjs",
+                  "require": "./dist/theme/NavbarItem/AuthDropdownNavbarItem.js"
+                },
+                "./components/CompactButton": {
+                  "types": "./dist/components/CompactButton/index.d.ts",
+                  "import": "./dist/components/CompactButton/index.mjs",
+                  "require": "./dist/components/CompactButton/index.js"
+                },
+                "./components/VocabularyCard": {
+                  "types": "./dist/components/VocabularyCard/index.d.ts",
+                  "import": "./dist/components/VocabularyCard/index.mjs",
+                  "require": "./dist/components/VocabularyCard/index.js"
+                },
+                "./components/NamespaceHub": {
+                  "types": "./dist/components/NamespaceHub/index.d.ts",
+                  "import": "./dist/components/NamespaceHub/index.mjs",
+                  "require": "./dist/components/NamespaceHub/index.js"
+                },
+                "./components/ElementSetCard": {
+                  "types": "./dist/components/ElementSetCard/index.d.ts",
+                  "import": "./dist/components/ElementSetCard/index.mjs",
+                  "require": "./dist/components/ElementSetCard/index.js"
+                }
+              },
+              "packageMain": "dist/index.js",
+              "isInPackageManagerWorkspaces": true
+            }
+          },
+          "sourceRoot": "packages/theme/src",
+          "implicitDependencies": []
+        }
+      },
+      "admin": {
+        "name": "admin",
+        "type": "app",
+        "data": {
+          "root": "apps/admin",
+          "targets": {
+            "lint": {
+              "executor": "@nx/eslint:lint",
+              "outputs": [
+                "{options.outputFile}"
+              ],
+              "options": {
+                "lintFilePatterns": [
+                  "apps/admin/src/**/*.{ts,tsx,js,jsx}",
+                  "apps/admin/*.{ts,tsx,js,jsx}"
+                ]
+              },
+              "configurations": {},
+              "parallelism": true,
+              "inputs": [
+                "default",
+                "^default"
+              ],
+              "cache": true
+            },
+            "test": {
+              "executor": "nx:run-commands",
+              "options": {
+                "command": "vitest run",
+                "cwd": "apps/admin"
+              },
+              "configurations": {},
+              "parallelism": true,
+              "dependsOn": [
+                "^build"
+              ],
+              "inputs": [
+                "testInputs",
+                "^testInputs",
+                {
+                  "runtime": "node -v"
+                }
+              ],
+              "outputs": [
+                "{projectRoot}/coverage",
+                "{projectRoot}/test-results"
+              ],
+              "cache": true
+            },
+            "typecheck": {
+              "executor": "nx:run-commands",
+              "options": {
+                "command": "tsc --noEmit",
+                "cwd": "apps/admin"
+              },
+              "configurations": {},
+              "parallelism": true,
+              "dependsOn": [
+                "^build"
+              ],
+              "cache": false,
+              "inputs": [
+                "default",
+                "{projectRoot}/tsconfig.json",
+                "{projectRoot}/tsconfig.*.json",
+                "{workspaceRoot}/tsconfig.json",
+                "{workspaceRoot}/tsconfig.base.json"
+              ],
+              "outputs": [
+                "{workspaceRoot}/tmp/typecheck-{projectName}.done"
+              ]
+            },
+            "build-deps": {
+              "dependsOn": [
+                "^build"
+              ],
+              "configurations": {},
+              "options": {},
+              "parallelism": true,
+              "executor": "nx:noop"
+            },
+            "watch-deps": {
+              "continuous": true,
+              "dependsOn": [
+                "build-deps"
+              ],
+              "executor": "nx:run-commands",
+              "options": {
+                "command": "pnpm exec nx watch --projects admin --includeDependentProjects -- pnpm exec nx build-deps admin"
+              },
+              "configurations": {},
+              "parallelism": true
+            },
+            "build": {
+              "executor": "@nx/next:build",
+              "outputs": [
+                "{options.outputPath}"
+              ],
+              "defaultConfiguration": "production",
+              "options": {
+                "outputPath": "dist/apps/admin"
+              },
+              "configurations": {
+                "development": {
+                  "outputPath": "apps/admin"
+                },
+                "production": {}
+              },
+              "dependsOn": [
+                {
+                  "target": "build",
+                  "projects": [
+                    "@ifla/theme"
+                  ]
+                }
+              ],
+              "parallelism": true,
+              "inputs": [
+                "buildInputs",
+                "^buildInputs",
+                "sharedGlobals"
+              ],
+              "cache": true
+            },
+            "dev": {
+              "executor": "@nx/next:server",
+              "options": {
+                "buildTarget": "admin:build:development",
+                "dev": true,
+                "port": 3007
+              },
+              "configurations": {},
+              "parallelism": true,
+              "continuous": true
+            },
+            "start": {
+              "executor": "@nx/next:server",
+              "options": {
+                "buildTarget": "admin:build:production",
+                "dev": false,
+                "port": 3007
+              },
+              "configurations": {},
+              "parallelism": true,
+              "continuous": true,
+              "cache": false
+            },
+            "serve-static": {
+              "continuous": true,
+              "options": {
+                "cwd": "apps/admin",
+                "command": "next start"
+              },
+              "dependsOn": [
+                "build"
+              ],
+              "executor": "nx:run-commands",
+              "configurations": {},
+              "parallelism": true
+            },
+            "serve": {
+              "executor": "nx:run-commands",
+              "defaultConfiguration": "development",
+              "options": {
+                "command": "pnpm dev:interactive",
+                "cwd": "."
+              },
+              "configurations": {
+                "development": {
+                  "command": "pnpm dev:interactive",
+                  "cwd": "."
+                },
+                "production": {
+                  "command": "pnpm dev:headless",
+                  "cwd": "."
+                }
+              },
+              "parallelism": true,
+              "cache": false
+            },
+            "test:unit": {
+              "executor": "nx:run-commands",
+              "options": {
+                "command": "vitest run src/test/components/",
+                "cwd": "apps/admin"
+              },
+              "configurations": {},
+              "parallelism": true,
+              "cache": true,
+              "outputs": [
+                "{projectRoot}/coverage",
+                "{projectRoot}/test-results"
+              ],
+              "inputs": [
+                "testInputs",
+                "sharedGlobals"
+              ]
+            },
+            "test:integration": {
+              "executor": "nx:run-commands",
+              "options": {
+                "command": "vitest run src/test/integration/ --exclude='**/server-dependent/**'",
+                "cwd": "apps/admin"
+              },
+              "configurations": {},
+              "parallelism": true,
+              "cache": true,
+              "outputs": [
+                "{projectRoot}/coverage",
+                "{projectRoot}/test-results"
+              ],
+              "inputs": [
+                "testInputs",
+                "sharedGlobals"
+              ]
+            },
+            "test:watch": {
+              "executor": "nx:run-commands",
+              "options": {
+                "command": "vitest",
+                "cwd": "apps/admin"
+              },
+              "configurations": {},
+              "parallelism": true
+            },
+            "test:coverage": {
+              "executor": "nx:run-commands",
+              "options": {
+                "command": "vitest run --coverage",
+                "cwd": "apps/admin"
+              },
+              "configurations": {},
+              "parallelism": true
+            },
+            "test:server-dependent": {
+              "executor": "nx:run-commands",
+              "options": {
+                "command": "vitest run --config=vitest.config.server-dependent.ts",
+                "cwd": "apps/admin"
+              },
+              "configurations": {},
+              "parallelism": true
+            },
+            "e2e": {
+              "executor": "nx:run-commands",
+              "options": {
+                "command": "playwright test --project=admin",
+                "cwd": ".",
+                "cacheableOperations": [
+                  "e2e"
+                ]
+              },
+              "inputs": [
+                "default",
+                "{workspaceRoot}/e2e/admin/**/*.spec.ts",
+                "{workspaceRoot}/e2e/admin/**/*.e2e.test.ts",
+                "{workspaceRoot}/playwright.config.ts"
+              ],
+              "outputs": [
+                "{workspaceRoot}/test-results",
+                "{workspaceRoot}/playwright-report"
+              ],
+              "configurations": {},
+              "parallelism": true,
+              "cache": true,
+              "dependsOn": [
+                "build"
+              ]
+            }
+          },
+          "metadata": {
+            "targetGroups": {},
+            "description": "Authentication and API services for IFLA Standards platform",
+            "js": {
+              "packageName": "@ifla/admin",
+              "isInPackageManagerWorkspaces": true
+            }
+          },
+          "name": "admin",
+          "projectType": "application",
+          "tags": [
+            "npm:private"
+          ],
+          "$schema": "../../node_modules/nx/schemas/project-schema.json",
+          "sourceRoot": "apps/admin",
+          "implicitDependencies": []
+        }
+      },
+      "scripts": {
+        "name": "scripts",
+        "type": "lib",
+        "data": {
+          "root": "scripts",
+          "targets": {
+            "lint": {
+              "executor": "@nx/eslint:lint",
+              "options": {
+                "lintFilePatterns": [
+                  "scripts/**/*.ts",
+                  "scripts/**/*.js"
+                ]
+              },
+              "inputs": [
+                "scriptFiles"
+              ],
+              "cache": true,
+              "configurations": {},
+              "parallelism": true,
+              "outputs": []
+            },
+            "test": {
+              "executor": "@nx/vite:test",
+              "outputs": [
+                "{workspaceRoot}/coverage/{projectRoot}"
+              ],
+              "options": {
+                "passWithNoTests": true,
+                "config": "scripts/vitest.config.ts",
+                "coverage": false,
+                "watch": false
+              },
+              "configurations": {
+                "watch": {
+                  "watch": true
+                },
+                "coverage": {
+                  "coverage": true
+                }
+              },
+              "inputs": [
+                "scriptFiles",
+                "testFiles",
+                {
+                  "externalDependencies": [
+                    "vitest"
+                  ]
+                }
+              ],
+              "cache": true,
+              "parallelism": true,
+              "dependsOn": [
+                "^build"
+              ]
+            },
+            "typecheck": {
+              "executor": "nx:run-commands",
+              "options": {
+                "command": "tsc --noEmit -p scripts/tsconfig.json"
+              },
+              "inputs": [
+                "scriptFiles"
+              ],
+              "cache": true,
+              "configurations": {},
+              "parallelism": true,
+              "dependsOn": [
+                "^build"
+              ],
+              "outputs": [
+                "{workspaceRoot}/tmp/typecheck-{projectName}.done"
+              ]
+            },
+            "build-deps": {
+              "dependsOn": [
+                "^build"
+              ],
+              "configurations": {},
+              "options": {},
+              "parallelism": true,
+              "executor": "nx:noop"
+            },
+            "watch-deps": {
+              "continuous": true,
+              "dependsOn": [
+                "build-deps"
+              ],
+              "executor": "nx:run-commands",
+              "options": {
+                "command": "pnpm exec nx watch --projects scripts --includeDependentProjects -- pnpm exec nx build-deps scripts"
+              },
+              "configurations": {},
+              "parallelism": true
+            },
+            "test:specific": {
+              "executor": "nx:run-commands",
+              "options": {
+                "command": "vitest run {args.file} --config scripts/vitest.config.ts",
+                "cwd": ""
+              },
+              "configurations": {
+                "watch": {
+                  "command": "vitest watch {args.file} --config scripts/vitest.config.ts"
+                }
+              },
+              "parallelism": true
+            }
+          },
+          "metadata": {},
+          "name": "scripts",
+          "$schema": "../node_modules/nx/schemas/project-schema.json",
+          "sourceRoot": "scripts",
+          "projectType": "library",
+          "tags": [
+            "type:scripts",
+            "scope:tooling"
+          ],
+          "implicitDependencies": [],
+          "namedInputs": {
+            "scriptFiles": [
+              "{projectRoot}/**/*.ts",
+              "{projectRoot}/**/*.js",
+              "!{projectRoot}/**/*.test.ts",
+              "!{projectRoot}/**/*.spec.ts"
+            ],
+            "testFiles": [
+              "{projectRoot}/**/*.test.ts",
+              "{projectRoot}/**/*.spec.ts"
+            ]
+          }
+        }
+      },
+      "portal": {
+        "name": "portal",
+        "type": "app",
+        "data": {
+          "root": "portal",
+          "targets": {
+            "lint": {
+              "executor": "@nx/eslint:lint",
+              "options": {
+                "lintFilePatterns": [
+                  "portal/src/**/*.{ts,tsx,js,jsx}",
+                  "portal/*.{ts,tsx,js,jsx}"
+                ]
+              },
+              "inputs": [
+                "default"
+              ],
+              "cache": true,
+              "configurations": {},
+              "parallelism": true,
+              "outputs": []
+            },
+            "build": {
+              "executor": "nx:run-commands",
+              "options": {
+                "command": "docusaurus build portal"
+              },
+              "inputs": [
+                "production",
+                "^production",
+                "docusaurus"
+              ],
+              "configurations": {},
+              "parallelism": true,
+              "dependsOn": [
+                "^build"
+              ],
+              "outputs": [
+                "{projectRoot}/build",
+                "{projectRoot}/dist"
+              ],
+              "cache": true
+            },
+            "start": {
+              "executor": "nx:run-commands",
+              "options": {
+                "command": "docusaurus start portal"
+              },
+              "configurations": {},
+              "parallelism": true,
+              "cache": false
+            },
+            "start:robust": {
+              "executor": "nx:run-commands",
+              "options": {
+                "command": "node scripts/utils/port-manager.js site portal && docusaurus start portal --no-open"
+              },
+              "configurations": {},
+              "parallelism": true
+            },
+            "serve": {
+              "executor": "nx:run-commands",
+              "options": {
+                "command": "docusaurus serve portal"
+              },
+              "configurations": {},
+              "parallelism": true,
+              "cache": false
+            },
+            "serve:robust": {
+              "executor": "nx:run-commands",
+              "options": {
+                "command": "node scripts/utils/port-manager.js site portal && docusaurus serve portal"
+              },
+              "configurations": {},
+              "parallelism": true
+            },
+            "clear": {
+              "executor": "nx:run-commands",
+              "options": {
+                "command": "docusaurus clear portal"
+              },
+              "configurations": {},
+              "parallelism": true
+            },
+            "typecheck": {
+              "executor": "nx:run-commands",
+              "options": {
+                "command": "tsc --noEmit",
+                "cwd": "portal"
+              },
+              "configurations": {},
+              "parallelism": true,
+              "dependsOn": [
+                "^build"
+              ],
+              "cache": false,
+              "inputs": [
+                "default",
+                "{projectRoot}/tsconfig.json",
+                "{projectRoot}/tsconfig.*.json",
+                "{workspaceRoot}/tsconfig.json",
+                "{workspaceRoot}/tsconfig.base.json"
+              ],
+              "outputs": [
+                "{workspaceRoot}/tmp/typecheck-{projectName}.done"
+              ]
+            },
+            "e2e": {
+              "executor": "nx:run-commands",
+              "options": {
+                "command": "playwright test e2e/portal-smoke.spec.ts",
+                "cacheableOperations": [
+                  "e2e"
+                ]
+              },
+              "inputs": [
+                "default",
+                "{workspaceRoot}/e2e/portal-smoke.spec.ts",
+                "{workspaceRoot}/playwright.config.ts"
+              ],
+              "outputs": [
+                "{workspaceRoot}/test-results",
+                "{workspaceRoot}/playwright-report"
+              ],
+              "configurations": {},
+              "parallelism": true,
+              "cache": true,
+              "dependsOn": [
+                "build"
+              ]
+            },
+            "build-all": {
+              "executor": "@nx/workspace:run-commands",
+              "options": {
+                "command": "nx run-many --target=build --all"
+              },
+              "configurations": {},
+              "parallelism": true
+            },
+            "start-robust": {
+              "executor": "@nx/workspace:run-commands",
+              "options": {
+                "command": "concurrently \"nx run portal:start:robust\" \"nx run isbd:start:robust\" \"nx run isbdm:start:robust\" \"nx run lrm:start:robust\" \"nx run frbr:start:robust\" \"nx run muldicat:start:robust\" \"nx run unimarc:start:robust\""
+              },
+              "configurations": {},
+              "parallelism": true
+            }
+          },
+          "name": "portal",
+          "sourceRoot": "portal",
+          "projectType": "application",
+          "tags": [
+            "docusaurus",
+            "site",
+            "portal"
+          ],
+          "implicitDependencies": [
+            "@ifla/theme"
+          ]
+        }
+      }
+    },
+    "dependencies": {
+      "unified-spreadsheet": [],
+      "eslint-config": [],
+      "@ifla/dev-servers": [
+        {
+          "source": "@ifla/dev-servers",
+          "target": "@ifla/theme",
+          "type": "static"
+        }
+      ],
+      "@ifla/theme": [
+        {
+          "source": "@ifla/theme",
+          "target": "eslint-config",
+          "type": "static"
+        },
+        {
+          "source": "@ifla/theme",
+          "target": "scripts",
+          "type": "dynamic"
+        },
+        {
+          "source": "@ifla/theme",
+          "target": "scripts",
+          "type": "static"
+        }
+      ],
+      "admin": [
+        {
+          "source": "admin",
+          "target": "eslint-config",
+          "type": "static"
+        },
+        {
+          "source": "admin",
+          "target": "@ifla/theme",
+          "type": "static"
+        }
+      ],
+      "scripts": [
+        {
+          "source": "scripts",
+          "target": "@ifla/theme",
+          "type": "static"
+        },
+        {
+          "source": "scripts",
+          "target": "@ifla/dev-servers",
+          "type": "dynamic"
+        },
+        {
+          "source": "scripts",
+          "target": "@ifla/dev-servers",
+          "type": "static"
+        },
+        {
+          "source": "scripts",
+          "target": "unified-spreadsheet",
+          "type": "static"
+        },
+        {
+          "source": "scripts",
+          "target": "admin",
+          "type": "dynamic"
+        }
+      ],
+      "portal": [
+        {
+          "source": "portal",
+          "target": "@ifla/theme",
+          "type": "implicit"
+        },
+        {
+          "source": "portal",
+          "target": "@ifla/theme",
+          "type": "static"
+        },
+        {
+          "source": "portal",
+          "target": "eslint-config",
+          "type": "static"
+        }
+      ]
+    }
+  }
+}

@@ -24,8 +24,10 @@
     "command": "init",
     "operation": "Project initialization",
     "status": "completed",
-    "startTime": "2025-08-03T15:18:44.137Z",
     "projectPath": "/Users/jonphipps/Code/IFLA/standards-dev",
+    "startTime": "2025-08-03T15:18:44.137Z",
+    "endTime": "2025-08-03T15:30:02.791Z",
+    "duration": 678654,
     "metadata": {
       "aiEnabled": false,
       "targetIDEs": [
@@ -48,8 +50,26 @@
         "startTime": "2025-08-03T15:30:02.706Z",
         "endTime": "2025-08-03T15:30:02.790Z"
       }
-    ],
-    "endTime": "2025-08-03T15:30:02.791Z",
-    "duration": 678654
+    ]
+  },
+  {
+    "id": "mdx85b7d2pymumgsn",
+    "command": "init",
+    "operation": "Project initialization",
+    "status": "failed",
+    "startTime": "2025-08-04T14:47:29.017Z",
+    "projectPath": "/Users/jonphipps/Code/IFLA/standards-dev",
+    "metadata": {
+      "aiEnabled": false,
+      "targetIDEs": [
+        "claude"
+      ],
+      "errors": [
+        "Operation cancelled by user"
+      ]
+    },
+    "steps": [],
+    "endTime": "2025-08-04T14:47:33.491Z",
+    "duration": 4474
   }
 ]

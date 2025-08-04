@@ -1720,11 +1720,9 @@
                 "{projectRoot}/tsconfig.declarations.json",
                 "{projectRoot}/package.json"
               ],
+              "dependsOn": [],
               "configurations": {},
               "parallelism": true,
-              "dependsOn": [
-                "^build"
-              ],
               "cache": true
             },
             "test": {
