@@ -3,11 +3,18 @@
   "ensureRunning": true,
   "restartOnFailure": true,
   "healthCheckInterval": 300000,
-  "startupTimeout": 10000,
+  "startupTimeout": 15000,
+  "maxMemory": "16GB",
+  "parallel": 12,
   "scripts": {
     "test": true,
     "build": true,
     "lint": true,
     "typecheck": true
+  },
+  "performance": {
+    "enableCache": true,
+    "enableParallelism": true,
+    "maxWorkers": 12
   }
 }

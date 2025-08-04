@@ -78,3 +78,6 @@ playwright-state-*.json
 
 # Build warning reports
 output/_reports/
+
+# Performance optimization
+.env.performance

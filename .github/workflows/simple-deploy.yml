@@ -39,6 +39,12 @@ jobs:
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
         
+      - name: Configure Nx for CI environment
+        run: |
+          echo "🔧 Configuring Nx for CI environment..."
+          pnpm nx:optimize:environment
+          echo "✅ Nx configured with CI-optimized settings"
+        
       - name: Build theme package
         run: pnpm nx build @ifla/theme
         

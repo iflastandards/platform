@@ -19,7 +19,7 @@ fi
 echo "✅ Test tagging validation passed!"
 
 # Use the optimized pre-commit command from package.json
-pnpm test:pre-commit
+pnpm test:pre-commit:smart
 
 if [ $? -ne 0 ]; then
   echo "❌ Pre-commit tests failed. Please fix and try again."
