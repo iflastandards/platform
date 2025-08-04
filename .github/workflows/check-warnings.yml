@@ -39,19 +39,51 @@ jobs:
         run: |
           node scripts/collect-warnings-parallel.js
           
-          # Extract warning count for PR comment
-          if [ -f "_reports/build-warnings.json" ]; then
-            WARNING_COUNT=$(jq '[.[] | .warnings | length] | add' _reports/build-warnings.json)
+          # Extract warning data for API access
+          if [ -f "output/_reports/build-warnings.json" ]; then
+            WARNING_COUNT=$(jq '[.[] | .warnings | length] | add' output/_reports/build-warnings.json)
+            SITE_SUMMARY=$(jq -c '[.[] | {site: .site, warnings: .warnings | length, success: .success, buildTime: .buildTime}]' output/_reports/build-warnings.json)
             echo "warning_count=$WARNING_COUNT" >> $GITHUB_OUTPUT
+            echo "site_summary=$SITE_SUMMARY" >> $GITHUB_OUTPUT
+            echo "timestamp=$(date -u +%Y-%m-%dT%H:%M:%SZ)" >> $GITHUB_OUTPUT
+            
+            # Create API-friendly summary
+            jq -n \
+              --arg run_id "${{ github.run_id }}" \
+              --arg run_number "${{ github.run_number }}" \
+              --arg event_name "${{ github.event_name }}" \
+              --arg pr_number "${{ github.event.pull_request.number || '' }}" \
+              --arg sha "${{ github.sha }}" \
+              --arg ref "${{ github.ref }}" \
+              --arg timestamp "$(date -u +%Y-%m-%dT%H:%M:%SZ)" \
+              --arg warning_count "$WARNING_COUNT" \
+              --argjson site_summary "$SITE_SUMMARY" \
+              --argjson detailed_warnings "$(cat output/_reports/build-warnings.json)" \
+              '{
+                run_id: $run_id,
+                run_number: $run_number,
+                event_name: $event_name,
+                pr_number: (if $pr_number == "" then null else ($pr_number | tonumber) end),
+                sha: $sha,
+                ref: $ref,
+                timestamp: $timestamp,
+                warning_count: ($warning_count | tonumber),
+                site_summary: $site_summary,
+                detailed_warnings: $detailed_warnings
+              }' > output/_reports/check-summary.json
           else
             echo "warning_count=0" >> $GITHUB_OUTPUT
+            echo "site_summary=[]" >> $GITHUB_OUTPUT
           fi
           
       - name: Upload warnings report
         uses: actions/upload-artifact@v4
         with:
           name: docusaurus-build-warnings
-          path: _reports/
+          path: |
+            output/_reports/build-warnings.json
+            output/_reports/build-warnings-summary.md
+            output/_reports/check-summary.json
           retention-days: 30
           
       - name: Comment PR with summary
@@ -71,7 +103,7 @@ jobs:
               
               // Read summary if available
               try {
-                const summaryPath = '_reports/build-warnings-summary.md';
+                const summaryPath = 'output/_reports/build-warnings-summary.md';
                 if (fs.existsSync(summaryPath)) {
                   const summary = fs.readFileSync(summaryPath, 'utf8');
                   // Extract just the site summary

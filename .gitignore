@@ -77,4 +77,4 @@ playwright-state-*.json
 .context-forge-api
 
 # Build warning reports
-_reports/
+output/_reports/

@@ -6,7 +6,10 @@ const { spawn } = require('child_process');
 
 // Configuration
 const SITES = ['portal', 'isbdm', 'lrm', 'frbr', 'isbd', 'muldicat', 'unimarc'];
-const MAX_PARALLEL = 3; // Limit parallel builds to avoid resource exhaustion
+
+// Environment-aware parallelism
+const isCI = process.env.CI === 'true' || process.env.GITHUB_ACTIONS === 'true';
+const MAX_PARALLEL = isCI ? 3 : 8; // Conservative in CI (3), optimized locally (8)
 
 class ParallelWarningCollector {
   constructor() {
@@ -166,7 +169,7 @@ class ParallelWarningCollector {
    * Main execution
    */
   async run() {
-    console.log('🚀 Running parallel build warning collection...\n');
+    console.log(`🚀 Running parallel build warning collection (${isCI ? 'CI mode' : 'Local mode'}: ${MAX_PARALLEL} parallel builds)...\n`);
     const startTime = Date.now();
     
     const results = await this.runParallel();
@@ -177,7 +180,7 @@ class ParallelWarningCollector {
     // Generate and save report
     const summary = this.generateSummary(results);
     
-    const reportsDir = path.join(process.cwd(), '_reports');
+    const reportsDir = path.join(process.cwd(), 'output', '_reports');
     fs.mkdirSync(reportsDir, { recursive: true });
     
     const reportPath = path.join(reportsDir, 'build-warnings-summary.md');

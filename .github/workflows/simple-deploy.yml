@@ -43,11 +43,24 @@ jobs:
         run: pnpm nx build @ifla/theme
         
       - name: Build all documentation sites and collect warnings
+        id: build-warnings
         env:
           DOCS_ENV: preview
         run: |
           echo "🏗️ Building documentation sites and collecting warnings..."
           node scripts/collect-warnings-parallel.js
+          
+          # Extract warning data for API access
+          if [ -f "output/_reports/build-warnings.json" ]; then
+            WARNING_COUNT=$(jq '[.[] | .warnings | length] | add' output/_reports/build-warnings.json)
+            SITE_SUMMARY=$(jq -c '[.[] | {site: .site, warnings: .warnings | length, success: .success, buildTime: .buildTime}]' output/_reports/build-warnings.json)
+            echo "warning_count=$WARNING_COUNT" >> $GITHUB_OUTPUT
+            echo "site_summary=$SITE_SUMMARY" >> $GITHUB_OUTPUT
+            echo "timestamp=$(date -u +%Y-%m-%dT%H:%M:%SZ)" >> $GITHUB_OUTPUT
+          else
+            echo "warning_count=0" >> $GITHUB_OUTPUT
+            echo "site_summary=[]" >> $GITHUB_OUTPUT
+          fi
           
           # Check if builds completed (warnings are OK, but builds must succeed)
           if [ ! -d "portal/build" ] || [ ! -d "standards/isbd/build" ]; then
@@ -86,7 +99,10 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: build-warnings-report
-          path: _reports/
+          path: |
+            output/_reports/build-warnings.json
+            output/_reports/build-warnings-summary.md
+            output/_reports/build-summary.json
           retention-days: 30
           
       - name: Upload artifact
@@ -101,10 +117,41 @@ jobs:
       - name: Post deployment warning summary
         if: always()
         run: |
-          if [ -f "_reports/build-warnings-summary.md" ]; then
+          # Create structured summary for API access
+          if [ -f "output/_reports/build-warnings.json" ]; then
+            # Create a summary JSON with metadata
+            jq -n \
+              --arg run_id "${{ github.run_id }}" \
+              --arg run_number "${{ github.run_number }}" \
+              --arg sha "${{ github.sha }}" \
+              --arg ref "${{ github.ref }}" \
+              --arg timestamp "$(date -u +%Y-%m-%dT%H:%M:%SZ)" \
+              --arg warning_count "${{ steps.build-warnings.outputs.warning_count }}" \
+              --argjson site_summary '${{ steps.build-warnings.outputs.site_summary }}' \
+              --argjson detailed_warnings "$(cat output/_reports/build-warnings.json)" \
+              '{
+                run_id: $run_id,
+                run_number: $run_number,
+                sha: $sha,
+                ref: $ref,
+                timestamp: $timestamp,
+                warning_count: ($warning_count | tonumber),
+                site_summary: $site_summary,
+                detailed_warnings: $detailed_warnings
+              }' > output/_reports/build-summary.json
+              
+            # Also create the markdown summary
             echo "## 📊 Build Warnings Report" >> $GITHUB_STEP_SUMMARY
             echo "" >> $GITHUB_STEP_SUMMARY
-            cat _reports/build-warnings-summary.md >> $GITHUB_STEP_SUMMARY
+            echo "- **Total Warnings**: ${{ steps.build-warnings.outputs.warning_count }}" >> $GITHUB_STEP_SUMMARY
+            echo "- **Run ID**: ${{ github.run_id }}" >> $GITHUB_STEP_SUMMARY
+            echo "- **Timestamp**: ${{ steps.build-warnings.outputs.timestamp }}" >> $GITHUB_STEP_SUMMARY
+            echo "" >> $GITHUB_STEP_SUMMARY
+            
+            if [ -f "output/_reports/build-warnings-summary.md" ]; then
+              cat output/_reports/build-warnings-summary.md >> $GITHUB_STEP_SUMMARY
+            fi
+            
             echo "" >> $GITHUB_STEP_SUMMARY
             echo "📥 [Download Full Report](https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }})" >> $GITHUB_STEP_SUMMARY
           fi

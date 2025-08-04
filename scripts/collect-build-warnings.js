@@ -339,7 +339,7 @@ class BuildWarningCollector {
     this.generateSummary();
     
     // Create reports directory
-    const reportsDir = path.join(process.cwd(), '_reports');
+    const reportsDir = path.join(process.cwd(), 'output', '_reports');
     fs.mkdirSync(reportsDir, { recursive: true });
     
     // Save reports

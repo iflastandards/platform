@@ -28,7 +28,7 @@ pnpm warnings:format:actionable
 
 ### View Results
 
-Reports are saved to `_reports/` directory:
+Reports are saved to `output/_reports/` directory:
 - `build-warnings-summary.md` - Quick overview
 - `build-warnings.json` - Raw data for processing
 - `build-warnings-{timestamp}.md` - Detailed report

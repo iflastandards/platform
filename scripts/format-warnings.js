@@ -209,7 +209,7 @@ class WarningFormatter {
 // CLI interface
 if (require.main === module) {
   const args = process.argv.slice(2);
-  const jsonPath = args[0] || '_reports/build-warnings.json';
+  const jsonPath = args[0] || 'output/_reports/build-warnings.json';
   const outputType = args[1] || 'actionable';
 
   if (!fs.existsSync(jsonPath)) {
