@@ -252,11 +252,11 @@ export function getAdminPortalConfigAuto(): AdminPortalConfig {
     return getAdminPortalConfig('preview');
   }
 
-  // Preview environment (Vercel or other hosting)
+  // Preview environment (Render or other hosting)
   if (
     hostname.includes('github.io') ||
     hostname.includes('netlify') ||
-    hostname.includes('vercel')
+    hostname.includes('onrender.com')
   ) {
     return getAdminPortalConfig('preview');
   }
@@ -287,7 +287,7 @@ export function getCurrentEnvironment(): Environment {
   if (
     hostname.includes('github.io') ||
     hostname.includes('netlify') ||
-    hostname.includes('vercel')
+    hostname.includes('onrender.com')
   ) {
     return 'preview';
   }

@@ -6,7 +6,7 @@
       "preview": true
     }
   },
-  "buildCommand": "pnpm nx:daemon:start && pnpm nx run-many --target=build --all --parallel=3",
+  "buildCommand": "pnpm nx:daemon:start && pnpm nx run-many --target=build --projects=tag:docusaurus --parallel=3",
   "outputDirectory": "_site/platform",
   "installCommand": "pnpm install --frozen-lockfile",
   "framework": null,
@@ -16,10 +16,6 @@
     }
   },
   "rewrites": [
-    {
-      "source": "/platform/admin/:path*",
-      "destination": "/platform/admin/:path*"
-    },
     {
       "source": "/platform/:site(ISBDM|LRM|FRBR|isbd|muldicat|unimarc)/:path*",
       "destination": "/platform/:site/:path*"

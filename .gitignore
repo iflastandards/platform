@@ -81,3 +81,4 @@ output/_reports/
 
 # Performance optimization
 .env.performance
+.vercel
