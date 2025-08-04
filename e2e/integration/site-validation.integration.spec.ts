@@ -1,6 +1,6 @@
 import { test, expect, describe } from '../utils/tagged-test';
 import { DocsEnv, sites } from '../utils/siteConfig';
-import { getPortalUrl, mapDocsEnvToEnvironment } from '@ifla/theme/config';
+import { getPortalUrl, type Environment } from '@ifla/theme/config';
 
 // Determine the current environment from env variable or default to localhost
 // Map environment variable values to our enum
@@ -35,6 +35,25 @@ const ALLOWED_EXTERNAL_DOMAINS = [
   'orcid.org',
   'creativecommons.org',
 ];
+
+/**
+ * Map DocsEnv enum to Environment type used by theme config
+ */
+function mapDocsEnvToEnvironment(env: DocsEnv): Environment {
+  switch (env) {
+    case DocsEnv.Localhost:
+      return 'local';
+    case DocsEnv.Preview:
+      return 'preview';
+    case DocsEnv.Dev:
+      // Dev maps to preview for now since we only have 3 environments
+      return 'preview';
+    case DocsEnv.Production:
+      return 'production';
+    default:
+      return 'local';
+  }
+}
 
 /**
  * Get the expected Portal URL for the current environment using the same helper
