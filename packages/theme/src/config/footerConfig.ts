@@ -1,19 +1,44 @@
-import { Environment, getPortalUrl } from './siteConfig';
+import { Environment, getPortalUrl, getAdminPortalConfig, SiteKey } from './siteConfig';
 
-export function createStandardFooter(DOCS_ENV: Environment) {
+interface FooterOptions {
+  rdfPath?: string;
+  standardsDocumentUrl?: string;
+}
+
+// Site-specific standards document URLs
+const STANDARDS_DOCUMENT_URLS: Record<SiteKey, string> = {
+  portal: 'https://www.ifla.org/programmes/ifla-standards/',
+  ISBDM: 'https://www.ifla.org/wp-content/uploads/2019/05/assets/cataloguing/isbd/isbd-cons_20110321.pdf',
+  LRM: 'https://www.ifla.org/files/assets/cataloguing/frbr-lrm/ifla-lrm-august-2017_rev201712.pdf',
+  FRBR: 'https://www.ifla.org/files/assets/cataloguing/frbr/frbr_2008.pdf',
+  isbd: 'https://www.ifla.org/wp-content/uploads/2019/05/assets/cataloguing/isbd/isbd-cons_20110321.pdf',
+  muldicat: 'https://www.ifla.org/programmes/ifla-standards/',
+  unimarc: 'https://www.ifla.org/publications/unimarc-formats-and-related-documentation/',
+  newtest: 'https://www.ifla.org/programmes/ifla-standards/',
+};
+
+export function createStandardFooter(DOCS_ENV: Environment, siteKey: SiteKey, options?: FooterOptions) {
+  const adminConfig = getAdminPortalConfig(DOCS_ENV);
+  const rdfPath = options?.rdfPath || '/rdf/';
+  const standardsUrl = options?.standardsDocumentUrl || STANDARDS_DOCUMENT_URLS[siteKey];
+
   return {
-    style: 'dark',
+    style: 'dark' as const,
     links: [
       {
         title: 'Resources',
         items: [
           {
             label: 'RDF Downloads',
-            to: '/rdf/',
+            to: rdfPath,
           },
           {
             label: 'Sitemap',
             to: '/sitemap',
+          },
+          {
+            label: 'Management',
+            href: `${adminConfig.dashboardUrl}/sites/${siteKey}`,
           },
         ],
       },
@@ -26,7 +51,7 @@ export function createStandardFooter(DOCS_ENV: Environment) {
           },
           {
             label: 'IFLA Standards',
-            href: 'https://www.ifla.org/programmes/ifla-standards/',
+            href: standardsUrl,
           },
         ],
       },

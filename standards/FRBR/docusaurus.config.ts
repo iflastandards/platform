@@ -168,7 +168,7 @@ const config: Config = {
         },
       ],
     },
-    footer: createStandardFooter(DOCS_ENV),
+    footer: createStandardFooter(DOCS_ENV, 'FRBR'),
     prism: {
       theme: prismThemes.github,
       darkTheme: prismThemes.dracula,
