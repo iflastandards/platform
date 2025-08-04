@@ -25,7 +25,8 @@
         "{projectRoot}/tsup.config.ts",
         "{projectRoot}/tsconfig.declarations.json",
         "{projectRoot}/package.json"
-      ]
+      ],
+      "dependsOn": []
     },
     "test": {
       "executor": "@nx/vite:test",
