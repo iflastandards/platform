@@ -562,6 +562,9 @@ importers:
       next-routes-list:
         specifier: ^1.2.0
         version: 1.2.0
+      npm-check-updates:
+        specifier: ^18.0.2
+        version: 18.0.2
       npm-run-all:
         specifier: ^4.1.5
         version: 4.1.5
@@ -10425,6 +10428,11 @@ packages:
   normalize-url@8.0.2:
     resolution: {integrity: sha512-Ee/R3SyN4BuynXcnTaekmaVdbDAEiNrHqjQIA37mHU8G9pf7aaAD4ZX3XjBLo6rsdcxA/gtkcNYZLt30ACgynw==}
     engines: {node: '>=14.16'}
+
+  npm-check-updates@18.0.2:
+    resolution: {integrity: sha512-9uVFZUCg5oDOcbzdsrJ4BEvq2gikd23tXuF5mqpl4mxVl051lzB00Xmd7ZVjVWY3XNUF3BQKWlN/qmyD8/bwrA==}
+    engines: {node: ^18.18.0 || >=20.0.0, npm: '>=8.12.1'}
+    hasBin: true
 
   npm-install-checks@6.3.0:
     resolution: {integrity: sha512-W29RiK/xtpCGqn6f3ixfRYGk+zRyr+Ew9F2E20BfXxT5/euLdA/Nm7fO7OeTGuAmTs30cpgInyJ0cYe708YTZw==}
@@ -26588,6 +26596,8 @@ snapshots:
   normalize-url@6.1.0: {}
 
   normalize-url@8.0.2: {}
+
+  npm-check-updates@18.0.2: {}
 
   npm-install-checks@6.3.0:
     dependencies:
