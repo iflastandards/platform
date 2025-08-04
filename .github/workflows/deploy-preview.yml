@@ -197,6 +197,21 @@ jobs:
         run: |
           echo "📦 Creating unified build directory..."
           node scripts/create-unified-build.js --env preview
+          
+          # The script creates content in _site/platform/, but GitHub Pages needs it at _site/ root
+          # Move platform content to root level for proper URL structure
+          if [ -d "_site/platform" ]; then
+            echo "📁 Moving platform content to root level..."
+            # Create temporary directory
+            mkdir -p _site_temp
+            # Move all content from platform to temp
+            mv _site/platform/* _site_temp/
+            # Remove the now-empty platform directory and _site
+            rm -rf _site
+            # Rename temp to _site
+            mv _site_temp _site
+          fi
+          
           echo "iflastandards.github.io" > _site/CNAME
           touch _site/.nojekyll
           
@@ -230,12 +245,13 @@ jobs:
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
         
-      - name: Build admin app (no testing - assumes local validation passed)
-        run: |
-          echo "🏗️ Building admin app for preview..."
-          pnpm nx build admin          
-      - name: Deploy to Vercel
-        uses: amondnet/vercel-action@v25
+       - name: Build admin app (no testing - assumes local validation passed)
+         run: |
+           echo "🏗️ Building admin app for preview..."
+           pnpm nx build admin
+           
+       - name: Deploy to Vercel
+         uses: amondnet/vercel-action@v25
         with:
           vercel-token: ${{ secrets.VERCEL_TOKEN }}
           vercel-org-id: ${{ secrets.VERCEL_ORG_ID }}

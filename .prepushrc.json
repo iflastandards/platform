@@ -2,7 +2,7 @@
   "allowWarnings": true,
   "runTests": true,
   "runBuilds": true,
-  "runE2E": false,
+  "runE2E": true,
   "runSmokeTests": false,
   "runAdminTests": false,
   "parallelJobs": 3,
@@ -13,6 +13,9 @@
   "comment5": "Smoke tests disabled by default (enable with runSmokeTests: true)",
   "comment6": "Admin tests run when admin project is affected",
   "comment7": "Each site gets its own server to avoid port conflicts",
-  "criticalE2EProjects": ["portal", "admin"],
+  "criticalE2EProjects": [
+    "portal",
+    "admin"
+  ],
   "e2eStrategy": "sequential-per-site"
 }

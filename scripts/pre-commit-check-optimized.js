@@ -21,7 +21,7 @@ let hasErrors = false;
 console.log('📋 Running affected typecheck and tests...');
 try {
   execSync(
-    'pnpm nx affected --targets=typecheck,test --parallel=10 --skip-nx-cache',
+    'node scripts/typecheck-safe.js nx affected --targets=typecheck,test --parallel=6 --skip-nx-cache',
     {
       stdio: 'inherit',
       encoding: 'utf8',

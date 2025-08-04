@@ -79,8 +79,8 @@ const startTime = Date.now();
 
 try {
   const command = all 
-    ? 'pnpm nx run-many --target=typecheck --all --parallel=3 --skip-nx-cache'
-    : 'pnpm nx affected --target=typecheck --parallel=3 --skip-nx-cache';
+    ? 'node scripts/typecheck-safe.js nx run-many --target=typecheck --all --parallel=3 --skip-nx-cache'
+    : 'node scripts/typecheck-safe.js nx affected --target=typecheck --parallel=3 --skip-nx-cache';
     
   console.log(`  - Command: ${command}`);
   console.log('  - This ensures complete type checking without cache interference\n');
