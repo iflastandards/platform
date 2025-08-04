@@ -294,3 +294,28 @@ export function getCurrentEnvironment(): Environment {
 
   return 'local';
 }
+
+/**
+ * Get the complete portal URL for a specific environment.
+ * This is a single-source helper that combines the portal's base URL and base path.
+ * 
+ * @param env - The environment to get the portal URL for
+ * @returns The complete portal URL (base URL + base path)
+ * @throws Error if configuration is missing for the environment
+ * 
+ * @example
+ * ```typescript
+ * // Local development
+ * getPortalUrl('local') // returns 'http://localhost:3000/'
+ * 
+ * // Preview environment
+ * getPortalUrl('preview') // returns 'https://iflastandards.github.io/platform/'
+ * 
+ * // Production environment
+ * getPortalUrl('production') // returns 'https://www.iflastandards.info/'
+ * ```
+ */
+export function getPortalUrl(env: Environment): string {
+  const portalConfig = getSiteConfig('portal', env);
+  return portalConfig.url + portalConfig.baseUrl;
+}

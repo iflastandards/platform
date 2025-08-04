@@ -1,5 +1,6 @@
 import { test, expect, describe } from '../utils/tagged-test';
 import { DocsEnv, sites } from '../utils/siteConfig';
+import { getPortalUrl, mapDocsEnvToEnvironment } from '@ifla/theme/config';
 
 // Determine the current environment from env variable or default to localhost
 // Map environment variable values to our enum
@@ -34,6 +35,16 @@ const ALLOWED_EXTERNAL_DOMAINS = [
   'orcid.org',
   'creativecommons.org',
 ];
+
+/**
+ * Get the expected Portal URL for the current environment using the same helper
+ * function that the application uses to avoid hardcoding URLs.
+ */
+function getExpectedPortalUrl(env: DocsEnv): string {
+  // Map from DocsEnv to the Environment type used by the theme config
+  const environment = mapDocsEnvToEnvironment(env);
+  return getPortalUrl(environment);
+}
 
 describe('Site Validation Tests', '@sites @validation @integration', () => {
   // Test each site
@@ -123,6 +134,26 @@ describe('Site Validation Tests', '@sites @validation @integration', () => {
         const skipLink = page.locator('a[href="#main"], a[href="#content"], .skip-to-content');
         const skipLinkCount = await skipLink.count();
         expect(skipLinkCount).toBeGreaterThan(0);
+      });
+      
+      test(`should validate footer Portal link for ${siteKey} @navigation @integration`, async ({ page }) => {
+        // Wait for footer to be visible
+        const footer = page.locator('footer').first();
+        await expect(footer).toBeVisible();
+        
+        // Find the Portal link in the footer
+        const portalLink = footer.locator('a:has-text("Portal")');
+        await expect(portalLink).toBeVisible();
+        
+        // Get the href attribute
+        const href = await portalLink.getAttribute('href');
+        expect(href).toBeTruthy();
+        
+        // Determine expected Portal URL based on current environment
+        const expectedPortalUrl = getExpectedPortalUrl(currentEnv);
+        
+        // Assert the href matches the expected Portal URL
+        expect(href).toBe(expectedPortalUrl);
       });
     });
   });

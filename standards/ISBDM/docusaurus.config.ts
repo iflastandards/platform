@@ -1,7 +1,7 @@
 import { themes as prismThemes } from 'prism-react-renderer';
 import type { Config } from '@docusaurus/types';
 import type * as Preset from '@docusaurus/preset-classic';
-import { getSiteConfig, getSiteConfigMap, type SiteKey, type Environment } from '@ifla/theme/config/siteConfig';
+import { getSiteConfig, getSiteConfigMap, getPortalUrl, type SiteKey, type Environment } from '@ifla/theme/config/siteConfig';
 import type { SidebarItemsGeneratorArgs, NormalizedSidebarItem } from '@docusaurus/plugin-content-docs/lib/sidebars/types';
 
 // Create a custom type that includes the undocumented `defaultSidebarItemsGenerator`
@@ -340,7 +340,7 @@ const config: Config = {
           items: [
             {
               label: 'Portal',
-              href: `${siteConfig.url === siteConfigMap.portal.url ? '/' : siteConfigMap.portal.url + siteConfigMap.portal.baseUrl}`,
+              href: getPortalUrl(DOCS_ENV),
             },
             {
               label: 'GitHub',

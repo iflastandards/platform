@@ -1,7 +1,7 @@
 import { themes as prismThemes } from 'prism-react-renderer';
 import type { Config } from '@docusaurus/types';
 import type * as Preset from '@docusaurus/preset-classic';
-import { getSiteConfig, getSiteConfigMap, type SiteKey, type Environment } from '@ifla/theme/config/siteConfig';
+import { getSiteConfig, getSiteConfigMap, getPortalUrl, type SiteKey, type Environment } from '@ifla/theme/config/siteConfig';
 
 // Get current environment from DOCS_ENV
 const DOCS_ENV = process.env.DOCS_ENV as Environment;
@@ -202,7 +202,7 @@ const config: Config = {
           items: [
             {
               label: 'Portal',
-              href: `${siteConfig.url === siteConfigMap.portal.url ? '/' : siteConfigMap.portal.url + siteConfigMap.portal.baseUrl}`,
+              href: getPortalUrl(DOCS_ENV),
             },
             {
               label: 'GitHub',

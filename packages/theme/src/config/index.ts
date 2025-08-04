@@ -5,6 +5,7 @@ export {
   getSiteConfig, 
   getSiteConfigMap,
   getAdminPortalConfig,
+  getPortalUrl,
   SITE_CONFIG,
   ADMIN_PORTAL_CONFIG,
   type SiteKey, 
@@ -12,3 +13,6 @@ export {
   type SiteConfigEntry,
   type AdminPortalConfig
 } from './siteConfig';
+
+// Footer configuration utility
+export { createStandardFooter } from './footerConfig';
