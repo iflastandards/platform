@@ -46,24 +46,8 @@ if (fs.existsSync(portalBuild)) {
   process.exit(1);
 }
 
-// Copy admin app if it exists
-const adminBuild = path.join(process.cwd(), 'apps/admin/.next');
-if (fs.existsSync(adminBuild)) {
-  console.log('🔧 Copying admin app...');
-  const adminOutput = path.join(outputDir, 'admin');
-  fs.mkdirSync(adminOutput, { recursive: true });
-  
-  // For Next.js, we need to copy the standalone output
-  const standaloneDir = path.join(adminBuild, 'standalone');
-  const staticDir = path.join(adminBuild, 'static');
-  
-  if (fs.existsSync(standaloneDir)) {
-    execSync(`cp -r ${standaloneDir}/* ${adminOutput}/`, { stdio: 'inherit' });
-  }
-  if (fs.existsSync(staticDir)) {
-    execSync(`cp -r ${staticDir} ${adminOutput}/_next/`, { stdio: 'inherit' });
-  }
-}
+// Skip admin app for now (has API routes that don't work with static export)
+console.log('⏭️ Skipping admin app (focus on Docusaurus sites first)...');
 
 // Copy each standard site
 console.log('📚 Copying standard sites...');

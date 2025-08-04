@@ -1,0 +1,89 @@
+name: Simple GitHub Pages Deploy
+
+on:
+  push:
+    branches: [preview]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: "pages"
+  cancel-in-progress: true
+
+jobs:
+  build-and-deploy:
+    name: Build and Deploy to GitHub Pages
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
+        
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: 'pnpm'
+          
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+        
+      - name: Build theme package
+        run: pnpm nx build @ifla/theme
+        
+      - name: Build all documentation sites
+        run: |
+          echo "🏗️ Building documentation sites..."
+          pnpm nx build portal
+          pnpm nx build isbdm
+          pnpm nx build lrm
+          pnpm nx build frbr
+          pnpm nx build isbd
+          pnpm nx build muldicat
+          pnpm nx build unimarc
+          
+      - name: Skip admin app for now
+        run: |
+          echo "⏭️ Skipping admin app build (has API routes that don't work with static export)"
+          echo "Focus: Get basic Docusaurus sites working first"
+          
+      - name: Create unified build
+        run: |
+          echo "📦 Creating unified build directory..."
+          node scripts/create-unified-build.js --env preview
+          
+          # Move content from _site/platform to _site root for GitHub Pages
+          if [ -d "_site/platform" ]; then
+            echo "📁 Moving platform content to root level..."
+            mkdir -p _site_temp
+            mv _site/platform/* _site_temp/
+            rm -rf _site
+            mv _site_temp _site
+          fi
+          
+          # Add GitHub Pages configuration
+          echo "iflastandards.github.io" > _site/CNAME
+          touch _site/.nojekyll
+          
+      - name: Setup Pages
+        uses: actions/configure-pages@v5
+        
+      - name: Upload artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: ./_site
+          
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
