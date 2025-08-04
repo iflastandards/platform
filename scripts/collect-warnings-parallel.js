@@ -3,7 +3,6 @@
 const fs = require('fs');
 const path = require('path');
 const { spawn } = require('child_process');
-const BrokenLinkChecker = require('./check-broken-links-simple');
 
 // Configuration
 const SITES = ['portal', 'isbdm', 'lrm', 'frbr', 'isbd', 'muldicat', 'unimarc'];
@@ -15,7 +14,6 @@ const MAX_PARALLEL = isCI ? 3 : 8; // Conservative in CI (3), optimized locally 
 class ParallelWarningCollector {
   constructor() {
     this.results = new Map();
-    this.linkChecker = new BrokenLinkChecker();
   }
 
   /**
@@ -141,28 +139,14 @@ class ParallelWarningCollector {
     const totalWarnings = results.reduce((sum, r) => sum + r.warnings.length, 0);
     const failedBuilds = results.filter(r => !r.success).length;
     
-    // Count broken link warnings separately
-    const brokenLinkWarnings = results.reduce((sum, r) => 
-      sum + r.warnings.filter(w => w.type === 'broken_link').length, 0
-    );
-    const buildWarnings = totalWarnings - brokenLinkWarnings;
-    
     let summary = '# Build Warnings Summary\n\n';
     summary += `- Total warnings: ${totalWarnings}\n`;
-    summary += `  - Build warnings: ${buildWarnings}\n`;
-    summary += `  - Broken links: ${brokenLinkWarnings}\n`;
     summary += `- Failed builds: ${failedBuilds}\n`;
     summary += `- Timestamp: ${new Date().toISOString()}\n\n`;
     
     summary += '## By Site\n\n';
     results.forEach(({ site, success, warnings, buildTime }) => {
-      const brokenLinks = warnings.filter(w => w.type === 'broken_link').length;
-      const otherWarnings = warnings.length - brokenLinks;
-      summary += `- **${site}**: ${success ? '✅' : '❌'} ${warnings.length} warnings`;
-      if (brokenLinks > 0) {
-        summary += ` (${otherWarnings} build, ${brokenLinks} broken links)`;
-      }
-      summary += ` (${buildTime}s)\n`;
+      summary += `- **${site}**: ${success ? '✅' : '❌'} ${warnings.length} warnings (${buildTime}s)\n`;
     });
     
     if (totalWarnings > 0) {
@@ -170,26 +154,10 @@ class ParallelWarningCollector {
       results.forEach(({ site, warnings }) => {
         if (warnings.length > 0) {
           summary += `### ${site}\n\n`;
-          
-          // Separate build warnings and broken links
-          const buildWarnings = warnings.filter(w => w.type !== 'broken_link');
-          const brokenLinks = warnings.filter(w => w.type === 'broken_link');
-          
-          if (buildWarnings.length > 0) {
-            summary += '#### Build Warnings\n\n';
-            buildWarnings.forEach((w, i) => {
-              summary += `${i + 1}. ${w.line}\n`;
-            });
-            summary += '\n';
-          }
-          
-          if (brokenLinks.length > 0) {
-            summary += '#### Broken Links (Post-Build Check)\n\n';
-            brokenLinks.forEach((w, i) => {
-              summary += `${i + 1}. ${w.line}\n`;
-            });
-            summary += '\n';
-          }
+          warnings.forEach((w, i) => {
+            summary += `${i + 1}. ${w.line}\n`;
+          });
+          summary += '\n';
         }
       });
     }
@@ -205,26 +173,6 @@ class ParallelWarningCollector {
     const startTime = Date.now();
     
     const results = await this.runParallel();
-    
-    // Run post-build broken link checks for sites that need them
-    console.log('\n🔍 Running post-build broken link checks...');
-    const linkResults = await this.linkChecker.checkAllSites(SITES);
-    
-    // Merge broken link warnings into main results
-    linkResults.forEach(linkResult => {
-      const siteResult = results.find(r => r.site.toLowerCase() === linkResult.site.toLowerCase());
-      if (siteResult && linkResult.brokenLinks.length > 0) {
-        // Add broken links as warnings
-        linkResult.brokenLinks.forEach(brokenLink => {
-          siteResult.warnings.push({
-            site: siteResult.site,
-            line: brokenLink.message,
-            timestamp: new Date().toISOString(),
-            type: 'broken_link'
-          });
-        });
-      }
-    });
     
     const totalTime = ((Date.now() - startTime) / 1000).toFixed(2);
     console.log(`\n⏱️  Total time: ${totalTime}s`);
