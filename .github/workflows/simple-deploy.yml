@@ -43,6 +43,8 @@ jobs:
         run: pnpm nx build @ifla/theme
         
       - name: Build all documentation sites
+        env:
+          DOCS_ENV: preview
         run: |
           echo "🏗️ Building documentation sites..."
           pnpm nx build portal
