@@ -365,7 +365,7 @@
     "@types/glob": "^9.0.0",
     "@types/jsonld": "^1.5.15",
     "@types/n3": "^1.26.0",
-    "@types/node": "^24.1.0",
+    "@types/node": "^22.17.0",
     "@types/papaparse": "^5.3.16",
     "algoliasearch": "^5.34.1",
     "boxen": "^8.0.1",
