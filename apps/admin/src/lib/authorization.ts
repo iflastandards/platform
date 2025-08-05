@@ -4,25 +4,7 @@
  */
 
 import { currentUser } from '@clerk/nextjs/server';
-
-// Types for our authorization model
-export interface UserRoles {
-  system?: 'superadmin';
-  reviewGroups: Array<{
-    reviewGroupId: string;
-    role: 'admin';
-  }>;
-  teams: Array<{
-    teamId: string;
-    role: 'editor' | 'author';
-    reviewGroup: string;
-    namespaces: string[];
-  }>;
-  translations: Array<{
-    language: string;
-    namespaces: string[];
-  }>;
-}
+import { UserRoles } from './auth';
 
 export interface AuthContext {
   userId: string;
@@ -70,17 +52,15 @@ export async function getAuthContext(): Promise<AuthContext | null> {
   const user = await currentUser();
   if (!user) return null;
 
-  // Extract roles from Clerk metadata
-  const publicMetadata = user.publicMetadata as any;
+  // Extract structured metadata with proper defaults
+  const metadata = user.publicMetadata as any;
   
   const roles: UserRoles = {
-    system: publicMetadata.systemRole,
-    reviewGroups: publicMetadata.reviewGroupAdmin?.map((rgId: string) => ({
-      reviewGroupId: rgId,
-      role: 'admin' as const,
-    })) || [],
-    teams: publicMetadata.projectMemberships || [],
-    translations: publicMetadata.translations || [],
+    system: metadata?.systemRole, // Maps to system for backward compatibility
+    systemRole: metadata?.systemRole,
+    reviewGroups: metadata?.reviewGroups || [],
+    teams: metadata?.teams || [],
+    translations: metadata?.translations || [],
   };
 
   return {
@@ -92,8 +72,7 @@ export async function getAuthContext(): Promise<AuthContext | null> {
 
 /**
  * Check if a user can perform an action on a resource
- * TODO: Implement proper role-based authorization without Cerbos
- * For now, this is a simplified version that checks basic permissions
+ * Implements proper role-based authorization based on the Cerbos design
  */
 export async function canPerformAction<T extends ResourceType>(
   resourceType: T,
@@ -103,35 +82,292 @@ export async function canPerformAction<T extends ResourceType>(
   const authContext = await getAuthContext();
   if (!authContext) return false;
 
-  // Superadmins can do anything
+  // Superadmins bypass all checks
   if (authContext.roles.system === 'superadmin') return true;
 
-  // TODO: Implement proper permission checking based on resource type and action
-  // For now, allow authenticated users to read, but restrict write operations
-  const readActions = ['read', 'list'];
-  if (readActions.includes(action as string)) {
-    return true;
+  // Check specific resource type permissions
+  switch (resourceType) {
+    case 'reviewGroup':
+      return checkReviewGroupPermission(authContext, action as Action<'reviewGroup'>, resourceAttributes);
+    
+    case 'namespace':
+      return checkNamespacePermission(authContext, action as Action<'namespace'>, resourceAttributes);
+    
+    case 'project':
+      return checkProjectPermission(authContext, action as Action<'project'>, resourceAttributes);
+    
+    case 'team':
+      return checkTeamPermission(authContext, action as Action<'team'>, resourceAttributes);
+    
+    case 'elementSet':
+    case 'vocabulary':
+      return checkContentPermission(authContext, action as Action<'vocabulary'>, resourceAttributes);
+    
+    case 'translation':
+      return checkTranslationPermission(authContext, action as Action<'translation'>, resourceAttributes);
+    
+    case 'release':
+      return checkReleasePermission(authContext, action as Action<'release'>, resourceAttributes);
+    
+    case 'spreadsheet':
+      return checkSpreadsheetPermission(authContext, action as Action<'spreadsheet'>, resourceAttributes);
+    
+    case 'user':
+      return checkUserPermission(authContext, action as Action<'user'>, resourceAttributes);
+    
+    default:
+      // Default to read-only for authenticated users
+      return ['read', 'list'].includes(action as string);
   }
+}
 
-  // Check if user is review group admin
-  if (authContext.roles.reviewGroups.length > 0) {
-    // Review group admins can manage their review groups
-    if (resourceAttributes?.reviewGroupId) {
-      return authContext.roles.reviewGroups.some(
-        rg => rg.reviewGroupId === resourceAttributes.reviewGroupId
+// Helper functions for specific resource type checks
+
+function checkReviewGroupPermission(
+  context: AuthContext,
+  action: Action<'reviewGroup'>,
+  attributes?: Record<string, any>
+): boolean {
+  // Review Group Admins can manage their own review groups
+  if (attributes?.reviewGroupId) {
+    const isRGAdmin = context.roles.reviewGroups.some(
+      rg => rg.reviewGroupId === attributes.reviewGroupId && rg.role === 'admin'
+    );
+    if (isRGAdmin) return true;
+  }
+  
+  // Only superadmins can create new review groups
+  if (action === 'create') return false;
+  
+  // All authenticated users can read/list review groups
+  return ['read', 'list'].includes(action);
+}
+
+function checkNamespacePermission(
+  context: AuthContext,
+  action: Action<'namespace'>,
+  attributes?: Record<string, any>
+): boolean {
+  // Review Group Admins can manage namespaces in their review groups
+  if (attributes?.reviewGroupId) {
+    const isRGAdmin = context.roles.reviewGroups.some(
+      rg => rg.reviewGroupId === attributes.reviewGroupId
+    );
+    if (isRGAdmin) return true;
+  }
+  
+  // Check team-based namespace access
+  if (attributes?.namespaceId) {
+    const hasAccess = context.roles.teams.some(
+      team => team.namespaces.includes(attributes.namespaceId)
+    );
+    
+    if (hasAccess) {
+      // Editors can perform most actions
+      const isEditor = context.roles.teams.some(
+        team => team.namespaces.includes(attributes.namespaceId) && team.role === 'editor'
       );
+      
+      if (isEditor) {
+        return !['delete', 'create'].includes(action); // Editors can't delete or create namespaces
+      }
+      
+      // Authors have limited permissions
+      return ['read', 'list'].includes(action);
     }
-    return true;
   }
+  
+  // Default read access for authenticated users
+  return ['read', 'list'].includes(action);
+}
 
-  // Check team membership for namespace operations
-  if (resourceAttributes?.namespaceId) {
-    return authContext.roles.teams.some(team =>
-      team.namespaces.includes(resourceAttributes.namespaceId)
+function checkProjectPermission(
+  context: AuthContext,
+  action: Action<'project'>,
+  attributes?: Record<string, any>
+): boolean {
+  // Review Group Admins can manage projects in their review groups
+  if (attributes?.reviewGroupId) {
+    const isRGAdmin = context.roles.reviewGroups.some(
+      rg => rg.reviewGroupId === attributes.reviewGroupId
+    );
+    if (isRGAdmin) return true;
+  }
+  
+  // Team members can access their projects
+  if (attributes?.teamId) {
+    const isMember = context.roles.teams.some(
+      team => team.teamId === attributes.teamId
+    );
+    
+    if (isMember) {
+      return !['delete', 'create', 'assignTeam'].includes(action);
+    }
+  }
+  
+  return ['read', 'list'].includes(action);
+}
+
+function checkTeamPermission(
+  context: AuthContext,
+  action: Action<'team'>,
+  attributes?: Record<string, any>
+): boolean {
+  // Review Group Admins can manage teams in their review groups
+  if (attributes?.reviewGroupId) {
+    const isRGAdmin = context.roles.reviewGroups.some(
+      rg => rg.reviewGroupId === attributes.reviewGroupId
+    );
+    if (isRGAdmin) return true;
+  }
+  
+  // Team members can view their own teams
+  if (attributes?.teamId) {
+    const isMember = context.roles.teams.some(
+      team => team.teamId === attributes.teamId
+    );
+    
+    if (isMember) {
+      return ['read', 'listMembers'].includes(action as string);
+    }
+  }
+  
+  return ['list', 'read'].includes(action as string);
+}
+
+function checkContentPermission(
+  context: AuthContext,
+  action: Action<'vocabulary'>,
+  attributes?: Record<string, any>
+): boolean {
+  // Check namespace-based access
+  if (attributes?.namespaceId) {
+    const teamAccess = context.roles.teams.find(
+      team => team.namespaces.includes(attributes.namespaceId)
+    );
+    
+    if (teamAccess) {
+      // Editors have full content permissions
+      if (teamAccess.role === 'editor') return true;
+      
+      // Authors can create and update
+      if (teamAccess.role === 'author') {
+        return ['create', 'read', 'update'].includes(action);
+      }
+    }
+    
+    // Translators can read content in their namespaces
+    const hasTranslationAccess = context.roles.translations.some(
+      trans => trans.namespaces.includes(attributes.namespaceId)
+    );
+    
+    if (hasTranslationAccess) {
+      return action === 'read';
+    }
+  }
+  
+  return action === 'read';
+}
+
+function checkTranslationPermission(
+  context: AuthContext,
+  action: Action<'translation'>,
+  attributes?: Record<string, any>
+): boolean {
+  // Check translation assignments
+  if (attributes?.namespaceId && attributes?.language) {
+    const hasTranslationRole = context.roles.translations.some(
+      trans => trans.language === attributes.language &&
+               trans.namespaces.includes(attributes.namespaceId)
+    );
+    
+    if (hasTranslationRole) {
+      return ['read', 'update'].includes(action);
+    }
+  }
+  
+  // Review Group Admins can approve translations
+  if (attributes?.reviewGroupId && action === 'approve') {
+    return context.roles.reviewGroups.some(
+      rg => rg.reviewGroupId === attributes.reviewGroupId
     );
   }
+  
+  return action === 'read';
+}
 
-  // Default deny
+function checkReleasePermission(
+  context: AuthContext,
+  action: Action<'release'>,
+  attributes?: Record<string, any>
+): boolean {
+  // Only Review Group Admins can create/publish releases
+  if (['create', 'publish', 'delete'].includes(action)) {
+    if (attributes?.reviewGroupId) {
+      return context.roles.reviewGroups.some(
+        rg => rg.reviewGroupId === attributes.reviewGroupId
+      );
+    }
+    return false;
+  }
+  
+  // Team members can update releases
+  if (action === 'update' && attributes?.namespaceId) {
+    return context.roles.teams.some(
+      team => team.namespaces.includes(attributes.namespaceId) &&
+              team.role === 'editor'
+    );
+  }
+  
+  return action === 'read';
+}
+
+function checkSpreadsheetPermission(
+  context: AuthContext,
+  action: Action<'spreadsheet'>,
+  attributes?: Record<string, any>
+): boolean {
+  // Check namespace-based access
+  if (attributes?.namespaceId) {
+    const teamAccess = context.roles.teams.find(
+      team => team.namespaces.includes(attributes.namespaceId)
+    );
+    
+    if (teamAccess?.role === 'editor') {
+      return true; // Editors have full spreadsheet access
+    }
+    
+    if (teamAccess?.role === 'author') {
+      return ['read', 'edit'].includes(action);
+    }
+  }
+  
+  return action === 'read';
+}
+
+function checkUserPermission(
+  context: AuthContext,
+  action: Action<'user'>,
+  attributes?: Record<string, any>
+): boolean {
+  // Only Review Group Admins can invite users to their review groups
+  if (action === 'invite' && attributes?.reviewGroupId) {
+    return context.roles.reviewGroups.some(
+      rg => rg.reviewGroupId === attributes.reviewGroupId
+    );
+  }
+  
+  // Users can read their own profile
+  if (action === 'read' && attributes?.userId === context.userId) {
+    return true;
+  }
+  
+  // Users can update their own profile (limited fields)
+  if (action === 'update' && attributes?.userId === context.userId) {
+    return true;
+  }
+  
+  // Only superadmins can delete or impersonate users
   return false;
 }
 
