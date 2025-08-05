@@ -2,7 +2,6 @@
 
 import React, { useState } from 'react';
 import { useRouter } from 'next/navigation';
-import { addBasePath } from '@/lib/utils/addBasePath';
 import {
   Box,
   Card,
@@ -205,7 +204,7 @@ export default function ImportWorkflow({
     
     try {
       // Call the API to create import job
-      const response = await fetch(addBasePath('/api/actions/scaffold-from-spreadsheet'), {
+      const response = await fetch('/api/actions/scaffold-from-spreadsheet', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

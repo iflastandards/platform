@@ -1,5 +1,4 @@
 import { MockUser } from './mock-data/auth';
-import { addBasePath } from './utils/addBasePath';
 
 export interface User {
   publicMetadata: {
@@ -17,16 +16,16 @@ export function getDefaultDashboardRoute(
 
   // Super Admin - goes to super admin dashboard
   if (user.publicMetadata.iflaRole === 'admin') {
-    return addBasePath(`/dashboard/admin${demoParam}`);
+    return `/dashboard/admin${demoParam}`;
   }
 
   // Review Group Admin - goes to RG dashboard
   if (user.publicMetadata.reviewGroupAdmin?.length) {
-    return addBasePath(`/dashboard/rg${demoParam}`);
+    return `/dashboard/rg${demoParam}`;
   }
 
   // Regular users - goes to regular dashboard
-  return addBasePath(`/dashboard${demoParam}`);
+  return `/dashboard${demoParam}`;
 }
 
 export function validateRouteAccess(
@@ -36,8 +35,8 @@ export function validateRouteAccess(
   const userRole = user.publicMetadata.iflaRole;
   const isReviewGroupAdmin = user.publicMetadata.reviewGroupAdmin?.length;
 
-  // Remove basePath from route for comparison (if present)
-  const normalizedRoute = route.replace(/^\/admin/, '');
+  // Route is already normalized since we run at root
+  const normalizedRoute = route;
 
   // Super admin routes
   if (normalizedRoute.startsWith('/dashboard/admin')) {

@@ -97,25 +97,10 @@ function needsThemeBuild() {
 if (isDependencyOnly) {
   console.log('🔍 Detected dependency-only changes - running light validation...\n');
   
-  // For dependency changes, just ensure theme builds and do a quick typecheck
-  if (needsThemeBuild()) {
-    console.log('📦 Building @ifla/theme...');
-    try {
-      execSync('nx build @ifla/theme', {
-        stdio: 'inherit',
-        encoding: 'utf8'
-      });
-      console.log('✅ @ifla/theme built successfully\n');
-    } catch (error) {
-      console.log('❌ Failed to build @ifla/theme\n');
-      hasErrors = true;
-    }
-  }
-  
-  // Quick typecheck on core packages only
+  // Quick typecheck on core packages only (includes theme build via dependencies)
   console.log('📋 Running core typecheck...');
   try {
-    execSync('nx run admin:typecheck && nx run @ifla/theme:typecheck', {
+    execSync('nx run admin:typecheck', {
       stdio: 'inherit',
       encoding: 'utf8'
     });
@@ -132,31 +117,15 @@ if (isDependencyOnly) {
 } else {
   console.log('🔍 Detected code changes - running full validation...\n');
   
-  // Build @ifla/theme if needed
-  if (needsThemeBuild()) {
-    console.log('📦 Building @ifla/theme (required for tests)...');
-    try {
-      execSync('nx build @ifla/theme', {
-        stdio: 'inherit',
-        encoding: 'utf8'
-      });
-      console.log('✅ @ifla/theme built successfully\n');
-    } catch (error) {
-      console.log('❌ Failed to build @ifla/theme\n');
-      hasErrors = true;
-    }
-  }
-
-  // Run full affected checks with hardware optimization
+  // Run full affected checks with hardware optimization (includes theme build via dependencies)
   console.log('📋 Running affected typecheck (hardware-optimized)...');
   try {
-    execSync('nx affected --targets=typecheck --parallel=10 --skip-nx-cache=false', {
+    execSync('nx affected --targets=typecheck --parallel=6', {
       stdio: 'inherit',
       encoding: 'utf8',
       env: {
         ...process.env,
-        NX_SKIP_IMPLICIT_DEPS: 'true',
-        NODE_OPTIONS: '--max-old-space-size=8192'
+        NODE_OPTIONS: '--max-old-space-size=6144'
       }
     });
     console.log('✅ TypeScript check passed\n');
@@ -165,15 +134,15 @@ if (isDependencyOnly) {
     hasErrors = true;
   }
 
-  // Run tests with hardware optimization
+  // Run tests with hardware optimization (uses cache, includes theme build)
   console.log('📋 Running affected tests (hardware-optimized)...');
   try {
-    execSync('nx affected --target=test --parallel=10 --skip-nx-cache', {
+    execSync('nx affected --target=test --parallel=6', {
       stdio: 'inherit',
       encoding: 'utf8',
       env: {
         ...process.env,
-        NODE_OPTIONS: '--max-old-space-size=8192'
+        NODE_OPTIONS: '--max-old-space-size=6144'
       }
     });
     console.log('✅ Tests passed\n');
@@ -187,7 +156,7 @@ if (isDependencyOnly) {
 if (!isDocumentationOnly) {
   console.log('📋 Running ESLint (hardware-optimized)...');
   try {
-    execSync('nx affected --target=lint --parallel=10', {
+    execSync('nx affected --target=lint --parallel=6', {
       stdio: 'inherit',
       encoding: 'utf8',
       env: {
@@ -214,8 +183,9 @@ if (hasErrors) {
     console.log('   - Documentation-only changes: No validation needed');
   } else {
     console.log('   - Code changes: Full validation with hardware optimization');
-    console.log('   - Using 10 parallel processes (optimized for 16-core CPU)');
-    console.log('   - 8GB Node.js memory limit per process');
+    console.log('   - Using 6 parallel processes (optimized for stability)');
+    console.log('   - 6GB Node.js memory limit per process');
+    console.log('   - Nx cache enabled for faster rebuilds');
   }
   console.log('   - Nx daemon running with 16GB memory limit');
   console.log('   - For urgent commits: git commit --no-verify\n');

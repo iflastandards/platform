@@ -2,13 +2,12 @@ import './global.css';
 import { ClerkProvider } from '@clerk/nextjs';
 import { ThemeProvider } from '@/contexts/theme-context';
 import type { Metadata } from 'next';
-import { addBasePath } from '../lib/utils/addBasePath';
 
 export const metadata: Metadata = {
   title: 'IFLA Admin Portal',
   description: 'Administrative portal for IFLA Standards management',
   icons: {
-    icon: addBasePath('/favicon.ico'),
+    icon: '/favicon.ico',
   },
 };
 

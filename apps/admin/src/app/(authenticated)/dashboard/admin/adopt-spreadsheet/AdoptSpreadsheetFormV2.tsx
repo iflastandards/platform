@@ -40,7 +40,6 @@ import {
   ArrowBack as ArrowBackIcon,
 } from '@mui/icons-material';
 import Link from 'next/link';
-import { addBasePath } from '@/lib/utils/addBasePath';
 
 interface AdoptSpreadsheetFormProps {
   userId: string;
@@ -153,7 +152,7 @@ export default function AdoptSpreadsheetFormV2({
   useEffect(() => {
     const fetchNamespaces = async () => {
       try {
-        const response = await fetch(addBasePath('/api/admin/namespaces'));
+        const response = await fetch('/api/admin/namespaces');
         if (response.ok) {
           const data = await response.json();
           setAvailableNamespaces(data.data || data.namespaces || []);
@@ -187,7 +186,7 @@ export default function AdoptSpreadsheetFormV2({
       
       // Try to get basic info from API
       const response = await fetch(
-        addBasePath(`/api/admin/adopt-spreadsheet?action=basic-info&url=${encodeURIComponent(metadata.spreadsheetUrl)}`),
+        `/api/admin/adopt-spreadsheet?action=analyze&url=${encodeURIComponent(metadata.spreadsheetUrl)}`,
         { method: 'GET' }
       );
       
@@ -271,8 +270,7 @@ export default function AdoptSpreadsheetFormV2({
     }
     
     try {
-      const response = await fetch(addBasePath(`/api/admin/namespace/${namespace}/element-sets`));
-      
+      const response = await fetch(`/api/admin/namespace/${namespace}/element-sets`);
       if (response.ok) {
         const data = await response.json();
         setAvailableElementSets(data.elementSets || []);
@@ -323,7 +321,7 @@ export default function AdoptSpreadsheetFormV2({
       
       console.log('Submitting adoption data:', adoptionData);
       
-      const response = await fetch(addBasePath('/api/admin/adopt-spreadsheet'), {
+      const response = await fetch('/api/admin/adopt-spreadsheet', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

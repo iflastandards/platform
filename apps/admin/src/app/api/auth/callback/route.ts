@@ -1,7 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { currentUser } from '@clerk/nextjs/server';
 import { getDefaultDashboardRoute } from '@/lib/auth-routing';
-import { addBasePath } from '../../../../lib/utils/addBasePath';
 import { checkAndSyncGitHubData } from '@/lib/github-integration';
 
 export async function GET(request: NextRequest) {
@@ -10,7 +9,7 @@ export async function GET(request: NextRequest) {
 
   if (!user) {
     // If no user, redirect to sign-in
-    return NextResponse.redirect(new URL(addBasePath('/sign-in'), request.url));
+    return NextResponse.redirect(new URL('/sign-in', request.url));
   }
 
   // Check for GitHub organization membership

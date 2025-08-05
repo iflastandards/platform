@@ -8,7 +8,6 @@ import {
   DialogActions,
   Typography,
 } from '@mui/material';
-import { addBasePath } from '@/lib/utils/addBasePath';
 
 export default function RequestInviteButton() {
   const [open, setOpen] = useState(false);
@@ -17,7 +16,7 @@ export default function RequestInviteButton() {
 
   const handleRequest = async () => {
     setStatus('Sending...');
-    const res = await fetch(addBasePath('/api/request-invite'), {
+    const res = await fetch('/api/request-invite', {
       method: 'POST',
       body: JSON.stringify({ email }),
       headers: { 'Content-Type': 'application/json' },

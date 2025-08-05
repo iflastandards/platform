@@ -41,7 +41,6 @@ import {
   Description as DescriptionIcon,
 } from '@mui/icons-material';
 import Link from 'next/link';
-import { addBasePath } from '@/lib/utils/addBasePath';
 import type { SpreadsheetAnalysis } from '@/lib/services/adoption-service';
 
 interface AdoptSpreadsheetFormProps {
@@ -207,7 +206,7 @@ export default function AdoptSpreadsheetForm({ userId: _userId, userName }: Adop
     try {
       // Check if already adopted
       const checkResponse = await fetch(
-        addBasePath(`/api/admin/adopt-spreadsheet?action=check&url=${encodeURIComponent(spreadsheetUrl)}`),
+        `/api/admin/adopt-spreadsheet?action=check&url=${encodeURIComponent(spreadsheetUrl)}`,
         { method: 'GET' }
       );
       
@@ -222,7 +221,7 @@ export default function AdoptSpreadsheetForm({ userId: _userId, userName }: Adop
       
       // Analyze spreadsheet
       const response = await fetch(
-        addBasePath(`/api/admin/adopt-spreadsheet?action=analyze&url=${encodeURIComponent(spreadsheetUrl)}`),
+        `/api/admin/adopt-spreadsheet?action=analyze&url=${encodeURIComponent(spreadsheetUrl)}`,
         { method: 'GET' }
       );
       
@@ -284,7 +283,7 @@ export default function AdoptSpreadsheetForm({ userId: _userId, userName }: Adop
         adoptData.reviewGroup = newProjectReviewGroup;
       }
       
-      const response = await fetch(addBasePath('/api/admin/adopt-spreadsheet'), {
+      const response = await fetch('/api/admin/adopt-spreadsheet', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -302,7 +301,7 @@ export default function AdoptSpreadsheetForm({ userId: _userId, userName }: Adop
       
       // Redirect to import workflow after 2 seconds
       setTimeout(() => {
-        router.push(addBasePath('/import'));
+        router.push('/import');
       }, 2000);
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Failed to adopt spreadsheet');

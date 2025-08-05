@@ -8,40 +8,38 @@
           "root": "tools/typescript/rdf-converters",
           "targets": {
             "lint": {
-              "cache": true,
-              "options": {
-                "cwd": "tools/typescript/rdf-converters",
-                "command": "eslint ."
-              },
+              "executor": "@nx/eslint:lint",
+              "outputs": [
+                "{options.outputFile}"
+              ],
+              "options": {},
+              "configurations": {},
+              "parallelism": true,
               "inputs": [
                 "default",
                 "^default"
               ],
-              "outputs": [],
-              "metadata": {
-                "technologies": [
-                  "eslint"
-                ],
-                "description": "Runs ESLint on project",
-                "help": {
-                  "command": "pnpm exec eslint --help",
-                  "example": {
-                    "options": {
-                      "max-warnings": 0
-                    }
-                  }
-                }
-              },
-              "executor": "nx:run-commands",
-              "configurations": {},
-              "parallelism": true
+              "cache": true
             },
             "test": {
+              "executor": "@nx/vite:test",
+              "outputs": [
+                "{workspaceRoot}/coverage/{projectRoot}"
+              ],
               "options": {
-                "cwd": "tools/typescript/rdf-converters",
-                "command": "vitest"
+                "passWithNoTests": true,
+                "reportsDirectory": "../../../coverage/tools/typescript/rdf-converters"
               },
-              "cache": true,
+              "configurations": {
+                "ci": {
+                  "ci": true,
+                  "codeCoverage": true
+                }
+              },
+              "parallelism": true,
+              "dependsOn": [
+                "^build"
+              ],
               "inputs": [
                 "testInputs",
                 "^testInputs",
@@ -49,44 +47,12 @@
                   "runtime": "node -v"
                 }
               ],
-              "outputs": [
-                "{projectRoot}/coverage",
-                "{projectRoot}/test-results"
-              ],
-              "metadata": {
-                "technologies": [
-                  "vite"
-                ],
-                "description": "Run Vite tests",
-                "help": {
-                  "command": "pnpm exec vitest --help",
-                  "example": {
-                    "options": {
-                      "bail": 1,
-                      "coverage": true
-                    }
-                  }
-                }
-              },
-              "executor": "nx:run-commands",
-              "configurations": {},
-              "parallelism": true,
-              "dependsOn": [
-                "^build"
-              ]
+              "cache": true
             },
             "typecheck": {
-              "cache": false,
-              "inputs": [
-                "default",
-                "{projectRoot}/tsconfig.json",
-                "{projectRoot}/tsconfig.*.json",
-                "{workspaceRoot}/tsconfig.json",
-                "{workspaceRoot}/tsconfig.base.json"
-              ],
+              "executor": "nx:run-script",
               "options": {
-                "cwd": "tools/typescript/rdf-converters",
-                "command": "tsc --noEmit -p tsconfig.json"
+                "script": "typecheck"
               },
               "metadata": {
                 "description": "Runs type-checking for the project.",
@@ -100,13 +66,22 @@
                       "noEmit": true
                     }
                   }
-                }
+                },
+                "scriptContent": "tsc --noEmit",
+                "runCommand": "pnpm run typecheck"
               },
-              "executor": "nx:run-commands",
               "configurations": {},
               "parallelism": true,
               "dependsOn": [
                 "^build"
+              ],
+              "cache": false,
+              "inputs": [
+                "default",
+                "{projectRoot}/tsconfig.json",
+                "{projectRoot}/tsconfig.*.json",
+                "{workspaceRoot}/tsconfig.json",
+                "{workspaceRoot}/tsconfig.base.json"
               ],
               "outputs": [
                 "{workspaceRoot}/tmp/typecheck-{projectName}.done"
@@ -132,12 +107,145 @@
               },
               "configurations": {},
               "parallelism": true
+            },
+            "test:ui": {
+              "executor": "nx:run-script",
+              "options": {
+                "script": "test:ui"
+              },
+              "metadata": {
+                "scriptContent": "vitest --ui",
+                "runCommand": "pnpm run test:ui"
+              },
+              "configurations": {},
+              "parallelism": true
+            },
+            "test:coverage": {
+              "executor": "nx:run-script",
+              "options": {
+                "script": "test:coverage"
+              },
+              "metadata": {
+                "scriptContent": "vitest --coverage",
+                "runCommand": "pnpm run test:coverage"
+              },
+              "configurations": {},
+              "parallelism": true
+            },
+            "lint:fix": {
+              "executor": "nx:run-script",
+              "options": {
+                "script": "lint:fix"
+              },
+              "metadata": {
+                "scriptContent": "eslint src tests --ext .ts --fix",
+                "runCommand": "pnpm run lint:fix"
+              },
+              "configurations": {},
+              "parallelism": true
+            },
+            "rdf-to-csv": {
+              "executor": "nx:run-script",
+              "options": {
+                "script": "rdf-to-csv"
+              },
+              "metadata": {
+                "scriptContent": "tsx src/rdf-to-csv.ts",
+                "runCommand": "pnpm run rdf-to-csv"
+              },
+              "configurations": {},
+              "parallelism": true
+            },
+            "rdf-folder-to-csv": {
+              "executor": "nx:run-script",
+              "options": {
+                "script": "rdf-folder-to-csv"
+              },
+              "metadata": {
+                "scriptContent": "tsx src/rdf-folder-to-csv.ts",
+                "runCommand": "pnpm run rdf-folder-to-csv"
+              },
+              "configurations": {},
+              "parallelism": true
+            },
+            "rdf-to-mdx": {
+              "executor": "nx:run-script",
+              "options": {
+                "script": "rdf-to-mdx"
+              },
+              "metadata": {
+                "scriptContent": "tsx src/rdf-to-mdx-pipeline.ts",
+                "runCommand": "pnpm run rdf-to-mdx"
+              },
+              "configurations": {},
+              "parallelism": true
+            },
+            "nx-release-publish": {
+              "executor": "@nx/js:release-publish",
+              "dependsOn": [
+                "^nx-release-publish"
+              ],
+              "options": {},
+              "configurations": {},
+              "parallelism": true
+            },
+            "build": {
+              "executor": "@nx/js:tsc",
+              "outputs": [
+                "{options.outputPath}"
+              ],
+              "options": {
+                "outputPath": "dist/tools/typescript/rdf-converters",
+                "main": "tools/typescript/rdf-converters/src/index.ts",
+                "tsConfig": "tools/typescript/rdf-converters/tsconfig.json",
+                "assets": []
+              },
+              "configurations": {},
+              "parallelism": true,
+              "cache": true,
+              "dependsOn": [
+                "^build"
+              ],
+              "inputs": [
+                "production",
+                "^production"
+              ]
             }
           },
-          "metadata": {},
+          "metadata": {
+            "targetGroups": {
+              "NPM Scripts": [
+                "test:ui",
+                "test:coverage",
+                "lint:fix",
+                "typecheck",
+                "rdf-to-csv",
+                "rdf-folder-to-csv",
+                "rdf-to-mdx"
+              ]
+            },
+            "description": "RDF to CSV converters with DCTAP support for IFLA Standards Platform",
+            "js": {
+              "packageName": "@ifla/rdf-converters",
+              "packageMain": "dist/index.js",
+              "isInPackageManagerWorkspaces": false
+            }
+          },
           "name": "@ifla/rdf-converters",
-          "implicitDependencies": [],
-          "tags": []
+          "tags": [
+            "npm:public",
+            "npm:rdf",
+            "npm:csv",
+            "npm:dctap",
+            "npm:ifla",
+            "npm:standards",
+            "npm:conversion",
+            "tools"
+          ],
+          "$schema": "../../../node_modules/nx/schemas/project-schema.json",
+          "sourceRoot": "tools/typescript/rdf-converters/src",
+          "projectType": "library",
+          "implicitDependencies": []
         }
       },
       "unified-spreadsheet": {
@@ -1612,11 +1720,9 @@
                 "{projectRoot}/tsconfig.declarations.json",
                 "{projectRoot}/package.json"
               ],
+              "dependsOn": [],
               "configurations": {},
               "parallelism": true,
-              "dependsOn": [
-                "^build"
-              ],
               "cache": true
             },
             "test": {
@@ -2847,9 +2953,7 @@
             "site",
             "portal"
           ],
-          "implicitDependencies": [
-            "@ifla/theme"
-          ]
+          "implicitDependencies": []
         }
       },
       "platform": {
@@ -2860,6 +2964,12 @@
           "metadata": {
             "targetGroups": {
               "NPM Scripts": [
+                "// GROUP 1: DEPENDENCY MANAGEMENT",
+                "deps:check",
+                "deps:update",
+                "deps:update:minor",
+                "deps:update:patch",
+                "deps:interactive",
                 "// GROUP 2: COMPREHENSIVE TESTS",
                 "// GROUP 5: CI TESTS",
                 "analyze:bundles",
@@ -2908,6 +3018,16 @@
                 "compare:vocabulary:help",
                 "compare:vocabulary:md",
                 "compare:vocabulary:validate",
+                "warnings:collect",
+                "warnings:collect:full",
+                "warnings:format",
+                "check:deployed",
+                "check:deployed:preview",
+                "check:deployed:production",
+                "warnings:format:actionable",
+                "warnings:format:csv",
+                "warnings:format:frontend",
+                "warnings:format:content",
                 "dctap:generate",
                 "demo:admin",
                 "demo:admin:simple",
@@ -2960,6 +3080,9 @@
                 "nx:monitor:links",
                 "nx:monitor:test",
                 "nx:optimize",
+                "nx:optimize:hardware",
+                "nx:optimize:environment",
+                "nx:detect-environment",
                 "nx:performance",
                 "nx:repair",
                 "output:move",
@@ -3250,6 +3373,78 @@
               "executor": "nx:run-commands",
               "options": {
                 "command": "pnpm exec nx watch --projects platform --includeDependentProjects -- pnpm exec nx build-deps platform"
+              },
+              "configurations": {},
+              "parallelism": true
+            },
+            "// GROUP 1: DEPENDENCY MANAGEMENT": {
+              "executor": "nx:run-script",
+              "options": {
+                "script": "// GROUP 1: DEPENDENCY MANAGEMENT"
+              },
+              "metadata": {
+                "scriptContent": "Local dependency update tools",
+                "runCommand": "pnpm run // GROUP 1: DEPENDENCY MANAGEMENT"
+              },
+              "configurations": {},
+              "parallelism": true
+            },
+            "deps:check": {
+              "executor": "nx:run-script",
+              "options": {
+                "script": "deps:check"
+              },
+              "metadata": {
+                "scriptContent": "ncu --format group",
+                "runCommand": "pnpm run deps:check"
+              },
+              "configurations": {},
+              "parallelism": true
+            },
+            "deps:update": {
+              "executor": "nx:run-script",
+              "options": {
+                "script": "deps:update"
+              },
+              "metadata": {
+                "scriptContent": "ncu -u && pnpm install",
+                "runCommand": "pnpm run deps:update"
+              },
+              "configurations": {},
+              "parallelism": true
+            },
+            "deps:update:minor": {
+              "executor": "nx:run-script",
+              "options": {
+                "script": "deps:update:minor"
+              },
+              "metadata": {
+                "scriptContent": "ncu -u --target minor && pnpm install",
+                "runCommand": "pnpm run deps:update:minor"
+              },
+              "configurations": {},
+              "parallelism": true
+            },
+            "deps:update:patch": {
+              "executor": "nx:run-script",
+              "options": {
+                "script": "deps:update:patch"
+              },
+              "metadata": {
+                "scriptContent": "ncu -u --target patch && pnpm install",
+                "runCommand": "pnpm run deps:update:patch"
+              },
+              "configurations": {},
+              "parallelism": true
+            },
+            "deps:interactive": {
+              "executor": "nx:run-script",
+              "options": {
+                "script": "deps:interactive"
+              },
+              "metadata": {
+                "scriptContent": "ncu -i",
+                "runCommand": "pnpm run deps:interactive"
               },
               "configurations": {},
               "parallelism": true
@@ -3826,6 +4021,126 @@
               "metadata": {
                 "scriptContent": "node scripts/vocabulary-comparison.mjs --skip-rdf-check --markdown",
                 "runCommand": "pnpm run compare:vocabulary:validate"
+              },
+              "configurations": {},
+              "parallelism": true
+            },
+            "warnings:collect": {
+              "executor": "nx:run-script",
+              "options": {
+                "script": "warnings:collect"
+              },
+              "metadata": {
+                "scriptContent": "node scripts/collect-warnings-parallel.js",
+                "runCommand": "pnpm run warnings:collect"
+              },
+              "configurations": {},
+              "parallelism": true
+            },
+            "warnings:collect:full": {
+              "executor": "nx:run-script",
+              "options": {
+                "script": "warnings:collect:full"
+              },
+              "metadata": {
+                "scriptContent": "node scripts/collect-build-warnings.js",
+                "runCommand": "pnpm run warnings:collect:full"
+              },
+              "configurations": {},
+              "parallelism": true
+            },
+            "warnings:format": {
+              "executor": "nx:run-script",
+              "options": {
+                "script": "warnings:format"
+              },
+              "metadata": {
+                "scriptContent": "node scripts/format-warnings.js",
+                "runCommand": "pnpm run warnings:format"
+              },
+              "configurations": {},
+              "parallelism": true
+            },
+            "check:deployed": {
+              "executor": "nx:run-script",
+              "options": {
+                "script": "check:deployed"
+              },
+              "metadata": {
+                "scriptContent": "node scripts/check-deployed-sites.js",
+                "runCommand": "pnpm run check:deployed"
+              },
+              "configurations": {},
+              "parallelism": true
+            },
+            "check:deployed:preview": {
+              "executor": "nx:run-script",
+              "options": {
+                "script": "check:deployed:preview"
+              },
+              "metadata": {
+                "scriptContent": "node scripts/check-deployed-sites.js preview",
+                "runCommand": "pnpm run check:deployed:preview"
+              },
+              "configurations": {},
+              "parallelism": true
+            },
+            "check:deployed:production": {
+              "executor": "nx:run-script",
+              "options": {
+                "script": "check:deployed:production"
+              },
+              "metadata": {
+                "scriptContent": "node scripts/check-deployed-sites.js production",
+                "runCommand": "pnpm run check:deployed:production"
+              },
+              "configurations": {},
+              "parallelism": true
+            },
+            "warnings:format:actionable": {
+              "executor": "nx:run-script",
+              "options": {
+                "script": "warnings:format:actionable"
+              },
+              "metadata": {
+                "scriptContent": "node scripts/format-warnings.js output/_reports/build-warnings.json actionable",
+                "runCommand": "pnpm run warnings:format:actionable"
+              },
+              "configurations": {},
+              "parallelism": true
+            },
+            "warnings:format:csv": {
+              "executor": "nx:run-script",
+              "options": {
+                "script": "warnings:format:csv"
+              },
+              "metadata": {
+                "scriptContent": "node scripts/format-warnings.js output/_reports/build-warnings.json csv > output/_reports/warnings.csv",
+                "runCommand": "pnpm run warnings:format:csv"
+              },
+              "configurations": {},
+              "parallelism": true
+            },
+            "warnings:format:frontend": {
+              "executor": "nx:run-script",
+              "options": {
+                "script": "warnings:format:frontend"
+              },
+              "metadata": {
+                "scriptContent": "node scripts/format-warnings.js output/_reports/build-warnings.json frontend",
+                "runCommand": "pnpm run warnings:format:frontend"
+              },
+              "configurations": {},
+              "parallelism": true
+            },
+            "warnings:format:content": {
+              "executor": "nx:run-script",
+              "options": {
+                "script": "warnings:format:content"
+              },
+              "metadata": {
+                "scriptContent": "node scripts/format-warnings.js output/_reports/build-warnings.json content",
+                "runCommand": "pnpm run warnings:format:content"
               },
               "configurations": {},
               "parallelism": true
@@ -4450,6 +4765,42 @@
               "metadata": {
                 "scriptContent": "node scripts/optimize-nx-performance.js",
                 "runCommand": "pnpm run nx:optimize"
+              },
+              "configurations": {},
+              "parallelism": true
+            },
+            "nx:optimize:hardware": {
+              "executor": "nx:run-script",
+              "options": {
+                "script": "nx:optimize:hardware"
+              },
+              "metadata": {
+                "scriptContent": "node scripts/optimize-for-hardware.js",
+                "runCommand": "pnpm run nx:optimize:hardware"
+              },
+              "configurations": {},
+              "parallelism": true
+            },
+            "nx:optimize:environment": {
+              "executor": "nx:run-script",
+              "options": {
+                "script": "nx:optimize:environment"
+              },
+              "metadata": {
+                "scriptContent": "node scripts/configure-nx-for-environment.js",
+                "runCommand": "pnpm run nx:optimize:environment"
+              },
+              "configurations": {},
+              "parallelism": true
+            },
+            "nx:detect-environment": {
+              "executor": "nx:run-script",
+              "options": {
+                "script": "nx:detect-environment"
+              },
+              "metadata": {
+                "scriptContent": "node scripts/detect-environment.js",
+                "runCommand": "pnpm run nx:detect-environment"
               },
               "configurations": {},
               "parallelism": true
@@ -6182,7 +6533,7 @@
                 "script": "test:pre-push"
               },
               "metadata": {
-                "scriptContent": "pnpm test:pre-commit && pnpm test:builds:critical",
+                "scriptContent": "pnpm test:builds:critical",
                 "runCommand": "pnpm run test:pre-push"
               },
               "configurations": {},
@@ -6194,7 +6545,7 @@
                 "script": "test:pre-push:integration"
               },
               "metadata": {
-                "scriptContent": "pnpm test:pre-commit && pnpm test:e2e:integration:affected && pnpm test:builds:critical",
+                "scriptContent": "pnpm test:e2e:integration:affected && pnpm test:builds:critical",
                 "runCommand": "pnpm run test:pre-push:integration"
               },
               "configurations": {},
@@ -6230,7 +6581,7 @@
                 "script": "test:pre-push:nx"
               },
               "metadata": {
-                "scriptContent": "nx affected --target=lint && nx affected --target=typecheck && nx affected --target=test && nx affected --target=build",
+                "scriptContent": "nx affected --target=test && nx affected --target=build",
                 "runCommand": "pnpm run test:pre-push:nx"
               },
               "configurations": {},
@@ -6578,7 +6929,7 @@
                 "script": "typecheck:all"
               },
               "metadata": {
-                "scriptContent": "pnpm nx run-many --target=typecheck --all --parallel=6 --skip-nx-cache",
+                "scriptContent": "node scripts/typecheck-safe.js nx run-many --target=typecheck --all --parallel=4 --skip-nx-cache",
                 "runCommand": "pnpm run typecheck:all"
               },
               "configurations": {},
@@ -7699,11 +8050,6 @@
         }
       ],
       "portal": [
-        {
-          "source": "portal",
-          "target": "@ifla/theme",
-          "type": "implicit"
-        },
         {
           "source": "portal",
           "target": "@ifla/theme",

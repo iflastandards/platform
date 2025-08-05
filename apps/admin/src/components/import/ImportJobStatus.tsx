@@ -1,7 +1,6 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
-import { addBasePath } from '../../lib/utils/addBasePath';
 import {
   Card,
   CardContent,
@@ -48,7 +47,7 @@ export default function ImportJobStatus({ jobId, onComplete }: ImportJobStatusPr
 
     const checkJobStatus = async () => {
       try {
-        const response = await fetch(addBasePath(`/api/actions/scaffold-from-spreadsheet?jobId=${jobId}`));
+        const response = await fetch(`/api/actions/scaffold-from-spreadsheet?jobId=${jobId}`);
         const data = await response.json();
 
         if (!response.ok) {

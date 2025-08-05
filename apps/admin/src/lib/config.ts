@@ -8,11 +8,11 @@ export const ADMIN_CONFIG = {
   portal: {
     local: {
       url: 'http://localhost:3000',
-      sessionApiUrl: 'http://localhost:3007/admin/api/auth/session',
+      sessionApiUrl: 'http://localhost:3007/api/auth/session',
     },
     preview: {
       url: 'https://iflastandards.github.io/platform',
-      sessionApiUrl: 'https://iflastandards.github.io/platform/admin/api/auth/session',
+      sessionApiUrl: 'https://admin-iflastandards-preview.onrender.com/api/auth/session',
     },
     production: {
       url: 'https://www.iflastandards.info',
@@ -30,7 +30,7 @@ export function getEnvironment(): Environment {
   
   if (url.includes('localhost')) {
     return 'local';
-  } else if (url.includes('github.io')) {
+  } else if (url.includes('github.io') || url.includes('onrender.com')) {
     return 'preview';
   } else {
     return 'production';

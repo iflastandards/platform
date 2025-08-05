@@ -1,7 +1,6 @@
 import { getAppUser } from '@/lib/clerk-github-auth';
 import { redirect } from 'next/navigation';
 import AdminDashboard from '../AdminDashboard';
-import { addBasePath } from '@/lib/utils/addBasePath';
 
 // Force dynamic rendering
 export const dynamic = 'force-dynamic';
@@ -10,7 +9,7 @@ export default async function SuperAdminPage() {
   const user = await getAppUser();
   
   if (!user) {
-    redirect(addBasePath(`/sign-in?redirect_url=${encodeURIComponent(addBasePath('/dashboard/admin'))}`));
+    redirect('/auth/sign-in');
   }
 
   // Check if user has system admin role
