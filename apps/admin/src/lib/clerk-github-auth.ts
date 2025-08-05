@@ -29,6 +29,7 @@ export interface AppUser {
   name: string;
   githubUsername?: string;
   systemRole?: 'admin';
+  roles?: string[];
   reviewGroups: ReviewGroup[];
   projects: Record<string, Project>;
   isReviewGroupAdmin: boolean;
@@ -75,6 +76,7 @@ export async function getAppUser(): Promise<AppUser | null> {
     githubId?: string;
     githubUsername?: string;
     systemRole?: 'admin';
+    roles?: string[];
     reviewGroups?: ReviewGroup[];
     isReviewGroupAdmin?: boolean;
     totalActiveProjects?: number;
@@ -91,7 +93,8 @@ export async function getAppUser(): Promise<AppUser | null> {
     email,
     name: user.fullName || user.firstName || 'User',
     githubUsername: publicMetadata.githubUsername,
-    systemRole: publicMetadata.systemRole,
+    systemRole: publicMetadata.roles?.includes('superadmin') ? 'admin' : publicMetadata.systemRole,
+    roles: publicMetadata.roles || [],
     reviewGroups: publicMetadata.reviewGroups || [],
     projects: privateMetadata.projects || {},
     isReviewGroupAdmin: publicMetadata.isReviewGroupAdmin || false,
@@ -124,7 +127,7 @@ function extractAccessibleNamespaces(reviewGroups: ReviewGroup[], projects: Reco
  */
 export function getDashboardRoute(user: AppUser): string {
   // System admin goes to admin dashboard
-  if (user.systemRole === 'admin') {
+  if (isSuperAdmin(user)) {
     return '/dashboard/admin';
   }
   
@@ -173,11 +176,25 @@ export function hasNamespaceAccess(user: AppUser, namespace: string): boolean {
 }
 
 /**
+ * Check if user has a specific role
+ */
+export function hasRole(user: AppUser, role: string): boolean {
+  return user.roles?.includes(role) || false;
+}
+
+/**
+ * Check if user is a superadmin (using roles array or legacy systemRole)
+ */
+export function isSuperAdmin(user: AppUser): boolean {
+  return hasRole(user, 'superadmin') || user.systemRole === 'admin';
+}
+
+/**
  * Get user's role in a specific namespace
  */
 export function getNamespaceRole(user: AppUser, namespace: string): string | null {
   // System admin always has admin role
-  if (user.systemRole === 'admin') {
+  if (isSuperAdmin(user)) {
     return 'admin';
   }
   
