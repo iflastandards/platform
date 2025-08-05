@@ -1,0 +1,62 @@
+# Exported from Render on 2025-08-05T23:06:32Z
+services:
+- type: web
+  name: admin-iflastandards-preview
+  runtime: node
+  repo: https://github.com/iflastandards/platform
+  plan: standard
+  envVars:
+  - key: NEXT_PUBLIC_SUPABASE_ANON_KEY
+    sync: false
+  - key: NEXT_PUBLIC_CLERK_SIGN_UP_URL
+    sync: false
+  - key: NEXT_PUBLIC_CLERK_SIGN_UP_FALLBACK_REDIRECT_URL
+    sync: false
+  - key: NEXT_PUBLIC_CLERK_SIGN_IN_FALLBACK_REDIRECT_URL
+    sync: false
+  - key: NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY
+    sync: false
+  - key: AUTH_GITHUB_SECRET
+    sync: false
+  - key: AUTH_GITHUB_ID
+    sync: false
+  - key: GSHEETS_SA_KEY
+    sync: false
+  - key: NEXT_PUBLIC_CLERK_SIGN_IN_URL
+    sync: false
+  - key: DOCS_ENV
+    sync: false
+  - key: NODE_ENV
+    sync: false
+  - key: NX_CLOUD_ACCESS_TOKEN
+    sync: false
+  - key: CLERK_SECRET_KEY
+    sync: false
+  - key: NEXT_PUBLIC_SUPABASE_URL
+    sync: false
+  - key: GOOGLE_SHEETS_API_KEY
+    sync: false
+  - key: PORT
+    sync: false
+  region: frankfurt
+  buildCommand: pnpm install && pnpm nx build admin
+  startCommand: PORT=${PORT:-10000} pnpm nx start admin --port ${PORT} --hostname 0.0.0.0
+  healthCheckPath: /admin/api/health
+  autoDeployTrigger: commit
+  buildFilter:
+    paths:
+    - apps/admin
+    - packages/theme
+    - packages/eslint-config
+    - package.json
+    - pnpm-lock.yaml
+    - nx.json
+    ignoredPaths:
+    - standards
+    - docs
+    - portal
+    - e2e
+    - tests
+    - '*.md'
+    - .github
+version: "1"
