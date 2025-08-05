@@ -1,5 +1,5 @@
 import { MockUser } from './mock-data/auth';
-import { addBasePath } from '@ifla/theme/utils';
+import { addBasePath } from './utils/addBasePath';
 
 export interface User {
   publicMetadata: {

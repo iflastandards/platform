@@ -3,8 +3,7 @@
  * Determines the correct landing page based on user roles and permissions
  */
 
-// import { getSiteConfig } from '@ifla/theme/config/siteConfig';
-// import type { Environment } from '@ifla/theme/config/siteConfig';
+
 
 type Environment = 'local' | 'preview' | 'development' | 'production';
 

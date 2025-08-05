@@ -2,7 +2,7 @@ import './global.css';
 import { ClerkProvider } from '@clerk/nextjs';
 import { ThemeProvider } from '@/contexts/theme-context';
 import type { Metadata } from 'next';
-import { addBasePath } from '@ifla/theme/utils';
+import { addBasePath } from '../lib/utils/addBasePath';
 
 export const metadata: Metadata = {
   title: 'IFLA Admin Portal',

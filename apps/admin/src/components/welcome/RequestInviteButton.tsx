@@ -8,7 +8,7 @@ import {
   DialogActions,
   Typography,
 } from '@mui/material';
-import { addBasePath } from '@ifla/theme/utils';
+import { addBasePath } from '@/lib/utils/addBasePath';
 
 export default function RequestInviteButton() {
   const [open, setOpen] = useState(false);

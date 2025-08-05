@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
-import { addBasePath } from '@ifla/theme/utils';
+import { addBasePath } from '../../lib/utils/addBasePath';
 import {
   Card,
   CardContent,

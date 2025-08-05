@@ -40,7 +40,7 @@ import {
   ArrowBack as ArrowBackIcon,
 } from '@mui/icons-material';
 import Link from 'next/link';
-import { addBasePath } from '@ifla/theme/utils';
+import { addBasePath } from '@/lib/utils/addBasePath';
 
 interface AdoptSpreadsheetFormProps {
   userId: string;

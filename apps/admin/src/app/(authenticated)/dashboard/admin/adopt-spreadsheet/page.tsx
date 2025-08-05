@@ -1,7 +1,7 @@
 import { getAppUser } from '@/lib/clerk-github-auth';
 import { redirect } from 'next/navigation';
 import AdoptSpreadsheetFormV2 from './AdoptSpreadsheetFormV2';
-import { addBasePath } from '@ifla/theme/utils';
+import { addBasePath } from '@/lib/utils/addBasePath';
 
 // Force dynamic rendering
 export const dynamic = 'force-dynamic';

@@ -41,7 +41,7 @@ import {
   Description as DescriptionIcon,
 } from '@mui/icons-material';
 import Link from 'next/link';
-import { addBasePath } from '@ifla/theme/utils';
+import { addBasePath } from '@/lib/utils/addBasePath';
 import type { SpreadsheetAnalysis } from '@/lib/services/adoption-service';
 
 interface AdoptSpreadsheetFormProps {

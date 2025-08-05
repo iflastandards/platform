@@ -2,7 +2,7 @@
 
 import React, { useState } from 'react';
 import { useRouter } from 'next/navigation';
-import { addBasePath } from '@ifla/theme/utils';
+import { addBasePath } from '@/lib/utils/addBasePath';
 import {
   Box,
   Card,

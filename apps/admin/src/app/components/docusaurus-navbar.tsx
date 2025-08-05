@@ -5,7 +5,7 @@ import Link from 'next/link';
 import { UserButton } from '@clerk/nextjs';
 import { usePathname } from 'next/navigation';
 import { getPortalUrl } from '@/lib/get-portal-url';
-import { addBasePath } from '@ifla/theme/utils';
+import { addBasePath } from '@/lib/utils/addBasePath';
 import './docusaurus-navbar.css';
 
 interface DocusaurusNavbarProps {

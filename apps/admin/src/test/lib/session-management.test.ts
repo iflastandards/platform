@@ -1,14 +1,14 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
-import { getAdminPortalConfig } from '@ifla/theme/config';
+import { ADMIN_CONFIG } from '../../lib/config';
 
 // Get admin portal configuration for testing
-const localAdminConfig = getAdminPortalConfig('local');
-const productionAdminConfig = getAdminPortalConfig('production');
+const localAdminConfig = ADMIN_CONFIG.portal.local;
+const productionAdminConfig = ADMIN_CONFIG.portal.production;
 
 // Mock the session API route handler
 const mockSessionHandler = vi.fn();
 
-describe('Session Management @unit', () => {
+describe('Session Management @unit @auth @high-priority', () => {
   beforeEach(() => {
     // Reset mocks
     mockSessionHandler.mockClear();

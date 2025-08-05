@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { currentUser } from '@clerk/nextjs/server';
 import { getDefaultDashboardRoute } from '@/lib/auth-routing';
-import { addBasePath } from '@ifla/theme/utils';
+import { addBasePath } from '../../../../lib/utils/addBasePath';
 import { checkAndSyncGitHubData } from '@/lib/github-integration';
 
 export async function GET(request: NextRequest) {
