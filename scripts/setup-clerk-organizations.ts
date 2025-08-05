@@ -168,9 +168,11 @@ const ORGANIZATION_ROLES = [
  * Create or update an organization
  */
 async function createOrUpdateOrganization(orgConfig: typeof REVIEW_GROUPS[0]) {
+  const clerk = await clerkClient();
+  
   try {
     // Try to create the organization
-    const org = await clerkClient.organizations.create({
+    const org = await clerk.organizations.createOrganization({
       name: orgConfig.name,
       slug: orgConfig.slug,
       publicMetadata: orgConfig.publicMetadata,
@@ -185,14 +187,14 @@ async function createOrUpdateOrganization(orgConfig: typeof REVIEW_GROUPS[0]) {
       console.log(`ℹ️  Organization ${orgConfig.name} already exists, updating metadata...`);
       
       // List all organizations to find the existing one
-      const orgs = await clerkClient.organizations.getOrganizationList({
+      const orgs = await clerk.organizations.getOrganizationList({
         limit: 100
       });
       
-      const existingOrg = orgs.data.find(org => org.slug === orgConfig.slug);
+      const existingOrg = orgs.data.find((org: any) => org.slug === orgConfig.slug);
       if (existingOrg) {
         // Update the organization metadata
-        const updatedOrg = await clerkClient.organizations.updateOrganization(existingOrg.id, {
+        const updatedOrg = await clerk.organizations.updateOrganizationMetadata(existingOrg.id, {
           publicMetadata: orgConfig.publicMetadata
         });
         console.log(`✅ Updated organization: ${updatedOrg.name} (${updatedOrg.id})`);

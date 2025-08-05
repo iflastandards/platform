@@ -166,7 +166,9 @@ if (!isDocumentationOnly) {
     });
     console.log('✅ ESLint passed\n');
   } catch (error) {
+    // ESLint warnings should not fail the pre-commit hook
     console.log('⚠️  ESLint completed with warnings (this is OK)\n');
+    // Don't set hasErrors for lint warnings
   }
 }
 
