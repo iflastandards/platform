@@ -41,7 +41,7 @@ const OPTIONAL_TAGS = [
   '@local-only', '@ci-only', '@preview-only', '@production-only',
   '@slow', '@fast', '@flaky', '@performance', '@visual',
   '@chromium-only', '@firefox-only', '@webkit-only', '@mobile-only',
-  '@skip', '@portal'
+  '@skip', '@portal', '@server-dependent', '@authentication', '@clerk', '@example', '@madcreek'
 ];
 
 // All known tags (for validation)
@@ -111,8 +111,20 @@ function isTestFile(filePath) {
     return false;
   }
 
-  // Check file naming patterns
   const fileName = path.basename(filePath);
+  
+  // Exclude setup files and other non-test files
+  const isSetupFile = fileName.startsWith('setup') || 
+                      fileName.includes('setup') ||
+                      fileName === 'vitest.config.ts' ||
+                      fileName === 'jest.config.ts' ||
+                      fileName.endsWith('.config.ts');
+  
+  if (isSetupFile) {
+    return false;
+  }
+
+  // Check file naming patterns
   const hasValidPattern = VALID_FILE_PATTERNS.some(pattern => pattern.test(fileName));
   
   // Check if it's in a test directory
