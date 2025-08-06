@@ -1,18 +1,9 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { auth } from '@clerk/nextjs/server';
+import { canPerformAction } from '@/lib/authorization';
 import { ImportService } from '@/lib/services/import-service';
 
 export async function POST(request: NextRequest) {
   try {
-    // Check authentication
-    const { userId } = await auth();
-    if (!userId) {
-      return NextResponse.json(
-        { error: 'Unauthorized' },
-        { status: 401 }
-      );
-    }
-
     const body = await request.json();
     const { spreadsheetUrl, namespace, dctapProfile } = body;
 
@@ -20,6 +11,18 @@ export async function POST(request: NextRequest) {
       return NextResponse.json(
         { error: 'Missing required fields: spreadsheetUrl, namespace, or dctapProfile' },
         { status: 400 }
+      );
+    }
+
+    // Check if user can import spreadsheets for this namespace
+    const canImport = await canPerformAction('spreadsheet', 'import', {
+      namespaceId: namespace
+    });
+
+    if (!canImport) {
+      return NextResponse.json(
+        { error: 'You do not have permission to import spreadsheets for this namespace' },
+        { status: 403 }
       );
     }
 

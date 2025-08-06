@@ -1,28 +1,17 @@
 /**
- * Role-based routing logic for NextAuth redirects
+ * Role-based routing logic for Clerk redirects
  * Determines the correct landing page based on user roles and permissions
  */
 
-
+import { UserRoles } from '@/lib/auth';
 
 type Environment = 'local' | 'preview' | 'development' | 'production';
 
-type UserRole = 'admin' | 'editor' | 'contributor';
-
-interface UserAttributes {
-  rgs?: Record<string, UserRole>;
-  sites?: Record<string, UserRole>;
-  teams?: string[];
-  permissions?: string[];
-  [key: string]: Record<string, UserRole> | string[] | undefined;
-}
-
 interface SessionUser {
   id: string;
-  roles: string[];
   name?: string | null;
   email?: string | null;
-  attributes?: UserAttributes;
+  roles: UserRoles;
 }
 
 /**
@@ -32,45 +21,39 @@ export function getRoleBasedLandingPage(
   user: SessionUser,
   baseUrl: string,
 ): string {
-  const { roles, attributes } = user;
+  const { roles } = user;
 
-  // System admins and IFLA admins get the portal dashboard
-  if (roles.includes('system-admin') || roles.includes('ifla-admin')) {
+  // Superadmins get the portal dashboard
+  if (roles.systemRole === 'superadmin') {
     return `${baseUrl}/dashboard`;
   }
 
-  // Site-specific admins should go directly to their site's management interface
-  if (attributes?.sites) {
-    const siteEntries = Object.entries(attributes.sites);
+  // Review Group Admins get the general dashboard to choose sites
+  if (roles.reviewGroups && roles.reviewGroups.length > 0) {
+    const adminRgs = roles.reviewGroups.filter(rg => rg.role === 'admin');
+    
+    if (adminRgs.length === 1) {
+      const rg = adminRgs[0].reviewGroupId;
 
-    // If user is admin of exactly one site, redirect them there
-    const adminSites = siteEntries.filter(([_, role]) => role === 'admin');
-    if (adminSites.length === 1) {
-      const [siteKey] = adminSites[0];
-      return `${baseUrl}/dashboard/${siteKey}`;
-    }
-
-    // If user has editor/contributor roles but no admin, also redirect to site management
-    if (siteEntries.length === 1) {
-      const [siteKey] = siteEntries[0];
-      return `${baseUrl}/dashboard/${siteKey}`;
+      // For single-namespace review groups, redirect directly to namespace management
+      if (rg === 'icp') {
+        return `${baseUrl}/dashboard/muldicat`;
+      }
+      // BCM, ISBD, and PUC have multiple namespaces, so show dashboard to choose
     }
   }
 
-  // Review group admins get the general dashboard to choose sites
-  if (attributes?.rgs) {
-    const rgEntries = Object.entries(attributes.rgs);
+  // Team members with single namespace access
+  if (roles.teams && roles.teams.length > 0) {
+    const allNamespaces = new Set<string>();
+    roles.teams.forEach(team => {
+      team.namespaces.forEach(ns => allNamespaces.add(ns));
+    });
 
-    // If user is admin of exactly one review group with limited sites, might redirect directly
-    const adminRgs = rgEntries.filter(([_, role]) => role === 'admin');
-    if (adminRgs.length === 1) {
-      const [rg] = adminRgs[0];
-
-      // For single-site review groups, redirect directly to site management
-      if (rg === 'ICP') {
-        return `${baseUrl}/dashboard/muldicat`;
-      }
-      // BCM, ISBD, and PUC have multiple sites, so show dashboard to choose
+    // If user has access to exactly one namespace, redirect there
+    if (allNamespaces.size === 1) {
+      const namespace = Array.from(allNamespaces)[0];
+      return `${baseUrl}/dashboard/${namespace}`;
     }
   }
 
@@ -179,55 +162,66 @@ export function getSiteManagementURL(siteKey: string): string {
 }
 
 /**
- * Check if user has access to a specific site
+ * Check if user has access to a specific namespace/site
  */
 export function userHasSiteAccess(user: SessionUser, siteKey: string): boolean {
-  const { roles, attributes } = user;
+  const { roles } = user;
 
-  // System admins have access to everything
-  if (roles.includes('system-admin') || roles.includes('ifla-admin')) {
+  // Superadmins have access to everything
+  if (roles.systemRole === 'superadmin') {
     return true;
   }
 
-  // Direct site access
-  if (attributes?.sites?.[siteKey]) {
+  // Check team-based namespace access
+  const hasTeamAccess = roles.teams?.some(team => 
+    team.namespaces.includes(siteKey)
+  );
+  if (hasTeamAccess) {
+    return true;
+  }
+
+  // Check translation access
+  const hasTranslationAccess = roles.translations?.some(trans => 
+    trans.namespaces.includes(siteKey)
+  );
+  if (hasTranslationAccess) {
     return true;
   }
 
   // Review group access (check which review group the site belongs to)
   const siteToRg: Record<string, string> = {
     // ICP (International Cataloguing Principles)
-    muldicat: 'ICP',
+    muldicat: 'icp',
 
     // BCM (Bibliographic Conceptual Models)
-    lrm: 'BCM',
-    frbr: 'BCM',
-    frad: 'BCM',
-    frbrer: 'BCM',
-    frbroo: 'BCM',
-    frsad: 'BCM',
+    lrm: 'bcm',
+    frbr: 'bcm',
+    frad: 'bcm',
+    frbrer: 'bcm',
+    frbroo: 'bcm',
+    frsad: 'bcm',
 
     // ISBD (International Standard Bibliographic Description)
-    isbd: 'ISBD',
-    isbdm: 'ISBD',
-    isbdw: 'ISBD',
-    isbde: 'ISBD',
-    isbdi: 'ISBD',
-    isbdap: 'ISBD',
-    isbdac: 'ISBD',
-    isbdn: 'ISBD',
-    isbdp: 'ISBD',
-    isbdt: 'ISBD',
+    isbd: 'isbd',
+    isbdm: 'isbd',
+    isbdw: 'isbd',
+    isbde: 'isbd',
+    isbdi: 'isbd',
+    isbdap: 'isbd',
+    isbdac: 'isbd',
+    isbdn: 'isbd',
+    isbdp: 'isbd',
+    isbdt: 'isbd',
 
     // PUC (Permanent UNIMARC Committee) - all UNIMARC elements
-    unimarc: 'PUC',
+    unimarc: 'puc',
 
     // Testing
-    newtest: 'ISBD', // For testing
+    newtest: 'isbd', // For testing
   };
 
   const rg = siteToRg[siteKey];
-  if (rg && attributes?.rgs?.[rg]) {
+  if (rg && roles.reviewGroups?.some(reviewGroup => reviewGroup.reviewGroupId === rg)) {
     return true;
   }
 

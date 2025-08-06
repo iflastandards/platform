@@ -8,15 +8,15 @@ export const ADMIN_CONFIG = {
   portal: {
     local: {
       url: 'http://localhost:3000',
-      sessionApiUrl: 'http://localhost:3007/api/auth/session',
+      adminUrl: 'http://localhost:3007',
     },
     preview: {
       url: 'https://iflastandards.github.io/platform',
-      sessionApiUrl: 'https://admin-iflastandards-preview.onrender.com/api/auth/session',
+      adminUrl: 'https://admin-iflastandards-preview.onrender.com',
     },
     production: {
       url: 'https://www.iflastandards.info',
-      sessionApiUrl: 'https://admin.iflastandards.info/api/auth/session',
+      adminUrl: 'https://admin.iflastandards.info',
     },
   },
 } as const;
@@ -26,11 +26,11 @@ export const ADMIN_CONFIG = {
  */
 export function getEnvironment(): Environment {
   // In server components, we need to check environment variables or URLs
-  const url = process.env.NEXTAUTH_URL || process.env.NEXT_PUBLIC_CLERK_AFTER_SIGN_IN_URL || '';
+  const url = process.env.NEXT_PUBLIC_CLERK_AFTER_SIGN_IN_URL || process.env.VERCEL_URL || '';
   
   if (url.includes('localhost')) {
     return 'local';
-  } else if (url.includes('github.io') || url.includes('onrender.com')) {
+  } else if (url.includes('github.io') || url.includes('onrender.com') || url.includes('vercel.app')) {
     return 'preview';
   } else {
     return 'production';

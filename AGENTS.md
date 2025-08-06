@@ -38,6 +38,17 @@ Essential guidance for coding agents working in this IFLA Standards monorepo.
 - Use `workspaceUtils` in integration tests, not `process.cwd()`
 - Include `experimental_faster: true` in all `docusaurus.config.ts` files
 
+## Testing Philosophy & Strategy
+- **Integration-first approach**: Prefer real I/O and actual data over mocks
+- **5-phase testing strategy**: Selective → Pre-commit → Pre-push → Comprehensive → CI
+- **MANDATORY**: Read `developer_notes/TESTING_QUICK_REFERENCE.md` before writing tests
+- **Templates**: Use `developer_notes/TEST_TEMPLATES.md` for proper test structure
+- **Default to @integration tests** with real files, databases, and services
+- **Use @unit tests only for pure functions** (rare)
+- **Command format**: `pnpm nx test [project] --skip-nx-cache` (NEVER forget pnpm and --skip-nx-cache)
+- **Performance targets**: <30s per integration test, <5s per unit test
+- **Real test data**: Create actual files, use temp directories, clean up in afterEach
+
 ## Phase 5 CI/CD Compliance
 - **CI/CD focuses ONLY on environment validation** - no code testing
 - **All code quality validation must happen locally** (Phases 1-4)

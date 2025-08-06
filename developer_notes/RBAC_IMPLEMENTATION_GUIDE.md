@@ -10,13 +10,13 @@ This guide provides practical implementation details for developers working with
 
 ## Quick Reference
 
-- **Authorization Engine**: Clerk Organizations (Primary) / Cerbos (Alternative)
+- **Authorization Engine**: Clerk Organizations with built-in RBAC
 - **Authentication**: Clerk with built-in session management
-- **Permission Storage**: Clerk metadata + Supabase for extended data
+- **Permission Storage**: Clerk user metadata
 - **Frontend Framework**: Next.js with React
 - **API Layer**: Vercel Edge Functions
 
-> **Note**: The platform is implementing Clerk's organization-based RBAC as the primary authorization system. The Cerbos examples below are retained for reference but Clerk is the recommended approach.
+> **Note**: The platform has migrated to a Clerk-only authorization system for simplicity and maintainability. Previous Cerbos references have been removed.
 
 ## Cerbos Policy Implementation
 

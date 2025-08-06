@@ -1,95 +1,105 @@
-import { describe, it, expect, beforeEach } from 'vitest';
-import { createUser, getUser } from '@/app/lib/mock-auth';
+/**
+ * @unit @critical @auth
+ */
 
-describe('Mock Authentication @unit @critical @authentication @security', () => {
+import { describe, it, expect, beforeEach } from 'vitest';
+import { 
+  createUser, 
+  getUser, 
+  createSuperAdmin, 
+  createReviewGroupAdmin, 
+  createNamespaceEditor,
+  createNamespaceAuthor,
+  createTranslator,
+  clearUsers 
+} from '../../app/lib/mock-auth';
+
+describe('Mock Authentication @unit @critical @auth', () => {
   beforeEach(() => {
-    // Clear any existing mock users between tests
-    // Note: In the actual implementation, we might need to expose a clear function
+    clearUsers();
   });
 
   describe('createUser', () => {
     it('should create a new mock user with provided data', () => {
-      const userData = {
+      const user = createUser({
         name: 'Test User',
-        roles: ['namespace-admin', 'site-editor'],
-      };
-
-      const user = createUser(userData);
+        teams: [{ 
+          teamId: 'team-1', 
+          role: 'editor', 
+          reviewGroup: 'isbd', 
+          namespaces: ['isbd', 'isbdm'] 
+        }],
+      });
 
       expect(user).toMatchObject({
         name: 'Test User',
         email: 'test.user@example.com',
-        roles: ['namespace-admin', 'site-editor'],
+      });
+      expect(user.roles.teams).toHaveLength(1);
+      expect(user.roles.teams[0]).toMatchObject({
+        teamId: 'team-1',
+        role: 'editor',
+        reviewGroup: 'isbd',
+        namespaces: ['isbd', 'isbdm'],
       });
       expect(user.id).toMatch(/^mock-\d+-[a-z0-9]+$/);
     });
 
     it('should generate email from name', () => {
-      const userData = {
+      const user = createUser({
         name: 'John Doe Smith',
-        roles: ['reviewer'],
-      };
-
-      const user = createUser(userData);
+      });
 
       expect(user.email).toBe('john.doe.smith@example.com');
     });
 
     it('should handle special characters in name', () => {
-      const userData = {
+      const user = createUser({
         name: "O'Brien-Smith",
-        roles: ['editor'],
-      };
-
-      const user = createUser(userData);
+      });
 
       expect(user.email).toBe("obrien-smith@example.com");
     });
 
     it('should create unique IDs for each user', async () => {
-      const user1 = createUser({ name: 'User 1', roles: [] });
+      const user1 = createUser({ name: 'User 1' });
       
       // Add small delay to ensure different timestamps
       await new Promise(resolve => setTimeout(resolve, 1));
       
-      const user2 = createUser({ name: 'User 2', roles: [] });
+      const user2 = createUser({ name: 'User 2' });
 
       expect(user1.id).not.toBe(user2.id);
     });
 
-    it('should handle empty roles array', () => {
-      const userData = {
+    it('should handle empty roles', () => {
+      const user = createUser({
         name: 'No Roles User',
-        roles: [],
-      };
+      });
 
-      const user = createUser(userData);
-
-      expect(user.roles).toEqual([]);
+      expect(user.roles.reviewGroups).toEqual([]);
+      expect(user.roles.teams).toEqual([]);
+      expect(user.roles.translations).toEqual([]);
     });
 
-    it('should handle multiple complex roles', () => {
-      const userData = {
-        name: 'Admin User',
-        roles: [
-          'system-admin',
-          'namespace-admin:ISBD',
-          'site-admin:isbdm',
-          'editor:lrm',
-          'reviewer:frbr',
-        ],
-      };
+    it('should handle complex role structure', () => {
+      const user = createUser({
+        name: 'Complex User',
+        systemRole: 'superadmin',
+        reviewGroups: [{ reviewGroupId: 'isbd', role: 'admin' }],
+        teams: [{ 
+          teamId: 'team-1', 
+          role: 'editor', 
+          reviewGroup: 'isbd', 
+          namespaces: ['isbd', 'isbdm'] 
+        }],
+        translations: [{ language: 'fr', namespaces: ['isbd'] }],
+      });
 
-      const user = createUser(userData);
-
-      expect(user.roles).toHaveLength(5);
-      expect(user.roles).toEqual([
-        'system-admin',
-        'namespace-admin:ISBD',
-        'site-admin:isbdm',
-        'editor:lrm',
-        'reviewer:frbr',
-      ]);
+      expect(user.roles.systemRole).toBe('superadmin');
+      expect(user.roles.reviewGroups).toHaveLength(1);
+      expect(user.roles.teams).toHaveLength(1);
+      expect(user.roles.translations).toHaveLength(1);
     });
   });
 
@@ -136,69 +146,67 @@ describe('Mock Authentication @unit @critical @authentication @security', () => 
     });
   });
 
-  describe('Mock User Scenarios', () => {
-    it('should support creating a super admin user', () => {
-      const superAdmin = createUser({
-        name: 'Super Admin',
-        roles: ['system-admin', 'ifla-admin'],
-      });
+  describe('Helper Functions', () => {
+    it('should create a super admin user', () => {
+      const superAdmin = createSuperAdmin('Test Super Admin');
 
-      expect(superAdmin.roles).toContain('system-admin');
-      expect(superAdmin.roles).toContain('ifla-admin');
+      expect(superAdmin.roles.systemRole).toBe('superadmin');
+      expect(superAdmin.name).toBe('Test Super Admin');
     });
 
-    it('should support creating a namespace admin', () => {
-      const namespaceAdmin = createUser({
-        name: 'ISBD Admin',
-        roles: ['namespace-admin:ISBD', 'isbd-admin'],
-      });
+    it('should create a review group admin', () => {
+      const rgAdmin = createReviewGroupAdmin('ISBD Admin', 'isbd');
 
-      expect(namespaceAdmin.roles).toContain('namespace-admin:ISBD');
-      expect(namespaceAdmin.roles).toContain('isbd-admin');
+      expect(rgAdmin.roles.reviewGroups).toHaveLength(1);
+      expect(rgAdmin.roles.reviewGroups[0]).toMatchObject({
+        reviewGroupId: 'isbd',
+        role: 'admin',
+      });
     });
 
-    it('should support creating a site-specific editor', () => {
-      const siteEditor = createUser({
-        name: 'ISBDM Editor',
-        roles: ['site-editor:isbdm', 'isbdm-editor'],
-      });
+    it('should create a namespace editor', () => {
+      const editor = createNamespaceEditor('ISBD Editor', 'team-1', 'isbd', ['isbd', 'isbdm']);
 
-      expect(siteEditor.roles).toContain('site-editor:isbdm');
-      expect(siteEditor.roles).toContain('isbdm-editor');
+      expect(editor.roles.teams).toHaveLength(1);
+      expect(editor.roles.teams[0]).toMatchObject({
+        teamId: 'team-1',
+        role: 'editor',
+        reviewGroup: 'isbd',
+        namespaces: ['isbd', 'isbdm'],
+      });
     });
 
-    it('should support creating a translator with multiple namespace access', () => {
-      const translator = createUser({
-        name: 'Multi Translator',
-        roles: [
-          'translator',
-          'namespace-translator:ISBD',
-          'namespace-translator:LRM',
-          'site-translator:isbdm',
-        ],
-      });
+    it('should create a namespace author', () => {
+      const author = createNamespaceAuthor('ISBD Author', 'team-2', 'isbd', ['isbd']);
 
-      expect(translator.roles).toHaveLength(4);
-      expect(translator.roles).toContain('translator');
-      expect(translator.roles).toContain('namespace-translator:ISBD');
+      expect(author.roles.teams).toHaveLength(1);
+      expect(author.roles.teams[0]).toMatchObject({
+        teamId: 'team-2',
+        role: 'author',
+        reviewGroup: 'isbd',
+        namespaces: ['isbd'],
+      });
     });
 
-    it('should support creating a reviewer with limited access', () => {
-      const reviewer = createUser({
-        name: 'Limited Reviewer',
-        roles: ['reviewer', 'site-reviewer:frbr'],
-      });
+    it('should create a translator', () => {
+      const translator = createTranslator('French Translator', 'fr', ['isbd', 'lrm']);
 
-      expect(reviewer.roles).toEqual(['reviewer', 'site-reviewer:frbr']);
+      expect(translator.roles.translations).toHaveLength(1);
+      expect(translator.roles.translations[0]).toMatchObject({
+        language: 'fr',
+        namespaces: ['isbd', 'lrm'],
+      });
     });
 
-    it('should support creating a user with no permissions', () => {
+    it('should create a user with no permissions', () => {
       const unauthorizedUser = createUser({
         name: 'Unauthorized User',
-        roles: [],
       });
 
-      expect(unauthorizedUser.roles).toEqual([]);
+      expect(unauthorizedUser.roles.systemRole).toBeUndefined();
+      expect(unauthorizedUser.roles.reviewGroups).toEqual([]);
+      expect(unauthorizedUser.roles.teams).toEqual([]);
+      expect(unauthorizedUser.roles.translations).toEqual([]);
     });
   });
 });

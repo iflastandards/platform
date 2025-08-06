@@ -2,45 +2,53 @@
 
 ## Overview
 
-This document defines the integrated authentication and authorization architecture for the IFLA Standards Development Platform, leveraging Clerk for identity management, Cerbos for policy-based authorization, and GitHub Projects for project management.
+This document defines the authentication and authorization architecture for the IFLA Standards Development Platform, using Clerk for both identity management and role-based authorization, integrated with GitHub Projects for project management.
+
+**Note**: This architecture has been simplified from the original Clerk+Cerbos design to use Clerk-only authorization for better maintainability and reduced complexity.
 
 ## Architecture Components
 
 ### 1. Authentication & Identity (Clerk)
 
-**Purpose**: Handle all user authentication, onboarding, and team formation
+**Purpose**: Handle all user authentication, onboarding, and role-based authorization
 
 **Key Features**:
 - **User Onboarding**: Streamlined signup flow for both IFLA members and external contributors
-- **Email Invitations**: Project-specific invitations with role pre-assignment
-- **Social Login**: GitHub OAuth for seamless integration
-- **User Metadata**: Store roles, project memberships, and Review Group associations
-- **Team Formation**: Built-in team management with role assignment
+- **Organizations**: Review Groups as Clerk organizations with proper role hierarchy
+- **User Metadata**: Comprehensive role structure stored in Clerk user metadata
+- **Role-Based Authorization**: Built-in authorization logic using user metadata
 
 **Implementation**:
 ```typescript
 // Clerk user metadata structure
-interface ClerkUserMetadata {
-  iflaRole?: 'member' | 'staff' | 'admin';
-  reviewGroupAdmin?: string[]; // Review Group IDs
-  projectMemberships: {
-    projectId: string;
-    role: 'editor' | 'reviewer' | 'translator';
-    joinedAt: Date;
-  }[];
-  externalContributor: boolean;
+interface UserMetadata {
+  systemRole?: 'superadmin';
+  reviewGroups: Array<{
+    reviewGroupId: string;
+    role: 'admin';
+  }>;
+  teams: Array<{
+    teamId: string;
+    role: 'editor' | 'author';
+    reviewGroup: string;
+    namespaces: string[];
+  }>;
+  translations: Array<{
+    language: string;
+    namespaces: string[];
+  }>;
 }
 ```
 
-### 2. Authorization & Access Control (Cerbos)
+### 2. Authorization Logic (Built-in)
 
-**Purpose**: Enforce fine-grained permissions based on user roles and project/namespace context
+**Purpose**: Enforce fine-grained permissions based on user roles and resource context
 
 **Key Features**:
-- **Policy-as-Code**: Version-controlled authorization policies
-- **Context-Aware**: Decisions based on user role + project + namespace
-- **Real-time Evaluation**: Sub-millisecond authorization decisions
-- **Audit Trail**: Complete log of all authorization decisions
+- **Role Hierarchy**: Clear permission levels from superadmin to translator
+- **Context-Aware**: Decisions based on user role + namespace + review group
+- **Resource-Based**: Different permissions for different resource types
+- **Maintainable**: Simple TypeScript functions instead of external policy engine
 
 **Policy Structure**:
 ```yaml

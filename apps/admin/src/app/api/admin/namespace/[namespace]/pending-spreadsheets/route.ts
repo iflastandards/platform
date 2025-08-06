@@ -1,26 +1,21 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { currentUser } from '@clerk/nextjs/server';
+import { canPerformAction } from '@/lib/authorization';
 
 export async function GET(
   request: NextRequest,
   context: { params: Promise<{ namespace: string }> }
 ) {
   try {
-    // Check authentication
-    const user = await currentUser();
-    if (!user) {
-      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
-    }
-
     const { namespace } = await context.params;
 
-    // TODO: Implement proper role checking without Cerbos
-    // For now, allow all authenticated users
-    const hasAccess = true;
+    // Check if user can read spreadsheets for this namespace
+    const canRead = await canPerformAction('spreadsheet', 'read', {
+      namespaceId: namespace
+    });
 
-    if (!hasAccess) {
+    if (!canRead) {
       return NextResponse.json(
-        { error: 'You do not have permission to view this namespace' },
+        { error: 'You do not have permission to view spreadsheets for this namespace' },
         { status: 403 }
       );
     }

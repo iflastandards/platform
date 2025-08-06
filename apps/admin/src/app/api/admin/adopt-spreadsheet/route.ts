@@ -1,20 +1,16 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { auth } from '@clerk/nextjs/server';
+import { canPerformAction, getAuthContext } from '@/lib/authorization';
 import { AdoptionService } from '@/lib/services/adoption-service';
 
 export async function POST(request: NextRequest) {
   try {
-    // Check authentication
-    const { userId } = await auth();
-    if (!userId) {
+    const authContext = await getAuthContext();
+    if (!authContext) {
       return NextResponse.json(
         { error: 'Unauthorized' },
         { status: 401 }
       );
     }
-
-    // TODO: Check if user is superadmin
-    // For now, we'll allow any authenticated user in development
 
     const body = await request.json();
     const {
@@ -65,6 +61,18 @@ export async function POST(request: NextRequest) {
       );
     }
 
+    // Check if user can import spreadsheets for this namespace
+    const canImport = await canPerformAction('spreadsheet', 'import', {
+      namespaceId: namespace
+    });
+
+    if (!canImport) {
+      return NextResponse.json(
+        { error: 'You do not have permission to adopt spreadsheets for this namespace' },
+        { status: 403 }
+      );
+    }
+
     // Create adoption service
     const adoptionService = new AdoptionService();
 
@@ -91,7 +99,7 @@ export async function POST(request: NextRequest) {
       projectName,
       reviewGroup,
       // User info
-      userId,
+      userId: authContext.userId,
       userName,
     });
 
@@ -112,9 +120,8 @@ export async function POST(request: NextRequest) {
 
 export async function GET(request: NextRequest) {
   try {
-    // Check authentication
-    const { userId } = await auth();
-    if (!userId) {
+    const authContext = await getAuthContext();
+    if (!authContext) {
       return NextResponse.json(
         { error: 'Unauthorized' },
         { status: 401 }
