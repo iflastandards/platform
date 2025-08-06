@@ -76,6 +76,88 @@ vi.mock('@clerk/nextjs/server', () => ({
   ),
   currentUser: vi.fn(() => Promise.resolve(null)),
   clerkMiddleware: vi.fn(() => vi.fn()),
+  clerkClient: vi.fn(() => ({
+    users: {
+      getUser: vi.fn(() => Promise.resolve({
+        id: 'test-user-id',
+        emailAddresses: [{ emailAddress: 'test@example.com' }],
+        firstName: 'Test',
+        lastName: 'User',
+        publicMetadata: {},
+        privateMetadata: {},
+      })),
+      getUserList: vi.fn(() => Promise.resolve({
+        data: [
+          {
+            id: 'user_superadmin123',
+            emailAddresses: [{ emailAddress: 'superadmin+clerk_test@example.com' }],
+            firstName: 'Super',
+            lastName: 'Admin',
+            publicMetadata: {
+              systemRole: 'superadmin',
+              reviewGroups: [],
+              teams: [],
+              translations: [],
+            },
+            privateMetadata: {},
+          },
+          {
+            id: 'user_rgadmin123',
+            emailAddresses: [{ emailAddress: 'rg_admin+clerk_test@example.com' }],
+            firstName: 'Review Group',
+            lastName: 'Admin',
+            publicMetadata: {
+              systemRole: undefined,
+              reviewGroups: [{ reviewGroupId: 'isbd', role: 'admin' }],
+              teams: [],
+              translations: [],
+            },
+            privateMetadata: {},
+          },
+          {
+            id: 'user_editor123',
+            emailAddresses: [{ emailAddress: 'editor+clerk_test@example.com' }],
+            firstName: 'Test',
+            lastName: 'Editor',
+            publicMetadata: {
+              systemRole: undefined,
+              reviewGroups: [],
+              teams: [{ teamId: 'isbd-team-1', role: 'editor', reviewGroup: 'isbd', namespaces: ['isbd', 'isbdm'] }],
+              translations: [],
+            },
+            privateMetadata: {},
+          },
+          {
+            id: 'user_author123',
+            emailAddresses: [{ emailAddress: 'author+clerk_test@example.com' }],
+            firstName: 'Test',
+            lastName: 'Author',
+            publicMetadata: {
+              systemRole: undefined,
+              reviewGroups: [],
+              teams: [{ teamId: 'lrm-team-1', role: 'author', reviewGroup: 'bcm', namespaces: ['lrm'] }],
+              translations: [],
+            },
+            privateMetadata: {},
+          },
+          {
+            id: 'user_translator123',
+            emailAddresses: [{ emailAddress: 'translator+clerk_test@example.com' }],
+            firstName: 'Test',
+            lastName: 'Translator',
+            publicMetadata: {
+              systemRole: undefined,
+              reviewGroups: [],
+              teams: [],
+              translations: [{ language: 'fr', namespaces: ['isbd', 'lrm'] }],
+            },
+            privateMetadata: {},
+          },
+        ],
+        totalCount: 5,
+      })),
+    },
+  })),
 }));
 
 // Mock auth helper

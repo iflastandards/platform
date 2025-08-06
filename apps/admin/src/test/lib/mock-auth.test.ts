@@ -13,6 +13,7 @@ import {
   createTranslator,
   clearUsers 
 } from '../../app/lib/mock-auth';
+import { UserRoles } from '../../lib/auth';
 
 describe('Mock Authentication @unit @critical @auth', () => {
   beforeEach(() => {
@@ -131,7 +132,12 @@ describe('Mock Authentication @unit @critical @auth', () => {
     it('should maintain user data integrity', () => {
       const userData = {
         name: 'Integrity Test User',
-        roles: ['namespace-admin', 'site-editor', 'reviewer'],
+        roles: {
+          systemRole: undefined,
+          reviewGroups: [],
+          teams: [],
+          translations: [],
+        } as UserRoles,
       };
 
       const createdUser = createUser(userData);
@@ -141,7 +147,18 @@ describe('Mock Authentication @unit @critical @auth', () => {
         id: createdUser.id,
         name: 'Integrity Test User',
         email: 'integrity.test.user@example.com',
-        roles: ['namespace-admin', 'site-editor', 'reviewer'],
+        roles: {
+          systemRole: undefined,
+          reviewGroups: [],
+          teams: [],
+          translations: [],
+        },
+        publicMetadata: {
+          systemRole: undefined,
+          reviewGroups: [],
+          teams: [],
+          translations: [],
+        },
       });
     });
   });

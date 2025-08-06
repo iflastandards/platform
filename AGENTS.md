@@ -35,6 +35,7 @@ Essential guidance for coding agents working in this IFLA Standards monorepo.
 - **ALWAYS** run `pnpm typecheck && pnpm lint` after edits
 - **ALWAYS** fix code to pass tests, never fix tests to pass
 - **ALWAYS** ensure local validation (Phases 1-4) passes before pushing
+- **NEVER commit secrets or API keys** - pre-commit hooks will block commits with secrets
 - Use `workspaceUtils` in integration tests, not `process.cwd()`
 - Include `experimental_faster: true` in all `docusaurus.config.ts` files
 
@@ -54,6 +55,15 @@ Essential guidance for coding agents working in this IFLA Standards monorepo.
 - **All code quality validation must happen locally** (Phases 1-4)
 - **Never bypass git hooks** with `--no-verify` unless absolute emergency
 - **Understand**: CI assumes your code is already validated locally
+
+## Secrets Protection
+- **Automatic Detection**: Pre-commit hooks automatically scan for secrets using secretlint
+- **Blocked Commits**: Commits containing API keys, tokens, or secrets will be automatically blocked
+- **Manual Check**: Use `pnpm check:secrets` to scan entire codebase for secrets
+- **Staged Files**: Use `pnpm check:secrets:staged` to check only staged files
+- **Configuration**: Secrets detection rules configured in `.secretlintrc.json`
+- **Exclusions**: Test files, documentation, and build artifacts are excluded from scanning
+- **Emergency Override**: If absolutely necessary, remove secrets and commit clean version
 
 ## Server-Dependent Testing
 - **Location**: `apps/admin/src/test/integration/server-dependent/`

@@ -1,7 +1,7 @@
 import { describe, it, expect } from 'vitest';
 import { testServerManager } from '../../../lib/test-helpers/server-manager';
 
-describe('Basic Server Test @unit @admin @api @low-priority', () => {
+describe('Basic Server Test @integration @server-dependent @admin @api @low-priority', () => {
   it('should be able to start and stop admin server', async () => {
     console.log('Starting basic server test...');
 

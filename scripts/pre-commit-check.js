@@ -46,17 +46,30 @@ try {
   // Don't set hasErrors = true here, as warnings are allowed
 }
 
+// Run secrets detection
+console.log('📋 Running secrets detection...');
+try {
+  execSync('pnpm check:secrets:staged', {
+    stdio: 'inherit',
+    encoding: 'utf8'
+  });
+  console.log('✅ Secrets detection passed\n');
+} catch (error) {
+  console.log('❌ Secrets detected! Please remove sensitive information before committing.\n');
+  hasErrors = true;
+}
+
 // Run unit tests (fast feedback)
 console.log('📋 Running unit tests...');
 try {
-  // Use the standard test target with nx affected
-  execSync('pnpm nx affected --target=test --parallel=3 --skip-nx-cache', {
+  // Use the unit test target to avoid running integration tests with wrong config
+  execSync('pnpm nx affected --target=test:unit --parallel=3 --skip-nx-cache', {
     stdio: 'inherit',
     encoding: 'utf8'
   });
   console.log('✅ Unit tests passed\n');
 } catch (error) {
-  console.log('❌ Tests failed\n');
+  console.log('❌ Unit tests failed\n');
   hasErrors = true;
 }
 

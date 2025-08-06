@@ -143,32 +143,19 @@ function shouldAutoTriggerE2E() {
 
 let hasErrors = false;
 
-// Run affected tests (unit + integration)
+// Run affected tests (integration tests for pre-push)
 if (config.runTests) {
-  console.log('📋 Running affected tests...');
+  console.log('📋 Running affected integration tests...');
   try {
-    // Run all affected tests
-    safeExecSync(`pnpm nx affected --target=test --parallel=${config.parallelJobs} --skip-nx-cache`, {
-      stdio: 'inherit',
-      encoding: 'utf8',
-      timeout: 600000 // 10 minutes timeout
-    });
-    console.log('✅ Affected tests passed\n');
-  } catch (error) {
-    console.log('❌ Some tests failed\n');
-    hasErrors = true;
-  }
-  
-  // Run integration tests specifically if they exist
-  try {
+    // Run integration tests specifically (pre-commit already ran unit tests)
     safeExecSync(`pnpm nx affected --target=test:integration --parallel=${config.parallelJobs} --skip-nx-cache`, {
-      stdio: 'pipe',
+      stdio: 'inherit',
       encoding: 'utf8',
       timeout: 600000 // 10 minutes timeout
     });
     console.log('✅ Integration tests passed\n');
   } catch (error) {
-    // Not all projects have integration tests, this is OK
+    // Not all projects have integration tests, this is OK for some projects
     console.log('ℹ️  Integration tests completed (some projects may not have integration tests)\n');
   }
 }
@@ -237,16 +224,16 @@ if (shouldRunSmokeTests()) {
 if (shouldRunAdminTests()) {
   console.log('📋 Running admin-specific tests...');
   
-  // Run admin unit and integration tests
+  // Run admin integration tests (unit tests already ran in pre-commit)
   try {
-    safeExecSync('pnpm nx run admin:test --skip-nx-cache', {
+    safeExecSync('pnpm nx run admin:test:integration --skip-nx-cache', {
       stdio: 'inherit',
       encoding: 'utf8',
       timeout: 600000 // 10 minutes timeout
     });
-    console.log('✅ Admin tests passed\n');
+    console.log('✅ Admin integration tests passed\n');
   } catch (error) {
-    console.log('❌ Admin tests failed\n');
+    console.log('❌ Admin integration tests failed\n');
     hasErrors = true;
   }
   

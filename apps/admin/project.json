@@ -81,7 +81,7 @@
     "test:unit": {
       "executor": "nx:run-commands",
       "options": {
-        "command": "vitest run src/test/components/",
+        "command": "vitest run --exclude='**/server-dependent/**' --exclude='**/integration/**' src/test/unit/ src/test/lib/ src/test/components/ src/lib/services/__tests__/ src/app/**/__tests__/",
         "cwd": "apps/admin"
       }
     },

@@ -1,7 +1,7 @@
 import { describe, it, expect } from 'vitest';
 import { spawn } from 'child_process';
 
-describe('Simple Spawn Test @unit', () => {
+describe('Simple Spawn Test @integration @server-dependent @admin @low-priority', () => {
   it('should be able to run pnpm command', async () => {
     console.log('Testing basic pnpm command...');
 

@@ -18,8 +18,8 @@ fi
 
 echo "✅ Test tagging validation passed!"
 
-# Use the optimized pre-commit command from package.json
-pnpm test:pre-commit:smart
+# Use the robust pre-commit command with better timeout handling
+pnpm test:pre-commit:robust
 
 if [ $? -ne 0 ]; then
   echo "❌ Pre-commit tests failed. Please fix and try again."
