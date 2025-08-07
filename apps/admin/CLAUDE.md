@@ -4,91 +4,67 @@ This file provides Next.js admin app-specific guidance for Claude Code when work
 
 ## 🔴 ADMIN APP CONTEXT - YOU ARE HERE!
 
-You are working in the **Next.js Admin App** with critical basePath configuration at `/admin`.
+You are working in the **Next.js Admin App** that serves from the root path (no basePath).
 
-### ⚠️ CRITICAL basePath RULES - CHECK EVERY TIME
+### ✅ SIMPLIFIED ROUTING - NO BASEPATH
 
-The admin app runs at `/admin` basePath. **EVERY** path-related operation must account for this:
+The admin app now serves from root. All paths work as standard Next.js routing:
 
-#### 1. **Navigation Links - Write as if at root**
+#### 1. **Navigation Links - Standard Next.js**
 ```tsx
-// ✅ ALWAYS DO THIS - Next.js adds /admin automatically
+// ✅ STANDARD NEXT.JS ROUTING
 import Link from 'next/link';
 
 <Link href="/dashboard">Dashboard</Link>
 <Link href="/users">Users</Link>
 <Link href="/settings">Settings</Link>
 <Link href={`/users/${userId}`}>User Profile</Link>
-
-// ❌ NEVER DO THIS - Results in /admin/admin/...
-<Link href="/admin/dashboard">Dashboard</Link>
-<a href="/admin/users">Users</a>  // Also wrong - use Link!
 ```
 
-#### 2. **API Calls - MUST use addBasePath**
+#### 2. **API Calls - Standard fetch**
 ```tsx
-// ✅ ALWAYS DO THIS
-import { addBasePath } from '@ifla/theme/utils';
-
-// For all fetch calls
-const response = await fetch(addBasePath('/api/vocabularies'));
-const userRes = await fetch(addBasePath(`/api/users/${id}`));
-const data = await fetch(addBasePath('/api/stats'), {
+// ✅ STANDARD FETCH CALLS
+const response = await fetch('/api/vocabularies');
+const userRes = await fetch(`/api/users/${id}`);
+const data = await fetch('/api/stats', {
   method: 'POST',
   body: JSON.stringify(payload)
 });
-
-// ❌ NEVER DO THIS
-const response = await fetch('/api/vocabularies');  // Fails in production
-const response = await fetch('/admin/api/vocabularies');  // Double prefix
-const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/data`);  // Use addBasePath!
 ```
 
 #### 3. **Static Assets & Images**
 ```tsx
-// ✅ ALWAYS DO THIS
-import { addBasePath } from '@ifla/theme/utils';
-
-<img src={addBasePath('/logo.png')} alt="Logo" />
-<link rel="icon" href={addBasePath('/favicon.ico')} />
-<Image src={addBasePath('/hero.jpg')} width={800} height={400} />
+// ✅ STANDARD ASSET PATHS
+<img src="/logo.png" alt="Logo" />
+<link rel="icon" href="/favicon.ico" />
+<Image src="/hero.jpg" width={800} height={400} />
 
 // For dynamic assets
-const imageUrl = addBasePath(`/uploads/${filename}`);
-
-// ❌ NEVER DO THIS
-<img src="/admin/logo.png" />  // Double prefix
-<img src="/logo.png" />  // Missing basePath
+const imageUrl = `/uploads/${filename}`;
 ```
 
 #### 4. **Router Navigation**
 ```tsx
-// ✅ ALWAYS DO THIS - Write paths as if at root
+// ✅ STANDARD ROUTER USAGE
 import { useRouter } from 'next/navigation';
 
 const router = useRouter();
 router.push('/dashboard');
 router.replace('/login');
 router.prefetch('/users');
-
-// ❌ NEVER DO THIS
-router.push('/admin/dashboard');  // Double prefix
 ```
 
 #### 5. **Form Actions & Redirects**
 ```tsx
-// ✅ ALWAYS DO THIS
+// ✅ STANDARD REDIRECTS
 import { redirect } from 'next/navigation';
 
 // In server actions
 async function submitForm() {
   'use server';
   // ... process form
-  redirect('/dashboard');  // Next.js handles basePath
+  redirect('/dashboard');
 }
-
-// ❌ NEVER DO THIS
-redirect('/admin/dashboard');  // Double prefix
 ```
 
 ---
@@ -256,25 +232,18 @@ async function handleLogin(formData: FormData) {
 ## 🐛 Common Admin App Issues
 
 ### Issue: 404 on API calls
-**Cause**: Missing `addBasePath()` on fetch calls
+**Cause**: Incorrect API paths
 **Fix**: 
 ```tsx
-// Before
+// ✅ CORRECT - Standard paths
 const res = await fetch('/api/data');
-
-// After
-import { addBasePath } from '@ifla/theme/utils';
-const res = await fetch(addBasePath('/api/data'));
 ```
 
 ### Issue: Broken navigation links
-**Cause**: Hardcoded `/admin` prefix in Link components
+**Cause**: Incorrect Link paths
 **Fix**:
 ```tsx
-// Before
-<Link href="/admin/users">Users</Link>
-
-// After
+// ✅ CORRECT - Standard Next.js routing
 <Link href="/users">Users</Link>
 ```
 
@@ -282,16 +251,9 @@ const res = await fetch(addBasePath('/api/data'));
 **Cause**: Incorrect asset paths
 **Fix**:
 ```tsx
-// Before
+// ✅ CORRECT - Standard asset paths
 <img src="/images/logo.png" />
-
-// After
-<img src={addBasePath('/images/logo.png')} />
 ```
-
-### Issue: Double /admin in URL
-**Cause**: Manual basePath prepending
-**Fix**: Remove all manual `/admin` prefixes, let Next.js handle it
 
 ---
 
@@ -500,12 +462,12 @@ Some tests require the admin server to be running. These are isolated in `src/te
 
 ## 💡 Admin Development Tips
 
-1. **Always import addBasePath** at the top of files that make API calls
+1. **Use standard Next.js patterns** - No special path handling needed
 2. **Use TypeScript** - The app is fully typed with TypeScript 5.7
 3. **Server Components by default** - Only add 'use client' when needed
 4. **Use App Router patterns** - Not Pages Router
 5. **Tailwind for styling** - Avoid inline styles when possible
-6. **Check the network tab** - If API calls fail, check if basePath is missing
+6. **Standard routing** - All paths work as normal Next.js routing
 7. **Test organization** - Keep server-dependent tests separate to avoid CI issues
 
 ---
@@ -513,10 +475,10 @@ Some tests require the admin server to be running. These are isolated in `src/te
 ## 🚨 BEFORE YOU CODE
 
 Ask yourself:
-- [ ] Am I handling paths correctly? (no hardcoded /admin)
-- [ ] Are my API calls using addBasePath?
-- [ ] Are my Links using root-relative paths?
+- [ ] Am I using standard Next.js routing patterns?
+- [ ] Are my API calls using standard paths (/api/*)?
+- [ ] Are my Links using standard Next.js routing?
 - [ ] Is this a client or server component?
 - [ ] Have I checked existing patterns in the codebase?
 
-Remember: **Write all paths as if the app is at the root!**
+Remember: **Use standard Next.js routing - no special path handling needed!**

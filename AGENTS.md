@@ -13,6 +13,12 @@ Essential guidance for coding agents working in this IFLA Standards monorepo.
 - **Lint**: `pnpm lint` (nx affected parallel), `pnpm lint:fix` for auto-fix
 - **E2E**: `nx run standards-dev:e2e` or `nx run {site}:e2e`
 
+## Admin App Configuration
+- **Routing**: Admin app now serves from root path (no basePath)
+- **API routes**: Located at `/api/*` (not `/admin/api/*`)
+- **Static assets**: Served from root (no path prefix needed)
+- **Links**: Use standard Next.js routing without basePath considerations
+
 ## Code Style
 - **Imports**: Use path aliases (`@ifla/theme`, `@site/*`), remove unused imports (enforced)
 - **Formatting**: Single quotes, Prettier config in `.prettierrc`

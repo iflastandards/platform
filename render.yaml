@@ -41,7 +41,7 @@ services:
   region: frankfurt
   buildCommand: pnpm install && pnpm nx build admin
   startCommand: PORT=${PORT:-10000} pnpm nx start admin --port ${PORT} --hostname 0.0.0.0
-  healthCheckPath: /admin/api/health
+  healthCheckPath: /api/health
   autoDeployTrigger: commit
   buildFilter:
     paths:

@@ -6,8 +6,8 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ### What am I working on?
 **ASK MYSELF FIRST**: Which part of the monorepo?
-1. **🔴 Admin app** (apps/admin) → Next.js with **CRITICAL basePath rules**
-2. **🟢 Documentation sites** (standards/*) → Docusaurus with simpler routing
+1. **🔴 Admin app** (apps/admin) → Next.js with standard routing (no basePath)
+2. **🟢 Documentation sites** (standards/*) → Docusaurus with standard routing
 3. **📦 Shared packages** (packages/*) → Used by both
 4. **📚 System Design** (@system-design-docs/) → Authoritative architecture documentation
 
@@ -20,7 +20,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 ### 📋 Universal Checklist (BEFORE EVERY TASK)
 - [ ] **Working directory**: Am I in the root? (All commands run from root)
 - [ ] **Project context**: Admin app or documentation site?
-- [ ] **If admin**: Apply basePath rules (see red section below)
+- [ ] **Standard routing**: Both admin and docs use standard Next.js/Docusaurus routing
 - [ ] **Scripts first**: Check `package.json` scripts before writing bash
 - [ ] **MCP usage**: Could Context7/MUI help with this task?
 - [ ] **Testing**: Use `nx affected` not full test runs
@@ -38,40 +38,29 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## 🔴 ADMIN APP RULES (apps/admin)
 
-### ⚠️ basePath Configuration - MOST COMMON MISTAKES
-The admin app runs at `/admin` basePath. This affects EVERYTHING:
+### ✅ Standard Next.js Routing
+The admin app uses standard Next.js routing (no basePath):
 
-#### 1. **Links - NEVER hardcode /admin**
+#### 1. **Links - Standard Next.js**
 ```tsx
-// ✅ CORRECT - Next.js adds /admin automatically
+// ✅ STANDARD NEXT.JS ROUTING
 <Link href="/dashboard">Dashboard</Link>
 <Link href="/settings">Settings</Link>
-
-// ❌ WRONG - Results in /admin/admin/dashboard
-<Link href="/admin/dashboard">Dashboard</Link>
+<Link href={`/users/${userId}`}>User Profile</Link>
 ```
 
-#### 2. **API Calls - ALWAYS use addBasePath**
+#### 2. **API Calls - Standard fetch**
 ```tsx
-// ✅ CORRECT
-import { addBasePath } from '@ifla/theme/utils';
-const response = await fetch(addBasePath('/api/vocabularies'));
-const data = await fetch(addBasePath(`/api/users/${id}`));
-
-// ❌ WRONG - Will fail in production
+// ✅ STANDARD FETCH CALLS
 const response = await fetch('/api/vocabularies');
-const response2 = await fetch('/admin/api/vocabularies');
+const data = await fetch(`/api/users/${id}`);
 ```
 
-#### 3. **Static Assets - ALWAYS use addBasePath**
+#### 3. **Static Assets - Standard paths**
 ```tsx
-// ✅ CORRECT
-<img src={addBasePath('/logo.png')} />
-<link rel="icon" href={addBasePath('/favicon.ico')} />
-
-// ❌ WRONG
-<img src="/admin/logo.png" />
+// ✅ STANDARD ASSET PATHS
 <img src="/logo.png" />
+<link rel="icon" href="/favicon.ico" />
 ```
 
 ### Admin-Specific Details
@@ -80,15 +69,15 @@ const response2 = await fetch('/admin/api/vocabularies');
 - **Build**: `nx build admin`
 - **Dependencies**: React 19, TypeScript 5.7, Tailwind CSS, shadcn/ui
 - **API routes**: `apps/admin/src/app/api/`
-- **Critical import**: `import { addBasePath } from '@ifla/theme/utils';`
+- **Routing**: Standard Next.js routing patterns
 
 ---
 
 ## 🟢 DOCUMENTATION SITES RULES (standards/*)
 
-### Docusaurus Sites (No basePath Issues!)
+### Docusaurus Sites
 - **Framework**: Docusaurus 3.6.3
-- **No basePath complexity** - Standard routing works
+- **Standard routing** - Standard Docusaurus patterns
 - **Sites**: portal, isbd, isbdm, unimarc, mri, frbr, lrm, mia, pressoo, muldicat, etc.
 
 ### Documentation Commands

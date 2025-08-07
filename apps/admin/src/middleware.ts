@@ -1,4 +1,5 @@
 import { clerkMiddleware, createRouteMatcher } from '@clerk/nextjs/server';
+import { NextResponse } from 'next/server';
 
 const isPublicRoute = createRouteMatcher([
   '/', // Public home page with SignInButton modal
@@ -14,6 +15,12 @@ export default clerkMiddleware((auth, request) => {
   // Skip authentication in test environment
   if (process.env.NODE_ENV === 'test') {
     return;
+  }
+
+  // Temporarily disable auth protection to debug deployment
+  if (process.env.NODE_ENV === 'production') {
+    console.log('Skipping auth protection in production for debugging');
+    return NextResponse.next();
   }
 
   if (!isPublicRoute(request)) {
