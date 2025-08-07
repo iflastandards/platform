@@ -3,6 +3,7 @@ services:
 - type: web
   name: admin-iflastandards-preview
   runtime: node
+  nodeVersion: 22.17.1
   repo: https://github.com/iflastandards/platform
   plan: standard
   envVars:
