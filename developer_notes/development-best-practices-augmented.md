@@ -376,6 +376,84 @@ export async function GET() {
 }
 ```
 
+### API Route Security (MANDATORY)
+
+**🚨 CRITICAL RULE: ALL API routes must be protected with authentication checks**
+
+- **Default assumption**: All API routes are private and require authentication
+- **Public routes**: Must be explicitly documented and justified
+- **Authorization**: Check permissions after authentication
+- **Error handling**: Return proper HTTP status codes
+
+```typescript
+// ✅ CORRECT - Standard protected API route pattern
+import { auth } from '@clerk/nextjs/server';
+import { NextResponse } from 'next/server';
+
+export async function GET() {
+  // 1. ALWAYS check authentication first
+  const { userId } = auth();
+  if (!userId) {
+    return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+  }
+
+  // 2. Check authorization for specific resource
+  const canAccess = await checkPermission('resource', 'read');
+  if (!canAccess) {
+    return NextResponse.json({ error: 'Forbidden' }, { status: 403 });
+  }
+
+  // 3. Handle authorized request
+  return NextResponse.json({ data: 'protected data' });
+}
+
+// ✅ CORRECT - Public route (explicitly documented)
+export async function GET() {
+  // Public routes must have clear justification
+  // This endpoint provides public health check data
+  return NextResponse.json({ status: 'ok', timestamp: Date.now() });
+}
+
+// ❌ INCORRECT - Missing authentication check
+export async function GET() {
+  // This exposes data without authentication!
+  return NextResponse.json({ sensitiveData: 'exposed' });
+}
+```
+
+#### Public Route Exceptions
+
+Only these routes should be public (must be documented):
+
+- **Health checks**: `/api/health`, `/api/status`
+- **Authentication**: `/api/auth/*` (Clerk callbacks)
+- **Public data**: `/api/public/*` (explicitly public endpoints)
+- **Webhooks**: `/api/webhooks/*` (with proper signature verification)
+
+```typescript
+// ✅ CORRECT - Webhook with signature verification
+export async function POST(request: Request) {
+  // Verify webhook signature instead of user auth
+  const signature = request.headers.get('webhook-signature');
+  if (!verifyWebhookSignature(signature, await request.text())) {
+    return NextResponse.json({ error: 'Invalid signature' }, { status: 401 });
+  }
+  
+  // Handle webhook
+}
+```
+
+#### Security Checklist for API Routes
+
+- [ ] **Authentication check**: `const { userId } = auth();`
+- [ ] **Return 401** for unauthenticated requests
+- [ ] **Authorization check**: Verify user can access resource
+- [ ] **Return 403** for unauthorized requests  
+- [ ] **Input validation**: Validate all request data
+- [ ] **Error handling**: Don't leak sensitive information
+- [ ] **Rate limiting**: Consider for public endpoints
+- [ ] **CORS**: Configure appropriately for cross-origin requests
+
 ### RBAC Implementation Patterns
 
 ```typescript
@@ -1333,6 +1411,7 @@ Before starting any task:
 - [ ] **Verify routing patterns** (use root-relative paths like `/dashboard`)
 - [ ] **Choose appropriate test level** (usually selective/affected)
 - [ ] **Confirm API calls use standard fetch**
+- [ ] **🚨 API SECURITY: All API routes must have authentication checks**
 - [ ] **Use `nx affected` instead of running everything**
 
 ### Post-Development Checklist (MANDATORY)
@@ -1343,6 +1422,7 @@ After completing any task:
 - [ ] **Run `pnpm lint`** - must pass with zero warnings (auto-fixes unused imports)
 - [ ] **Run affected tests** - `pnpm test` must pass
 - [ ] **Verify builds** - `nx build {project}` must succeed
+- [ ] **🚨 SECURITY REVIEW: All API routes have authentication checks**
 
 ### ESLint Integration
 
