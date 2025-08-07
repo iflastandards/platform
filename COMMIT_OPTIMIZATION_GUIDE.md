@@ -31,7 +31,7 @@ git commit -m "message" --timeout=600000
 #### A. Parallel Execution Tuning
 ```javascript
 // Optimized for stability vs speed
-execSync('nx affected --targets=typecheck --parallel=6', {
+execSync('pnpm nx affected --targets=typecheck --parallel=6', {
   env: { NODE_OPTIONS: '--max-old-space-size=6144' }
 });
 ```

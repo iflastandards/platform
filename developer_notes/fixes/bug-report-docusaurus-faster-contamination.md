@@ -43,7 +43,7 @@ When building multiple Docusaurus sites in a monorepo, sites become contaminated
 ### Minimal Reproduction
 ```bash
 # Even with sequential builds (no parallelism)
-nx run-many --target=build --projects=site1,site2,site3 --parallel=1
+pnpm pnpm nx run-many --target=build --projects=site1,site2,site3 --parallel=1
 
 # Result: Later sites contaminated with earlier site configurations
 ```
@@ -53,7 +53,7 @@ nx run-many --target=build --projects=site1,site2,site3 --parallel=1
 ### 1. Initial Hypothesis: Concurrency Issue
 **Test**: Reduced parallel builds from 3 to 1
 ```bash
-nx run-many --target=build --parallel=1
+pnpm pnpm nx run-many --target=build --parallel=1
 ```
 **Result**: ❌ Contamination persisted even with sequential builds
 
@@ -61,10 +61,10 @@ nx run-many --target=build --parallel=1
 **Test**: Disabled all caching mechanisms
 ```bash
 # Clear Nx cache
-nx reset
+pnpm pnpm nx reset
 
 # Disable Nx cache
-nx run-many --target=build --skip-nx-cache
+pnpm pnpm nx run-many --target=build --skip-nx-cache
 
 # Clear Node module cache
 rm -rf node_modules/.cache
@@ -192,7 +192,7 @@ Actual contaminated files:
 
 3. **Short-term Workarounds**:
    - Use process isolation (spawn separate Node processes)
-   - Build sites individually rather than using nx run-many
+   - Build sites individually rather than using pnpm nx run-many
    - Clear module cache between builds if possible
 
 ## Related Issues
@@ -231,10 +231,10 @@ Actual contaminated files:
 2. **Build the sites sequentially**:
    ```bash
    # Build first site (e.g., newtest)
-   nx build newtest
+   pnpm nx build newtest
    
    # Build second site (e.g., LRM) 
-   nx build lrm
+   pnpm nx build lrm
    ```
 
 3. **Check for contamination**:
@@ -258,7 +258,7 @@ Actual contaminated files:
 
 2. **Rebuild and verify**:
    ```bash
-   nx build newtest && nx build lrm
+   pnpm nx build newtest && pnpm nx build lrm
    grep -r "newtest" standards/LRM/build/
    # ✅ Should return no results (clean build)
    ```

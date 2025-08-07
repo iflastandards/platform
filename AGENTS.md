@@ -2,22 +2,50 @@
 
 Essential guidance for coding agents working in this IFLA Standards monorepo.
 
+## Tech Stack Overview
+
+### Core Monorepo Infrastructure
+- **Monorepo Tool**: Nx 21.3.11
+- **Package Manager**: pnpm 10.13.1 (ALWAYS use pnpm, never npm/yarn)
+- **Node Version**: 22 LTS
+- **Language**: TypeScript 5.8.3
+- **Build Tools**: Vite 7.0.6 (packages), Next.js 15.4.4 (admin), Docusaurus 3.8.1 (sites)
+- **Testing**: Vitest 3.2.4 + Playwright 1.50.1
+- **Linting**: ESLint 9.32.0 with TypeScript ESLint 8.38.0
+
+### Docusaurus Substack (Documentation Sites)
+- **Framework**: Docusaurus 3.8.1 with React 19.1.1
+- **Sites**: portal, isbd, isbdm, unimarc, mri, frbr, lrm, mia, pressoo, muldicat
+- **Content**: MDX 3.1.0 format
+- **Styling**: Sass 1.89.2 + TailwindCSS 4.1.11
+- **Search**: @easyops-cn/docusaurus-search-local 0.52.1
+
+### Next.js Substack (Admin Application)
+- **Framework**: Next.js 15.4.4 with App Router + React 19.1.1
+- **Authentication**: Clerk (latest)
+- **Database**: Supabase (PostgreSQL) with Supabase JS 2.53.0
+- **API Layer**: Next.js App Router API routes with standard fetch
+- **State Management**: TanStack Query 5.83.0
+- **UI Components**: Material-UI 7.2.0 + Lucide React 0.536.0
+- **Forms**: React Hook Form 7.61.1 + Zod 4.0.14 validation
+- **Styling**: Emotion 11.14.0 + Material-UI theming
+
 ## Commands
-- **Package manager**: Always use `pnpm` (never npm/yarn)
-- **Build**: `nx build {site}` (e.g., `nx build portal`, `nx build admin`)
-- **Dev server**: `nx start {site}` or `nx dev admin` (Next.js)
-- **Single test**: `nx test {project}` or `nx test --testNamePattern="test name"`
-- **Test all**: `pnpm test` (nx affected parallel), `pnpm test:all` (all projects)
+- **Build**: `pnpm nx build {site}` (e.g., `pnpm nx build portal`, `pnpm nx build admin`)
+- **Dev server**: `pnpm nx start {site}` or `pnpm nx dev admin --turbopack` (Next.js with Turbopack)
+- **Single test**: `pnpm nx test {project}` or `pnpm nx test --testNamePattern="test name"`
+- **Test all**: `pnpm test` (pnpm nx affected parallel), `pnpm test:all` (all projects)
 - **Server-dependent tests**: `cd apps/admin && pnpm test:server-dependent` (requires live servers)
-- **Type check**: `pnpm typecheck` (nx affected parallel)
-- **Lint**: `pnpm lint` (nx affected parallel), `pnpm lint:fix` for auto-fix
-- **E2E**: `nx run standards-dev:e2e` or `nx run {site}:e2e`
+- **Type check**: `pnpm typecheck` (pnpm nx affected parallel)
+- **Lint**: `pnpm lint` (pnpm nx affected parallel), `pnpm lint:fix` for auto-fix
+- **E2E**: `pnpm nx run standards-dev:e2e` or `pnpm nx run {site}:e2e`
 
 ## Admin App Configuration
-- **Routing**: Admin app now serves from root path (no basePath)
-- **API routes**: Located at `/api/*` (not `/admin/api/*`)
-- **Static assets**: Served from root (no path prefix needed)
-- **Links**: Use standard Next.js routing without basePath considerations
+- **Routing**: Standard Next.js App Router
+- **API routes**: Located at `/api/*`
+- **Static assets**: Served from root
+- **Links**: Use standard Next.js routing
+- **Development**: Uses Turbopack for fast refresh
 
 ## Code Style
 - **Imports**: Use path aliases (`@ifla/theme`, `@site/*`), remove unused imports (enforced)
@@ -70,6 +98,34 @@ Essential guidance for coding agents working in this IFLA Standards monorepo.
 - **Configuration**: Secrets detection rules configured in `.secretlintrc.json`
 - **Exclusions**: Test files, documentation, and build artifacts are excluded from scanning
 - **Emergency Override**: If absolutely necessary, remove secrets and commit clean version
+
+## Development Best Practices
+
+**Comprehensive Guidance** (uses conditional blocks for smart loading):
+- **Core Development**: `@developer_notes/development-best-practices-augmented.md`
+- **UI/UX & Accessibility**: `@developer_notes/ui-ux-accessibility-best-practices.md`
+- **Documentation Standards**: `@developer_notes/documentation-best-practices.md`
+
+**Note**: The development-best-practices file uses conditional blocks - only relevant sections load based on your current task context.
+
+## Deployment & Hosting
+- **Preview Environment**: GitHub Pages (iflastandards.github.io/platform)
+- **Production Environment**: GitHub Pages (www.iflastandards.info)
+- **Admin Preview**: Render.com (admin-iflastandards-preview.onrender.com)
+- **Admin Production**: Render.com (admin.iflastandards.info)
+- **CI/CD Platform**: GitHub Actions with Nx Cloud distributed builds
+- **Database Hosting**: Supabase managed PostgreSQL
+- **Environment Management**: Branch-based (preview/main)
+
+## Shared Libraries & Utilities
+- **Theme Package**: @ifla/theme (workspace package with shared components)
+- **Dev Servers**: @ifla/dev-servers (workspace package for development tooling)
+- **ESLint Config**: @ifla/eslint-config (shared linting configuration)
+- **Data Processing**: ExcelJS 4.4.0, PapaParse 5.5.3, CSV utilities
+- **RDF/Semantic**: N3 1.26.0, JSON-LD 8.3.3 for semantic data processing
+- **HTTP Client**: Node Fetch 3.3.2
+- **Icons**: Lucide React 0.536.0
+- **Fonts**: Fontsource Roboto 5.2.6
 
 ## Server-Dependent Testing
 - **Location**: `apps/admin/src/test/integration/server-dependent/`

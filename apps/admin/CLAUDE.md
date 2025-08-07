@@ -4,7 +4,7 @@ This file provides Next.js admin app-specific guidance for Claude Code when work
 
 ## 🔴 ADMIN APP CONTEXT - YOU ARE HERE!
 
-You are working in the **Next.js Admin App** that serves from the root path (no basePath).
+You are working in the **Next.js Admin App** that serves from the root path (no ).
 
 ### ✅ SIMPLIFIED ROUTING - NO BASEPATH
 
@@ -87,7 +87,7 @@ apps/admin/
 │   ├── lib/                   # Utilities
 │   └── styles/               # Global styles
 ├── public/                    # Static assets
-├── next.config.js            # Next.js config with basePath
+├── next.config.js            # Next.js config 
 └── tailwind.config.ts        # Tailwind config
 ```
 
@@ -99,12 +99,12 @@ All commands run from the **repository root**, not from apps/admin:
 
 ```bash
 # Development
-nx dev admin --turbopack        # Start dev server with turbo
-nx dev admin                    # Start dev server
+pnpm nx dev admin --turbopack        # Start dev server with turbo
+pnpm nx dev admin                    # Start dev server
 
 # Building
-nx build admin                  # Production build
-nx serve admin                  # Serve production build
+pnpm nx build admin                  # Production build
+pnpm nx serve admin                  # Serve production build
 
 # Testing & Quality
 pnpm test                      # Run affected tests
@@ -112,7 +112,7 @@ pnpm typecheck                 # Type check affected
 pnpm lint                      # Lint affected
 
 # Admin-specific
-nx run admin:analyze           # Bundle analysis
+pnpm nx run admin:analyze           # Bundle analysis
 ```
 
 ---
@@ -204,7 +204,7 @@ export default async function DashboardLayout({
   const session = await getSession();
   
   if (!session) {
-    redirect('/login');  // Next.js adds basePath
+    redirect('/login');  // Standard Next.js redirect
   }
   
   return <>{children}</>;
@@ -222,7 +222,7 @@ async function handleLogin(formData: FormData) {
   
   const success = await signIn(formData);
   if (success) {
-    redirect('/dashboard');  // Not '/admin/dashboard'!
+    redirect('/dashboard');  // Standard Next.js routing
   }
 }
 ```
@@ -443,16 +443,16 @@ test('page is accessible', async () => {
 ### Running Tests
 ```bash
 # Run all tests (unit + integration, NO server-dependent)
-nx test admin
+pnpm nx test admin
 
 # Run only integration tests (NO server-dependent)
-nx test:integration admin
+pnpm nx test:integration admin
 
 # Run server-dependent tests (starts servers)
-nx test:server-dependent admin
+pnpm nx test:server-dependent admin
 
 # Run E2E tests
-nx e2e admin
+pnpm nx e2e admin
 ```
 
 ### Important: Server-Dependent Tests

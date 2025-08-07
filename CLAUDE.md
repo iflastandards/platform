@@ -6,7 +6,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ### What am I working on?
 **ASK MYSELF FIRST**: Which part of the monorepo?
-1. **🔴 Admin app** (apps/admin) → Next.js with standard routing (no basePath)
+1. **🔴 Admin app** (apps/admin) → Next.js with standard routing
 2. **🟢 Documentation sites** (standards/*) → Docusaurus with standard routing
 3. **📦 Shared packages** (packages/*) → Used by both
 4. **📚 System Design** (@system-design-docs/) → Authoritative architecture documentation
@@ -23,7 +23,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 - [ ] **Standard routing**: Both admin and docs use standard Next.js/Docusaurus routing
 - [ ] **Scripts first**: Check `package.json` scripts before writing bash
 - [ ] **MCP usage**: Could Context7/MUI help with this task?
-- [ ] **Testing**: Use `nx affected` not full test runs
+- [ ] **Testing**: Use `pnpm nx affected` not full test runs
 - [ ] **Writing tests?**: Read `developer_notes/AI_TESTING_INSTRUCTIONS.md` FIRST
 - [ ] **TypeScript**: Follow strict typing rules - NO undocumented `any` or `require`
 
@@ -31,7 +31,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 - **Package manager**: Always `pnpm` (never npm/yarn)
 - **Dependencies**: All in root `package.json`
 - **Commands**: Run from root directory
-- **Nx commands**: `nx build {project}`, `nx test {project}`
+- **Nx commands**: `pnpm nx build {project}`, `pnpm nx test {project}`
 - **Shared code**: `packages/*` directory
 
 ---
@@ -39,7 +39,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 ## 🔴 ADMIN APP RULES (apps/admin)
 
 ### ✅ Standard Next.js Routing
-The admin app uses standard Next.js routing (no basePath):
+The admin app uses standard Next.js routing:
 
 #### 1. **Links - Standard Next.js**
 ```tsx
@@ -65,8 +65,8 @@ const data = await fetch(`/api/users/${id}`);
 
 ### Admin-Specific Details
 - **Framework**: Next.js 15.1.3 with App Router
-- **Start dev**: `nx dev admin --turbopack`
-- **Build**: `nx build admin`
+- **Start dev**: `pnpm nx dev admin --turbopack`
+- **Build**: `pnpm nx build admin`
 - **Dependencies**: React 19, TypeScript 5.7, Tailwind CSS, shadcn/ui
 - **API routes**: `apps/admin/src/app/api/`
 - **Routing**: Standard Next.js routing patterns
@@ -81,11 +81,11 @@ const data = await fetch(`/api/users/${id}`);
 - **Sites**: portal, isbd, isbdm, unimarc, mri, frbr, lrm, mia, pressoo, muldicat, etc.
 
 ### Documentation Commands
-- **Start dev**: `nx start {site}` (e.g., `nx start portal`)
-- **Build**: `nx build {site}`
-- **Serve built**: `nx serve {site}`
+- **Start dev**: `pnpm nx start {site}` (e.g., `pnpm nx start portal`)
+- **Build**: `pnpm nx build {site}`
+- **Serve built**: `pnpm nx serve {site}`
 - **Build all**: `pnpm build:all`
-- **With port cleanup**: `nx run {site}:start:robust`
+- **With port cleanup**: `pnpm nx run {site}:start:robust`
 
 ### Site Scaffolding
 ```bash
@@ -100,24 +100,24 @@ pnpm tsx scripts/scaffold-site.ts --siteKey=newsite --title="New Standard" --tag
 ## 🎯 QUICK TASK REFERENCE
 
 ### "I'm building a UI component"
-1. **Admin?** → Check basePath rules, use `addBasePath()`
+1. **Admin?** → Standard Next.js patterns
 2. **Docs?** → Standard Docusaurus patterns
 3. Use **MUI MCP** for component examples
 4. Use **Context7 MCP** for React patterns
 5. Run `pnpm typecheck` after coding
 
 ### "I'm adding an API route"
-1. **Admin app** → MUST use `addBasePath()` for all fetches
+1. **Admin app** → Use standard fetch calls to `/api/*` routes
 2. Check existing patterns in `apps/admin/src/app/api/`
 3. Use **Context7 MCP** for Next.js App Router patterns
 
 ### "I'm fixing routing issues"
-1. **Admin**: 90% of issues = missing `addBasePath()` or hardcoded `/admin`
+1. **Admin**: Use standard Next.js routing patterns
 2. **Docs**: Standard Docusaurus routing
 3. Reference: `developer_notes/NEXTJS_CODING_STANDARDS.MD`
 
 ### "I'm running tests"
-1. Use `pnpm test` (runs `nx affected`)
+1. Use `pnpm test` (runs `pnpm nx affected`)
 2. Never run all tests - always use affected
 3. Reference: `developer_notes/TESTING_STRATEGY.md`
 
@@ -134,11 +134,11 @@ Quick rules:
 ## 📚 ESSENTIAL REFERENCES
 
 ### Next.js Coding Standards (ALWAYS CHECK THESE FIRST)
-1. **Internal Links**: Always use `<Link href="/dashboard">` - NEVER `<a href="/admin/dashboard">`
-2. **API Calls**: Always use `fetch(addBasePath('/api/route'))` - NEVER hardcode basePath
-3. **Static Assets**: Always use `addBasePath('/logo.png')` - NEVER manual prepending
-4. **Write paths as if app is at root** - Next.js adds basePath automatically
-5. **Import utility**: `import { addBasePath } from '@ifla/theme/utils';`
+1. **Internal Links**: Always use `<Link href="/dashboard">` - Standard Next.js routing
+2. **API Calls**: Always use `fetch('/api/route')` - Standard fetch calls
+3. **Static Assets**: Always use `/logo.png` - Standard asset paths
+4. **Write paths as if app is at root** - Standard Next.js patterns
+5. **No special utilities needed** - Use standard Next.js routing
 
 ### Testing Strategy (MANDATORY FOR ALL TESTS)
 1. **🚨 ALWAYS run tests as: `pnpm nx test [project] --skip-nx-cache`** - NEVER forget pnpm or skip-nx-cache!
@@ -164,14 +164,14 @@ Quick rules:
 
 ### Essential Commands
 - **Package manager**: Always use `pnpm` (never npm or yarn)
-- **Build single site**: `nx build {name}` (e.g., `nx build portal`, `nx build isbdm`, `nx build admin`)
+- **Build single site**: `pnpm nx build {name}` (e.g., `pnpm nx build portal`, `pnpm nx build isbdm`, `pnpm nx build admin`)
 - **Build all sites**: `pnpm build:all` (optimized with Nx caching and parallelization)
-- **Start dev server**: `nx start {site}` or `nx run {site}:start:robust` (with port cleanup)
-- **Start Next.js dev**: `nx dev admin --turbopack` (for admin development)
-- **Serve built site**: `nx serve {site}` or `nx run {site}:serve:robust` (with port cleanup)
-- **Test execution**: `pnpm test` (nx affected with parallel execution)
-- **Type checking**: `pnpm typecheck` (nx affected with parallel execution)
-- **Linting**: `pnpm lint` (nx affected with parallel execution)
+- **Start dev server**: `pnpm nx start {site}` or `pnpm nx run {site}:start:robust` (with port cleanup)
+- **Start Next.js dev**: `pnpm nx dev admin --turbopack` (for admin development)
+- **Serve built site**: `pnpm nx serve {site}` or `pnpm nx run {site}:serve:robust` (with port cleanup)
+- **Test execution**: `pnpm test` (pnpm nx affected with parallel execution)
+- **Type checking**: `pnpm typecheck` (pnpm nx affected with parallel execution)
+- **Linting**: `pnpm lint` (pnpm nx affected with parallel execution)
 - **Health check**: `pnpm health` (comprehensive system check)
 - **Fresh install**: `pnpm fresh` (clean install with cache clear)
 
@@ -422,8 +422,8 @@ The project has optimized GitHub Actions workflows:
 ### Common Issues & Solutions
 
 #### Top 5 Mistakes (and fixes)
-1. **Hardcoding /admin in admin app**
-   - Fix: Remove /admin, use relative paths
+1. **Incorrect routing patterns**
+   - Fix: Use standard Next.js routing
    - Check: All Links, fetches, and assets
    
 2. **Not using pnpm scripts**
@@ -439,8 +439,8 @@ The project has optimized GitHub Actions workflows:
    - Check: Before writing new code
    
 5. **Running all tests instead of affected**
-   - Fix: Use `pnpm test` which runs nx affected
-   - Never: `nx run-many -t test`
+   - Fix: Use `pnpm test` which runs pnpm nx affected
+   - Never: `pnpm nx run-many -t test`
 
 ### Performance Issues
 1. **Slow builds**: Run `pnpm nx:optimize` and ensure daemon is running
@@ -450,7 +450,7 @@ The project has optimized GitHub Actions workflows:
 
 ### Performance Tips
 1. Always have Nx daemon running: `pnpm nx:daemon:start`
-2. Use affected commands when possible: `nx affected -t build`
+2. Use affected commands when possible: `pnpm nx affected -t build`
 3. Monitor cache effectiveness: `pnpm nx:cache:stats`
 4. Run health check regularly: `pnpm health`
 
@@ -459,11 +459,11 @@ The project has optimized GitHub Actions workflows:
 ## 💡 HELPFUL USER PROMPTS
 
 To help me work better, consider starting prompts with:
-- **"Working on admin:"** → Activates admin-specific rules & basePath awareness
+- **"Working on admin:"** → Activates admin-specific rules & Next.js patterns
 - **"Working on docs:"** → Activates documentation rules & Docusaurus patterns
-- **"Need to add API route"** → Triggers basePath checks & Next.js patterns
+- **"Need to add API route"** → Triggers Next.js App Router patterns
 - **"Building UI component"** → Triggers MCP usage & component patterns
-- **"Running tests"** → Triggers nx affected usage & test strategy
+- **"Running tests"** → Triggers pnpm nx affected usage & test strategy
 
 Examples:
 - "Working on admin: Add a new user management page"

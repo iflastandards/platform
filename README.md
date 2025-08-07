@@ -90,12 +90,12 @@ pnpm dev:interactive
 pnpm dev:headless
 
 # Start specific site (individual approach)
-nx start portal          # Main portal
-nx start isbd           # ISBD standard
-nx start admin          # Admin portal
+pnpm nx start portal          # Main portal
+pnpm nx start isbd           # ISBD standard
+pnpm nx start admin          # Admin portal
 
 # Start with port cleanup
-nx run portal:start:robust
+pnpm nx run portal:start:robust
 ```
 
 ### Building
@@ -105,9 +105,9 @@ nx run portal:start:robust
 pnpm build:all
 
 # Build specific site
-nx build portal
-nx build isbd
-nx build admin
+pnpm nx build portal
+pnpm nx build isbd
+pnpm nx build admin
 
 # Test builds
 pnpm test:builds:affected

@@ -22,17 +22,17 @@ This document outlines the five distinct test phases that organize all testing a
 ### Unit Tests
 ```bash
 # Individual project tests
-nx test @ifla/theme                    # Theme package only
-nx test portal                         # Portal site only
-nx test isbdm                          # ISBDM standard only
-nx test admin-portal                   # Admin portal (Next.js) only
+pnpm nx test @ifla/theme                    # Theme package only
+pnpm nx test portal                         # Portal site only
+pnpm nx test isbdm                          # ISBDM standard only
+pnpm nx test admin-portal                   # Admin portal (Next.js) only
 
 # Affected unit tests (recommended for development)
-nx affected --target=test              # Only test changed projects
-nx affected --target=test --parallel=3 # Parallel execution
+pnpm nx affected --target=test              # Only test changed projects
+pnpm nx affected --target=test --parallel=3 # Parallel execution
 
 # All unit tests (when needed)
-nx run-many --target=test --all        # All projects
+pnpm nx run-many --target=test --all        # All projects
 
 # 🎯 Tag-based test selection (NEW - Phase 1 Complete)
 pnpm test --grep "@unit"              # Run only unit tests
@@ -74,13 +74,13 @@ npx playwright test --ui
 ### Regression Tests (Targeted)
 ```bash
 # Visual regression
-nx run standards-dev:regression:visual
+pnpm nx run standards-dev:regression:visual
 
 # Performance regression
-nx run standards-dev:regression:performance
+pnpm nx run standards-dev:regression:performance
 
 # Build regression (affected only)
-nx run standards-dev:regression:affected
+pnpm nx run standards-dev:regression:affected
 ```
 
 ## Phase 2: Pre-Commit Tests (Automated Git Hook)
@@ -93,9 +93,9 @@ nx run standards-dev:regression:affected
 ### What Runs
 ```bash
 # Automatically runs via Husky:
-nx affected --target=typecheck --parallel=3
-nx affected --target=lint --parallel=3       # Warnings allowed
-nx affected --target=test --parallel=3       # Unit tests only
+pnpm nx affected --target=typecheck --parallel=3
+pnpm nx affected --target=lint --parallel=3       # Warnings allowed
+pnpm nx affected --target=test --parallel=3       # Unit tests only
 ```
 
 ### Key Points
@@ -114,9 +114,9 @@ nx affected --target=test --parallel=3       # Unit tests only
 ### What Runs
 ```bash
 # Automatically runs via Husky:
-nx affected --target=test:integration --parallel=3  # Integration tests
-nx affected --target=build --parallel=3            # Production builds
-nx affected --target=e2e                          # If portal/admin affected
+pnpm nx affected --target=test:integration --parallel=3  # Integration tests
+pnpm nx affected --target=build --parallel=3            # Production builds
+pnpm nx affected --target=e2e                          # If portal/admin affected
 ```
 
 ### Key Points
@@ -147,12 +147,12 @@ pnpm test:comprehensive:regression    # Full regression suite
 ### Implementation
 ```bash
 # Equivalent to:
-nx run-many --target=typecheck --all --parallel &&
-nx run-many --target=lint --all --parallel &&
-nx run-many --target=test --all --parallel &&
-nx run-many --target=build --all --parallel &&
-nx run standards-dev:e2e &&
-nx run standards-dev:regression:full
+pnpm nx run-many --target=typecheck --all --parallel &&
+pnpm nx run-many --target=lint --all --parallel &&
+pnpm nx run-many --target=test --all --parallel &&
+pnpm nx run-many --target=build --all --parallel &&
+pnpm nx run standards-dev:e2e &&
+pnpm nx run standards-dev:regression:full
 ```
 
 ## Phase 5: CI Environment Tests (Automated)
@@ -249,16 +249,16 @@ pnpm test:ci:env
 ### Core Development Commands (Nx-Optimized)
 ```bash
 # Primary development workflow
-pnpm lint                             # nx affected --target=lint
-pnpm typecheck                        # nx affected --target=typecheck  
-pnpm test                             # nx affected --target=test
-pnpm build:affected                   # nx affected --target=build
+pnpm lint                             # pnpm nx affected --target=lint
+pnpm typecheck                        # pnpm nx affected --target=typecheck  
+pnpm test                             # pnpm nx affected --target=test
+pnpm build:affected                   # pnpm nx affected --target=build
 
 # Comprehensive alternatives
-pnpm lint:all                         # nx run-many --target=lint --all
-pnpm typecheck:all                    # nx run-many --target=typecheck --all
-pnpm test:all                         # nx run-many --target=test --all
-pnpm build:all                        # nx run-many --target=build --all
+pnpm lint:all                         # pnpm nx run-many --target=lint --all
+pnpm typecheck:all                    # pnpm nx run-many --target=typecheck --all
+pnpm test:all                         # pnpm nx run-many --target=test --all
+pnpm build:all                        # pnpm nx run-many --target=build --all
 ```
 
 ### Test Group Commands

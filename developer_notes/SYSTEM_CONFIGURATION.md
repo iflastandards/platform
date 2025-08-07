@@ -43,7 +43,7 @@ All build and test scripts should use these parallelism settings:
 const MAX_PARALLEL = 8; // Optimal for 16-core machine
 
 // For Nx commands
-nx run-many --parallel=8
+pnpm nx run-many --parallel=8
 
 // For concurrent operations
 concurrently -m 8
