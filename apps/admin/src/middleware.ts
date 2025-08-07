@@ -1,8 +1,10 @@
 import { clerkMiddleware, createRouteMatcher } from '@clerk/nextjs/server';
-import { NextResponse } from 'next/server';
 
 const isPublicRoute = createRouteMatcher([
   '/', // Public home page with SignInButton modal
+  '/sign-in', // Public sign-in page
+  '/sign-up', // Public sign-up page
+  '/sso-callback', // SSO callback page
   '/request-invite', // Public invitation request
   '/api/auth/callback', // Public auth callback API
   '/api/request-invite', // Public request invite API
@@ -15,12 +17,6 @@ export default clerkMiddleware((auth, request) => {
   // Skip authentication in test environment
   if (process.env.NODE_ENV === 'test') {
     return;
-  }
-
-  // Temporarily disable auth protection to debug deployment
-  if (process.env.NODE_ENV === 'production') {
-    console.log('Skipping auth protection in production for debugging');
-    return NextResponse.next();
   }
 
   if (!isPublicRoute(request)) {
