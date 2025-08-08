@@ -11,6 +11,12 @@
 import { currentUser } from '@clerk/nextjs/server';
 import { UserRoles } from './auth';
 import { AuthContextSchema, type AuthContext } from './schemas/auth.schema';
+import { getAuthCache } from './cache/AuthCache';
+import { 
+  createDebugContext, 
+  logAuthorizationResult, 
+  type RoleCheck 
+} from './debug/authDebug';
 
 // Resource types for authorization checks
 export type ResourceType = 
@@ -59,6 +65,13 @@ export async function getAuthContext(): Promise<AuthContext | null> {
   const user = await currentUser();
   if (!user) return null;
 
+  // Check cache first
+  const cache = getAuthCache();
+  const cached = cache.getCachedAuthContext(user.id);
+  if (cached) {
+    return cached;
+  }
+
   // Extract structured metadata with proper defaults
   const metadata = user.publicMetadata as any;
   
@@ -78,7 +91,10 @@ export async function getAuthContext(): Promise<AuthContext | null> {
 
   // Validate the context with Zod schema
   try {
-    return AuthContextSchema.parse(context);
+    const validatedContext = AuthContextSchema.parse(context);
+    // Cache the validated context
+    cache.cacheAuthContext(user.id, validatedContext);
+    return validatedContext;
   } catch (error) {
     console.error('Invalid auth context structure:', error);
     return context; // Return unvalidated for backward compatibility
@@ -114,43 +130,103 @@ export async function canPerformAction<T extends ResourceType>(
   const authContext = await getAuthContext();
   if (!authContext) return false;
 
+  // Create debug context
+  const debugContext = process.env.AUTH_DEBUG === 'true' || process.env.NODE_ENV === 'development'
+    ? createDebugContext(authContext, resourceType, action, resourceAttributes)
+    : null;
+
+  // Check cache first
+  const cache = getAuthCache();
+  const cachedResult = cache.getCachedPermission(authContext.userId, resourceType, action, resourceAttributes);
+  
+  if (cachedResult !== null) {
+    if (debugContext) {
+      logAuthorizationResult(
+        authContext,
+        resourceType,
+        action,
+        cachedResult,
+        debugContext,
+        resourceAttributes,
+        [{ role: 'cached', type: 'system', checked: true, matched: cachedResult, details: 'Result from cache' }]
+      );
+    }
+    return cachedResult;
+  }
+
+  const roleChecks: RoleCheck[] = [];
+
   // Superadmins bypass all checks
-  if (authContext.roles.system === 'superadmin') return true;
+  if (authContext.roles.system === 'superadmin') {
+    roleChecks.push({ role: 'superadmin', type: 'system', checked: true, matched: true });
+    cache.cachePermission(authContext.userId, resourceType, action, true, resourceAttributes);
+    if (debugContext) {
+      logAuthorizationResult(authContext, resourceType, action, true, debugContext, resourceAttributes, roleChecks);
+    }
+    return true;
+  }
 
   // Check specific resource type permissions
+  let allowed: boolean;
   switch (resourceType) {
     case 'reviewGroup':
-      return checkReviewGroupPermission(authContext, action as Action<'reviewGroup'>, resourceAttributes);
+      allowed = checkReviewGroupPermission(authContext, action as Action<'reviewGroup'>, resourceAttributes);
+      break;
     
     case 'namespace':
-      return checkNamespacePermission(authContext, action as Action<'namespace'>, resourceAttributes);
+      allowed = checkNamespacePermission(authContext, action as Action<'namespace'>, resourceAttributes);
+      break;
     
     case 'project':
-      return checkProjectPermission(authContext, action as Action<'project'>, resourceAttributes);
+      allowed = checkProjectPermission(authContext, action as Action<'project'>, resourceAttributes);
+      break;
     
     case 'team':
-      return checkTeamPermission(authContext, action as Action<'team'>, resourceAttributes);
+      allowed = checkTeamPermission(authContext, action as Action<'team'>, resourceAttributes);
+      break;
     
     case 'elementSet':
     case 'vocabulary':
-      return checkContentPermission(authContext, action as Action<'vocabulary'>, resourceAttributes);
+      allowed = checkContentPermission(authContext, action as Action<'vocabulary'>, resourceAttributes);
+      break;
     
     case 'translation':
-      return checkTranslationPermission(authContext, action as Action<'translation'>, resourceAttributes);
+      allowed = checkTranslationPermission(authContext, action as Action<'translation'>, resourceAttributes);
+      break;
     
     case 'release':
-      return checkReleasePermission(authContext, action as Action<'release'>, resourceAttributes);
+      allowed = checkReleasePermission(authContext, action as Action<'release'>, resourceAttributes);
+      break;
     
     case 'spreadsheet':
-      return checkSpreadsheetPermission(authContext, action as Action<'spreadsheet'>, resourceAttributes);
+      allowed = checkSpreadsheetPermission(authContext, action as Action<'spreadsheet'>, resourceAttributes);
+      break;
     
     case 'user':
-      return checkUserPermission(authContext, action as Action<'user'>, resourceAttributes);
+      allowed = checkUserPermission(authContext, action as Action<'user'>, resourceAttributes);
+      break;
     
     default:
       // Default to read-only for authenticated users
-      return ['read', 'list'].includes(action as string);
+      allowed = action === 'read' || action === 'list';
+      roleChecks.push({ 
+        role: 'authenticated', 
+        type: 'system', 
+        checked: true, 
+        matched: allowed,
+        details: 'Default permission for authenticated users'
+      });
   }
+
+  // Cache the result
+  cache.cachePermission(authContext.userId, resourceType, action, allowed, resourceAttributes);
+  
+  // Log debug information
+  if (debugContext) {
+    logAuthorizationResult(authContext, resourceType, action, allowed, debugContext, resourceAttributes, roleChecks);
+  }
+  
+  return allowed;
 }
 
 // Helper functions for specific resource type checks
@@ -493,6 +569,14 @@ export const auth = {
     return canPerformAction('user', 'update', { userId });
   },
 };
+
+/**
+ * Invalidate user's cache (call this when roles change)
+ */
+export function invalidateUserCache(userId: string): void {
+  const cache = getAuthCache();
+  cache.invalidateUser(userId);
+}
 
 /**
  * Get user's accessible resources

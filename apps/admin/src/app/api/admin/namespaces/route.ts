@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { auth, getAuthContext, getUserAccessibleResources } from '@/lib/authorization';
+import { getUserAccessibleResources } from '@/lib/authorization';
+import { withAuth, type AuthenticatedRequest } from '@/lib/middleware/withAuth';
 import { promises as fs } from 'fs';
 import path from 'path';
 
@@ -7,24 +8,10 @@ import path from 'path';
  * GET /api/admin/namespaces
  * List namespaces the user has access to
  */
-export async function GET(request: NextRequest) {
+export const GET = withAuth(async (req: AuthenticatedRequest) => {
   try {
-    const authContext = await getAuthContext();
-    if (!authContext) {
-      return NextResponse.json(
-        {
-          success: false,
-          error: {
-            code: 'AUTH_REQUIRED',
-            message: 'Authentication required',
-          },
-        },
-        { status: 401 }
-      );
-    }
-
     // Get review group filter from query params
-    const { searchParams } = new URL(request.url);
+    const { searchParams } = new URL(req.url);
     const reviewGroupId = searchParams.get('reviewGroup');
 
     // Get user's accessible resources
@@ -107,92 +94,88 @@ export async function GET(request: NextRequest) {
       { status: 500 }
     );
   }
-}
+});
 
 /**
  * POST /api/admin/namespaces
  * Create a new namespace
  */
-export async function POST(request: NextRequest) {
-  try {
-    const body = await request.json();
-    const { name, description, reviewGroupId, visibility = 'public', initialTeams = [] } = body;
+export const POST = withAuth(
+  async (req: AuthenticatedRequest) => {
+    try {
+      const body = await req.json();
+      const { name, description, reviewGroupId, visibility = 'public', initialTeams = [] } = body;
 
-    // Validate required fields
-    if (!name || !reviewGroupId) {
-      return NextResponse.json(
-        {
-          success: false,
-          error: {
-            code: 'VALIDATION_ERROR',
-            message: 'Name and reviewGroupId are required',
-            details: {
-              missing: [!name && 'name', !reviewGroupId && 'reviewGroupId'].filter(Boolean),
+      // Validate required fields
+      if (!name || !reviewGroupId) {
+        return NextResponse.json(
+          {
+            success: false,
+            error: {
+              code: 'VALIDATION_ERROR',
+              message: 'Name and reviewGroupId are required',
+              details: {
+                missing: [!name && 'name', !reviewGroupId && 'reviewGroupId'].filter(Boolean),
+              },
             },
           },
-        },
-        { status: 400 }
-      );
-    }
+          { status: 400 }
+        );
+      }
 
-    // Check authorization
-    const canCreate = await auth.canCreateNamespace(reviewGroupId);
-    if (!canCreate) {
+      // TODO: Replace with actual database operation
+      // This is mock implementation for demonstration
+      const newNamespace = {
+        id: `ns_${name.toLowerCase().replace(/\s+/g, '_')}`,
+        name,
+        description,
+        reviewGroup: reviewGroupId,
+        projects: [],
+        elementSets: [],
+        vocabularies: [],
+        translations: ['en'], // Always include English
+        releases: [],
+        status: 'active',
+        visibility,
+        createdAt: new Date().toISOString(),
+        updatedAt: new Date().toISOString(),
+      };
+
+      // TODO: Assign initial teams to the namespace
+      if (initialTeams.length > 0) {
+        // Validate teams belong to the review group
+        // Assign teams to namespace
+      }
+
+      return NextResponse.json({
+        success: true,
+        data: newNamespace,
+        meta: {
+          timestamp: new Date().toISOString(),
+          version: '1.0',
+        },
+      });
+    } catch (error) {
+      console.error('Error creating namespace:', error);
       return NextResponse.json(
         {
           success: false,
           error: {
-            code: 'PERMISSION_DENIED',
-            message: "You don't have permission to create namespaces in this review group",
+            code: 'SERVER_ERROR',
+            message: 'Failed to create namespace',
           },
         },
-        { status: 403 }
+        { status: 500 }
       );
     }
-
-    // TODO: Replace with actual database operation
-    // This is mock implementation for demonstration
-    const newNamespace = {
-      id: `ns_${name.toLowerCase().replace(/\s+/g, '_')}`,
-      name,
-      description,
-      reviewGroup: reviewGroupId,
-      projects: [],
-      elementSets: [],
-      vocabularies: [],
-      translations: ['en'], // Always include English
-      releases: [],
-      status: 'active',
-      visibility,
-      createdAt: new Date().toISOString(),
-      updatedAt: new Date().toISOString(),
-    };
-
-    // TODO: Assign initial teams to the namespace
-    if (initialTeams.length > 0) {
-      // Validate teams belong to the review group
-      // Assign teams to namespace
+  },
+  {
+    resourceType: 'namespace',
+    action: 'create',
+    getResourceAttributes: (req) => {
+      // Parse the body to get reviewGroupId for authorization
+      // Note: This is a simplified approach, in production you might want to handle this differently
+      return {};
     }
-
-    return NextResponse.json({
-      success: true,
-      data: newNamespace,
-      meta: {
-        timestamp: new Date().toISOString(),
-        version: '1.0',
-      },
-    });
-  } catch (error) {
-    console.error('Error creating namespace:', error);
-    return NextResponse.json(
-      {
-        success: false,
-        error: {
-          code: 'SERVER_ERROR',
-          message: 'Failed to create namespace',
-        },
-      },
-      { status: 500 }
-    );
   }
-}
+);

@@ -1,7 +1,8 @@
 // apps/admin/src/app/api/admin/roles/route.ts
 import { NextResponse } from 'next/server';
-import { getAuthContext, canPerformAction } from '@/lib/authorization';
+import { canPerformAction } from '@/lib/authorization';
 import { clerkClient } from '@clerk/nextjs/server';
+import { withAuth, type AuthenticatedRequest } from '@/lib/middleware/withAuth';
 
 // Type for user metadata updates
 interface UpdatedMetadata {
@@ -20,29 +21,17 @@ interface UpdatedMetadata {
   [key: string]: unknown;
 }
 
-export async function GET() {
-  const authContext = await getAuthContext();
-
-  if (!authContext) {
-    return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
-  }
-
+export const GET = withAuth(async (req: AuthenticatedRequest) => {
   // Return the user's structured roles
   return NextResponse.json({ 
-    roles: authContext.roles,
-    userId: authContext.userId,
-    email: authContext.email
+    roles: req.auth.roles,
+    userId: req.auth.userId,
+    email: req.auth.email
   });
-}
+});
 
-export async function POST(request: Request) {
-  const authContext = await getAuthContext();
-
-  if (!authContext) {
-    return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
-  }
-
-  const { userId, role, reviewGroupId, namespaceId, teamId } = await request.json();
+export const POST = withAuth(async (req: AuthenticatedRequest) => {
+  const { userId, role, reviewGroupId, namespaceId, teamId } = await req.json();
 
   // Validate required fields
   if (!userId || !role) {
@@ -57,7 +46,7 @@ export async function POST(request: Request) {
   if (reviewGroupId) {
     // Check if user can manage users in this review group
     canAssignRole = await canPerformAction('user', 'update', { reviewGroupId });
-  } else if (authContext.roles.system === 'superadmin') {
+  } else if (req.auth.roles.system === 'superadmin') {
     // Only superadmins can assign system-level roles
     canAssignRole = true;
   }
@@ -139,7 +128,7 @@ export async function POST(request: Request) {
         break;
         
       case 'superadmin':
-        if (authContext.roles.system !== 'superadmin') {
+        if (req.auth.roles.system !== 'superadmin') {
           return NextResponse.json({ 
             error: 'Only superadmins can assign superadmin role' 
           }, { status: 403 });
@@ -160,7 +149,7 @@ export async function POST(request: Request) {
     
     // Log the role assignment
     console.log(
-      `User ${authContext.email} assigned role "${role}" to user "${userId}" ` +
+      `User ${req.auth.email} assigned role "${role}" to user "${userId}" ` +
       `in context: RG=${reviewGroupId}, NS=${namespaceId}, Team=${teamId}`
     );
 
@@ -177,4 +166,4 @@ export async function POST(request: Request) {
       details: error instanceof Error ? error.message : 'Unknown error'
     }, { status: 500 });
   }
-}
+});
