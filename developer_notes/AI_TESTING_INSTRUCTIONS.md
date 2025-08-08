@@ -8,6 +8,17 @@ The guide ensures consistent test tagging, proper placement within our **5-phase
 
 **📋 Quick Reference**: See [TESTING_STRATEGY.md](./TESTING_STRATEGY.md) for the complete 5-phase testing approach that organizes all testing activities from development to deployment.
 
+### Authorization Architecture Context
+
+Our platform uses a **custom RBAC system** built on top of Clerk authentication:
+
+* **Custom Metadata**: Role information stored in Clerk's `publicMetadata` field (NOT Clerk Organizations)
+* **No tRPC**: Standard Next.js API routes with `fetch()` calls
+* **withAuth Middleware**: All protected routes use our custom middleware wrapper
+* **Performance**: AuthCache reduces permission checks from ~50ms to <1ms with 5-minute TTL
+* **Debug Support**: Comprehensive debugging via environment variables and `/api/admin/auth/debug` endpoint
+* **Test Users**: 5 pre-configured Clerk users with specific roles (all use verification code `424242`)
+
 ## Testing Philosophy
 
 ### Integration-First Approach
@@ -296,6 +307,246 @@ describe('Date Utils @unit', () => {
 
 ***
 
+## Authorization Testing Guidelines
+
+### Testing with Custom RBAC
+
+Our platform uses custom RBAC with Clerk's publicMetadata (NOT Clerk Organizations). All authorization tests should account for:
+
+* **Caching Layer**: Permission checks are cached for 5 minutes (reduces latency from ~50ms to <1ms)
+* **withAuth Middleware**: All protected API routes use our custom middleware
+* **Debug Mode**: Comprehensive debugging available via environment variables and debug endpoint
+
+### Testing API Routes with withAuth
+
+```typescript
+/**
+ * @integration @auth @api
+ * Test protected API routes with proper authorization
+ */
+describe('Protected API Authorization @integration @auth', () => {
+  let superAdmin: ClerkTestUser;
+  let rgAdmin: ClerkTestUser;
+  let editor: ClerkTestUser;
+  
+  beforeAll(async () => {
+    // Load real test users from Clerk
+    superAdmin = await TestUsers.getSuperAdmin();
+    rgAdmin = await TestUsers.getReviewGroupAdmin();
+    editor = await TestUsers.getEditor();
+  });
+  
+  describe('Namespace Creation @auth @critical', () => {
+    test('RG Admin can create namespace in their review group', async () => {
+      // Mock Clerk auth for RG Admin
+      vi.mock('@clerk/nextjs/server', () => ({
+        currentUser: vi.fn().mockResolvedValue({
+          id: rgAdmin.id,
+          publicMetadata: {
+            reviewGroups: [{ role: 'admin', reviewGroupId: 'isbd' }]
+          }
+        })
+      }));
+      
+      const response = await fetch('/api/admin/namespaces', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          name: 'Test Namespace',
+          reviewGroupId: 'isbd'
+        })
+      });
+      
+      expect(response.status).toBe(200);
+      
+      // Verify response includes request tracking
+      expect(response.headers.get('x-request-id')).toBeDefined();
+      expect(response.headers.get('x-response-time')).toMatch(/\d+\.\d+ms/);
+    });
+    
+    test('Editor cannot create namespace', async () => {
+      // Mock Clerk auth for Editor
+      vi.mock('@clerk/nextjs/server', () => ({
+        currentUser: vi.fn().mockResolvedValue({
+          id: editor.id,
+          publicMetadata: {
+            teams: [{ 
+              role: 'editor', 
+              teamId: 'isbd-team-1',
+              namespaces: ['isbd']
+            }]
+          }
+        })
+      }));
+      
+      const response = await fetch('/api/admin/namespaces', {
+        method: 'POST',
+        body: JSON.stringify({ name: 'Test', reviewGroupId: 'isbd' })
+      });
+      
+      expect(response.status).toBe(403);
+      const error = await response.json();
+      expect(error.error.code).toBe('PERMISSION_DENIED');
+    });
+  });
+});
+```
+
+### Using Debug Endpoint for Test Verification
+
+```typescript
+describe('Authorization Debug Verification @integration @auth', () => {
+  test('should verify permission matrix matches expectations', async () => {
+    // Get current user's permission matrix
+    const response = await fetch('/api/admin/auth/debug?action=matrix');
+    const { data } = await response.json();
+    
+    // Define expected permissions for RG Admin
+    const expectedRGAdminPermissions = {
+      namespace: { create: true, read: true, update: true, delete: true },
+      vocabulary: { create: true, read: true, update: true, delete: false },
+      user: { read: true, update: true, create: false, delete: false }
+    };
+    
+    // Verify matrix matches expectations
+    Object.entries(expectedRGAdminPermissions).forEach(([resource, actions]) => {
+      Object.entries(actions).forEach(([action, expected]) => {
+        expect(data.matrix[resource][action]).toBe(expected);
+      });
+    });
+  });
+  
+  test('should trace authorization decision path', async () => {
+    // Enable verbose debug mode
+    process.env.AUTH_DEBUG_VERBOSE = 'true';
+    
+    // Make a request
+    await fetch('/api/admin/namespaces/isbd');
+    
+    // Get debug logs
+    const logs = await fetch('/api/admin/auth/debug?action=logs&count=1');
+    const { data } = await logs.json();
+    
+    // Verify authorization was logged
+    expect(data[0]).toMatchObject({
+      resource: 'namespace',
+      action: 'read',
+      result: 'allowed',
+      executionTime: expect.any(Number)
+    });
+    
+    // Verify execution time shows cache hit (< 5ms)
+    expect(data[0].executionTime).toBeLessThan(5);
+  });
+});
+```
+
+### Testing React Components with usePermission Hook
+
+```typescript
+/**
+ * @integration @ui @auth
+ * Test UI components with permission-based rendering
+ */
+describe('Permission-based UI @integration @ui @auth', () => {
+  test('should show/hide elements based on permissions', async () => {
+    render(
+      <PermissionGate resource="namespace" action="create">
+        <button>Create Namespace</button>
+      </PermissionGate>
+    );
+    
+    // For RG Admin - button should be visible
+    expect(screen.queryByText('Create Namespace')).toBeInTheDocument();
+    
+    // Mock different user context
+    mockUserContext({ roles: { teams: [{ role: 'author' }] } });
+    
+    // For Author - button should be hidden
+    expect(screen.queryByText('Create Namespace')).not.toBeInTheDocument();
+  });
+  
+  test('should handle loading states during permission checks', async () => {
+    const { rerender } = render(
+      <PermissionGate 
+        resource="namespace" 
+        action="create"
+        fallback={<Spinner />}
+      >
+        <button>Create Namespace</button>
+      </PermissionGate>
+    );
+    
+    // Should show spinner while checking
+    expect(screen.getByRole('progressbar')).toBeInTheDocument();
+    
+    // After permission check completes
+    await waitFor(() => {
+      expect(screen.queryByRole('progressbar')).not.toBeInTheDocument();
+    });
+  });
+});
+```
+
+### Testing Cache Behavior
+
+```typescript
+describe('Authorization Cache @integration @performance', () => {
+  beforeEach(() => {
+    // Clear cache before each test
+    clearTestUsersCache();
+  });
+  
+  test('should cache permission results for 5 minutes', async () => {
+    const start = performance.now();
+    
+    // First call - hits database
+    const perm1 = await canPerformAction('namespace', 'read', {
+      namespaceId: 'isbd'
+    });
+    const firstTime = performance.now() - start;
+    
+    // Second call - uses cache
+    const cacheStart = performance.now();
+    const perm2 = await canPerformAction('namespace', 'read', {
+      namespaceId: 'isbd'
+    });
+    const cacheTime = performance.now() - cacheStart;
+    
+    // Cache should be significantly faster
+    expect(cacheTime).toBeLessThan(firstTime / 10);
+    expect(cacheTime).toBeLessThan(1); // Sub-millisecond from cache
+    
+    // Results should be identical
+    expect(perm1).toBe(perm2);
+  });
+  
+  test('should invalidate cache after TTL expires', async () => {
+    // Mock time progression
+    vi.useFakeTimers();
+    
+    const perm1 = await canPerformAction('namespace', 'read');
+    
+    // Advance time by 5 minutes + 1 second
+    vi.advanceTimersByTime(5 * 60 * 1000 + 1000);
+    
+    const perm2 = await canPerformAction('namespace', 'read');
+    
+    // Should have made a fresh call (verify via debug logs)
+    const logs = await fetch('/api/admin/auth/debug?action=logs&count=2');
+    const { data } = await logs.json();
+    
+    expect(data[0].roleChecks).not.toContainEqual(
+      expect.objectContaining({ role: 'cached' })
+    );
+    
+    vi.useRealTimers();
+  });
+});
+```
+
+***
+
 ## E2E Test Guidelines
 
 ### DO:
@@ -554,5 +805,34 @@ test('should read file', async () => {
 * Ensure test directory is writable
 * Clean up files in `afterEach`
 * Use unique filenames to avoid conflicts
+
+### Authorization Test Issues
+
+#### Permission Denied Errors
+* Verify test user has correct metadata structure in Clerk
+* Check that `publicMetadata` matches expected format (NOT using Clerk Organizations)
+* Enable debug mode: `AUTH_DEBUG=true AUTH_DEBUG_VERBOSE=true`
+* Check debug endpoint: `/api/admin/auth/debug?action=logs`
+
+#### Cache-Related Test Failures
+* Clear cache between tests: `clearTestUsersCache()`
+* Account for 5-minute TTL when testing cache expiration
+* Use `vi.useFakeTimers()` for time-dependent cache tests
+* Remember cache key includes resource attributes
+
+#### withAuth Middleware Issues
+* Ensure `@clerk/nextjs/server` mock returns proper user structure
+* Include both `id` and `publicMetadata` in mock response
+* Check that resource type and action match schema definitions
+* Verify `getResourceAttributes` function extracts correct context
+
+#### Debug Mode Not Working
+* Set environment variables BEFORE imports:
+  ```typescript
+  process.env.AUTH_DEBUG = 'true';
+  process.env.AUTH_DEBUG_VERBOSE = 'true';
+  ```
+* Check logs at `/api/admin/auth/debug?action=logs`
+* Verify debug endpoint is accessible (superadmin only in production)
 
 This guide reflects our integration-first testing philosophy where we prioritize testing real-world scenarios over isolated unit tests, resulting in more confidence that our code works correctly in production.

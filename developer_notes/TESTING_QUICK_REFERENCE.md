@@ -4,6 +4,8 @@
 
 **📋 Full Strategy**: See [TESTING_STRATEGY.md](./TESTING_STRATEGY.md) for complete 5-phase approach.
 
+**🔐 Auth Context**: Custom RBAC with Clerk metadata (NOT Organizations). All protected routes use `withAuth` middleware. Permission checks cached for 5min (50ms→<1ms).
+
 ## 🎯 Test Decision Tree (30 Seconds)
 
 ```
@@ -14,6 +16,18 @@ Need to write a test?
 └─ Pure function only? → @unit test (RARE)
 ```
 
+## 🔐 Test Users (Quick Access)
+
+| Email | Role | Access |
+|-------|------|--------|
+| `superadmin+clerk_test@example.com` | System Admin | Full system |
+| `rg_admin+clerk_test@example.com` | RG Admin | ISBD review group |
+| `editor+clerk_test@example.com` | Editor | ISBD/ISBDM namespaces |
+| `author+clerk_test@example.com` | Author | LRM namespace |
+| `translator+clerk_test@example.com` | Translator | French for ISBD/LRM |
+
+All use verification code: **`424242`**
+
 ## 📋 Required Tags
 
 ### Category (Pick ONE)
@@ -23,7 +37,7 @@ Need to write a test?
 - `@unit` - Pure functions only (rare)
 
 ### Add Functional Tags
-- `@api`, `@auth`, `@rbac`, `@ui`, `@validation`, `@security`, `@performance`, `@a11y`
+- `@api`, `@auth`, `@rbac`, `@ui`, `@validation`, `@security`, `@performance`, `@a11y`, `@cache`
 
 ### Add Priority (Optional)
 - `@critical`, `@happy-path`, `@error-handling`, `@edge-case`
@@ -115,6 +129,10 @@ pnpm lint:fix               # Auto-fix linting issues
 
 # Type checking
 pnpm typecheck              # TypeScript validation
+
+# Auth debugging
+AUTH_DEBUG=true pnpm test    # Enable auth debug logs
+AUTH_DEBUG_VERBOSE=true      # Include stack traces
 ```
 
 ## 📝 Integration Test Template (Primary)
@@ -146,6 +164,39 @@ describe('Feature @integration @api', () => {
 });
 ```
 
+## 🔐 Auth Testing Template
+
+```typescript
+// auth.integration.test.ts
+describe('Protected Route @integration @auth @rbac', () => {
+  let testUser: ClerkTestUser;
+  
+  beforeAll(async () => {
+    testUser = await TestUsers.getReviewGroupAdmin();
+  });
+  
+  it('should enforce permissions with withAuth', async () => {
+    // Test protected API route
+    const response = await fetch('/api/admin/namespaces', {
+      method: 'POST',
+      body: JSON.stringify({ 
+        name: 'Test',
+        reviewGroupId: 'isbd' 
+      })
+    });
+    
+    // RG Admin can create in their review group
+    expect(response.status).toBe(200);
+    
+    // Check debug info if needed
+    if (process.env.AUTH_DEBUG) {
+      const logs = await fetch('/api/admin/auth/debug?action=logs');
+      console.log('Auth decision:', await logs.json());
+    }
+  });
+});
+```
+
 ## 🤖 AI Agent Tips
 
 1. **🚨 ALWAYS use `pnpm nx test [project]`** - Never forget pnpm prefix!
@@ -154,6 +205,13 @@ describe('Feature @integration @api', () => {
 4. **Test the full flow** - Input → Processing → Output
 5. **Use fixtures for consistency** - Store in `tests/fixtures/`
 6. **Never use bare `nx` commands** - Always prefix with `pnpm`
+
+### 🔐 Auth Testing Tips
+7. **Test users available** - 5 pre-configured Clerk users (code: `424242`)
+8. **Use withAuth middleware** - All protected routes use our custom wrapper
+9. **Cache impacts timing** - Permission checks cached 5min (50ms→<1ms)
+10. **Debug with endpoint** - `/api/admin/auth/debug` for troubleshooting
+11. **Clear cache in tests** - `clearTestUsersCache()` between test suites
 
 ## 💡 Philosophy
 
@@ -169,3 +227,5 @@ We believe in testing code the way it runs in production:
 - **Integration-First Guide**: `/developer_notes/AI_TESTING_INSTRUCTIONS.md`
 - **Templates**: `/developer_notes/TEST_TEMPLATES.md`
 - **Comprehensive Strategy**: `/system-design-docs/06-testing-strategy-comprehensive.md`
+- **Auth Testing Guide**: `/developer_notes/CLERK_AUTHENTICATION_TESTING.md`
+- **Test Users Config**: `/apps/admin/src/test-config/clerk-test-users.ts`

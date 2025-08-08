@@ -4,7 +4,15 @@ This guide explains how to set up and use Clerk authentication in E2E tests.
 
 ## Overview
 
-Our E2E tests use real Clerk authentication with pre-configured test users. Tests can run in authenticated or unauthenticated state, with different user roles for RBAC testing.
+Our E2E tests use real Clerk authentication with pre-configured test users. Tests can run in authenticated or unauthenticated state, with different user roles for our custom RBAC system (using Clerk publicMetadata, NOT Clerk Organizations).
+
+### Key Architecture Points
+- **Custom RBAC**: We use Clerk's publicMetadata to store role information
+- **No Clerk Organizations**: We do NOT use Clerk's built-in organization features
+- **No tRPC**: Standard Next.js API routes with fetch()
+- **withAuth Middleware**: All protected routes use our custom middleware
+- **Caching**: AuthCache reduces permission checks from ~50ms to <1ms
+- **Debug Mode**: Comprehensive authorization debugging available
 
 ## Setup
 
@@ -25,19 +33,45 @@ No passwords needed - all test users use verification code `424242`.
 
 ### 2. Test Users
 
-Pre-configured test users in Clerk:
+Pre-configured test users in Clerk with custom RBAC metadata:
 
-| Email | Role | Purpose |
-|-------|------|---------|
-| superadmin+clerk_test@example.com | system-admin | Full admin access |
-| rg_admin+clerk_test@example.com | rg-admin | Review Group Admin |
-| editor+clerk_test@example.com | editor | Content editing |
-| author+clerk_test@example.com | reviewer | Review/author access |
-| translator+clerk_test@example.com | translator | Translation access |
+| Email | Role Type | Metadata Structure | Purpose |
+|-------|-----------|-------------------|---------|
+| superadmin+clerk_test@example.com | System Admin | `systemRole: 'superadmin'` | Full system access |
+| rg_admin+clerk_test@example.com | Review Group Admin | `reviewGroups: [{ role: 'admin', reviewGroupId: 'isbd' }]` | Administers ISBD review group |
+| editor+clerk_test@example.com | Team Editor | `teams: [{ role: 'editor', teamId: 'isbd-team-1', namespaces: ['isbd', 'isbdm'] }]` | Edit content in ISBD namespaces |
+| author+clerk_test@example.com | Team Author | `teams: [{ role: 'author', teamId: 'lrm-team-1', namespaces: ['lrm'] }]` | Author content in LRM namespace |
+| translator+clerk_test@example.com | Translator | `translations: [{ language: 'fr', namespaces: ['isbd', 'lrm'] }]` | French translations for ISBD/LRM |
 
 All users authenticate with email verification code: `424242`
 
-### 3. Global Setup
+### 3. Role Structure
+
+Our custom RBAC implementation uses Clerk's `publicMetadata` field with this structure:
+
+```typescript
+interface UserMetadata {
+  systemRole?: 'superadmin';  // Optional system-wide admin
+  reviewGroups: Array<{        // Review Group admin roles
+    role: 'admin';
+    reviewGroupId: string;
+  }>;
+  teams: Array<{               // Team memberships with namespace access
+    role: 'editor' | 'author';
+    teamId: string;
+    reviewGroup: string;
+    namespaces: string[];
+  }>;
+  translations: Array<{        // Translation assignments
+    language: string;
+    namespaces: string[];
+  }>;
+}
+```
+
+**Note**: We use custom RBAC with Clerk's publicMetadata, NOT Clerk Organizations or Clerk RBAC features.
+
+### 4. Global Setup
 
 The global setup (`e2e/global-setup.ts`) runs before all tests to:
 1. Authenticate each test user
@@ -91,30 +125,159 @@ npx playwright test --project=chromium-editor
 
 ## Authentication Utilities
 
-### Manual Authentication in Tests
+### Using Test Users in Integration Tests
 
 ```typescript
-import { setupMockAuth } from '../utils/auth-helpers';
+import { TestUsers } from '../../test-config/clerk-test-users';
 
-test('manual auth test', async ({ context, page }) => {
-  // Authenticate as admin
-  await setupMockAuth(context, 'systemAdmin');
+test('admin functionality', async () => {
+  // Get the superadmin test user
+  const user = await TestUsers.getSuperAdmin();
   
-  await page.goto('/dashboard');
-  // Now authenticated
+  // User object includes:
+  // - id: Clerk user ID
+  // - email: Test user email
+  // - roles: Parsed metadata structure
+  // - description: User purpose
 });
 ```
 
-### Clear Authentication
+### Available Test User Helpers
 
 ```typescript
-import { clearAuth } from '../utils/auth-helpers';
+// Get specific test users
+const superAdmin = await TestUsers.getSuperAdmin();
+const rgAdmin = await TestUsers.getReviewGroupAdmin();
+const editor = await TestUsers.getEditor();
+const author = await TestUsers.getAuthor();
+const translator = await TestUsers.getTranslator();
 
-test('logout test', async ({ context, page }) => {
-  await clearAuth(context);
+// Verify all test users are configured correctly
+const verification = await TestUserUtils.verifyAllTestUsers();
+if (!verification.valid) {
+  console.error('Test user issues:', verification.errors);
+}
+
+// Clear cache when test users are modified
+import { clearTestUsersCache } from '../../test-config/clerk-test-users';
+clearTestUsersCache();
+```
+
+### Testing withAuth Middleware
+
+```typescript
+// Testing API routes protected by withAuth
+import { withAuth } from '@/lib/middleware/withAuth';
+import { TestUsers } from '../../test-config/clerk-test-users';
+
+describe('Protected API Routes', () => {
+  test('should allow RG admin to create namespace', async () => {
+    const rgAdmin = await TestUsers.getReviewGroupAdmin();
+    
+    // Mock the Clerk auth to return our test user
+    vi.mock('@clerk/nextjs/server', () => ({
+      currentUser: vi.fn().mockResolvedValue({
+        id: rgAdmin.id,
+        publicMetadata: TEST_USER_METADATA.RG_ADMIN
+      })
+    }));
+    
+    const response = await fetch('/api/admin/namespaces', {
+      method: 'POST',
+      body: JSON.stringify({
+        name: 'Test Namespace',
+        reviewGroupId: 'isbd'
+      })
+    });
+    
+    expect(response.status).toBe(200);
+  });
   
-  await page.goto('/dashboard');
-  // Should redirect to login
+  test('should deny editor from deleting namespace', async () => {
+    const editor = await TestUsers.getEditor();
+    
+    // Test that editors cannot delete
+    const response = await fetch('/api/admin/namespaces/test-ns', {
+      method: 'DELETE'
+    });
+    
+    expect(response.status).toBe(403);
+    const error = await response.json();
+    expect(error.error.code).toBe('PERMISSION_DENIED');
+  });
+});
+```
+
+### Using Debug Endpoints in Tests
+
+```typescript
+describe('Authorization Debug Tests', () => {
+  test('should verify permission matrix', async () => {
+    const superAdmin = await TestUsers.getSuperAdmin();
+    
+    // Get permission matrix from debug endpoint
+    const response = await fetch('/api/admin/auth/debug?action=matrix', {
+      headers: { /* auth headers */ }
+    });
+    
+    const { data } = await response.json();
+    
+    // Superadmin should have all permissions
+    expect(data.matrix.namespace.create).toBe(true);
+    expect(data.matrix.namespace.delete).toBe(true);
+    expect(data.matrix.user.delete).toBe(true);
+  });
+  
+  test('should trace authorization decisions', async () => {
+    // Enable debug mode for detailed logging
+    process.env.AUTH_DEBUG = 'true';
+    process.env.AUTH_DEBUG_VERBOSE = 'true';
+    
+    // Make a request that requires authorization
+    await fetch('/api/admin/namespaces');
+    
+    // Check debug logs
+    const logs = await fetch('/api/admin/auth/debug?action=logs&count=1');
+    const { data } = await logs.json();
+    
+    expect(data[0].result).toBe('allowed');
+    expect(data[0].roleChecks).toContainEqual(
+      expect.objectContaining({
+        role: 'admin',
+        type: 'reviewGroup',
+        matched: true
+      })
+    );
+  });
+});
+```
+
+### Testing with Cached Permissions
+
+```typescript
+describe('Permission Caching', () => {
+  test('should use cached permissions for performance', async () => {
+    const startTime = performance.now();
+    
+    // First call - hits database
+    const perm1 = await canPerformAction('namespace', 'read', {
+      namespaceId: 'isbd'
+    });
+    
+    const firstCallTime = performance.now() - startTime;
+    
+    // Second call - uses cache
+    const cacheStart = performance.now();
+    const perm2 = await canPerformAction('namespace', 'read', {
+      namespaceId: 'isbd'
+    });
+    
+    const cachedCallTime = performance.now() - cacheStart;
+    
+    expect(perm1).toBe(perm2);
+    expect(cachedCallTime).toBeLessThan(firstCallTime / 10); // Cache is 10x+ faster
+    expect(cachedCallTime).toBeLessThan(5); // Should be under 5ms
+  });
 });
 ```
 
@@ -142,14 +305,51 @@ For faster CI runs, you can pre-seed authentication:
 SKIP_AUTH_SETUP=true pnpm test:e2e
 ```
 
+## Debugging Authorization
+
+### Using the Debug Endpoint
+
+```typescript
+// Check authorization debug information
+const response = await fetch('/api/admin/auth/debug?action=matrix');
+const { data } = await response.json();
+
+// data.matrix shows all permissions for current user
+console.log('User permissions:', data.matrix);
+```
+
+### Debug Mode Environment Variables
+
+```bash
+# Enable authorization debug logging
+AUTH_DEBUG=true
+AUTH_DEBUG_VERBOSE=true  # Include stack traces
+AUTH_DEBUG_STACK=true    # Include call stacks
+```
+
+### Checking Permissions in Tests
+
+```typescript
+test('verify RG admin permissions', async () => {
+  const rgAdmin = await TestUsers.getReviewGroupAdmin();
+  
+  // Check specific permission
+  const canCreate = await canPerformAction('namespace', 'create', {
+    reviewGroupId: 'isbd'
+  });
+  
+  expect(canCreate).toBe(true); // RG admins can create namespaces
+});
+```
+
 ## Troubleshooting
 
 ### Authentication Fails
 
-1. Check Clerk Dashboard for username/password auth enabled
-2. Verify test user emails exist in Clerk
-3. Check `.env.test` has correct passwords
-4. Enable debug mode: `DEBUG=pw:api pnpm test:e2e`
+1. Check Clerk Dashboard for email/password auth enabled
+2. Verify test user emails exist in Clerk with correct metadata
+3. Verify all users use verification code `424242`
+4. Enable debug mode: `DEBUG=pw:api AUTH_DEBUG=true pnpm test:e2e`
 
 ### Session Expires
 
@@ -224,6 +424,20 @@ async function authenticateUser(browser: Browser, role: string) {
 
 ## Reference
 
+### External Documentation
 - [Clerk Playwright Example](https://github.com/clerk/clerk-playwright-nextjs)
 - [Playwright Auth Docs](https://playwright.dev/docs/auth)
 - [Clerk Testing Docs](https://clerk.com/docs/testing)
+
+### Internal Documentation
+- **Test User Configuration**: `/apps/admin/src/test-config/clerk-test-users.ts`
+- **Authorization Implementation**: `/apps/admin/src/lib/authorization.ts`
+- **withAuth Middleware**: `/apps/admin/src/lib/middleware/withAuth.ts`
+- **Auth Cache**: `/apps/admin/src/lib/cache/AuthCache.ts`
+- **Debug Utilities**: `/apps/admin/src/lib/debug/authDebug.ts`
+- **Permission Matrix**: `/system-design-docs/13-permission-matrix-detailed.md`
+
+### Key Implementation Files
+- **Auth Context Schema**: `/apps/admin/src/lib/schemas/auth.schema.ts`
+- **Test User Tests**: `/apps/admin/src/test/integration/clerk-test-users.test.ts`
+- **API Auth Tests**: `/apps/admin/src/test/integration/api-auth-with-clerk-users.test.ts`
