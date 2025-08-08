@@ -1,16 +1,16 @@
 /**
  * Authorization utilities for the IFLA Standards Admin application
- * Simplified version without Cerbos - uses Clerk user metadata for role checking
+ * 
+ * This module provides role-based access control (RBAC) using Clerk's user metadata.
+ * It replaces the previous Cerbos-based authorization with a simpler, custom implementation
+ * that stores roles directly in Clerk's publicMetadata.
+ * 
+ * @module authorization
  */
 
 import { currentUser } from '@clerk/nextjs/server';
 import { UserRoles } from './auth';
-
-export interface AuthContext {
-  userId: string;
-  email: string;
-  roles: UserRoles;
-}
+import { AuthContextSchema, type AuthContext } from './schemas/auth.schema';
 
 // Resource types for authorization checks
 export type ResourceType = 
@@ -46,7 +46,14 @@ export const ACTIONS = {
 export type Action<T extends ResourceType> = typeof ACTIONS[T][number];
 
 /**
- * Get the current user's authorization context
+ * Get the current user's authorization context from Clerk
+ * 
+ * @returns {Promise<AuthContext | null>} The user's authorization context with roles, or null if not authenticated
+ * @example
+ * const authContext = await getAuthContext();
+ * if (!authContext) {
+ *   return new Response('Unauthorized', { status: 401 });
+ * }
  */
 export async function getAuthContext(): Promise<AuthContext | null> {
   const user = await currentUser();
@@ -63,16 +70,41 @@ export async function getAuthContext(): Promise<AuthContext | null> {
     translations: metadata?.translations || [],
   };
 
-  return {
+  const context: AuthContext = {
     userId: user.id,
     email: user.emailAddresses[0]?.emailAddress || '',
     roles,
   };
+
+  // Validate the context with Zod schema
+  try {
+    return AuthContextSchema.parse(context);
+  } catch (error) {
+    console.error('Invalid auth context structure:', error);
+    return context; // Return unvalidated for backward compatibility
+  }
 }
 
 /**
  * Check if a user can perform an action on a resource
- * Implements proper role-based authorization based on the Cerbos design
+ * 
+ * This function implements role-based authorization checks for all resource types.
+ * Superadmins bypass all checks, while other roles are checked against specific
+ * resource permissions.
+ * 
+ * @template T - The resource type being checked
+ * @param {T} resourceType - The type of resource (e.g., 'user', 'namespace', 'reviewGroup')
+ * @param {Action<T>} action - The action to perform (e.g., 'read', 'create', 'delete')
+ * @param {Record<string, any>} [resourceAttributes] - Optional attributes of the resource (e.g., reviewGroupId)
+ * @returns {Promise<boolean>} True if the user can perform the action, false otherwise
+ * 
+ * @example
+ * // Check if user can read users
+ * const canRead = await canPerformAction('user', 'read');
+ * 
+ * @example
+ * // Check if user can manage a specific review group
+ * const canManage = await canPerformAction('reviewGroup', 'manage', { reviewGroupId: 'isbd' });
  */
 export async function canPerformAction<T extends ResourceType>(
   resourceType: T,

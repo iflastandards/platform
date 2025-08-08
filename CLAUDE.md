@@ -38,8 +38,8 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## 🔴 ADMIN APP RULES (apps/admin)
 
-### ✅ Standard Next.js Routing
-The admin app uses standard Next.js routing:
+### ✅ Standard Next.js API Routes (NOT tRPC)
+The admin app uses standard Next.js App Router API routes, NOT tRPC:
 
 #### 1. **Links - Standard Next.js**
 ```tsx
@@ -49,9 +49,14 @@ The admin app uses standard Next.js routing:
 <Link href={`/users/${userId}`}>User Profile</Link>
 ```
 
-#### 2. **API Calls - Standard fetch**
+#### 2. **API Implementation - Next.js App Router**
 ```tsx
-// ✅ STANDARD FETCH CALLS
+// ✅ SERVER-SIDE: Next.js API Route (app/api/users/route.ts)
+export async function GET(request: Request) {
+  return NextResponse.json({ users: [] });
+}
+
+// ✅ CLIENT-SIDE: Standard fetch calls
 const response = await fetch('/api/vocabularies');
 const data = await fetch(`/api/users/${id}`);
 ```
@@ -64,11 +69,13 @@ const data = await fetch(`/api/users/${id}`);
 ```
 
 ### Admin-Specific Details
-- **Framework**: Next.js 15.1.3 with App Router
+- **Framework**: Next.js 15.4.4 with App Router
 - **Start dev**: `pnpm nx dev admin --turbopack`
 - **Build**: `pnpm nx build admin`
-- **Dependencies**: React 19, TypeScript 5.7, Tailwind CSS, shadcn/ui
-- **API routes**: `apps/admin/src/app/api/`
+- **Dependencies**: React 19, TypeScript 5.8.3, Material-UI, Clerk
+- **API routes**: `apps/admin/src/app/api/` (Next.js App Router API routes, NOT tRPC)
+- **Authentication**: Clerk middleware on all non-public routes
+- **Authorization**: Custom RBAC using Clerk publicMetadata (NOT Clerk Organizations)
 - **Routing**: Standard Next.js routing patterns
 
 ---

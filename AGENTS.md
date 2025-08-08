@@ -22,9 +22,10 @@ Essential guidance for coding agents working in this IFLA Standards monorepo.
 
 ### Next.js Substack (Admin Application)
 - **Framework**: Next.js 15.4.4 with App Router + React 19.1.1
-- **Authentication**: Clerk (latest)
+- **Authentication**: Clerk middleware with custom RBAC in user metadata
 - **Database**: Supabase (PostgreSQL) with Supabase JS 2.53.0
-- **API Layer**: Next.js App Router API routes with standard fetch
+- **API Layer**: Next.js App Router API routes (/app/api/*) with standard fetch (NOT tRPC)
+- **Authorization**: Custom role-based system using Clerk publicMetadata
 - **State Management**: TanStack Query 5.83.0
 - **UI Components**: Material-UI 7.2.0 + Lucide React 0.536.0
 - **Forms**: React Hook Form 7.61.1 + Zod 4.0.14 validation
