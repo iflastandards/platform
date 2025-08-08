@@ -5,7 +5,7 @@
  * in a single request for better performance.
  */
 
-import { NextRequest, NextResponse } from 'next/server';
+import { NextResponse } from 'next/server';
 import { withAuth } from '@/lib/middleware/withAuth';
 import { canPerformAction, ResourceType, Action } from '@/lib/authorization';
 

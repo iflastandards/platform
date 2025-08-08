@@ -395,14 +395,17 @@ export function PermissionGate<T extends ResourceType>({
 }
 
 /**
- * Invalidate the permission cache for the current user
+ * Hook to invalidate the permission cache for the current user
  * Useful after role changes or permission updates
  */
-export function invalidatePermissionCache(): void {
+export function useInvalidatePermissionCache(): () => void {
   const { user } = useUser();
-  if (user?.id) {
-    permissionCache.invalidateUser(user.id);
-  }
+  
+  return () => {
+    if (user?.id) {
+      permissionCache.invalidateUser(user.id);
+    }
+  };
 }
 
 /**

@@ -87,7 +87,7 @@ export function createRequestContext(req: NextRequest): RequestContext {
     requestId: generateRequestId(),
     timestamp: new Date(),
     method: req.method,
-    path: req.nextUrl.pathname,
+    path: req.nextUrl?.pathname || req.url || '/',
     clientIp: getClientIp(req),
     userAgent: headers.get('user-agent') || undefined,
     origin: headers.get('origin') || undefined,

@@ -141,7 +141,7 @@ interface AuthContext {
 - [ ] **TASK-001**: Update AGENTS.md to reflect Next.js API routes architecture
 - [ ] **TASK-002**: Update CLAUDE.md to remove tRPC references
 - [ ] **TASK-003**: Create API endpoint reference documentation
-- [ ] **TASK-004**: Document authorization flow with diagrams
+- [x] **TASK-004**: Document authorization flow with diagrams *(Updated system design docs to reflect namespace-level authorization)*
 - [ ] **TASK-005**: Remove unused tRPC packages from package.json
 - [ ] **TASK-006**: Remove 'trpc' from middleware matcher pattern
 - [ ] **TASK-007**: Run build and tests to ensure no breaking changes

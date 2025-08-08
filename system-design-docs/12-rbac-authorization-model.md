@@ -241,13 +241,15 @@ Viewer (Read-only access)
 - `ns.config`: Configure namespace settings
 - `ns.team`: Manage namespace team
 
-### 4. Content Permissions
-- `content.create`: Create new content
-- `content.edit`: Edit existing content
-- `content.delete`: Delete content
-- `content.translate`: Edit translations
-- `content.review`: Review and comment
-- `content.approve`: Approve for publication
+### 4. Content Permissions (Namespace-Level Authorization)
+- `content.create`: Create new content (authorized at namespace level)
+- `content.edit`: Edit existing content (authorized at namespace level)
+- `content.delete`: Delete content (authorized at namespace level)
+- `content.translate`: Edit translations (authorized at namespace level)
+- `content.review`: Review and comment (authorized at namespace level)
+- `content.approve`: Approve for publication (authorized at namespace level)
+
+**IMPORTANT**: All vocabulary and element set permissions are determined by namespace-level access. There are no vocabulary-specific or element-set-specific permissions in the system. Users with namespace access can perform actions on all vocabularies within that namespace according to their role level.
 
 ### 5. Project Permissions
 - `project.admin`: Full project control

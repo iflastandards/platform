@@ -305,13 +305,13 @@ class PreCommitRunner {
     } else if (analysis.type === 'dependency') {
       this.log('📦 Dependency-only changes - light validation', 'info');
       
-      if (!await this.runStep('TypeScript Check', 'nx', ['run', 'admin:typecheck'], {
+      if (!await this.runStep('TypeScript Check', 'pnpm', ['nx', 'run', 'admin:typecheck'], {
         timeout: CONFIG.TYPECHECK_TIMEOUT
       })) {
         this.hasErrors = true;
       }
 
-      if (!await this.runStep('ESLint', 'nx', ['affected', '--target=lint', '--parallel=3'], {
+      if (!await this.runStep('ESLint', 'pnpm', ['nx', 'affected', '--target=lint', '--parallel=3'], {
         timeout: CONFIG.LINT_TIMEOUT
       })) {
         // Lint warnings don't fail the commit
@@ -320,20 +320,20 @@ class PreCommitRunner {
     } else {
       this.log('🔍 Code changes - full validation', 'info');
       
-      if (!await this.runStep('TypeScript Check', 'nx', ['affected', '--target=typecheck', '--parallel=3'], {
+      if (!await this.runStep('TypeScript Check', 'pnpm', ['nx', 'affected', '--target=typecheck', '--parallel=3'], {
         timeout: CONFIG.TYPECHECK_TIMEOUT
       })) {
         this.hasErrors = true;
       }
 
       // Run unit tests only for pre-commit (fast feedback)
-      if (!await this.runStep('Tests', 'nx', ['affected', '--target=test:unit', '--parallel=3', '--exclude=platform,@ifla/dev-servers,unified-spreadsheet,standards-cli'], {
+      if (!await this.runStep('Tests', 'pnpm', ['nx', 'affected', '--target=test:unit', '--parallel=3', '--exclude=platform,@ifla/dev-servers,unified-spreadsheet,standards-cli'], {
         timeout: CONFIG.TEST_TIMEOUT
       })) {
         this.hasErrors = true;
       }
 
-      if (!await this.runStep('ESLint', 'nx', ['affected', '--target=lint', '--parallel=3'], {
+      if (!await this.runStep('ESLint', 'pnpm', ['nx', 'affected', '--target=lint', '--parallel=3'], {
         timeout: CONFIG.LINT_TIMEOUT
       })) {
         // Lint warnings don't fail the commit

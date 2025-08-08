@@ -210,7 +210,7 @@ export function withAuth<T extends ResourceType = ResourceType>(
       logger.debug('Processing authenticated request', {
         resource: resourceType,
         action,
-        path: req.nextUrl.pathname
+        path: req.nextUrl?.pathname || req.url || '/'
       });
       
       // Step 1: Check authentication

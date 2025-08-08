@@ -1,4 +1,4 @@
-import { NextRequest, NextResponse } from 'next/server';
+import { NextResponse } from 'next/server';
 import { getUserAccessibleResources } from '@/lib/authorization';
 import { withAuth, type AuthenticatedRequest } from '@/lib/middleware/withAuth';
 import { promises as fs } from 'fs';

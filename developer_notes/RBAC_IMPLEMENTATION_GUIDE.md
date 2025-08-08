@@ -20,6 +20,27 @@ This guide provides practical implementation details for developers working with
 
 ## Custom RBAC Implementation
 
+### Authorization Hierarchy (CRITICAL)
+
+The IFLA Standards Platform uses **namespace-level authorization** as the fundamental access control mechanism:
+
+```
+System Level (Superadmin)
+    ↓
+Review Group Level (Review Group Admin)
+    ↓
+Namespace Level (Namespace Admin/Editor/Translator) ← LOWEST AUTHORIZATION LEVEL
+    ↓
+Content Level (Vocabularies, Element Sets) ← NO SPECIFIC PERMISSIONS
+```
+
+**Key Principles:**
+1. **Namespace is the lowest level of authorization** - All content permissions are determined by namespace access
+2. **No vocabulary-specific permissions** - Users cannot have permissions for individual vocabularies
+3. **No element-set-specific permissions** - Users cannot have permissions for individual element sets
+4. **Inheritance model** - All content within a namespace inherits the namespace's access permissions
+5. **Uniform access** - If you can edit one vocabulary in a namespace, you can edit ALL vocabularies in that namespace
+
 ### Role Definitions
 
 ```typescript
@@ -99,10 +120,10 @@ resourcePolicy:
     - actions: ["manage"]
 ```
 
-### Permission Matrix
+### Permission Matrix (Namespace-Level Authorization)
 
-| Role | Vocabularies | Namespaces | Users | Settings |
-|------|-------------|------------|-------|----------|
+| Role | Namespace Content* | Namespaces | Users | Settings |
+|------|-------------------|------------|-------|----------|
 | SUPERADMIN | Full | Full | Full | Full |
 | ADMIN | Full | Manage | Manage | Edit |
 | EDITOR | Create/Edit | View | View | View |
@@ -110,20 +131,29 @@ resourcePolicy:
 | REVIEWER | Comment | View | - | - |
 | VIEWER | Read | View | - | - |
 
-### Namespace-Specific Permissions
+*Namespace Content includes ALL vocabularies, element sets, and other content within the namespace. Permissions are granted at the namespace level and apply to all content within that namespace.
+
+### Namespace-Level Authorization
+
+**IMPORTANT**: All vocabulary and element set permissions are determined at the namespace level. There are no vocabulary-specific permissions in the system.
 
 ```typescript
 // Example: User with editor role in specific namespace
 interface NamespacePermissions {
   'isbd': {
     role: 'editor',
-    permissions: ['vocabulary:create', 'vocabulary:edit', 'vocabulary:delete']
+    permissions: ['content:create', 'content:edit', 'content:delete'] // Applies to ALL vocabularies in namespace
   },
   'unimarc': {
     role: 'reviewer',
-    permissions: ['vocabulary:read', 'vocabulary:comment']
+    permissions: ['content:read', 'content:comment'] // Applies to ALL vocabularies in namespace
   }
 }
+
+// Authorization hierarchy: Namespace is the lowest level
+// - Vocabularies inherit permissions from their namespace
+// - Element sets inherit permissions from their namespace
+// - No vocabulary-specific or element-set-specific permissions exist
 ```
 
 ### Time-Based Permissions
@@ -187,10 +217,10 @@ export function checkUserPermission(
   return rolePermissions.includes(`${resource}:${action}`);
 }
 
-// Example usage in API route
+// Example usage in vocabulary API route (namespace-level authorization)
 export async function GET(
   req: Request,
-  { params }: { params: { namespace: string } }
+  { params }: { params: { vocabularyId: string } }
 ) {
   const { userId, sessionClaims } = auth();
   
@@ -198,19 +228,27 @@ export async function GET(
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
   
+  // Find vocabulary to get its namespace
+  const vocabulary = await getVocabulary(params.vocabularyId);
+  if (!vocabulary) {
+    return NextResponse.json({ error: "Not found" }, { status: 404 });
+  }
+  
+  // Check namespace-level permission (NOT vocabulary-specific)
   const userRole = sessionClaims?.publicMetadata?.role;
   const canRead = checkUserPermission(
     userRole,
     'namespace',
     'read',
-    params.namespace
+    vocabulary.namespaceId  // Authorization happens at namespace level
   );
   
   if (!canRead) {
     return NextResponse.json({ error: "Forbidden" }, { status: 403 });
   }
   
-  // Proceed with request...
+  // User has access to namespace, therefore access to ALL vocabularies in it
+  return NextResponse.json({ vocabulary });
 }
 ```
 

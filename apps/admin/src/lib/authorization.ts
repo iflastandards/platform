@@ -5,6 +5,12 @@
  * It replaces the previous Cerbos-based authorization with a simpler, custom implementation
  * that stores roles directly in Clerk's publicMetadata.
  * 
+ * IMPORTANT: Authorization hierarchy:
+ * - Namespace is the lowest level of authorization
+ * - Vocabularies and ElementSets inherit permissions from their namespace
+ * - There are NO vocabulary-specific or element-set-specific permissions
+ * - All content access is determined by namespace-level permissions
+ * 
  * @module authorization
  */
 
@@ -348,23 +354,42 @@ function checkContentPermission(
   action: Action<'vocabulary'>,
   attributes?: Record<string, any>
 ): boolean {
+  // IMPORTANT: Authorization for vocabularies and element sets happens at the namespace level
+  // There are no vocabulary-specific permissions - all access is determined by namespace permissions
+  
+  // Namespace is REQUIRED for vocabulary/elementSet operations (except list/read)
+  if (!attributes?.namespaceId && !['read', 'list'].includes(action)) {
+    return false; // Cannot perform write operations without namespace context
+  }
+  
   // Check namespace-based access
   if (attributes?.namespaceId) {
+    // Review Group Admins have full access to content in namespaces belonging to their review group
+    // First, we need to check if this namespace belongs to a review group they admin
+    // This would require checking the namespace's parent review group
+    if (attributes?.reviewGroupId) {
+      const isRGAdmin = context.roles.reviewGroups.some(
+        rg => rg.reviewGroupId === attributes.reviewGroupId && rg.role === 'admin'
+      );
+      if (isRGAdmin) return true;
+    }
+    
+    // Check team-based access
     const teamAccess = context.roles.teams.find(
       team => team.namespaces.includes(attributes.namespaceId)
     );
     
     if (teamAccess) {
-      // Editors have full content permissions
+      // Editors have full content permissions within their namespaces
       if (teamAccess.role === 'editor') return true;
       
-      // Authors can create and update
+      // Authors can create and update content within their namespaces
       if (teamAccess.role === 'author') {
         return ['create', 'read', 'update'].includes(action);
       }
     }
     
-    // Translators can read content in their namespaces
+    // Translators can read content in their assigned namespaces
     const hasTranslationAccess = context.roles.translations.some(
       trans => trans.namespaces.includes(attributes.namespaceId)
     );
@@ -374,6 +399,7 @@ function checkContentPermission(
     }
   }
   
+  // Default: all authenticated users can read vocabularies
   return action === 'read';
 }
 

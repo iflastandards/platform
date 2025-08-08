@@ -20,11 +20,11 @@ This document provides detailed permission matrices that map every platform acti
 | Delete namespace | ✓ | ✓ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ |
 | Archive namespace | ✓ | ✓ | ✓ | ✗ | ✗ | ✗ | ✗ | ✗ |
 | Configure namespace | ✓ | ✓ | ✓ | ✗ | ✗ | ✗ | ✗ | ✗ |
-| **Content Management** |
-| Create content | ✓ | ✓ | ✓ | ✓ | ✗ | ✗ | ✓ | ✓¹ |
-| Edit draft content | ✓ | ✓ | ✓ | ✓ | ✗ | ✗ | ✓ | ✓¹ |
-| Delete content | ✓ | ✓ | ✓ | ✓ | ✗ | ✗ | ✓ | ✗ |
-| Edit released content | ✓ | ✓² | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ |
+| **Content Management (Namespace-Level Authorization)** |
+| Create vocabulary/elementSet | ✓ | ✓ | ✓ | ✓ | ✗ | ✗ | ✓ | ✓¹ |
+| Edit vocabulary/elementSet | ✓ | ✓ | ✓ | ✓ | ✗ | ✗ | ✓ | ✓¹ |
+| Delete vocabulary/elementSet | ✓ | ✓ | ✓ | ✓ | ✗ | ✗ | ✓ | ✗ |
+| Edit released vocabulary/elementSet | ✓ | ✓² | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ |
 | **Translation** |
 | Edit translations | ✓ | ✓ | ✓ | ✓ | ✓ | ✗ | ✓ | ✓¹ |
 | Approve translations | ✓ | ✓ | ✓ | ✗ | ✗ | ✗ | ✓ | ✗ |
@@ -35,16 +35,18 @@ This document provides detailed permission matrices that map every platform acti
 | Publish version | ✓ | ✓ | ✓ | ✗ | ✗ | ✗ | ✗ | ✗ |
 | Rollback version | ✓ | ✓ | ✓ | ✗ | ✗ | ✗ | ✗ | ✗ |
 | Tag release | ✓ | ✓ | ✓ | ✗ | ✗ | ✗ | ✗ | ✗ |
-| **Import/Export** |
-| Import vocabulary | ✓ | ✓ | ✓ | ✓ | ✗ | ✗ | ✓ | ✗ |
-| Export vocabulary | ✓ | ✓ | ✓ | ✓ | ✓³ | ✓⁴ | ✓ | ✓¹ |
-| Bulk operations | ✓ | ✓ | ✓ | ✗ | ✗ | ✗ | ✓ | ✗ |
+| **Import/Export (Namespace-Level Authorization)** |
+| Import vocabulary/elementSet | ✓ | ✓ | ✓ | ✓ | ✗ | ✗ | ✓ | ✗ |
+| Export vocabulary/elementSet | ✓ | ✓ | ✓ | ✓ | ✓³ | ✓⁴ | ✓ | ✓¹ |
+| Bulk operations on namespace content | ✓ | ✓ | ✓ | ✗ | ✗ | ✗ | ✓ | ✗ |
 
 **Notes:**
 - ¹ Only for assigned namespaces within project scope
 - ² Requires temporary unlock (24-hour window)
 - ³ Translation fields only
 - ⁴ Read-only export for review purposes
+
+**IMPORTANT**: All vocabulary and element set operations are authorized at the namespace level. There are no vocabulary-specific permissions. Users with namespace access can perform actions on ALL vocabularies and element sets within that namespace according to their role level.
 
 ### Project Management Activities
 
@@ -171,10 +173,11 @@ This document provides detailed permission matrices that map every platform acti
 | `/api/admin/namespaces/:id` | GET | `ns.read` | Namespace-specific |
 | `/api/admin/namespaces/:id` | PUT | `ns.config` | NS Admin only |
 | `/api/admin/namespaces/:id` | DELETE | `rg.delete` | RG Admin only |
-| `/api/admin/namespaces/:id/content` | GET | `ns.read` | Any authorized user |
-| `/api/admin/namespaces/:id/content` | POST | `content.create` | NS Editor+ |
-| `/api/admin/namespaces/:id/content/:cid` | PUT | `content.edit` | NS Editor+ |
-| `/api/admin/namespaces/:id/content/:cid` | DELETE | `content.delete` | NS Editor+ |
+| `/api/admin/namespaces/:id/vocabularies` | GET | `ns.read` | Any authorized user |
+| `/api/admin/namespaces/:id/vocabularies` | POST | `content.create` | NS Editor+ |
+| `/api/admin/vocabularies/:id` | GET | `ns.read` | Namespace access required |
+| `/api/admin/vocabularies/:id` | PUT | `content.edit` | NS Editor+ in vocabulary's namespace |
+| `/api/admin/vocabularies/:id` | DELETE | `content.delete` | NS Editor+ in vocabulary's namespace |
 | `/api/admin/namespaces/:id/versions` | GET | `ns.read` | Any authorized user |
 | `/api/admin/namespaces/:id/versions` | POST | `ns.publish` | NS Admin+ |
 | `/api/admin/namespaces/:id/publish` | POST | `ns.publish` | NS Admin+ |
