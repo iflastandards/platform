@@ -46,7 +46,7 @@ const mockUser: AppUser = {
   accessibleNamespaces: ['isbd', 'isbdm'],
 };
 
-describe('PersonalDashboard Accessibility @a11y @integration', () => {
+describe('PersonalDashboard Accessibility @integration @accessibility @dashboard @high-priority', () => {
   it('should have no accessibility violations', async () => {
     const { container } = render(<PersonalDashboard user={mockUser} />);
     const results = await axe(container);

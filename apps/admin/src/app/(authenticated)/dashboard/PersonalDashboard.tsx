@@ -2,25 +2,24 @@
 
 import React, { useState } from 'react';
 import {
-  Container,
-  Typography,
+  Alert,
   Box,
-  Paper,
+  Button,
   Card,
   CardContent,
-  Button,
-  Tab,
-  Tabs,
-  Alert,
   Chip,
-  Stack,
+  Container,
+  Grid,
   List,
   ListItem,
-  ListItemText,
   ListItemIcon,
-  Divider,
+  ListItemText,
+  Paper,
+  Stack,
+  Tab,
+  Tabs,
+  Typography,
 } from '@mui/material';
-import Grid from '@mui/material/Grid';
 import {
   Dashboard as DashboardIcon,
   GitHub,
@@ -193,7 +192,8 @@ export default function PersonalDashboard({ user }: PersonalDashboardProps) {
                       Review Groups
                     </Typography>
                     <Typography 
-                      variant="h5"
+                      variant="h3"
+                      component="h3"
                       aria-label={`You are a member of ${user.reviewGroups.length} review groups`}
                     >
                       {user.reviewGroups.length}
@@ -218,7 +218,7 @@ export default function PersonalDashboard({ user }: PersonalDashboardProps) {
                   <Typography color="text.secondary" variant="body2">
                     Active Projects
                   </Typography>
-                  <Typography variant="h5">{projectCount}</Typography>
+                  <Typography variant="h3" component="h3">{projectCount}</Typography>
                 </Box>
               </Box>
             </CardContent>
@@ -233,7 +233,7 @@ export default function PersonalDashboard({ user }: PersonalDashboardProps) {
                   <Typography color="text.secondary" variant="body2">
                     Accessible Namespaces
                   </Typography>
-                  <Typography variant="h5">{user.accessibleNamespaces.length}</Typography>
+                  <Typography variant="h3" component="h3">{user.accessibleNamespaces.length}</Typography>
                 </Box>
               </Box>
             </CardContent>
@@ -248,7 +248,7 @@ export default function PersonalDashboard({ user }: PersonalDashboardProps) {
                   <Typography color="text.secondary" variant="body2">
                     Your Role
                   </Typography>
-                  <Typography variant="h6">
+                  <Typography variant="h4" component="h4">
                     {user.systemRole === 'admin' ? 'System Admin' :
                      user.isReviewGroupAdmin ? 'RG Admin' : 'Member'}
                   </Typography>
@@ -295,14 +295,14 @@ export default function PersonalDashboard({ user }: PersonalDashboardProps) {
         {/* Review Groups Tab */}
         <TabPanel value={tabValue} index={0}>
           <Box sx={{ p: 3 }}>
-            <Typography variant="h6" gutterBottom>
+            <Typography variant="h4" component="h4" gutterBottom>
               Your Review Group Memberships
             </Typography>
             {user.reviewGroups.length > 0 ? (
               <List>
-                {user.reviewGroups.map((rg) => (
+                {user.reviewGroups.map((rg, index) => (
                   <React.Fragment key={rg.slug}>
-                    <ListItem>
+                    <ListItem sx={{ borderBottom: index < user.reviewGroups.length - 1 ? 1 : 0, borderColor: 'divider' }}>
                       <ListItemIcon>
                         {getRoleIcon(rg.role)}
                       </ListItemIcon>
@@ -330,7 +330,6 @@ export default function PersonalDashboard({ user }: PersonalDashboardProps) {
                         </Button>
                       )}
                     </ListItem>
-                    <Divider component="li" />
                   </React.Fragment>
                 ))}
               </List>
@@ -345,14 +344,14 @@ export default function PersonalDashboard({ user }: PersonalDashboardProps) {
         {/* Projects Tab */}
         <TabPanel value={tabValue} index={1}>
           <Box sx={{ p: 3 }}>
-            <Typography variant="h6" gutterBottom>
+            <Typography variant="h4" component="h4" gutterBottom>
               Your Project Assignments
             </Typography>
             {projectCount > 0 ? (
               <List>
-                {Object.entries(user.projects).map(([projectId, project]) => (
+                {Object.entries(user.projects).map(([projectId, project], index) => (
                   <React.Fragment key={projectId}>
-                    <ListItem>
+                    <ListItem sx={{ borderBottom: index < Object.entries(user.projects).length - 1 ? 1 : 0, borderColor: 'divider' }}>
                       <ListItemIcon>
                         {getRoleIcon(project.role)}
                       </ListItemIcon>
@@ -379,7 +378,6 @@ export default function PersonalDashboard({ user }: PersonalDashboardProps) {
                         Open
                       </Button>
                     </ListItem>
-                    <Divider component="li" />
                   </React.Fragment>
                 ))}
               </List>
@@ -394,7 +392,7 @@ export default function PersonalDashboard({ user }: PersonalDashboardProps) {
         {/* Namespaces Tab */}
         <TabPanel value={tabValue} index={2}>
           <Box sx={{ p: 3 }}>
-            <Typography variant="h6" gutterBottom>
+            <Typography variant="h4" component="h4" gutterBottom>
               Accessible Namespaces
             </Typography>
             {user.accessibleNamespaces.length > 0 ? (
@@ -403,7 +401,7 @@ export default function PersonalDashboard({ user }: PersonalDashboardProps) {
                   <Grid size={{ xs: 12, sm: 6, md: 4 }} key={namespace}>
                     <Card>
                       <CardContent>
-                        <Typography variant="h6" gutterBottom>
+                        <Typography variant="h5" component="h5" gutterBottom>
                           {namespace.toUpperCase()}
                         </Typography>
                         <Button

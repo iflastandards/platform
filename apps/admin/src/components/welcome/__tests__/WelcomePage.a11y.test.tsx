@@ -22,7 +22,7 @@ vi.mock('../../auth/SafeSignInButton', () => ({
   },
 }));
 
-describe('WelcomePage Accessibility', () => {
+describe('WelcomePage Accessibility @integration @accessibility @ui @high-priority', () => {
   it('should have no accessibility violations', async () => {
     const { container } = render(<WelcomePage />);
     
