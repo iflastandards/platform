@@ -461,6 +461,7 @@
     "zod": "^4.0.14"
   },
   "devDependencies": {
+    "@axe-core/playwright": "^4.10.2",
     "@clerk/testing": "^1.10.9",
     "@docusaurus/core": "^3.8.1",
     "@docusaurus/eslint-plugin": "^3.8.1",
@@ -527,6 +528,7 @@
     "autoprefixer": "10.4.21",
     "axe-core": "^4.10.3",
     "cheerio": "^1.1.2",
+    "chrome-launcher": "^1.2.0",
     "concurrently": "^9.2.0",
     "devkit@latest": "link:nx/devkit@latest",
     "dotenv": "^17.2.1",
@@ -534,6 +536,7 @@
     "esbuild-sass-plugin": "^3.3.1",
     "eslint": "^9.32.0",
     "eslint-formatter-compact": "^8.40.0",
+    "eslint-plugin-jsx-a11y": "^6.10.2",
     "eslint-plugin-mdx": "^3.6.2",
     "eslint-plugin-react": "^7.37.5",
     "eslint-plugin-react-hooks": "5.2.0",
@@ -552,6 +555,7 @@
     "jose": "^6.0.12",
     "jsonc-eslint-parser": "^2.4.0",
     "knip": "^5.62.0",
+    "lighthouse": "^12.8.1",
     "lint-staged": "^16.1.2",
     "next-list": "^1.0.18",
     "next-routes-list": "^1.2.0",

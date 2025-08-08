@@ -5,6 +5,7 @@
 import baseConfig from './configs/base.mjs';
 import typescriptConfig from './configs/typescript.mjs';
 import reactConfig from './configs/react.mjs';
+import accessibilityConfig from './configs/accessibility.mjs';
 import nextConfig from './configs/next.mjs';
 import docusaurusConfig from './configs/docusaurus.mjs';
 import testConfig from './configs/test.mjs';
@@ -27,12 +28,13 @@ export const typescript = createPreset([
 ]);
 
 /**
- * Configuration for React applications (includes TypeScript)
+ * Configuration for React applications (includes TypeScript and Accessibility)
  */
 export const react = createPreset([
   baseConfig,
   typescriptConfig,
   reactConfig,
+  accessibilityConfig,
   testConfig,
 ]);
 
@@ -43,6 +45,7 @@ export const next = createPreset([
   baseConfig,
   typescriptConfig,
   reactConfig,
+  accessibilityConfig,
   nextConfig,
   testConfig,
 ]);
@@ -54,6 +57,7 @@ export const docusaurus = createPreset([
   baseConfig,
   typescriptConfig,
   reactConfig,
+  accessibilityConfig,
   docusaurusConfig,
   testConfig,
 ]);
@@ -87,6 +91,7 @@ export {
   baseConfig,
   typescriptConfig,
   reactConfig,
+  accessibilityConfig,
   nextConfig,
   docusaurusConfig,
   testConfig,
