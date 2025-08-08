@@ -285,7 +285,7 @@ export const POST = withAuth(
  */
 async function getUserAccessibleNamespaces(authContext: any): Promise<string[]> {
   // Superadmins have access to all namespaces
-  if (authContext.roles.system === 'superadmin') {
+  if (authContext.roles.systemRole === 'superadmin') {
     return ['isbd', 'unimarc', 'frbr', 'lrm', 'mri']; // Return all namespaces
   }
 
