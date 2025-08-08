@@ -2,7 +2,7 @@ import { currentUser } from '@clerk/nextjs/server';
 
 /**
  * User metadata structure for RBAC
- * This structure replaces the old Cerbos user attributes
+ * Stored in Clerk's publicMetadata for authorization
  */
 export interface UserMetadata {
   // System-level role (only for superadmins)
@@ -36,7 +36,7 @@ export interface UserRoles extends UserMetadata {
 
 /**
  * Get the current authenticated user with proper RBAC metadata
- * This replaces the old getCerbosUser function
+ * Returns user with roles from Clerk's publicMetadata
  */
 export async function getAuthUser() {
   const user = await currentUser();

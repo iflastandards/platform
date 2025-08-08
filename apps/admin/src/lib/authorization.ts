@@ -2,8 +2,8 @@
  * Authorization utilities for the IFLA Standards Admin application
  * 
  * This module provides role-based access control (RBAC) using Clerk's user metadata.
- * It replaces the previous Cerbos-based authorization with a simpler, custom implementation
- * that stores roles directly in Clerk's publicMetadata.
+ * Roles and permissions are stored directly in Clerk's publicMetadata for efficient
+ * authorization checks without external dependencies.
  * 
  * IMPORTANT: Authorization hierarchy:
  * - Namespace is the lowest level of authorization

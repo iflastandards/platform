@@ -204,7 +204,6 @@
     "test:admin:coverage": "nx run admin:test:coverage",
     "test:admin:e2e": "nx run admin:e2e",
     "test:admin:integration": "nx run admin:test:integration",
-    "test:admin:roles": "node scripts/test-admin-roles.js",
     "test:admin:unit": "nx run admin:test:unit",
     "test:admin:watch": "nx run admin:test:watch",
     "test:affected": "nx affected --target=test --parallel=3",

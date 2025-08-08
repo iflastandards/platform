@@ -5,8 +5,8 @@ The IFLA Standards Admin Portal is a headless Next.js service that provides auth
 ## Architecture
 
 - **Framework**: Next.js 15.2.5 (App Router)
-- **Authentication**: Clerk (replacing NextAuth)
-- **Authorization**: Cerbos for role-based access control
+- **Authentication**: Clerk
+- **Authorization**: Custom RBAC using Clerk publicMetadata
 - **Database**: Supabase
 - **Port**: 3007 (local development)
 
@@ -36,7 +36,7 @@ nx test admin
 **What's Tested**:
 - API endpoint logic
 - Authentication helpers
-- Cerbos integration
+- Authorization and RBAC logic
 - React component rendering
 - User interaction handlers
 - Custom hooks
@@ -130,14 +130,11 @@ SUPABASE_SERVICE_ROLE_KEY=
 GITHUB_APP_ID=
 GITHUB_APP_PRIVATE_KEY=
 GITHUB_APP_INSTALLATION_ID=
-
-# Cerbos
-CERBOS_URL=http://localhost:3592
 ```
 
 ## Authorization Model
 
-The admin portal uses Cerbos for fine-grained authorization:
+The admin portal uses a custom RBAC system with roles stored in Clerk's publicMetadata:
 
 ### Roles
 - `superadmin` - Full platform access
@@ -154,4 +151,4 @@ The admin portal uses Cerbos for fine-grained authorization:
 - Roles
 - Spreadsheets
 
-See `src/lib/cerbos.ts` for the complete authorization logic.
+See `src/lib/authorization.ts` for the complete authorization logic.

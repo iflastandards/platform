@@ -95,7 +95,7 @@ ALTER TABLE projects ENABLE ROW LEVEL SECURITY;
 ALTER TABLE namespace_profiles ENABLE ROW LEVEL SECURITY;
 ALTER TABLE import_logs ENABLE ROW LEVEL SECURITY;
 
--- RLS Policies (basic - to be refined based on Cerbos integration)
+-- RLS Policies (basic - authorization handled via Clerk metadata)
 -- For now, authenticated users can read everything but write is restricted
 
 -- Import jobs: users can see all, create their own
