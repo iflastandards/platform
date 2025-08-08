@@ -28,10 +28,23 @@ export default function RequestInviteButton() {
   return (
     <>
       <Button
-        variant="outlined"
-        color="secondary"
-        size="large"
-        sx={{ fontWeight: 'bold', px: 4, py: 1.5 }}
+        variant="text"
+        size="small"
+        sx={{ 
+          fontWeight: 'bold', 
+          fontSize: '0.875rem',
+          textTransform: 'none',
+          color: 'info.main',
+          textDecoration: 'underline',
+          minWidth: 'auto',
+          px: 1,
+          py: 0.5,
+          '&:hover': {
+            textDecoration: 'underline',
+            bgcolor: 'transparent',
+            color: 'info.dark',
+          },
+        }}
         onClick={() => setOpen(true)}
       >
         Request Invitation

@@ -219,11 +219,15 @@ export default function Navbar() {
           backgroundColor:
             theme.palette.mode === 'dark' ? 'background.paper' : 'primary.main',
         }}
+        role="banner"
+        aria-label="Main navigation"
       >
         <Toolbar>
           <IconButton
             color="inherit"
-            aria-label="open drawer"
+            aria-label="Open navigation menu"
+            aria-expanded={mobileOpen}
+            aria-controls="navigation-drawer"
             edge="start"
             onClick={handleDrawerToggle}
             sx={{ mr: 2, display: { md: 'none' } }}
@@ -278,13 +282,20 @@ export default function Navbar() {
               sx={{ display: { xs: 'none', sm: 'flex' } }}
             />
 
-            <IconButton color="inherit">
+            <IconButton 
+              color="inherit"
+              aria-label="View notifications (5 unread)"
+            >
               <Badge badgeContent={5} color="error">
                 <NotificationsIcon />
               </Badge>
             </IconButton>
 
-            <IconButton onClick={toggleTheme} color="inherit">
+            <IconButton 
+              onClick={toggleTheme} 
+              color="inherit"
+              aria-label={`Switch to ${mode === 'dark' ? 'light' : 'dark'} mode`}
+            >
               {mode === 'dark' ? <LightModeIcon /> : <DarkModeIcon />}
             </IconButton>
 
@@ -311,8 +322,12 @@ export default function Navbar() {
           display: { xs: 'block', md: 'none' },
           '& .MuiDrawer-paper': { boxSizing: 'border-box', width: 240 },
         }}
+        id="navigation-drawer"
+        aria-label="Main navigation"
       >
-        {drawer}
+        <nav role="navigation" aria-label="Main navigation">
+          {drawer}
+        </nav>
       </Drawer>
     </>
   );

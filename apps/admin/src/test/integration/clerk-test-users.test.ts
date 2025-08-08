@@ -7,7 +7,6 @@ import {
   TestUsers, 
   TestUserUtils, 
   TEST_USER_EMAILS,
-  getTestUser,
   getAllTestUsers,
   clearTestUsersCache 
 } from '../../test-config/clerk-test-users';

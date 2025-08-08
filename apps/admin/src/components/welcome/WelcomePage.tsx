@@ -1,6 +1,4 @@
 'use client';
-
-import React from 'react';
 import {
   Box,
   Card,
@@ -9,7 +7,6 @@ import {
   Chip,
   Button,
   Container,
-  Stack,
   Alert,
   useTheme,
 } from '@mui/material';
@@ -104,7 +101,7 @@ function NamespaceStatusCard({
         >
           <Box>
             <Typography
-              variant="h6"
+              variant="h4"
               fontWeight="bold"
               gutterBottom
               sx={{ color }}
@@ -167,22 +164,61 @@ export default function WelcomePage() {
   ];
 
   return (
-    <Box sx={{ bgcolor: 'background.default', minHeight: '100vh' }}>
+    <Box component="main" sx={{ bgcolor: 'background.default', minHeight: '100vh' }}>
       {/* Hero Section */}
       <Box
+        component="header"
         sx={{
+          position: 'relative',
           bgcolor: 'primary.main',
           color: 'white',
-          py: 8,
+          py: { xs: 6, md: 10 },
           background: `linear-gradient(135deg, ${theme.palette.primary.main} 0%, ${theme.palette.primary.dark} 100%)`,
+          overflow: 'hidden',
+          '&::before': {
+            content: '""',
+            position: 'absolute',
+            top: 0,
+            left: 0,
+            right: 0,
+            bottom: 0,
+            background: 'radial-gradient(circle at 30% 20%, rgba(255,255,255,0.1) 0%, transparent 50%), radial-gradient(circle at 70% 80%, rgba(255,255,255,0.08) 0%, transparent 50%)',
+            pointerEvents: 'none',
+          },
         }}
       >
-        <Container maxWidth="lg">
+        <Container maxWidth="lg" sx={{ position: 'relative', zIndex: 1 }}>
           <Box textAlign="center">
-            <Typography variant="h2" fontWeight="bold" gutterBottom>
+            <Typography 
+              variant="h1" 
+              sx={{
+                fontWeight: 800,
+                fontSize: { xs: '2.5rem', sm: '3.5rem', md: '4rem' },
+                lineHeight: 1.1,
+                mb: 3,
+                background: 'linear-gradient(45deg, #ffffff 30%, rgba(255,255,255,0.8) 100%)',
+                backgroundClip: 'text',
+                WebkitBackgroundClip: 'text',
+                WebkitTextFillColor: 'transparent',
+                textShadow: '0 2px 4px rgba(0,0,0,0.1)',
+              }}
+            >
               IFLA Standards Management Toolkit
             </Typography>
-            <Typography variant="h5" sx={{ mb: 4, opacity: 0.9 }}>
+            
+            <Typography 
+              variant="h2" 
+              sx={{ 
+                mb: 5, 
+                opacity: 0.95,
+                fontWeight: 400,
+                fontSize: { xs: '1.25rem', sm: '1.5rem', md: '1.75rem' },
+                lineHeight: 1.4,
+                maxWidth: 800,
+                mx: 'auto',
+                textShadow: '0 1px 2px rgba(0,0,0,0.1)',
+              }}
+            >
               Collaborative platform for developing, maintaining, and publishing
               international library standards
             </Typography>
@@ -190,55 +226,126 @@ export default function WelcomePage() {
             <Alert
               severity="info"
               sx={{
-                mb: 4,
-                bgcolor: 'rgba(255, 255, 255, 0.95)',
+                mb: 5,
+                bgcolor: 'rgba(255, 255, 255, 0.98)',
                 color: 'grey.800',
-                border: 1,
-                borderColor: 'rgba(255, 255, 255, 0.8)',
+                border: 2,
+                borderColor: 'rgba(255, 255, 255, 0.9)',
+                borderRadius: 3,
                 '& .MuiAlert-icon': {
                   color: 'info.main',
+                  fontSize: '1.5rem',
                 },
-                maxWidth: 600,
+                maxWidth: 650,
                 mx: 'auto',
-                boxShadow: '0 4px 12px rgba(0, 0, 0, 0.1)',
+                boxShadow: '0 8px 32px rgba(0, 0, 0, 0.15)',
+                backdropFilter: 'blur(10px)',
+                p: 3,
               }}
             >
-              <Typography fontWeight="medium">
+              <Typography 
+                fontWeight="bold" 
+                sx={{ 
+                  fontSize: '1.1rem',
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: 1,
+                  flexWrap: 'wrap',
+                }}
+              >
                 🔒 Access by invitation only
+                <RequestInviteButton />
               </Typography>
-              <Typography variant="body2" sx={{ mt: 1 }}>
+              <Typography 
+                variant="body1" 
+                sx={{ 
+                  mt: 1.5,
+                  fontSize: '1rem',
+                  lineHeight: 1.5,
+                }}
+              >
                 This platform is exclusively for IFLA review group members,
                 editors, translators, and authorized contributors.
               </Typography>
             </Alert>
 
-            {/* Clerk Sign-In and Invitation CTA */}
-            <Stack direction="row" spacing={2} justifyContent="center">
+            {/* Enhanced CTA Section */}
+            <Box sx={{ display: 'flex', justifyContent: 'center' }}>
               <SafeSignInButton>
                 <Button
                   variant="contained"
-                  color="secondary"
                   size="large"
                   sx={{
+                    bgcolor: 'white',
+                    color: 'primary.main',
                     fontWeight: 'bold',
-                    px: 4,
-                    py: 1.5,
-                    fontSize: '1.1rem',
+                    px: 5,
+                    py: 2,
+                    fontSize: '1.2rem',
+                    borderRadius: 3,
+                    textTransform: 'none',
+                    boxShadow: '0 4px 20px rgba(0, 0, 0, 0.15)',
+                    border: 2,
+                    borderColor: 'transparent',
+                    transition: 'all 0.3s ease',
+                    '&:hover': {
+                      bgcolor: 'rgba(255, 255, 255, 0.95)',
+                      transform: 'translateY(-2px)',
+                      boxShadow: '0 8px 30px rgba(0, 0, 0, 0.2)',
+                      borderColor: 'rgba(255, 255, 255, 0.3)',
+                    },
+                    '&:active': {
+                      transform: 'translateY(0)',
+                    },
                   }}
                 >
                   Sign In
                 </Button>
               </SafeSignInButton>
-              <RequestInviteButton />
-            </Stack>
+            </Box>
+
+            {/* Decorative Elements */}
+            <Box
+              sx={{
+                mt: 6,
+                display: 'flex',
+                justifyContent: 'center',
+                gap: 4,
+                opacity: 0.7,
+              }}
+            >
+              {[
+                { Icon: SecurityIcon, label: 'Security' },
+                { Icon: PeopleIcon, label: 'Collaboration' },
+                { Icon: LanguageIcon, label: 'Multilingual' }
+              ].map(({ Icon, label }, index) => (
+                <Box
+                  key={index}
+                  sx={{
+                    p: 2,
+                    borderRadius: '50%',
+                    bgcolor: 'rgba(255, 255, 255, 0.1)',
+                    backdropFilter: 'blur(10px)',
+                    border: 1,
+                    borderColor: 'rgba(255, 255, 255, 0.2)',
+                  }}
+                >
+                  <Icon 
+                    sx={{ fontSize: '2rem', color: 'white' }} 
+                    aria-label={label}
+                    role="img"
+                  />
+                </Box>
+              ))}
+            </Box>
           </Box>
         </Container>
       </Box>
 
       {/* Stats Section */}
-      <Container maxWidth="lg" sx={{ py: 6 }}>
-        <Box textAlign="center" mb={4}>
-          <Typography variant="h4" fontWeight="bold" gutterBottom>
+      <Container component="section" maxWidth="lg" sx={{ py: 6 }}>
+        <Box component="header" textAlign="center" mb={4}>
+          <Typography variant="h3" fontWeight="bold" gutterBottom>
             Live Platform Statistics
           </Typography>
           <Typography variant="body1" color="text.secondary">
@@ -298,8 +405,8 @@ export default function WelcomePage() {
         </Grid>
 
         {/* Features Section */}
-        <Box textAlign="center" mb={4}>
-          <Typography variant="h4" fontWeight="bold" gutterBottom>
+        <Box component="header" textAlign="center" mb={4}>
+          <Typography variant="h3" fontWeight="bold" gutterBottom>
             Platform Features
           </Typography>
           <Typography variant="body1" color="text.secondary">
@@ -328,7 +435,7 @@ export default function WelcomePage() {
                       {feature.icon}
                     </Box>
                     <Box>
-                      <Typography variant="h6" fontWeight="bold" gutterBottom>
+                      <Typography variant="h4" fontWeight="bold" gutterBottom>
                         {feature.title}
                       </Typography>
                       <Typography variant="body2" color="text.secondary">
@@ -344,7 +451,7 @@ export default function WelcomePage() {
 
         {/* Namespace Status */}
         <Box textAlign="center" mb={4}>
-          <Typography variant="h4" fontWeight="bold" gutterBottom>
+          <Typography variant="h3" fontWeight="bold" gutterBottom>
             Standards Overview
           </Typography>
           <Typography variant="body1" color="text.secondary">
@@ -363,6 +470,7 @@ export default function WelcomePage() {
 
       {/* Footer */}
       <Box
+        component="footer"
         sx={{
           bgcolor: 'grey.50',
           borderTop: 1,

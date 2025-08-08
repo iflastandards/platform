@@ -1,0 +1,109 @@
+# Agent OS Configuration for IFLA Standards Platform
+
+product:
+  name: "IFLA Standards Platform"
+  type: "documentation-platform"
+  description: "Multi-site documentation and vocabulary management system for library standards"
+  version: "1.0.0"
+  
+technology:
+  primary_language: "typescript"
+  framework:
+    frontend:
+      - "docusaurus@3.8.1"
+      - "nextjs@15.4.4"
+      - "react@19.1.1"
+    backend:
+      - "trpc@11.4.3"
+      - "clerk"
+      - "supabase"
+  build_system: "nx"
+  package_manager: "pnpm"
+  testing:
+    unit: "vitest"
+    e2e: "playwright"
+  
+structure:
+  type: "monorepo"
+  workspace_layout:
+    apps_dir: "apps"
+    libs_dir: "packages"
+  main_apps:
+    - path: "portal"
+      type: "docusaurus"
+      description: "Main documentation portal"
+    - path: "apps/admin"
+      type: "nextjs"
+      description: "Admin interface"
+    - path: "standards/*"
+      type: "docusaurus"
+      description: "Individual standard documentation sites"
+      
+commands:
+  dev:
+    start_all: "pnpm dev:servers"
+    start_portal: "pnpm nx start portal"
+    start_admin: "pnpm nx dev admin --turbopack"
+  build:
+    all: "pnpm build:all"
+    affected: "pnpm nx affected --target=build"
+  test:
+    unit: "pnpm test"
+    e2e: "pnpm test:e2e"
+    comprehensive: "pnpm test:comprehensive"
+  quality:
+    lint: "pnpm lint"
+    typecheck: "pnpm typecheck"
+    
+environments:
+  local:
+    url: "http://localhost:3000"
+  preview:
+    url: "https://iflastandards.github.io/platform"
+  production:
+    url: "https://www.iflastandards.info"
+    
+key_files:
+  - "package.json"
+  - "nx.json"
+  - "CLAUDE.md"
+  - "README.md"
+  - "apps/admin/next.config.js"
+  - "portal/docusaurus.config.ts"
+  
+workflows:
+  development:
+    - "Review existing patterns in codebase"
+    - "Run affected tests before changes"
+    - "Use Nx commands for efficiency"
+    - "Follow TypeScript strict mode"
+  testing:
+    - "Tag tests appropriately (@unit, @integration, @e2e)"
+    - "Use affected testing strategy"
+    - "Follow 5-phase testing approach"
+  deployment:
+    - "Push to preview branch for staging"
+    - "Create PR to main for production"
+    - "Automated GitHub Pages deployment"
+    
+agent_capabilities:
+  - "code_analysis"
+  - "test_execution"
+  - "build_optimization"
+  - "documentation_generation"
+  - "dependency_management"
+  - "quality_assurance"
+  - "workflow_automation"
+  
+priorities:
+  high:
+    - "Test coverage improvement"
+    - "Build performance optimization"
+    - "Authentication migration completion"
+  medium:
+    - "Documentation updates"
+    - "Dependency updates"
+    - "Code refactoring"
+  low:
+    - "Feature enhancements"
+    - "UI improvements"
