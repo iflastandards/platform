@@ -80,7 +80,7 @@ Essential guidance for coding agents working in this IFLA Standards monorepo.
 - **Templates**: Use `developer_notes/TEST_TEMPLATES.md` for proper test structure
 - **Default to @integration tests** with real files, databases, and services
 - **Use @unit tests only for pure functions** (rare)
-- **Command format**: `pnpm nx test [project] --skip-nx-cache` (NEVER forget pnpm and --skip-nx-cache)
+- **Command format**: `pnpm nx test [project]` (NEVER forget pnpm prefix)
 - **Performance targets**: <30s per integration test, <5s per unit test
 - **Real test data**: Create actual files, use temp directories, clean up in afterEach
 

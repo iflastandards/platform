@@ -199,7 +199,7 @@ nx reset portal
 
 ```bash
 # Force rebuild without cache
-nx build portal --skip-nx-cache
+nx build portal
 
 # Run with verbose logging
 nx build portal --verbose

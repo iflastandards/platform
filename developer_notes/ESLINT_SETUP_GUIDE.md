@@ -331,9 +331,9 @@ EOF
 # Add these scripts to root package.json
 {
   "scripts": {
-    "lint": "nx affected --target=lint --parallel=3 --skip-nx-cache",
+    "lint": "nx affected --target=lint --parallel=3",
     "lint:all": "nx run-many --target=lint --all --parallel=6",
-    "lint:fix": "nx affected --target=lint --parallel=3 --skip-nx-cache -- --fix"
+    "lint:fix": "nx affected --target=lint --parallel=3 -- --fix"
   }
 }
 ```

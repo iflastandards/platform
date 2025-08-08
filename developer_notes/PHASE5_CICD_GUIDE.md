@@ -29,7 +29,7 @@ You **MUST** ensure these phases pass locally:
 #### Phase 1: Selective Testing
 ```bash
 # Test your specific changes
-pnpm nx test your-project --skip-nx-cache
+pnpm nx test your-project
 pnpm test --grep "@critical"
 ```
 

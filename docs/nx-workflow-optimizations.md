@@ -90,7 +90,7 @@ nx show projects --affected --type=app
 ### 2. **Smart Caching**
 ```bash
 # Leverages NX cache for faster subsequent runs
-nx affected --target=build --parallel=1 --skip-nx-cache=false
+nx affected --target=build --parallel=1
 ```
 
 ### 3. **Dependency Graph**

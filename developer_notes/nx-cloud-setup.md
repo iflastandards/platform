@@ -127,7 +127,7 @@ pnpm nx show projects --with-target build
 pnpm nx affected -t build
 
 # Skip cloud cache (for testing)
-pnpm nx build portal --skip-nx-cache
+pnpm nx build portal
 
 # View cache statistics
 pnpm nx:cache:stats

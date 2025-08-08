@@ -64,7 +64,8 @@ pnpm pnpm nx run-many --target=build --parallel=1
 pnpm pnpm nx reset
 
 # Disable Nx cache
-pnpm pnpm nx run-many --target=build --skip-nx-cache
+pnpm nx reset
+pnpm nx run-many --target=build
 
 # Clear Node module cache
 rm -rf node_modules/.cache

@@ -298,7 +298,7 @@ pnpm test:ci:connectivity             # External service connectivity only
 - Load balancing across available resources
 
 ### Smart Caching
-- Nx cache enabled by default (`--skip-nx-cache=false`)
+- Nx cache enabled by default
 - Input-based cache invalidation
 - Shared cache across team members (if Nx Cloud configured)
 

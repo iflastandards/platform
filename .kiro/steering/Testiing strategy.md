@@ -252,7 +252,7 @@ npx vitest --ui                       # Open Vitest UI for debugging
 ## Performance Optimization
 
 - Use `--parallel=3` flag for faster execution
-- Leverage Nx cache with `--skip-nx-cache=false`
+- Leverage Nx cache for faster builds
 - Focus on affected tests during development
 - Run comprehensive tests only before releases
 

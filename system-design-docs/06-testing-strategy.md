@@ -491,7 +491,7 @@ nx test @ifla/theme --coverage
    ```bash
    # Clear and rebuild cache
    nx reset
-   nx run-many -t build --skip-nx-cache
+   nx run-many -t build
    ```
 
 4. **Parallel Test Conflicts**

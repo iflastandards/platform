@@ -6,10 +6,9 @@ This guide documents the solutions implemented to address flaky typecheck result
 
 ## Key Principles
 
-1. **Always use `--skip-nx-cache` for typechecks** where complete fidelity is essential
-2. **Clean build artifacts** before critical typechecks to ensure fresh state
-3. **Configure Nx properly** to understand typecheck outputs
-4. **Monitor cache drift** and clean periodically
+1. **Clean build artifacts** before critical typechecks to ensure fresh state
+2. **Configure Nx properly** to understand typecheck outputs
+3. **Monitor cache drift** and clean periodically
 
 ## Implementation Details
 
@@ -39,11 +38,11 @@ The typecheck target has been configured to:
 
 ### 2. Package.json Commands
 
-All typecheck commands now use `--skip-nx-cache`:
+Typecheck commands:
 
 ```json
-"typecheck": "pnpm nx affected --target=typecheck --parallel=3 --skip-nx-cache",
-"typecheck:all": "pnpm nx run-many --target=typecheck --all --parallel=6 --skip-nx-cache",
+"typecheck": "pnpm nx affected --target=typecheck --parallel=3",
+"typecheck:all": "pnpm nx run-many --target=typecheck --all --parallel=6",
 "typecheck:clean": "node scripts/typecheck-clean.js",
 "typecheck:clean:all": "node scripts/typecheck-clean.js --all",
 "typecheck:diagnose": "node scripts/typecheck-diagnose.js",
@@ -59,7 +58,7 @@ Comprehensive clean typecheck script that:
 - Removes TypeScript build info files (`.tsbuildinfo`)
 - Cleans node_modules cache
 - Removes dist folders
-- Runs typecheck with `--skip-nx-cache`
+- Runs typecheck
 - Supports `--all` and `--ci` flags
 
 #### `scripts/typecheck-diagnose.js`
@@ -91,7 +90,7 @@ Cleanup script that:
 
 ### 4. Git Hooks Updates
 
-All git hook scripts now use `--skip-nx-cache`:
+Git hook scripts:
 - `scripts/pre-commit-check-optimized.js`
 - `scripts/pre-commit-check.js`
 - `scripts/pre-push-check.js`
@@ -161,7 +160,7 @@ pnpm typecheck:clean-markers
 
 3. **Slow typecheck performance**
    - Cause: No incremental compilation
-   - Solution: This is expected when using `--skip-nx-cache`
+   - Solution: Use incremental builds when possible
 
 4. **Missing type definitions**
    - Cause: Build order issues
@@ -178,10 +177,9 @@ pnpm typecheck:clean-markers
 ## Best Practices
 
 1. **Always use pnpm commands** - Never run bare `nx` commands
-2. **Use --skip-nx-cache for critical checks** - Ensures reliability
-3. **Clean periodically** - Prevent cache accumulation
-4. **Monitor CI results** - Catch environment-specific issues
-5. **Keep TypeScript versions consistent** - Check with diagnostic tool
+2. **Clean periodically** - Prevent cache accumulation
+3. **Monitor CI results** - Catch environment-specific issues
+4. **Keep TypeScript versions consistent** - Check with diagnostic tool
 
 ## Technical Background
 

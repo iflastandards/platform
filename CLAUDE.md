@@ -104,7 +104,9 @@ pnpm tsx scripts/scaffold-site.ts --siteKey=newsite --title="New Standard" --tag
 2. **Docs?** → Standard Docusaurus patterns
 3. Use **MUI MCP** for component examples
 4. Use **Context7 MCP** for React patterns
-5. Run `pnpm typecheck` after coding
+5. **Check accessibility**: Follow `@developer_notes/ui-ux-accessibility-best-practices.md`
+6. **Add axe tests**: Include `@a11y` tagged tests with `axe(container)` checks
+7. Run `pnpm typecheck` after coding
 
 ### "I'm adding an API route"
 1. **Admin app** → Use standard fetch calls to `/api/*` routes
@@ -141,14 +143,13 @@ Quick rules:
 5. **No special utilities needed** - Use standard Next.js routing
 
 ### Testing Strategy (MANDATORY FOR ALL TESTS)
-1. **🚨 ALWAYS run tests as: `pnpm nx test [project] --skip-nx-cache`** - NEVER forget pnpm or skip-nx-cache!
+1. **🚨 ALWAYS run tests as: `pnpm nx test [project]`** - NEVER forget pnpm prefix!
 2. **AI AGENTS**: MUST read `@developer_notes/AI_TESTING_INSTRUCTIONS.md` before writing any tests
 3. **Integration-first philosophy**: We test with real I/O, not mocks - see AI_TESTING_INSTRUCTIONS.md
-4. **Pre-commit target**: < 60 seconds (use `pnpm nx affected --skip-nx-cache`)
+4. **Pre-commit target**: < 60 seconds (use `pnpm nx affected`)
 5. **Use 5-phase strategy**: On-demand → Pre-commit → Pre-push → Comprehensive → CI
 6. **Test placement**: Check `@developer_notes/TEST_PLACEMENT_GUIDE.md` before writing tests
 7. **NEVER use bare `nx` commands** - Always prefix with `pnpm`
-8. **NEVER trust nx cache for tests** - Always use `--skip-nx-cache`
 
 ### Critical File References
 - **AI Testing Guide**: `@developer_notes/AI_TESTING_INSTRUCTIONS.md` (MANDATORY for AI agents)
@@ -157,6 +158,7 @@ Quick rules:
 - **Test Templates**: `@developer_notes/TEST_TEMPLATES.md` (copy for new tests)
 - **Nx Test Optimizations**: `@developer_notes/NX_AFFECTED_TEST_OPTIMIZATION.md`
 - **Complete Next.js Standards**: `@developer_notes/NEXTJS_CODING_STANDARDS.MD`
+- **UI/UX & Accessibility**: `@developer_notes/ui-ux-accessibility-best-practices.md` (WCAG 2.1 AA compliance + axe testing)
 
 ---
 

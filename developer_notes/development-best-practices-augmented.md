@@ -1216,9 +1216,9 @@ describe('Protected API Endpoint @integration @auth', () => {
 
 ```bash
 # 🚨 ALWAYS use pnpm prefix
-pnpm nx test unified-spreadsheet --skip-nx-cache
-pnpm nx test @ifla/theme --skip-nx-cache
-pnpm nx test portal --skip-nx-cache
+pnpm nx test unified-spreadsheet
+pnpm nx test @ifla/theme
+pnpm nx test portal
 
 # Tag-based selection
 pnpm test --grep "@unit"              # Unit tests only

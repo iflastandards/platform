@@ -33,9 +33,9 @@ Need to write a test?
 ### Phase 1: Selective Testing (Development)
 ```bash
 # ✅ Individual project testing:
-pnpm nx test unified-spreadsheet --skip-nx-cache
-pnpm nx test @ifla/theme --skip-nx-cache
-pnpm nx test portal --skip-nx-cache
+pnpm nx test unified-spreadsheet
+pnpm nx test @ifla/theme
+pnpm nx test portal
 
 # ✅ Tag-based selection:
 pnpm test --grep "@unit"              # Unit tests only
@@ -148,13 +148,12 @@ describe('Feature @integration @api', () => {
 
 ## 🤖 AI Agent Tips
 
-1. **🚨 ALWAYS use `pnpm nx test [project] --skip-nx-cache`** - Never forget!
+1. **🚨 ALWAYS use `pnpm nx test [project]`** - Never forget pnpm prefix!
 2. **Default to integration tests** - Use real I/O, not mocks
 3. **Create real test files** - Use temp directories and clean up
 4. **Test the full flow** - Input → Processing → Output
 5. **Use fixtures for consistency** - Store in `tests/fixtures/`
 6. **Never use bare `nx` commands** - Always prefix with `pnpm`
-7. **Never trust cache** - Always use `--skip-nx-cache`
 
 ## 💡 Philosophy
 

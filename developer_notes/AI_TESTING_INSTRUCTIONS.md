@@ -402,9 +402,9 @@ export default defineConfig({
 #### Phase 1: Selective Testing (Development)
 ```bash
 # ✅ PREFERRED - Individual project testing:
-pnpm nx test unified-spreadsheet --skip-nx-cache
-pnpm nx test @ifla/theme --skip-nx-cache
-pnpm nx test portal --skip-nx-cache
+pnpm nx test unified-spreadsheet
+pnpm nx test @ifla/theme
+pnpm nx test portal
 
 # ✅ Tag-based selection (NEW):
 pnpm test --grep "@unit"              # Unit tests only
@@ -437,7 +437,7 @@ pnpm test:comprehensive:e2e           # All E2E tests
 pnpm test:ci:env                      # Environment validation only
 ```
 
-**❗ MANDATORY Format**: Always use `pnpm` prefix and `--skip-nx-cache` for individual project tests.
+**❗ MANDATORY Format**: Always use `pnpm` prefix for individual project tests.
 
 ***
 
@@ -540,7 +540,7 @@ test('should read file', async () => {
 * Check file naming: must include `.integration.test.ts`
 * Verify vitest config includes `tests/**` directory
 * Clear Nx cache: `pnpm nx reset`
-* 🚨 Run tests with: `pnpm nx test [project] --skip-nx-cache`
+* 🚨 Run tests with: `pnpm nx test [project]`
 
 ### Slow Integration Tests
 

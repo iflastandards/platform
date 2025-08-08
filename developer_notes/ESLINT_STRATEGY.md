@@ -170,7 +170,7 @@ Already configured in your existing Git hooks:
 
 ```bash
 # Pre-commit runs affected linting
-pnpm lint  # nx affected --target=lint --skip-nx-cache
+pnpm lint  # nx affected --target=lint
 ```
 
 ### GitHub Actions
