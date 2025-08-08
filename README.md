@@ -9,7 +9,7 @@ A comprehensive documentation and vocabulary management system for the Internati
 - **Admin Portal**: Next.js admin interface with GitHub OAuth authentication
 - **Cross-Site Navigation**: Environment-aware linking between standards
 - **Automated Testing**: Comprehensive build regression and E2E testing
-- **Role-Based Access**: Cerbos-powered authorization system
+- **Role-Based Access**: Custom RBAC system with Clerk authentication
 - **Multi-Environment Support**: Local, preview, development, and production deployments
 
 ## 🏗️ Architecture
@@ -21,7 +21,7 @@ A comprehensive documentation and vocabulary management system for the Internati
 - **Language**: TypeScript with strict configuration
 - **Testing**: Vitest (unit) + Playwright (E2E)
 - **Authentication**: Clerk with GitHub OAuth
-- **Authorization**: Cerbos RBAC system
+- **Authorization**: Custom RBAC via Clerk publicMetadata
 - **Data**: Google Sheets API + Supabase + File system
 
 ### Project Structure
@@ -219,7 +219,7 @@ Configuration is centralized in `packages/theme/src/config/siteConfig.ts`.
 
 1. Configure Clerk in the admin portal
 2. Set up GitHub OAuth application
-3. Configure Cerbos policies for authorization
+3. Configure user roles in Clerk publicMetadata
 4. Add test users for development (see testing documentation)
 
 ## 📖 Documentation

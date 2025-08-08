@@ -198,7 +198,7 @@ pnpm test:ci:env
   - GitHub token and OAuth credentials
   - Google Sheets API key and service account
   - Supabase URL and anonymous key
-  - Cerbos Hub credentials
+  - Clerk authentication keys
 - ✅ External services are reachable from CI environment
 - ✅ File paths and permissions work in CI
 - ✅ NODE_ENV is set to production (for optimized builds)

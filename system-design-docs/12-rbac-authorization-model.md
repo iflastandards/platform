@@ -1,13 +1,13 @@
 # Role-Based Access Control (RBAC) Authorization Model
 
-**Version:** 1.0  
+**Version:** 2.0  
 **Date:** January 2025  
-**Status:** Authoritative Reference  
-**Purpose:** Complete RBAC specification for the IFLA Standards Platform
+**Status:** Current Implementation  
+**Purpose:** RBAC specification as actually implemented in the IFLA Standards Platform
 
 ## Executive Summary
 
-This document provides the authoritative reference for the Role-Based Access Control (RBAC) system implemented in the IFLA Standards Platform. It defines all roles, their hierarchical relationships, permissions, and access control mechanisms across the platform's various components.
+This document provides the reference for the Role-Based Access Control (RBAC) system as actually implemented in the IFLA Standards Platform. The system uses Clerk for authentication with a custom RBAC implementation storing roles in Clerk's `publicMetadata`, NOT Clerk Organizations or Cerbos.
 
 ## Core Principles
 
@@ -19,32 +19,34 @@ This document provides the authoritative reference for the Role-Based Access Con
 
 ## Role Hierarchy
 
-### System-Level Roles
+### Implemented Roles (Stored in publicMetadata)
 
-```
-Superadmin (Platform Authority)
-    ↓
-Review Group Admin (Review Group Authority)
-    ↓
-Namespace Admin (Namespace Authority)
-    ↓
-Namespace Editor (Content Authority)
-    ↓
-Namespace Translator (Translation Authority)
-    ↓
-Namespace Reviewer (Review Authority)
+```typescript
+// From apps/admin/src/lib/authorization.ts
+export const ROLES = {
+  SUPERADMIN: 'superadmin',  // Full system access
+  ADMIN: 'admin',            // Review group administration
+  EDITOR: 'editor',          // Content creation and editing
+  TRANSLATOR: 'translator',  // Translation capabilities
+  REVIEWER: 'reviewer',      // Review and comment only
+  VIEWER: 'viewer'          // Read-only access
+} as const;
 ```
 
-### Project-Based Roles
+### Hierarchical Permission Inheritance
 
 ```
-Project Lead (Project Authority)
+Superadmin (All permissions)
     ↓
-Project Manager (Coordination Authority)
+Admin (Manage namespaces, users, settings)
     ↓
-Project Member (Contribution Authority)
+Editor (Create, edit, delete content)
     ↓
-Project Contributor (Limited Authority)
+Translator (Translate content, view all)
+    ↓
+Reviewer (Comment, review, view all)
+    ↓
+Viewer (Read-only access)
 ```
 
 ## Detailed Role Definitions

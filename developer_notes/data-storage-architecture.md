@@ -11,7 +11,7 @@ This document defines where different types of data are stored across the IFLA S
 **What Goes Here:**
 - Vocabulary content (MDX files with RDF in frontmatter)
 - DCTAP profiles (YAML/JSON files)
-- Cerbos policies (YAML files in `/cerbos/policies/`)
+- Authorization configuration (stored in Clerk publicMetadata)
 - Docusaurus site configuration
 - Build artifacts and generated RDF
 - Documentation
@@ -227,7 +227,7 @@ activity_logs (
 1. User authenticates → **Clerk**
 2. Get user metadata → **Clerk**
 3. Get project assignments → **Clerk privateMetadata**
-4. Check namespace permissions → **Cerbos policies** (in Git)
+4. Check namespace permissions → **Custom RBAC** (in Clerk publicMetadata)
 5. Log access → **Supabase**
 
 ### Version Publication
@@ -258,7 +258,7 @@ For the Potemkin village demo:
 
 ## Security Notes
 
-- Supabase RLS policies should enforce Cerbos decisions
+- Supabase RLS policies should enforce custom RBAC decisions
 - Sensitive data (tokens, credentials) in environment variables
 - Audit logs should be immutable
 - Regular backups of Supabase data

@@ -22,23 +22,13 @@ This document lists all the GitHub secrets that must be configured in your repos
   - Format: JWT token (3 parts separated by dots)
   - Used for: Client-side Supabase authentication
 
-### Cerbos (Authorization)
-- **CERBOS_HUB_CLIENT_ID**: Cerbos Hub client ID
-  - Format: Alphanumeric (e.g., `R6JC61TEEBXF`)
-  - Used for: Connecting to Cerbos Hub
+### Cerbos (NOT USED - Never Implemented)
+> **Note**: These variables were planned but never used. The platform uses custom RBAC via Clerk publicMetadata.
 
-- **CERBOS_HUB_CLIENT_SECRET**: Cerbos Hub client secret
-  - Format: `cerbos_[alphanumeric]` (e.g., `cerbos_YbxvOBDy42PvBP2Ng5tMJ1KvkUE6LOgn3KtaEUYJzp4`)
-  - Used for: Authenticating with Cerbos Hub
-
-- **CERBOS_HUB_WORKSPACE_SECRET**: Cerbos Hub workspace secret
-  - Format: `CERBOS-[UPPERCASE-WITH-DASHES]`
-  - Used for: Identifying Cerbos workspace
-
-- **CERBOS_HUB_BUNDLE** (Optional): Bundle version
-  - Format: `latest`, `stable`, or `preview`
-  - Default: `latest` for preview, `stable` for production
-  - Used for: Selecting Cerbos policy bundle version
+- ~~**CERBOS_HUB_CLIENT_ID**~~: Not needed
+- ~~**CERBOS_HUB_CLIENT_SECRET**~~: Not needed
+- ~~**CERBOS_HUB_WORKSPACE_SECRET**~~: Not needed
+- ~~**CERBOS_HUB_BUNDLE**~~: Not needed
 
 ### GitHub OAuth (Admin Portal)
 - **AUTH_GITHUB_ID**: GitHub OAuth App ID

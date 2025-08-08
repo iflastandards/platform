@@ -4,7 +4,7 @@
 
 This document defines the authentication and authorization architecture for the IFLA Standards Development Platform, using Clerk for both identity management and role-based authorization, integrated with GitHub Projects for project management.
 
-**Note**: This architecture has been simplified from the original Clerk+Cerbos design to use Clerk-only authorization for better maintainability and reduced complexity.
+**Implementation Note**: This document has been updated to reflect the actual implementation. The platform uses a custom RBAC system with Clerk authentication storing roles in `publicMetadata`. Neither Cerbos nor Clerk Organizations were implemented. See `system-design-docs/14-rbac-implementation.md` for complete details.
 
 ## Architecture Components
 
@@ -40,37 +40,37 @@ interface UserMetadata {
 }
 ```
 
-### 2. Authorization Logic (Built-in)
+### 2. Authorization Logic (Custom RBAC)
 
-**Purpose**: Enforce fine-grained permissions based on user roles and resource context
+**Purpose**: Enforce permissions based on user roles stored in Clerk publicMetadata
 
 **Key Features**:
-- **Role Hierarchy**: Clear permission levels from superadmin to translator
-- **Context-Aware**: Decisions based on user role + namespace + review group
-- **Resource-Based**: Different permissions for different resource types
-- **Maintainable**: Simple TypeScript functions instead of external policy engine
+- **Simple Role Hierarchy**: 6 roles (superadmin, admin, editor, translator, reviewer, viewer)
+- **Namespace Permissions**: Optional namespace-specific permissions
+- **TypeScript Implementation**: Simple, maintainable authorization logic
+- **No External Dependencies**: All logic in the application code
 
-**Policy Structure**:
-```yaml
-# Example Cerbos policy for namespace access
-apiVersion: api.cerbos.dev/v1
-resourcePolicy:
-  version: "default"
-  resource: "namespace"
-  rules:
-    - actions: ["edit"]
-      effect: EFFECT_ALLOW
-      roles: ["editor"]
-      condition:
-        match:
-          expr: P.attr.projectId in request.principal.attr.projectIds
-    
-    - actions: ["review"]
-      effect: EFFECT_ALLOW
-      roles: ["reviewer"]
-      condition:
-        match:
-          expr: P.attr.projectId in request.principal.attr.projectIds
+**Implementation**:
+```typescript
+// From apps/admin/src/lib/authorization.ts
+export const ROLES = {
+  SUPERADMIN: 'superadmin',
+  ADMIN: 'admin',
+  EDITOR: 'editor',
+  TRANSLATOR: 'translator',
+  REVIEWER: 'reviewer',
+  VIEWER: 'viewer'
+} as const;
+
+// Permission check function
+export function checkUserPermission(
+  userRole: string | undefined,
+  resource: string,
+  action: string,
+  namespace?: string
+): boolean {
+  // Implementation details in authorization.ts
+}
 ```
 
 ### 3. Project Management (GitHub Projects)
@@ -92,7 +92,7 @@ sequenceDiagram
     participant U as User
     participant C as Clerk
     participant A as Admin Portal
-    participant CB as Cerbos
+    participant Auth as Authorization Logic
     participant GH as GitHub
 
     Note over U,GH: Project Team Invitation Flow
@@ -103,9 +103,9 @@ sequenceDiagram
     C->>A: Redirect to admin portal
     
     A->>C: Get user + metadata
-    A->>CB: Check permissions with context
-    CB->>CB: Evaluate policies
-    CB->>A: Return authorization decision
+    A->>Auth: Check permissions with custom RBAC
+    Auth->>Auth: Evaluate role-based permissions
+    Auth->>A: Return authorization decision
     
     A->>GH: Sync team membership
     GH->>GH: Grant repository access
@@ -115,8 +115,8 @@ sequenceDiagram
 
 ### Data Flow
 
-1. **Clerk → Cerbos**: Pass user metadata for authorization
-2. **Cerbos → Application**: Return permission decisions
+1. **Clerk → Application**: Provide user identity and publicMetadata
+2. **Application → Authorization**: Check permissions using custom RBAC logic
 3. **Application → GitHub**: Sync team memberships based on permissions
 4. **GitHub → Clerk**: Webhook updates for team changes
 
@@ -129,12 +129,12 @@ sequenceDiagram
 export async function handleClerkWebhook(event: WebhookEvent) {
   switch (event.type) {
     case 'user.created':
-      // Set up default permissions
-      await createUserInCerbos(event.data);
+      // Set up default permissions in publicMetadata
+      await setDefaultUserRole(event.data);
       break;
       
     case 'user.updated':
-      // Sync role changes to Cerbos
+      // Handle role changes in publicMetadata
       await updateUserPermissions(event.data);
       break;
       
@@ -146,44 +146,31 @@ export async function handleClerkWebhook(event: WebhookEvent) {
 }
 ```
 
-### Cerbos Integration
+### Custom RBAC Implementation
 
 ```typescript
-// Cerbos client setup
-import { GRPC } from "@cerbos/grpc";
-
-const cerbos = new GRPC({
-  hostname: process.env.CERBOS_HOST,
-  tls: true,
-});
+// Authorization using custom RBAC
+import { auth } from "@clerk/nextjs/server";
+import { checkUserPermission } from "@/lib/authorization";
 
 // Authorization check
 export async function canUserEditNamespace(
-  user: ClerkUser,
-  projectId: string,
   namespaceId: string
 ) {
-  const result = await cerbos.checkResource({
-    principal: {
-      id: user.id,
-      roles: [user.role],
-      attributes: {
-        projectIds: user.projectMemberships.map(p => p.projectId),
-        reviewGroups: user.reviewGroupAdmin || [],
-      },
-    },
-    resource: {
-      kind: "namespace",
-      id: namespaceId,
-      attributes: {
-        projectId,
-        reviewGroup: getNamespaceReviewGroup(namespaceId),
-      },
-    },
-    actions: ["edit"],
-  });
+  const { userId, sessionClaims } = auth();
   
-  return result.isAllowed("edit");
+  if (!userId) return false;
+  
+  const userRole = sessionClaims?.publicMetadata?.role;
+  const namespacePerms = sessionClaims?.publicMetadata?.namespacePermissions;
+  
+  return checkUserPermission(
+    userRole,
+    'namespace',
+    'edit',
+    namespaceId,
+    namespacePerms
+  );
 }
 ```
 

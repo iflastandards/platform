@@ -23,8 +23,7 @@ This directory contains the comprehensive system design documentation for the IF
 11. **[Design System and UI Patterns](./11-design-system-ui-patterns.md)** - UI/UX guidelines and component library
 12. **[RBAC Authorization Model](./12-rbac-authorization-model.md)** - Comprehensive role-based access control specification
 13. **[Permission Matrix Detailed](./13-permission-matrix-detailed.md)** - Detailed permission mappings for all platform activities
-14. **[Clerk RBAC Architecture](./14-clerk-rbac-architecture.md)** - Primary authorization architecture using Clerk.com organizations
-15. **[Clerk RBAC Implementation Plan](./15-clerk-rbac-implementation-plan.md)** - Implementation plan for Clerk-based authorization
+14. **[RBAC Implementation](./14-rbac-implementation.md)** - Current custom RBAC implementation using Clerk publicMetadata
 
 ## Quick Reference
 
@@ -34,8 +33,8 @@ This directory contains the comprehensive system design documentation for the IF
 - **Documentation**: Docusaurus 3.8+
 - **Admin Portal**: Next.js 15.2.5 with App Router
 - **Backend**: Vercel Edge Functions
-- **Authentication**: Clerk + NextAuth.js 5.0
-- **Authorization**: Cerbos policy engine
+- **Authentication**: Clerk
+- **Authorization**: Custom RBAC via Clerk publicMetadata
 - **Database**: Supabase (operational data)
 - **Version Control**: Git/GitHub (source of truth)
 - **Testing**: Vitest + Playwright

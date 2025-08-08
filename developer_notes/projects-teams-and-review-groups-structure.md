@@ -221,14 +221,14 @@ interface Permissions {
    - Which namespaces their Project is assigned to
    - Active status of their Project
 
-### Permission Flow with Clerk + Cerbos
+### Permission Flow with Custom RBAC
 
 ```mermaid
 graph TD
-    A[User Login via Clerk] --> B[Clerk stores user metadata]
+    A[User Login via Clerk] --> B[Clerk stores user role in publicMetadata]
     B --> C{User selects Project}
-    C --> D[Application requests permission check]
-    D --> E[Cerbos evaluates policies]
+    C --> D[Application checks permissions]
+    D --> E[Custom RBAC evaluates role]
     E --> F{Permission granted?}
     F -->|Yes| G[User can perform action]
     F -->|No| H[Access denied]
@@ -238,10 +238,10 @@ graph TD
 ```
 
 **Key Points**:
-- Clerk handles identity and stores project/role associations
-- Cerbos evaluates permissions in real-time based on context
+- Clerk handles identity and stores roles in publicMetadata
+- Custom RBAC logic evaluates permissions based on role
 - GitHub teams provide repository-level access control
-- All three systems work together for comprehensive security
+- Simple, maintainable authorization without external services
 
 ## Workflow Example
 
@@ -302,35 +302,28 @@ A domain expert wants to contribute:
 - Enables external contributor onboarding without IFLA membership
 - Provides social login via GitHub OAuth
 
-**Authorization (Cerbos)**:
-- Evaluates permissions based on user role + project + namespace context
-- Policy-as-code approach for version-controlled authorization rules
+**Authorization (Custom RBAC)**:
+- Evaluates permissions based on user role stored in Clerk publicMetadata
+- Simple TypeScript logic for maintainable authorization rules
 - Real-time permission evaluation for all actions
 - Complete audit trail of authorization decisions
-- Integration with Clerk metadata for user attributes
+- Direct integration with Clerk session claims
 
 **Example Authorization Flow**:
 ```typescript
-// Check if user can edit namespace through project membership
-const canEdit = await cerbos.checkResource({
-  principal: {
-    id: user.id,
-    roles: [user.projectRole],
-    attributes: {
-      projectId: user.currentProject,
-      reviewGroup: user.reviewGroupMemberships,
-    },
-  },
-  resource: {
-    kind: "namespace",
-    id: namespaceId,
-    attributes: {
-      assignedProjects: namespace.projects,
-      owningReviewGroup: namespace.reviewGroup,
-    },
-  },
-  actions: ["edit"],
-});
+// Check if user can edit namespace through role
+import { auth } from "@clerk/nextjs/server";
+import { checkUserPermission } from "@/lib/authorization";
+
+const { userId, sessionClaims } = auth();
+const userRole = sessionClaims?.publicMetadata?.role;
+
+const canEdit = checkUserPermission(
+  userRole,
+  'namespace',
+  'edit',
+  namespaceId
+);
 ```
 
 ### GitHub Projects Integration
@@ -346,7 +339,7 @@ const canEdit = await cerbos.checkResource({
 - Project view shows teams, namespaces, progress
 - Team view shows members and their roles (from Clerk)
 - Clear indication of Project status and timeline
-- Role-based UI elements based on Cerbos decisions
+- Role-based UI elements based on custom RBAC decisions
 
 ### Migration Strategy
 1. Set up Clerk organization and authentication

@@ -22,7 +22,7 @@ These files will become obsolete once the Cerbos-to-Clerk migration is complete:
 1. **`apps/admin/src/test/lib/cerbos.test.ts`**
    - Full Cerbos integration tests
    - **Reason for removal:** Cerbos authorization system being replaced by Clerk
-   - **Timeline:** After Clerk migration completion (see `system-design-docs/15-cerbos-to-clerk-migration.md`)
+   - **Timeline:** Not needed - custom RBAC already implemented
 
 2. **`packages/theme/src/tests/deployment/supabase-cerbos-keys.test.ts`**
    - Cerbos key validation tests
@@ -64,10 +64,10 @@ These patterns will continue to work correctly even after future test file remov
 
 ## Recommendations for Future Cleanup
 
-### When Cerbos Migration is Complete:
-1. Remove all Cerbos-related test files listed above
-2. Remove Cerbos dependencies from `package.json`
-3. Update any test scripts that specifically reference Cerbos
+### Cleanup Notes:
+1. Cerbos was never implemented - no cleanup needed
+2. Custom RBAC is already in place
+3. Test files can be updated as needed during normal development
 4. Archive Cerbos policy files and related fixtures
 
 ### Immediate Actions:

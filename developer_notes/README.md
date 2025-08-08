@@ -24,7 +24,7 @@ This directory contains detailed documentation for developers working on the IFL
 - **`admin-portal-authentication-architecture.md`** - **UPDATED** Authentication and CORS configuration
 - **`admin-spa-architecture.md`** - **DEPRECATED** Previous Docusaurus SPA approach
 - **`admin-portal-testing.md`** - Complete testing guide for Next.js admin portal
-- **`rbac-implementation-plan.md`** - Role-based access control with Cerbos
+- **`rbac-implementation-plan.md`** - Role-based access control implementation guide
 
 ### 🧪 Testing
 - **`build-regression-testing.md`** - Comprehensive build regression testing strategy
@@ -62,7 +62,7 @@ To run development servers using the `pnpm dev:servers` command, follow these st
 ### Key Admin Portal Features
 - **44 TypeScript files** - Substantial existing functionality
 - **Complete authentication** - GitHub OAuth with team role detection
-- **Role-based access control** - Cerbos integration for fine-grained permissions
+- **Role-based access control** - Custom RBAC via Clerk publicMetadata
 - **Site management dashboards** - Individual management interfaces for each standard
 - **Cross-site integration** - CORS-enabled session sharing with Docusaurus sites
 

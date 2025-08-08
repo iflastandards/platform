@@ -15,7 +15,7 @@ This document serves as the master reference for implementing a MUI-based "Potem
    - GitHub Projects provides task management
 3. **Defined authentication/authorization architecture**:
    - Clerk for identity management and invitations
-   - Cerbos for policy-based authorization
+   - Custom RBAC via Clerk publicMetadata
    - GitHub for project management and repository access
 4. **Planned comprehensive vocabulary management UI** with focus on the 4-phase lifecycle
 
@@ -86,7 +86,7 @@ This document serves as the master reference for implementing a MUI-based "Potem
 - **UI Library**: MUI 7.2.0 with OMR25 theme
 - **Data Grid**: @mui/x-data-grid for spreadsheet views
 - **Authentication**: Clerk (mocked for demo)
-- **Authorization**: Cerbos (mocked for demo)
+- **Authorization**: Custom RBAC (implemented)
 - **Version Control**: GitHub integration
 - **Functions**: Vercel serverless (mocked)
 - **Database**: Supabase (mocked for demo)

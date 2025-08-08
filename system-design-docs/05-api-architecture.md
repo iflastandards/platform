@@ -66,146 +66,126 @@ Production:  https://www.iflastandards.info/admin/api/
 
 ## Authentication Architecture
 
-### NextAuth.js 5.0 Configuration
+### Clerk Authentication
 ```typescript
-import NextAuth from "next-auth";
-import GitHub from "next-auth/providers/github";
-import { ClerkAdapter } from "@auth/clerk-adapter";
+// Authentication is handled by Clerk middleware
+import { clerkMiddleware } from "@clerk/nextjs/server";
 
-export const { auth, handlers, signIn, signOut } = NextAuth({
-  providers: [
-    GitHub({
-      clientId: process.env.GITHUB_CLIENT_ID,
-      clientSecret: process.env.GITHUB_CLIENT_SECRET,
-      authorization: {
-        params: {
-          scope: "read:user user:email read:org",
-        },
-      },
-    }),
-  ],
-  adapter: ClerkAdapter(),
-  callbacks: {
-    async jwt({ token, account, profile }) {
-      if (account && profile) {
-        // Store GitHub teams for authorization
-        const teams = await fetchGitHubTeams(account.access_token);
-        token.teams = teams;
-      }
-      return token;
-    },
-    async session({ session, token }) {
-      session.user.teams = token.teams;
-      return session;
-    },
-  },
-  pages: {
-    signIn: "/admin/auth/signin",
-    error: "/admin/auth/error",
-  },
+export default clerkMiddleware({
+  publicRoutes: ["/", "/api/public/(.*)"],
+  afterAuth(auth, req) {
+    // Custom logic after authentication
+    if (auth.userId && !auth.orgId) {
+      // Redirect to organization selection if needed
+    }
+  }
 });
 ```
 
 ### Session Management
 ```typescript
-// Middleware to protect API routes
-export async function requireAuth(
-  req: Request,
-  context: { params: Params }
-): Promise<Response | void> {
-  const session = await auth();
-  
-  if (!session?.user) {
-    return new Response("Unauthorized", { status: 401 });
-  }
-  
-  // Attach session to request
-  (req as any).session = session;
-}
+// Using Clerk's auth() helper in API routes
+import { auth } from "@clerk/nextjs/server";
+import { NextResponse } from "next/server";
 
 // Usage in API route
 export async function GET(req: Request) {
-  await requireAuth(req, { params: {} });
-  const session = (req as any).session;
+  const { userId, sessionClaims } = auth();
+  
+  if (!userId) {
+    return NextResponse.json(
+      { error: "Unauthorized" },
+      { status: 401 }
+    );
+  }
   
   // Proceed with authenticated request
-  return Response.json({ user: session.user });
+  return NextResponse.json({ 
+    user: { 
+      id: userId,
+      role: sessionClaims?.publicMetadata?.role 
+    } 
+  });
 }
 ```
 
 ## Authorization Architecture
 
-### Cerbos Integration
+### Custom RBAC Implementation
 ```typescript
-import { GRPC as Cerbos } from "@cerbos/grpc";
-
-const cerbos = new Cerbos(process.env.CERBOS_SERVER_URL, {
-  tls: process.env.NODE_ENV === "production",
-});
+// Custom RBAC using Clerk's publicMetadata
+import { auth } from "@clerk/nextjs/server";
+import { checkUserPermission } from "@/lib/authorization";
 
 export async function checkPermission(
-  principal: Principal,
-  resource: Resource,
-  action: string
+  resource: string,
+  action: string,
+  namespace?: string
 ): Promise<boolean> {
-  const decision = await cerbos.checkResource({
-    principal,
-    resource,
-    actions: [action],
-  });
+  const { userId, sessionClaims } = auth();
   
-  return decision.isAllowed(action);
+  if (!userId) return false;
+  
+  // Check user's role and permissions from publicMetadata
+  const userRole = sessionClaims?.publicMetadata?.role;
+  const namespacePermissions = sessionClaims?.publicMetadata?.namespacePermissions;
+  
+  return checkUserPermission(userRole, resource, action, namespace, namespacePermissions);
 }
 ```
 
-### Resource Definitions
+### Authorization Types
 ```typescript
-interface Principal {
-  id: string;
-  roles: string[];
-  attributes: {
-    teams: string[];
-    namespaces: string[];
+// Types for custom RBAC system
+interface UserRole {
+  role: 'superadmin' | 'admin' | 'editor' | 'translator' | 'reviewer' | 'viewer';
+  namespaces?: string[];
+}
+
+interface NamespacePermissions {
+  [namespace: string]: {
+    role: string;
+    permissions: string[];
   };
 }
 
-interface Resource {
-  kind: "namespace" | "vocabulary" | "element" | "concept";
+interface AuthorizedUser {
   id: string;
-  attributes: {
-    namespace?: string;
-    status?: "draft" | "published";
-    owner?: string;
-  };
+  role: UserRole;
+  namespacePermissions?: NamespacePermissions;
 }
 ```
 
 ### Authorization Middleware
 ```typescript
-export function authorize(action: string) {
+export function authorize(resource: string, action: string) {
   return async function(req: Request, context: { params: Params }) {
-    const session = (req as any).session;
+    const { userId, sessionClaims } = auth();
     const { namespace } = context.params;
     
-    const principal: Principal = {
-      id: session.user.id,
-      roles: deriveRoles(session.user.teams),
-      attributes: {
-        teams: session.user.teams,
-        namespaces: session.user.namespaces,
-      },
-    };
+    if (!userId) {
+      return NextResponse.json(
+        { error: "Unauthorized" },
+        { status: 401 }
+      );
+    }
     
-    const resource: Resource = {
-      kind: "namespace",
-      id: namespace,
-      attributes: { namespace },
-    };
+    const userRole = sessionClaims?.publicMetadata?.role;
+    const namespacePerms = sessionClaims?.publicMetadata?.namespacePermissions;
     
-    const allowed = await checkPermission(principal, resource, action);
+    const allowed = checkUserPermission(
+      userRole,
+      resource,
+      action,
+      namespace,
+      namespacePerms
+    );
     
     if (!allowed) {
-      return new Response("Forbidden", { status: 403 });
+      return NextResponse.json(
+        { error: "Forbidden" },
+        { status: 403 }
+      );
     }
   };
 }

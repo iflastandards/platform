@@ -1,53 +1,48 @@
 # RBAC Implementation Guide
 
-**Version:** 1.0  
+**Version:** 2.0  
 **Date:** January 2025  
-**Purpose:** Developer guide for implementing RBAC in the IFLA Standards Platform
+**Purpose:** Developer guide for the actual RBAC implementation in the IFLA Standards Platform
 
 ## Overview
 
-This guide provides practical implementation details for developers working with the IFLA Standards Platform's Role-Based Access Control (RBAC) system. It includes code examples, configuration templates, and best practices.
+This guide provides practical implementation details for developers working with the IFLA Standards Platform's custom Role-Based Access Control (RBAC) system. The platform uses Clerk for authentication with a custom RBAC implementation storing roles in `publicMetadata`.
 
 ## Quick Reference
 
-- **Authorization Engine**: Clerk Organizations with built-in RBAC
+- **Authorization**: Custom RBAC via Clerk publicMetadata
 - **Authentication**: Clerk with built-in session management
-- **Permission Storage**: Clerk user metadata
+- **Permission Storage**: Clerk user publicMetadata
 - **Frontend Framework**: Next.js with React
-- **API Layer**: Vercel Edge Functions
+- **API Layer**: Standard Next.js App Router API routes (NOT tRPC)
 
-> **Note**: The platform has migrated to a Clerk-only authorization system for simplicity and maintainability. Previous Cerbos references have been removed.
+> **Note**: The platform uses a custom RBAC system, NOT Clerk Organizations or Cerbos. This simplifies the architecture while meeting all requirements.
 
-## Cerbos Policy Implementation
+## Custom RBAC Implementation
 
-### Basic Policy Structure
+### Role Definitions
 
-```yaml
-# policies/namespace_policy.yaml
-apiVersion: api.cerbos.dev/v1
-resourcePolicy:
-  version: "default"
-  resource: "namespace"
-  rules:
-    - actions: ["read"]
-      effect: EFFECT_ALLOW
-      roles:
-        - authenticated
-      condition:
-        match:
-          expr: request.resource.attr.public == true || 
-                request.principal.attr.namespaces.contains(request.resource.id)
-    
-    - actions: ["create", "update", "delete"]
-      effect: EFFECT_ALLOW
-      roles:
-        - namespace_editor
-        - namespace_admin
-      condition:
-        match:
-          expr: request.principal.attr.namespaces.contains(request.resource.id)
-    
-    - actions: ["publish", "archive"]
+```typescript
+// From apps/admin/src/lib/authorization.ts
+export const ROLES = {
+  SUPERADMIN: 'superadmin',  // Full system access
+  ADMIN: 'admin',            // Review group administration
+  EDITOR: 'editor',          // Content creation and editing
+  TRANSLATOR: 'translator',  // Translation capabilities
+  REVIEWER: 'reviewer',      // Review and comment only
+  VIEWER: 'viewer'          // Read-only access
+} as const;
+
+// User metadata structure in Clerk
+interface UserPublicMetadata {
+  role: keyof typeof ROLES;
+  namespacePermissions?: {
+    [namespace: string]: {
+      role: string;
+      permissions: string[];
+    }
+  };
+}
       effect: EFFECT_ALLOW
       roles:
         - namespace_admin
@@ -102,21 +97,33 @@ resourcePolicy:
             request.resource.attr.namespaces.intersects(request.principal.attr.projectNamespaces[request.resource.id])
     
     - actions: ["manage"]
-      effect: EFFECT_ALLOW
-      roles:
-        - project_manager
-        - project_lead
-      condition:
-        match:
-          expr: request.resource.id in request.principal.attr.projects
-    
-    - actions: ["admin"]
-      effect: EFFECT_ALLOW
-      roles:
-        - project_lead
-      condition:
-        match:
-          expr: request.resource.id in request.principal.attr.projects
+```
+
+### Permission Matrix
+
+| Role | Vocabularies | Namespaces | Users | Settings |
+|------|-------------|------------|-------|----------|
+| SUPERADMIN | Full | Full | Full | Full |
+| ADMIN | Full | Manage | Manage | Edit |
+| EDITOR | Create/Edit | View | View | View |
+| TRANSLATOR | Translate | View | - | - |
+| REVIEWER | Comment | View | - | - |
+| VIEWER | Read | View | - | - |
+
+### Namespace-Specific Permissions
+
+```typescript
+// Example: User with editor role in specific namespace
+interface NamespacePermissions {
+  'isbd': {
+    role: 'editor',
+    permissions: ['vocabulary:create', 'vocabulary:edit', 'vocabulary:delete']
+  },
+  'unimarc': {
+    role: 'reviewer',
+    permissions: ['vocabulary:read', 'vocabulary:comment']
+  }
+}
 ```
 
 ### Time-Based Permissions
@@ -153,74 +160,54 @@ resourcePolicy:
 
 ## API Implementation
 
-### Middleware for Permission Checking
+### Authorization Implementation
 
 ```typescript
-// middleware/auth.ts
-import { NextRequest, NextResponse } from 'next/server'
-import { getServerSession } from 'next-auth'
-import { GRPC as Cerbos } from '@cerbos/grpc'
-import { authOptions } from '@/lib/auth'
+// apps/admin/src/lib/authorization.ts
+import { auth } from "@clerk/nextjs/server";
 
-const cerbos = new Cerbos('localhost:3592')
-
-export async function checkPermission(
-  req: NextRequest,
+export function checkUserPermission(
+  userRole: string | undefined,
   resource: string,
   action: string,
-  resourceAttributes?: Record<string, any>
-) {
-  const session = await getServerSession(authOptions)
+  namespace?: string,
+  namespacePermissions?: NamespacePermissions
+): boolean {
+  // Superadmin bypass
+  if (userRole === ROLES.SUPERADMIN) return true;
   
-  if (!session?.user) {
-    return false
+  // Check namespace-specific permissions
+  if (namespace && namespacePermissions?.[namespace]) {
+    const nsPerms = namespacePermissions[namespace].permissions;
+    if (nsPerms.includes(`${resource}:${action}`)) return true;
   }
   
-  const principal = {
-    id: session.user.id,
-    roles: session.user.roles,
-    attr: {
-      namespaces: session.user.namespaces || [],
-      reviewGroups: session.user.reviewGroups || [],
-      projects: session.user.projects || [],
-      unlockExpiry: session.user.unlockExpiry,
-      emergencyAccess: session.user.emergencyAccess,
-      emergencyExpiry: session.user.emergencyExpiry,
-    }
-  }
-  
-  const resourceObj = {
-    kind: resource,
-    id: resourceAttributes?.id || 'new',
-    attr: resourceAttributes || {}
-  }
-  
-  const decision = await cerbos.checkResource({
-    principal,
-    resource: resourceObj,
-    actions: [action]
-  })
-  
-  return decision.isAllowed(action)
+  // Check role-based permissions
+  const rolePermissions = getRolePermissions(userRole);
+  return rolePermissions.includes(`${resource}:${action}`);
 }
 
 // Example usage in API route
 export async function GET(
-  req: NextRequest,
-  { params }: { params: { nsId: string } }
+  req: Request,
+  { params }: { params: { namespace: string } }
 ) {
-  const canRead = await checkPermission(
-    req,
+  const { userId, sessionClaims } = auth();
+  
+  if (!userId) {
+    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+  }
+  
+  const userRole = sessionClaims?.publicMetadata?.role;
+  const canRead = checkUserPermission(
+    userRole,
     'namespace',
     'read',
-    { id: params.nsId }
-  )
+    params.namespace
+  );
   
   if (!canRead) {
-    return NextResponse.json(
-      { error: 'Unauthorized' },
-      { status: 403 }
-    )
+    return NextResponse.json({ error: "Forbidden" }, { status: 403 });
   }
   
   // Proceed with request...
@@ -791,38 +778,40 @@ if (process.env.NODE_ENV === 'development') {
 
 This implementation guide provides the foundation for RBAC in the IFLA Standards Platform. Always refer to the authoritative [RBAC Authorization Model](../system-design-docs/12-rbac-authorization-model.md) and [Permission Matrix](../system-design-docs/13-permission-matrix-detailed.md) for complete specifications.
 
-## Primary Implementation: Clerk Organization-Based RBAC
+## Current Implementation: Custom RBAC with Clerk
 
-The platform is implementing Clerk.com's organization-based RBAC as the primary authorization system. Since Cerbos has not been implemented yet, this approach simplifies the architecture by using a single service for both authentication and authorization.
+The platform uses a custom RBAC system with roles stored in Clerk's `publicMetadata`. This approach is simpler than Clerk Organizations or external policy engines.
 
-### Clerk Implementation Overview
+### Implementation Overview
 
 ```typescript
-// Using Clerk for authorization
+// Using custom RBAC with Clerk authentication
 import { auth } from "@clerk/nextjs/server";
+import { checkUserPermission } from "@/lib/authorization";
 
 export async function checkPermission(
   resource: string,
   action: string,
   namespace?: string
 ) {
-  const { has, orgRole, sessionClaims } = auth();
+  const { userId, sessionClaims } = auth();
   
-  // Check superadmin
-  if (sessionClaims?.publicMetadata?.superadmin) {
-    return true;
-  }
+  if (!userId) return false;
   
-  // Check organization-based permission
-  const permission = namespace 
-    ? `${resource}:${action}:${namespace}`
-    : `${resource}:${action}`;
-    
-  return has({ permission }) || has({ role: 'org:admin' });
+  const userRole = sessionClaims?.publicMetadata?.role;
+  const namespacePerms = sessionClaims?.publicMetadata?.namespacePermissions;
+  
+  return checkUserPermission(
+    userRole,
+    resource,
+    action,
+    namespace,
+    namespacePerms
+  );
 }
 ```
 
-### Clerk Organization Structure
+### User Metadata Structure
 
 ```typescript
 // Review Groups as Clerk Organizations
@@ -868,8 +857,7 @@ export function usePermissions() {
 
 ### Migration Path
 
-For detailed information on migrating from Cerbos to Clerk, see:
-- [Clerk RBAC Architecture](../system-design-docs/14-clerk-rbac-architecture.md)
-- [Cerbos to Clerk Migration Strategy](../system-design-docs/15-cerbos-to-clerk-migration.md)
+For detailed information on the current RBAC implementation, see:
+- [RBAC Implementation](../system-design-docs/14-rbac-implementation.md)
 
 The Clerk approach offers simplified management and better integration with the authentication layer, while maintaining the same permission model and user experience.

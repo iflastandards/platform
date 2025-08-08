@@ -44,9 +44,9 @@ Component Library: @ifla/theme (shared)
 ### Backend Technologies
 ```yaml
 Runtime: Node.js 20+
-API Layer: Vercel Edge Functions
+API Layer: Next.js App Router API Routes (standard fetch)
 Authentication: Clerk (with built-in session management)
-Authorization: Clerk Organizations & Roles
+Authorization: Custom RBAC via Clerk publicMetadata
 Database: Supabase (PostgreSQL)
 File Storage: Git/GitHub
 Package Manager: pnpm 10.12.4

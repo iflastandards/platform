@@ -139,9 +139,11 @@ const checkSession = async () => {
 };
 ```
 
-## Cerbos Authorization Integration
+## Authorization Implementation
 
-This section details the integration of Cerbos for fine-grained authorization within the Admin Portal, including how Policy Decision Points (PDPs) are configured across different environments using Cerbos Hub deployment labels.
+> **Implementation Note**: The sections below describe a Cerbos integration that was never implemented. 
+> The platform uses a custom RBAC system with roles stored in Clerk's publicMetadata.
+> See `system-design-docs/14-rbac-implementation.md` for the actual implementation.
 
 ### 1. Policy Decision Point (PDP) Configuration
 

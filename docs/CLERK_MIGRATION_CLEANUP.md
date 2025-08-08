@@ -1,18 +1,18 @@
 # Clerk Migration Cleanup Guide
 
-This guide documents the migration from NextAuth/Cerbos to Clerk and provides cleanup instructions.
+This guide documents the actual implementation using Clerk with custom RBAC (NOT Clerk Organizations or Cerbos).
 
 ## Migration Status
 
 ### ✅ Completed
 1. **Created Clerk organization setup script** - `/scripts/setup-clerk-organizations.ts`
 2. **Updated auth.ts** - Proper metadata structure with backward compatibility
-3. **Updated authorization.ts** - Full RBAC implementation matching Cerbos design
+3. **Updated authorization.ts** - Custom RBAC implementation using publicMetadata
 4. **Updated API routes** - Proper authorization checks in `/api/admin/users` and `/api/admin/roles`
 
 ### 🚧 In Progress
 1. **Clerk Organizations Setup** - Run the setup script to create organizations
-2. **Dead Code Cleanup** - Remove NextAuth and Cerbos references
+2. **Dead Code Cleanup** - Removed tRPC packages, updated documentation
 
 ### 📋 TODO
 1. Update remaining API routes

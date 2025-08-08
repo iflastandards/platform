@@ -55,7 +55,7 @@ e2e/admin-portal/auth-flow.e2e.test.ts
 ```
 packages/theme/src/tests/deployment/env-variables.test.ts
 packages/theme/src/tests/deployment/external-services.test.ts
-packages/theme/src/tests/deployment/supabase-cerbos-keys.test.ts
+packages/theme/src/tests/deployment/clerk-auth-keys.test.ts
 ```
 
 ## Test Content Guidelines
