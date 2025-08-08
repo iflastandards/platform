@@ -106,9 +106,7 @@
     ],
     "taggedTestInputs": [
       "{projectRoot}/**/*.test.*",
-      "{projectRoot}/**/*.spec.*",
-      "{workspaceRoot}/scripts/test-tagging-analyzer.js",
-      "{workspaceRoot}/scripts/validate-test-tags.js"
+      "{projectRoot}/**/*.spec.*"
     ]
   },
   "targetDefaults": {
