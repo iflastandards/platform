@@ -21,22 +21,49 @@ Our platform uses a **custom RBAC system** built on top of Clerk authentication:
 
 ## Testing Philosophy
 
-### Integration-First Approach
+### Layered Testing Strategy (No Redundancy)
 
-We believe in testing code the way it actually runs in production. This means:
+We use a **layered testing approach** where each test type has a distinct purpose:
 
-* **Real File I/O**: Test with actual files on disk rather than mocked file systems
-* **Real Data**: Use test fixtures and sample data that mirror production scenarios
-* **Real Services**: When possible, test against test instances of real services
-* **Real Integration**: Test multiple components working together as they do in production
+#### Unit Tests (Isolated Logic)
+* **Purpose**: Test pure logic in complete isolation with mocks
+* **Use for**: Authorization functions, utility functions, complex algorithms
+* **Characteristics**: Fast (<5s), no external dependencies, comprehensive edge cases
+* **Mocking**: Mock ALL external dependencies (Clerk, databases, file systems)
 
-### When to Use Pure Unit Tests
+#### Integration Tests (Real I/O, Multiple Components)  
+* **Purpose**: Test component interactions with real systems
+* **Use for**: API workflows, file processing, database operations, UI component integration
+* **Characteristics**: Real file I/O, real test users, real databases, multiple components
+* **No Redundancy**: Don't re-test logic already covered by unit tests
 
-Pure unit tests (with mocks) should be limited to:
-* Pure functions with no external dependencies
-* Complex algorithms that need isolation for clarity
-* Edge cases that are difficult to reproduce with real data
-* Performance-critical code that needs microsecond-level timing
+#### E2E Tests (Complete User Journeys)
+* **Purpose**: Test complete user workflows through the browser
+* **Use for**: Login flows, multi-page workflows, cross-system integration
+* **Characteristics**: Real browser, real authentication, complete user journeys
+* **No Redundancy**: Don't re-test API logic or component logic
+
+### When to Use Each Test Type
+
+#### Unit Tests - Use When:
+* Testing pure functions with no external dependencies
+* Testing complex authorization logic in isolation
+* Testing edge cases and error conditions
+* Need fast feedback during development
+* Testing algorithms that benefit from isolation
+
+#### Integration Tests - Use When:
+* Testing multiple components working together
+* Testing real file I/O operations
+* Testing API endpoints with real data
+* Testing database operations
+* Testing UI components with real data flows
+
+#### E2E Tests - Use When:
+* Testing complete user workflows
+* Testing cross-browser compatibility
+* Testing authentication flows end-to-end
+* Testing visual elements and user interactions
 
 ### Test Classification
 
@@ -317,77 +344,108 @@ Our platform uses custom RBAC with Clerk's publicMetadata (NOT Clerk Organizatio
 * **withAuth Middleware**: All protected API routes use our custom middleware
 * **Debug Mode**: Comprehensive debugging available via environment variables and debug endpoint
 
-### Testing API Routes with withAuth
+### Unit Tests vs Integration Tests for Authorization
 
+#### Unit Tests (Authorization Logic Only)
+```typescript
+/**
+ * @unit @auth
+ * Unit tests for authorization functions - test logic in isolation
+ */
+describe('Authorization Functions @unit @auth', () => {
+  beforeEach(() => {
+    // Mock Clerk completely for unit tests
+    vi.mock('@clerk/nextjs/server', () => ({
+      currentUser: vi.fn()
+    }));
+  });
+
+  test('canPerformAction allows superadmin all actions', async () => {
+    // Mock user data for unit test
+    const mockCurrentUser = vi.mocked(currentUser);
+    mockCurrentUser.mockResolvedValue({
+      id: 'test-superadmin',
+      publicMetadata: { roles: { superadmin: true } }
+    });
+
+    const result = await canPerformAction('namespace', 'delete', {
+      namespaceId: 'any-namespace'
+    });
+
+    expect(result).toBe(true);
+  });
+
+  test('canPerformAction denies editor namespace creation', async () => {
+    const mockCurrentUser = vi.mocked(currentUser);
+    mockCurrentUser.mockResolvedValue({
+      id: 'test-editor',
+      publicMetadata: {
+        teams: [{ role: 'editor', teamId: 'team-1', namespaces: ['isbd'] }]
+      }
+    });
+
+    const result = await canPerformAction('namespace', 'create', {
+      reviewGroupId: 'isbd'
+    });
+
+    expect(result).toBe(false);
+  });
+});
+```
+
+#### Integration Tests (API Routes with Real Users)
 ```typescript
 /**
  * @integration @auth @api
- * Test protected API routes with proper authorization
+ * Integration tests for API routes - use real test users, no mocking
  */
-describe('Protected API Authorization @integration @auth', () => {
-  let superAdmin: ClerkTestUser;
-  let rgAdmin: ClerkTestUser;
-  let editor: ClerkTestUser;
+describe('Protected API Routes @integration @auth', () => {
+  let testUsers: ClerkTestUsers;
   
   beforeAll(async () => {
-    // Load real test users from Clerk
-    superAdmin = await TestUsers.getSuperAdmin();
-    rgAdmin = await TestUsers.getReviewGroupAdmin();
-    editor = await TestUsers.getEditor();
+    // Use real Clerk test users (no mocking)
+    testUsers = await loadClerkTestUsers();
   });
   
-  describe('Namespace Creation @auth @critical', () => {
-    test('RG Admin can create namespace in their review group', async () => {
-      // Mock Clerk auth for RG Admin
-      vi.mock('@clerk/nextjs/server', () => ({
-        currentUser: vi.fn().mockResolvedValue({
-          id: rgAdmin.id,
-          publicMetadata: {
-            reviewGroups: [{ role: 'admin', reviewGroupId: 'isbd' }]
-          }
-        })
-      }));
-      
-      const response = await fetch('/api/admin/namespaces', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          name: 'Test Namespace',
-          reviewGroupId: 'isbd'
-        })
-      });
-      
-      expect(response.status).toBe(200);
-      
-      // Verify response includes request tracking
-      expect(response.headers.get('x-request-id')).toBeDefined();
-      expect(response.headers.get('x-response-time')).toMatch(/\d+\.\d+ms/);
+  test('RG Admin can create namespace via API', async () => {
+    // Use real test user authentication
+    const response = await authenticatedFetch('/api/admin/namespaces', {
+      method: 'POST',
+      user: testUsers.reviewGroupAdmin,
+      body: JSON.stringify({
+        name: 'Test Namespace',
+        reviewGroupId: 'isbd'
+      })
     });
     
-    test('Editor cannot create namespace', async () => {
-      // Mock Clerk auth for Editor
-      vi.mock('@clerk/nextjs/server', () => ({
-        currentUser: vi.fn().mockResolvedValue({
-          id: editor.id,
-          publicMetadata: {
-            teams: [{ 
-              role: 'editor', 
-              teamId: 'isbd-team-1',
-              namespaces: ['isbd']
-            }]
-          }
-        })
-      }));
-      
-      const response = await fetch('/api/admin/namespaces', {
-        method: 'POST',
-        body: JSON.stringify({ name: 'Test', reviewGroupId: 'isbd' })
-      });
-      
-      expect(response.status).toBe(403);
-      const error = await response.json();
-      expect(error.error.code).toBe('PERMISSION_DENIED');
+    expect(response.status).toBe(200);
+    
+    // Verify actual database record was created
+    const namespace = await supabase
+      .from('namespaces')
+      .select('*')
+      .eq('name', 'Test Namespace')
+      .single();
+    
+    expect(namespace.data).toBeDefined();
+  });
+  
+  test('Editor cannot create namespace via API', async () => {
+    const response = await authenticatedFetch('/api/admin/namespaces', {
+      method: 'POST',
+      user: testUsers.editor,
+      body: JSON.stringify({ name: 'Test', reviewGroupId: 'isbd' })
     });
+    
+    expect(response.status).toBe(403);
+    
+    // Verify no database record was created
+    const { count } = await supabase
+      .from('namespaces')
+      .select('*', { count: 'exact' })
+      .eq('name', 'Test');
+    
+    expect(count).toBe(0);
   });
 });
 ```

@@ -54,6 +54,16 @@ test.describe('Feature @smoke @ui', () => {
 });
 ```
 
+### E2E Testing Philosophy
+E2E tests should focus on **complete user journeys** and **NOT re-test** logic already covered by unit/integration tests:
+
+- ✅ **Test user workflows**: Login → Navigate → Perform action → Verify result
+- ✅ **Test browser interactions**: Clicks, forms, navigation, visual feedback
+- ✅ **Test cross-system integration**: Authentication + UI + API working together
+- ❌ **Don't re-test API logic**: That's covered by integration tests
+- ❌ **Don't re-test authorization logic**: That's covered by unit tests
+- ❌ **Don't test individual component behavior**: That's covered by integration tests
+
 ### Using Helpers
 ```typescript
 import { smokeTest, integrationTest } from '../utils/tagged-test';

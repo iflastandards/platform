@@ -135,12 +135,37 @@ AUTH_DEBUG=true pnpm test    # Enable auth debug logs
 AUTH_DEBUG_VERBOSE=true      # Include stack traces
 ```
 
-## 📝 Integration Test Template (Primary)
+## 📝 Test Templates
 
+### Unit Test Template (Isolated Logic)
+```typescript
+// feature.unit.test.ts
+describe('Feature Logic @unit', () => {
+  beforeEach(() => {
+    // Mock ALL external dependencies
+    vi.mock('@clerk/nextjs/server');
+    vi.mock('../database');
+  });
+  
+  it('should calculate correctly', () => {
+    // Test pure logic with mocked inputs
+    const result = calculateSomething(input);
+    expect(result).toBe(expected);
+  });
+});
+```
+
+### Integration Test Template (Real I/O)
 ```typescript
 // feature.integration.test.ts
-describe('Feature @integration @api', () => {
+describe('Feature Integration @integration @api', () => {
   const testDir = path.join(__dirname, '.test-output');
+  let testUsers: ClerkTestUsers;
+  
+  beforeAll(async () => {
+    // Use real test users (no mocking)
+    testUsers = await loadClerkTestUsers();
+  });
   
   beforeEach(async () => {
     await fs.mkdir(testDir, { recursive: true });
@@ -150,13 +175,13 @@ describe('Feature @integration @api', () => {
     await fs.rm(testDir, { recursive: true, force: true });
   });
   
-  it('should process real files', async () => {
+  it('should process real files with real auth', async () => {
     // Create real test file
     const csvPath = path.join(testDir, 'test.csv');
     await fs.writeFile(csvPath, 'header\nvalue');
     
-    // Test with real I/O
-    const result = await processFile(csvPath);
+    // Test with real I/O and real authentication
+    const result = await authenticatedProcessFile(csvPath, testUsers.editor);
     
     // Verify actual results
     expect(result.rows).toBe(1);
@@ -164,35 +189,64 @@ describe('Feature @integration @api', () => {
 });
 ```
 
-## 🔐 Auth Testing Template
+## 🔐 Auth Testing Templates
 
+### Unit Test (Authorization Logic Only)
 ```typescript
-// auth.integration.test.ts
-describe('Protected Route @integration @auth @rbac', () => {
-  let testUser: ClerkTestUser;
-  
-  beforeAll(async () => {
-    testUser = await TestUsers.getReviewGroupAdmin();
+// auth.unit.test.ts
+describe('Authorization Logic @unit @auth', () => {
+  beforeEach(() => {
+    // Mock Clerk for unit tests
+    vi.mock('@clerk/nextjs/server', () => ({
+      currentUser: vi.fn()
+    }));
   });
   
-  it('should enforce permissions with withAuth', async () => {
-    // Test protected API route
-    const response = await fetch('/api/admin/namespaces', {
+  it('should allow superadmin all actions', async () => {
+    const mockCurrentUser = vi.mocked(currentUser);
+    mockCurrentUser.mockResolvedValue({
+      id: 'test-user',
+      publicMetadata: { roles: { superadmin: true } }
+    });
+    
+    const result = await canPerformAction('namespace', 'delete');
+    expect(result).toBe(true);
+  });
+});
+```
+
+### Integration Test (Real Auth + API)
+```typescript
+// auth.integration.test.ts
+describe('Protected API Routes @integration @auth @rbac', () => {
+  let testUsers: ClerkTestUsers;
+  
+  beforeAll(async () => {
+    // Use real Clerk test users (no mocking)
+    testUsers = await loadClerkTestUsers();
+  });
+  
+  it('should enforce permissions with real auth', async () => {
+    // Test with real authenticated user
+    const response = await authenticatedFetch('/api/admin/namespaces', {
       method: 'POST',
+      user: testUsers.reviewGroupAdmin,
       body: JSON.stringify({ 
         name: 'Test',
         reviewGroupId: 'isbd' 
       })
     });
     
-    // RG Admin can create in their review group
     expect(response.status).toBe(200);
     
-    // Check debug info if needed
-    if (process.env.AUTH_DEBUG) {
-      const logs = await fetch('/api/admin/auth/debug?action=logs');
-      console.log('Auth decision:', await logs.json());
-    }
+    // Verify actual database changes
+    const namespace = await supabase
+      .from('namespaces')
+      .select('*')
+      .eq('name', 'Test')
+      .single();
+    
+    expect(namespace.data).toBeDefined();
   });
 });
 ```
@@ -215,12 +269,27 @@ describe('Protected Route @integration @auth @rbac', () => {
 
 ## 💡 Philosophy
 
-We believe in testing code the way it runs in production:
+**Layered Testing Strategy** - Each test type has a distinct purpose:
+
+### Unit Tests (Isolated Logic)
+- ✅ Mock ALL external dependencies (Clerk, databases, file systems)
+- ✅ Test pure logic and algorithms in complete isolation
+- ✅ Fast feedback (<5s per file)
+- ✅ Comprehensive edge cases and error conditions
+- ❌ Don't test integration between components
+
+### Integration Tests (Real I/O, Multiple Components)
 - ✅ Real file I/O operations
-- ✅ Actual test databases
+- ✅ Real test users and databases
 - ✅ Multiple components working together
 - ✅ Real error conditions
-- ❌ Avoid mocks unless absolutely necessary
+- ❌ Don't re-test logic already covered by unit tests
+
+### E2E Tests (Complete User Journeys)
+- ✅ Real browser interactions
+- ✅ Complete user workflows
+- ✅ Cross-system integration
+- ❌ Don't re-test API logic or component logic
 
 ## 🔗 Full Documentation
 
