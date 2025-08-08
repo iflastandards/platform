@@ -33,7 +33,7 @@ This document serves as the master reference for implementing a MUI-based "Potem
 2. Admin selects namespace → Sees pending GitHub issues
 3. Actions tab → "Scaffold namespace from spreadsheet" action
 4. Import confirmation page → Verifies spreadsheet from GitHub issue
-5. Confirms action → Submitted to Vercel function which:
+5. Confirms action → Submitted to Render API endpoint which:
    a. Converts spreadsheets to CSV
    b. Validates against DCTAP profile
    c. If errors: generates report and GitHub issue
@@ -88,7 +88,7 @@ This document serves as the master reference for implementing a MUI-based "Potem
 - **Authentication**: Clerk (mocked for demo)
 - **Authorization**: Custom RBAC (implemented)
 - **Version Control**: GitHub integration
-- **Functions**: Vercel serverless (mocked)
+- **Functions**: Render API endpoints (mocked)
 - **Database**: Supabase (mocked for demo)
 
 ### Data Storage Strategy

@@ -73,7 +73,7 @@ export function getAdminPortalConfigAuto(): AdminPortalConfig {
     return getAdminPortalConfig('preview');
   }
   
-  if (hostname.includes('github.io') || hostname.includes('netlify') || hostname.includes('vercel')) {
+  if (hostname.includes('github.io') || hostname.includes('netlify') || hostname.includes('onrender.com')) {
     return getAdminPortalConfig('development');
   }
   

@@ -93,7 +93,6 @@ export function getCurrentEnvironment(): Environment {
     if (
       hostname.includes('github.io') ||
       hostname.includes('netlify') ||
-      hostname.includes('vercel') ||
       hostname.includes('onrender.com')
     ) {
       return 'preview';

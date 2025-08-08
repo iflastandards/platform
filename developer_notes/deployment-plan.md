@@ -39,7 +39,7 @@ This document tracks deployment tasks and phases for the IFLA Standards Platform
 - [ ] Verify all required secrets are configured
 - [ ] Check Nx Cloud agent availability for distributed builds
 - [ ] Validate branch protection rules
-- [ ] Ensure Vercel preview deployment configuration is correct
+- [ ] Ensure Render preview deployment configuration is correct
 - [ ] Test webhook configurations for automated deployments
 - [ ] Verify GitHub Pages deployment settings
 
@@ -48,7 +48,7 @@ This document tracks deployment tasks and phases for the IFLA Standards Platform
 - [ ] Run pre-push validation (`pnpm test:pre-push:flexible`)
 - [ ] Push changes to preview branch
 - [ ] Monitor GitHub Actions deployment pipeline
-- [ ] Verify Vercel preview deployment succeeds
+- [ ] Verify Render preview deployment succeeds
 - [x] Test deployed preview site functionality
 - [x] Validate all site navigation and cross-links
 - [ ] Check admin portal functionality on preview
@@ -76,7 +76,7 @@ This document tracks deployment tasks and phases for the IFLA Standards Platform
 **Completed:** 2025-01-08 (Preview deployment)  
 **Deployed by:** AI Assistant
 **Preview URL:** https://iflastandards.github.io/platform/  
-**Vercel Preview:** [URL to be filled when available]
+**Render Preview:** [URL to be filled when available]
 
 ## Notes
 

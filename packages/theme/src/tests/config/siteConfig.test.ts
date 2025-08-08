@@ -5,7 +5,7 @@ import {
   type Environment,
 } from '../../config/siteConfig';
 
-describe('getSiteConfig @unit', () => {
+describe('getSiteConfig @unit @low-priority @validation', () => {
   describe('basic functionality', () => {
     it('should return correct config for portal in local environment', () => {
       const config = getSiteConfig('portal', 'local');
@@ -116,7 +116,7 @@ describe('getSiteConfig @unit', () => {
       });
     });
 
-    it('should use Vercel URLs for preview environment', () => {
+    it('should use preview URLs for preview environment', () => {
       const sites: SiteKey[] = [
         'portal',
         'ISBDM',

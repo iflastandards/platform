@@ -99,7 +99,7 @@ jobs:
 
       - name: Validate external API integrations
         run: |
-          echo "🔧 Validating external API integrations (Vercel, Supabase, Clerk, GitHub)..."
+          echo "🔧 Validating external API integrations (Render, Supabase, Clerk, GitHub)..."
           
           # Use nx affected for external API testing
           PARALLEL="${{ inputs.parallelism || '4' }}"

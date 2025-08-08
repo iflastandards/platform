@@ -1,6 +1,6 @@
 # API
 
-Vercel Edge Functions for the IFLA platform.
+API endpoints for the IFLA platform (deployed on Render).
 
 ## Structure
 
@@ -11,4 +11,4 @@ Vercel Edge Functions for the IFLA platform.
 
 ## Development
 
-These functions are deployed as Vercel Edge Functions and provide serverless API endpoints for the platform.
+These functions are deployed on Render and provide serverless API endpoints for the platform.

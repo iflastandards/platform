@@ -560,11 +560,11 @@ graph LR
 ## Future Considerations
 
 ### Potential Enhancements
-1. **Vercel Integration**: Evaluate for PR preview deployments (Q2 2025)
-2. **Regional Deployments**: Consider geographic distribution based on user analysis
-3. **Configuration Validation**: Runtime checks for configuration integrity
-4. **Feature Flags**: Environment-specific feature toggles
-5. **A/B Testing**: Multiple production configurations
+1. **Regional Deployments**: Consider geographic distribution based on user analysis
+2. **Configuration Validation**: Runtime checks for configuration integrity
+3. **Feature Flags**: Environment-specific feature toggles
+4. **A/B Testing**: Multiple production configurations
+5. **Enhanced Preview Features**: Additional staging capabilities
 
 ### Maintaining Simplicity
 - Resist adding complexity without clear benefits

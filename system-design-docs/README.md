@@ -32,7 +32,7 @@ This directory contains the comprehensive system design documentation for the IF
 - **Frontend**: React 19.1.0, TypeScript 5.7
 - **Documentation**: Docusaurus 3.8+
 - **Admin Portal**: Next.js 15.2.5 with App Router
-- **Backend**: Vercel Edge Functions
+- **Backend**: Render API endpoints
 - **Authentication**: Clerk
 - **Authorization**: Custom RBAC via Clerk publicMetadata
 - **Database**: Supabase (operational data)

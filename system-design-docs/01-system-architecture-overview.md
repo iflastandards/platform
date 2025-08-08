@@ -19,7 +19,7 @@ The IFLA Standards Platform is a modern, monorepo-based system designed to manag
 ### 2. **Distributed System Architecture**
 - **Documentation Sites**: Individual Docusaurus sites for each standard/namespace
 - **Admin Portal**: Centralized Next.js application for management tasks
-- **Edge Functions**: Serverless API endpoints via Vercel
+- **Edge Functions**: Serverless API endpoints via Render
 - **External Services**: Integrated with GitHub, Google Sheets, Clerk, and Supabase
 
 ### 3. **Progressive Enhancement**
@@ -67,7 +67,7 @@ Version Control: Git + GitHub
 | Component | OMR25 (March 2025) | Current (July 2025) | Rationale for Change |
 |-----------|-------------------|---------------------|---------------------|
 | **Language** | PHP 8.4 | TypeScript/JavaScript | Modern ecosystem, better tooling |
-| **Backend** | Laravel 11 | Next.js + Vercel Functions | Serverless, edge computing |
+| **Backend** | Laravel 11 | Next.js + Render API | Serverless, edge computing |
 | **Database** | MariaDB | Git + Supabase (temp only) | Version control as primary storage |
 | **Frontend** | Filament/Livewire | React 19 + Docusaurus | Component ecosystem, static generation |
 | **Testing** | Pest | Vitest/Playwright | JavaScript ecosystem alignment |
@@ -134,7 +134,7 @@ Reusable libraries across the monorepo:
 - **@ifla/rdf-tools**: RDF generation and parsing
 - **@ifla/shared-config**: Centralized configuration
 
-### 4. API Layer (Vercel Edge Functions)
+### 4. API Layer (Render API Endpoints)
 Serverless endpoints for dynamic operations:
 - **Authentication**: OAuth flows and session management
 - **RDF Operations**: Generation and validation
@@ -174,8 +174,9 @@ Local Development:
 
 Preview Environment:
   - URL: https://iflastandards.github.io/platform/
+  - Admin URL: https://admin-iflastandards-preview.onrender.com
   - Purpose: Staging and review
-  - Features: PR previews, stakeholder review
+  - Features: Stakeholder review, testing
 
 Production Environment:
   - URL: https://www.iflastandards.info/
@@ -220,7 +221,7 @@ Production Environment:
 
 ### Runtime Performance
 - **Static Generation**: Pre-built documentation pages
-- **Edge Computing**: Vercel Edge Functions
+- **Edge Computing**: Render API endpoints
 - **CDN Distribution**: Global content delivery
 - **Image Optimization**: Next.js automatic optimization
 

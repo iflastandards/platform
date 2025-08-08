@@ -104,9 +104,9 @@ jobs:
           # Use nx affected for basepath testing
           pnpm nx affected -t test --parallel=4
           
-      - name: Test Vercel deployment integrations
+      - name: Test Render deployment integrations
         run: |
-          echo "▲ Testing Vercel deployment integrations with nx affected..."
+          echo "▲ Testing Render deployment integrations with nx affected..."
           
           # Use nx affected for deployment testing
           pnpm nx affected -t test --parallel=4
@@ -203,7 +203,7 @@ jobs:
           echo "**External Services:** ${{ inputs.include_external_services != false && 'Tested' || 'Skipped' }}" >> $GITHUB_STEP_SUMMARY
           echo "" >> $GITHUB_STEP_SUMMARY
           echo "### Staging Validations Performed:" >> $GITHUB_STEP_SUMMARY
-          echo "- ✅ External service connectivity (Vercel, Supabase, Clerk, GitHub)" >> $GITHUB_STEP_SUMMARY
+          echo "- ✅ External service connectivity (Render, Supabase, Clerk, GitHub)" >> $GITHUB_STEP_SUMMARY
           echo "- ✅ Environment configuration validation" >> $GITHUB_STEP_SUMMARY
           echo "- ✅ Base URL and path configuration testing" >> $GITHUB_STEP_SUMMARY
           echo "- ✅ Deployment artifact validation" >> $GITHUB_STEP_SUMMARY
@@ -217,7 +217,7 @@ jobs:
           echo "### Focus Areas:" >> $GITHUB_STEP_SUMMARY
           echo "- 🌍 External API integrations and authentication" >> $GITHUB_STEP_SUMMARY
           echo "- 🔗 URL/path handling across environments" >> $GITHUB_STEP_SUMMARY
-          echo "- ▲ Vercel deployment and serverless function testing" >> $GITHUB_STEP_SUMMARY
+          echo "- ▲ Render deployment and serverless function testing" >> $GITHUB_STEP_SUMMARY
           echo "- 📦 Build artifact and deployment validation" >> $GITHUB_STEP_SUMMARY
           echo "" >> $GITHUB_STEP_SUMMARY
           echo "_Note: This workflow assumes unit and basic integration tests have already passed locally._"

@@ -139,7 +139,7 @@ function collectWarnings() {
 function collectApiTests() {
   console.log('## 🧪 API Test Results\n');
   
-  const testTypes = ['supabase', 'clerk', 'github', 'vercel'];
+  const testTypes = ['supabase', 'clerk', 'github', 'render'];
   const results = {};
   
   // Look for test result files
@@ -227,7 +227,7 @@ function collectHealthChecks() {
     { name: 'GitHub Pages', type: 'site' },
     { name: 'Portal Homepage', type: 'site' },
     { name: 'ISBDM Site', type: 'site' },
-    { name: 'Vercel Admin', type: 'admin' },
+    { name: 'Render Admin', type: 'admin' },
     { name: 'Supabase Connection', type: 'api' },
     { name: 'Clerk Auth', type: 'api' },
     { name: 'GitHub API Integration', type: 'api' }

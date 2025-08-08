@@ -172,7 +172,7 @@ nx run-many --target=e2e --all --parallel=2
 nx e2e standards-dev --grep="@smoke"
 
 # Environment-specific
-BASE_URL=https://preview.vercel.app nx e2e standards-dev --grep="@smoke"
+BASE_URL=https://preview.onrender.com nx e2e standards-dev --grep="@smoke"
 BASE_URL=https://iflastandards.info nx e2e standards-dev --grep="@smoke"
 ```
 
@@ -419,7 +419,7 @@ jobs:
       # Integration tests for preview
       - if: github.event_name == 'pull_request'
         run: |
-          BASE_URL=${{ steps.vercel.outputs.url }} \
+          BASE_URL=${{ steps.render.outputs.url }} \
           npx nx affected -t test:integration --parallel=2
       
       # Smoke tests for production
@@ -481,10 +481,10 @@ nx test @ifla/theme --coverage
    });
    ```
 
-2. **Vercel Preview URL Issues**
+2. **Render Preview URL Issues**
    ```bash
    # Wait for deployment
-   npx wait-on $VERCEL_URL --timeout 300000
+   npx wait-on $RENDER_URL --timeout 300000
    ```
 
 3. **Nx Cache Misses**

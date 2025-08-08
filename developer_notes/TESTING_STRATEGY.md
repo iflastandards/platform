@@ -181,14 +181,14 @@ pnpm test:ci:env
 
 #### Preview Deployment (`deploy-preview.yml`)
 - ✅ **Environment validation**: API tokens, environment variables, service connectivity
-- ✅ **Build and deploy**: GitHub Pages + Vercel (if admin affected)
+- ✅ **Build and deploy**: GitHub Pages + Render (if admin affected)
 - ✅ **Post-deployment validation**: Health checks on deployed sites
 - ❌ **Skips**: TypeScript, ESLint, unit tests, integration tests
 
 #### Production Deployment (`deploy-production.yml`)
 - ✅ **PR validation**: Must be from preview → main branch
 - ✅ **Production environment validation**: Production secrets, API tokens
-- ✅ **Secure deployment**: Production GitHub Pages + Vercel
+- ✅ **Secure deployment**: Production GitHub Pages + Render
 - ✅ **Production health checks**: Full production API integration validation
 - ❌ **Skips**: All code quality checks (assumes local validation)
 

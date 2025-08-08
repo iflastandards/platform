@@ -52,7 +52,7 @@ The IFLA Standards Platform is a modern, Git-centric system for managing interna
 - **Styling**: Tailwind CSS + shadcn/ui
 
 ### Backend
-- **API Layer**: Vercel Edge Functions
+- **API Layer**: Render API endpoints
 - **Authentication**: Clerk (replacing NextAuth.js)
 - **Authorization**: Clerk + Cerbos Policy Engine
 - **Database**: Supabase (PostgreSQL)

@@ -33,7 +33,7 @@ This phase is a one-time, administrator-triggered event to start a new version o
     2.  If revising, the system calls an API to export the latest published RDF for that namespace into a new Google Sheet.
     3.  The Google Sheet is shared with the editorial team. Editors perform a one-time, bulk update of the structured data.
     4.  When complete, an Editor or Admin triggers the "Import from Sheet" process via the dashboard.
-    5.  A Vercel function is invoked (**`POST /api/cycle/import`**). This function:
+    5.  A Render API endpoint is invoked (**`POST /api/cycle/import`**). This function:
         a. Fetches all data from the specified Google Sheet.
         b. Validates the data row-by-row against the shared `@ifla/validation` library.
         c. Converts the validated data into RDF.
@@ -78,7 +78,7 @@ This is the final, administrator-triggered event to publish a new version.
 -   **Process**:
     1.  The UI displays the suggested semantic version (e.g., `v1.3.0`). The admin can confirm or override this.
     2.  The admin clicks "Publish Version `v1.3.0`".
-    3.  A Vercel function is invoked (**`POST /api/publish`**). This is a lightweight function that:
+    3.  A Render API endpoint is invoked (**`POST /api/publish`**). This is a lightweight function that:
         a. Takes the pre-assembled draft vocabulary from the latest nightly build.
         b. Assigns the confirmed version number to the artifact.
         c. Creates a new Git tag for the source code commit.
@@ -180,7 +180,7 @@ This allows for commands like:
 ## 5. Data Flow Diagram
 
 ```
-[Google Sheet] -> (1. Admin Triggers Import API) -> [Vercel Function: /api/cycle/import]
+[Google Sheet] -> (1. Admin Triggers Import API) -> [Render API: /api/cycle/import]
     |
     -> (Converts & Validates)
     |
@@ -188,7 +188,7 @@ This allows for commands like:
         ^
         | (2. Editor Saves via TinaCMS)
         |
-        -> [Vercel Function: /api/tina/validateOnSave] -> (Validates) -> [Commit to Git]
+        -> [Render API: /api/tina/validateOnSave] -> (Validates) -> [Commit to Git]
             ^
             | (3. Nightly GitHub Action)
             |
@@ -196,7 +196,7 @@ This allows for commands like:
                                                                                         |
                                                                                         | (4. Admin Triggers Publish API)
                                                                                         |
-                                                                                        -> [Vercel Function: /api/publish] -> [Final Vocabulary Server]
+                                                                                        -> [Render API: /api/publish] -> [Final Vocabulary Server]
 ```
 
 This comprehensive plan provides a resilient, scalable, and transparent foundation for managing your standards content.

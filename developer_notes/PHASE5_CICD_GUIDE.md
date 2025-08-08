@@ -74,7 +74,7 @@ git push --no-verify
 2. **Build and Deploy**
    - Build all sites (assumes code is valid)
    - Deploy to GitHub Pages
-   - Deploy admin to Vercel (if affected)
+   - Deploy admin to Render (if affected)
    
 3. **Post-Deployment Validation**
    - Health check deployed URLs
@@ -100,7 +100,7 @@ git push --no-verify
 3. **Production Build and Deploy**
    - Build for production (assumes code is valid)
    - Deploy to production GitHub Pages
-   - Deploy admin to production Vercel
+   - Deploy admin to production Render
    
 4. **Production Health Checks**
    - Comprehensive production health checks

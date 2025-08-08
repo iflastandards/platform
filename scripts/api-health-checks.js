@@ -18,7 +18,7 @@ const token = tokenIndex !== -1 ? args[tokenIndex + 1] : process.env.GITHUB_TOKE
 
 if (!service) {
   console.error('❌ Please specify a service with --service <name>');
-  console.error('Available services: supabase, clerk, github, vercel, check-supabase, check-clerk, check-github');
+  console.error('Available services: supabase, clerk, github, render, check-supabase, check-clerk, check-github');
   process.exit(1);
 }
 
@@ -50,9 +50,9 @@ const services = {
     name: 'GitHub API',
     check: checkGitHub
   },
-  vercel: {
-    name: 'Vercel',
-    check: checkVercel
+  render: {
+    name: 'Render',
+    check: checkRender
   }
 };
 
@@ -223,23 +223,23 @@ async function checkGitHub() {
   }
 }
 
-async function checkVercel() {
-  // For Vercel, we'll check if the deployment endpoint is accessible
-  // This would typically be done through the Vercel API
-  const vercelToken = process.env.VERCEL_TOKEN;
-  const projectId = process.env.VERCEL_PROJECT_ID;
+async function checkRender() {
+  // For Render, we'll check if the deployment endpoint is accessible
+  // This would typically be done through the Render API
+  const renderToken = process.env.RENDER_API_KEY;
+  const serviceId = process.env.RENDER_SERVICE_ID;
   
-  if (!vercelToken || !projectId) {
+  if (!renderToken || !serviceId) {
     return {
       success: false,
-      error: 'Vercel configuration missing (VERCEL_TOKEN or VERCEL_PROJECT_ID)'
+      error: 'Render configuration missing (RENDER_API_KEY or RENDER_SERVICE_ID)'
     };
   }
   
   try {
-    const response = await makeRequest(`https://api.vercel.com/v9/projects/${projectId}`, {
+    const response = await makeRequest(`https://api.render.com/v1/services/${serviceId}`, {
       headers: {
-        'Authorization': `Bearer ${vercelToken}`,
+        'Authorization': `Bearer ${renderToken}`,
         'Content-Type': 'application/json'
       }
     });

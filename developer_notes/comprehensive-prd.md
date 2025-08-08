@@ -10,7 +10,7 @@ This PRD outlines the comprehensive redesign of the IFLA Standards Development P
 - **IFLA hierarchy alignment**: Review Group → Namespace → Element Sets + Concept Schemes
 - **Simplified CI/CD**: Preview branch → Main branch deployment
 - **Comprehensive authorization**: GitHub OAuth + Cerbos policy engine
-- **Vercel deployment**: Edge Functions for serverless operations
+- **Render deployment**: API endpoints for serverless operations
 
 ## Current State Analysis
 
@@ -120,7 +120,7 @@ ifla-standards-platform/
 │       │   └── concept-schemes/  # 40+ concept schemes
 │       ├── csv/
 │       └── [config files]
-├── api/                          # Vercel Edge Functions
+├── api/                          # Render API endpoints
 │   ├── auth/                     # Authentication endpoints
 │   ├── rdf/                      # RDF generation and validation
 │   ├── sheets/                   # Google Sheets integration
@@ -169,7 +169,7 @@ ifla-standards-platform/
 - TinaCMS for direct page editing and content management
 
 **Backend:**
-- Vercel Edge Functions for serverless API
+- Render API endpoints for serverless API
 - NextAuth.js 5.0 for authentication
 - Cerbos for authorization policies
 - Google Sheets API for vocabulary management
@@ -183,7 +183,7 @@ ifla-standards-platform/
 - ESLint + Prettier for code quality
 
 **Deployment:**
-- Vercel for hosting and edge functions
+- Render for hosting and API endpoints
 - GitHub Actions for CI/CD
 - Nx Cloud for build caching
 
@@ -433,16 +433,16 @@ ifla-standards-platform/
 ### Phase 2: Admin Portal and Pipeline Implementation (Week 2)
 
 **Critical Path Tasks:**
-1. **Admin Portal Foundation with Vercel Routing**
+1. **Admin Portal Foundation with Render Routing**
    - Create Next.js app with App Router
-   - **SECOND PRIORITY: Configure Vercel routing for admin portal**
+   - **SECOND PRIORITY: Configure Render routing for admin portal**
    - Configure NextAuth.js with GitHub OAuth
    - Build basic dashboard and navigation
    - Implement user session management
 
 2. **Spreadsheet → CSV → MDX → RDF Pipeline (Final Form)**
    - **CRITICAL: Implement complete pipeline in production-ready form**
-   - Build Vercel Edge Functions for Google Sheets integration
+   - Build Render API endpoints for Google Sheets integration
    - Create CSV processing and validation
    - Implement MDX generation for documentation
    - Build RDF output generation (multiple formats)
@@ -462,7 +462,7 @@ ifla-standards-platform/
    - Create authorization middleware
 
 **Dependencies:** Phase 1 completion (ISBDM working)
-**Deliverables:** Admin portal with Vercel routing and complete pipeline functional
+**Deliverables:** Admin portal with Render routing and complete pipeline functional
 
 ### Phase 3: Content Migration Strategy (Week 3)
 

@@ -6,7 +6,7 @@
 
 ## Overview
 
-The IFLA Standards Platform API layer consists of Vercel Edge Functions providing serverless endpoints for authentication, vocabulary management, RDF operations, and administrative tasks. This document details the API design patterns, security model, and integration architecture.
+The IFLA Standards Platform API layer consists of Render API endpoints providing serverless endpoints for authentication, vocabulary management, RDF operations, and administrative tasks. This document details the API design patterns, security model, and integration architecture.
 
 ## API Design Principles
 

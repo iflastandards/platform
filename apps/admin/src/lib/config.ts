@@ -26,11 +26,11 @@ export const ADMIN_CONFIG = {
  */
 export function getEnvironment(): Environment {
   // In server components, we need to check environment variables or URLs
-  const url = process.env.NEXT_PUBLIC_CLERK_AFTER_SIGN_IN_URL || process.env.VERCEL_URL || '';
+  const url = process.env.NEXT_PUBLIC_CLERK_AFTER_SIGN_IN_URL || process.env.RENDER_EXTERNAL_URL || '';
   
   if (url.includes('localhost')) {
     return 'local';
-  } else if (url.includes('github.io') || url.includes('onrender.com') || url.includes('vercel.app')) {
+  } else if (url.includes('github.io') || url.includes('onrender.com')) {
     return 'preview';
   } else {
     return 'production';

@@ -374,7 +374,7 @@ Nx is configured for maximum performance:
 The project has optimized GitHub Actions workflows:
 - **Preview deployments**: Push to `preview` branch → GitHub Pages at `iflastandards.github.io/platform`
 - **Production deployments**: PR from `preview` to `main` → GitHub Pages at `www.iflastandards.info`
-- **Vercel previews**: Automatic preview deployments for each push to preview branch
+- **Render deployments**: Automatic preview deployments for each push to preview branch
 - **Nx Cloud integration**: Distributed builds with 6-8 agents depending on environment
 
 #### Development Environment
@@ -393,7 +393,7 @@ The project has optimized GitHub Actions workflows:
 #### Deployment URLs
 - **Preview**: https://iflastandards.github.io/platform/
 - **Production**: https://www.iflastandards.info/
-- **Admin Preview**: https://admin-preview.iflastandards.info
+- **Admin Preview**: https://admin-iflastandards-preview.onrender.com
 - **Admin Production**: https://admin.iflastandards.info
 
 #### Phase 5 CI/CD Process
