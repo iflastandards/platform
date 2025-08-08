@@ -30,7 +30,7 @@ export default defineConfig({
   use: {
     ...(baseConfig.use || {}),
     // Use environment-specific base URL
-    baseURL: process.env.BASE_URL || process.env.VERCEL_URL || baseConfig.use?.baseURL,
+    baseURL: process.env.BASE_URL || process.env.RENDER_EXTERNAL_URL || baseConfig.use?.baseURL,
     
     // CI performance optimizations
     launchOptions: {

@@ -104,13 +104,13 @@ describe('CI Configuration Validation @unit @high-priority @validation', () => {
     });
   });
 
-  describe('Vercel Specific', () => {
-    it('should have Vercel environment variables', () => {
-      if (!process.env.CI || !process.env.VERCEL) return;
+  describe('Render Specific', () => {
+    it('should have Render environment variables', () => {
+      if (!process.env.CI || !process.env.RENDER) return;
       
-      expect(process.env.VERCEL_URL).toBeDefined();
-      expect(process.env.VERCEL_ENV).toMatch(/production|preview|development/);
-      expect(process.env.VERCEL_GIT_COMMIT_SHA).toBeDefined();
+      expect(process.env.RENDER_EXTERNAL_URL).toBeDefined();
+      expect(process.env.RENDER_SERVICE_NAME).toBeDefined();
+      expect(process.env.RENDER_GIT_COMMIT).toBeDefined();
     });
   });
 

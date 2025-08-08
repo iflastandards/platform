@@ -256,7 +256,7 @@ Configuration is centralized in `packages/theme/src/config/siteConfig.ts`.
 
 - **Preview**: https://iflastandards.github.io/platform/
 - **Production**: https://www.iflastandards.info/
-- **Vercel Previews**: Automatic for preview branch commits
+- **Admin Preview**: https://admin-iflastandards-preview.onrender.com
 
 ### Contributing
 
