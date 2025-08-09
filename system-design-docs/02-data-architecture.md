@@ -1,7 +1,7 @@
 # Data Architecture
 
-**Version:** 2.0  
-**Date:** July 2025  
+**Version:** 1.1  
+**Date:** August 2025  
 **Status:** Current Implementation
 
 ## Overview
@@ -40,23 +40,33 @@ Different data types are stored in systems optimized for their access patterns:
 standards/
   {namespace}/
     namespace.json          # Namespace metadata
-    element-sets/           # Element set definitions
-      *.json
-    concept-schemes/        # Controlled vocabularies
-      *.json
     dctap/                  # Validation profiles
-      *.json
-    docs/                   # Documentation content
-      elements/*.mdx        # Element documentation
-      concepts/*.mdx        # Concept documentation
-    rdf/generated/          # Generated RDF outputs
+      *.yaml
+    docs/                   # MDX with embedded RDF
+      elements/*.mdx        # Element definitions with RDF front matter
+      concepts/*.mdx        # Concept definitions with RDF front matter
+    rdf/generated/          # Generated RDF outputs from MDX
       *.ttl, *.xml, *.jsonld
 ```
 
+**MDX with RDF Front Matter**:
+```yaml
+---
+uri: http://iflastandards.info/ns/isbd/terms/contentForm
+prefLabel:
+  en: content form
+  fr: forme du contenu
+definition:
+  en: A categorization reflecting the fundamental form...
+broader: http://iflastandards.info/ns/isbd/terms/C2001
+---
+# Content documentation follows...
+```
+
 **Access Patterns**:
-- Build-time: Static generation reads directly
+- Build-time: Static generation reads MDX and generates RDF
 - Runtime: API serves cached content
-- Updates: Through PR workflow only
+- Updates: Through PR workflow or import service
 
 ### 2. Clerk (User Identity)
 **Purpose**: Authentication and minimal user metadata
@@ -84,10 +94,32 @@ interface ClerkUserMetadata {
 - References to full data stored elsewhere
 
 ### 3. Supabase (Operational Data)
-**Purpose**: Processing workflows and transient operational data
+**Purpose**: Processing workflows, import/export tracking, and transient operational data
 
 **Core Tables**:
 ```sql
+-- Import/Export job tracking
+import_jobs (
+  id uuid PRIMARY KEY,
+  namespace text NOT NULL,
+  sheet_id text,
+  status text, -- pending, processing, completed, failed
+  created_by text,
+  created_at timestamp,
+  completed_at timestamp,
+  error_message text
+)
+
+-- Validation results
+validation_results (
+  id uuid PRIMARY KEY,
+  job_id uuid REFERENCES import_jobs(id),
+  item_uri text,
+  errors jsonb,
+  warnings jsonb,
+  created_at timestamp
+)
+
 -- Review groups and projects (cached from GitHub)
 review_groups (
   id uuid PRIMARY KEY,
@@ -189,38 +221,47 @@ interface LocalStorageData {
 ## Data Models
 
 ### Vocabulary Data Model
-**Element Set Structure**:
+**MDX-Based Vocabulary Structure**:
 ```typescript
-interface ElementSet {
-  id: string;
-  namespace: string;
-  prefix: string;
-  title: LocalizedString;
-  description: LocalizedString;
-  elements: Element[];
-  metadata: {
-    created: string;
-    modified: string;
-    version: string;
-    status: 'draft' | 'review' | 'published';
-  };
-}
-
-interface Element {
-  id: string;
+// MDX Front Matter for Vocabulary Items
+interface VocabularyFrontMatter {
   uri: string;
-  label: LocalizedString;
+  prefLabel: LocalizedString;
   definition: LocalizedString;
-  type: 'class' | 'property';
+  altLabel?: LocalizedString;
+  scopeNote?: LocalizedString;
+  type?: 'class' | 'property' | 'concept';
+  broader?: string | string[];
+  narrower?: string | string[];
+  related?: string | string[];
   domain?: string[];
   range?: string[];
-  cardinality?: Cardinality;
-  examples?: LocalizedString[];
+  status: 'draft' | 'review' | 'published';
+  version?: string;
+  created?: string;
+  modified?: string;
 }
 
 interface LocalizedString {
   [languageCode: string]: string;
 }
+
+// Example MDX file
+---
+uri: http://iflastandards.info/ns/isbd/terms/contentForm
+prefLabel:
+  en: content form
+  fr: forme du contenu
+definition:
+  en: A categorization reflecting the fundamental form...
+  fr: Une catégorisation reflétant la forme fondamentale...
+broader: http://iflastandards.info/ns/isbd/terms/C2001
+status: published
+---
+
+# Content Form
+
+Detailed documentation and usage examples...
 ```
 
 ### Multi-Element Set Architecture
@@ -395,6 +436,32 @@ graph LR
     note2[No authentication]
     note3[All data pre-rendered]
 ```
+
+## Four-Phase Vocabulary Lifecycle
+
+### Phase 1: Bootstrap (Cycle Kick-off)
+- Admin initiates new editorial cycle
+- Exports current vocabulary from Git to Google Sheets
+- Team performs bulk updates in spreadsheet
+- Import validates and creates MDX files with embedded RDF
+
+### Phase 2: Daily Editing
+- Direct MDX editing via Git
+- Form-based RDF metadata editing in admin portal
+- Real-time DCTAP validation
+- Automatic version tracking
+
+### Phase 3: Nightly Assembly
+- Automated builds via GitHub Actions
+- Validation against DCTAP profiles
+- Semantic versioning suggestions
+- Impact report generation
+
+### Phase 4: Publication
+- Review impact reports
+- Confirm version numbers
+- Merge to main branch
+- Automatic deployment to production
 
 ## Data Access Patterns
 

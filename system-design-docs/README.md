@@ -10,11 +10,12 @@ This directory contains the comprehensive system design documentation for the IF
 
 ## 🎯 Quick Platform Reference
 
-**Working on the Admin Portal?** (Next.js, MUI, Tailwind)
+**Working on the Admin Portal?** (Next.js, MUI Theme)
 - Start with **[Doc 20 - Platform-Specific Architecture Guide](./20-platform-specific-architecture-guide.md)**
 - Location: `apps/admin/`
 - Tests: `apps/admin/src/test*/`, `apps/admin/e2e/`
 - API Routes: `apps/admin/src/app/api/`
+- **UI Components: Material-UI with MUI theme (NO Tailwind CSS)**
 
 **Working on Documentation Sites?** (Docusaurus, Infima, SASS)
 - Start with **[Doc 20 - Platform-Specific Architecture Guide](./20-platform-specific-architecture-guide.md)**
@@ -42,7 +43,7 @@ This directory contains the comprehensive system design documentation for the IF
 
 ### UI/UX & Design
 11. **[Design System and UI Patterns](./11-design-system-ui-patterns.md)** - UI/UX guidelines and component library
-34. **[Accessibility Best Practices](./34-accessibility-best-practices.md)** - 🆕 Standards leadership approach to digital accessibility
+34. **[Accessibility Best Practices](./34-accessibility-best-practices.md)** - Standards leadership approach to digital accessibility
 
 ### Security & Authorization
 12. **[RBAC Authorization Model](./12-rbac-authorization-model.md)** - Comprehensive role-based access control specification
@@ -50,7 +51,14 @@ This directory contains the comprehensive system design documentation for the IF
 14. **[RBAC Implementation](./14-rbac-implementation.md)** - Current custom RBAC implementation using Clerk publicMetadata
 
 ### Platform-Specific Guidance
-20. **[Platform-Specific Architecture Guide](./20-platform-specific-architecture-guide.md)** - 🆕 Comprehensive guide distinguishing Next.js admin from Docusaurus sites
+20. **[Platform-Specific Architecture Guide](./20-platform-specific-architecture-guide.md)** - Comprehensive guide distinguishing Next.js admin from Docusaurus sites
+
+### Development Standards
+35. **[AI Development Guidelines](./35-ai-development-guidelines.md)** - 🆕 Comprehensive guidelines for AI-assisted development
+36. **[Platform Coding Standards](./36-platform-coding-standards.md)** - 🆕 Coding standards for Next.js, TypeScript, and platform patterns
+
+### Feature Architecture
+37. **[Vocabulary Management Architecture](./37-vocabulary-management-architecture.md)** - 🆕 Complete vocabulary lifecycle and management system
 
 ## Quick Reference
 
@@ -85,14 +93,17 @@ This directory contains the comprehensive system design documentation for the IF
 ## Task-Based Navigation
 
 ### 🎯 Platform-Specific Starting Points
-- **Working on Admin Portal (Next.js)** → Start with Doc 20, then 1, 5, 11 (MUI section)
-- **Working on Documentation Sites (Docusaurus)** → Start with Doc 20, then 1, 3, 11 (Infima section)
+- **Working on Admin Portal (Next.js)** → Start with Doc 20, then 1, 5, 11 (MUI section), 36
+  - **IMPORTANT: Use Material-UI components exclusively - NO Tailwind CSS classes**
+- **Working on Documentation Sites (Docusaurus)** → Start with Doc 20, then 1, 3, 11 (Infima section), 36
 - **Understanding platform differences** → **Doc 20** (comprehensive guide)
+- **AI-assisted development** → **Doc 35** (AI guidelines), then 36 (coding standards)
 
 ### 🚀 Getting Started & Project Setup
-- **New to the project** → Docs 1, 20 (platform guide), 10
+- **New to the project** → Docs 1, 20 (platform guide), 10, 35 (AI guidelines)
 - **Environment configuration** → Doc 3, plus `developer_notes/`
 - **Understanding the architecture** → Docs 1, 2, 7, 20
+- **Coding standards** → Doc 36 (platform standards), 35 (AI guidelines)
 
 ### 🔌 API Development [Admin Portal Only]
 - **Adding new API endpoints** → Docs 20 (admin API patterns), 5, 14 (RBAC)
@@ -104,9 +115,10 @@ This directory contains the comprehensive system design documentation for the IF
 ### 🎨 UI Component Development
 #### Admin Portal (Next.js)
 - **Building MUI components** → Docs 20 (MUI section), 11 (admin patterns)
-- **Using Tailwind CSS** → Doc 20 (admin styling)
+- **Styling approach** → **Material-UI theme system ONLY (NO Tailwind CSS)**
 - **Component location** → Doc 20 (`apps/admin/src/components/`)
 - **Implementing permissions in UI** → Docs 12, 13
+- **Theme customization** → Use MUI's `createTheme()` and `ThemeProvider`
 
 #### Documentation Sites (Docusaurus)
 - **Building Infima components** → Docs 20 (Infima section), 11 (docs patterns)
@@ -132,10 +144,11 @@ This directory contains the comprehensive system design documentation for the IF
 - **Test templates** → `developer_notes/TEST_TEMPLATES.md`
 
 ### 📊 Import/Export Features [Admin Portal]
-- **Spreadsheet import/export** → **Doc 33** (implementation checklist)
+- **Spreadsheet import/export** → **Doc 33** (implementation checklist), 37 (architecture)
+- **Vocabulary management** → **Doc 37** (complete lifecycle)
 - **Dynamic data operations** → Doc 20 (admin data flow)
-- **Google Sheets integration** → Doc 33, plus `tools/sheet-sync/`
-- **Data validation patterns** → Docs 2, 33
+- **Google Sheets integration** → Doc 33, 37, plus `tools/sheet-sync/`
+- **Data validation patterns** → Docs 2, 33, 37 (DCTAP)
 
 ### 🔄 RDF & Semantic Processing [Both Platforms]
 - **RDF generation (build-time)** → Doc 2, Docusaurus static generation

@@ -1,6 +1,6 @@
 'use client';
 
-import React from 'react';
+import React, { useState } from 'react';
 import Link from 'next/link';
 import {
   Box,
@@ -8,21 +8,13 @@ import {
   CardContent,
   Typography,
   Chip,
-  Drawer,
-  List,
-  ListItem,
-  ListItemButton,
-  ListItemIcon,
-  ListItemText,
   Link as MuiLink,
   Button,
   Stack,
   useTheme,
-  Container,
 } from '@mui/material';
 import Grid from '@mui/material/Grid';
 import {
-  Dashboard as DashboardIcon,
   People as PeopleIcon,
   Language as LanguageIcon,
   Folder as FolderIcon,
@@ -32,7 +24,9 @@ import {
   PersonAdd as PersonAddIcon,
   AddTask as AddTaskIcon,
   CloudUpload as CloudUploadIcon,
+  Home,
 } from '@mui/icons-material';
+import { StandardDashboardLayout, NavigationItem } from '@/components/layout/StandardDashboardLayout';
 
 interface AdminDashboardProps {
   userRoles: string[];
@@ -54,16 +48,43 @@ function StatsCard({ title, value, change, changeType }: StatsCardProps) {
     changeType === 'decrease' ? theme.palette.error.main : 
     theme.palette.text.secondary;
   
+  const cardId = `stats-${title.toLowerCase().replace(/\s+/g, '-')}`;
+  
   return (
-    <Card elevation={0}>
+    <Card 
+      elevation={0}
+      sx={{ 
+        minHeight: 140,
+        display: 'flex',
+        flexDirection: 'column',
+        justifyContent: 'space-between',
+      }}
+      role="region"
+      aria-labelledby={cardId}
+    >
       <CardContent>
-        <Typography variant="body2" color="text.secondary" gutterBottom>
+        <Typography 
+          id={cardId}
+          variant="body2" 
+          color="text.secondary" 
+          gutterBottom
+        >
           {title}
         </Typography>
-        <Typography variant="h4" component="div" fontWeight="bold" color="primary.main">
+        <Typography 
+          variant="h4" 
+          component="div" 
+          fontWeight="bold" 
+          color="primary.main"
+          aria-label={`${title}: ${value.toLocaleString()}`}
+        >
           {value.toLocaleString()}
         </Typography>
-        <Typography variant="body2" sx={{ color: changeColor, mt: 1 }}>
+        <Typography 
+          variant="body2" 
+          sx={{ color: changeColor, mt: 1 }}
+          aria-label={`Change: ${change}`}
+        >
           {change}
         </Typography>
       </CardContent>
@@ -90,7 +111,7 @@ function ActivityItem({ action, author, time, type }: ActivityItemProps) {
   return (
     <Box py={2} borderBottom={1} borderColor="divider">
       <Stack direction="row" spacing={2} alignItems="flex-start">
-        <Typography fontSize={24}>{typeIcons[type]}</Typography>
+        <Typography fontSize={24} aria-hidden="true">{typeIcons[type]}</Typography>
         <Box flex={1}>
           <Typography variant="body1" fontWeight="medium">
             {action}
@@ -128,25 +149,25 @@ function SystemStatusItem({ service, status }: SystemStatusItemProps) {
         color={config.color} 
         size="small"
         sx={{ fontWeight: 600 }}
+        aria-label={`${service} status: ${config.label}`}
       />
     </Box>
   );
 }
 
 export default function AdminDashboard({ userRoles: _userRoles, userName: _userName, userEmail: _userEmail }: AdminDashboardProps) {
+  const [selectedTab, setSelectedTab] = useState('overview');
   
-  const drawerWidth = 240;
-  
-  const sidebarItems = [
-    { key: 'dashboard', label: 'Dashboard', icon: <DashboardIcon />, href: '/dashboard/admin', active: true },
-    { key: 'users', label: 'Users', icon: <PeopleIcon />, href: '/dashboard/users' },
-    { key: 'review-groups', label: 'Review Groups', icon: <LanguageIcon />, href: '/dashboard/review-groups' },
-    { key: 'projects', label: 'Projects', icon: <AssignmentIcon />, href: '/dashboard/projects' },
-    { key: 'namespaces', label: 'Namespaces', icon: <FolderIcon />, href: '/dashboard/namespaces' },
-    { key: 'vocabularies', label: 'Vocabularies', icon: <BookIcon />, href: '/dashboard/vocabularies' },
-    { key: 'profiles', label: 'DCTAP Profiles', icon: <BookIcon />, href: '/dashboard/profiles' },
-    { key: 'adopt', label: 'Adopt Spreadsheet', icon: <CloudUploadIcon />, href: '/dashboard/admin/adopt-spreadsheet' },
-    { key: 'activity', label: 'Activity Log', icon: <HistoryIcon />, href: '/dashboard/activity' },
+  const navigationItems: NavigationItem[] = [
+    { id: 'overview', label: 'Dashboard Overview', icon: <Home /> },
+    { id: 'users', label: 'Users', icon: <PeopleIcon />, badge: 352 },
+    { id: 'review-groups', label: 'Review Groups', icon: <LanguageIcon /> },
+    { id: 'projects', label: 'Projects', icon: <AssignmentIcon />, badge: 12 },
+    { id: 'namespaces', label: 'Namespaces', icon: <FolderIcon /> },
+    { id: 'vocabularies', label: 'Vocabularies', icon: <BookIcon />, badge: 824 },
+    { id: 'profiles', label: 'DCTAP Profiles', icon: <BookIcon /> },
+    { id: 'adopt', label: 'Adopt Spreadsheet', icon: <CloudUploadIcon />, specialAccess: true },
+    { id: 'activity', label: 'Activity Log', icon: <HistoryIcon /> },
   ];
 
   const stats = [
@@ -170,168 +191,191 @@ export default function AdminDashboard({ userRoles: _userRoles, userName: _userN
     { service: 'Build System', status: 'online' as const },
   ];
 
-  return (
-    <Box sx={{ display: 'flex', height: '100vh' }}>
-      {/* Sidebar */}
-      <Drawer
-        variant="permanent"
-        sx={{
-          width: drawerWidth,
-          flexShrink: 0,
-          '& .MuiDrawer-paper': {
-            width: drawerWidth,
-            boxSizing: 'border-box',
-          },
-        }}
-      >
-        <Box sx={{ p: 3, borderBottom: 1, borderColor: 'divider' }}>
-          <Typography variant="h5" fontWeight="bold">
-            IFLA Admin
-          </Typography>
-        </Box>
-        <List sx={{ px: 2 }}>
-          {sidebarItems.map((item) => (
-            <ListItem key={item.key} disablePadding sx={{ mb: 0.5 }}>
-              <ListItemButton
-                component={Link}
-                href={`${item.href}?demo=true`}
-                selected={item.active}
-                sx={{
-                  borderRadius: 1,
-                  '&.Mui-selected': {
-                    backgroundColor: 'primary.main',
-                    color: 'white',
-                    '&:hover': {
-                      backgroundColor: 'primary.dark',
-                    },
-                    '& .MuiListItemIcon-root': {
-                      color: 'white',
-                    },
-                    '& .MuiListItemText-primary': {
-                      color: 'white',
-                    },
-                  },
-                }}
-              >
-                <ListItemIcon sx={{ minWidth: 40 }}>
-                  {item.icon}
-                </ListItemIcon>
-                <ListItemText primary={item.label} />
-              </ListItemButton>
-            </ListItem>
-          ))}
-        </List>
-      </Drawer>
+  const renderContent = () => {
+    switch (selectedTab) {
+      case 'overview':
+        return (
+          <>
+            <Box mb={4}>
+              <Typography variant="h4" fontWeight="bold" gutterBottom component="h1">
+                Admin Dashboard
+              </Typography>
+              <Typography variant="body1" color="text.secondary">
+                System overview and key metrics
+              </Typography>
+            </Box>
 
-      {/* Main Content */}
-      <Box component="main" sx={{ flexGrow: 1, bgcolor: 'background.default', overflow: 'auto' }}>
-        {/* Page Content */}
-        <Container maxWidth="xl" sx={{ py: 4, mt: 8 }}>
-          <Box mb={4}>
-            <Typography variant="h4" fontWeight="bold" gutterBottom>
-              Admin Dashboard
-            </Typography>
-            <Typography variant="body1" color="text.secondary">
-              System overview and key metrics
-            </Typography>
-          </Box>
-
-          {/* Stats Grid */}
-          <Grid container spacing={3} sx={{ mb: 4 }}>
-            {stats.map((stat) => (
-              <Grid size={{ xs: 12, sm: 6, md: 4 }} key={stat.title}>
-                <StatsCard {...stat} />
-              </Grid>
-            ))}
-          </Grid>
-
-          <Grid container spacing={3}>
-            {/* Recent Activity */}
-            <Grid size={{ xs: 12, lg: 8 }}>
-              <Card elevation={0}>
-                <CardContent>
-                  <Typography variant="h6" fontWeight="bold" gutterBottom>
-                    Recent System Activity
-                  </Typography>
-                  <Box>
-                    {recentActivity.map((activity, index) => (
-                      <ActivityItem key={index} {...activity} />
-                    ))}
-                  </Box>
-                  <Box mt={3} pt={2} borderTop={1} borderColor="divider">
-                    <MuiLink
-                      component={Link}
-                      href="/dashboard/activity?demo=true"
-                      color="primary"
-                      underline="hover"
-                      fontSize="small"
-                    >
-                      View all activity →
-                    </MuiLink>
-                  </Box>
-                </CardContent>
-              </Card>
+            {/* Stats Grid */}
+            <Grid container spacing={3} sx={{ mb: 4 }}>
+              {stats.map((stat) => (
+                <Grid size={{ xs: 12, sm: 6, md: 4 }} key={stat.title}>
+                  <StatsCard {...stat} />
+                </Grid>
+              ))}
             </Grid>
 
-            {/* System Status & Quick Actions */}
-            <Grid size={{ xs: 12, lg: 4 }}>
-              <Stack spacing={3}>
-                {/* System Status */}
+            <Grid container spacing={3}>
+              {/* Recent Activity */}
+              <Grid size={{ xs: 12, lg: 8 }}>
                 <Card elevation={0}>
                   <CardContent>
-                    <Typography variant="h6" fontWeight="bold" gutterBottom>
-                      System Status
+                    <Typography variant="h6" fontWeight="bold" gutterBottom component="h2">
+                      Recent System Activity
                     </Typography>
-                    <Box>
-                      {systemStatus.map((status) => (
-                        <SystemStatusItem key={status.service} {...status} />
+                    <Box role="feed" aria-label="Recent activity feed">
+                      {recentActivity.map((activity, index) => (
+                        <ActivityItem key={index} {...activity} />
                       ))}
+                    </Box>
+                    <Box mt={3} pt={2} borderTop={1} borderColor="divider">
+                      <MuiLink
+                        component={Link}
+                        href="/dashboard/activity?demo=true"
+                        color="primary"
+                        underline="hover"
+                        fontSize="small"
+                      >
+                        View all activity →
+                      </MuiLink>
                     </Box>
                   </CardContent>
                 </Card>
+              </Grid>
 
-                {/* Quick Actions */}
-                <Card elevation={0}>
-                  <CardContent>
-                    <Typography variant="h6" fontWeight="bold" gutterBottom>
-                      Quick Actions
-                    </Typography>
-                    <Stack spacing={2}>
-                      <Button
-                        variant="contained"
-                        fullWidth
-                        startIcon={<AddTaskIcon />}
-                        component={Link}
-                        href="/dashboard/projects/new?demo=true"
-                      >
-                        Charter New Project
-                      </Button>
-                      <Button
-                        variant="outlined"
-                        fullWidth
-                        startIcon={<CloudUploadIcon />}
-                        component={Link}
-                        href="/dashboard/admin/adopt-spreadsheet"
-                      >
-                        Adopt Spreadsheet
-                      </Button>
-                      <Button
-                        variant="outlined"
-                        fullWidth
-                        startIcon={<PersonAddIcon />}
-                        component={Link}
-                        href="/dashboard/users/invite?demo=true"
-                      >
-                        Invite User
-                      </Button>
-                    </Stack>
-                  </CardContent>
-                </Card>
-              </Stack>
+              {/* System Status & Quick Actions */}
+              <Grid size={{ xs: 12, lg: 4 }}>
+                <Stack spacing={3}>
+                  {/* System Status */}
+                  <Card elevation={0}>
+                    <CardContent>
+                      <Typography variant="h6" fontWeight="bold" gutterBottom component="h2">
+                        System Status
+                      </Typography>
+                      <Box role="list" aria-label="System service status">
+                        {systemStatus.map((status) => (
+                          <SystemStatusItem key={status.service} {...status} />
+                        ))}
+                      </Box>
+                    </CardContent>
+                  </Card>
+
+                  {/* Quick Actions */}
+                  <Card elevation={0}>
+                    <CardContent>
+                      <Typography variant="h6" fontWeight="bold" gutterBottom component="h2">
+                        Quick Actions
+                      </Typography>
+                      <Stack spacing={2}>
+                        <Button
+                          variant="contained"
+                          fullWidth
+                          startIcon={<AddTaskIcon />}
+                          component={Link}
+                          href="/dashboard/projects/new?demo=true"
+                          aria-label="Charter a new project"
+                        >
+                          Charter New Project
+                        </Button>
+                        <Button
+                          variant="outlined"
+                          fullWidth
+                          startIcon={<CloudUploadIcon />}
+                          component={Link}
+                          href="/dashboard/admin/adopt-spreadsheet"
+                          aria-label="Adopt a spreadsheet"
+                        >
+                          Adopt Spreadsheet
+                        </Button>
+                        <Button
+                          variant="outlined"
+                          fullWidth
+                          startIcon={<PersonAddIcon />}
+                          component={Link}
+                          href="/dashboard/users/invite?demo=true"
+                          aria-label="Invite a new user"
+                        >
+                          Invite User
+                        </Button>
+                      </Stack>
+                    </CardContent>
+                  </Card>
+                </Stack>
+              </Grid>
             </Grid>
-          </Grid>
-        </Container>
-      </Box>
-    </Box>
+          </>
+        );
+
+      case 'users':
+        return (
+          <Box>
+            <Typography variant="h4" component="h1" gutterBottom>
+              User Management
+            </Typography>
+            <Button component={Link} href="/dashboard/users" variant="contained">
+              View All Users
+            </Button>
+          </Box>
+        );
+
+      case 'projects':
+        return (
+          <Box>
+            <Typography variant="h4" component="h1" gutterBottom>
+              Project Management
+            </Typography>
+            <Button component={Link} href="/dashboard/projects" variant="contained">
+              View All Projects
+            </Button>
+          </Box>
+        );
+
+      case 'adopt':
+        return (
+          <Box>
+            <Typography variant="h4" component="h1" gutterBottom>
+              Adopt Spreadsheet
+            </Typography>
+            <Button component={Link} href="/dashboard/admin/adopt-spreadsheet" variant="contained">
+              Go to Spreadsheet Adoption
+            </Button>
+          </Box>
+        );
+
+      case 'activity':
+        return (
+          <Box>
+            <Typography variant="h4" component="h1" gutterBottom>
+              Activity Log
+            </Typography>
+            <Button component={Link} href="/dashboard/activity" variant="contained">
+              View Full Activity Log
+            </Button>
+          </Box>
+        );
+
+      default:
+        return (
+          <Box>
+            <Typography variant="h4" component="h1" gutterBottom>
+              {navigationItems.find(item => item.id === selectedTab)?.label}
+            </Typography>
+            <Typography variant="body1" color="text.secondary">
+              This section is under development.
+            </Typography>
+          </Box>
+        );
+    }
+  };
+
+  return (
+    <StandardDashboardLayout
+      title="IFLA Admin"
+      subtitle="System Administration"
+      navigationItems={navigationItems}
+      selectedTab={selectedTab}
+      onTabSelect={setSelectedTab}
+    >
+      {renderContent()}
+    </StandardDashboardLayout>
   );
 }

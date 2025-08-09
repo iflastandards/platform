@@ -14,7 +14,7 @@ The IFLA Standards Platform consists of two distinct types of applications with 
 |--------|------------------------|----------------------------------|
 | **Framework** | Next.js 15.2.5 (App Router) | Docusaurus 3.8+ |
 | **Rendering** | SSR/CSR (dynamic) | SSG (static) |
-| **Styling** | Tailwind CSS + Material-UI | Infima + SASS/SCSS |
+| **Styling** | Material-UI Theme System | Infima + SASS/SCSS |
 | **Authentication** | Clerk with custom RBAC | None (public) |
 | **API** | Next.js API routes | No API (static files) |
 | **Data Source** | Supabase + GitHub API | Git files at build time |
@@ -38,9 +38,10 @@ The IFLA Standards Platform consists of two distinct types of applications with 
 Framework: Next.js 15.2.5 with App Router
 UI Library: React 19.1.0
 Styling: 
-  - Tailwind CSS (utilities)
-  - Material-UI v6 (components)
-  - Custom MUI theme
+  - Material-UI v7 (components and theme)
+  - MUI System (sx prop, styled components)
+  - Custom MUI theme configuration
+  - NO Tailwind CSS (deprecated)
 State Management: React Context + SWR
 Authentication: Clerk
 Authorization: Custom RBAC via publicMetadata
@@ -169,23 +170,24 @@ export const theme = createTheme({
 });
 ```
 
-#### Tailwind Configuration
+#### MUI Theme Configuration
 ```javascript
-// apps/admin/tailwind.config.js
-module.exports = {
-  content: ['./src/**/*.{js,ts,jsx,tsx}'],
-  theme: {
-    extend: {
-      colors: {
-        primary: {
-          DEFAULT: '#0F766E',
-          light: '#14b8a6',
-          dark: '#065f46',
-        },
-      },
+// apps/admin/src/theme/theme.ts
+import { createTheme } from '@mui/material/styles';
+
+export const theme = createTheme({
+  palette: {
+    primary: {
+      main: '#0F766E',
+      light: '#14b8a6',
+      dark: '#065f46',
     },
+    // Additional palette configuration
   },
-};
+  components: {
+    // Component style overrides
+  },
+});
 ```
 
 ### Documentation Sites Styling
@@ -572,7 +574,7 @@ When moving content from admin to documentation:
 - ❌ Using static imports for dynamic data
 - ❌ Forgetting authentication on API routes
 - ❌ Not handling loading/error states
-- ❌ Using Tailwind classes in MUI sx prop
+- ❌ Using Tailwind CSS classes (use MUI theme system instead)
 - ❌ Bypassing RBAC checks
 
 ### Docusaurus

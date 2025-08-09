@@ -49,7 +49,7 @@ The IFLA Standards Platform is a modern, Git-centric system for managing interna
 - **Documentation Sites**: Docusaurus 3.8+
 - **Admin Portal**: Next.js 15.2.5 with App Router
 - **UI Framework**: React 19.1.0 + TypeScript 5.7
-- **Styling**: Tailwind CSS + shadcn/ui
+- **Styling**: Material-UI (MUI) Theme System
 
 ### Backend
 - **API Layer**: Render API endpoints

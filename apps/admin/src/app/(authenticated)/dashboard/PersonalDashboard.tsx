@@ -8,16 +8,12 @@ import {
   Card,
   CardContent,
   Chip,
-  Container,
   Grid,
   List,
   ListItem,
   ListItemIcon,
   ListItemText,
-  Paper,
   Stack,
-  Tab,
-  Tabs,
   Typography,
 } from '@mui/material';
 import {
@@ -31,35 +27,14 @@ import {
   RateReview,
   Translate,
   Person,
+  Home,
 } from '@mui/icons-material';
 import { AppUser } from '@/lib/clerk-github-auth';
 import Link from 'next/link';
-import SkipLinks from '@/components/accessibility/SkipLinks';
-import LiveRegion from '@/components/accessibility/LiveRegion';
+import { StandardDashboardLayout, NavigationItem } from '@/components/layout/StandardDashboardLayout';
 
 interface PersonalDashboardProps {
   user: AppUser;
-}
-
-interface TabPanelProps {
-  children?: React.ReactNode;
-  index: number;
-  value: number;
-}
-
-function TabPanel(props: TabPanelProps) {
-  const { children, value, index, ...other } = props;
-  return (
-    <div 
-      role="tabpanel" 
-      hidden={value !== index}
-      id={`dashboard-tabpanel-${index}`}
-      aria-labelledby={`dashboard-tab-${index}`}
-      {...other}
-    >
-      {value === index && <Box sx={{ py: 3 }}>{children}</Box>}
-    </div>
-  );
 }
 
 function getRoleIcon(role: string) {
@@ -80,222 +55,222 @@ function getRoleIcon(role: string) {
 }
 
 export default function PersonalDashboard({ user }: PersonalDashboardProps) {
-  const [tabValue, setTabValue] = useState(0);
-  const [liveMessage, setLiveMessage] = useState('');
-
-  const handleTabChange = (_event: React.SyntheticEvent, newValue: number) => {
-    setTabValue(newValue);
-    const tabNames = ['Review Groups', 'Projects', 'Namespaces'];
-    setLiveMessage(`Switched to ${tabNames[newValue]} tab`);
-    // Clear message after announcement
-    setTimeout(() => setLiveMessage(''), 1000);
-  };
-
+  const [selectedTab, setSelectedTab] = useState('overview');
   const projectCount = Object.keys(user.projects).length;
   const isDemo = process.env.NEXT_PUBLIC_IFLA_DEMO === 'true';
 
-  const skipLinks = [
-    { href: '#main-content', label: 'Skip to main content' },
-    { href: '#dashboard-tabs', label: 'Skip to dashboard tabs' },
-    { href: '#stats-overview', label: 'Skip to statistics overview' },
+  const navigationItems: NavigationItem[] = [
+    {
+      id: 'overview',
+      label: 'Overview',
+      icon: <Home />,
+    },
+    {
+      id: 'review-groups',
+      label: 'Review Groups',
+      icon: <Group />,
+      badge: user.reviewGroups.length,
+    },
+    {
+      id: 'projects',
+      label: 'Projects',
+      icon: <AccountTree />,
+      badge: projectCount,
+    },
+    {
+      id: 'namespaces',
+      label: 'Namespaces',
+      icon: <Folder />,
+      badge: user.accessibleNamespaces.length,
+    },
   ];
 
-  return (
-    <>
-      <SkipLinks links={skipLinks} />
-      <LiveRegion message={liveMessage} />
-      <Container 
-        maxWidth="xl" 
-        sx={{ py: 4 }}
-        component="main"
-        id="main-content"
-        role="main"
-        aria-labelledby="dashboard-title"
-      >
-      {/* Header */}
-      <Box sx={{ mb: 4 }}>
-        <Typography 
-          variant="h4" 
-          gutterBottom
-          component="h1"
-          id="dashboard-title"
-        >
-          Welcome back, {user.name}
-        </Typography>
-        <Stack direction="row" spacing={1} flexWrap="wrap" alignItems="center">
-          {user.githubUsername && (
-            <Chip
-              icon={<GitHub />}
-              label={`@${user.githubUsername}`}
-              variant="outlined"
-              size="small"
-            />
-          )}
-          {user.systemRole === 'admin' && (
-            <Chip
-              icon={<AdminPanelSettings />}
-              label="System Admin"
-              color="primary"
-              size="small"
-            />
-          )}
-          {user.isReviewGroupAdmin && (
-            <Chip
-              icon={<Group />}
-              label="Review Group Admin"
-              color="secondary"
-              size="small"
-            />
-          )}
-          {isDemo && (
-            <Chip
-              label="DEMO MODE"
-              color="warning"
-              size="small"
-              variant="filled"
-            />
-          )}
-        </Stack>
-      </Box>
+  const renderContent = () => {
+    switch (selectedTab) {
+      case 'overview':
+        return (
+          <>
+            {/* Header */}
+            <Box sx={{ mb: 4 }}>
+              <Typography variant="h4" gutterBottom component="h1">
+                Welcome back, {user.name}
+              </Typography>
+              <Stack direction="row" spacing={1} flexWrap="wrap" alignItems="center">
+                {user.githubUsername && (
+                  <Chip
+                    icon={<GitHub />}
+                    label={`@${user.githubUsername}`}
+                    variant="outlined"
+                    size="small"
+                  />
+                )}
+                {user.systemRole === 'admin' && (
+                  <Chip
+                    icon={<AdminPanelSettings />}
+                    label="System Admin"
+                    color="primary"
+                    size="small"
+                  />
+                )}
+                {user.isReviewGroupAdmin && (
+                  <Chip
+                    icon={<Group />}
+                    label="Review Group Admin"
+                    color="secondary"
+                    size="small"
+                  />
+                )}
+                {isDemo && (
+                  <Chip
+                    label="DEMO MODE"
+                    color="warning"
+                    size="small"
+                    variant="filled"
+                  />
+                )}
+              </Stack>
+            </Box>
 
-      {/* Quick Stats */}
-      <Box 
-        component="section" 
-        id="stats-overview"
-        aria-labelledby="stats-title"
-        sx={{ mb: 4 }}
-      >
-        <Typography 
-          id="stats-title" 
-          variant="h5" 
-          component="h2" 
-          sx={{ mb: 2, sr: 'only' }}
-        >
-          Dashboard Statistics Overview
-        </Typography>
-        <Grid container spacing={3}>
-          <Grid size={{ xs: 12, sm: 6, md: 3 }}>
-            <Card
-              role="region"
-              aria-labelledby="review-groups-title"
-              aria-describedby="review-groups-desc"
-            >
-              <CardContent>
-                <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
-                  <Group color="primary" aria-hidden="true" />
-                  <Box>
+            {/* Quick Stats */}
+            <Typography variant="h5" component="h2" sx={{ mb: 2 }}>
+              Dashboard Overview
+            </Typography>
+            <Grid container spacing={3}>
+              <Grid size={{ xs: 12, sm: 6, md: 3 }}>
+                <Card
+                  sx={{ 
+                    minHeight: 140,
+                    display: 'flex',
+                    flexDirection: 'column',
+                    justifyContent: 'space-between',
+                  }}
+                  role="region"
+                  aria-labelledby="review-groups-card"
+                >
+                  <CardContent>
+                    <Box sx={{ display: 'flex', alignItems: 'center', mb: 2 }}>
+                      <Group sx={{ mr: 1, color: 'primary.main' }} aria-hidden="true" />
+                      <Typography id="review-groups-card" variant="h6" component="h3">
+                        Review Groups
+                      </Typography>
+                    </Box>
                     <Typography 
-                      id="review-groups-title"
-                      color="text.secondary" 
-                      variant="body2"
-                    >
-                      Review Groups
-                    </Typography>
-                    <Typography 
-                      variant="h3"
-                      component="h3"
+                      variant="h4"
+                      sx={{ fontWeight: 'bold', color: 'text.primary' }}
                       aria-label={`You are a member of ${user.reviewGroups.length} review groups`}
                     >
                       {user.reviewGroups.length}
                     </Typography>
-                    <Box 
-                      id="review-groups-desc" 
-                      sx={{ sr: 'only' }}
-                    >
-                      Number of review groups you belong to
+                    <Typography variant="body2" color="text.secondary" sx={{ mt: 1 }}>
+                      Groups you belong to
+                    </Typography>
+                  </CardContent>
+                </Card>
+              </Grid>
+
+              <Grid size={{ xs: 12, sm: 6, md: 3 }}>
+                <Card
+                  sx={{ 
+                    minHeight: 140,
+                    display: 'flex',
+                    flexDirection: 'column',
+                    justifyContent: 'space-between',
+                  }}
+                  role="region"
+                  aria-labelledby="projects-card"
+                >
+                  <CardContent>
+                    <Box sx={{ display: 'flex', alignItems: 'center', mb: 2 }}>
+                      <AccountTree sx={{ mr: 1, color: 'secondary.main' }} aria-hidden="true" />
+                      <Typography id="projects-card" variant="h6" component="h3">
+                        Active Projects
+                      </Typography>
                     </Box>
-                  </Box>
-                </Box>
-              </CardContent>
-            </Card>
-          </Grid>
-        <Grid size={{ xs: 12, sm: 6, md: 3 }}>
-          <Card>
-            <CardContent>
-              <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
-                <AccountTree color="secondary" />
-                <Box>
-                  <Typography color="text.secondary" variant="body2">
-                    Active Projects
-                  </Typography>
-                  <Typography variant="h3" component="h3">{projectCount}</Typography>
-                </Box>
-              </Box>
-            </CardContent>
-          </Card>
-        </Grid>
-        <Grid size={{ xs: 12, sm: 6, md: 3 }}>
-          <Card>
-            <CardContent>
-              <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
-                <Folder color="success" />
-                <Box>
-                  <Typography color="text.secondary" variant="body2">
-                    Accessible Namespaces
-                  </Typography>
-                  <Typography variant="h3" component="h3">{user.accessibleNamespaces.length}</Typography>
-                </Box>
-              </Box>
-            </CardContent>
-          </Card>
-        </Grid>
-        <Grid size={{ xs: 12, sm: 6, md: 3 }}>
-          <Card>
-            <CardContent>
-              <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
-                <DashboardIcon color="info" />
-                <Box>
-                  <Typography color="text.secondary" variant="body2">
-                    Your Role
-                  </Typography>
-                  <Typography variant="h4" component="h4">
-                    {user.systemRole === 'admin' ? 'System Admin' :
-                     user.isReviewGroupAdmin ? 'RG Admin' : 'Member'}
-                  </Typography>
-                </Box>
-              </Box>
-            </CardContent>
-          </Card>
-        </Grid>
-        </Grid>
-      </Box>
+                    <Typography 
+                      variant="h4"
+                      sx={{ fontWeight: 'bold', color: 'text.primary' }}
+                      aria-label={`You have ${projectCount} active projects`}
+                    >
+                      {projectCount}
+                    </Typography>
+                    <Typography variant="body2" color="text.secondary" sx={{ mt: 1 }}>
+                      Projects assigned to you
+                    </Typography>
+                  </CardContent>
+                </Card>
+              </Grid>
 
-      {/* Main Content */}
-      <Paper sx={{ width: '100%' }}>
-        <Tabs 
-          value={tabValue} 
-          onChange={handleTabChange} 
-          sx={{ borderBottom: 1, borderColor: 'divider' }}
-          aria-label="Dashboard sections"
-          id="dashboard-tabs"
-        >
-          <Tab 
-            label="Review Groups" 
-            icon={<Group aria-hidden="true" />} 
-            iconPosition="start"
-            id="dashboard-tab-0"
-            aria-controls="dashboard-tabpanel-0"
-          />
-          <Tab 
-            label="Projects" 
-            icon={<AccountTree aria-hidden="true" />} 
-            iconPosition="start"
-            id="dashboard-tab-1"
-            aria-controls="dashboard-tabpanel-1"
-          />
-          <Tab 
-            label="Namespaces" 
-            icon={<Folder aria-hidden="true" />} 
-            iconPosition="start"
-            id="dashboard-tab-2"
-            aria-controls="dashboard-tabpanel-2"
-          />
-        </Tabs>
+              <Grid size={{ xs: 12, sm: 6, md: 3 }}>
+                <Card
+                  sx={{ 
+                    minHeight: 140,
+                    display: 'flex',
+                    flexDirection: 'column',
+                    justifyContent: 'space-between',
+                  }}
+                  role="region"
+                  aria-labelledby="namespaces-card"
+                >
+                  <CardContent>
+                    <Box sx={{ display: 'flex', alignItems: 'center', mb: 2 }}>
+                      <Folder sx={{ mr: 1, color: 'success.main' }} aria-hidden="true" />
+                      <Typography id="namespaces-card" variant="h6" component="h3">
+                        Namespaces
+                      </Typography>
+                    </Box>
+                    <Typography 
+                      variant="h4"
+                      sx={{ fontWeight: 'bold', color: 'text.primary' }}
+                      aria-label={`You have access to ${user.accessibleNamespaces.length} namespaces`}
+                    >
+                      {user.accessibleNamespaces.length}
+                    </Typography>
+                    <Typography variant="body2" color="text.secondary" sx={{ mt: 1 }}>
+                      Accessible namespaces
+                    </Typography>
+                  </CardContent>
+                </Card>
+              </Grid>
 
-        {/* Review Groups Tab */}
-        <TabPanel value={tabValue} index={0}>
-          <Box sx={{ p: 3 }}>
-            <Typography variant="h4" component="h4" gutterBottom>
+              <Grid size={{ xs: 12, sm: 6, md: 3 }}>
+                <Card
+                  sx={{ 
+                    minHeight: 140,
+                    display: 'flex',
+                    flexDirection: 'column',
+                    justifyContent: 'space-between',
+                  }}
+                  role="region"
+                  aria-labelledby="role-card"
+                >
+                  <CardContent>
+                    <Box sx={{ display: 'flex', alignItems: 'center', mb: 2 }}>
+                      <DashboardIcon sx={{ mr: 1, color: 'info.main' }} aria-hidden="true" />
+                      <Typography id="role-card" variant="h6" component="h3">
+                        Your Role
+                      </Typography>
+                    </Box>
+                    <Typography 
+                      variant="h4"
+                      sx={{ fontWeight: 'bold', color: 'text.primary' }}
+                    >
+                      {user.systemRole === 'admin' ? 'System Admin' :
+                       user.isReviewGroupAdmin ? 'RG Admin' : 'Member'}
+                    </Typography>
+                    <Typography variant="body2" color="text.secondary" sx={{ mt: 1 }}>
+                      System access level
+                    </Typography>
+                  </CardContent>
+                </Card>
+              </Grid>
+            </Grid>
+          </>
+        );
+
+      case 'review-groups':
+        return (
+          <Box>
+            <Typography variant="h4" component="h1" gutterBottom>
               Your Review Group Memberships
             </Typography>
             {user.reviewGroups.length > 0 ? (
@@ -339,12 +314,12 @@ export default function PersonalDashboard({ user }: PersonalDashboardProps) {
               </Alert>
             )}
           </Box>
-        </TabPanel>
+        );
 
-        {/* Projects Tab */}
-        <TabPanel value={tabValue} index={1}>
-          <Box sx={{ p: 3 }}>
-            <Typography variant="h4" component="h4" gutterBottom>
+      case 'projects':
+        return (
+          <Box>
+            <Typography variant="h4" component="h1" gutterBottom>
               Your Project Assignments
             </Typography>
             {projectCount > 0 ? (
@@ -387,12 +362,12 @@ export default function PersonalDashboard({ user }: PersonalDashboardProps) {
               </Alert>
             )}
           </Box>
-        </TabPanel>
+        );
 
-        {/* Namespaces Tab */}
-        <TabPanel value={tabValue} index={2}>
-          <Box sx={{ p: 3 }}>
-            <Typography variant="h4" component="h4" gutterBottom>
+      case 'namespaces':
+        return (
+          <Box>
+            <Typography variant="h4" component="h1" gutterBottom>
               Accessible Namespaces
             </Typography>
             {user.accessibleNamespaces.length > 0 ? (
@@ -401,7 +376,7 @@ export default function PersonalDashboard({ user }: PersonalDashboardProps) {
                   <Grid size={{ xs: 12, sm: 6, md: 4 }} key={namespace}>
                     <Card>
                       <CardContent>
-                        <Typography variant="h5" component="h5" gutterBottom>
+                        <Typography variant="h5" component="h2" gutterBottom>
                           {namespace.toUpperCase()}
                         </Typography>
                         <Button
@@ -424,9 +399,22 @@ export default function PersonalDashboard({ user }: PersonalDashboardProps) {
               </Alert>
             )}
           </Box>
-        </TabPanel>
-      </Paper>
-    </Container>
-    </>
+        );
+
+      default:
+        return null;
+    }
+  };
+
+  return (
+    <StandardDashboardLayout
+      title="Personal Dashboard"
+      subtitle="Manage your IFLA Standards work"
+      navigationItems={navigationItems}
+      selectedTab={selectedTab}
+      onTabSelect={setSelectedTab}
+    >
+      {renderContent()}
+    </StandardDashboardLayout>
   );
 }

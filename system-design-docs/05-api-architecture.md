@@ -1,7 +1,7 @@
 # API Architecture
 
-**Version:** 2.0  
-**Date:** July 2025  
+**Version:** 1.1  
+**Date:** August 2025  
 **Status:** Current Implementation
 
 ## Overview
@@ -32,7 +32,7 @@ The IFLA Standards Platform API layer consists of Render API endpoints providing
 
 ### Base URL Patterns
 ```
-Development: http://localhost:3007/admin/api/
+Development: http://localhost:3000/api/
 Preview:     https://admin-iflastandards-preview.onrender.com/api/
 Production:  https://admin.iflastandards.info/api/
 ```
@@ -46,21 +46,30 @@ Production:  https://admin.iflastandards.info/api/
 │   ├── session        # Session management
 │   └── signout        # Session termination
 ├── vocabularies/       # Vocabulary CRUD
-│   ├── :namespace/    # Namespace operations
-│   │   ├── elements   # Element sets
-│   │   └── concepts   # Concept schemes
-│   └── import/        # Import workflows
+│   ├── route.ts       # List all vocabularies
+│   ├── [namespace]/   # Namespace operations
+│   │   ├── route.ts   # Namespace CRUD
+│   │   ├── elements/  # Element sets
+│   │   └── concepts/  # Concept schemes
+│   ├── import/        # Import from spreadsheets
+│   │   └── route.ts   # POST import job
+│   └── export/        # Export to spreadsheets
+│       └── route.ts   # POST export job
 ├── rdf/               # RDF operations
-│   ├── generate       # RDF generation
+│   ├── generate       # RDF generation from MDX
 │   ├── validate       # RDF validation
 │   └── transform      # Format conversion
 ├── sheets/            # Google Sheets integration
 │   ├── export         # Export to sheets
 │   ├── import         # Import from sheets
 │   └── validate       # Sheet validation
+├── health/            # Health checks
+│   └── vocabularies/  # Vocabulary service health
 └── admin/             # Administrative operations
     ├── users          # User management
     ├── roles          # Role assignments
+    ├── auth/
+    │   └── debug      # Debug endpoint for auth
     └── audit          # Audit logs
 ```
 
@@ -156,39 +165,60 @@ interface AuthorizedUser {
 }
 ```
 
-### Authorization Middleware
+### withAuth Middleware Pattern
 ```typescript
-export function authorize(resource: string, action: string) {
-  return async function(req: Request, context: { params: Params }) {
+// Custom middleware wrapper for protected routes
+export function withAuth(
+  handler: (request: NextRequest, context: AuthContext) => Promise<NextResponse>,
+  options: {
+    resource: string;
+    action: string;
+  }
+) {
+  return async (request: NextRequest) => {
     const { userId, sessionClaims } = auth();
-    const { namespace } = context.params;
     
     if (!userId) {
-      return NextResponse.json(
-        { error: "Unauthorized" },
-        { status: 401 }
-      );
+      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
     
     const userRole = sessionClaims?.publicMetadata?.role;
-    const namespacePerms = sessionClaims?.publicMetadata?.namespacePermissions;
+    const namespacePermissions = sessionClaims?.publicMetadata?.namespacePermissions;
     
-    const allowed = checkUserPermission(
+    // Extract resource attributes from request
+    const resourceAttributes = getResourceAttributes(request);
+    
+    const canPerform = checkUserPermission(
       userRole,
-      resource,
-      action,
-      namespace,
-      namespacePerms
+      options.resource,
+      options.action,
+      resourceAttributes.namespace,
+      namespacePermissions
     );
     
-    if (!allowed) {
-      return NextResponse.json(
-        { error: "Forbidden" },
-        { status: 403 }
-      );
+    if (!canPerform) {
+      return NextResponse.json({ error: "Forbidden" }, { status: 403 });
     }
+    
+    // Call the actual handler with auth context
+    return handler(request, {
+      userId,
+      userRole,
+      namespacePermissions,
+      resourceAttributes
+    });
   };
 }
+
+// Usage in API routes
+export const GET = withAuth(async (request, context) => {
+  const { resourceAttributes } = context;
+  const vocabularies = await fetchVocabularies(resourceAttributes.namespace);
+  return NextResponse.json(vocabularies);
+}, {
+  resource: 'vocabulary',
+  action: 'read'
+});
 ```
 
 ## Core API Endpoints
@@ -245,29 +275,44 @@ export async function POST(
 }
 ```
 
-### Import/Export Workflows
+### Vocabulary Import/Export APIs
 
-#### Export to Google Sheets
+#### Import from Spreadsheet
 ```typescript
-// POST /api/sheets/export
-export async function POST(req: Request) {
-  await requireAuth(req, { params: {} });
+// POST /api/vocabularies/import
+export const POST = withAuth(async (request: NextRequest) => {
+  const { sheetId, namespace } = await request.json();
   
-  const body = await req.json();
-  const { namespace, vocabularyIds, languages } = body;
+  const importService = new VocabularyImportService();
+  const result = await importService.importFromSheet(sheetId, namespace);
   
-  await authorize("export")(req, { params: { namespace } });
-  
-  // Create Google Sheet
-  const sheet = await createSheet({
-    title: `${namespace} Vocabulary Export`,
-    vocabularies: await loadVocabularies(vocabularyIds),
-    languages,
+  // Track job in Supabase
+  await supabase.from('import_jobs').insert({
+    namespace,
+    sheet_id: sheetId,
+    status: 'completed',
+    created_by: context.userId,
+    imported_count: result.imported
   });
   
-  // Log export in Supabase
-  await logExport({
-    namespace,
+  return NextResponse.json(result);
+}, {
+  resource: 'vocabulary',
+  action: 'create'
+});
+
+// POST /api/vocabularies/export
+export const POST = withAuth(async (request: NextRequest) => {
+  const { namespace, format } = await request.json();
+  
+  const exportService = new VocabularyExportService();
+  const result = await exportService.exportToSheet(namespace, format);
+  
+  return NextResponse.json(result);
+}, {
+  resource: 'vocabulary',
+  action: 'read'
+});
     sheetId: sheet.id,
     userId: req.session.user.id,
   });
@@ -359,6 +404,53 @@ export async function POST(req: Request) {
       "Content-Disposition": `attachment; filename="${namespace}.${format}"`,
     },
   });
+}
+```
+
+### Health Check Endpoints
+
+```typescript
+// GET /api/health/vocabularies
+export async function GET() {
+  const checks = {
+    git: await checkGitConnection(),
+    supabase: await checkSupabaseConnection(),
+    googleSheets: await checkGoogleSheetsAPI(),
+    dctapValidator: await checkDCTAPValidator()
+  };
+  
+  const healthy = Object.values(checks).every(c => c.status === 'ok');
+  
+  return NextResponse.json({
+    status: healthy ? 'healthy' : 'degraded',
+    checks,
+    timestamp: new Date().toISOString()
+  });
+}
+```
+
+### Batch Processing Support
+
+```typescript
+// Process vocabularies in batches for large imports
+export async function batchProcessVocabularies(
+  items: VocabularyItem[],
+  batchSize = 100
+) {
+  const results = [];
+  
+  for (let i = 0; i < items.length; i += batchSize) {
+    const batch = items.slice(i, i + batchSize);
+    const processed = await Promise.all(
+      batch.map(item => processVocabularyItem(item))
+    );
+    results.push(...processed);
+    
+    // Prevent memory buildup
+    if (global.gc) global.gc();
+  }
+  
+  return results;
 }
 ```
 

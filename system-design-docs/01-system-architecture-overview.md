@@ -37,7 +37,7 @@ The IFLA Standards Platform is a modern, monorepo-based system designed to manag
 Framework: Next.js 15.2.5 (App Router)
 UI Framework: React 19.1.0
 Type System: TypeScript 5.7
-Styling: Tailwind CSS + Material-UI (MUI)
+Styling: Material-UI (MUI) Theme System
 State Management: React Context + SWR
 Authentication: Clerk components
 Component Location: apps/admin/src/components/
@@ -152,9 +152,10 @@ Centralized management application at `/admin`:
   - basePath configuration for environment flexibility
   - Server-side rendering (SSR) and client components
 - **Styling**:
-  - Tailwind CSS for utilities
-  - Material-UI (MUI) components
+  - Material-UI (MUI) v7 components
+  - MUI theme system (sx prop, styled components)
   - Custom theme configuration
+  - NO Tailwind CSS
 - **Authentication**:
   - Clerk middleware on all routes
   - Custom RBAC via publicMetadata

@@ -11,9 +11,10 @@ This document consolidates the complete design system for the IFLA Standards Pla
 ## Platform-Specific Design Systems
 
 ### Admin Portal (Next.js)
-- **Framework**: Material-UI (MUI) v6 + Tailwind CSS
+- **Framework**: Material-UI (MUI) v7
 - **Theme**: Custom MUI theme with IFLA branding
-- **Components**: MUI components with Tailwind utilities
+- **Components**: MUI components with sx prop and styled API
+- **Styling**: MUI theme system exclusively (NO Tailwind CSS)
 - **Location**: `apps/admin/src/theme/` and `apps/admin/src/components/`
 
 ### Documentation Sites (Docusaurus)
@@ -504,110 +505,437 @@ export default function CompactButton({
 
 ### Navigation Components
 
-### Global Navbar
+### Dashboard Layout Pattern (Standard)
 
-Persistent top navigation with user context
+All admin dashboards should follow this accessible left-sidebar pattern with Material-UI components:
 
 ```tsx
-import { AppBar, Toolbar, IconButton, Avatar, Menu, MenuItem, Typography, Box } from '@mui/material';
-import { AccountCircle, Notifications, Settings } from '@mui/icons-material';
-import Link from 'next/link';
-import { addBasePath } from '@ifla/theme/utils';
+import React, { useState, useEffect } from 'react';
+import {
+  Box,
+  Drawer,
+  List,
+  ListItem,
+  ListItemButton,
+  ListItemIcon,
+  ListItemText,
+  Typography,
+  Divider,
+  AppBar,
+  Toolbar,
+  IconButton,
+  useTheme,
+  useMediaQuery,
+  Link,
+  Chip,
+} from '@mui/material';
+import { Menu as MenuIcon } from '@mui/icons-material';
 
-export function GlobalNavbar({ user }: { user: AppUser }) {
-  const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
-  
-  return (
-    <AppBar 
-      position="fixed" 
-      sx={{ 
-        zIndex: (theme) => theme.zIndex.drawer + 1,
-        backgroundColor: 'background.paper',
-        color: 'text.primary',
-        borderBottom: 1,
-        borderColor: 'divider',
-        boxShadow: 1,
-      }}
-    >
-      <Toolbar sx={{ height: 64 }}>
-        {/* Logo/Brand */}
-        <Typography variant="h6" component="div" sx={{ flexGrow: 0, mr: 4 }}>
-          IFLA Standards
+// Skip Links Component (Required for Accessibility)
+const SkipLinks = () => (
+  <Box
+    sx={{
+      position: 'absolute',
+      left: '-9999px',
+      top: 0,
+      '&:focus-within': {
+        position: 'static',
+        left: 'auto',
+        top: 'auto',
+        zIndex: 9999,
+        p: 2,
+        bgcolor: 'primary.main',
+      },
+    }}
+  >
+    <Link href="#main-content" sx={{ color: 'white', mr: 2 }}>
+      Skip to main content
+    </Link>
+    <Link href="#navigation" sx={{ color: 'white', mr: 2 }}>
+      Skip to navigation
+    </Link>
+    <Link href="#external-resources" sx={{ color: 'white' }}>
+      Skip to external resources
+    </Link>
+  </Box>
+);
+
+// Live Region for Screen Reader Announcements
+const LiveRegion = ({ message }: { message: string }) => (
+  <Box
+    role="status"
+    aria-live="polite"
+    aria-atomic="true"
+    sx={{ 
+      position: 'absolute',
+      left: '-9999px',
+      width: '1px',
+      height: '1px',
+      overflow: 'hidden',
+    }}
+  >
+    {message}
+  </Box>
+);
+
+interface DashboardLayoutProps {
+  title: string;
+  code: string;
+  navigationItems: NavigationItem[];
+  children: React.ReactNode;
+  footerContent?: React.ReactNode;
+}
+
+interface NavigationItem {
+  id: string;
+  label: string;
+  icon: React.ReactNode;
+  badge?: string | number;
+  specialAccess?: boolean;
+}
+
+export function StandardDashboardLayout({
+  title,
+  code,
+  navigationItems,
+  children,
+  footerContent,
+}: DashboardLayoutProps) {
+  const [selectedTab, setSelectedTab] = useState(navigationItems[0]?.id || '');
+  const [mobileOpen, setMobileOpen] = useState(false);
+  const [liveMessage, setLiveMessage] = useState('');
+  const theme = useTheme();
+  const isMobile = useMediaQuery(theme.breakpoints.down('md'));
+  const drawerWidth = 240;
+
+  const handleDrawerToggle = () => {
+    setMobileOpen(!mobileOpen);
+    setLiveMessage(mobileOpen ? 'Navigation closed' : 'Navigation opened');
+  };
+
+  const handleTabSelect = (itemId: string, itemLabel: string) => {
+    setSelectedTab(itemId);
+    setLiveMessage(`Switched to ${itemLabel} section`);
+    if (isMobile) {
+      setMobileOpen(false);
+    }
+    // Clear message after announcement
+    setTimeout(() => setLiveMessage(''), 1000);
+  };
+
+  const drawer = (
+    <Box role="navigation" aria-label="Dashboard navigation">
+      <Box sx={{ p: 2, borderBottom: 1, borderColor: 'divider' }}>
+        <Typography variant="h6" noWrap component="h2">
+          {code}
         </Typography>
-        
-        {/* Spacer */}
-        <Box sx={{ flexGrow: 1 }} />
-        
-        {/* User Actions */}
-        <IconButton
-          aria-label="View notifications"
-          sx={{ mr: 1 }}
-        >
-          <Badge badgeContent={3} color="error">
-            <Notifications />
-          </Badge>
-        </IconButton>
-        
-        <IconButton
-          aria-label="Settings"
-          component={Link}
-          href="/settings"
-          sx={{ mr: 2 }}
-        >
-          <Settings />
-        </IconButton>
-        
-        {/* User Menu */}
-        <IconButton
-          onClick={(e) => setAnchorEl(e.currentTarget)}
-          aria-label="User menu"
-          aria-controls="user-menu"
-          aria-haspopup="true"
-        >
-          <Avatar 
-            alt={user.name}
-            src={user.avatar}
-            sx={{ width: 32, height: 32 }}
-          />
-        </IconButton>
-        
-        <Menu
-          id="user-menu"
-          anchorEl={anchorEl}
-          open={Boolean(anchorEl)}
-          onClose={() => setAnchorEl(null)}
-          transformOrigin={{ horizontal: 'right', vertical: 'top' }}
-          anchorOrigin={{ horizontal: 'right', vertical: 'bottom' }}
-        >
-          <MenuItem component={Link} href="/profile">Profile</MenuItem>
-          <MenuItem component={Link} href="/settings">Settings</MenuItem>
+        <Typography variant="caption" color="textSecondary">
+          Dashboard Management
+        </Typography>
+      </Box>
+      <List id="navigation">
+        {navigationItems.map((item) => (
+          <ListItem key={item.id} disablePadding>
+            <ListItemButton
+              selected={selectedTab === item.id}
+              onClick={() => handleTabSelect(item.id, item.label)}
+              aria-current={selectedTab === item.id ? 'page' : undefined}
+              aria-label={`${item.label}${item.specialAccess ? ' (Restricted)' : ''}`}
+            >
+              <ListItemIcon aria-hidden="true">
+                {item.icon}
+              </ListItemIcon>
+              <ListItemText 
+                primary={item.label}
+                secondary={item.specialAccess && (
+                  <Chip 
+                    label="Restricted" 
+                    size="small" 
+                    color="warning"
+                    aria-label="Restricted access"
+                  />
+                )}
+              />
+              {item.badge && (
+                <Chip 
+                  label={item.badge} 
+                  size="small" 
+                  color="primary"
+                />
+              )}
+            </ListItemButton>
+          </ListItem>
+        ))}
+      </List>
+      {footerContent && (
+        <>
           <Divider />
-          <MenuItem onClick={handleLogout}>Logout</MenuItem>
-        </Menu>
-      </Toolbar>
-    </AppBar>
+          <Box sx={{ p: 2 }}>
+            {footerContent}
+          </Box>
+        </>
+      )}
+    </Box>
+  );
+
+  return (
+    <>
+      <SkipLinks />
+      <LiveRegion message={liveMessage} />
+      
+      <Box sx={{ display: 'flex' }}>
+        {/* Mobile App Bar */}
+        {isMobile && (
+          <AppBar
+            position="fixed"
+            sx={{
+              width: '100%',
+              ml: 0,
+            }}
+          >
+            <Toolbar>
+              <IconButton
+                color="inherit"
+                aria-label="open navigation menu"
+                edge="start"
+                onClick={handleDrawerToggle}
+                sx={{ mr: 2 }}
+              >
+                <MenuIcon />
+              </IconButton>
+              <Typography variant="h6" noWrap component="h1">
+                {title}
+              </Typography>
+            </Toolbar>
+          </AppBar>
+        )}
+
+        {/* Sidebar Drawer */}
+        <Box
+          component="nav"
+          sx={{ width: { md: drawerWidth }, flexShrink: { md: 0 } }}
+        >
+          {/* Mobile Drawer */}
+          <Drawer
+            variant="temporary"
+            open={mobileOpen}
+            onClose={handleDrawerToggle}
+            ModalProps={{
+              keepMounted: true, // Better open performance on mobile
+            }}
+            sx={{
+              display: { xs: 'block', md: 'none' },
+              '& .MuiDrawer-paper': { boxSizing: 'border-box', width: drawerWidth },
+            }}
+          >
+            {drawer}
+          </Drawer>
+
+          {/* Desktop Drawer */}
+          <Drawer
+            variant="permanent"
+            sx={{
+              display: { xs: 'none', md: 'block' },
+              '& .MuiDrawer-paper': { 
+                boxSizing: 'border-box', 
+                width: drawerWidth,
+                position: 'relative',
+                height: '100%',
+                borderRight: 1,
+                borderColor: 'divider',
+              },
+            }}
+            open
+          >
+            {drawer}
+          </Drawer>
+        </Box>
+
+        {/* Main Content */}
+        <Box
+          component="main"
+          id="main-content"
+          sx={{
+            flexGrow: 1,
+            p: 3,
+            width: { md: `calc(100% - ${drawerWidth}px)` },
+            mt: { xs: 8, md: 0 },
+          }}
+        >
+          {children}
+        </Box>
+      </Box>
+    </>
   );
 }
 ```
 
-### Left Sidebar Navigation
+### Dashboard Card Components (Accessible)
 
-Collapsible left sidebar with domain selection
+Standard card components for dashboards with proper ARIA labels and WCAG 2.1 Level AA compliance:
 
 ```tsx
-import { Drawer, List, ListItem, ListItemButton, ListItemIcon, ListItemText, Collapse, IconButton, Box } from '@mui/material';
-import { ExpandLess, ExpandMore, ChevronLeft, ChevronRight } from '@mui/icons-material';
+// Accessible dashboard card with full screen reader support
+const DashboardCard = ({ 
+  title, 
+  value, 
+  icon: Icon, 
+  trend,
+  description 
+}: DashboardCardProps) => {
+  const cardId = `card-${title.toLowerCase().replace(/\s+/g, '-')}`;
+  
+  return (
+    <Card 
+      sx={{ 
+        minHeight: 140,
+        display: 'flex',
+        flexDirection: 'column',
+        justifyContent: 'space-between',
+      }}
+      role="region"
+      aria-labelledby={cardId}
+    >
+      <CardContent>
+        <Box sx={{ display: 'flex', alignItems: 'center', mb: 2 }}>
+          <Icon 
+            sx={{ mr: 1, color: 'primary.main' }} 
+            aria-hidden="true"
+          />
+          <Typography 
+            id={cardId}
+            variant="h6" 
+            component="h3"
+          >
+            {title}
+          </Typography>
+        </Box>
+        
+        <Typography 
+          variant="h4"
+          sx={{ fontWeight: 'bold', color: 'text.primary' }}
+          aria-label={`${title}: ${value}`}
+        >
+          {value}
+        </Typography>
+        
+        {description && (
+          <Typography 
+            variant="body2" 
+            color="text.secondary"
+            sx={{ mt: 1 }}
+          >
+            {description}
+          </Typography>
+        )}
+        
+        {trend !== undefined && (
+          <Typography 
+            variant="body2" 
+            color={trend > 0 ? 'success.main' : 'error.main'}
+            aria-label={`Trend: ${trend > 0 ? 'up' : 'down'} ${Math.abs(trend)} percent`}
+            sx={{ mt: 1 }}
+          >
+            {trend > 0 ? '↗' : '↘'} {Math.abs(trend)}%
+          </Typography>
+        )}
+      </CardContent>
+    </Card>
+  );
+};
 
-interface SidebarProps {
-  open: boolean;
-  onToggle: () => void;
-  selectedDomain: string;
-  onDomainSelect: (domain: string) => void;
-}
+// Quick action card for dashboard
+const QuickActionCard = ({ 
+  title, 
+  actions 
+}: QuickActionCardProps) => {
+  return (
+    <Card>
+      <CardContent>
+        <Typography variant="h6" gutterBottom>
+          {title}
+        </Typography>
+        <Stack spacing={1}>
+          {actions.map((action) => (
+            <Button
+              key={action.id}
+              variant={action.primary ? 'contained' : 'outlined'}
+              startIcon={action.icon}
+              onClick={action.onClick}
+              fullWidth
+              aria-label={action.ariaLabel || action.label}
+            >
+              {action.label}
+            </Button>
+          ))}
+        </Stack>
+      </CardContent>
+    </Card>
+  );
+};
 
-export function Sidebar({ open, onToggle, selectedDomain, onDomainSelect }: SidebarProps) {
-  const [expandedItems, setExpandedItems] = useState<string[]>([]);
-  const drawerWidth = open ? 240 : 64;
+// Recent activity card
+const RecentActivityCard = ({ 
+  title, 
+  activities,
+  maxItems = 5 
+}: RecentActivityCardProps) => {
+  const [expanded, setExpanded] = useState(false);
+  const displayedActivities = expanded ? activities : activities.slice(0, maxItems);
+  
+  return (
+    <Card>
+      <CardContent>
+        <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 2 }}>
+          <Typography variant="h6" component="h3">
+            {title}
+          </Typography>
+          {activities.length > maxItems && (
+            <Button 
+              size="small"
+              onClick={() => setExpanded(!expanded)}
+              aria-expanded={expanded}
+            >
+              {expanded ? 'Show less' : `Show all (${activities.length})`}
+            </Button>
+          )}
+        </Box>
+        
+        <List dense>
+          {displayedActivities.map((activity) => (
+            <ListItem key={activity.id} disableGutters>
+              <ListItemIcon sx={{ minWidth: 40 }}>
+                {activity.icon}
+              </ListItemIcon>
+              <ListItemText
+                primary={activity.title}
+                secondary={
+                  <>
+                    {activity.description}
+                    <Typography 
+                      component="span" 
+                      variant="caption" 
+                      color="text.secondary"
+                      sx={{ display: 'block' }}
+                    >
+                      {activity.timestamp}
+                    </Typography>
+                  </>
+                }
+              />
+            </ListItem>
+          ))}
+        </List>
+        
+        {activities.length === 0 && (
+          <Typography variant="body2" color="text.secondary" align="center" sx={{ py: 2 }}>
+            No recent activity
+          </Typography>
+        )}
+      </CardContent>
+    </Card>
+  );
+};
   
   const navigationItems = [
     {

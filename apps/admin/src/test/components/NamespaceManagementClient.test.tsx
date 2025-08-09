@@ -33,6 +33,25 @@ vi.mock('next/navigation', () => ({
   useParams: () => ({ siteKey: 'newtest' }),
 }));
 
+vi.mock('@mui/material', async () => {
+  const actual = await vi.importActual<typeof import('@mui/material')>('@mui/material');
+  return {
+    ...actual,
+    useMediaQuery: () => false, // Mock as desktop view
+    useTheme: () => ({
+      breakpoints: {
+        down: () => false,
+        up: () => true,
+      },
+      palette: {
+        primary: {
+          main: '#1976d2',
+        },
+      },
+    }),
+  };
+});
+
 describe('NamespaceManagementClient @unit @ui @dashboard @low-priority', () => {
   const defaultProps = {
     namespaceTitle: 'Test Namespace',
@@ -53,9 +72,11 @@ describe('NamespaceManagementClient @unit @ui @dashboard @low-priority', () => {
     it('should render the component with correct namespace information', () => {
       render(<NamespaceManagementClient {...defaultProps} />);
 
-      expect(
-        screen.getByText('Test Namespace Namespace Management'),
-      ).toBeInTheDocument();
+      // Check for the namespace code in the navigation header (may appear multiple times due to mobile/desktop)
+      expect(screen.getAllByText('TEST').length).toBeGreaterThan(0);
+      // Check for the subtitle (may appear multiple times due to mobile/desktop)
+      expect(screen.getAllByText('Namespace Management').length).toBeGreaterThan(0);
+      // Check that Test Namespace appears somewhere (don't be specific about where)
       expect(screen.getAllByText(/Test Namespace/).length).toBeGreaterThan(0);
     });
 
@@ -95,8 +116,8 @@ describe('NamespaceManagementClient @unit @ui @dashboard @low-priority', () => {
       render(<NamespaceManagementClient {...defaultProps} />);
 
       const overviewTab = screen.getByRole('button', { name: 'Overview' });
-      // Check for the active tab classes used in the component
-      expect(overviewTab.className).toMatch(/text-blue-600|border-blue-600/);
+      // Check for the active state aria attribute
+      expect(overviewTab).toHaveAttribute('aria-current', 'page');
     });
   });
 
@@ -110,7 +131,7 @@ describe('NamespaceManagementClient @unit @ui @dashboard @low-priority', () => {
       fireEvent.click(contentTab);
 
       await waitFor(() => {
-        expect(contentTab.className).toMatch(/text-blue-600|border-blue-600/);
+        expect(contentTab).toHaveAttribute('aria-current', 'page');
       });
     });
 
@@ -125,7 +146,7 @@ describe('NamespaceManagementClient @unit @ui @dashboard @low-priority', () => {
         screen.getByRole('button', { name: 'Content Management' }),
       );
       await waitFor(() => {
-        // Content tab should show action cards instead of redundant heading
+        // Content tab should show action cards
         expect(screen.getByText('Create New Page')).toBeInTheDocument();
       });
     });
@@ -136,7 +157,7 @@ describe('NamespaceManagementClient @unit @ui @dashboard @low-priority', () => {
       render(<NamespaceManagementClient {...defaultProps} />);
 
       expect(screen.getByText('Namespace Status')).toBeInTheDocument();
-      expect(screen.getByText('Last Updated:')).toBeInTheDocument();
+      expect(screen.getByText('Last Updated')).toBeInTheDocument();
     });
   });
 
@@ -152,7 +173,7 @@ describe('NamespaceManagementClient @unit @ui @dashboard @low-priority', () => {
         const activeTab = screen.getByRole('button', {
           name: 'Content Management',
         });
-        expect(activeTab.className).toMatch(/text-blue-600|border-blue-600/);
+        expect(activeTab).toHaveAttribute('aria-current', 'page');
       });
     });
   });

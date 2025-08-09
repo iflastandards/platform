@@ -85,11 +85,11 @@ function isAuthorizedForNamespace(
 
   // For special cases (portal/newtest), only superadmins have access
   if (isSpecialCase) {
-    return userRoles.includes('superadmin');
+    return userRoles.includes('super-admin');
   }
 
   // Check for admin roles that can access all namespaces
-  const adminRoles = ['superadmin', 'ifla-admin', 'standards-admin'];
+  const adminRoles = ['super-admin', 'ifla-admin', 'standards-admin', 'admin'];
   if (userRoles.some((role) => adminRoles.includes(role))) {
     return true;
   }
@@ -130,7 +130,7 @@ export default async function NamespaceManagementPage({ params }: PageProps) {
 
   // Get user roles
   const userRoles = user.roles;
-  const isSuperAdmin = userRoles?.includes('superadmin') || false;
+  const isSuperAdmin = userRoles?.includes('super-admin') || false;
 
   // Check authorization for this namespace
   if (!isAuthorizedForNamespace(userRoles, namespaceKey, isSpecialCase)) {

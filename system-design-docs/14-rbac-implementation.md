@@ -1,7 +1,7 @@
 # Current RBAC Implementation
 
-**Version:** 1.0  
-**Date:** July 2025  
+**Version:** 2.0  
+**Date:** January 2025  
 **Status:** Active Implementation
 
 ## Overview
@@ -12,15 +12,39 @@ This document describes the **actual implemented** authorization architecture fo
 
 ### Technology Stack
 - **Authentication**: Clerk (handles user identity and sessions)
-- **Authorization**: Custom RBAC via `publicMetadata`
-- **API Layer**: Standard Next.js App Router API routes
+- **Authorization**: Custom RBAC via `publicMetadata` (NOT Clerk Organizations)
+- **API Layer**: Standard Next.js App Router API routes (NOT tRPC)
 - **Data Storage**: Supabase for operational data, Git for content
+- **Performance**: AuthCache with 5-minute TTL (reduces checks from ~50ms to <1ms)
 
 ### Key Design Decisions
 1. **Metadata-based roles**: Using Clerk publicMetadata for role storage
 2. **Custom authorization**: Authorization logic implemented in TypeScript
 3. **Standard API routes**: Next.js API routes with fetch()
-4. **Hierarchical roles**: Role-based permissions with namespace-level granularity
+4. **Namespace-level authorization**: Lowest level of permission granularity
+5. **No vocabulary-specific permissions**: All content within namespace shares permissions
+
+## Authorization Hierarchy (CRITICAL)
+
+The IFLA Standards Platform uses **namespace-level authorization** as the fundamental access control mechanism:
+
+```
+System Level (Superadmin)
+    ↓
+Review Group Level (Review Group Admin)
+    ↓
+Namespace Level (Namespace Admin/Editor/Translator) ← LOWEST AUTHORIZATION LEVEL
+    ↓
+Content Level (Vocabularies, Element Sets) ← NO SPECIFIC PERMISSIONS
+```
+
+### Key Principles
+
+1. **Namespace is the lowest level of authorization** - All content permissions are determined by namespace access
+2. **No vocabulary-specific permissions** - Users cannot have permissions for individual vocabularies
+3. **No element-set-specific permissions** - Users cannot have permissions for individual element sets
+4. **Inheritance model** - All content within a namespace inherits the namespace's access permissions
+5. **Uniform access** - If you can edit one vocabulary in a namespace, you can edit ALL vocabularies in that namespace
 
 ## Role Hierarchy
 
@@ -279,9 +303,26 @@ If we need to migrate to a different authorization system in the future:
 
 ## Testing Strategy
 
+### Test Users Configuration
+
+The platform includes 5 pre-configured Clerk test users with specific roles (all use verification code `424242`):
+
+1. **Superadmin Test User**: Full system access
+2. **Review Group Admin**: Admin for specific review groups
+3. **Editor**: Content editing permissions
+4. **Translator**: Translation-only access
+5. **Viewer**: Read-only access
+
+### Authorization Testing Patterns
+
 ```typescript
-// Example test for authorization
-describe('Authorization', () => {
+// Example test for authorization with caching
+describe('Authorization with Cache', () => {
+  beforeEach(() => {
+    // Clear cache before each test
+    clearTestUsersCache();
+  });
+
   it('should allow superadmin all actions', () => {
     const result = checkUserPermission(
       'superadmin',
@@ -292,12 +333,28 @@ describe('Authorization', () => {
     expect(result).toBe(true);
   });
   
-  it('should restrict viewer to read-only', () => {
-    const canRead = checkUserPermission('viewer', 'vocabulary', 'read');
-    const canEdit = checkUserPermission('viewer', 'vocabulary', 'edit');
+  it('should cache permission results for 5 minutes', async () => {
+    const start = performance.now();
     
-    expect(canRead).toBe(true);
-    expect(canEdit).toBe(false);
+    // First call - hits database
+    const perm1 = await canPerformAction('namespace', 'read', {
+      namespaceId: 'isbd'
+    });
+    const firstTime = performance.now() - start;
+    
+    // Second call - uses cache
+    const cacheStart = performance.now();
+    const perm2 = await canPerformAction('namespace', 'read', {
+      namespaceId: 'isbd'
+    });
+    const cacheTime = performance.now() - cacheStart;
+    
+    // Cache should be significantly faster
+    expect(cacheTime).toBeLessThan(firstTime / 10);
+    expect(cacheTime).toBeLessThan(1); // Sub-millisecond from cache
+    
+    // Results should be identical
+    expect(perm1).toBe(perm2);
   });
   
   it('should respect namespace permissions', () => {
@@ -320,9 +377,116 @@ describe('Authorization', () => {
 });
 ```
 
+### Debug Mode Testing
+
+```typescript
+describe('Authorization Debug Verification', () => {
+  test('should verify permission matrix matches expectations', async () => {
+    // Enable debug mode
+    process.env.AUTH_DEBUG = 'true';
+    process.env.AUTH_DEBUG_VERBOSE = 'true';
+    
+    // Get current user's permission matrix
+    const response = await fetch('/api/admin/auth/debug?action=matrix');
+    const { data } = await response.json();
+    
+    // Define expected permissions for RG Admin
+    const expectedRGAdminPermissions = {
+      namespace: { create: true, read: true, update: true, delete: true },
+      vocabulary: { create: true, read: true, update: true, delete: false },
+      user: { read: true, update: true, create: false, delete: false }
+    };
+    
+    // Verify matrix matches expectations
+    Object.entries(expectedRGAdminPermissions).forEach(([resource, actions]) => {
+      Object.entries(actions).forEach(([action, expected]) => {
+        expect(data.matrix[resource][action]).toBe(expected);
+      });
+    });
+  });
+});
+```
+
+## withAuth Middleware Pattern
+
+### Custom Middleware Wrapper
+
+```typescript
+// apps/admin/src/lib/auth/middleware.ts
+export function withAuth(
+  handler: (request: NextRequest, context: AuthContext) => Promise<NextResponse>,
+  options: {
+    resource: string;
+    action: string;
+  }
+) {
+  return async (request: NextRequest) => {
+    const { userId, sessionClaims } = auth();
+    
+    if (!userId) {
+      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+    }
+    
+    const userRole = sessionClaims?.publicMetadata?.role;
+    const namespacePermissions = sessionClaims?.publicMetadata?.namespacePermissions;
+    
+    // Extract resource attributes from request
+    const resourceAttributes = getResourceAttributes(request);
+    
+    const canPerform = checkUserPermission(
+      userRole,
+      options.resource,
+      options.action,
+      resourceAttributes.namespace,
+      namespacePermissions
+    );
+    
+    if (!canPerform) {
+      return NextResponse.json({ error: "Forbidden" }, { status: 403 });
+    }
+    
+    // Call the actual handler with auth context
+    return handler(request, {
+      userId,
+      userRole,
+      namespacePermissions,
+      resourceAttributes
+    });
+  };
+}
+```
+
+### Usage in API Routes
+
+```typescript
+// apps/admin/src/app/api/vocabularies/[namespace]/route.ts
+export const GET = withAuth(async (request, context) => {
+  // Handler has access to authenticated context
+  const { resourceAttributes } = context;
+  const vocabularies = await fetchVocabularies(resourceAttributes.namespace);
+  return NextResponse.json(vocabularies);
+}, {
+  resource: 'vocabulary',
+  action: 'read'
+});
+
+export const POST = withAuth(async (request, context) => {
+  const body = await request.json();
+  const vocabulary = await createVocabulary({
+    ...body,
+    createdBy: context.userId
+  });
+  return NextResponse.json(vocabulary, { status: 201 });
+}, {
+  resource: 'vocabulary',
+  action: 'create'
+});
+```
+
 ## Monitoring and Audit
 
-### Authorization Events
+### Authorization Events with Debug Support
+
 ```typescript
 // Log authorization decisions for audit
 export async function logAuthorizationEvent(
@@ -332,6 +496,28 @@ export async function logAuthorizationEvent(
   allowed: boolean,
   context?: any
 ) {
+  // Debug mode logging
+  if (process.env.AUTH_DEBUG === 'true') {
+    console.log('[AUTH]', {
+      userId,
+      resource,
+      action,
+      allowed,
+      context,
+      timestamp: new Date().toISOString()
+    });
+  }
+  
+  // Verbose debug mode
+  if (process.env.AUTH_DEBUG_VERBOSE === 'true') {
+    console.log('[AUTH VERBOSE]', {
+      stack: new Error().stack,
+      headers: context?.headers,
+      body: context?.body
+    });
+  }
+  
+  // Persist to database
   await supabase.from('authorization_log').insert({
     user_id: userId,
     resource,
@@ -340,6 +526,47 @@ export async function logAuthorizationEvent(
     context,
     timestamp: new Date().toISOString()
   });
+}
+```
+
+### Debug Endpoint
+
+```typescript
+// apps/admin/src/app/api/admin/auth/debug/route.ts
+export async function GET(request: NextRequest) {
+  const { searchParams } = new URL(request.url);
+  const action = searchParams.get('action');
+  
+  // Only available to superadmin in production
+  const { sessionClaims } = auth();
+  if (process.env.NODE_ENV === 'production' && 
+      sessionClaims?.publicMetadata?.role !== 'superadmin') {
+    return NextResponse.json({ error: "Forbidden" }, { status: 403 });
+  }
+  
+  switch (action) {
+    case 'matrix':
+      // Return permission matrix for current user
+      return NextResponse.json({ 
+        data: generatePermissionMatrix(sessionClaims) 
+      });
+      
+    case 'logs':
+      // Return recent authorization logs
+      const count = parseInt(searchParams.get('count') || '10');
+      const logs = await getRecentAuthLogs(count);
+      return NextResponse.json({ data: logs });
+      
+    case 'cache':
+      // Return cache statistics
+      const stats = getAuthCacheStats();
+      return NextResponse.json({ data: stats });
+      
+    default:
+      return NextResponse.json({ 
+        error: "Invalid action. Use: matrix, logs, or cache" 
+      }, { status: 400 });
+  }
 }
 ```
 

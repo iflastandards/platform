@@ -2,26 +2,24 @@
 
 import React, { useState, useEffect } from 'react';
 import {
-  Container,
   Typography,
   Box,
-  Paper,
   Card,
   CardContent,
   Button,
-  Tab,
-  Tabs,
   Alert,
   Skeleton,
 } from '@mui/material';
 import Grid from '@mui/material/Grid';
 import {
-  Dashboard as DashboardIcon,
   Add,
   CloudUpload,
   Assessment,
   People,
   Timeline,
+  Home,
+  Settings,
+  Folder,
 } from '@mui/icons-material';
 import { 
   NamespaceSelector, 
@@ -41,6 +39,7 @@ import {
   MockUser,
 } from '@/lib/mock-data';
 import { AppUser } from '@/lib/clerk-github-auth';
+import { StandardDashboardLayout, NavigationItem } from '@/components/layout/StandardDashboardLayout';
 
 interface RoleBasedDashboardProps {
   userId?: string;
@@ -48,29 +47,11 @@ interface RoleBasedDashboardProps {
   appUser?: AppUser;
 }
 
-interface TabPanelProps {
-  children?: React.ReactNode;
-  index: number;
-  value: number;
-}
-
-function TabPanel(props: TabPanelProps) {
-  const { children, value, index, ...other } = props;
-  return (
-    <div
-      role="tabpanel"
-      hidden={value !== index}
-      {...other}
-    >
-      {value === index && <Box sx={{ py: 3 }}>{children}</Box>}
-    </div>
-  );
-}
 
 export default function RoleBasedDashboard({ userId }: RoleBasedDashboardProps) {
   const [loading, setLoading] = useState(true);
   const [user, setUser] = useState<MockUser | null>(null);
-  const [tabValue, setTabValue] = useState(0);
+  const [selectedTab, setSelectedTab] = useState('overview');
 
   useEffect(() => {
     // Simulate loading user data
@@ -85,7 +66,7 @@ export default function RoleBasedDashboard({ userId }: RoleBasedDashboardProps) 
 
   if (loading) {
     return (
-      <Container maxWidth="xl" sx={{ py: 4 }}>
+      <Box sx={{ p: 4 }}>
         <Skeleton variant="rectangular" height={200} sx={{ mb: 3 }} />
         <Grid container spacing={3}>
           {[1, 2, 3].map((n) => (
@@ -94,15 +75,15 @@ export default function RoleBasedDashboard({ userId }: RoleBasedDashboardProps) 
             </Grid>
           ))}
         </Grid>
-      </Container>
+      </Box>
     );
   }
 
   if (!user) {
     return (
-      <Container maxWidth="md" sx={{ py: 4 }}>
+      <Box sx={{ p: 4 }}>
         <Alert severity="error">User not found. Please log in.</Alert>
-      </Container>
+      </Box>
     );
   }
 
@@ -129,105 +110,152 @@ export default function RoleBasedDashboard({ userId }: RoleBasedDashboardProps) 
     metadata: log.properties.attributes,
   }));
 
-  const handleTabChange = (event: React.SyntheticEvent, newValue: number) => {
-    setTabValue(newValue);
-  };
+  const navigationItems: NavigationItem[] = [
+    { id: 'overview', label: 'Overview', icon: <Home /> },
+    { id: 'namespaces', label: 'Your Namespaces', icon: <Folder />, badge: accessibleNamespaces.length },
+    ...(isAdmin ? [
+      { id: 'activity', label: 'All Activity', icon: <Timeline /> },
+      { id: 'actions', label: 'Quick Actions', icon: <Settings /> },
+    ] : []),
+  ];
 
-  return (
-    <Container maxWidth="xl" sx={{ py: 4 }}>
-      {/* Header */}
-      <Box sx={{ mb: 4 }}>
-        <Typography variant="h4" gutterBottom>
-          Welcome back, {user.name}
-        </Typography>
-        <Box sx={{ display: 'flex', gap: 1, flexWrap: 'wrap' }}>
-          <RoleChip role={user.publicMetadata.iflaRole || 'member'} />
-          {user.publicMetadata.reviewGroupAdmin?.map(group => (
-            <RoleChip key={group} role="namespace-admin" namespace={group} />
-          ))}
-          {user.publicMetadata.externalContributor && (
-            <StatusChip status="external" label="External Contributor" />
-          )}
-        </Box>
-      </Box>
+  const renderContent = () => {
+    switch (selectedTab) {
+      case 'overview':
+        return (
+          <>
+            {/* Header */}
+            <Box sx={{ mb: 4 }}>
+              <Typography variant="h4" component="h1" gutterBottom>
+                Welcome back, {user.name}
+              </Typography>
+              <Box sx={{ display: 'flex', gap: 1, flexWrap: 'wrap' }}>
+                <RoleChip role={user.publicMetadata.iflaRole || 'member'} />
+                {user.publicMetadata.reviewGroupAdmin?.map(group => (
+                  <RoleChip key={group} role="namespace-admin" namespace={group} />
+                ))}
+                {user.publicMetadata.externalContributor && (
+                  <StatusChip status="external" label="External Contributor" />
+                )}
+              </Box>
+            </Box>
 
-      {/* Quick Stats for Admins */}
-      {isAdmin && (
-        <Grid container spacing={3} sx={{ mb: 4 }}>
-          <Grid size={{ xs: 12, sm: 6, md: 3 }}>
-            <Card>
-              <CardContent>
-                <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
-                  <Assessment color="primary" />
-                  <Box>
-                    <Typography color="text.secondary" variant="body2">
-                      Active Namespaces
-                    </Typography>
-                    <Typography variant="h5">{stats.active}</Typography>
-                  </Box>
-                </Box>
-              </CardContent>
-            </Card>
-          </Grid>
-          <Grid size={{ xs: 12, sm: 6, md: 3 }}>
-            <Card>
-              <CardContent>
-                <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
-                  <Timeline color="secondary" />
-                  <Box>
-                    <Typography color="text.secondary" variant="body2">
-                      Editorial Cycles
-                    </Typography>
-                    <Typography variant="h5">{activeCycles.length}</Typography>
-                  </Box>
-                </Box>
-              </CardContent>
-            </Card>
-          </Grid>
-          <Grid size={{ xs: 12, sm: 6, md: 3 }}>
-            <Card>
-              <CardContent>
-                <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
-                  <People color="success" />
-                  <Box>
-                    <Typography color="text.secondary" variant="body2">
-                      Total Elements
-                    </Typography>
-                    <Typography variant="h5">{stats.totalElements.toLocaleString()}</Typography>
-                  </Box>
-                </Box>
-              </CardContent>
-            </Card>
-          </Grid>
-          <Grid size={{ xs: 12, sm: 6, md: 3 }}>
-            <Card>
-              <CardContent>
-                <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
-                  <CloudUpload color="info" />
-                  <Box>
-                    <Typography color="text.secondary" variant="body2">
-                      Active Translations
-                    </Typography>
-                    <Typography variant="h5">{translationStats.activeTranslations}</Typography>
-                  </Box>
-                </Box>
-              </CardContent>
-            </Card>
-          </Grid>
-        </Grid>
-      )}
+            {/* Quick Stats for Admins */}
+            {isAdmin && (
+              <Grid container spacing={3}>
+                <Grid size={{ xs: 12, sm: 6, md: 3 }}>
+                  <Card
+                    sx={{ 
+                      minHeight: 140,
+                      display: 'flex',
+                      flexDirection: 'column',
+                      justifyContent: 'space-between',
+                    }}
+                    role="region"
+                    aria-labelledby="active-namespaces-stat"
+                  >
+                    <CardContent>
+                      <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
+                        <Assessment color="primary" aria-hidden="true" />
+                        <Box>
+                          <Typography id="active-namespaces-stat" color="text.secondary" variant="body2">
+                            Active Namespaces
+                          </Typography>
+                          <Typography variant="h5" aria-label={`${stats.active} active namespaces`}>
+                            {stats.active}
+                          </Typography>
+                        </Box>
+                      </Box>
+                    </CardContent>
+                  </Card>
+                </Grid>
+                <Grid size={{ xs: 12, sm: 6, md: 3 }}>
+                  <Card
+                    sx={{ 
+                      minHeight: 140,
+                      display: 'flex',
+                      flexDirection: 'column',
+                      justifyContent: 'space-between',
+                    }}
+                    role="region"
+                    aria-labelledby="editorial-cycles-stat"
+                  >
+                    <CardContent>
+                      <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
+                        <Timeline color="secondary" aria-hidden="true" />
+                        <Box>
+                          <Typography id="editorial-cycles-stat" color="text.secondary" variant="body2">
+                            Editorial Cycles
+                          </Typography>
+                          <Typography variant="h5" aria-label={`${activeCycles.length} editorial cycles`}>
+                            {activeCycles.length}
+                          </Typography>
+                        </Box>
+                      </Box>
+                    </CardContent>
+                  </Card>
+                </Grid>
+                <Grid size={{ xs: 12, sm: 6, md: 3 }}>
+                  <Card
+                    sx={{ 
+                      minHeight: 140,
+                      display: 'flex',
+                      flexDirection: 'column',
+                      justifyContent: 'space-between',
+                    }}
+                    role="region"
+                    aria-labelledby="total-elements-stat"
+                  >
+                    <CardContent>
+                      <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
+                        <People color="success" aria-hidden="true" />
+                        <Box>
+                          <Typography id="total-elements-stat" color="text.secondary" variant="body2">
+                            Total Elements
+                          </Typography>
+                          <Typography variant="h5" aria-label={`${stats.totalElements.toLocaleString()} total elements`}>
+                            {stats.totalElements.toLocaleString()}
+                          </Typography>
+                        </Box>
+                      </Box>
+                    </CardContent>
+                  </Card>
+                </Grid>
+                <Grid size={{ xs: 12, sm: 6, md: 3 }}>
+                  <Card
+                    sx={{ 
+                      minHeight: 140,
+                      display: 'flex',
+                      flexDirection: 'column',
+                      justifyContent: 'space-between',
+                    }}
+                    role="region"
+                    aria-labelledby="active-translations-stat"
+                  >
+                    <CardContent>
+                      <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
+                        <CloudUpload color="info" aria-hidden="true" />
+                        <Box>
+                          <Typography id="active-translations-stat" color="text.secondary" variant="body2">
+                            Active Translations
+                          </Typography>
+                          <Typography variant="h5" aria-label={`${translationStats.activeTranslations} active translations`}>
+                            {translationStats.activeTranslations}
+                          </Typography>
+                        </Box>
+                      </Box>
+                    </CardContent>
+                  </Card>
+                </Grid>
+              </Grid>
+            )}
+          </>
+        );
 
-      {/* Main Content */}
-      <Paper sx={{ width: '100%' }}>
-        <Tabs value={tabValue} onChange={handleTabChange} sx={{ borderBottom: 1, borderColor: 'divider' }}>
-          <Tab label="Your Namespaces" icon={<DashboardIcon />} iconPosition="start" />
-          {isAdmin && <Tab label="All Activity" icon={<Timeline />} iconPosition="start" />}
-          {isAdmin && <Tab label="Quick Actions" icon={<Add />} iconPosition="start" />}
-        </Tabs>
-
-        <TabPanel value={tabValue} index={0}>
-          <Box sx={{ p: 3 }}>
-            <Typography variant="h6" gutterBottom>
+      case 'namespaces':
+        return (
+          <Box>
+            <Typography variant="h4" component="h1" gutterBottom>
               Your Accessible Namespaces
             </Typography>
             {accessibleNamespaces.length > 0 ? (
@@ -241,63 +269,78 @@ export default function RoleBasedDashboard({ userId }: RoleBasedDashboardProps) 
               </Alert>
             )}
           </Box>
-        </TabPanel>
+        );
 
-        {isAdmin && (
-          <TabPanel value={tabValue} index={1}>
-            <Box sx={{ p: 3 }}>
-              <Typography variant="h6" gutterBottom>
-                Recent System Activity
-              </Typography>
-              <ActivityFeed activities={recentActivities} />
-            </Box>
-          </TabPanel>
-        )}
+      case 'activity':
+        return isAdmin ? (
+          <Box>
+            <Typography variant="h4" component="h1" gutterBottom>
+              Recent System Activity
+            </Typography>
+            <ActivityFeed activities={recentActivities} />
+          </Box>
+        ) : null;
 
-        {isAdmin && (
-          <TabPanel value={tabValue} index={2}>
-            <Box sx={{ p: 3 }}>
-              <Typography variant="h6" gutterBottom>
-                Administrative Actions
-              </Typography>
-              <Grid container spacing={2}>
-                <Grid size={{ xs: 12, sm: 6, md: 4 }}>
-                  <Button
-                    variant="contained"
-                    fullWidth
-                    startIcon={<CloudUpload />}
-                    sx={{ py: 2 }}
-                  >
-                    Start New Import
-                  </Button>
-                </Grid>
-                <Grid size={{ xs: 12, sm: 6, md: 4 }}>
-                  <Button
-                    variant="contained"
-                    fullWidth
-                    startIcon={<Add />}
-                    sx={{ py: 2 }}
-                    color="secondary"
-                  >
-                    Create Editorial Cycle
-                  </Button>
-                </Grid>
-                <Grid size={{ xs: 12, sm: 6, md: 4 }}>
-                  <Button
-                    variant="contained"
-                    fullWidth
-                    startIcon={<People />}
-                    sx={{ py: 2 }}
-                    color="success"
-                  >
-                    Manage Users
-                  </Button>
-                </Grid>
+      case 'actions':
+        return isAdmin ? (
+          <Box>
+            <Typography variant="h4" component="h1" gutterBottom>
+              Administrative Actions
+            </Typography>
+            <Grid container spacing={2}>
+              <Grid size={{ xs: 12, sm: 6, md: 4 }}>
+                <Button
+                  variant="contained"
+                  fullWidth
+                  startIcon={<CloudUpload />}
+                  sx={{ py: 2 }}
+                  aria-label="Start a new import process"
+                >
+                  Start New Import
+                </Button>
               </Grid>
-            </Box>
-          </TabPanel>
-        )}
-      </Paper>
-    </Container>
+              <Grid size={{ xs: 12, sm: 6, md: 4 }}>
+                <Button
+                  variant="contained"
+                  fullWidth
+                  startIcon={<Add />}
+                  sx={{ py: 2 }}
+                  color="secondary"
+                  aria-label="Create a new editorial cycle"
+                >
+                  Create Editorial Cycle
+                </Button>
+              </Grid>
+              <Grid size={{ xs: 12, sm: 6, md: 4 }}>
+                <Button
+                  variant="contained"
+                  fullWidth
+                  startIcon={<People />}
+                  sx={{ py: 2 }}
+                  color="success"
+                  aria-label="Manage system users"
+                >
+                  Manage Users
+                </Button>
+              </Grid>
+            </Grid>
+          </Box>
+        ) : null;
+
+      default:
+        return null;
+    }
+  };
+
+  return (
+    <StandardDashboardLayout
+      title="Role-Based Dashboard"
+      subtitle={isAdmin ? 'System Administration' : 'Member Dashboard'}
+      navigationItems={navigationItems}
+      selectedTab={selectedTab}
+      onTabSelect={setSelectedTab}
+    >
+      {renderContent()}
+    </StandardDashboardLayout>
   );
 }

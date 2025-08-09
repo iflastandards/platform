@@ -1,8 +1,8 @@
 # Comprehensive Spreadsheet Export/Import System Guide
 
-**Version**: 1.0  
-**Date**: 2025-01-21  
-**Status**: Complete Documentation  
+**Version**: 1.1  
+**Date**: August 2025  
+**Status**: Current Implementation  
 **Purpose**: Consolidated guide for IFLA vocabulary management through spreadsheet workflows
 
 ## Table of Contents
@@ -139,15 +139,31 @@ stateDiagram-v2
     Rollback --> MDXSource: Revert
 ```
 
-### Lifecycle Phases
+### Four-Phase Vocabulary Lifecycle
 
-1. **Initial Migration** (One-time per namespace)
-   - Convert existing RDF data to spreadsheets
-   - Import to MDX format with RDF frontmatter
-   - Establish MDX as source of truth
+1. **Phase 1: Bootstrap (Cycle Kick-off)**
+   - Admin initiates new editorial cycle
+   - Export current vocabulary from Git to Google Sheets
+   - Team performs bulk updates in spreadsheet
+   - Import validates and creates MDX files with embedded RDF
 
-2. **Ongoing Management** (Continuous)
-   - Export MDX to collaborative spreadsheets
+2. **Phase 2: Daily Editing**
+   - Direct MDX editing via Git for technical users
+   - Form-based editing in admin portal for content editors
+   - Real-time DCTAP validation
+   - Automatic RDF generation from MDX front matter
+
+3. **Phase 3: Nightly Assembly**
+   - Automated builds via GitHub Actions
+   - Validation against DCTAP profiles
+   - Semantic versioning suggestions
+   - Impact report generation
+
+4. **Phase 4: Publication**
+   - Review impact reports in admin portal
+   - Confirm version numbers
+   - Merge to main branch
+   - Automatic deployment to production
    - Enable team editing in familiar tools
    - Import changes back with validation
    - Maintain version history

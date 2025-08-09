@@ -1,9 +1,95 @@
 'use client';
 
 import React, { useState } from 'react';
-import { DocusaurusNavbar } from '@/app/components/docusaurus-navbar';
-import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
-import { InfoIcon, ShieldAlertIcon } from 'lucide-react';
+import {
+  Box,
+  Card,
+  CardContent,
+  Typography,
+  Grid,
+  Button,
+  Alert,
+  AlertTitle,
+  Chip,
+  List,
+  ListItem,
+  ListItemButton,
+  ListItemIcon,
+  ListItemText,
+  Divider,
+  Stack,
+  Drawer,
+  IconButton,
+  useTheme,
+  useMediaQuery,
+  Toolbar,
+  AppBar,
+  Link,
+} from '@mui/material';
+import {
+  Dashboard as LayoutDashboard,
+  Description as FileText,
+  Storage as Database,
+  AccountTree as GitBranch,
+  People as Users,
+  Inventory as Package,
+  Security as Shield,
+  GitHub,
+  Settings,
+  Build as Wrench,
+  Menu,
+  ElectricBolt,
+  Computer,
+  Link as LinkIcon,
+  Build,
+} from '@mui/icons-material';
+
+// Skip Links Component
+const SkipLinks = () => (
+  <Box
+    sx={{
+      position: 'absolute',
+      left: '-9999px',
+      top: 0,
+      '&:focus-within': {
+        position: 'static',
+        left: 'auto',
+        top: 'auto',
+        zIndex: 9999,
+        p: 2,
+        bgcolor: 'primary.main',
+      },
+    }}
+  >
+    <Link href="#main-content" sx={{ color: 'white', mr: 2 }}>
+      Skip to main content
+    </Link>
+    <Link href="#navigation" sx={{ color: 'white', mr: 2 }}>
+      Skip to navigation
+    </Link>
+    <Link href="#external-resources" sx={{ color: 'white' }}>
+      Skip to external resources
+    </Link>
+  </Box>
+);
+
+// Live Region for announcements
+const LiveRegion = ({ message }: { message: string }) => (
+  <Box
+    role="status"
+    aria-live="polite"
+    aria-atomic="true"
+    sx={{ 
+      position: 'absolute',
+      left: '-9999px',
+      width: '1px',
+      height: '1px',
+      overflow: 'hidden',
+    }}
+  >
+    {message}
+  </Box>
+);
 
 interface ManagementAction {
   id: string;
@@ -18,7 +104,7 @@ interface TabData {
   id: string;
   label: string;
   actions: ManagementAction[];
-  specialCaseOnly?: boolean; // For tabs only available to portal/newtest
+  specialCaseOnly?: boolean;
 }
 
 export interface NamespaceManagementClientProps {
@@ -31,12 +117,12 @@ export interface NamespaceManagementClientProps {
   namespaceDescription?: string;
 }
 
-// Different tab configurations for standard namespaces vs special cases
+// Tab configurations remain the same
 const standardNamespaceTabs: TabData[] = [
   {
     id: 'overview',
     label: 'Overview',
-    actions: [], // Special case - will show dashboard
+    actions: [],
   },
   {
     id: 'content',
@@ -45,8 +131,7 @@ const standardNamespaceTabs: TabData[] = [
       {
         id: 'create-page',
         title: 'Create New Page',
-        description:
-          'Add new documentation pages for elements, terms, or concepts',
+        description: 'Add new documentation pages for elements, terms, or concepts',
         type: 'github-cli',
       },
       {
@@ -106,8 +191,7 @@ const standardNamespaceTabs: TabData[] = [
       {
         id: 'update-dctap',
         title: 'Manage DC-TAP',
-        description:
-          'Maintain DC-TAP and JSON-LD context files for this namespace',
+        description: 'Maintain DC-TAP and JSON-LD context files for this namespace',
         type: 'codespaces',
       },
       {
@@ -330,7 +414,6 @@ const standardNamespaceTabs: TabData[] = [
   },
 ];
 
-// Additional tabs for portal/newtest special cases
 const specialCaseTabs: TabData[] = [
   {
     id: 'system',
@@ -369,6 +452,8 @@ const specialCaseTabs: TabData[] = [
   },
 ];
 
+const drawerWidth = 240;
+
 function NamespaceDashboard({
   namespaceTitle,
   namespaceCode,
@@ -381,226 +466,295 @@ function NamespaceDashboard({
   isSpecialCase?: boolean;
 }) {
   return (
-    <div className="space-y-6">
-      {/* Special case alert for portal/newtest */}
+    <Box>
       {isSpecialCase && (
-        <Alert className="border-orange-500 bg-orange-50 dark:bg-orange-900/20">
-          <ShieldAlertIcon className="h-4 w-4 text-orange-600 dark:text-orange-400" />
+        <Alert severity="warning" sx={{ mb: 3 }} role="alert">
           <AlertTitle>Special Management Area</AlertTitle>
-          <AlertDescription>
+          <Typography variant="body2">
             {namespaceKey === 'portal' ? (
-              <span>
+              <>
                 The Portal is not a standard namespace. It serves as the main IFLA standards platform 
                 and requires superadmin permissions for all management operations.
-              </span>
+              </>
             ) : (
-              <span>
+              <>
                 This is a development/testing environment, not a standard namespace. 
                 It requires superadmin permissions and should be used with caution.
-              </span>
+              </>
             )}
-          </AlertDescription>
+          </Typography>
         </Alert>
       )}
 
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 xl:grid-cols-2 gap-6">
-        <div className="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg p-6 shadow-sm">
-          <h3 className="text-lg font-semibold text-blue-600 dark:text-blue-400 mb-4">
-            {isSpecialCase ? 'System' : 'Namespace'} Status
-          </h3>
-          <div className="space-y-3">
-            <div className="flex justify-between items-center py-2 border-b border-gray-100 dark:border-gray-700 last:border-b-0">
-              <span className="font-medium text-gray-900 dark:text-gray-100">
-                Type:
-              </span>
-              <span className={`font-semibold ${isSpecialCase ? 'text-orange-600 dark:text-orange-400' : 'text-gray-600 dark:text-gray-400'}`}>
-                {isSpecialCase ? 'Special System Area' : 'Standard Namespace'}
-              </span>
-            </div>
-            <div className="flex justify-between items-center py-2 border-b border-gray-100 dark:border-gray-700 last:border-b-0">
-              <span className="font-medium text-gray-900 dark:text-gray-100">
-                Last Updated:
-              </span>
-              <span className="text-gray-600 dark:text-gray-400 font-semibold">
-                2 hours ago
-              </span>
-            </div>
-            <div className="flex justify-between items-center py-2 border-b border-gray-100 dark:border-gray-700 last:border-b-0">
-              <span className="font-medium text-gray-900 dark:text-gray-100">
-                Build Status:
-              </span>
-              <span className="text-green-600 dark:text-green-400 font-semibold">
-                Passing
-              </span>
-            </div>
-            <div className="flex justify-between items-center py-2 border-b border-gray-100 dark:border-gray-700 last:border-b-0">
-              <span className="font-medium text-gray-900 dark:text-gray-100">
-                {isSpecialCase ? 'System Issues' : 'Open PRs'}:
-              </span>
-              <span className="text-gray-600 dark:text-gray-400 font-semibold">
-                3
-              </span>
-            </div>
-            <div className="flex justify-between items-center py-2 border-b border-gray-100 dark:border-gray-700 last:border-b-0">
-              <span className="font-medium text-gray-900 dark:text-gray-100">
-                {isSpecialCase ? 'Active Tasks' : 'Pending Reviews'}:
-              </span>
-              <span className="text-gray-600 dark:text-gray-400 font-semibold">
-                5
-              </span>
-            </div>
-          </div>
-        </div>
+      <Grid container spacing={3}>
+        <Grid size={{ xs: 12, md: 6 }}>
+          <Card 
+            role="region"
+            aria-labelledby={`${namespaceKey}-status-title`}
+          >
+            <CardContent>
+              <Typography 
+                variant="h6" 
+                gutterBottom
+                id={`${namespaceKey}-status-title`}
+                component="h2"
+              >
+                {isSpecialCase ? 'System' : 'Namespace'} Status
+              </Typography>
+              <List dense>
+                <ListItem>
+                  <ListItemText 
+                    primary="Type"
+                    secondary={isSpecialCase ? 'Special System Area' : 'Standard Namespace'}
+                  />
+                </ListItem>
+                <Divider />
+                <ListItem>
+                  <ListItemText 
+                    primary="Last Updated"
+                    secondary="2 hours ago"
+                  />
+                </ListItem>
+                <Divider />
+                <ListItem>
+                  <ListItemText 
+                    primary="Build Status"
+                    secondary={
+                      <Chip 
+                        label="Passing" 
+                        color="success" 
+                        size="small"
+                        aria-label="Build status: Passing"
+                      />
+                    }
+                    secondaryTypographyProps={{ component: 'div' }}
+                  />
+                </ListItem>
+                <Divider />
+                <ListItem>
+                  <ListItemText 
+                    primary={isSpecialCase ? 'System Issues' : 'Open PRs'}
+                    secondary={<span aria-label={`${isSpecialCase ? 'System Issues' : 'Open PRs'}: 3`}>3</span>}
+                    secondaryTypographyProps={{ component: 'div' }}
+                  />
+                </ListItem>
+                <Divider />
+                <ListItem>
+                  <ListItemText 
+                    primary={isSpecialCase ? 'Active Tasks' : 'Pending Reviews'}
+                    secondary={<span aria-label={`${isSpecialCase ? 'Active Tasks' : 'Pending Reviews'}: 5`}>5</span>}
+                    secondaryTypographyProps={{ component: 'div' }}
+                  />
+                </ListItem>
+              </List>
+            </CardContent>
+          </Card>
+        </Grid>
 
-        <div className="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg p-6 shadow-sm">
-          <h3 className="text-lg font-semibold text-blue-600 dark:text-blue-400 mb-4">
-            Recent Activity - {namespaceCode}
-          </h3>
-          <div className="space-y-3">
-            {isSpecialCase ? (
-              <>
-                <div className="flex items-center gap-3">
-                  <span className="text-xs text-gray-500 dark:text-gray-400 min-w-[3rem]">
-                    1h ago
-                  </span>
-                  <span className="text-sm text-gray-900 dark:text-gray-100">
-                    System configuration updated
-                  </span>
-                </div>
-                <div className="flex items-center gap-3">
-                  <span className="text-xs text-gray-500 dark:text-gray-400 min-w-[3rem]">
-                    3h ago
-                  </span>
-                  <span className="text-sm text-gray-900 dark:text-gray-100">
-                    New namespace created: test-ns
-                  </span>
-                </div>
-                <div className="flex items-center gap-3">
-                  <span className="text-xs text-gray-500 dark:text-gray-400 min-w-[3rem]">
-                    1d ago
-                  </span>
-                  <span className="text-sm text-gray-900 dark:text-gray-100">
-                    Platform deployment completed
-                  </span>
-                </div>
-              </>
-            ) : (
-              <>
-                <div className="flex items-center gap-3">
-                  <span className="text-xs text-gray-500 dark:text-gray-400 min-w-[3rem]">
-                    2h ago
-                  </span>
-                  <span className="text-sm text-gray-900 dark:text-gray-100">
-                    Updated element C2001
-                  </span>
-                </div>
-                <div className="flex items-center gap-3">
-                  <span className="text-xs text-gray-500 dark:text-gray-400 min-w-[3rem]">
-                    1d ago
-                  </span>
-                  <span className="text-sm text-gray-900 dark:text-gray-100">
-                    Merged PR #45
-                  </span>
-                </div>
-                <div className="flex items-center gap-3">
-                  <span className="text-xs text-gray-500 dark:text-gray-400 min-w-[3rem]">
-                    2d ago
-                  </span>
-                  <span className="text-sm text-gray-900 dark:text-gray-100">
-                    Added new vocabulary terms
-                  </span>
-                </div>
-              </>
-            )}
-          </div>
-        </div>
+        <Grid size={{ xs: 12, md: 6 }}>
+          <Card 
+            role="region"
+            aria-labelledby={`${namespaceKey}-activity-title`}
+          >
+            <CardContent>
+              <Typography 
+                variant="h6" 
+                gutterBottom
+                id={`${namespaceKey}-activity-title`}
+                component="h2"
+              >
+                Recent Activity - {namespaceCode}
+              </Typography>
+              <List dense>
+                {isSpecialCase ? (
+                  <>
+                    <ListItem>
+                      <ListItemText 
+                        primary="System configuration updated"
+                        secondary="1h ago"
+                      />
+                    </ListItem>
+                    <ListItem>
+                      <ListItemText 
+                        primary="New namespace created: test-ns"
+                        secondary="3h ago"
+                      />
+                    </ListItem>
+                    <ListItem>
+                      <ListItemText 
+                        primary="Platform deployment completed"
+                        secondary="1d ago"
+                      />
+                    </ListItem>
+                  </>
+                ) : (
+                  <>
+                    <ListItem>
+                      <ListItemText 
+                        primary="Updated element C2001"
+                        secondary="2h ago"
+                      />
+                    </ListItem>
+                    <ListItem>
+                      <ListItemText 
+                        primary="Merged PR #45"
+                        secondary="1d ago"
+                      />
+                    </ListItem>
+                    <ListItem>
+                      <ListItemText 
+                        primary="Added new vocabulary terms"
+                        secondary="2d ago"
+                      />
+                    </ListItem>
+                  </>
+                )}
+              </List>
+            </CardContent>
+          </Card>
+        </Grid>
 
-        <div className="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg p-6 shadow-sm">
-          <h3 className="text-lg font-semibold text-blue-600 dark:text-blue-400 mb-4">
-            Quick Actions
-          </h3>
-          <div className="flex flex-col gap-2">
-            <button
-              className="bg-blue-600 text-white px-4 py-2 rounded-md text-sm font-medium opacity-50 cursor-not-allowed"
-              disabled
-            >
-              {isSpecialCase ? 'System Config' : 'New Content'}
-            </button>
-            <button
-              className="bg-gray-200 text-gray-700 px-4 py-2 rounded-md text-sm font-medium opacity-50 cursor-not-allowed"
-              disabled
-            >
-              {isSpecialCase ? 'User Management' : 'Sync Sheets'}
-            </button>
-            <button
-              className="bg-gray-200 text-gray-700 px-4 py-2 rounded-md text-sm font-medium opacity-50 cursor-not-allowed"
-              disabled
-            >
-              {isSpecialCase ? 'Deploy' : 'View PRs'}
-            </button>
-          </div>
-        </div>
+        <Grid size={{ xs: 12, md: 6 }}>
+          <Card
+            role="region"
+            aria-labelledby={`${namespaceKey}-actions-title`}
+          >
+            <CardContent>
+              <Typography 
+                variant="h6" 
+                gutterBottom
+                id={`${namespaceKey}-actions-title`}
+                component="h2"
+              >
+                Quick Actions
+              </Typography>
+              <Stack spacing={2}>
+                <Button
+                  variant="contained"
+                  disabled
+                  fullWidth
+                  aria-label={`${isSpecialCase ? 'System Config' : 'New Content'} (Coming Soon)`}
+                  sx={{ minHeight: 44 }}
+                >
+                  {isSpecialCase ? 'System Config' : 'New Content'}
+                </Button>
+                <Button
+                  variant="outlined"
+                  disabled
+                  fullWidth
+                  aria-label={`${isSpecialCase ? 'User Management' : 'Sync Sheets'} (Coming Soon)`}
+                  sx={{ minHeight: 44 }}
+                >
+                  {isSpecialCase ? 'User Management' : 'Sync Sheets'}
+                </Button>
+                <Button
+                  variant="outlined"
+                  disabled
+                  fullWidth
+                  aria-label={`${isSpecialCase ? 'Deploy' : 'View PRs'} (Coming Soon)`}
+                  sx={{ minHeight: 44 }}
+                >
+                  {isSpecialCase ? 'Deploy' : 'View PRs'}
+                </Button>
+              </Stack>
+            </CardContent>
+          </Card>
+        </Grid>
 
-        <div className="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg p-6 shadow-sm">
-          <h3 className="text-lg font-semibold text-blue-600 dark:text-blue-400 mb-4">
-            {isSpecialCase ? 'System Overview' : 'Team Overview'}
-          </h3>
-          <div className="flex justify-around gap-4">
-            {isSpecialCase ? (
-              <>
-                <div className="text-center">
-                  <span className="block text-3xl font-bold text-blue-600 dark:text-blue-400 leading-none">
-                    12
-                  </span>
-                  <span className="text-xs text-gray-500 dark:text-gray-400 uppercase tracking-wider">
-                    Namespaces
-                  </span>
-                </div>
-                <div className="text-center">
-                  <span className="block text-3xl font-bold text-blue-600 dark:text-blue-400 leading-none">
-                    156
-                  </span>
-                  <span className="text-xs text-gray-500 dark:text-gray-400 uppercase tracking-wider">
-                    Total Users
-                  </span>
-                </div>
-              </>
-            ) : (
-              <>
-                <div className="text-center">
-                  <span className="block text-3xl font-bold text-blue-600 dark:text-blue-400 leading-none">
-                    8
-                  </span>
-                  <span className="text-xs text-gray-500 dark:text-gray-400 uppercase tracking-wider">
-                    Team Members
-                  </span>
-                </div>
-                <div className="text-center">
-                  <span className="block text-3xl font-bold text-blue-600 dark:text-blue-400 leading-none">
-                    3
-                  </span>
-                  <span className="text-xs text-gray-500 dark:text-gray-400 uppercase tracking-wider">
-                    Active Reviewers
-                  </span>
-                </div>
-              </>
-            )}
-          </div>
-        </div>
-      </div>
+        <Grid size={{ xs: 12, md: 6 }}>
+          <Card
+            role="region"
+            aria-labelledby={`${namespaceKey}-overview-title`}
+          >
+            <CardContent>
+              <Typography 
+                variant="h6" 
+                gutterBottom
+                id={`${namespaceKey}-overview-title`}
+                component="h2"
+              >
+                {isSpecialCase ? 'System Overview' : 'Team Overview'}
+              </Typography>
+              <Grid container spacing={3}>
+                {isSpecialCase ? (
+                  <>
+                    <Grid size={{ xs: 6 }}>
+                      <Box textAlign="center">
+                        <Typography 
+                          variant="h3" 
+                          color="primary"
+                          aria-label="12 namespaces"
+                        >
+                          12
+                        </Typography>
+                        <Typography variant="caption" color="textSecondary">
+                          NAMESPACES
+                        </Typography>
+                      </Box>
+                    </Grid>
+                    <Grid size={{ xs: 6 }}>
+                      <Box textAlign="center">
+                        <Typography 
+                          variant="h3" 
+                          color="primary"
+                          aria-label="156 total users"
+                        >
+                          156
+                        </Typography>
+                        <Typography variant="caption" color="textSecondary">
+                          TOTAL USERS
+                        </Typography>
+                      </Box>
+                    </Grid>
+                  </>
+                ) : (
+                  <>
+                    <Grid size={{ xs: 6 }}>
+                      <Box textAlign="center">
+                        <Typography 
+                          variant="h3" 
+                          color="primary"
+                          aria-label="8 team members"
+                        >
+                          8
+                        </Typography>
+                        <Typography variant="caption" color="textSecondary">
+                          TEAM MEMBERS
+                        </Typography>
+                      </Box>
+                    </Grid>
+                    <Grid size={{ xs: 6 }}>
+                      <Box textAlign="center">
+                        <Typography 
+                          variant="h3" 
+                          color="primary"
+                          aria-label="3 active reviewers"
+                        >
+                          3
+                        </Typography>
+                        <Typography variant="caption" color="textSecondary">
+                          ACTIVE REVIEWERS
+                        </Typography>
+                      </Box>
+                    </Grid>
+                  </>
+                )}
+              </Grid>
+            </CardContent>
+          </Card>
+        </Grid>
+      </Grid>
 
-      {/* Info alert for standard namespaces */}
       {!isSpecialCase && (
-        <Alert>
-          <InfoIcon className="h-4 w-4" />
+        <Alert severity="info" sx={{ mt: 3 }} role="status">
           <AlertTitle>Namespace Management</AlertTitle>
-          <AlertDescription>
+          <Typography variant="body2">
             This dashboard manages the <strong>{namespaceTitle}</strong> namespace. 
             Each namespace represents a distinct IFLA standard with its own content, team, and workflow.
-          </AlertDescription>
+          </Typography>
         </Alert>
       )}
-    </div>
+    </Box>
   );
 }
 
@@ -614,15 +768,15 @@ function ActionGrid({
   const getActionTypeIcon = (type: ManagementAction['type']) => {
     switch (type) {
       case 'github-cli':
-        return '⚡';
+        return <ElectricBolt />;
       case 'codespaces':
-        return '💻';
+        return <Computer />;
       case 'internal':
-        return '🔧';
+        return <Build />;
       case 'external':
-        return '🔗';
+        return <LinkIcon />;
       default:
-        return '📋';
+        return <FileText />;
     }
   };
 
@@ -647,50 +801,75 @@ function ActionGrid({
   };
 
   return (
-    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
+    <Grid container spacing={3}>
       {actions.map((action) => {
         const hasAccess = canAccessAction(action);
         return (
-          <div
-            key={action.id}
-            className={`bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg p-6 shadow-sm 
-              transition-all duration-200 hover:shadow-md hover:border-blue-500 dark:hover:border-blue-400 
-              flex flex-col ${action.disabled || !hasAccess ? 'opacity-70 hover:shadow-sm hover:border-gray-200 dark:hover:border-gray-700' : ''}`}
-          >
-            <div className="flex justify-between items-start mb-3">
-              <h4 className="text-lg font-medium text-gray-900 dark:text-gray-100 flex-1">
-                {action.title}
-              </h4>
-              <span
-                className="text-xl ml-2"
-                title={getActionTypeLabel(action.type)}
-              >
-                {getActionTypeIcon(action.type)}
-              </span>
-            </div>
-            <p className="text-gray-600 dark:text-gray-400 text-sm leading-relaxed mb-4 flex-1">
-              {action.description}
-            </p>
-            <div className="flex justify-between items-center gap-2">
-              <button
-                className={`px-4 py-2 rounded-md text-sm font-medium transition-colors ${
-                  action.disabled !== false || !hasAccess
-                    ? 'bg-gray-200 text-gray-700 cursor-not-allowed'
-                    : 'bg-blue-600 text-white hover:bg-blue-700'
-                }`}
-                disabled={action.disabled !== false || !hasAccess}
-              >
-                {!hasAccess ? 'Superadmin Only' : action.disabled !== false ? 'Coming Soon' : 'Run Action'}
-              </button>
-              <span className="text-xs text-gray-500 dark:text-gray-400 uppercase tracking-wider">
-                {getActionTypeLabel(action.type)}
-              </span>
-            </div>
-          </div>
+          <Grid size={{ xs: 12, md: 6, lg: 4 }} key={action.id}>
+            <Card 
+              sx={{ height: '100%', opacity: hasAccess ? 1 : 0.6 }}
+              role="article"
+              aria-labelledby={`action-${action.id}-title`}
+            >
+              <CardContent>
+                <Box sx={{ display: 'flex', alignItems: 'flex-start', mb: 2 }}>
+                  <Box aria-hidden="true">
+                    {getActionTypeIcon(action.type)}
+                  </Box>
+                  <Box sx={{ ml: 2, flex: 1 }}>
+                    <Typography 
+                      variant="h6" 
+                      gutterBottom
+                      id={`action-${action.id}-title`}
+                      component="h3"
+                    >
+                      {action.title}
+                    </Typography>
+                    <Typography variant="body2" color="textSecondary" paragraph>
+                      {action.description}
+                    </Typography>
+                    <Stack direction="row" spacing={1} alignItems="center">
+                      <Button
+                        variant="contained"
+                        size="small"
+                        disabled={!hasAccess || action.disabled !== false}
+                        aria-label={`${action.title}: ${!hasAccess ? 'Superadmin Only' : action.disabled !== false ? 'Coming Soon' : 'Run Action'}`}
+                        sx={{ minHeight: 36 }}
+                      >
+                        {!hasAccess ? 'Superadmin Only' : action.disabled !== false ? 'Coming Soon' : 'Run Action'}
+                      </Button>
+                      <Chip 
+                        label={getActionTypeLabel(action.type)} 
+                        size="small" 
+                        variant="outlined"
+                        aria-label={`Action type: ${getActionTypeLabel(action.type)}`}
+                      />
+                    </Stack>
+                  </Box>
+                </Box>
+              </CardContent>
+            </Card>
+          </Grid>
         );
       })}
-    </div>
+    </Grid>
   );
+}
+
+function getTabIcon(tabId: string) {
+  switch(tabId) {
+    case 'overview': return <LayoutDashboard />;
+    case 'content': return <FileText />;
+    case 'rdf': return <Database />;
+    case 'workflow': return <GitBranch />;
+    case 'team': return <Users />;
+    case 'releases': return <Package />;
+    case 'quality': return <Shield />;
+    case 'github': return <GitHub />;
+    case 'settings': return <Settings />;
+    case 'system': return <Wrench />;
+    default: return null;
+  }
 }
 
 export default function NamespaceManagementClient({
@@ -702,222 +881,254 @@ export default function NamespaceManagementClient({
   isSuperAdmin = false,
   namespaceDescription,
 }: NamespaceManagementClientProps) {
-  const [activeTab, setActiveTab] = useState('overview');
+  const [selectedTab, setSelectedTab] = useState('overview');
+  const [mobileOpen, setMobileOpen] = useState(false);
+  const [liveMessage, setLiveMessage] = useState('');
+  const theme = useTheme();
+  const isMobile = useMediaQuery(theme.breakpoints.down('md'));
 
-  // Determine which tabs to show
   const availableTabs = isSpecialCase && isSuperAdmin 
     ? [...standardNamespaceTabs, ...specialCaseTabs]
     : standardNamespaceTabs;
 
-  const currentTab = availableTabs.find((tab) => tab.id === activeTab);
+  const currentTab = availableTabs.find(tab => tab.id === selectedTab);
+
+  const handleDrawerToggle = () => {
+    setMobileOpen(!mobileOpen);
+    setLiveMessage(mobileOpen ? 'Navigation closed' : 'Navigation opened');
+  };
+
+  const handleTabSelect = (tabId: string, tabLabel: string) => {
+    setSelectedTab(tabId);
+    setLiveMessage(`Switched to ${tabLabel} section`);
+    if (isMobile) {
+      setMobileOpen(false);
+    }
+    // Clear message after announcement
+    setTimeout(() => setLiveMessage(''), 1000);
+  };
+
+  const drawer = (
+    <Box role="navigation" aria-label="Dashboard navigation">
+      <Box sx={{ p: 2, borderBottom: 1, borderColor: 'divider' }}>
+        <Typography variant="h6" noWrap component="h2">
+          {namespaceCode}
+        </Typography>
+        <Typography variant="caption" color="textSecondary">
+          {isSpecialCase ? 'System Management' : 'Namespace Management'}
+        </Typography>
+      </Box>
+      <List id="navigation">
+        {availableTabs.map((tab) => (
+          <ListItem key={tab.id} disablePadding>
+            <ListItemButton
+              selected={selectedTab === tab.id}
+              onClick={() => handleTabSelect(tab.id, tab.label)}
+              aria-current={selectedTab === tab.id ? 'page' : undefined}
+              aria-label={`${tab.label}${tab.specialCaseOnly ? ' (System only)' : ''}`}
+            >
+              <ListItemIcon aria-hidden="true">
+                {getTabIcon(tab.id)}
+              </ListItemIcon>
+              <ListItemText 
+                primary={tab.label}
+                secondary={tab.specialCaseOnly && (
+                  <Chip 
+                    label="System" 
+                    size="small" 
+                    color="warning"
+                    aria-label="System administrator only"
+                  />
+                )}
+              />
+            </ListItemButton>
+          </ListItem>
+        ))}
+      </List>
+      <Divider />
+      <Box sx={{ p: 2 }}>
+        <Typography variant="caption" color="textSecondary">
+          {namespaceTitle}
+        </Typography>
+        <Box sx={{ display: 'flex', alignItems: 'center', mt: 1 }}>
+          <Box 
+            sx={{ width: 8, height: 8, bgcolor: 'success.main', borderRadius: '50%', mr: 1 }}
+            role="img"
+            aria-label="Status: Connected"
+          />
+          <Typography variant="caption">Connected</Typography>
+        </Box>
+      </Box>
+    </Box>
+  );
 
   return (
-    <div className="min-h-screen bg-gray-50 dark:bg-gray-900">
-      <DocusaurusNavbar siteKey={namespaceKey} />
-      <div className="pt-20 pb-16">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-12">
-            <h1 className="text-4xl font-bold text-gray-900 dark:text-gray-100 mb-4">
-              {namespaceTitle} {isSpecialCase ? 'System' : 'Namespace'} Management
-            </h1>
-            <p className="text-xl text-gray-600 dark:text-gray-400">
-              {namespaceDescription || 
-                (isSpecialCase 
-                  ? `Manage system-wide settings and configuration for ${namespaceTitle}`
-                  : `Manage content, workflows, and team collaboration for the ${namespaceTitle} namespace`
-                )
-              }
-            </p>
-          </div>
+    <>
+      <SkipLinks />
+      <LiveRegion message={liveMessage} />
+      
+      <Box sx={{ display: 'flex' }}>
+        {/* Mobile App Bar */}
+        {isMobile && (
+          <AppBar
+            position="fixed"
+            sx={{
+              width: '100%',
+              ml: 0,
+            }}
+          >
+            <Toolbar>
+              <IconButton
+                color="inherit"
+                aria-label="open navigation menu"
+                edge="start"
+                onClick={handleDrawerToggle}
+                sx={{ mr: 2 }}
+              >
+                <Menu />
+              </IconButton>
+              <Typography variant="h6" noWrap component="h1">
+                {namespaceTitle}
+              </Typography>
+            </Toolbar>
+          </AppBar>
+        )}
 
-          {/* Tab Navigation */}
-          <div className="flex justify-center mb-8 border-b-2 border-gray-200 dark:border-gray-700 overflow-x-auto">
-            <div className="flex gap-0 min-w-max">
-              {availableTabs.map((tab) => (
-                <button
-                  key={tab.id}
-                  className={`px-6 py-4 text-sm font-medium whitespace-nowrap border-b-3 transition-all duration-200
-                  ${
-                    activeTab === tab.id
-                      ? 'text-blue-600 dark:text-blue-400 border-blue-600 dark:border-blue-400 font-semibold'
-                      : 'text-gray-500 dark:text-gray-400 border-transparent hover:text-blue-600 dark:hover:text-blue-400 hover:bg-gray-100 dark:hover:bg-gray-800'
-                  } ${tab.specialCaseOnly ? 'bg-orange-50 dark:bg-orange-900/20' : ''}`}
-                  onClick={() => setActiveTab(tab.id)}
-                >
-                  {tab.label}
-                  {tab.specialCaseOnly && (
-                    <span className="ml-2 text-xs text-orange-600 dark:text-orange-400">●</span>
-                  )}
-                </button>
-              ))}
-            </div>
-          </div>
+        {/* Sidebar Drawer */}
+        <Box
+          component="nav"
+          sx={{ width: { md: drawerWidth }, flexShrink: { md: 0 } }}
+        >
+          {/* Mobile Drawer */}
+          <Drawer
+            variant="temporary"
+            open={mobileOpen}
+            onClose={handleDrawerToggle}
+            ModalProps={{
+              keepMounted: true, // Better open performance on mobile.
+            }}
+            sx={{
+              display: { xs: 'block', md: 'none' },
+              '& .MuiDrawer-paper': { boxSizing: 'border-box', width: drawerWidth },
+            }}
+          >
+            {drawer}
+          </Drawer>
 
-          {/* Tab Content */}
-          <div className="min-h-[500px]">
-            {activeTab === 'overview' ? (
-              <NamespaceDashboard 
-                namespaceTitle={namespaceTitle} 
-                namespaceCode={namespaceCode}
-                namespaceKey={namespaceKey}
-                isSpecialCase={isSpecialCase}
-              />
-            ) : activeTab === 'github' ? (
-              <>
-                <div className="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg p-6 shadow-sm mb-6">
-                  <h3 className="text-lg font-semibold text-blue-600 dark:text-blue-400 mb-4">
-                    Repository Information
-                  </h3>
-                  <div className="space-y-3">
-                    <div className="flex justify-between items-center">
-                      <span className="text-gray-600 dark:text-gray-400">
-                        Repository:
-                      </span>
-                      <span className="text-gray-900 dark:text-gray-100 font-medium">
-                        {githubRepo}
-                      </span>
-                    </div>
-                    <div className="flex justify-between items-center">
-                      <span className="text-gray-600 dark:text-gray-400">
-                        Quick Actions:
-                      </span>
-                      <div className="flex gap-2">
-                        <a
-                          href={`https://github.com/${githubRepo}`}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          className="bg-blue-600 text-white px-3 py-1 rounded text-sm hover:bg-blue-700 transition-colors"
-                        >
-                          View Repository
-                        </a>
-                        <a
-                          href={`https://github.com/${githubRepo}/issues`}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          className="bg-green-600 text-white px-3 py-1 rounded text-sm hover:bg-green-700 transition-colors"
-                        >
-                          Open Issues
-                        </a>
-                        <a
-                          href={`https://github.com/${githubRepo}/pulls`}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          className="bg-purple-600 text-white px-3 py-1 rounded text-sm hover:bg-purple-700 transition-colors"
-                        >
-                          PRs
-                        </a>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-                {currentTab && (
-                  <ActionGrid 
-                    actions={currentTab.actions} 
-                    isSuperAdmin={isSuperAdmin}
-                  />
-                )}
-              </>
-            ) : activeTab === 'settings' ? (
-              <>
-                <div className="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg p-6 shadow-sm mb-6">
-                  <h3 className="text-lg font-semibold text-blue-600 dark:text-blue-400 mb-4">
-                    {isSpecialCase ? 'System' : 'Namespace'} Settings
-                  </h3>
-                  <div className="space-y-4">
-                    <div>
-                      <h4 className="text-md font-medium text-gray-900 dark:text-gray-100 mb-2">
-                        Configuration
-                      </h4>
-                      <p className="text-gray-600 dark:text-gray-400 text-sm">
-                        {isSpecialCase 
-                          ? `Manage system-wide configuration and settings for ${namespaceTitle}.`
-                          : `Manage namespace configuration, navigation, and deployment settings for ${namespaceTitle}.`
-                        }
-                      </p>
-                    </div>
-                    <div className="border-t border-gray-200 dark:border-gray-700 pt-4">
-                      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                        <div>
-                          <span className="text-gray-600 dark:text-gray-400 text-sm">
-                            {isSpecialCase ? 'System Key' : 'Namespace Key'}:
-                          </span>
-                          <span className="ml-2 text-gray-900 dark:text-gray-100 font-medium">
-                            {namespaceKey}
-                          </span>
-                        </div>
-                        <div>
-                          <span className="text-gray-600 dark:text-gray-400 text-sm">
-                            {isSpecialCase ? 'System Code' : 'Namespace Code'}:
-                          </span>
-                          <span className="ml-2 text-gray-900 dark:text-gray-100 font-medium">
-                            {namespaceCode}
-                          </span>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-                {currentTab && (
-                  <ActionGrid 
-                    actions={currentTab.actions} 
-                    isSuperAdmin={isSuperAdmin}
-                  />
-                )}
-              </>
-            ) : (
-              currentTab && (
-                <ActionGrid 
-                  actions={currentTab.actions} 
-                  isSuperAdmin={isSuperAdmin}
-                />
-              )
-            )}
-          </div>
+          {/* Desktop Drawer */}
+          <Drawer
+            variant="permanent"
+            sx={{
+              display: { xs: 'none', md: 'block' },
+              '& .MuiDrawer-paper': { 
+                boxSizing: 'border-box', 
+                width: drawerWidth,
+                position: 'relative',
+                height: '100%',
+                borderRight: 1,
+                borderColor: 'divider',
+              },
+            }}
+            open
+          >
+            {drawer}
+          </Drawer>
+        </Box>
 
-          {/* Footer Links */}
-          <div className="mt-12 pt-8 border-t border-gray-200 dark:border-gray-700">
-            <div>
-              <h4 className="text-lg font-semibold text-blue-600 dark:text-blue-400 mb-4">
-                External Resources
-              </h4>
-              <div className="flex flex-wrap gap-3">
-                <a
-                  href={`https://github.com/${githubRepo}`}
-                  className="bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 px-4 py-2 rounded-md text-sm font-medium hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                >
-                  GitHub Repository
-                </a>
-                <a
-                  href={`https://github.com/${githubRepo}/issues`}
-                  className="bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 px-4 py-2 rounded-md text-sm font-medium hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                >
-                  Issues
-                </a>
-                <a
-                  href={`https://github.com/${githubRepo}/pulls`}
-                  className="bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 px-4 py-2 rounded-md text-sm font-medium hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                >
-                  Pull Requests
-                </a>
-                <a
-                  href="https://github.com/orgs/iflastandards/teams"
-                  className="bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 px-4 py-2 rounded-md text-sm font-medium hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                >
-                  Team Management
-                </a>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
+        {/* Main Content */}
+        <Box
+          component="main"
+          id="main-content"
+          sx={{
+            flexGrow: 1,
+            p: 3,
+            width: { md: `calc(100% - ${drawerWidth}px)` },
+            mt: { xs: 8, md: 0 },
+          }}
+        >
+          <Box sx={{ mb: 3 }}>
+            <Typography variant="h4" gutterBottom component="h1">
+              {currentTab?.label}
+            </Typography>
+            <Typography variant="body1" color="textSecondary">
+              {namespaceTitle} - Dashboard and status overview
+            </Typography>
+          </Box>
+
+          {selectedTab === 'overview' ? (
+            <NamespaceDashboard 
+              namespaceTitle={namespaceTitle} 
+              namespaceCode={namespaceCode}
+              namespaceKey={namespaceKey}
+              isSpecialCase={isSpecialCase}
+            />
+          ) : (
+            <ActionGrid 
+              actions={currentTab?.actions || []} 
+              isSuperAdmin={isSuperAdmin}
+            />
+          )}
+
+          <Box 
+            sx={{ mt: 4 }}
+            id="external-resources"
+            role="region"
+            aria-labelledby="external-resources-title"
+          >
+            <Typography 
+              variant="h6" 
+              gutterBottom
+              id="external-resources-title"
+              component="h2"
+            >
+              External Resources
+            </Typography>
+            <Stack direction="row" spacing={2} flexWrap="wrap">
+              <Button
+                variant="outlined"
+                startIcon={<GitHub aria-hidden="true" />}
+                href={`https://github.com/${githubRepo}`}
+                target="_blank"
+                rel="noopener noreferrer"
+                aria-label="GitHub Repository (opens in new tab)"
+                sx={{ minHeight: 44 }}
+              >
+                GitHub Repository
+              </Button>
+              <Button
+                variant="outlined"
+                href={`https://github.com/${githubRepo}/issues`}
+                target="_blank"
+                rel="noopener noreferrer"
+                aria-label="GitHub Issues (opens in new tab)"
+                sx={{ minHeight: 44 }}
+              >
+                Issues
+              </Button>
+              <Button
+                variant="outlined"
+                href={`https://github.com/${githubRepo}/pulls`}
+                target="_blank"
+                rel="noopener noreferrer"
+                aria-label="GitHub Pull Requests (opens in new tab)"
+                sx={{ minHeight: 44 }}
+              >
+                Pull Requests
+              </Button>
+              <Button
+                variant="outlined"
+                href="https://github.com/orgs/iflastandards/teams"
+                target="_blank"
+                rel="noopener noreferrer"
+                aria-label="Team Management (opens in new tab)"
+                sx={{ minHeight: 44 }}
+              >
+                Team Management
+              </Button>
+            </Stack>
+          </Box>
+        </Box>
+      </Box>
+    </>
   );
 }

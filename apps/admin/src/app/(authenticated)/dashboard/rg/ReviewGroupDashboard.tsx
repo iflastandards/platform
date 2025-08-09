@@ -1,6 +1,6 @@
 'use client';
 
-import React from 'react';
+import React, { useState } from 'react';
 import Link from 'next/link';
 import {
   Box,
@@ -8,17 +8,10 @@ import {
   CardContent,
   Typography,
   Chip,
-  Drawer,
-  List,
-  ListItem,
-  ListItemButton,
-  ListItemIcon,
-  ListItemText,
   Link as MuiLink,
   Button,
   Stack,
   useTheme,
-  Container,
 } from '@mui/material';
 import Grid from '@mui/material/Grid';
 import {
@@ -31,6 +24,7 @@ import {
   AddTask as AddTaskIcon,
 } from '@mui/icons-material';
 import { mockReviewGroups, getNamespacesByReviewGroup } from '@/lib/mock-data/namespaces-extended';
+import { StandardDashboardLayout, NavigationItem } from '@/components/layout/StandardDashboardLayout';
 
 interface ReviewGroupDashboardProps {
   userRoles: string[];
@@ -184,19 +178,18 @@ export default function ReviewGroupDashboard({
   userEmail: _userEmail,
   reviewGroups 
 }: ReviewGroupDashboardProps) {
-  
-  const drawerWidth = 240;
+  const [selectedTab, setSelectedTab] = useState('overview');
   
   // Get user's review group info
   const userReviewGroups = reviewGroups.map(rgId => mockReviewGroups[rgId]).filter(Boolean);
   const userNamespaces = reviewGroups.flatMap(rgId => getNamespacesByReviewGroup(rgId));
   
-  const sidebarItems = [
-    { key: 'dashboard', label: 'RG Dashboard', icon: <DashboardIcon />, href: '/dashboard/rg', active: true },
-    { key: 'projects', label: 'My Projects', icon: <AssignmentIcon />, href: '/dashboard/rg/projects' },
-    { key: 'namespaces', label: 'My Namespaces', icon: <FolderIcon />, href: '/dashboard/rg/namespaces' },
-    { key: 'team', label: 'Team Members', icon: <PeopleIcon />, href: '/dashboard/rg/team' },
-    { key: 'activity', label: 'Activity Log', icon: <HistoryIcon />, href: '/dashboard/rg/activity' },
+  const navigationItems: NavigationItem[] = [
+    { id: 'overview', label: 'RG Dashboard', icon: <DashboardIcon /> },
+    { id: 'projects', label: 'My Projects', icon: <AssignmentIcon /> },
+    { id: 'namespaces', label: 'My Namespaces', icon: <FolderIcon />, badge: userNamespaces.length },
+    { id: 'team', label: 'Team Members', icon: <PeopleIcon /> },
+    { id: 'activity', label: 'Activity Log', icon: <HistoryIcon /> },
   ];
 
   const stats = [
@@ -212,164 +205,180 @@ export default function ReviewGroupDashboard({
     { action: 'Review group meeting notes published', author: 'You', time: '3 days ago', type: 'project' as const },
   ];
 
-  return (
-    <Box sx={{ display: 'flex', height: '100vh' }}>
-      {/* Sidebar */}
-      <Drawer
-        variant="permanent"
-        sx={{
-          width: drawerWidth,
-          flexShrink: 0,
-          '& .MuiDrawer-paper': {
-            width: drawerWidth,
-            boxSizing: 'border-box',
-          },
-        }}
-      >
-        <Box sx={{ p: 3, borderBottom: 1, borderColor: 'divider' }}>
-          <Typography variant="h6" fontWeight="bold">
-            Review Group Admin
-          </Typography>
-          <Typography variant="body2" color="text.secondary">
-            {userReviewGroups.map(rg => rg.name).join(', ')}
-          </Typography>
-        </Box>
-        <List sx={{ px: 2 }}>
-          {sidebarItems.map((item) => (
-            <ListItem key={item.key} disablePadding sx={{ mb: 0.5 }}>
-              <ListItemButton
-                component={Link}
-                href={`${item.href}?demo=true`}
-                selected={item.active}
-                sx={{
-                  borderRadius: 1,
-                  '&.Mui-selected': {
-                    backgroundColor: 'primary.main',
-                    color: 'white',
-                    '&:hover': {
-                      backgroundColor: 'primary.dark',
-                    },
-                    '& .MuiListItemIcon-root': {
-                      color: 'white',
-                    },
-                    '& .MuiListItemText-primary': {
-                      color: 'white',
-                    },
-                  },
-                }}
-              >
-                <ListItemIcon sx={{ minWidth: 40 }}>
-                  {item.icon}
-                </ListItemIcon>
-                <ListItemText primary={item.label} />
-              </ListItemButton>
-            </ListItem>
-          ))}
-        </List>
-      </Drawer>
-
-      {/* Main Content */}
-      <Box component="main" sx={{ flexGrow: 1, bgcolor: 'background.default', overflow: 'auto' }}>
-        {/* Page Content */}
-        <Container maxWidth="xl" sx={{ py: 4, mt: 8 }}>
-          <Box mb={4}>
-            <Typography variant="h4" fontWeight="bold" gutterBottom>
-              Review Group Dashboard
-            </Typography>
-            <Typography variant="body1" color="text.secondary">
-              Manage your review group projects, namespaces, and team members
-            </Typography>
-          </Box>
-
-          {/* Stats Grid */}
-          <Grid container spacing={3} sx={{ mb: 4 }}>
-            {stats.map((stat) => (
-              <Grid size={{ xs: 12, sm: 6, md: 4 }} key={stat.title}>
-                <StatsCard {...stat} />
-              </Grid>
-            ))}
-          </Grid>
-
-          <Grid container spacing={3}>
-            {/* My Namespaces */}
-            <Grid size={{ xs: 12, lg: 8 }}>
-              <Card elevation={0}>
-                <CardContent>
-                  <Typography variant="h6" fontWeight="bold" gutterBottom>
-                    My Namespaces
-                  </Typography>
-                  <Grid container spacing={2}>
-                    {userNamespaces.map((namespace) => (
-                      <Grid size={{ xs: 12, md: 6 }} key={namespace.id}>
-                        <NamespaceCard {...namespace} />
-                      </Grid>
-                    ))}
-                  </Grid>
-                  <Box mt={3} pt={2} borderTop={1} borderColor="divider">
-                    <MuiLink
-                      component={Link}
-                      href="/dashboard/rg/namespaces?demo=true"
-                      color="primary"
-                      underline="hover"
-                      fontSize="small"
-                    >
-                      Manage all namespaces →
-                    </MuiLink>
-                  </Box>
-                </CardContent>
-              </Card>
+  const renderContent = () => {
+    switch (selectedTab) {
+      case 'overview':
+        return (
+          <>
+            {/* Stats Grid */}
+            <Grid container spacing={3} sx={{ mb: 4 }}>
+              {stats.map((stat) => (
+                <Grid size={{ xs: 12, sm: 6, md: 4 }} key={stat.title}>
+                  <StatsCard {...stat} />
+                </Grid>
+              ))}
             </Grid>
 
-            {/* Recent Activity & Quick Actions */}
-            <Grid size={{ xs: 12, lg: 4 }}>
-              <Stack spacing={3}>
-                {/* Recent Activity */}
+            <Grid container spacing={3}>
+              {/* My Namespaces */}
+              <Grid size={{ xs: 12, lg: 8 }}>
                 <Card elevation={0}>
                   <CardContent>
-                    <Typography variant="h6" fontWeight="bold" gutterBottom>
-                      Recent Activity
+                    <Typography variant="h6" fontWeight="bold" gutterBottom component="h2">
+                      My Namespaces
                     </Typography>
-                    <Box>
-                      {recentActivity.map((activity, index) => (
-                        <ActivityItem key={index} {...activity} />
+                    <Grid container spacing={2}>
+                      {userNamespaces.map((namespace) => (
+                        <Grid size={{ xs: 12, md: 6 }} key={namespace.id}>
+                          <NamespaceCard {...namespace} />
+                        </Grid>
                       ))}
+                    </Grid>
+                    <Box mt={3} pt={2} borderTop={1} borderColor="divider">
+                      <MuiLink
+                        component={Link}
+                        href="/dashboard/rg/namespaces?demo=true"
+                        color="primary"
+                        underline="hover"
+                        fontSize="small"
+                      >
+                        Manage all namespaces →
+                      </MuiLink>
                     </Box>
                   </CardContent>
                 </Card>
+              </Grid>
 
-                {/* Quick Actions */}
-                <Card elevation={0}>
-                  <CardContent>
-                    <Typography variant="h6" fontWeight="bold" gutterBottom>
-                      Quick Actions
-                    </Typography>
-                    <Stack spacing={2}>
-                      <Button
-                        variant="contained"
-                        fullWidth
-                        startIcon={<AddTaskIcon />}
-                        component={Link}
-                        href="/dashboard/rg/projects/new?demo=true"
-                      >
-                        Start New Project
-                      </Button>
-                      <Button
-                        variant="outlined"
-                        fullWidth
-                        startIcon={<PersonAddIcon />}
-                        component={Link}
-                        href="/dashboard/rg/team/invite?demo=true"
-                      >
-                        Invite Team Member
-                      </Button>
-                    </Stack>
-                  </CardContent>
-                </Card>
-              </Stack>
+              {/* Recent Activity & Quick Actions */}
+              <Grid size={{ xs: 12, lg: 4 }}>
+                <Stack spacing={3}>
+                  {/* Recent Activity */}
+                  <Card elevation={0}>
+                    <CardContent>
+                      <Typography variant="h6" fontWeight="bold" gutterBottom component="h2">
+                        Recent Activity
+                      </Typography>
+                      <Box role="feed" aria-label="Recent review group activity">
+                        {recentActivity.map((activity, index) => (
+                          <ActivityItem key={index} {...activity} />
+                        ))}
+                      </Box>
+                    </CardContent>
+                  </Card>
+
+                  {/* Quick Actions */}
+                  <Card elevation={0}>
+                    <CardContent>
+                      <Typography variant="h6" fontWeight="bold" gutterBottom component="h2">
+                        Quick Actions
+                      </Typography>
+                      <Stack spacing={2}>
+                        <Button
+                          variant="contained"
+                          fullWidth
+                          startIcon={<AddTaskIcon />}
+                          component={Link}
+                          href="/dashboard/rg/projects/new?demo=true"
+                          aria-label="Start a new project"
+                        >
+                          Start New Project
+                        </Button>
+                        <Button
+                          variant="outlined"
+                          fullWidth
+                          startIcon={<PersonAddIcon />}
+                          component={Link}
+                          href="/dashboard/rg/team/invite?demo=true"
+                          aria-label="Invite a team member"
+                        >
+                          Invite Team Member
+                        </Button>
+                      </Stack>
+                    </CardContent>
+                  </Card>
+                </Stack>
+              </Grid>
             </Grid>
-          </Grid>
-        </Container>
-      </Box>
-    </Box>
+          </>
+        );
+
+      case 'projects':
+        return (
+          <Box>
+            <Typography variant="h4" component="h1" gutterBottom>
+              My Projects
+            </Typography>
+            <Button component={Link} href="/dashboard/rg/projects" variant="contained">
+              View All Projects
+            </Button>
+          </Box>
+        );
+
+      case 'namespaces':
+        return (
+          <Box>
+            <Typography variant="h4" component="h1" gutterBottom>
+              My Namespaces
+            </Typography>
+            <Grid container spacing={2}>
+              {userNamespaces.map((namespace) => (
+                <Grid size={{ xs: 12, sm: 6, md: 4 }} key={namespace.id}>
+                  <NamespaceCard {...namespace} />
+                </Grid>
+              ))}
+            </Grid>
+          </Box>
+        );
+
+      case 'team':
+        return (
+          <Box>
+            <Typography variant="h4" component="h1" gutterBottom>
+              Team Members
+            </Typography>
+            <Button component={Link} href="/dashboard/rg/team" variant="contained">
+              View All Team Members
+            </Button>
+          </Box>
+        );
+
+      case 'activity':
+        return (
+          <Box>
+            <Typography variant="h4" component="h1" gutterBottom>
+              Activity Log
+            </Typography>
+            <Box role="feed" aria-label="Review group activity log">
+              {recentActivity.map((activity, index) => (
+                <ActivityItem key={index} {...activity} />
+              ))}
+            </Box>
+          </Box>
+        );
+
+      default:
+        return (
+          <Box>
+            <Typography variant="h4" component="h1" gutterBottom>
+              {navigationItems.find(item => item.id === selectedTab)?.label}
+            </Typography>
+            <Typography variant="body1" color="text.secondary">
+              This section is under development.
+            </Typography>
+          </Box>
+        );
+    }
+  };
+
+  return (
+    <StandardDashboardLayout
+      title="Review Group Admin"
+      subtitle={userReviewGroups.map(rg => rg.name).join(', ')}
+      navigationItems={navigationItems}
+      selectedTab={selectedTab}
+      onTabSelect={setSelectedTab}
+    >
+      {renderContent()}
+    </StandardDashboardLayout>
   );
 }
