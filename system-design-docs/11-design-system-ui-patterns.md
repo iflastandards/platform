@@ -1778,6 +1778,22 @@ const layoutPatterns = {
 
 ## Accessibility Standards
 
+### Standards Leadership Philosophy
+
+As an international standards organization, IFLA demonstrates leadership in digital accessibility by voluntarily adopting and exceeding international best practices. Our approach aligns with the most stringent global standards, including those outlined in the EU Web Accessibility Directive and UK Public Sector Bodies Accessibility Regulations, not as legal requirements but as benchmarks of excellence.
+
+**Our Commitment:**
+- **Leading by Example**: As a standards setter, we model the accessibility practices we advocate for globally
+- **International Excellence**: Adopting WCAG 2.1 Level AA as our baseline, working towards AAA where feasible
+- **Inclusive Design**: Ensuring all users, regardless of ability or technology, can access our standards documentation
+- **Continuous Improvement**: Regular accessibility audits and user feedback integration
+
+**Best Practice Alignment:**
+- **EU Standards**: Following Web Accessibility Directive 2016/2102 guidelines as best practice
+- **UK Standards**: Aligning with Public Sector Bodies Accessibility Regulations 2018 recommendations
+- **Global Standards**: Supporting UN Convention on Rights of Persons with Disabilities principles
+- **Industry Leadership**: Setting an example for library and information organizations worldwide
+
 ### WCAG 2.1 Level AA Compliance
 
 1. **Color Contrast**

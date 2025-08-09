@@ -42,6 +42,7 @@ This directory contains the comprehensive system design documentation for the IF
 
 ### UI/UX & Design
 11. **[Design System and UI Patterns](./11-design-system-ui-patterns.md)** - UI/UX guidelines and component library
+34. **[Accessibility Best Practices](./34-accessibility-best-practices.md)** - 🆕 Standards leadership approach to digital accessibility
 
 ### Security & Authorization
 12. **[RBAC Authorization Model](./12-rbac-authorization-model.md)** - Comprehensive role-based access control specification

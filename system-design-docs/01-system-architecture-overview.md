@@ -218,7 +218,9 @@ Preview Environment:
   - Features: Stakeholder review, testing
 
 Production Environment:
-  - URL: https://www.iflastandards.info/
+  - Portal URL: https://www.iflastandards.info/
+  - Admin URL: https://admin.iflastandards.info/
+  - Sites URL: https://www.iflastandards.info/{sitekey}
   - Purpose: Live platform
   - Features: Full optimization, monitoring
 ```
@@ -406,6 +408,28 @@ Production Environment:
 - Type coverage: 100% for core modules
 - Accessibility: WCAG 2.1 AA compliant
 - Documentation: 100% API coverage
+
+### Accessibility Excellence
+
+As an international standards organization, IFLA demonstrates leadership in digital accessibility by voluntarily exceeding global best practices:
+
+**Strategic Commitment:**
+- **Standards Leadership**: IFLA models the accessibility excellence expected of modern information systems
+- **Global Inclusion**: Ensuring equitable access across all regions, languages, and abilities
+- **Best Practice Adoption**: Voluntarily following EU Web Accessibility Directive and UK Public Sector Bodies guidelines as benchmarks
+- **Continuous Evolution**: Regular accessibility audits and community feedback integration
+
+**Technical Implementation:**
+- **Baseline Standard**: WCAG 2.1 Level AA across all platform components
+- **Progressive Enhancement**: Working towards Level AAA for critical user journeys
+- **Multi-Language Support**: Accessibility features maintained across all language versions
+- **Assistive Technology**: Full compatibility with screen readers, keyboard navigation, and alternative input methods
+
+**Quality Assurance:**
+- **Automated Testing**: Continuous accessibility validation in CI/CD pipeline
+- **Manual Audits**: Quarterly reviews with actual assistive technology users
+- **User Feedback**: Dedicated accessibility feedback channel with committed response times
+- **Performance Metrics**: Accessibility score maintained above 95% (Lighthouse/axe)
 
 ### MVP Success Criteria
 - Week 3: Vocabulary server handling 100% of test traffic

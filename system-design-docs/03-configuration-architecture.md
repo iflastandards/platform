@@ -120,11 +120,11 @@ export const ADMIN_PORTAL_CONFIG: Record<Environment, AdminPortalConfig> = {
     port: 3007,
   },
   preview: {
-    url: 'https://iflastandards.github.io/platform/admin',
-    signinUrl: 'https://iflastandards.github.io/platform/admin/auth/signin',
-    dashboardUrl: 'https://iflastandards.github.io/platform/admin/dashboard',
-    signoutUrl: 'https://iflastandards.github.io/platform/admin/api/auth/signout',
-    sessionApiUrl: 'https://iflastandards.github.io/platform/admin/api/auth/session',
+    url: 'https://admin-iflastandards-preview.onrender.com',
+    signinUrl: 'https://admin-iflastandards-preview.onrender.com/auth/signin',
+    dashboardUrl: 'https://admin-iflastandards-preview.onrender.com/dashboard',
+    signoutUrl: 'https://admin-iflastandards-preview.onrender.com/api/auth/signout',
+    sessionApiUrl: 'https://admin-iflastandards-preview.onrender.com/api/auth/session',
   },
   production: {
     url: 'https://www.iflastandards.info/admin',
@@ -184,13 +184,13 @@ export function addBasePath(path: string): string {
   // Server-side: use DOCS_ENV
   if (typeof window === 'undefined') {
     const env = mapDocsEnvToEnvironment(process.env.DOCS_ENV);
-    const basePath = env === 'preview' ? '/platform/admin' : '/admin';
+    const basePath = '/admin'; // Admin portal is served from root on Render
     return `${basePath}${path}`;
   }
   
   // Client-side: detect from hostname
   const hostname = window.location.hostname;
-  const basePath = hostname.includes('github.io') ? '/platform/admin' : '/admin';
+  const basePath = '/admin'; // Admin portal is served from root on Render
   return `${basePath}${path}`;
 }
 ```

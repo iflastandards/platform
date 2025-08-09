@@ -236,7 +236,7 @@ nx run-many --target=e2e --all --parallel=2
 nx e2e standards-dev --grep="@smoke"
 
 # Environment-specific
-BASE_URL=https://preview.onrender.com nx e2e standards-dev --grep="@smoke"
+BASE_URL=https://admin-iflastandards-preview.onrender.com nx e2e standards-dev --grep="@smoke"
 BASE_URL=https://iflastandards.info nx e2e standards-dev --grep="@smoke"
 ```
 
@@ -507,6 +507,45 @@ jobs:
 - **E2E Tests**: <60 seconds per workflow
 - **Total Pre-commit**: <60 seconds
 - **Total Pre-push**: <180 seconds
+
+### Accessibility Excellence Testing
+
+As a standards organization, IFLA implements accessibility testing as a core quality measure, not just compliance checking:
+
+**Standards Leadership Approach:**
+- **Baseline Testing**: WCAG 2.1 AA automated validation on every commit
+- **Excellence Testing**: Manual testing with assistive technologies quarterly
+- **Innovation Testing**: Early adoption of WCAG 3.0 guidelines where applicable
+- **Community Testing**: User feedback from people with disabilities
+
+**Testing Categories:**
+```typescript
+// @a11y tag for accessibility-specific tests
+describe('Component @a11y @integration', () => {
+  test('meets WCAG 2.1 AA standards', async () => {
+    const results = await axe(container);
+    expect(results).toHaveNoViolations();
+  });
+  
+  test('exceeds baseline with AAA features', async () => {
+    // Test for enhanced color contrast (7:1)
+    // Test for comprehensive keyboard shortcuts
+    // Test for cognitive accessibility features
+  });
+});
+```
+
+**Continuous Improvement Metrics:**
+- **Accessibility Score**: Maintain >95% on Lighthouse
+- **Screen Reader Compatibility**: Test with NVDA, JAWS, VoiceOver
+- **Keyboard Navigation**: 100% functionality without mouse
+- **Response Times**: <100ms for assistive technology interactions
+
+**Best Practice Alignment:**
+- Follow EU Web Accessibility Directive guidelines voluntarily
+- Implement UK Public Sector Bodies recommendations
+- Exceed international standards as industry leadership example
+- Share accessibility innovations with global library community
 
 ## Key Commands for AI Agents
 

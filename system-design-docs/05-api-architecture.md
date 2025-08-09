@@ -33,8 +33,8 @@ The IFLA Standards Platform API layer consists of Render API endpoints providing
 ### Base URL Patterns
 ```
 Development: http://localhost:3007/admin/api/
-Preview:     https://iflastandards.github.io/platform/admin/api/
-Production:  https://www.iflastandards.info/admin/api/
+Preview:     https://admin-iflastandards-preview.onrender.com/api/
+Production:  https://admin.iflastandards.info/api/
 ```
 
 ### Resource Hierarchy
@@ -609,9 +609,9 @@ info:
   version: 2.0.0
   description: API for managing IFLA library standards
 servers:
-  - url: https://www.iflastandards.info/admin/api
+  - url: https://admin.iflastandards.info/api
     description: Production
-  - url: https://iflastandards.github.io/platform/admin/api
+  - url: https://admin-iflastandards-preview.onrender.com/api
     description: Preview
 paths:
   /vocabularies/{namespace}:

@@ -206,9 +206,12 @@ The IFLA Standards Platform is a modern, Git-centric system for managing interna
 
 ### Strategic Positioning
 - **Industry Leadership**: W3C-inspired working group model
+- **Digital Accessibility Excellence**: Leading by example with voluntary adoption of EU/UK best practices
 - **Global Accessibility**: External contributors without membership barriers
+- **Standards Setting Example**: Demonstrating that accessibility is fundamental to information access
 - **Future-Ready**: Scalable architecture for emerging technologies
 - **Community Growth**: Project-based collaboration enables focused engagement
+- **Inclusive Design Leadership**: Setting benchmarks for library and information organizations worldwide
 
 ## Future Roadmap
 

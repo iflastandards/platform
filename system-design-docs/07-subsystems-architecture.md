@@ -199,7 +199,7 @@ export const ADMIN_PORTAL_CONFIG: Record<Environment, AdminPortalConfig> = {
     sessionApiUrl: 'http://localhost:3007/admin/api/auth/session',
   },
   preview: {
-    url: 'https://iflastandards.github.io/platform/admin',
+    url: 'https://admin-iflastandards-preview.onrender.com',
     // ... preview URLs
   },
   production: {
