@@ -505,12 +505,48 @@ export default function CompactButton({
 
 ### Navigation Components
 
-### Dashboard Layout Pattern (Standard)
+### Dashboard Architecture (Nested Routing)
 
-All admin dashboards should follow this accessible left-sidebar pattern with Material-UI components:
+All admin dashboards follow a nested routing architecture that provides deep-linking, breadcrumb navigation, and modular feature organization. This replaces the previous tab-switching pattern with proper Next.js routing.
+
+#### Architecture Overview
+
+```
+/dashboard
+├── /author
+│   ├── /overview
+│   ├── /projects
+│   │   ├── /edit/[id]    # Action pages in tab container
+│   │   └── /new          # Action pages in tab container
+│   ├── /tasks
+│   │   ├── /review/[id]
+│   │   └── /translate/[id]
+│   └── /namespaces
+├── /editor
+│   ├── /overview
+│   ├── /projects
+│   └── /tools
+└── /admin
+    ├── /overview
+    ├── /users
+    └── /projects
+```
+
+#### Key Benefits
+
+- **Deep Linking**: Direct URLs to specific dashboard states
+- **Breadcrumb Navigation**: Auto-generated from route structure
+- **Action Pages**: Edit/create forms load within tab containers
+- **Browser History**: Back/forward navigation works correctly
+- **Bookmarkable**: Users can bookmark specific dashboard views
+
+### Dashboard Layout Pattern (Nested Routing)
+
+The StandardDashboardLayout now uses Next.js nested routing with an Outlet pattern:
 
 ```tsx
-import React, { useState, useEffect } from 'react';
+import React from 'react';
+import { usePathname } from 'next/navigation';
 import {
   Box,
   Drawer,
@@ -529,7 +565,7 @@ import {
   Link,
   Chip,
 } from '@mui/material';
-import { Menu as MenuIcon } from '@mui/icons-material';
+import { Menu as MenuIcon, ChevronRight } from '@mui/icons-material';
 
 // Skip Links Component (Required for Accessibility)
 const SkipLinks = () => (
@@ -578,9 +614,42 @@ const LiveRegion = ({ message }: { message: string }) => (
   </Box>
 );
 
+// Breadcrumb generation from route
+function generateBreadcrumbs(pathname: string) {
+  const segments = pathname.split('/').filter(Boolean);
+  return segments.map((segment, index) => {
+    const href = '/' + segments.slice(0, index + 1).join('/');
+    const label = formatBreadcrumbLabel(segment);
+    return { href, label, current: index === segments.length - 1 };
+  });
+}
+
+function formatBreadcrumbLabel(segment: string) {
+  // Convert route segments to readable labels
+  const labelMap: { [key: string]: string } = {
+    'dashboard': 'Dashboard',
+    'author': 'Author Dashboard',
+    'editor': 'Editor Dashboard', 
+    'admin': 'Admin Dashboard',
+    'rg': 'Review Group Dashboard',
+    'overview': 'Overview',
+    'projects': 'Projects',
+    'namespaces': 'Namespaces',
+    'tasks': 'Tasks',
+    'review': 'Review',
+    'translate': 'Translation',
+    'tools': 'Tools',
+    'users': 'Users',
+    'new': 'Create New',
+    'edit': 'Edit',
+  };
+  
+  return labelMap[segment] || segment.charAt(0).toUpperCase() + segment.slice(1);
+}
+
 interface DashboardLayoutProps {
   title: string;
-  code: string;
+  subtitle: string;
   navigationItems: NavigationItem[];
   children: React.ReactNode;
   footerContent?: React.ReactNode;
@@ -589,19 +658,21 @@ interface DashboardLayoutProps {
 interface NavigationItem {
   id: string;
   label: string;
+  href: string;
   icon: React.ReactNode;
   badge?: string | number;
   specialAccess?: boolean;
+  children?: NavigationItem[];
 }
 
 export function StandardDashboardLayout({
   title,
-  code,
+  subtitle,
   navigationItems,
   children,
   footerContent,
 }: DashboardLayoutProps) {
-  const [selectedTab, setSelectedTab] = useState(navigationItems[0]?.id || '');
+  const pathname = usePathname();
   const [mobileOpen, setMobileOpen] = useState(false);
   const [liveMessage, setLiveMessage] = useState('');
   const theme = useTheme();
@@ -613,34 +684,33 @@ export function StandardDashboardLayout({
     setLiveMessage(mobileOpen ? 'Navigation closed' : 'Navigation opened');
   };
 
-  const handleTabSelect = (itemId: string, itemLabel: string) => {
-    setSelectedTab(itemId);
-    setLiveMessage(`Switched to ${itemLabel} section`);
-    if (isMobile) {
-      setMobileOpen(false);
-    }
-    // Clear message after announcement
-    setTimeout(() => setLiveMessage(''), 1000);
-  };
+  // Generate breadcrumbs from current route
+  const breadcrumbs = generateBreadcrumbs(pathname);
 
   const drawer = (
     <Box role="navigation" aria-label="Dashboard navigation">
       <Box sx={{ p: 2, borderBottom: 1, borderColor: 'divider' }}>
         <Typography variant="h6" noWrap component="h2">
-          {code}
+          {title}
         </Typography>
         <Typography variant="caption" color="textSecondary">
-          Dashboard Management
+          {subtitle}
         </Typography>
       </Box>
       <List id="navigation">
         {navigationItems.map((item) => (
           <ListItem key={item.id} disablePadding>
             <ListItemButton
-              selected={selectedTab === item.id}
-              onClick={() => handleTabSelect(item.id, item.label)}
-              aria-current={selectedTab === item.id ? 'page' : undefined}
+              component={Link}
+              href={item.href}
+              selected={pathname === item.href || pathname.startsWith(item.href + '/')}
+              aria-current={pathname === item.href ? 'page' : undefined}
               aria-label={`${item.label}${item.specialAccess ? ' (Restricted)' : ''}`}
+              onClick={() => {
+                setLiveMessage(`Navigating to ${item.label}`);
+                if (isMobile) setMobileOpen(false);
+                setTimeout(() => setLiveMessage(''), 1000);
+              }}
             >
               <ListItemIcon aria-hidden="true">
                 {item.icon}
@@ -662,6 +732,9 @@ export function StandardDashboardLayout({
                   size="small" 
                   color="primary"
                 />
+              )}
+              {item.children && (
+                <ChevronRight sx={{ color: 'text.secondary' }} />
               )}
             </ListItemButton>
           </ListItem>
@@ -757,15 +830,204 @@ export function StandardDashboardLayout({
           id="main-content"
           sx={{
             flexGrow: 1,
-            p: 3,
             width: { md: `calc(100% - ${drawerWidth}px)` },
             mt: { xs: 8, md: 0 },
           }}
         >
-          {children}
+          {/* Breadcrumb Navigation */}
+          <Box sx={{ px: 3, py: 2, borderBottom: 1, borderColor: 'divider' }}>
+            <Box 
+              component="nav" 
+              aria-label="Breadcrumb"
+              sx={{ display: 'flex', alignItems: 'center', gap: 1 }}
+            >
+              {breadcrumbs.map((crumb, index) => (
+                <React.Fragment key={crumb.href}>
+                  {index > 0 && (
+                    <ChevronRight sx={{ fontSize: 16, color: 'text.secondary' }} />
+                  )}
+                  {crumb.current ? (
+                    <Typography 
+                      variant="body2" 
+                      color="text.primary"
+                      sx={{ fontWeight: 500 }}
+                    >
+                      {crumb.label}
+                    </Typography>
+                  ) : (
+                    <Link 
+                      href={crumb.href} 
+                      variant="body2"
+                      color="text.secondary"
+                      sx={{ textDecoration: 'none', '&:hover': { textDecoration: 'underline' } }}
+                    >
+                      {crumb.label}
+                    </Link>
+                  )}
+                </React.Fragment>
+              ))}
+            </Box>
+          </Box>
+
+          {/* Page Content - This is where nested routes render */}
+          <Box sx={{ p: 3 }}>
+            {children}
+          </Box>
         </Box>
       </Box>
     </>
+  );
+}
+```
+
+### Feature-Based Data Fetching
+
+Each dashboard feature uses dedicated hooks for data management:
+
+```tsx
+// hooks/dashboard/useAuthorProjects.ts
+import { useQuery } from '@tanstack/react-query';
+
+export function useAuthorProjects() {
+  return useQuery({
+    queryKey: ['author', 'projects'],
+    queryFn: async () => {
+      const response = await fetch('/api/author/projects');
+      if (!response.ok) throw new Error('Failed to fetch author projects');
+      return response.json();
+    },
+    staleTime: 5 * 60 * 1000, // 5 minutes
+    refetchOnWindowFocus: false,
+  });
+}
+
+// hooks/dashboard/useAuthorTasks.ts
+export function useAuthorTasks() {
+  return useQuery({
+    queryKey: ['author', 'tasks'],
+    queryFn: async () => {
+      const response = await fetch('/api/author/tasks');
+      if (!response.ok) throw new Error('Failed to fetch author tasks');
+      return response.json();
+    },
+    refetchInterval: 30000, // Refresh every 30 seconds
+  });
+}
+
+// hooks/dashboard/useNamespaceStatus.ts
+export function useNamespaceStatus(namespaceId: string) {
+  return useQuery({
+    queryKey: ['namespace', namespaceId, 'status'],
+    queryFn: async () => {
+      const response = await fetch(`/api/namespaces/${namespaceId}/status`);
+      if (!response.ok) throw new Error('Failed to fetch namespace status');
+      return response.json();
+    },
+    enabled: !!namespaceId,
+  });
+}
+```
+
+### Dashboard Route Configuration
+
+Example navigation configuration for nested routes:
+
+```tsx
+// config/navigation.ts
+const authorNavigation: NavigationItem[] = [
+  {
+    id: 'overview',
+    label: 'Overview',
+    href: '/dashboard/author/overview',
+    icon: <HomeIcon />,
+  },
+  {
+    id: 'projects',
+    label: 'My Projects',
+    href: '/dashboard/author/projects',
+    icon: <AssignmentIcon />,
+    badge: '2',
+    children: [
+      {
+        id: 'projects-new',
+        label: 'Create New',
+        href: '/dashboard/author/projects/new',
+        icon: <AddIcon />,
+      },
+    ],
+  },
+  {
+    id: 'tasks',
+    label: 'Active Tasks',
+    href: '/dashboard/author/tasks',
+    icon: <TaskIcon />,
+    badge: '6',
+    children: [
+      {
+        id: 'tasks-review',
+        label: 'Review Queue',
+        href: '/dashboard/author/tasks/review',
+        icon: <ReviewIcon />,
+      },
+      {
+        id: 'tasks-translate',
+        label: 'Translation Tasks',
+        href: '/dashboard/author/tasks/translate',
+        icon: <TranslateIcon />,
+      },
+    ],
+  },
+];
+
+// Dashboard layout usage
+export function AuthorDashboard() {
+  return (
+    <StandardDashboardLayout
+      title="Author Dashboard"
+      subtitle="Content Review & Translation"
+      navigationItems={authorNavigation}
+    >
+      {/* This Outlet renders the matched child route */}
+      <Outlet />
+    </StandardDashboardLayout>
+  );
+}
+```
+
+### Action Page Patterns
+
+Action pages (create, edit, detail views) render within the dashboard container:
+
+```tsx
+// app/dashboard/author/projects/edit/[id]/page.tsx
+export default function EditProjectPage({ params }: { params: { id: string } }) {
+  const { data: project, isLoading } = useQuery({
+    queryKey: ['project', params.id],
+    queryFn: () => fetch(`/api/projects/${params.id}`).then(r => r.json()),
+  });
+
+  if (isLoading) return <ProjectEditSkeleton />;
+
+  return (
+    <PageLayout
+      title={`Edit ${project.name}`}
+      subtitle="Update project details and settings"
+      actions={
+        <Stack direction="row" spacing={2}>
+          <Button variant="outlined" component={Link} href="/dashboard/author/projects">
+            Cancel
+          </Button>
+          <Button variant="contained" form="project-edit-form">
+            Save Changes
+          </Button>
+        </Stack>
+      }
+    >
+      <ProjectEditForm 
+        project={project} 
+        onSuccess={() => router.push('/dashboard/author/projects')}
+      />
+    </PageLayout>
   );
 }
 ```

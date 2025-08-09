@@ -74,12 +74,13 @@ apps/admin/
 ```
 
 #### Key Features
-- **Dynamic Routing**: Server-side and client-side routing
+- **Nested Routing**: App Router with nested layouts and deep linking
+- **Dashboard Architecture**: Modular dashboard system with nested routes
 - **API Routes**: RESTful endpoints in `app/api/`
 - **Authentication**: Clerk middleware on all routes
 - **Authorization**: withAuth HOC for API protection
-- **Real-time Data**: Dynamic fetching from Supabase
-- **basePath Support**: Environment-aware routing
+- **Real-time Data**: Dynamic fetching from Supabase with React Query
+- **Feature-Based Hooks**: Dedicated hooks for each dashboard feature
 
 ### Documentation Sites (Docusaurus)
 
