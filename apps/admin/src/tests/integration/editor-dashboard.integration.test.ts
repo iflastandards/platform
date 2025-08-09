@@ -9,10 +9,10 @@ import { AppUser } from '@/lib/clerk-github-auth';
 expect.extend(toHaveNoViolations);
 
 /**
- * @integration @ui @dashboard
+ * @integration @ui @dashboard @critical
  * Integration tests for EditorDashboard with real editor user data and components
  */
-describe('EditorDashboard @integration @ui @dashboard', () => {
+describe('EditorDashboard @integration @ui @dashboard @critical', () => {
   let testUser: AppUser;
   const originalConsoleLog = console.log;
 

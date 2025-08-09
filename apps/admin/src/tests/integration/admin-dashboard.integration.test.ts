@@ -8,10 +8,10 @@ import AdminDashboard from '../../app/(authenticated)/dashboard/AdminDashboard';
 expect.extend(toHaveNoViolations);
 
 /**
- * @integration @ui @dashboard
+ * @integration @ui @dashboard @critical
  * Integration tests for AdminDashboard with real system administration data and components
  */
-describe('AdminDashboard @integration @ui @dashboard', () => {
+describe('AdminDashboard @integration @ui @dashboard @critical', () => {
   const testProps = {
     userRoles: ['superadmin'],
     userName: 'Jane Super Admin',

@@ -8,10 +8,10 @@ import NamespaceDashboard from '../../app/(authenticated)/namespaces/[namespace]
 expect.extend(toHaveNoViolations);
 
 /**
- * @integration @ui @dashboard
+ * @integration @ui @dashboard @critical
  * Integration tests for NamespaceDashboard with real namespace data and components
  */
-describe('NamespaceDashboard @integration @ui @dashboard', () => {
+describe('NamespaceDashboard @integration @ui @dashboard @critical', () => {
   const testNamespace = 'isbd';
   const testUserId = 'user-admin-1';
   const originalConsoleLog = console.log;

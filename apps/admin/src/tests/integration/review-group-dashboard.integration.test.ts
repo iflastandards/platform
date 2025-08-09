@@ -8,10 +8,10 @@ import ReviewGroupDashboard from '../../app/(authenticated)/dashboard/rg/ReviewG
 expect.extend(toHaveNoViolations);
 
 /**
- * @integration @ui @dashboard
+ * @integration @ui @dashboard @critical
  * Integration tests for ReviewGroupDashboard with real review group data and components
  */
-describe('ReviewGroupDashboard @integration @ui @dashboard', () => {
+describe('ReviewGroupDashboard @integration @ui @dashboard @critical', () => {
   const testProps = {
     userRoles: ['rg-admin'],
     userName: 'John RG Admin',
