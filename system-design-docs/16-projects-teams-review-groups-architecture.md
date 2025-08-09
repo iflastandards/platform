@@ -1,7 +1,7 @@
 # Projects, Teams, and Review Groups Architecture
 
 **Version:** 1.0  
-**Date:** January 2025  
+**Date:** July 2025  
 **Status:** Proposed Architecture
 
 ## Overview
@@ -204,14 +204,14 @@ sequenceDiagram
     participant User
     participant Clerk
     participant App
-    participant Cerbos
+    participant custom RBAC middleware
     participant GitHub
 
     User->>Clerk: Authenticate
     Clerk->>App: User + Metadata
     App->>App: Determine Project Context
-    App->>Cerbos: Check Permission
-    Cerbos->>App: Allow/Deny
+    App->>custom RBAC middleware: Check Permission
+    custom RBAC middleware->>App: Allow/Deny
     App->>GitHub: Sync Team Access
     GitHub->>User: Repository Access
 ```
@@ -227,7 +227,7 @@ sequenceDiagram
 - Social login via GitHub OAuth
 - Invitation system for team members
 
-**Cerbos Integration**:
+**custom RBAC middleware Integration**:
 - Real-time permission evaluation
 - Policy-as-code authorization rules
 - Audit trail of all decisions
@@ -266,7 +266,7 @@ graph TB
     
     subgraph "Permissions"
         M -.->|Via Clerk| AUTH[Authentication]
-        AUTH -.->|Via Cerbos| PERM[Permissions]
+        AUTH -.->|Via custom RBAC middleware| PERM[Permissions]
         PERM -.->|Access| NS
     end
 ```
@@ -434,8 +434,8 @@ GET    /api/users/:id/projects
 ## Migration Strategy
 
 ### Phase 1: Foundation (Weeks 1-2)
-- Set up Clerk organization structure
-- Define Cerbos policies for new model
+- Set up Clerk user metadata structure
+- Define custom RBAC middleware for new model
 - Create database schema
 - Build core API endpoints
 
@@ -503,7 +503,7 @@ GET    /api/users/:id/projects
 - **Risk**: GitHub API rate limits
   - **Mitigation**: Implement caching and queuing
 - **Risk**: Permission check performance
-  - **Mitigation**: Optimize Cerbos policies
+  - **Mitigation**: Optimize custom RBAC middleware policies
 - **Risk**: Data migration errors
   - **Mitigation**: Comprehensive testing and rollback plans
 

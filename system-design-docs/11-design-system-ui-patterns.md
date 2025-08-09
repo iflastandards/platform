@@ -1,12 +1,26 @@
 # Design System and UI Patterns
 
-**Version:** 1.0  
+**Version:** 2.0  
 **Date:** January 2025  
-**Status:** Consolidated Reference Document
+**Status:** Consolidated Reference Document with Platform Distinctions
 
 ## Overview
 
-This document consolidates the complete design system for the IFLA Standards Platform, including design tokens, component patterns, mockup references, and accessibility standards. It serves as the comprehensive reference for all UI/UX implementation across the admin interface.
+This document consolidates the complete design system for the IFLA Standards Platform, covering both the Next.js Admin Portal and Docusaurus Documentation Sites. Each platform has distinct styling frameworks and component patterns optimized for their specific use cases.
+
+## Platform-Specific Design Systems
+
+### Admin Portal (Next.js)
+- **Framework**: Material-UI (MUI) v6 + Tailwind CSS
+- **Theme**: Custom MUI theme with IFLA branding
+- **Components**: MUI components with Tailwind utilities
+- **Location**: `apps/admin/src/theme/` and `apps/admin/src/components/`
+
+### Documentation Sites (Docusaurus)
+- **Framework**: Infima CSS framework + SASS/SCSS
+- **Theme**: Docusaurus classic theme with custom overrides
+- **Components**: React components with CSS modules
+- **Location**: `standards/*/src/css/` (site-specific) and `packages/theme/src/components/` (shared components)
 
 ## Design Tokens
 
@@ -379,7 +393,116 @@ export const states = {
 };
 ```
 
-## Navigation Components
+## Docusaurus Site Styling
+
+### Infima Theme Variables
+
+Docusaurus sites use the Infima CSS framework with custom SASS overrides:
+
+```scss
+// standards/*/src/css/custom.css
+:root {
+  /* Primary Color (IFLA Teal) */
+  --ifm-color-primary: #0F766E;
+  --ifm-color-primary-dark: #065f46;
+  --ifm-color-primary-darker: #064e3b;
+  --ifm-color-primary-darkest: #022c22;
+  --ifm-color-primary-light: #14b8a6;
+  --ifm-color-primary-lighter: #2dd4bf;
+  --ifm-color-primary-lightest: #5eead4;
+  
+  /* Typography */
+  --ifm-font-family-base: 'Inter', system-ui, -apple-system, sans-serif;
+  --ifm-font-family-monospace: 'JetBrains Mono', 'Courier New', monospace;
+  --ifm-code-font-size: 95%;
+  
+  /* Layout */
+  --ifm-container-width-xl: 1440px;
+  --ifm-navbar-height: 64px;
+  --ifm-sidebar-width: 300px;
+  
+  /* Spacing */
+  --ifm-spacing-horizontal: 1rem;
+  --ifm-spacing-vertical: 1rem;
+  
+  /* Components */
+  --ifm-button-border-radius: 0.375rem;
+  --ifm-card-border-radius: 0.5rem;
+  --ifm-global-radius: 0.375rem;
+}
+
+/* Dark mode overrides */
+[data-theme='dark'] {
+  --ifm-color-primary: #14b8a6;
+  --ifm-background-color: #1a1a1a;
+  --ifm-background-surface-color: #242424;
+}
+```
+
+### Custom Components (Docusaurus)
+
+```tsx
+// packages/theme/src/components/CompactButton/index.tsx
+import React from 'react';
+import styles from './CompactButton.module.css';
+
+interface CompactButtonProps {
+  href: string;
+  children: React.ReactNode;
+  variant?: 'primary' | 'secondary';
+}
+
+export default function CompactButton({ 
+  href, 
+  children, 
+  variant = 'primary' 
+}: CompactButtonProps) {
+  return (
+    <a 
+      href={href} 
+      className={`${styles.button} ${styles[variant]}`}
+    >
+      {children}
+    </a>
+  );
+}
+```
+
+```scss
+// packages/theme/src/components/CompactButton/styles.module.scss
+.button {
+  display: inline-block;
+  padding: 0.5rem 1rem;
+  border-radius: var(--ifm-button-border-radius);
+  text-decoration: none;
+  font-weight: 600;
+  transition: all 0.2s ease;
+  
+  &.primary {
+    background-color: var(--ifm-color-primary);
+    color: white;
+    
+    &:hover {
+      background-color: var(--ifm-color-primary-dark);
+    }
+  }
+  
+  &.secondary {
+    background-color: transparent;
+    color: var(--ifm-color-primary);
+    border: 2px solid var(--ifm-color-primary);
+    
+    &:hover {
+      background-color: var(--ifm-color-primary);
+      color: white;
+    }
+  }
+}
+```
+
+## Admin Portal Components (Material-UI)
+
+### Navigation Components
 
 ### Global Navbar
 

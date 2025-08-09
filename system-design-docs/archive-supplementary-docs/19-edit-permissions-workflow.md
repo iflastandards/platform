@@ -1,7 +1,7 @@
 # Edit Permissions and Workflow Design
 
 **Version:** 1.0  
-**Date:** January 2025  
+**Date:** July 2025  
 **Status:** Workflow Architecture Document
 **Focus:** TinaCMS editing permissions and GitHub integration
 

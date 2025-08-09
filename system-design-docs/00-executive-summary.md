@@ -1,7 +1,7 @@
 # Executive Summary - IFLA Standards Platform System Design
 
 **Version:** 3.0  
-**Date:** January 2025  
+**Date:** July 2025  
 **Status:** Consolidated Architecture Documentation
 
 ## Overview
@@ -54,7 +54,7 @@ The IFLA Standards Platform is a modern, Git-centric system for managing interna
 ### Backend
 - **API Layer**: Render API endpoints
 - **Authentication**: Clerk (replacing NextAuth.js)
-- **Authorization**: Clerk + Cerbos Policy Engine
+- **Authorization**: Custom RBAC middleware using Clerk publicMetadata
 - **Database**: Supabase (PostgreSQL)
 
 ### Development
@@ -119,7 +119,7 @@ The IFLA Standards Platform is a modern, Git-centric system for managing interna
 - **To**: Centralized TypeScript configuration matrix
 - **Result**: 90% reduction in configuration complexity
 
-### January 2025 Enhancements
+### July 2025 Enhancements
 - **Projects Architecture**: GitHub Projects-based collaboration model
 - **Clerk Migration**: Unified authentication replacing NextAuth.js
 - **Nx Testing Strategy**: Tag-based, atomic test execution
@@ -152,7 +152,7 @@ The IFLA Standards Platform is a modern, Git-centric system for managing interna
 - **Test Users**: Dedicated test accounts for E2E
 
 ### Authorization
-- **Engine**: Clerk + Cerbos policy-based
+- **Engine**: Custom RBAC middleware with Clerk publicMetadata
 - **Context**: Project and Team membership
 - **Granularity**: Resource-level permissions
 - **Audit**: Complete activity logging

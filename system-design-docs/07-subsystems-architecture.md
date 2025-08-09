@@ -1,7 +1,7 @@
 # Subsystems Architecture
 
 **Version:** 2.0  
-**Date:** January 2025  
+**Date:** July 2025  
 **Status:** Current Implementation
 
 ## Overview
@@ -366,7 +366,7 @@ Google Sheets ↔ RDF Pipeline ↔ Git Repository
        ↓                              ↑
    Admin Portal → Vocabulary Lifecycle → Docusaurus Sites
        ↓                              ↑
-   Auth System → Cerbos → User Permissions
+   Auth System → custom RBAC middleware → User Permissions
 ```
 
 ## Future Subsystem Enhancements

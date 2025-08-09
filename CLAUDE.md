@@ -1,709 +1,214 @@
 # CLAUDE.md
 
-This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
+This file provides guidance to Claude Code (claude.ai/code) when working with this repository.
 
 ## 🎯 CONTEXT DETECTION - START HERE
 
 ### What am I working on?
 **ASK MYSELF FIRST**: Which part of the monorepo?
-1. **🔴 Admin app** (apps/admin) → Next.js with standard routing
-2. **🟢 Documentation sites** (standards/*) → Docusaurus with standard routing
-3. **📦 Shared packages** (packages/*) → Used by both
-4. **📚 System Design** (@system-design-docs/) → Authoritative architecture documentation
+1. **🔴 Admin app** (apps/admin) → Next.js, MUI, Tailwind → See [Platform Guide](system-design-docs/20-platform-specific-architecture-guide.md)
+2. **🟢 Documentation sites** (standards/*) → Docusaurus, Infima, SASS → See [Platform Guide](system-design-docs/20-platform-specific-architecture-guide.md)
+3. **📦 Shared packages** (packages/*) → Used by both platforms
+4. **📚 System Design** (@system-design-docs/) → **AUTHORITATIVE SPECS - ALWAYS READ FIRST!**
 
-**💡 USER TIP**: Start prompts with "Working on admin:" or "Working on docs:" to help me focus!
-
----
-
-## 🚨 CRITICAL RULES - ALWAYS CHECK
-
-### 📋 Universal Checklist (BEFORE EVERY TASK)
-- [ ] **Working directory**: Am I in the root? (All commands run from root)
-- [ ] **Project context**: Admin app or documentation site?
-- [ ] **Standard routing**: Both admin and docs use standard Next.js/Docusaurus routing
-- [ ] **Scripts first**: Check `package.json` scripts before writing bash
-- [ ] **MCP usage**: Could Context7/MUI help with this task?
-- [ ] **Testing**: Use `pnpm nx affected` not full test runs
-- [ ] **Writing tests?**: Read `developer_notes/AI_TESTING_INSTRUCTIONS.md` FIRST
-- [ ] **TypeScript**: Follow strict typing rules - NO undocumented `any` or `require`
-
-### 🔧 Monorepo Essentials
-- **Package manager**: Always `pnpm` (never npm/yarn)
-- **Dependencies**: All in root `package.json`
-- **Commands**: Run from root directory
-- **Nx commands**: `pnpm nx build {project}`, `pnpm nx test {project}`
-- **Shared code**: `packages/*` directory
+**⚠️ CRITICAL RULE**: System-design-docs are the SOURCE OF TRUTH:
+- **BEFORE ANY TASK**: Check @system-design-docs/README.md "Task-Based Navigation"
+- **Specs override implementation**: If code doesn't match spec, FIX THE CODE
+- **Platform differences**: ALWAYS check Doc 20 for admin vs docs distinctions
 
 ---
 
-## 🔴 ADMIN APP RULES (apps/admin)
+## 🚨 CRITICAL RULES - ALWAYS APPLY
 
-### ✅ Standard Next.js API Routes (NOT tRPC)
-The admin app uses standard Next.js App Router API routes, NOT tRPC:
+### 📋 Pre-Task Checklist (MANDATORY)
+1. **📚 Read relevant spec** in @system-design-docs/ BEFORE implementing
+2. **🤖 Check MCP Decision Tree** below for tool selection
+3. **📍 Verify working directory** is root (all commands from root)
+4. **🎯 Identify platform** (admin or docs) and apply correct patterns
+5. **📝 Check package.json scripts** before writing bash commands
+6. **🧪 Use `pnpm nx affected`** for tests, not full runs
+7. **🔒 NO undocumented `any`** or `require` in TypeScript
 
-#### 1. **Links - Standard Next.js**
-```tsx
-// ✅ STANDARD NEXT.JS ROUTING
-<Link href="/dashboard">Dashboard</Link>
-<Link href="/settings">Settings</Link>
-<Link href={`/users/${userId}`}>User Profile</Link>
-```
-
-#### 2. **API Implementation - Next.js App Router**
-```tsx
-// ✅ SERVER-SIDE: Next.js API Route (app/api/users/route.ts)
-export async function GET(request: Request) {
-  return NextResponse.json({ users: [] });
-}
-
-// ✅ CLIENT-SIDE: Standard fetch calls
-const response = await fetch('/api/vocabularies');
-const data = await fetch(`/api/users/${id}`);
-```
-
-#### 3. **Static Assets - Standard paths**
-```tsx
-// ✅ STANDARD ASSET PATHS
-<img src="/logo.png" />
-<link rel="icon" href="/favicon.ico" />
-```
-
-### Admin-Specific Details
-- **Framework**: Next.js 15.4.4 with App Router
-- **Start dev**: `pnpm nx dev admin --turbopack`
-- **Build**: `pnpm nx build admin`
-- **Dependencies**: React 19, TypeScript 5.8.3, Material-UI, Clerk
-- **API routes**: `apps/admin/src/app/api/` (Next.js App Router API routes, NOT tRPC)
-- **Authentication**: Clerk middleware on all non-public routes
-- **Authorization**: Custom RBAC using Clerk publicMetadata (NOT Clerk Organizations)
-- **Routing**: Standard Next.js routing patterns
+### 🔧 Core Technical Rules
+- **Package manager**: `pnpm` only (never npm/yarn)
+- **Monorepo tool**: Nx commands via `pnpm nx`
+- **Admin routing**: Standard Next.js patterns
+- **Docs routing**: Standard Docusaurus patterns
+- **API calls**: Standard `fetch('/api/route')`
+- **Authentication**: Clerk (admin only)
+- **Authorization**: Custom RBAC via publicMetadata
 
 ---
 
-## 🟢 DOCUMENTATION SITES RULES (standards/*)
+## 🤖 MCP SERVER DECISION TREE (MANDATORY)
 
-### Docusaurus Sites
-- **Framework**: Docusaurus 3.6.3
-- **Standard routing** - Standard Docusaurus patterns
-- **Sites**: portal, isbd, isbdm, unimarc, mri, frbr, lrm, mia, pressoo, muldicat, etc.
+```
+START: What type of task?
+│
+├─> 🔍 SEARCHING CODEBASE?
+│   └─> USE JetBrains MCP FIRST (file search, content search, structure)
+│
+├─> 📚 USING EXTERNAL LIBRARY?
+│   ├─> React/Next.js/TypeScript → USE Context7
+│   ├─> Material-UI → USE MUI MCP
+│   └─> Other libraries → USE Context7
+│
+├─> 🎨 BUILDING UI?
+│   ├─> MUI component → USE MUI MCP (required)
+│   └─> React patterns → USE Context7
+│
+├─> 🧩 COMPLEX PROBLEM?
+│   └─> USE Sequential Thinking + JetBrains
+│
+└─> ✏️ SIMPLE EDIT? → Use native tools
+```
 
-### Documentation Commands
-- **Start dev**: `pnpm nx start {site}` (e.g., `pnpm nx start portal`)
-- **Build**: `pnpm nx build {site}`
-- **Serve built**: `pnpm nx serve {site}`
-- **Build all**: `pnpm build:all`
-- **With port cleanup**: `pnpm nx run {site}:start:robust`
+**Priority**: JetBrains for search > Context7/MUI for patterns > Native tools as fallback
 
-### Site Scaffolding
+---
+
+## 📚 DOCUMENTATION NAVIGATION
+
+### Platform-Specific References
+- **Admin vs Docs differences**: @system-design-docs/20-platform-specific-architecture-guide.md
+- **Task-based navigation**: @system-design-docs/README.md#task-based-navigation
+
+### By Feature Area
+| Task | Primary Docs | Secondary Refs |
+|------|--------------|----------------|
+| **API Development** | Docs 5, 20 (admin) | @developer_notes/NEXTJS_CODING_STANDARDS.MD |
+| **UI Components** | Docs 11, 20 | Platform-specific sections |
+| **Testing** | Doc 6 | @developer_notes/AI_TESTING_INSTRUCTIONS.md |
+| **RBAC/Auth** | Docs 12-14 | RBAC-IMPLEMENTATION-TASKS.md |
+| **Import/Export** | Doc 33 | tools/sheet-sync/ |
+| **Deployment** | Docs 3, 10 | .github/workflows/ |
+
+### Critical Developer Notes
+- **AI Testing**: @developer_notes/AI_TESTING_INSTRUCTIONS.md (MANDATORY before writing tests)
+- **Test Placement**: @developer_notes/TEST_PLACEMENT_GUIDE.md
+- **Test Templates**: @developer_notes/TEST_TEMPLATES.md
+- **Accessibility**: @developer_notes/ui-ux-accessibility-best-practices.md
+
+---
+
+## 🎯 QUICK COMMAND REFERENCE
+
+### Development
 ```bash
-pnpm tsx scripts/scaffold-site.ts --siteKey=newsite --title="New Standard" --tagline="A new IFLA standard"
-```
-- **Template**: `scripts/scaffold-template/`
-- **Generated**: `docusaurus.config.ts`, `project.json`, content pages, CompactButton
-- **Documentation**: See `developer_notes/current-scaffolding-plan.md`
-
----
-
-## 🎯 QUICK TASK REFERENCE
-
-### "I'm building a UI component"
-1. **Admin?** → Standard Next.js patterns
-2. **Docs?** → Standard Docusaurus patterns
-3. Use **MUI MCP** for component examples
-4. Use **Context7 MCP** for React patterns
-5. **Check accessibility**: Follow `@developer_notes/ui-ux-accessibility-best-practices.md`
-6. **Add axe tests**: Include `@a11y` tagged tests with `axe(container)` checks
-7. Run `pnpm typecheck` after coding
-
-### "I'm adding an API route"
-1. **Admin app** → Use standard fetch calls to `/api/*` routes
-2. Check existing patterns in `apps/admin/src/app/api/`
-3. Use **Context7 MCP** for Next.js App Router patterns
-
-### "I'm fixing routing issues"
-1. **Admin**: Use standard Next.js routing patterns
-2. **Docs**: Standard Docusaurus routing
-3. Reference: `developer_notes/NEXTJS_CODING_STANDARDS.MD`
-
-### "I'm running tests"
-1. Use `pnpm test` (runs `pnpm nx affected`)
-2. Never run all tests - always use affected
-3. Reference: `developer_notes/TESTING_STRATEGY.md`
-
-### "I'm writing tests" 
-**🚨 MANDATORY**: Read `developer_notes/AI_TESTING_INSTRUCTIONS.md` FIRST!
-Quick rules:
-1. **Decide test type**: env vars? → @env | multiple components? → @integration | browser? → @e2e | else → @unit
-2. **Tag properly**: @unit/@integration/@e2e + @api/@auth/@ui + @critical (if needed)
-3. **Place correctly**: Unit tests next to source, integration in tests/, E2E in e2e/
-4. **Use templates**: Copy from `developer_notes/TEST_TEMPLATES.md`
-
----
-
-## 📚 ESSENTIAL REFERENCES
-
-### Next.js Coding Standards (ALWAYS CHECK THESE FIRST)
-1. **Internal Links**: Always use `<Link href="/dashboard">` - Standard Next.js routing
-2. **API Calls**: Always use `fetch('/api/route')` - Standard fetch calls
-3. **Static Assets**: Always use `/logo.png` - Standard asset paths
-4. **Write paths as if app is at root** - Standard Next.js patterns
-5. **No special utilities needed** - Use standard Next.js routing
-
-### Testing Strategy (MANDATORY FOR ALL TESTS)
-1. **🚨 ALWAYS run tests as: `pnpm nx test [project]`** - NEVER forget pnpm prefix!
-2. **AI AGENTS**: MUST read `@developer_notes/AI_TESTING_INSTRUCTIONS.md` before writing any tests
-3. **Integration-first philosophy**: We test with real I/O, not mocks - see AI_TESTING_INSTRUCTIONS.md
-4. **Pre-commit target**: < 60 seconds (use `pnpm nx affected`)
-5. **Use 5-phase strategy**: On-demand → Pre-commit → Pre-push → Comprehensive → CI
-6. **Test placement**: Check `@developer_notes/TEST_PLACEMENT_GUIDE.md` before writing tests
-7. **NEVER use bare `nx` commands** - Always prefix with `pnpm`
-
-### Critical File References
-- **AI Testing Guide**: `@developer_notes/AI_TESTING_INSTRUCTIONS.md` (MANDATORY for AI agents)
-- **Complete Testing Strategy**: `@developer_notes/TESTING_STRATEGY.md`
-- **Test Placement Guide**: `@developer_notes/TEST_PLACEMENT_GUIDE.md` (use when writing tests)
-- **Test Templates**: `@developer_notes/TEST_TEMPLATES.md` (copy for new tests)
-- **Nx Test Optimizations**: `@developer_notes/NX_AFFECTED_TEST_OPTIMIZATION.md`
-- **Complete Next.js Standards**: `@developer_notes/NEXTJS_CODING_STANDARDS.MD`
-- **UI/UX & Accessibility**: `@developer_notes/ui-ux-accessibility-best-practices.md` (WCAG 2.1 AA compliance + axe testing)
-
----
-
-## 🛠️ DEVELOPMENT WORKFLOWS
-
-### Essential Commands
-- **Package manager**: Always use `pnpm` (never npm or yarn)
-- **Build single site**: `pnpm nx build {name}` (e.g., `pnpm nx build portal`, `pnpm nx build isbdm`, `pnpm nx build admin`)
-- **Build all sites**: `pnpm build:all` (optimized with Nx caching and parallelization)
-- **Start dev server**: `pnpm nx start {site}` or `pnpm nx run {site}:start:robust` (with port cleanup)
-- **Start Next.js dev**: `pnpm nx dev admin --turbopack` (for admin development)
-- **Serve built site**: `pnpm nx serve {site}` or `pnpm nx run {site}:serve:robust` (with port cleanup)
-- **Test execution**: `pnpm test` (pnpm nx affected with parallel execution)
-- **Type checking**: `pnpm typecheck` (pnpm nx affected with parallel execution)
-- **Linting**: `pnpm lint` (pnpm nx affected with parallel execution)
-- **Health check**: `pnpm health` (comprehensive system check)
-- **Fresh install**: `pnpm fresh` (clean install with cache clear)
-
-### Performance Optimization Commands
-- **Optimize Nx**: `pnpm nx:optimize` (run performance optimization script)
-- **Start Nx daemon**: `pnpm nx:daemon:start` (speeds up all Nx commands)
-- **Clear cache**: `pnpm nx:cache:clear` (when you need a fresh build)
-- **View cache stats**: `pnpm nx:cache:stats` (monitor cache effectiveness)
-- **View dependency graph**: `pnpm nx:graph` (visualize project dependencies)
-
-### Code Development Guidelines
-- **ALWAYS CHECK MUI MCP AND CONTEXT7 MCP FOR EXAMPLES BEFORE WRITING CODE**
-- **ALWAYS RUN TYPECHECK AND ESLINT AFTER WRITING CODE BEFORE MOVING TO THE NEXT TASK**
-
-### AI Agent TypeScript & Import Compliance Rules
-
-#### ALWAYS DO THIS
-- **Always use ES Module `import`/`export` syntax** for all TypeScript, React, Next.js, or Docusaurus code
-  ```typescript
-  import { Component } from "react";
-  import util from "@workspace/shared/utils";
-  ```
-- **Always follow workspace path aliases** as defined in root `tsconfig.json` and Nx configuration
-- **Always use strict, explicit types** in all code—both production and test files
-- **Always provide clear comment explaining any use of `any`** and tag for human review
-  ```typescript
-  // Using `any` here to simulate invalid API input for edge case testing. Review required.
-  const malformedPayload: any = getUserSuppliedData();
-  expect(() => processPayload(malformedPayload)).toThrow();
-  ```
-- **Always write code that passes all linting and type checks**
-- **Always include at least one minimal test** for any new logic/UI
-- **Always add JSDoc comments** for all exported functions/types/interfaces
-
-#### NEVER DO THIS
-- **Never use `require` for module imports** - breaks compatibility
-  ```typescript
-  // ❌ WRONG
-  const config = require("./config");
-  ```
-- **Never import using deep paths or absolute paths** outside workspace/NX aliases
-  ```typescript
-  // ❌ WRONG
-  import X from "../../../lib/foo/internal/bar";
-  ```
-- **Never use `any`, `@ts-ignore`, or unsafe type casts** without:
-  - Explicit, documented rationale in comment
-  - Tagged for reviewer attention
-  - Treated as temporary exception
-- **Never merge code that fails CI, lint/type checks, or lacks test coverage**
-- **Never use `any` in tests without clear justification and reviewer signoff**
-
-#### Quick Reference Table
-| Context | ✅ Always | ❌ Never |
-|---------|-----------|----------|
-| Imports | ES modules + workspace aliases | `require` or deep paths |
-| Types | Explicit, precise, documented | Undocumented `any` |
-| Test edge cases | Document & justify `any` | Routine `any` in tests |
-| CI/Lint | Pass all checks | Merge failing code |
-
----
-
-## 🧪 TESTING & QUALITY
-
-### Test File Linting
-- **Test files use relaxed linting rules**: See `pnpm lint:test-rules` for details
-- **Less strict TypeScript**: Tests use `tsconfig.test.json` with relaxed type checking
-- **⚠️ `any` in tests**: Only allowed with documented justification and review tag
-  ```typescript
-  // Using `any` to test malformed input handling. Review required.
-  const invalidData: any = { malformed: true };
-  ```
-- **Test patterns**: `**/*.{test,spec}.{js,jsx,ts,tsx}`, `**/tests/**/*`, `**/e2e/**/*`
-- **Commands**: 
-  - `pnpm lint:tests` (lint only test files)
-  - `pnpm lint:test-rules` (show relaxed rules explanation)
-
-### Git Hooks (Layered Testing)
-
-#### Pre-commit (Fast Feedback - ~30s)
-- **Purpose**: Catch basic errors before commit
-- **Command**: `pnpm test:pre-commit`
-- **Runs**: TypeScript check, ESLint, Unit tests (affected)
-- **Philosophy**: Warnings allowed, errors block commit
-- **Goal**: Fast feedback loop for developers
-
-#### Pre-push (Production Readiness - ~2-5min)
-- **Purpose**: Ensure production readiness before push
-- **Command**: `pnpm test:pre-push:flexible`
-- **Assumes**: Pre-commit tests already passed
-- **Runs**: Integration tests, Production builds (affected), Smart E2E
-- **Goal**: Confidence that code works in production
-- **Uses Nx affected**: Only tests what changed
-- **E2E Strategy**: Auto-triggers when portal/admin affected
-
-#### Post-push (GitHub Pages)
-- **Purpose**: Verify deployment and external integrations
-- **Runs**: Full site builds, GitHub Pages deployment, External service validation
-- **Goal**: Catch issues that only appear in production environment
-
-#### E2E Test Triggers
-- **Auto-trigger**: When `portal` or `admin` projects are affected
-- **Manual override**: Set `"runE2E": true` in `.prepushrc.json`
-- **Critical changes**: UI/UX, navigation, search, auth flows, vocabulary functionality
-- **Rationale**: E2E can be slow/flaky locally, only run when high-impact changes
-
-#### Configuration
-- **`.precommitrc.json`**: Pre-commit behavior
-- **`.prepushrc.json`**: Pre-push behavior (integration tests, builds, smart e2e)
-- **Philosophy**: No redundant testing between layers
-
----
-
-## 🔗 INTEGRATIONS & TOOLS
-
-### Development Tools
-- **Ripgrep (rg)**: Fast file search tool installed and available
-  - Use via the Grep tool (not bash commands)
-  - Supports regex patterns, file type filtering, and context lines
-  - Example: Search for "github" in TypeScript files with context
-- **Flexible Linting**: Different strictness levels for production vs test code
-  - Production code: Strict linting with warnings as errors
-  - Test code: Relaxed rules allowing `any`, console logs, longer functions
-  - Scripts: `scripts/pre-commit-check.js`, `scripts/pre-push-check.js`
-
-### MCP Server Usage
-1. **Context7**: Documentation, patterns, best practices
-   - Use for: Library docs, API references, framework patterns
-2. **MUI**: Material-UI components and patterns  
-   - Use for: Component examples, theming, styling
-3. **Playwright/Puppeteer**: Browser automation
-   - Use for: E2E testing, browser interactions
-
-### GitHub Services Integration
-
-#### Mock GitHub Package
-- **Package**: `@kie/mock-github` (v2.0.1 installed)
-- **Documentation**: https://github.com/kiegroup/mock-github?tab=readme-ov-file
-- **Purpose**: Mock GitHub API responses for testing without hitting real endpoints
-- **Key Features**: Simulates GitHub API, repositories, issues, pull requests, and webhooks
-
-#### Octokit.js (JavaScript GitHub SDK)
-- **Official SDK**: The all-batteries-included GitHub SDK for Browsers, Node.js, and Deno
-- **Documentation**: https://github.com/octokit/octokit.js
-- **Installation**: `pnpm add octokit`
-- **Basic Usage**:
-  ```javascript
-  import { Octokit } from "octokit";
-  const octokit = new Octokit({ auth: `personal-access-token` });
-  const { data } = await octokit.rest.users.getAuthenticated();
-  ```
-
-#### GitHub API References
-- **REST API**: https://docs.github.com/en/rest
-- **GraphQL API**: https://docs.github.com/en/graphql
-- **Common Endpoints**:
-  - Issues: `POST /repos/{owner}/{repo}/issues`
-  - Pull Requests: `POST /repos/{owner}/{repo}/pulls`
-  - Repositories: `GET /repos/{owner}/{repo}`
-  - Webhooks: `POST /repos/{owner}/{repo}/hooks`
-
-#### GitHub MCP Server
-- **Docker Image**: `ghcr.io/github/github-mcp-server`
-- **Features**: Direct GitHub API access for AI tools
-- **Environment Variables**:
-  - `GITHUB_PERSONAL_ACCESS_TOKEN`: Required for authentication
-  - `GITHUB_TOOLSETS`: Comma-separated list of toolsets
-  - `GITHUB_HOST`: For GitHub Enterprise Server
-
----
-
-## ⚙️ PERFORMANCE & DEPLOYMENT
-
-### Performance Optimizations
-
-#### pnpm Configuration
-The project uses optimized pnpm settings configured in `.npmrc`:
-- **Workspace hoisting**: Optimized for monorepo with shared dependencies
-- **Auto peer deps**: Automatically installs peer dependencies (helps with React 19)
-- **Deep linking**: Better cross-package dependency resolution
-- **Performance caching**: Side effects cache enabled for faster installs
-
-#### Nx Configuration
-Nx is configured for maximum performance:
-- **Daemon process**: Always running for faster command execution
-- **Distributed caching**: Nx Cloud enabled for team cache sharing
-- **Parallel execution**: Configured to use 8 cores (adjustable)
-- **Remote caching**: Enabled for CI/CD pipeline optimization
-
-#### CI/CD Pipeline
-The project has optimized GitHub Actions workflows:
-- **Preview deployments**: Push to `preview` branch → GitHub Pages at `iflastandards.github.io/platform`
-- **Production deployments**: PR from `preview` to `main` → GitHub Pages at `www.iflastandards.info`
-- **Render deployments**: Automatic preview deployments for each push to preview branch
-- **Nx Cloud integration**: Distributed builds with 6-8 agents depending on environment
-
-#### Development Environment
-- **VS Code**: Configured with `.vscode/settings.json` for optimal development
-- **JetBrains IDEs**: Pre-configured run configurations and code styles in `.idea/`
-- **Environment variables**: Use `.env.nx` for Nx-specific optimizations
-- **Health check**: Run `pnpm health` to verify system configuration
-
-### Deployment Workflow (Phase 5 Compliant)
-
-#### Branch Strategy
-1. **Development**: Work on feature branches
-2. **Preview**: Merge to `preview` branch for staging
-3. **Production**: Create PR from `preview` to `main` (protected branch)
-
-#### Deployment URLs
-- **Preview**: https://iflastandards.github.io/platform/
-- **Production**: https://www.iflastandards.info/
-- **Admin Preview**: https://admin-iflastandards-preview.onrender.com
-- **Admin Production**: https://admin.iflastandards.info
-
-#### Phase 5 CI/CD Process
-1. **Environment Validation**: API tokens, environment variables, service connectivity
-2. **Build and Deploy**: Assumes code quality validated locally (Phases 1-4)
-3. **Post-Deployment Validation**: Health checks on deployed infrastructure
-4. **No Code Testing**: CI focuses only on environment-specific aspects
-
-#### ⚠️ Critical Developer Requirement
-**All code quality validation must happen locally before pushing:**
-- ✅ Pre-commit hooks must pass (Phase 2)
-- ✅ Pre-push hooks must pass (Phase 3)
-- ✅ Never bypass with `--no-verify` unless emergency
-- ✅ CI assumes your code is already validated
-
----
-
-## 📚 SYSTEM DESIGN DOCUMENTATION
-
-### Authoritative Architecture Documentation
-- **Location**: `@system-design-docs/` - Comprehensive system design and architecture
-- **Numbered Sequence**: Documents are numbered 00-32 for logical reading order
-- **Key Documents**:
-  - `00-executive-summary.md` - High-level system overview
-  - `01-system-architecture-overview.md` - Core architecture patterns
-  - `10-implementation-strategy.md` - Implementation roadmap
-  - `31-spreadsheet-export-import-comprehensive-guide.md` - Import/export workflows
-  - `32-phase1-import-export-implementation-plan.md` - Phase 1 integration approach
-- **Usage**: Consult these documents for authoritative architectural decisions and design patterns
-
----
-
-## 🚨 TROUBLESHOOTING
-
-### Common Issues & Solutions
-
-#### Top 5 Mistakes (and fixes)
-1. **Incorrect routing patterns**
-   - Fix: Use standard Next.js routing
-   - Check: All Links, fetches, and assets
-   
-2. **Not using pnpm scripts**
-   - Fix: Check package.json first
-   - Use: `pnpm test`, `pnpm build:all`, etc.
-   
-3. **Running commands from subdirectories**
-   - Fix: Always cd to root first
-   - Remember: All commands run from root
-   
-4. **Not using MCP servers**
-   - Fix: Context7 for docs, MUI for components
-   - Check: Before writing new code
-   
-5. **Running all tests instead of affected**
-   - Fix: Use `pnpm test` which runs pnpm nx affected
-   - Never: `pnpm nx run-many -t test`
-
-### Performance Issues
-1. **Slow builds**: Run `pnpm nx:optimize` and ensure daemon is running
-2. **Cache issues**: Run `pnpm nx:cache:clear` for a fresh build
-3. **Dependency conflicts**: Run `pnpm fresh` for clean install
-4. **Port conflicts**: Use `pnpm ports:kill` to free up ports
-
-### Performance Tips
-1. Always have Nx daemon running: `pnpm nx:daemon:start`
-2. Use affected commands when possible: `pnpm nx affected -t build`
-3. Monitor cache effectiveness: `pnpm nx:cache:stats`
-4. Run health check regularly: `pnpm health`
-
----
-
-## 💡 HELPFUL USER PROMPTS
-
-To help me work better, consider starting prompts with:
-- **"Working on admin:"** → Activates admin-specific rules & Next.js patterns
-- **"Working on docs:"** → Activates documentation rules & Docusaurus patterns
-- **"Need to add API route"** → Triggers Next.js App Router patterns
-- **"Building UI component"** → Triggers MCP usage & component patterns
-- **"Running tests"** → Triggers pnpm nx affected usage & test strategy
-
-Examples:
-- "Working on admin: Add a new user management page"
-- "Working on docs: Create a new vocabulary section for ISBD"
-- "Need to debug why API calls fail in production"
-
----
-
-## important-instruction-reminders
-Do what has been asked; nothing more, nothing less.
-NEVER create files unless they're absolutely necessary for achieving your goal.
-ALWAYS prefer editing an existing file to creating a new one.
-NEVER proactively create documentation files (*.md) or README files. Only create documentation files if explicitly requested by the User.
-
-<!-- ===== APPENDED BY CONTEXT FORGE RETROFIT - 2025-08-04 ===== -->
-
-## Retrofit Updates - 2025-08-04
-
-# standards-dev - Claude Code Context
-
-This file provides comprehensive guidance to Claude Code when working with this Next.js 15 application with React 19 and TypeScript.
-
-## Project Overview
-
-IFLA Standards Platform
-
-## Core Development Philosophy
-
-### KISS (Keep It Simple, Stupid)
-
-Simplicity should be a key goal in design. Choose straightforward solutions over complex ones whenever possible.
-
-### YAGNI (You Aren't Gonna Need It)
-
-Avoid building functionality on speculation. Implement features only when they are needed.
-
-### Design Principles
-
-- **Dependency Inversion**: High-level modules should not depend on low-level modules
-- **Open/Closed Principle**: Software entities should be open for extension but closed for modification
-- **Component-First**: Build with reusable, composable components
-- **Fail Fast**: Validate inputs early, throw errors immediately
-
-## 🧱 Code Structure & Modularity
-
-### File and Component Limits
-
-- **Never create a file longer than 500 lines of code**
-- **Components should be under 200 lines** for better maintainability
-- **Functions should be short and focused (sub 50 lines)**
-
-## 🚀 Next.js 15 & React 19 Key Features
-
-### TypeScript Integration (MANDATORY)
-
-- **MUST use `ReactElement` instead of `JSX.Element`** for return types
-- **MUST import types from 'react'** explicitly
-- **NEVER use `JSX.Element` namespace**
-
-```typescript
-// ✅ CORRECT
-import { ReactElement } from 'react';
-
-function MyComponent(): ReactElement {
-  return <div>Content</div>;
-}
-
-// ❌ FORBIDDEN
-function MyComponent(): JSX.Element {  // Cannot find namespace 'JSX'
-  return <div>Content</div>;
-}
+# Admin portal
+pnpm nx dev admin --turbopack         # Start dev server
+pnpm nx build admin                   # Build
+pnpm nx test admin                    # Test
+
+# Documentation sites
+pnpm nx start {site}                  # Start dev (e.g., isbd, portal)
+pnpm nx build {site}                  # Build site
+pnpm build:all                        # Build all sites
+
+# Testing (ALWAYS use affected)
+pnpm test                             # Runs nx affected
+pnpm nx affected -t test --parallel=3 # Manual affected
+pnpm typecheck                        # Type checking
+pnpm lint                             # Linting
+
+# Utilities
+pnpm fresh                            # Clean install
+pnpm health                           # System check
+pnpm nx:optimize                      # Performance optimization
 ```
 
-## 🏗️ Project Structure
+---
 
-```
-src/
-├── app/                   # Next.js App Router
-│   ├── (routes)/          # Route groups
-│   ├── layout.tsx         # Root layout
-│   └── page.tsx           # Home page
-├── components/            # Shared components
-│   ├── ui/                # Base UI components
-│   └── features/          # Feature components
-├── hooks/                 # Custom React hooks
-├── lib/                   # Utilities
-└── types/                 # TypeScript types
-```
+## ⚡ PLATFORM QUICK REFERENCE
 
-## 🎯 TypeScript Configuration
+### Admin Portal (Next.js)
+- **Location**: `apps/admin/`
+- **Components**: `apps/admin/src/components/`
+- **API Routes**: `apps/admin/src/app/api/`
+- **Tests**: `apps/admin/src/test*/`, `apps/admin/e2e/`
+- **Styling**: Tailwind CSS + Material-UI
+- **Auth**: Clerk required
 
-### Strict Requirements
+### Documentation Sites (Docusaurus)
+- **Location**: `standards/{site}/`
+- **Components**: `packages/theme/src/components/` (shared globally)
+- **Tests**: `packages/theme/src/tests/`
+- **Styling**: Infima + SASS/SCSS
+- **Content**: MDX files in `docs/`
+- **No API routes** - static generation only
 
-- **NEVER use `any` type** - use `unknown` if type is truly unknown
-- **MUST have explicit return types** for all functions
-- **MUST use type inference from Zod schemas** using `z.infer<typeof schema>`
+---
 
-## 🛡️ Data Validation (MANDATORY)
+## 🚨 COMMON MISTAKES TO AVOID
 
-### Zod Validation Rules
+1. **Not checking specs first** → ALWAYS read system-design-docs
+2. **Using wrong platform patterns** → Check Doc 20 for distinctions
+3. **Not using MCP servers** → Follow decision tree above
+4. **Running all tests** → Use `pnpm nx affected`
+5. **Working from subdirectory** → Always work from root
+6. **Using npm/yarn** → Only use pnpm
+7. **Implementing != spec** → Specs are correct, fix implementation
 
-- **MUST validate ALL external data**: API responses, form inputs, URL params
-- **MUST use branded types** for IDs
-- **MUST fail fast**: Validate at system boundaries
+---
 
-```typescript
-import { z } from 'zod';
+## 🔗 INTEGRATION NOTES
 
-// Branded types for IDs
-const UserIdSchema = z.string().uuid().brand<'UserId'>();
-type UserId = z.infer<typeof UserIdSchema>;
+### MCP Servers Available
+- **JetBrains**: Codebase intelligence and search
+- **Context7**: Library documentation and patterns
+- **MUI**: Material-UI components and examples
+- **Sequential**: Complex problem analysis
+- **Playwright**: Browser automation (E2E tests)
 
-// Environment validation
-export const envSchema = z.object({
-  NODE_ENV: z.enum(['development', 'test', 'production']),
-  NEXT_PUBLIC_APP_URL: z.string().url(),
-});
+### GitHub Services
+- **Mock GitHub**: @kie/mock-github for testing
+- **Octokit**: GitHub API SDK
+- **GitHub MCP**: Direct API access
 
-export const env = envSchema.parse(process.env);
-```
+### External Services
+- **Clerk**: Authentication (admin only)
+- **Supabase**: Operational data
+- **Google Sheets**: Bulk editing
+- **GitHub**: Version control & teams
 
-## 🧪 Testing Strategy
+---
 
-### Requirements
+## 📋 TROUBLESHOOTING
 
-- **MINIMUM 80% code coverage**
-- **MUST co-locate tests** with components in `__tests__` folders
-- **MUST use React Testing Library**
-- **MUST test user behavior** not implementation details
+For detailed troubleshooting, see:
+- Platform issues → @system-design-docs/20-platform-specific-architecture-guide.md#common-pitfalls
+- Test failures → @developer_notes/TESTING_STRATEGY.md#troubleshooting
+- Build issues → Check `pnpm health` and `pnpm nx:optimize`
+- Port conflicts → `pnpm ports:kill`
 
-## 🎨 Component Guidelines
+---
 
-### Documentation Requirements
+## 💡 HELPFUL PROMPTS
 
-```typescript
-/**
- * Component description
- *
- * @component
- * @example
- * <Button variant="primary" onClick={handleClick}>
- *   Click me
- * </Button>
- */
-```
+To help me work better:
+- **"Working on admin:"** → Activates admin-specific context
+- **"Working on docs:"** → Activates documentation context
+- **"Need to implement [feature]"** → I'll check specs first
+- **"Debug [issue]"** → I'll use Sequential + JetBrains MCP
 
-## 🔄 State Management Hierarchy
+---
 
-1. **Local State**: `useState` for component-specific state
-2. **Context**: For cross-component state within a feature
-3. **URL State**: Use search params for shareable state
-4. **Server State**: TanStack Query for ALL API data
-5. **Global State**: Zustand ONLY when truly needed
+## IMPORTANT REMINDERS
 
-## 🔐 Security Requirements
+- Do what has been asked; nothing more, nothing less
+- NEVER create files unless absolutely necessary
+- ALWAYS prefer editing existing files
+- NEVER proactively create documentation unless requested
+- ALWAYS check system-design-docs before implementing
 
-- **MUST sanitize ALL user inputs** with Zod
-- **MUST validate file uploads**: type, size, content
-- **MUST prevent XSS** with proper escaping
-- **MUST implement CSRF protection**
-- **NEVER use dangerouslySetInnerHTML** without sanitization
+---
 
-## 💅 Code Style & Quality
+<!-- 
+For comprehensive details on any topic, refer to:
+- System architecture → @system-design-docs/
+- Developer guides → @developer_notes/
+- Test documentation → @developer_notes/AI_TESTING_INSTRUCTIONS.md
+- UI/UX standards → @developer_notes/ui-ux-accessibility-best-practices.md
 
-### ESLint Rules
-
-- `@typescript-eslint/no-explicit-any`: error
-- `@typescript-eslint/explicit-function-return-type`: error
-- `no-console`: error (except warn/error)
-
-## 📋 Development Commands
-
-```json
-{
-  "scripts": {
-    "dev": "next dev",
-    "build": "next build",
-    "start": "next start",
-    "lint": "next lint --max-warnings 0",
-    "test": "vitest",
-    "test:coverage": "vitest --coverage",
-    "type-check": "tsc --noEmit"
-  }
-}
-```
-
-## ⚠️ CRITICAL GUIDELINES
-
-1. **ENFORCE strict TypeScript** - ZERO compromises
-2. **VALIDATE everything with Zod** - ALL external data
-3. **MINIMUM 80% test coverage** - NO EXCEPTIONS
-4. **MAXIMUM 500 lines per file** - Split if larger
-5. **MUST handle ALL states** - Loading, error, empty, success
-6. **NEVER use `any` type** - Use proper typing or `unknown`
-
-## 📋 Pre-commit Checklist
-
-- [ ] TypeScript compiles with ZERO errors
-- [ ] Tests passing with 80%+ coverage
-- [ ] ESLint passes with ZERO warnings
-- [ ] All components have JSDoc documentation
-- [ ] Zod schemas validate ALL external data
-- [ ] No console.log statements
-- [ ] Component files under 200 lines
-
-## Workflow Rules
-
-### Before Starting Any Task
-
-- Consult `/Docs/Implementation.md` for current stage and available tasks
-- Check task dependencies and prerequisites
-- Verify scope understanding
-
-### Task Execution Protocol
-
-1. Read task from Implementation.md
-2. Check relevant documentation
-3. Implement following existing patterns
-4. Test thoroughly
-5. Mark task complete only when fully working
-
-### File Reference Priority
-
-1. `/Docs/Bug_tracking.md` - Check for known issues first
-2. `/Docs/Implementation.md` - Main task reference
-3. `/Docs/project_structure.md` - Structure guidance
-4. `/Docs/UI_UX_doc.md` - Design requirements
-
-
-### PRP Workflow
-
-- Check `/PRPs/` directory for detailed implementation prompts
-- Follow validation loops defined in PRPs
-- Use ai_docs/ for additional context when needed
+This file intentionally kept concise. Full specifications are maintained in system-design-docs.
+-->

@@ -1,7 +1,7 @@
 # Architecture Evolution Timeline
 
 **Version:** 1.0  
-**Date:** January 2025  
+**Date:** July 2025  
 **Status:** Historical Evolution Documentation
 
 ## Overview
@@ -66,7 +66,7 @@ export const SITE_CONFIG: Record<SiteKey, Record<Environment, SiteConfigEntry>> 
 
 **Status**: ✅ **CURRENT** - Active architecture
 
-### Phase 4: Repository Simplification (January 2025)
+### Phase 4: Repository Simplification (July 2025)
 
 #### Current State
 - **Single Repository**: `iflastandards/platform`
@@ -304,7 +304,7 @@ French: http://iflastandards.info/ns/isbd/terms/Texte
 ### Architecture Decision Records (ADRs)
 
 #### ADR-001: Version-Based Translation Synchronization
-**Date**: January 2025  
+**Date**: July 2025  
 **Status**: Accepted  
 **Context**: Complex multi-system translation workflow  
 **Decision**: Implement version boundaries as sync points  
@@ -338,7 +338,7 @@ French: http://iflastandards.info/ns/isbd/terms/Texte
 - No runtime environment loading
 
 #### ADR-004: basePath Architecture for Admin Portal
-**Date**: January 2025  
+**Date**: July 2025  
 **Status**: Accepted  
 **Context**: Subdomain complexity and authentication issues  
 **Decision**: Use `/admin` basePath instead of subdomain  

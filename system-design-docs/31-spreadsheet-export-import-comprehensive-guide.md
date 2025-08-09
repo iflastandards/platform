@@ -1019,7 +1019,7 @@ sequenceDiagram
     participant ClerkAuth
     participant GoogleOAuth
     participant API
-    participant Cerbos
+    participant custom RBAC middleware
     
     User->>ClerkAuth: Login
     ClerkAuth->>User: Session Token
@@ -1028,9 +1028,9 @@ sequenceDiagram
     API->>ClerkAuth: Verify Token
     ClerkAuth->>API: User Info + Roles
     
-    API->>Cerbos: Check Permission
-    Note over Cerbos: namespace:isbd:export
-    Cerbos->>API: Allow/Deny
+    API->>custom RBAC middleware: Check Permission
+    Note over custom RBAC middleware: namespace:isbd:export
+    custom RBAC middleware->>API: Allow/Deny
     
     alt Needs Google Access
         API->>GoogleOAuth: Request Auth

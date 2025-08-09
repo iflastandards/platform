@@ -1,26 +1,26 @@
 # Current RBAC Implementation
 
 **Version:** 1.0  
-**Date:** January 2025  
+**Date:** July 2025  
 **Status:** Active Implementation
 
 ## Overview
 
-This document describes the **actual implemented** authorization architecture for the IFLA Standards Platform. The system uses Clerk for authentication with a custom RBAC implementation stored in Clerk's `publicMetadata`, NOT Clerk Organizations or Cerbos.
+This document describes the **actual implemented** authorization architecture for the IFLA Standards Platform. The system uses Clerk for authentication with a custom RBAC implementation stored in Clerk's `publicMetadata`.
 
 ## Architecture Overview
 
 ### Technology Stack
 - **Authentication**: Clerk (handles user identity and sessions)
 - **Authorization**: Custom RBAC via `publicMetadata`
-- **API Layer**: Standard Next.js App Router API routes (NOT tRPC)
+- **API Layer**: Standard Next.js App Router API routes
 - **Data Storage**: Supabase for operational data, Git for content
 
 ### Key Design Decisions
-1. **No Clerk Organizations**: Simpler implementation using publicMetadata
-2. **No Cerbos**: Custom authorization logic in TypeScript
-3. **No tRPC**: Standard Next.js API routes with fetch()
-4. **Role-based**: Hierarchical roles with namespace-specific permissions
+1. **Metadata-based roles**: Using Clerk publicMetadata for role storage
+2. **Custom authorization**: Authorization logic implemented in TypeScript
+3. **Standard API routes**: Next.js API routes with fetch()
+4. **Hierarchical roles**: Role-based permissions with namespace-level granularity
 
 ## Role Hierarchy
 
@@ -254,7 +254,7 @@ export const config = {
   matcher: [
     "/((?!.+\\.[\\w]+$|_next).*)",
     "/",
-    "/(api|trpc)(.*)" // Note: trpc included for legacy, not used
+    "/(api)(.*)"
   ]
 };
 ```
@@ -269,7 +269,7 @@ export const config = {
 
 ## Migration Path (If Needed)
 
-If we need to migrate to Clerk Organizations or another system:
+If we need to migrate to a different authorization system in the future:
 
 1. **Data Migration**: Export roles from publicMetadata
 2. **Gradual Rollout**: Run both systems in parallel

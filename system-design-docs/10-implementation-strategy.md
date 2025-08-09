@@ -1,7 +1,7 @@
 # Implementation Strategy
 
 **Version:** 1.0  
-**Date:** January 2025  
+**Date:** July 2025  
 **Status:** Strategic Planning Document
 
 ## Overview
@@ -151,7 +151,7 @@ User Management:
 - GitHub API for project management
 - Supabase for job tracking
 - Clerk for authentication
-- Cerbos for authorization
+- custom RBAC middleware for authorization
 
 ### Phase 4: Migration and Rollout (Months 7-8)
 

@@ -1,7 +1,7 @@
 # Discussion Points
 
 **Version:** 2.0  
-**Date:** January 2025  
+**Date:** July 2025  
 **Status:** Areas Requiring Team Discussion (Updated)
 
 ## Overview

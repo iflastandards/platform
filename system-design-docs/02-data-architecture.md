@@ -1,7 +1,7 @@
 # Data Architecture
 
 **Version:** 2.0  
-**Date:** January 2025  
+**Date:** July 2025  
 **Status:** Current Implementation
 
 ## Overview
@@ -143,7 +143,7 @@ activity_logs (
 ```
 
 **Row Level Security**:
-- All tables implement RLS based on Cerbos decisions
+- All tables implement RLS based on custom RBAC middleware decisions
 - User can only see data for authorized namespaces
 - Audit logs are immutable once created
 
@@ -308,61 +308,92 @@ interface PropertyConstraint {
 
 ## Data Flow Patterns
 
-### 1. Vocabulary Import Flow
+### Platform-Specific Data Flows
+
+#### Admin Portal (Next.js) - Dynamic Data Flow
+
+The admin portal handles dynamic data operations with real-time API calls:
+
+##### 1. Vocabulary Import Flow (Admin Only)
 ```mermaid
 sequenceDiagram
     participant U as User
     participant A as Admin Portal
+    participant API as Next.js API Routes
     participant S as Supabase
     participant G as Google Sheets
     participant GH as GitHub
 
     U->>A: Upload spreadsheet
-    A->>S: Create import job
-    A->>G: Fetch sheet data
-    A->>A: Validate against DCTAP
-    A->>S: Store validation results
+    A->>API: POST /api/import
+    API->>S: Create import job
+    API->>G: Fetch sheet data
+    API->>API: Validate against DCTAP
+    API->>S: Store validation results
     
     alt Validation Success
-        A->>GH: Create branch
-        A->>GH: Commit changes
-        A->>GH: Create PR
-        A->>U: Show success + PR link
+        API->>GH: Create branch
+        API->>GH: Commit changes
+        API->>GH: Create PR
+        API->>U: Show success + PR link
     else Validation Failed
-        A->>S: Update job status
-        A->>U: Show error report
+        API->>S: Update job status
+        API->>U: Show error report
     end
 ```
 
-### 2. User Access Flow
+##### 2. User Access Flow (Admin Only)
 ```mermaid
 sequenceDiagram
     participant U as User
     participant C as Clerk
     participant A as Admin Portal
-    participant CB as Cerbos
+    participant API as API Routes
+    participant RBAC as Custom RBAC
     participant S as Supabase
 
     U->>C: Authenticate
     C->>A: Return user + metadata
-    A->>CB: Check permissions
-    CB->>A: Return decisions
-    A->>S: Query with RLS context
-    S->>A: Return authorized data
+    A->>API: Request with auth
+    API->>RBAC: Check permissions
+    RBAC->>API: Return decisions
+    API->>S: Query with RLS context
+    S->>API: Return authorized data
+    API->>A: JSON response
     A->>U: Render UI
 ```
 
-### 3. Build-Time Data Flow
+#### Documentation Sites (Docusaurus) - Static Data Flow
+
+Docusaurus sites use build-time data fetching with no runtime API calls:
+
+##### 3. Build-Time Data Flow (Docusaurus Only)
 ```mermaid
 graph LR
-    A[Git Repository] --> B[Build Process]
+    A[Git Repository] --> B[Docusaurus Build]
     B --> C[Read MDX Files]
     B --> D[Read JSON Files]
-    C --> E[Generate Static Pages]
+    C --> E[Generate Static HTML]
     D --> E
-    E --> F[Docusaurus Sites]
-    D --> G[Generate RDF]
-    G --> H[RDF Endpoints]
+    E --> F[Static Site Files]
+    F --> G[CDN/GitHub Pages]
+    
+    D --> H[Generate RDF]
+    H --> I[Static RDF Files]
+    I --> G
+```
+
+##### 4. Runtime Data Access (Docusaurus)
+```mermaid
+graph LR
+    U[User Browser] --> CDN[CDN/GitHub Pages]
+    CDN --> HTML[Static HTML]
+    CDN --> JS[React Hydration]
+    CDN --> RDF[Static RDF Files]
+    
+    note1[No API calls]
+    note2[No authentication]
+    note3[All data pre-rendered]
 ```
 
 ## Data Access Patterns
@@ -503,7 +534,7 @@ Cache Invalidation:
 ### Access Control
 - Row Level Security in Supabase
 - Git branch protection rules
-- Cerbos policy enforcement
+- custom RBAC middleware policy enforcement
 - API rate limiting
 
 ### Data Privacy

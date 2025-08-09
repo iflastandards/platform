@@ -1,7 +1,7 @@
 # TinaCMS POC Implementation Guide
 
 **Version:** 1.0  
-**Date:** January 2025  
+**Date:** July 2025  
 **Purpose:** Step-by-step guide for TinaCMS proof of concept
 
 ## Quick Start

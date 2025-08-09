@@ -74,6 +74,60 @@ Essential guidance for coding agents working in this IFLA Standards monorepo.
 - Use `workspaceUtils` in integration tests, not `process.cwd()`
 - Include `experimental_faster: true` in all `docusaurus.config.ts` files
 
+## MCP Server Usage Strategy
+- **CRITICAL**: Default to using MCP servers for current API information rather than relying on potentially outdated training data
+- **Always use Context7 MCP** for library documentation, API references, and implementation patterns
+- **Always use MUI MCP** for Material-UI component APIs, props, and usage examples
+- **Knowledge drift problem**: Libraries evolve rapidly with breaking changes - my training data may be outdated
+- **High-risk scenarios requiring MCP**: React 19, Next.js 15, Material-UI 7.x, TypeScript 5.8+, build tool configurations
+- **Proactive MCP usage**: Check current docs even when I "think" I know the answer
+- **Better to over-use MCP than provide outdated information** that causes bugs or frustration
+
+## Tool Selection Decision Framework
+
+### JetBrains Tools - Use When:
+**Direct codebase operations are needed:**
+- Finding specific functions, classes, or patterns in the codebase
+- Making targeted edits to existing files
+- Searching for implementations or usage patterns
+- Running tests or build configurations
+- Debugging with breakpoints
+- File management and project structure exploration
+- **JetBrains excels at**: Indexed codebase knowledge, precise search, direct manipulation, IDE integration
+
+### Sequential Thinking - Use When:
+**Complex problem-solving is required:**
+- Multi-step architectural decisions
+- Debugging complex issues that require hypothesis testing
+- Planning implementation strategies
+- Analyzing trade-offs between different approaches
+- Breaking down large features into smaller tasks
+- Understanding system interactions and dependencies
+- **Sequential Thinking excels at**: Iterative reasoning, hypothesis generation, complex analysis, planning and design
+
+### Decision Framework:
+```
+Is this a straightforward code task?
+├─ YES → Use JetBrains directly
+└─ NO → Is this complex/multi-faceted?
+   ├─ YES → Start with Sequential Thinking
+   └─ MAYBE → Use JetBrains first, fall back to Sequential Thinking if needed
+```
+
+### Hybrid Approach - Common Workflow:
+1. **Sequential Thinking** to understand the problem and plan approach
+2. **JetBrains** to explore the codebase and gather specific information
+3. **Sequential Thinking** to synthesize findings and refine the plan
+4. **JetBrains** to implement the solution
+
+### Example Task Routing:
+- "Find all uses of UserService" → **JetBrains**
+- "Why is authentication failing intermittently?" → **Sequential Thinking** + JetBrains
+- "Add a new API endpoint" → **JetBrains** (if pattern is clear)
+- "Design a new feature architecture" → **Sequential Thinking** first
+- "Debug this complex error" → **Sequential Thinking** to analyze, **JetBrains** to investigate
+- "Refactor this component" → **JetBrains** (if straightforward), **Sequential Thinking** (if architectural implications)
+
 ## Testing Philosophy & Strategy
 - **Integration-first approach**: Prefer real I/O and actual data over mocks
 - **5-phase testing strategy**: Selective → Pre-commit → Pre-push → Comprehensive → CI
@@ -99,6 +153,20 @@ Essential guidance for coding agents working in this IFLA Standards monorepo.
 - **Configuration**: Secrets detection rules configured in `.secretlintrc.json`
 - **Exclusions**: Test files, documentation, and build artifacts are excluded from scanning
 - **Emergency Override**: If absolutely necessary, remove secrets and commit clean version
+
+## System Design Documentation - CONSULT BEFORE CODING
+- **Location**: `@system-design-docs/` - Authoritative architecture documentation
+- **Index**: `@system-design-docs/README.md` - Task-based navigation guide
+- **MANDATORY**: Check relevant docs before implementing features or making architectural changes
+- **Task-Based Quick Reference**:
+  - **API Development** → Docs 5, 2, 14 (endpoints, data patterns, RBAC)
+  - **UI Components** → Doc 11 (design system), Docs 12-13 (permissions)
+  - **Import/Export** → **Doc 33** (active implementation checklist)
+  - **Authentication/RBAC** → Docs 12, 13, 14
+  - **Testing** → Doc 6 (5-phase strategy)
+  - **Database changes** → Doc 2 (data architecture)
+  - **Docusaurus sites** → Docs 3, 4 (configuration, workflow)
+- **When to consult**: Before writing code for any non-trivial feature or architectural component
 
 ## Development Best Practices
 

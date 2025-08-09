@@ -1,7 +1,7 @@
 # MVP Critical Path Implementation Plan
 
 **Version:** 1.0  
-**Date:** January 2025  
+**Date:** July 2025  
 **Status:** Execution Ready
 
 ## Overview
@@ -28,7 +28,7 @@ These features will be implemented post-MVP:
 - Comprehensive analytics
 - Advanced project management features
 
-## Updated Critical Path Timeline (Reprioritized January 2025)
+## Updated Critical Path Timeline (Reprioritized July 2025)
 
 ### **Phase 1 - Weeks 1-4: Import/Export Workflows** 🔴 CRITICAL
 
@@ -108,7 +108,7 @@ async function importFromGoogleSheets(config: ImportConfig): Promise<ImportResul
 ```yaml
 Week 5: Authentication & Authorization Foundation
   - Clerk authentication integration
-  - Cerbos policy engine setup
+  - custom RBAC middleware policy engine setup
   - Role-based access control (RBAC) implementation
   - JWT token validation and refresh
 

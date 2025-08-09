@@ -1,7 +1,7 @@
 # MDX Generation Safety Design: Dry-Run and Rollback
 
 **Version:** 1.0  
-**Date:** January 2025  
+**Date:** July 2025  
 **Status:** Design Specification  
 **Priority:** HIGH - Critical for data integrity
 

@@ -1,7 +1,7 @@
 # API Architecture
 
 **Version:** 2.0  
-**Date:** January 2025  
+**Date:** July 2025  
 **Status:** Current Implementation
 
 ## Overview
@@ -24,7 +24,7 @@ The IFLA Standards Platform API layer consists of Render API endpoints providing
 
 ### 3. **Security by Default**
 - All endpoints require authentication
-- Fine-grained authorization via Cerbos
+- Fine-grained authorization via custom RBAC middleware
 - Input validation on all requests
 - Rate limiting and abuse prevention
 

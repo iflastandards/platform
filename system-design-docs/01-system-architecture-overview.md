@@ -1,7 +1,7 @@
 # System Architecture Overview
 
 **Version:** 2.0  
-**Date:** January 2025  
+**Date:** July 2025  
 **Status:** Current Implementation
 
 ## Executive Summary
@@ -31,14 +31,35 @@ The IFLA Standards Platform is a modern, monorepo-based system designed to manag
 ## Technology Stack
 
 ### Frontend Technologies
+
+#### Admin Portal (Next.js)
 ```yaml
+Framework: Next.js 15.2.5 (App Router)
 UI Framework: React 19.1.0
 Type System: TypeScript 5.7
-Styling: Tailwind CSS + shadcn/ui
-Documentation: Docusaurus 3.8+
-Admin Portal: Next.js 15.2.5 (App Router)
+Styling: Tailwind CSS + Material-UI (MUI)
 State Management: React Context + SWR
-Component Library: @ifla/theme (shared)
+Authentication: Clerk components
+Component Location: apps/admin/src/components/
+Test Location: apps/admin/src/test/, apps/admin/src/tests/
+```
+
+#### Documentation Sites (Docusaurus)
+```yaml
+Framework: Docusaurus 3.8+
+UI Framework: React 19.1.0
+Type System: TypeScript 5.7
+Styling: SASS/SCSS + Infima theme
+Component Location: packages/theme/src/components/
+Test Location: packages/theme/src/tests/
+Static Generation: MDX pages + React components
+```
+
+#### Shared Libraries
+```yaml
+Component Library: @ifla/theme (shared utilities)
+Validation: @ifla/validation (DCTAP schemas)
+RDF Tools: @ifla/rdf-tools (RDF processing)
 ```
 
 ### Backend Technologies
@@ -106,9 +127,18 @@ The platform leverages GitHub's team management to reflect governance:
 Each namespace/standard has its own Docusaurus site:
 - **Purpose**: Public-facing documentation and vocabulary browsing
 - **Examples**: ISBD, UNIMARC, LRM, FRBR, MulDiCat
+- **Architecture**:
+  - Static site generation (SSG)
+  - No API routes (purely static)
+  - No authentication required
+  - Build-time data fetching from Git
+- **Styling**:
+  - Infima theme framework
+  - SASS/SCSS for custom styles
+  - CSS modules for component styles
 - **Features**: 
-  - Multilingual support
-  - Version-controlled content
+  - Multilingual support via i18n
+  - Version-controlled MDX content
   - Static generation for performance
   - Integrated vocabulary tables
   - GitHub-integrated feedback
@@ -116,16 +146,25 @@ Each namespace/standard has its own Docusaurus site:
 ### 2. Admin Portal (Next.js)
 Centralized management application at `/admin`:
 - **Purpose**: Vocabulary lifecycle management
+- **Architecture**: 
+  - App Router with React Server Components
+  - Dynamic API routes in app/api/
+  - basePath configuration for environment flexibility
+  - Server-side rendering (SSR) and client components
+- **Styling**:
+  - Tailwind CSS for utilities
+  - Material-UI (MUI) components
+  - Custom theme configuration
+- **Authentication**:
+  - Clerk middleware on all routes
+  - Custom RBAC via publicMetadata
+  - Protected API endpoints
 - **Features**:
   - Import/export workflows
   - DCTAP validation
   - Version publishing
   - Translation management
   - User and role administration
-- **Architecture**: 
-  - App Router with React Server Components
-  - basePath configuration for environment flexibility
-  - Integrated with all backend services
 
 ### 3. Shared Packages
 Reusable libraries across the monorepo:
@@ -150,7 +189,7 @@ graph LR
     
     B --> D[Edge Functions]
     D --> E[Clerk Auth]
-    D --> F[Cerbos Policies]
+    D --> F[Custom RBAC Middleware]
     D --> G[GitHub API]
     D --> H[Google Sheets]
     D --> I[Supabase]
@@ -199,11 +238,11 @@ Production Environment:
 - **API Security**: JWT tokens with short expiry
 
 ### Authorization Model
-- **Authorization System**: Clerk Organizations with custom roles
+- **Authorization System**: Custom RBAC using Clerk publicMetadata
 - **Role Hierarchy**: Superadmin → Review Group Admin → Namespace Admin → Editor → Translator → Reviewer
-- **Organization-based**: Review Groups mapped to Clerk Organizations
-- **Resource-based**: Namespace permissions via organization metadata
-- **Comprehensive Documentation**: See [RBAC Authorization Model](./12-rbac-authorization-model.md), [Permission Matrix](./13-permission-matrix-detailed.md), and [Clerk RBAC Architecture](./14-clerk-rbac-architecture.md)
+- **Metadata-based**: Roles and permissions stored in Clerk user publicMetadata
+- **Resource-based**: Namespace-level permission inheritance
+- **Comprehensive Documentation**: See [RBAC Authorization Model](./12-rbac-authorization-model.md), [Permission Matrix](./13-permission-matrix-detailed.md), and [RBAC Implementation](./14-rbac-implementation.md)
 
 ### Data Security
 - **At Rest**: Git encryption, Supabase RLS

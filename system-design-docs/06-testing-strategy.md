@@ -1,7 +1,7 @@
 # Comprehensive Testing Strategy
 
 **Version:** 4.0  
-**Date:** January 2025  
+**Date:** July 2025  
 **Status:** Current Implementation (Nx-Optimized with AI Guidance)
 
 ## Overview
@@ -95,26 +95,74 @@ When writing tests, AI agents should:
 
 ## Test Placement Guide for AI Agents
 
+### Platform-Specific Test Locations
+
+#### Admin Portal (Next.js)
+```
+apps/admin/
+├── src/
+│   ├── components/
+│   │   └── **/__tests__/        # Component unit tests
+│   ├── app/api/
+│   │   └── **/__tests__/        # API route tests
+│   ├── lib/
+│   │   └── __tests__/           # Utility function tests
+│   ├── test/                    # Test utilities and setup
+│   │   ├── unit/                # Unit test helpers
+│   │   ├── integration/         # Integration test helpers
+│   │   └── setup.ts             # Test configuration
+│   └── tests/                   # Integration tests
+│       └── api/                 # API integration tests
+└── e2e/                         # E2E tests for admin
+```
+
+#### Documentation Sites (Docusaurus)
+```
+standards/{site}/
+├── src/
+│   ├── components/
+│   │   └── __tests__/           # Component unit tests
+│   ├── pages/
+│   │   └── __tests__/           # Page component tests
+│   └── theme/
+│       └── __tests__/           # Theme component tests
+└── tests/                       # Integration tests
+    └── build/                   # Build-time tests
+```
+
 ### Decision Tree
 ```
 Start: Need to write a test
   |
+  ├─ Which platform?
+  │   ├─ Admin Portal (Next.js)?
+  │   │   ├─ API Route? → apps/admin/src/app/api/**/__tests__/
+  │   │   ├─ Component? → apps/admin/src/components/**/__tests__/
+  │   │   ├─ Integration? → apps/admin/src/tests/
+  │   │   └─ E2E? → apps/admin/e2e/
+  │   │
+  │   └─ Docusaurus Site?
+  │       ├─ Component? → packages/theme/src/tests/components/
+  │       ├─ Build test? → standards/{site}/tests/build/
+  │       └─ E2E? → e2e/sites/{site}/
+  |
   ├─ Does it need environment variables or external services?
   │   └─ YES → Environment Test (@env)
-  │       └─ Place in: tests/deployment/
-  │       └─ Name: env-*.test.ts
+  │       └─ Admin: apps/admin/src/tests/deployment/
+  │       └─ Docs: standards/{site}/tests/deployment/
   |
   ├─ Does it test multiple components working together?
   │   └─ YES → Integration Test (@integration)
-  │       └─ Place in: tests/integration/ or *.integration.test.ts
+  │       └─ Admin: apps/admin/src/tests/integration/
+  │       └─ Docs: standards/{site}/tests/integration/
   |
   ├─ Does it test a complete user workflow in a browser?
   │   └─ YES → E2E Test (@e2e)
-  │       └─ Place in: e2e/
-  │       └─ Name: *.e2e.test.ts or *.spec.ts
+  │       └─ Admin: apps/admin/e2e/
+  │       └─ Docs: e2e/sites/{site}/
   |
   └─ NO to all above → Unit Test (@unit)
-      └─ Place next to source file
+      └─ Place next to source file in __tests__/
       └─ Name: *.test.ts or *.spec.tsx
 ```
 
@@ -125,12 +173,22 @@ Start: Need to write a test
 **Speed**: <60s for affected projects  
 **Automatic**: Via Husky pre-commit hook
 
+#### Admin Portal Tests
 ```bash
-# Nx affected testing
-nx affected --target=test --parallel=3
+# Test admin components and API routes
+pnpm nx test admin --parallel=3
 
 # With coverage
-nx affected --target=test --coverage --parallel=3
+pnpm nx test admin --coverage
+```
+
+#### Docusaurus Sites Tests
+```bash
+# Test specific site
+pnpm nx test isbd --parallel=3
+
+# Test all documentation sites
+pnpm nx run-many --target=test --projects=tag:docusaurus
 ```
 
 ### Phase 2: Integration Tests (Pre-merge)
@@ -138,13 +196,19 @@ nx affected --target=test --coverage --parallel=3
 **Speed**: <15min  
 **Scope**: API endpoints, database, external services
 
+#### Admin Portal Integration
 ```bash
-# Run integration tests for affected projects
-nx affected --target=test:integration --parallel=3
+# Admin API integration tests
+pnpm nx test:integration admin --grep="@api"
 
-# Specific integration suites
-nx test:integration admin --grep="@api"
-nx test:integration portal --grep="@database"
+# Admin with Clerk auth
+pnpm nx test:integration admin --grep="@auth"
+```
+
+#### Docusaurus Build Tests
+```bash
+# Test build process for sites
+pnpm nx run-many --target=test:build --projects=tag:docusaurus
 ```
 
 ### Phase 3: E2E Tests (Pre-push)

@@ -1,7 +1,7 @@
 # Collaboration Architecture
 
 **Version:** 2.0  
-**Date:** January 2025  
+**Date:** July 2025  
 **Status:** Current Implementation
 
 ## Overview
@@ -294,7 +294,7 @@ sequenceDiagram
     participant U as User
     participant C as Clerk
     participant A as Application
-    participant CB as Cerbos
+    participant CB as custom RBAC middleware
     participant GH as GitHub
     
     U->>C: Login via GitHub OAuth

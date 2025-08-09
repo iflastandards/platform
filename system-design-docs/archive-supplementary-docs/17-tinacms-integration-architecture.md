@@ -1,7 +1,7 @@
 # TinaCMS Integration Architecture
 
 **Version:** 1.0  
-**Date:** January 2025  
+**Date:** July 2025  
 **Status:** Technical Design Document
 **Focus:** Self-hosted TinaCMS with GitHub integration
 

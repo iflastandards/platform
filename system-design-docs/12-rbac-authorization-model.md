@@ -1,13 +1,13 @@
 # Role-Based Access Control (RBAC) Authorization Model
 
 **Version:** 2.0  
-**Date:** January 2025  
+**Date:** July 2025  
 **Status:** Current Implementation  
 **Purpose:** RBAC specification as actually implemented in the IFLA Standards Platform
 
 ## Executive Summary
 
-This document provides the reference for the Role-Based Access Control (RBAC) system as actually implemented in the IFLA Standards Platform. The system uses Clerk for authentication with a custom RBAC implementation storing roles in Clerk's `publicMetadata`, NOT Clerk Organizations or Cerbos.
+This document provides the reference for the Role-Based Access Control (RBAC) system as specified for the IFLA Standards Platform. The system uses Clerk for authentication with a custom RBAC middleware implementation storing roles in Clerk's `publicMetadata`.
 
 ## Core Principles
 
@@ -417,7 +417,7 @@ Response:
 
 ### Permission Checking Logic
 ```typescript
-// Cerbos policy example
+// custom RBAC middleware policy example
 function canUserEditContent(user: User, namespace: string, content: Content): boolean {
   // Check explicit permissions
   if (user.hasSystemPermission('system.admin')) return true;
@@ -471,8 +471,8 @@ function canUserEditContent(user: User, namespace: string, content: Content): bo
 - Clear permission error messages
 
 ### Backend Implementation
-- Cerbos policies for all endpoints
-- Middleware for permission checking
+- Custom RBAC middleware for all API endpoints
+- withAuth wrapper for permission checking
 - Resource-level permission validation
 - Batch permission checks for performance
 
