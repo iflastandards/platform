@@ -50,8 +50,16 @@ This directory contains the comprehensive system design documentation for the IF
 13. **[Permission Matrix Detailed](./13-permission-matrix-detailed.md)** - Detailed permission mappings for all platform activities
 14. **[RBAC Implementation](./14-rbac-implementation.md)** - Current custom RBAC implementation using Clerk publicMetadata
 
+### Organization & Teams
+16. **[Projects, Teams, and Review Groups Architecture](./16-projects-teams-review-groups-architecture.md)** - Organizational structure and team management
+
 ### Platform-Specific Guidance
 20. **[Platform-Specific Architecture Guide](./20-platform-specific-architecture-guide.md)** - Comprehensive guide distinguishing Next.js admin from Docusaurus sites
+
+### Import/Export & Data Management
+31. **[Spreadsheet Export/Import Comprehensive Guide](./31-spreadsheet-export-import-comprehensive-guide.md)** - Complete round-trip workflow for vocabulary management
+32. **[Phase 1 Import/Export Implementation Plan](./32-phase1-import-export-implementation-plan.md)** - Initial implementation roadmap
+33. **[Spreadsheet Import/Export Implementation Checklist](./33-spreadsheet-import-export-implementation-checklist.md)** - Active implementation checklist
 
 ### Development Standards
 35. **[AI Development Guidelines](./35-ai-development-guidelines.md)** - 🆕 Comprehensive guidelines for AI-assisted development
@@ -77,18 +85,23 @@ This directory contains the comprehensive system design documentation for the IF
 
 ### Key Architectural Decisions
 - Git as single source of truth for all vocabulary data
+- MDX with RDF front matter for vocabulary definitions
 - Distributed storage across multiple systems
 - Five-phase progressive testing strategy
+- Four-phase vocabulary lifecycle management
 - Centralized TypeScript configuration matrix
 - Role-based workflow governance
-- Environment-aware basePath handling
+- Platform serves from root (no basePath)
 
-### Recent Updates (December 2024 - July 2025)
+### Recent Updates (December 2024 - August 2025)
 - Migration from 36+ environment files to centralized configuration
 - Introduction of OMR25 vocabulary management system
 - Enhanced testing strategy with Nx optimizations
 - Simplified environment structure (local/preview/production)
-- Admin portal basePath architecture implementation
+- Platform now serves from root (basePath removed)
+- MDX-based vocabulary management with RDF front matter
+- Four-phase vocabulary lifecycle implementation
+- AI development guidelines and coding standards
 
 ## Task-Based Navigation
 
@@ -140,15 +153,16 @@ This directory contains the comprehensive system design documentation for the IF
 
 #### General Testing
 - **5-phase testing strategy** → Doc 6
-- **AI testing guide** → `developer_notes/AI_TESTING_INSTRUCTIONS.md`
-- **Test templates** → `developer_notes/TEST_TEMPLATES.md`
+- **AI testing guide** → **Doc 35** (AI development guidelines)
+- **Test placement** → Doc 35 (decision tree)
+- **Test templates** → Doc 35 (examples)
 
 ### 📊 Import/Export Features [Admin Portal]
-- **Spreadsheet import/export** → **Doc 33** (implementation checklist), 37 (architecture)
+- **Spreadsheet import/export** → **Doc 31** (comprehensive guide), **Doc 33** (checklist), **Doc 37** (architecture)
 - **Vocabulary management** → **Doc 37** (complete lifecycle)
-- **Dynamic data operations** → Doc 20 (admin data flow)
-- **Google Sheets integration** → Doc 33, 37, plus `tools/sheet-sync/`
-- **Data validation patterns** → Docs 2, 33, 37 (DCTAP)
+- **Four-phase lifecycle** → Docs 2, 31, 37
+- **Google Sheets integration** → Docs 31, 33, 37, plus `tools/sheet-sync/`
+- **DCTAP validation** → Docs 31, 33, 37
 
 ### 🔄 RDF & Semantic Processing [Both Platforms]
 - **RDF generation (build-time)** → Doc 2, Docusaurus static generation
@@ -167,7 +181,9 @@ This directory contains the comprehensive system design documentation for the IF
 - **Clerk integration** → Docs 20, 14 (current implementation)
 - **RBAC system** → Docs 12, 13, 14
 - **Permission matrix** → Doc 13
+- **Team structure** → Doc 16 (projects, teams, review groups)
 - **Protected routes** → Doc 20 (admin auth section)
+- **withAuth middleware** → Doc 14 (implementation pattern)
 
 ### ⚡ Performance & Optimization
 #### Admin Portal
@@ -191,29 +207,35 @@ This directory contains the comprehensive system design documentation for the IF
 - **Environment management** → Doc 3, Doc 10
 
 ### 📋 Current Implementation Priorities
-- **Phase 1 Import/Export** → **Doc 33** (active checklist)
-- **Platform distinctions** → **Doc 20** (NEW - must read)
+- **Vocabulary management** → **Doc 37** (complete architecture)
+- **Import/Export workflow** → **Docs 31, 33** (implementation guides)
+- **AI-assisted development** → **Doc 35** (guidelines)
+- **Coding standards** → **Doc 36** (platform standards)
+- **Platform distinctions** → **Doc 20** (must read)
 - **PRD compliance** → **PRD-CONFORMANCE-REPORT.md**
-- **MVP scope management** → Doc 10, PRD-CONFORMANCE-REPORT.md
 
 ## Role-Based Navigation
 
-- **For new developers**: Start with Doc 20 (platform guide), then 1, 3, and 6
-- **For frontend developers (Admin)**: Focus on Docs 20, 11 (MUI), 5 (API integration)
-- **For frontend developers (Docs)**: Focus on Docs 20, 11 (Infima), 3 (configuration)
-- **For backend developers**: Review Docs 20 (admin sections), 5, 2, 14
-- **For architects**: Focus on documents 1, 2, 5, 7, 8, and 20
-- **For operations**: Review documents 6, 10, 20 (deployment sections)
-- **For project managers**: See documents 4, 9, 10, and 11
-- **For security & compliance**: Focus on documents 12, 13, 14 for RBAC
-- **For administrators**: Review documents 12, 13, 14 for role management
+- **For new developers**: Start with Doc 20 (platform guide), Doc 35 (AI guidelines), then 1, 3, 6, 36
+- **For frontend developers (Admin)**: Focus on Docs 20, 11 (MUI), 5 (API integration), 36 (standards)
+- **For frontend developers (Docs)**: Focus on Docs 20, 11 (Infima), 3 (configuration), 36 (standards)
+- **For backend developers**: Review Docs 20 (admin sections), 5, 2, 14, 37 (vocabulary)
+- **For architects**: Focus on documents 1, 2, 5, 7, 8, 20, 37
+- **For operations**: Review documents 6, 10, 20 (deployment sections), 31-33 (import/export)
+- **For project managers**: See documents 4, 9, 10, 11, 16 (teams)
+- **For security & compliance**: Focus on documents 12, 13, 14, 34 (accessibility)
+- **For administrators**: Review documents 12, 13, 14, 16 (teams) for role management
+- **For AI assistants**: Start with Doc 35 (AI guidelines), then 36 (standards), 20 (platform)
 
 ## Document Status
 
-These documents represent the current state of the IFLA Standards Platform as of July 2025. They supersede all previous design documents, incorporating:
+These documents represent the current state of the IFLA Standards Platform as of August 2025. They supersede all previous design documents, incorporating:
 - Lessons learned from initial implementation
+- MDX-based vocabulary management system
+- Four-phase vocabulary lifecycle
+- AI development guidelines
 - Performance optimizations
-- Simplified configuration approach
+- Simplified configuration approach (no basePath)
 - Enhanced testing and quality gates
 - Improved developer experience
 
