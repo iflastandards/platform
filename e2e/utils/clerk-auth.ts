@@ -1,38 +1,32 @@
 import { BrowserContext } from '@playwright/test';
 import { addBasePath } from '@ifla/theme/utils';
+import { TEST_USER_EMAILS } from '../../apps/admin/src/test-config/clerk-test-users';
 
-interface ClerkTestUser {
-  email: string;
-  name: string;
-  role: string;
-  // Real users that exist in Clerk's development environment
-}
-
-// Real Clerk test users
+// Map test users for E2E convenience
 // All test users use email verification code: 424242
-const CLERK_TEST_USERS: ClerkTestUser[] = [
+const CLERK_TEST_USERS = [
   { 
-    email: 'superadmin+clerk_test@example.com', 
+    email: TEST_USER_EMAILS.SUPERADMIN, 
     name: 'Super Admin',
     role: 'system-admin'
   },
   { 
-    email: 'rg_admin+clerk_test@example.com', 
+    email: TEST_USER_EMAILS.RG_ADMIN, 
     name: 'Review Group Admin',
     role: 'rg-admin'
   },
   { 
-    email: 'editor+clerk_test@example.com', 
+    email: TEST_USER_EMAILS.EDITOR, 
     name: 'Editor',
     role: 'editor'
   },
   { 
-    email: 'author+clerk_test@example.com', 
+    email: TEST_USER_EMAILS.AUTHOR, 
     name: 'Author/Reviewer',
     role: 'reviewer'
   },
   { 
-    email: 'translator+clerk_test@example.com', 
+    email: TEST_USER_EMAILS.TRANSLATOR, 
     name: 'Translator',
     role: 'translator'
   },
@@ -110,7 +104,7 @@ export async function clearClerkAuth(context: BrowserContext) {
 /**
  * Helper function to get available test users
  */
-export function getAvailableTestUsers(): ClerkTestUser[] {
+export function getAvailableTestUsers() {
   return [...CLERK_TEST_USERS];
 }
 

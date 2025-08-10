@@ -1,43 +1,49 @@
 import { BrowserContext } from '@playwright/test';
 import { seedClerkAuth, clearClerkAuth as clearClerkAuthState, isValidTestUser } from './clerk-auth';
+import { TEST_USER_EMAILS } from '../../apps/admin/src/test-config/clerk-test-users';
 
-// Pre-defined test users based on real Clerk test users
-// These correspond to actual users in Clerk's development environment
+// Map the test user emails to a more convenient format for E2E tests
 export const TEST_USERS = {
   systemAdmin: {
-    email: 'superadmin+clerk_test@example.com',
+    email: TEST_USER_EMAILS.SUPERADMIN,
     name: 'Super Admin',
     role: 'system-admin'
   },
   rgAdmin: {
-    email: 'rg_admin+clerk_test@example.com',
+    email: TEST_USER_EMAILS.RG_ADMIN,
     name: 'Review Group Admin',
     role: 'rg-admin'
   },
   siteEditor: {
-    email: 'editor+clerk_test@example.com',
+    email: TEST_USER_EMAILS.EDITOR,
     name: 'Editor',
     role: 'editor'
   },
   reviewer: {
-    email: 'author+clerk_test@example.com',
+    email: TEST_USER_EMAILS.AUTHOR,
     name: 'Author/Reviewer',
     role: 'reviewer'
   },
   translator: {
-    email: 'translator+clerk_test@example.com',
+    email: TEST_USER_EMAILS.TRANSLATOR,
     name: 'Translator',
     role: 'translator'
   },
   admin: {
-    email: 'superadmin+clerk_test@example.com',
+    email: TEST_USER_EMAILS.SUPERADMIN,
     name: 'Super Admin',
     role: 'system-admin'
   },
   namespace_editor: {
-    email: 'editor+clerk_test@example.com',
+    email: TEST_USER_EMAILS.EDITOR,
     name: 'Editor',
     role: 'editor'
+  },
+  // Add namespace admin if it exists
+  namespaceAdmin: {
+    email: TEST_USER_EMAILS.NAMESPACE_ADMIN || TEST_USER_EMAILS.RG_ADMIN,
+    name: 'Namespace Admin',
+    role: 'namespace-admin'
   }
 };
 
@@ -80,7 +86,7 @@ export async function clearClerkAuth(context: BrowserContext) {
  * Setup unauthenticated state by ensuring no Clerk session exists
  */
 export async function setupClerkUnauthenticatedState(context: BrowserContext) {
-// Clear any existing Clerk authentication
+  // Clear any existing Clerk authentication
   await clearClerkAuthState(context);
   
   // Clear any cookies that might indicate authentication
