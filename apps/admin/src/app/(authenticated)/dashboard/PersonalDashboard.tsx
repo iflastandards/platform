@@ -31,7 +31,7 @@ import {
 } from '@mui/icons-material';
 import { AppUser } from '@/lib/clerk-github-auth';
 import Link from 'next/link';
-import { StandardDashboardLayout, NavigationItem } from '@/components/layout/StandardDashboardLayout';
+import { TabBasedDashboardLayout, NavigationItem } from '@/components/layout/TabBasedDashboardLayout';
 
 interface PersonalDashboardProps {
   user: AppUser;
@@ -63,24 +63,24 @@ export default function PersonalDashboard({ user }: PersonalDashboardProps) {
     {
       id: 'overview',
       label: 'Overview',
-      icon: <Home />,
+      icon: Home,
     },
     {
       id: 'review-groups',
       label: 'Review Groups',
-      icon: <Group />,
+      icon: Group,
       badge: user.reviewGroups.length,
     },
     {
       id: 'projects',
       label: 'Projects',
-      icon: <AccountTree />,
+      icon: AccountTree,
       badge: projectCount,
     },
     {
       id: 'namespaces',
       label: 'Namespaces',
-      icon: <Folder />,
+      icon: Folder,
       badge: user.accessibleNamespaces.length,
     },
   ];
@@ -407,7 +407,7 @@ export default function PersonalDashboard({ user }: PersonalDashboardProps) {
   };
 
   return (
-    <StandardDashboardLayout
+    <TabBasedDashboardLayout
       title="Personal Dashboard"
       subtitle="Manage your IFLA Standards work"
       navigationItems={navigationItems}
@@ -415,6 +415,6 @@ export default function PersonalDashboard({ user }: PersonalDashboardProps) {
       onTabSelect={setSelectedTab}
     >
       {renderContent()}
-    </StandardDashboardLayout>
+    </TabBasedDashboardLayout>
   );
 }

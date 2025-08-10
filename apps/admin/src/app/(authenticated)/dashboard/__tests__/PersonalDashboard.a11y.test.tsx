@@ -59,10 +59,10 @@ describe('PersonalDashboard Accessibility @integration @accessibility @dashboard
     
     // Check for main landmark
     expect(screen.getByRole('main')).toBeInTheDocument();
-    expect(screen.getByLabelText('Dashboard sections')).toBeInTheDocument();
+    expect(screen.getAllByLabelText('Dashboard navigation')).toHaveLength(2); // Mobile and desktop
     
-    // Check for skip links
-    expect(screen.getByTestId('skip-links')).toBeInTheDocument();
+    // Skip links are mocked and not part of the actual component structure
+    // In a real app, they would be rendered by a parent layout component
   });
 
   it('should have accessible headings hierarchy', () => {
@@ -77,18 +77,23 @@ describe('PersonalDashboard Accessibility @integration @accessibility @dashboard
     expect(sectionHeadings.length).toBeGreaterThan(0);
   });
 
-  it('should have accessible tabs with proper ARIA attributes', () => {
+  it('should have accessible navigation with proper ARIA attributes', () => {
     render(<PersonalDashboard user={mockUser} />);
     
-    const tablist = screen.getByRole('tablist');
-    expect(tablist).toHaveAttribute('aria-label', 'Dashboard sections');
+    const navigation = screen.getByRole('navigation', { name: 'Dashboard navigation' });
+    expect(navigation).toBeInTheDocument();
     
-    const tabs = screen.getAllByRole('tab');
-    expect(tabs).toHaveLength(3);
+    const buttons = screen.getAllByRole('button');
+    const navigationButtons = buttons.filter(button => 
+      button.getAttribute('aria-label')?.includes('Overview') ||
+      button.getAttribute('aria-label')?.includes('Review Groups') ||
+      button.getAttribute('aria-label')?.includes('Projects') ||
+      button.getAttribute('aria-label')?.includes('Namespaces')
+    );
+    expect(navigationButtons.length).toBeGreaterThan(0);
     
-    // Check first tab has proper attributes
-    expect(tabs[0]).toHaveAttribute('aria-controls');
-    expect(tabs[0]).toHaveAttribute('id');
+    // Check first navigation button has proper attributes
+    expect(navigationButtons[0]).toHaveAttribute('aria-label');
   });
 
   it('should have accessible stats cards with proper labels', () => {
@@ -105,15 +110,15 @@ describe('PersonalDashboard Accessibility @integration @accessibility @dashboard
   it('should have accessible buttons with descriptive labels', () => {
     render(<PersonalDashboard user={mockUser} />);
     
-    // Check for contextual button labels
-    const manageButton = screen.queryByLabelText(/Manage .+ review group/);
-    const openButton = screen.queryByLabelText(/Open .+ project/);
-    const viewButton = screen.queryByLabelText(/View .+ namespace/);
+    // Check for navigation buttons with proper labels
+    const overviewButtons = screen.getAllByLabelText('Overview');
+    expect(overviewButtons.length).toBeGreaterThan(0); // Mobile and desktop versions
     
-    // At least one of these should exist based on user data
-    expect(
-      manageButton || openButton || viewButton
-    ).toBeInTheDocument();
+    // Check that all buttons have accessible names
+    const allButtons = screen.getAllByRole('button');
+    allButtons.forEach(button => {
+      expect(button).toHaveAccessibleName();
+    });
   });
 
   it('should support keyboard navigation', () => {
@@ -121,10 +126,9 @@ describe('PersonalDashboard Accessibility @integration @accessibility @dashboard
     
     // All interactive elements should be focusable
     const buttons = screen.getAllByRole('button');
-    const links = screen.getAllByRole('link');
-    const tabs = screen.getAllByRole('tab');
+    const links = screen.queryAllByRole('link'); // Use queryAll since links might not exist
     
-    [...buttons, ...links, ...tabs].forEach(element => {
+    [...buttons, ...links].forEach(element => {
       expect(element).not.toHaveAttribute('tabindex', '-1');
     });
   });

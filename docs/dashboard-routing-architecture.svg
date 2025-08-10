@@ -1,0 +1,150 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="1200" height="800" viewBox="0 0 1200 800" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <style>
+      .title { font-family: Arial, sans-serif; font-size: 16px; font-weight: bold; fill: #111827; }
+      .subtitle { font-family: Arial, sans-serif; font-size: 12px; fill: #6b7280; }
+      .route-text { font-family: 'Courier New', monospace; font-size: 10px; fill: #374151; }
+      .nav-text { font-family: Arial, sans-serif; font-size: 11px; fill: #1f2937; }
+      .breadcrumb-text { font-family: Arial, sans-serif; font-size: 10px; fill: #6b7280; }
+      .old-system { stroke: #ef4444; stroke-dasharray: 5,5; fill: #fef2f2; }
+      .new-system { stroke: #10b981; fill: #f0fdf4; }
+      .route-box { fill: #dbeafe; stroke: #3b82f6; stroke-width: 1; }
+      .nav-box { fill: #e0e7ff; stroke: #6366f1; stroke-width: 1; }
+      .breadcrumb-box { fill: #f3f4f6; stroke: #9ca3af; stroke-width: 1; }
+    </style>
+  </defs>
+
+  <!-- Title -->
+  <text x="600" y="30" text-anchor="middle" class="title">Dashboard Routing Architecture: Before and After Refactor</text>
+  <text x="600" y="50" text-anchor="middle" class="subtitle">Site Management Dashboard - Nested Routes Implementation</text>
+
+  <!-- OLD SYSTEM (Left Side) -->
+  <g id="old-system">
+    <text x="300" y="80" text-anchor="middle" class="title" fill="#ef4444">BEFORE: Tab-Based Navigation</text>
+    
+    <!-- Old Dashboard Container -->
+    <rect x="50" y="100" width="500" height="600" class="old-system" stroke-width="2" rx="8"/>
+    
+    <!-- URL Bar (Old) -->
+    <rect x="70" y="120" width="460" height="30" fill="#f9fafb" stroke="#d1d5db" rx="4"/>
+    <text x="80" y="140" class="route-text">/dashboard/isbd</text>
+    <text x="450" y="140" class="route-text" fill="#ef4444">❌ Same URL for all tabs</text>
+    
+    <!-- Tab Navigation -->
+    <rect x="70" y="170" width="460" height="40" fill="#f8fafc" stroke="#e2e8f0" rx="4"/>
+    <rect x="80" y="180" width="80" height="20" fill="#3b82f6" rx="3"/>
+    <text x="120" y="192" class="nav-text" fill="white">Overview</text>
+    <rect x="170" y="180" width="70" height="20" fill="#e5e7eb" rx="3"/>
+    <text x="205" y="192" class="nav-text">Content</text>
+    <rect x="250" y="180" width="60" height="20" fill="#e5e7eb" rx="3"/>
+    <text x="280" y="192" class="nav-text">Team</text>
+    <rect x="320" y="180" width="60" height="20" fill="#e5e7eb" rx="3"/>
+    <text x="350" y="192" class="nav-text">GitHub</text>
+    <rect x="390" y="180" width="60" height="20" fill="#e5e7eb" rx="3"/>
+    <text x="420" y="192" class="nav-text">Settings</text>
+    
+    <!-- Content Area -->
+    <rect x="70" y="220" width="460" height="350" fill="#ffffff" stroke="#e5e7eb" rx="4"/>
+    <text x="300" y="250" text-anchor="middle" class="nav-text">Tab Content Rendered Here</text>
+    <text x="300" y="270" text-anchor="middle" class="subtitle">State: { activeTab: 'overview' }</text>
+    
+    <!-- Problems List -->
+    <text x="80" y="300" class="subtitle" fill="#ef4444">Problems:</text>
+    <text x="90" y="320" class="route-text">• No deep linking to specific sections</text>
+    <text x="90" y="335" class="route-text">• Browser back/forward doesn't work</text>
+    <text x="90" y="350" class="route-text">• Can't bookmark specific dashboard views</text>
+    <text x="90" y="365" class="route-text">• No breadcrumb navigation</text>
+    <text x="90" y="380" class="route-text">• Client-side state only</text>
+    <text x="90" y="395" class="route-text">• Action pages open in modals</text>
+    
+    <!-- Old Code Example -->
+    <rect x="70" y="420" width="460" height="120" fill="#f3f4f6" stroke="#d1d5db" rx="4"/>
+    <text x="80" y="440" class="route-text">// OLD: Tab switching logic</text>
+    <text x="80" y="455" class="route-text">const [activeTab, setActiveTab] = useState('overview');</text>
+    <text x="80" y="470" class="route-text">const renderContent = () => {</text>
+    <text x="80" y="485" class="route-text">  switch (activeTab) {</text>
+    <text x="80" y="500" class="route-text">    case 'content': return [ContentTab];</text>
+    <text x="80" y="515" class="route-text">    default: return [OverviewTab];</text>
+    <text x="80" y="530" class="route-text">  }</text>
+  </g>
+
+  <!-- NEW SYSTEM (Right Side) -->
+  <g id="new-system">
+    <text x="900" y="80" text-anchor="middle" class="title" fill="#10b981">AFTER: Nested Route Navigation</text>
+    
+    <!-- New Dashboard Container -->
+    <rect x="650" y="100" width="500" height="600" class="new-system" stroke-width="2" rx="8"/>
+    
+    <!-- Route Structure -->
+    <text x="670" y="130" class="subtitle" fill="#10b981">Route Structure:</text>
+    
+    <!-- Route Boxes -->
+    <rect x="670" y="140" width="300" height="20" class="route-box" rx="3"/>
+    <text x="675" y="153" class="route-text">/dashboard/isbd</text>
+    <text x="950" y="153" class="route-text">Overview</text>
+    
+    <rect x="670" y="165" width="300" height="20" class="route-box" rx="3"/>
+    <text x="675" y="178" class="route-text">/dashboard/isbd/content</text>
+    <text x="950" y="178" class="route-text">Content Hub</text>
+    
+    <rect x="670" y="190" width="300" height="20" class="route-box" rx="3"/>
+    <text x="675" y="203" class="route-text">/dashboard/isbd/content/vocabularies</text>
+    <text x="950" y="203" class="route-text">Vocab List</text>
+    
+    <rect x="670" y="215" width="300" height="20" class="route-box" rx="3"/>
+    <text x="675" y="228" class="route-text">/dashboard/isbd/content/vocabularies/123/edit</text>
+    <text x="950" y="228" class="route-text">Edit Form</text>
+    
+    <rect x="670" y="240" width="300" height="20" class="route-box" rx="3"/>
+    <text x="675" y="253" class="route-text">/dashboard/isbd/team</text>
+    <text x="950" y="253" class="route-text">Team Mgmt</text>
+    
+    <rect x="670" y="265" width="300" height="20" class="route-box" rx="3"/>
+    <text x="675" y="278" class="route-text">/dashboard/isbd/github</text>
+    <text x="950" y="278" class="route-text">GitHub Status</text>
+    
+    <!-- Breadcrumb Example -->
+    <text x="670" y="310" class="subtitle" fill="#10b981">Breadcrumb Navigation:</text>
+    <rect x="670" y="320" width="460" height="25" class="breadcrumb-box" rx="4"/>
+    <text x="680" y="335" class="breadcrumb-text">Dashboard > ISBD > Content > Vocabularies > Edit</text>
+    
+    <!-- Benefits -->
+    <text x="670" y="370" class="subtitle" fill="#10b981">Benefits:</text>
+    <text x="680" y="390" class="route-text" fill="#059669">✓ Deep linking: Each section has its own URL</text>
+    <text x="680" y="405" class="route-text" fill="#059669">✓ Browser navigation: Back/forward works naturally</text>
+    <text x="680" y="420" class="route-text" fill="#059669">✓ Bookmarkable: Save direct links to any section</text>
+    <text x="680" y="435" class="route-text" fill="#059669">✓ Breadcrumbs: Clear navigation hierarchy</text>
+    <text x="680" y="450" class="route-text" fill="#059669">✓ SEO friendly: Crawlable dashboard sections</text>
+    <text x="680" y="465" class="route-text" fill="#059669">✓ Action pages: Full routes for edit/create</text>
+    
+    <!-- New Code Example -->
+    <rect x="670" y="480" width="460" height="120" fill="#f0fdf4" stroke="#10b981" rx="4"/>
+    <text x="680" y="500" class="route-text">// NEW: Route-based navigation</text>
+    <text x="680" y="515" class="route-text">// File: app/(authenticated)/dashboard/[siteKey]/layout.tsx</text>
+    <text x="680" y="530" class="route-text">export default function SiteLayout({ children }) {</text>
+    <text x="680" y="545" class="route-text">  return (</text>
+    <text x="680" y="560" class="route-text">    [StandardDashboardLayout nav={siteNavigation}]</text>
+    <text x="680" y="575" class="route-text">      {children}</text>
+    <text x="680" y="590" class="route-text">    [/StandardDashboardLayout]);</text>
+  </g>
+
+  <!-- Navigation Flow Arrow -->
+  <g id="flow-arrow">
+    <defs>
+      <marker id="arrowhead" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto">
+        <polygon points="0 0, 10 3.5, 0 7" fill="#6366f1"/>
+      </marker>
+    </defs>
+    <path d="M 550 400 Q 600 350 650 400" stroke="#6366f1" stroke-width="3" fill="none" marker-end="url(#arrowhead)"/>
+    <text x="600" y="370" text-anchor="middle" class="nav-text" fill="#6366f1">Refactor Migration</text>
+  </g>
+
+  <!-- Navigation Structure Detail -->
+  <g id="nav-structure">
+    <text x="50" y="750" class="subtitle">StandardDashboardLayout Navigation Structure (Post-Refactor):</text>
+    <rect x="50" y="760" width="1100" height="30" class="nav-box" rx="4"/>
+    <text x="60" y="780" class="nav-text">Overview | Content Management | Team and Access | GitHub Integration | Build and Deploy | Settings</text>
+    <text x="900" y="780" class="nav-text">← Each item links to its own route</text>
+  </g>
+</svg>

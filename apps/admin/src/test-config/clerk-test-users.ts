@@ -29,6 +29,7 @@ export interface ClerkTestUser {
 export const TEST_USER_EMAILS = {
   SUPERADMIN: 'superadmin+clerk_test@example.com',
   RG_ADMIN: 'rg_admin+clerk_test@example.com',
+  NAMESPACE_ADMIN: 'ns_admin+clerk_test@example.com',
   EDITOR: 'editor+clerk_test@example.com',
   AUTHOR: 'author+clerk_test@example.com',
   TRANSLATOR: 'translator+clerk_test@example.com',
@@ -39,17 +40,34 @@ export const TEST_USER_EMAILS = {
  */
 export const TEST_USER_METADATA = {
   SUPERADMIN: {
+    role: 'superadmin' as const,
     systemRole: 'superadmin' as const,
     reviewGroups: [],
     teams: [],
     translations: [],
   },
   RG_ADMIN: {
+    role: 'admin' as const,
+    systemRole: undefined,
     reviewGroups: [{ role: 'admin' as const, reviewGroupId: 'isbd' }],
     teams: [],
     translations: [],
   },
+  NAMESPACE_ADMIN: {
+    role: 'admin' as const,
+    systemRole: undefined,
+    reviewGroups: [],
+    teams: [{ 
+      teamId: 'isbd-namespace-admin',
+      role: 'admin' as const,
+      reviewGroup: 'isbd',
+      namespaces: ['isbd', 'isbdm']
+    }],
+    translations: [],
+  },
   EDITOR: {
+    role: 'editor' as const,
+    systemRole: undefined,
     reviewGroups: [],
     teams: [{ 
       role: 'editor' as const,
@@ -60,6 +78,8 @@ export const TEST_USER_METADATA = {
     translations: [],
   },
   AUTHOR: {
+    role: 'editor' as const,
+    systemRole: undefined,
     reviewGroups: [],
     teams: [{ 
       role: 'author' as const,
@@ -70,6 +90,8 @@ export const TEST_USER_METADATA = {
     translations: [],
   },
   TRANSLATOR: {
+    role: 'translator' as const,
+    systemRole: undefined,
     reviewGroups: [],
     teams: [],
     translations: [{ 
@@ -177,6 +199,8 @@ function getTestUserDescription(email: string): string {
       return 'System superadmin with full access to all resources';
     case TEST_USER_EMAILS.RG_ADMIN:
       return 'Review Group admin for ISBD with namespace management permissions';
+    case TEST_USER_EMAILS.NAMESPACE_ADMIN:
+      return 'Namespace admin for ISBD/ISBDM with full namespace control';
     case TEST_USER_EMAILS.EDITOR:
       return 'Namespace editor for ISBD/ISBDM with content creation/editing permissions';
     case TEST_USER_EMAILS.AUTHOR:
@@ -204,6 +228,13 @@ export const TestUsers = {
    */
   async getReviewGroupAdmin(): Promise<ClerkTestUser | null> {
     return getTestUserByRole('RG_ADMIN');
+  },
+
+  /**
+   * Get a namespace admin for tests requiring namespace management
+   */
+  async getNamespaceAdmin(): Promise<ClerkTestUser | null> {
+    return getTestUserByRole('NAMESPACE_ADMIN');
   },
 
   /**
@@ -272,6 +303,11 @@ export const TestUserUtils = {
       const rgAdmin = await TestUsers.getReviewGroupAdmin();
       if (!rgAdmin || !verifyTestUserMetadata(rgAdmin, 'RG_ADMIN')) {
         errors.push('Review Group admin user metadata is incorrect');
+      }
+
+      const namespaceAdmin = await TestUsers.getNamespaceAdmin();
+      if (!namespaceAdmin || !verifyTestUserMetadata(namespaceAdmin, 'NAMESPACE_ADMIN')) {
+        errors.push('Namespace admin user metadata is incorrect');
       }
 
       const editor = await TestUsers.getEditor();

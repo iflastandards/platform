@@ -31,8 +31,18 @@ export function mockClerkCurrentUser(testUser: ClerkTestUser | null) {
   // Mock the Clerk module
   vi.doMock('@clerk/nextjs/server', () => ({
     currentUser: mockCurrentUser,
-    auth: vi.fn().mockResolvedValue({
+    auth: vi.fn().mockReturnValue({
       userId: testUser?.id || null,
+      sessionClaims: testUser ? {
+        email: testUser.email,
+        publicMetadata: {
+          role: testUser.roles.systemRole,
+          systemRole: testUser.roles.systemRole,
+          reviewGroups: testUser.roles.reviewGroups,
+          teams: testUser.roles.teams,
+          translations: testUser.roles.translations,
+        },
+      } : null,
     }),
   }));
 
@@ -100,6 +110,17 @@ export const TestScenarios = {
   },
 
   /**
+   * Test with namespace admin (should have namespace-level access)
+   */
+  async withNamespaceAdmin<T>(testFn: (user: ClerkTestUser) => Promise<T>): Promise<T> {
+    const user = await TestUsers.getNamespaceAdmin();
+    if (!user) throw new Error('Namespace admin test user not found');
+    
+    mockClerkCurrentUser(user);
+    return testFn(user);
+  },
+
+  /**
    * Test with editor (should have namespace editing access)
    */
   async withEditor<T>(testFn: (user: ClerkTestUser) => Promise<T>): Promise<T> {
@@ -150,6 +171,7 @@ export async function testAuthorizationMatrix(
   expectedResults: {
     superadmin?: 'allow' | 'deny' | 'error';
     reviewGroupAdmin?: 'allow' | 'deny' | 'error';
+    namespaceAdmin?: 'allow' | 'deny' | 'error';
     editor?: 'allow' | 'deny' | 'error';
     author?: 'allow' | 'deny' | 'error';
     translator?: 'allow' | 'deny' | 'error';
@@ -177,6 +199,17 @@ export async function testAuthorizationMatrix(
       results.reviewGroupAdmin = await testFn(user);
     } catch (error) {
       results.reviewGroupAdmin = { error: error instanceof Error ? error.message : String(error) };
+    }
+  }
+
+  // Test namespace admin
+  if (expectedResults.namespaceAdmin) {
+    const user = await TestUsers.getNamespaceAdmin();
+    mockClerkCurrentUser(user);
+    try {
+      results.namespaceAdmin = await testFn(user);
+    } catch (error) {
+      results.namespaceAdmin = { error: error instanceof Error ? error.message : String(error) };
     }
   }
 

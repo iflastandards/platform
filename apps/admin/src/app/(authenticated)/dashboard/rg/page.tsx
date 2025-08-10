@@ -1,6 +1,6 @@
 import { getAppUser } from '@/lib/clerk-github-auth';
 import { redirect } from 'next/navigation';
-import ReviewGroupDashboard from './ReviewGroupDashboard';
+import { RGOverviewPage } from '@/components/dashboard/rg/RGOverviewPage';
 
 // Force dynamic rendering
 export const dynamic = 'force-dynamic';
@@ -27,12 +27,5 @@ export default async function ReviewGroupAdminPage() {
     .filter(rg => rg.role === 'maintainer')
     .map(rg => rg.slug);
 
-  return (
-    <ReviewGroupDashboard
-      userRoles={['rg_admin']}
-      userName={user.name}
-      userEmail={user.email}
-      reviewGroups={adminReviewGroups}
-    />
-  );
+  return <RGOverviewPage reviewGroups={adminReviewGroups} />;
 }

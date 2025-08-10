@@ -24,7 +24,7 @@ import {
   AddTask as AddTaskIcon,
 } from '@mui/icons-material';
 import { mockReviewGroups, getNamespacesByReviewGroup } from '@/lib/mock-data/namespaces-extended';
-import { StandardDashboardLayout, NavigationItem } from '@/components/layout/StandardDashboardLayout';
+import { TabBasedDashboardLayout, NavigationItem } from '@/components/layout/TabBasedDashboardLayout';
 
 interface ReviewGroupDashboardProps {
   userRoles: string[];
@@ -185,11 +185,11 @@ export default function ReviewGroupDashboard({
   const userNamespaces = reviewGroups.flatMap(rgId => getNamespacesByReviewGroup(rgId));
   
   const navigationItems: NavigationItem[] = [
-    { id: 'overview', label: 'RG Dashboard', icon: <DashboardIcon /> },
-    { id: 'projects', label: 'My Projects', icon: <AssignmentIcon /> },
-    { id: 'namespaces', label: 'My Namespaces', icon: <FolderIcon />, badge: userNamespaces.length },
-    { id: 'team', label: 'Team Members', icon: <PeopleIcon /> },
-    { id: 'activity', label: 'Activity Log', icon: <HistoryIcon /> },
+    { id: 'overview', label: 'RG Dashboard', icon: DashboardIcon },
+    { id: 'projects', label: 'My Projects', icon: AssignmentIcon },
+    { id: 'namespaces', label: 'My Namespaces', icon: FolderIcon, badge: userNamespaces.length },
+    { id: 'team', label: 'Team Members', icon: PeopleIcon },
+    { id: 'activity', label: 'Activity Log', icon: HistoryIcon },
   ];
 
   const stats = [
@@ -371,7 +371,7 @@ export default function ReviewGroupDashboard({
   };
 
   return (
-    <StandardDashboardLayout
+    <TabBasedDashboardLayout
       title="Review Group Admin"
       subtitle={userReviewGroups.map(rg => rg.name).join(', ')}
       navigationItems={navigationItems}
@@ -379,6 +379,6 @@ export default function ReviewGroupDashboard({
       onTabSelect={setSelectedTab}
     >
       {renderContent()}
-    </StandardDashboardLayout>
+    </TabBasedDashboardLayout>
   );
 }

@@ -26,7 +26,7 @@ import {
   CloudUpload as CloudUploadIcon,
   Home,
 } from '@mui/icons-material';
-import { StandardDashboardLayout, NavigationItem } from '@/components/layout/StandardDashboardLayout';
+import { TabBasedDashboardLayout, NavigationItem } from '@/components/layout/TabBasedDashboardLayout';
 
 interface AdminDashboardProps {
   userRoles: string[];
@@ -159,15 +159,15 @@ export default function AdminDashboard({ userRoles: _userRoles, userName: _userN
   const [selectedTab, setSelectedTab] = useState('overview');
   
   const navigationItems: NavigationItem[] = [
-    { id: 'overview', label: 'Dashboard Overview', icon: <Home /> },
-    { id: 'users', label: 'Users', icon: <PeopleIcon />, badge: 352 },
-    { id: 'review-groups', label: 'Review Groups', icon: <LanguageIcon /> },
-    { id: 'projects', label: 'Projects', icon: <AssignmentIcon />, badge: 12 },
-    { id: 'namespaces', label: 'Namespaces', icon: <FolderIcon /> },
-    { id: 'vocabularies', label: 'Vocabularies', icon: <BookIcon />, badge: 824 },
-    { id: 'profiles', label: 'DCTAP Profiles', icon: <BookIcon /> },
-    { id: 'adopt', label: 'Adopt Spreadsheet', icon: <CloudUploadIcon />, specialAccess: true },
-    { id: 'activity', label: 'Activity Log', icon: <HistoryIcon /> },
+    { id: 'overview', label: 'Dashboard Overview', icon: Home },
+    { id: 'users', label: 'Users', icon: PeopleIcon, badge: 352 },
+    { id: 'review-groups', label: 'Review Groups', icon: LanguageIcon },
+    { id: 'projects', label: 'Projects', icon: AssignmentIcon, badge: 12 },
+    { id: 'namespaces', label: 'Namespaces', icon: FolderIcon },
+    { id: 'vocabularies', label: 'Vocabularies', icon: BookIcon, badge: 824 },
+    { id: 'profiles', label: 'DCTAP Profiles', icon: BookIcon },
+    { id: 'adopt', label: 'Adopt Spreadsheet', icon: CloudUploadIcon, specialAccess: true },
+    { id: 'activity', label: 'Activity Log', icon: HistoryIcon },
   ];
 
   const stats = [
@@ -368,7 +368,7 @@ export default function AdminDashboard({ userRoles: _userRoles, userName: _userN
   };
 
   return (
-    <StandardDashboardLayout
+    <TabBasedDashboardLayout
       title="IFLA Admin"
       subtitle="System Administration"
       navigationItems={navigationItems}
@@ -376,6 +376,6 @@ export default function AdminDashboard({ userRoles: _userRoles, userName: _userN
       onTabSelect={setSelectedTab}
     >
       {renderContent()}
-    </StandardDashboardLayout>
+    </TabBasedDashboardLayout>
   );
 }

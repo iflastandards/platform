@@ -1,7 +1,7 @@
 import React from 'react';
 import { render, screen, fireEvent, waitFor } from '@testing-library/react';
 import { axe, toHaveNoViolations } from 'jest-axe';
-import { describe, it, expect, beforeEach, afterEach } from 'vitest';
+import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest';
 import AdminDashboard from '../../app/(authenticated)/dashboard/AdminDashboard';
 
 // Extend expect matchers
@@ -21,7 +21,7 @@ describe('AdminDashboard @integration @ui @dashboard @critical', () => {
 
   beforeEach(async () => {
     // Mock console.log for clean test output
-    console.log = jest.fn();
+    console.log = vi.fn();
   });
 
   afterEach(async () => {

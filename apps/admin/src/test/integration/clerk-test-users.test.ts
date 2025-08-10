@@ -48,6 +48,20 @@ describe('Clerk Test Users @integration @authentication @clerk', () => {
       });
     });
 
+    it('should get namespace admin test user', async () => {
+      const namespaceAdmin = await TestUsers.getNamespaceAdmin();
+      
+      expect(namespaceAdmin).toBeDefined();
+      expect(namespaceAdmin?.email).toBe(TEST_USER_EMAILS.NAMESPACE_ADMIN);
+      expect(namespaceAdmin?.roles.teams).toHaveLength(1);
+      expect(namespaceAdmin?.roles.teams[0]).toMatchObject({
+        teamId: 'isbd-namespace-admin',
+        role: 'admin',
+        reviewGroup: 'isbd',
+        namespaces: ['isbd', 'isbdm']
+      });
+    });
+
     it('should get editor test user', async () => {
       const editor = await TestUsers.getEditor();
       
@@ -134,6 +148,21 @@ describe('Clerk Test Users @integration @authentication @clerk', () => {
         { reviewGroupId: 'isbd', role: 'admin' }
       ]);
       expect(user?.roles.teams).toEqual([]);
+      expect(user?.roles.translations).toEqual([]);
+    });
+
+    it('should have correct namespace admin metadata', async () => {
+      const user = await TestUsers.getNamespaceAdmin();
+      
+      expect(user?.roles.teams).toEqual([
+        { 
+          teamId: 'isbd-namespace-admin', 
+          role: 'admin', 
+          reviewGroup: 'isbd', 
+          namespaces: ['isbd', 'isbdm'] 
+        }
+      ]);
+      expect(user?.roles.reviewGroups).toEqual([]);
       expect(user?.roles.translations).toEqual([]);
     });
 

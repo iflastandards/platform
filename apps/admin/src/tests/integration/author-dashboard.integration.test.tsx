@@ -60,7 +60,7 @@ describe('AuthorDashboard @integration @ui @dashboard @critical', () => {
 
   describe('Real Component Rendering @integration', () => {
     it('should render with StandardDashboardLayout and real author data', async () => {
-      render(<AuthorDashboard user={testUser} />);
+      render(React.createElement(AuthorDashboard, { user: testUser }));
 
       // Verify StandardDashboardLayout integration
       expect(screen.getByText('Author Dashboard')).toBeInTheDocument();

@@ -1,0 +1,210 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="1400" height="900" viewBox="0 0 1400 900" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <style>
+      .wireframe-bg { fill: #ffffff; stroke: #cccccc; stroke-width: 1; }
+      .wireframe-header { fill: #f8f9fa; stroke: #dee2e6; stroke-width: 1; }
+      .wireframe-sidebar { fill: #f1f3f4; stroke: #dee2e6; stroke-width: 1; }
+      .wireframe-content { fill: #ffffff; stroke: #e9ecef; stroke-width: 1; }
+      .wireframe-nav-active { fill: #0d6efd; stroke: #0d6efd; }
+      .wireframe-nav-inactive { fill: #ffffff; stroke: #dee2e6; stroke-width: 1; }
+      .wireframe-breadcrumb { fill: #f8f9fa; stroke: #dee2e6; stroke-width: 1; }
+      .wireframe-card { fill: #ffffff; stroke: #dee2e6; stroke-width: 1; }
+      .wireframe-button { fill: #28a745; stroke: #28a745; }
+      .wireframe-button-secondary { fill: #6c757d; stroke: #6c757d; }
+      
+      .title-text { font-family: Arial, sans-serif; font-size: 16px; font-weight: bold; fill: #212529; }
+      .header-text { font-family: Arial, sans-serif; font-size: 14px; font-weight: bold; fill: #495057; }
+      .nav-text { font-family: Arial, sans-serif; font-size: 12px; fill: #212529; }
+      .nav-text-active { font-family: Arial, sans-serif; font-size: 12px; fill: #ffffff; font-weight: bold; }
+      .content-text { font-family: Arial, sans-serif; font-size: 11px; fill: #6c757d; }
+      .label-text { font-family: Arial, sans-serif; font-size: 10px; fill: #868e96; }
+      .url-text { font-family: 'Courier New', monospace; font-size: 10px; fill: #495057; }
+      .route-text { font-family: 'Courier New', monospace; font-size: 9px; fill: #28a745; }
+    </style>
+  </defs>
+
+  <!-- Main Title -->
+  <text x="700" y="25" text-anchor="middle" class="title-text">Site Management Dashboard - Nested Route Wireframe</text>
+  <text x="700" y="45" text-anchor="middle" class="content-text">Post-Refactor Architecture with Deep Linking</text>
+
+  <!-- Browser Frame -->
+  <rect x="50" y="70" width="1300" height="800" class="wireframe-bg" rx="8"/>
+  
+  <!-- Browser Header -->
+  <rect x="50" y="70" width="1300" height="40" class="wireframe-header" rx="8 8 0 0"/>
+  <circle cx="80" cy="90" r="6" fill="#ff5f56"/>
+  <circle cx="100" cy="90" r="6" fill="#ffbd2e"/>
+  <circle cx="120" cy="90" r="6" fill="#27ca3f"/>
+  
+  <!-- URL Bar -->
+  <rect x="160" y="82" width="400" height="16" class="wireframe-content" rx="8"/>
+  <text x="170" y="92" class="url-text">/dashboard/isbd/content/vocabularies</text>
+  
+  <!-- Main Header Bar -->
+  <rect x="50" y="110" width="1300" height="60" class="wireframe-header"/>
+  <text x="80" y="130" class="header-text">IFLA Standards Admin Portal</text>
+  <text x="80" y="145" class="content-text">Site Management Dashboard</text>
+  
+  <!-- User Menu -->
+  <rect x="1250" y="125" width="80" height="30" class="wireframe-nav-inactive" rx="4"/>
+  <text x="1290" y="142" text-anchor="middle" class="nav-text">Admin User</text>
+  
+  <!-- Breadcrumb Navigation -->
+  <rect x="50" y="170" width="1300" height="35" class="wireframe-breadcrumb"/>
+  <text x="80" y="185" class="content-text">Dashboard</text>
+  <text x="150" y="185" class="content-text">></text>
+  <text x="170" y="185" class="content-text">ISBD</text>
+  <text x="210" y="185" class="content-text">></text>
+  <text x="230" y="185" class="content-text">Content</text>
+  <text x="280" y="185" class="content-text">></text>
+  <text x="300" y="185" class="header-text">Vocabularies</text>
+  
+  <!-- Left Sidebar Navigation (StandardDashboardLayout pattern) -->
+  <rect x="80" y="220" width="280" height="620" class="wireframe-sidebar" rx="4"/>
+  
+  <!-- Dashboard Title -->
+  <text x="95" y="245" class="header-text">ISBD Site Dashboard</text>
+  <text x="95" y="260" class="content-text">Namespace Management</text>
+  
+  <!-- Navigation Items (Vertical) -->
+  <rect x="95" y="280" width="250" height="35" class="wireframe-nav-inactive" rx="4"/>
+  <text x="110" y="300" class="nav-text">🏠 Overview</text>
+  
+  <rect x="95" y="320" width="250" height="35" class="wireframe-nav-active" rx="4"/>
+  <text x="110" y="340" class="nav-text-active">📝 Content Management</text>
+  <circle cx="315" cy="337" r="8" fill="#dc3545"/>
+  <text x="315" y="341" text-anchor="middle" class="label-text" fill="white">4</text>
+  
+  <rect x="95" y="360" width="250" height="35" class="wireframe-nav-inactive" rx="4"/>
+  <text x="110" y="380" class="nav-text">👥 Team and Access</text>
+  
+  <rect x="95" y="400" width="250" height="35" class="wireframe-nav-inactive" rx="4"/>
+  <text x="110" y="420" class="nav-text">🔗 GitHub Integration</text>
+  
+  <rect x="95" y="440" width="250" height="35" class="wireframe-nav-inactive" rx="4"/>
+  <text x="110" y="460" class="nav-text">🏗️ Build and Deploy</text>
+  
+  <rect x="95" y="480" width="250" height="35" class="wireframe-nav-inactive" rx="4"/>
+  <text x="110" y="500" class="nav-text">⚙️ Settings</text>
+  
+  <!-- Quick Stats in Sidebar -->
+  <text x="95" y="540" class="content-text">Quick Stats</text>
+  <rect x="95" y="550" width="250" height="80" class="wireframe-content" rx="4"/>
+  <text x="110" y="570" class="content-text">Vocabularies: 4</text>
+  <text x="110" y="585" class="content-text">Elements: 534 total</text>
+  <text x="110" y="600" class="content-text">Last update: 2h ago</text>
+  <text x="110" y="615" class="content-text">Status: ✅ All systems</text>
+  
+  <!-- Main Content Area -->
+  <rect x="380" y="220" width="950" height="620" class="wireframe-content" rx="4"/>
+  
+  <!-- Content Header -->
+  <rect x="400" y="240" width="910" height="50" class="wireframe-header" rx="4"/>
+  <text x="420" y="260" class="header-text">Content Management - Vocabularies</text>
+  <text x="420" y="275" class="content-text">Manage vocabulary definitions and concept schemes for ISBD namespace</text>
+  
+  <!-- Action Buttons -->
+  <rect x="1150" y="250" width="80" height="30" class="wireframe-button" rx="4"/>
+  <text x="1190" y="267" text-anchor="middle" class="nav-text-active">New Vocab</text>
+  
+  <rect x="1240" y="250" width="60" height="30" class="wireframe-button-secondary" rx="4"/>
+  <text x="1270" y="267" text-anchor="middle" class="nav-text-active">Import</text>
+  
+  <!-- Sub-Navigation Tabs/Pills -->
+  <rect x="400" y="310" width="910" height="40" class="wireframe-breadcrumb"/>
+  
+  <rect x="420" y="320" width="80" height="20" class="wireframe-nav-active" rx="10"/>
+  <text x="460" y="332" text-anchor="middle" class="nav-text-active">Overview</text>
+  
+  <rect x="510" y="320" width="100" height="20" class="wireframe-nav-inactive" rx="10"/>
+  <text x="560" y="332" text-anchor="middle" class="nav-text">Concept Schemes</text>
+  
+  <rect x="620" y="320" width="80" height="20" class="wireframe-nav-inactive" rx="10"/>
+  <text x="660" y="332" text-anchor="middle" class="nav-text">Elements</text>
+  
+  <rect x="710" y="320" width="70" height="20" class="wireframe-nav-inactive" rx="10"/>
+  <text x="745" y="332" text-anchor="middle" class="nav-text">Classes</text>
+  
+  <!-- Content Cards Grid -->
+  <text x="420" y="375" class="header-text">Active Vocabularies (4)</text>
+  
+  <!-- Vocab Card 1 -->
+  <rect x="420" y="390" width="200" height="120" class="wireframe-card" rx="4"/>
+  <text x="430" y="410" class="nav-text">ISBD Elements</text>
+  <text x="430" y="425" class="content-text">Main element set</text>
+  <text x="430" y="440" class="content-text">247 terms</text>
+  <rect x="430" y="460" width="50" height="20" class="wireframe-button" rx="2"/>
+  <text x="455" y="472" text-anchor="middle" class="label-text">Edit</text>
+  <rect x="490" y="460" width="50" height="20" class="wireframe-nav-inactive" rx="2"/>
+  <text x="515" y="472" text-anchor="middle" class="label-text">View</text>
+  <text x="430" y="495" class="route-text">→ .../vocabularies/isbd-elements/edit</text>
+  
+  <!-- Vocab Card 2 -->
+  <rect x="640" y="390" width="200" height="120" class="wireframe-card" rx="4"/>
+  <text x="650" y="410" class="nav-text">ISBD Classes</text>
+  <text x="650" y="425" class="content-text">Resource classes</text>
+  <text x="650" y="440" class="content-text">42 terms</text>
+  <rect x="650" y="460" width="50" height="20" class="wireframe-button" rx="2"/>
+  <text x="675" y="472" text-anchor="middle" class="label-text">Edit</text>
+  <rect x="710" y="460" width="50" height="20" class="wireframe-nav-inactive" rx="2"/>
+  <text x="735" y="472" text-anchor="middle" class="label-text">View</text>
+  <text x="650" y="495" class="route-text">→ .../vocabularies/isbd-classes/edit</text>
+  
+  <!-- Vocab Card 3 -->
+  <rect x="860" y="390" width="200" height="120" class="wireframe-card" rx="4"/>
+  <text x="870" y="410" class="nav-text">ISBD Properties</text>
+  <text x="870" y="425" class="content-text">Relationship properties</text>
+  <text x="870" y="440" class="content-text">89 terms</text>
+  <rect x="870" y="460" width="50" height="20" class="wireframe-button" rx="2"/>
+  <text x="895" y="472" text-anchor="middle" class="label-text">Edit</text>
+  <rect x="930" y="460" width="50" height="20" class="wireframe-nav-inactive" rx="2"/>
+  <text x="955" y="472" text-anchor="middle" class="label-text">View</text>
+  <text x="870" y="495" class="route-text">→ .../vocabularies/isbd-properties/edit</text>
+  
+  <!-- Vocab Card 4 -->
+  <rect x="1080" y="390" width="200" height="120" class="wireframe-card" rx="4"/>
+  <text x="1090" y="410" class="nav-text">ISBD Unconstrained</text>
+  <text x="1090" y="425" class="content-text">Unconstrained properties</text>
+  <text x="1090" y="440" class="content-text">156 terms</text>
+  <rect x="1090" y="460" width="50" height="20" class="wireframe-button" rx="2"/>
+  <text x="1115" y="472" text-anchor="middle" class="label-text">Edit</text>
+  <rect x="1150" y="460" width="50" height="20" class="wireframe-nav-inactive" rx="2"/>
+  <text x="1175" y="472" text-anchor="middle" class="label-text">View</text>
+  <text x="1090" y="495" class="route-text">→ .../vocabularies/isbd-unconstrained/edit</text>
+  
+  <!-- Recent Activity Section -->
+  <text x="420" y="540" class="header-text">Recent Activity</text>
+  
+  <rect x="420" y="555" width="860" height="80" class="wireframe-card" rx="4"/>
+  <text x="440" y="575" class="nav-text">ISBD Elements updated</text>
+  <text x="440" y="590" class="content-text">Added 3 new element definitions</text>
+  <text x="440" y="605" class="content-text">2 hours ago by Maria Editor</text>
+  <text x="440" y="620" class="route-text">→ /dashboard/isbd/content/vocabularies/isbd-elements/history</text>
+  
+  <!-- Quick Actions Panel -->
+  <text x="420" y="660" class="header-text">Quick Actions</text>
+  
+  <rect x="420" y="675" width="120" height="35" class="wireframe-button" rx="4"/>
+  <text x="480" y="695" text-anchor="middle" class="nav-text-active">Import CSV</text>
+  
+  <rect x="550" y="675" width="120" height="35" class="wireframe-button-secondary" rx="4"/>
+  <text x="610" y="695" text-anchor="middle" class="nav-text-active">Export All</text>
+  
+  <rect x="680" y="675" width="120" height="35" class="wireframe-nav-inactive" rx="4"/>
+  <text x="740" y="695" text-anchor="middle" class="nav-text">Validate RDF</text>
+  
+  <rect x="810" y="675" width="120" height="35" class="wireframe-nav-inactive" rx="4"/>
+  <text x="870" y="695" text-anchor="middle" class="nav-text">Sync GitHub</text>
+  
+  <!-- Footer Navigation -->
+  <rect x="50" y="850" width="1300" height="20" class="wireframe-breadcrumb"/>
+  <text x="80" y="862" class="content-text">Deep linkable routes enable: Bookmarking | Browser navigation | Direct access | SEO indexing</text>
+  
+  <!-- Routing Benefits Callout -->
+  <rect x="950" y="675" width="320" height="80" class="wireframe-content" rx="4" stroke-dasharray="3,3"/>
+  <text x="965" y="695" class="header-text">Routing Benefits</text>
+  <text x="965" y="710" class="content-text">✓ Deep linking ✓ Browser nav ✓ Bookmarks</text>
+  <text x="965" y="725" class="content-text">✓ Breadcrumbs ✓ Action pages ✓ SEO friendly</text>
+  <text x="965" y="740" class="content-text">✓ Standard web patterns ✓ History support</text>
+</svg>

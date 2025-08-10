@@ -39,7 +39,7 @@ import {
   MockUser,
 } from '@/lib/mock-data';
 import { AppUser } from '@/lib/clerk-github-auth';
-import { StandardDashboardLayout, NavigationItem } from '@/components/layout/StandardDashboardLayout';
+import { TabBasedDashboardLayout, NavigationItem } from '@/components/layout/TabBasedDashboardLayout';
 
 interface RoleBasedDashboardProps {
   userId?: string;
@@ -111,11 +111,11 @@ export default function RoleBasedDashboard({ userId }: RoleBasedDashboardProps) 
   }));
 
   const navigationItems: NavigationItem[] = [
-    { id: 'overview', label: 'Overview', icon: <Home /> },
-    { id: 'namespaces', label: 'Your Namespaces', icon: <Folder />, badge: accessibleNamespaces.length },
+    { id: 'overview', label: 'Overview', icon: Home },
+    { id: 'namespaces', label: 'Your Namespaces', icon: Folder, badge: accessibleNamespaces.length },
     ...(isAdmin ? [
-      { id: 'activity', label: 'All Activity', icon: <Timeline /> },
-      { id: 'actions', label: 'Quick Actions', icon: <Settings /> },
+      { id: 'activity', label: 'All Activity', icon: Timeline },
+      { id: 'actions', label: 'Quick Actions', icon: Settings },
     ] : []),
   ];
 
@@ -333,7 +333,7 @@ export default function RoleBasedDashboard({ userId }: RoleBasedDashboardProps) 
   };
 
   return (
-    <StandardDashboardLayout
+    <TabBasedDashboardLayout
       title="Role-Based Dashboard"
       subtitle={isAdmin ? 'System Administration' : 'Member Dashboard'}
       navigationItems={navigationItems}
@@ -341,6 +341,6 @@ export default function RoleBasedDashboard({ userId }: RoleBasedDashboardProps) 
       onTabSelect={setSelectedTab}
     >
       {renderContent()}
-    </StandardDashboardLayout>
+    </TabBasedDashboardLayout>
   );
 }

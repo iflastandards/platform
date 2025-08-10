@@ -35,7 +35,7 @@ import {
 } from '@mui/icons-material';
 import { AppUser } from '@/lib/clerk-github-auth';
 import Link from 'next/link';
-import { StandardDashboardLayout, NavigationItem } from '@/components/layout/StandardDashboardLayout';
+import { TabBasedDashboardLayout, NavigationItem } from '@/components/layout/TabBasedDashboardLayout';
 
 interface EditorDashboardProps {
   user: AppUser;
@@ -57,14 +57,14 @@ export default function EditorDashboard({ user }: EditorDashboardProps) {
   };
 
   const navigationItems: NavigationItem[] = [
-    { id: 'overview', label: 'Overview', icon: <Home /> },
-    { id: 'projects', label: 'My Projects', icon: <ProjectIcon />, badge: editorProjects.length },
-    { id: 'namespaces', label: 'Namespaces', icon: <FolderIcon />, badge: accessibleNamespaces.length },
-    { id: 'editorial', label: 'Editorial Tools', icon: <EditIcon /> },
-    { id: 'import-export', label: 'Import/Export', icon: <ImportIcon /> },
-    { id: 'review', label: 'Review Queue', icon: <ReviewIcon /> },
-    { id: 'translation', label: 'Translations', icon: <TranslateIcon /> },
-    { id: 'system', label: 'System Status', icon: <BuildIcon /> },
+    { id: 'overview', label: 'Overview', icon: Home },
+    { id: 'projects', label: 'My Projects', icon: ProjectIcon, badge: editorProjects.length },
+    { id: 'namespaces', label: 'Namespaces', icon: FolderIcon, badge: accessibleNamespaces.length },
+    { id: 'editorial', label: 'Editorial Tools', icon: EditIcon },
+    { id: 'import-export', label: 'Import/Export', icon: ImportIcon },
+    { id: 'review', label: 'Review Queue', icon: ReviewIcon },
+    { id: 'translation', label: 'Translations', icon: TranslateIcon },
+    { id: 'system', label: 'System Status', icon: BuildIcon },
   ];
 
   const renderContent = () => {
@@ -469,7 +469,7 @@ export default function EditorDashboard({ user }: EditorDashboardProps) {
   };
 
   return (
-    <StandardDashboardLayout
+    <TabBasedDashboardLayout
       title="Editor Dashboard"
       subtitle="Editorial Control Center"
       navigationItems={navigationItems}
@@ -477,6 +477,6 @@ export default function EditorDashboard({ user }: EditorDashboardProps) {
       onTabSelect={setSelectedTab}
     >
       {renderContent()}
-    </StandardDashboardLayout>
+    </TabBasedDashboardLayout>
   );
 }

@@ -18,8 +18,12 @@ import {
   useMediaQuery,
   Link,
   Chip,
+  Breadcrumbs,
 } from '@mui/material';
-import { Menu as MenuIcon } from '@mui/icons-material';
+import { Menu as MenuIcon, NavigateNext } from '@mui/icons-material';
+import { usePathname } from 'next/navigation';
+import NextLink from 'next/link';
+import { generateBreadcrumbs } from '@/lib/navigation/breadcrumbs';
 
 // Skip Links Component (Required for Accessibility)
 const SkipLinks = () => (
@@ -71,17 +75,16 @@ const LiveRegion = ({ message }: { message: string }) => (
 export interface NavigationItem {
   id: string;
   label: string;
-  icon: React.ReactNode;
-  badge?: string | number;
+  href: string;
+  icon: React.ComponentType;
+  badge?: () => number | string;
   specialAccess?: boolean;
 }
 
 interface StandardDashboardLayoutProps {
   title: string;
   subtitle?: string;
-  navigationItems: NavigationItem[];
-  selectedTab: string;
-  onTabSelect: (tabId: string) => void;
+  navigation: NavigationItem[];
   children: React.ReactNode;
   footerContent?: React.ReactNode;
 }
@@ -89,9 +92,7 @@ interface StandardDashboardLayoutProps {
 export function StandardDashboardLayout({
   title,
   subtitle,
-  navigationItems,
-  selectedTab,
-  onTabSelect,
+  navigation,
   children,
   footerContent,
 }: StandardDashboardLayoutProps) {
@@ -99,6 +100,8 @@ export function StandardDashboardLayout({
   const [liveMessage, setLiveMessage] = useState('');
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down('md'));
+  const pathname = usePathname();
+  const breadcrumbs = generateBreadcrumbs(pathname);
   const drawerWidth = 240;
 
   const handleDrawerToggle = () => {
@@ -106,9 +109,8 @@ export function StandardDashboardLayout({
     setLiveMessage(mobileOpen ? 'Navigation closed' : 'Navigation opened');
   };
 
-  const handleTabSelect = (itemId: string, itemLabel: string) => {
-    onTabSelect(itemId);
-    setLiveMessage(`Switched to ${itemLabel} section`);
+  const handleNavigation = (itemLabel: string) => {
+    setLiveMessage(`Navigating to ${itemLabel} section`);
     if (isMobile) {
       setMobileOpen(false);
     }
@@ -129,38 +131,46 @@ export function StandardDashboardLayout({
         )}
       </Box>
       <List id="navigation">
-        {navigationItems.map((item) => (
-          <ListItem key={item.id} disablePadding>
-            <ListItemButton
-              selected={selectedTab === item.id}
-              onClick={() => handleTabSelect(item.id, item.label)}
-              aria-current={selectedTab === item.id ? 'page' : undefined}
-              aria-label={`${item.label}${item.specialAccess ? ' (Restricted)' : ''}`}
-            >
-              <ListItemIcon aria-hidden="true">
-                {item.icon}
-              </ListItemIcon>
-              <ListItemText 
-                primary={item.label}
-                secondary={item.specialAccess && (
+        {navigation.map((item) => {
+          const IconComponent = item.icon;
+          const isActive = pathname === item.href || 
+            (item.href !== '/dashboard' && pathname.startsWith(item.href));
+          
+          return (
+            <ListItem key={item.id} disablePadding>
+              <ListItemButton
+                component={NextLink}
+                href={item.href}
+                selected={isActive}
+                onClick={() => handleNavigation(item.label)}
+                aria-current={isActive ? 'page' : undefined}
+                aria-label={`${item.label}${item.specialAccess ? ' (Restricted)' : ''}`}
+              >
+                <ListItemIcon aria-hidden="true">
+                  <IconComponent />
+                </ListItemIcon>
+                <ListItemText 
+                  primary={item.label}
+                  secondary={item.specialAccess && (
+                    <Chip 
+                      label="Restricted" 
+                      size="small" 
+                      color="warning"
+                      aria-label="Restricted access"
+                    />
+                  )}
+                />
+                {item.badge && (
                   <Chip 
-                    label="Restricted" 
+                    label={item.badge()} 
                     size="small" 
-                    color="warning"
-                    aria-label="Restricted access"
+                    color="primary"
                   />
                 )}
-              />
-              {item.badge && (
-                <Chip 
-                  label={item.badge} 
-                  size="small" 
-                  color="primary"
-                />
-              )}
-            </ListItemButton>
-          </ListItem>
-        ))}
+              </ListItemButton>
+            </ListItem>
+          );
+        })}
       </List>
       {footerContent && (
         <>
@@ -264,6 +274,34 @@ export function StandardDashboardLayout({
             bgcolor: 'background.default',
           }}
         >
+          {/* Breadcrumbs */}
+          {breadcrumbs.length > 1 && (
+            <nav aria-label="Breadcrumb navigation" style={{ marginBottom: '1rem' }}>
+              <Breadcrumbs
+                separator={<NavigateNext fontSize="small" />}
+                aria-label="breadcrumb"
+              >
+                {breadcrumbs.map((crumb, index) => (
+                  index < breadcrumbs.length - 1 ? (
+                    <Link
+                      key={crumb.href}
+                      component={NextLink}
+                      href={crumb.href}
+                      underline="hover"
+                      color="inherit"
+                    >
+                      {crumb.label}
+                    </Link>
+                  ) : (
+                    <Typography key={crumb.href} color="text.primary">
+                      {crumb.label}
+                    </Typography>
+                  )
+                ))}
+              </Breadcrumbs>
+            </nav>
+          )}
+
           {children}
         </Box>
       </Box>

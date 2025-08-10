@@ -1,6 +1,6 @@
 import { getAppUser } from '@/lib/clerk-github-auth';
 import { redirect } from 'next/navigation';
-import AdminDashboard from '../AdminDashboard';
+import { AdminOverviewPage } from '@/components/dashboard/admin/AdminOverviewPage';
 
 // Force dynamic rendering
 export const dynamic = 'force-dynamic';
@@ -22,11 +22,5 @@ export default async function SuperAdminPage() {
     }
   }
 
-  return (
-    <AdminDashboard
-      userRoles={['admin']}
-      userName={user.name}
-      userEmail={user.email}
-    />
-  );
+  return <AdminOverviewPage />;
 }

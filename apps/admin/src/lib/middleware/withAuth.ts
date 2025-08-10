@@ -213,10 +213,9 @@ export function withAuth<T extends ResourceType = ResourceType>(
         path: req.nextUrl?.pathname || req.url || '/'
       });
       
-      // Step 1: Check authentication
-      const session = await auth();
-      const userId = session?.userId;
-      const sessionClaims = session?.sessionClaims;
+      // Step 1: Check authentication using Clerk's auth() function
+      const authResult = await auth();
+      const { userId, sessionClaims } = authResult;
       
       if (!userId && requireAuthentication) {
         return createErrorResponse(
@@ -228,7 +227,7 @@ export function withAuth<T extends ResourceType = ResourceType>(
         );
       }
 
-      // Step 2: Get auth context
+      // Step 2: Get auth context (this will use the same auth() call internally)
       const authContext = await getAuthContext();
       
       if (!authContext && requireAuthentication) {

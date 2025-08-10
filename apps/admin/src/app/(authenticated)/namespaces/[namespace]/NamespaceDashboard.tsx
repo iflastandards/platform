@@ -49,7 +49,7 @@ import { mockEditorialCycles } from '@/lib/mock-data/supabase/editorial-cycles';
 import { mockNightlyBuilds } from '@/lib/mock-data/supabase/nightly-builds';
 import { mockImportJobs } from '@/lib/mock-data/supabase/import-jobs';
 import { ActivityFeed, StatusChip } from '@/components/common';
-import { StandardDashboardLayout, NavigationItem } from '@/components/layout/StandardDashboardLayout';
+import { TabBasedDashboardLayout, NavigationItem } from '@/components/layout/TabBasedDashboardLayout';
 
 interface NamespaceDashboardProps {
   namespace: string;
@@ -167,11 +167,11 @@ export default function NamespaceDashboard({
   };
 
   const navigationItems: NavigationItem[] = [
-    { id: 'overview', label: 'Overview', icon: <DashboardIcon /> },
-    { id: 'issues', label: 'GitHub Issues', icon: <GitHubIcon />, badge: allIssues.filter(i => i.state === 'open').length },
-    { id: 'activity', label: 'Recent Activity', icon: <TimelineIcon /> },
-    { id: 'projects', label: 'Projects', icon: <AssignmentIcon />, badge: projects.length },
-    { id: 'metrics', label: 'Metrics', icon: <MetricsIcon /> },
+    { id: 'overview', label: 'Overview', icon: DashboardIcon },
+    { id: 'issues', label: 'GitHub Issues', icon: GitHubIcon, badge: allIssues.filter(i => i.state === 'open').length },
+    { id: 'activity', label: 'Recent Activity', icon: TimelineIcon },
+    { id: 'projects', label: 'Projects', icon: AssignmentIcon, badge: projects.length },
+    { id: 'metrics', label: 'Metrics', icon: MetricsIcon },
   ];
 
   const renderIssueCard = (issue: any) => {
@@ -592,7 +592,7 @@ export default function NamespaceDashboard({
 
   return (
     <>
-      <StandardDashboardLayout
+      <TabBasedDashboardLayout
         title={namespaceData.name}
         subtitle={namespaceData.description}
         navigationItems={navigationItems}
@@ -600,7 +600,7 @@ export default function NamespaceDashboard({
         onTabSelect={setSelectedTab}
       >
         {renderContent()}
-      </StandardDashboardLayout>
+      </TabBasedDashboardLayout>
 
       {/* Issue Action Menu */}
       <Menu

@@ -20,7 +20,7 @@ import {
   Person,
 } from '@mui/icons-material';
 import { AppUser } from '@/lib/clerk-github-auth';
-import { StandardDashboardLayout, NavigationItem } from '@/components/layout/StandardDashboardLayout';
+import { TabBasedDashboardLayout, NavigationItem } from '@/components/layout/TabBasedDashboardLayout';
 
 interface PendingDashboardProps {
   user: AppUser;
@@ -31,9 +31,9 @@ export default function PendingDashboard({ user }: PendingDashboardProps) {
   const isDemo = process.env.NEXT_PUBLIC_IFLA_DEMO === 'true';
   
   const navigationItems: NavigationItem[] = [
-    { id: 'status', label: 'Account Status', icon: <AccessTime /> },
-    { id: 'profile', label: 'My Profile', icon: <Person /> },
-    { id: 'help', label: 'Getting Started', icon: <HelpOutline /> },
+    { id: 'status', label: 'Account Status', icon: AccessTime },
+    { id: 'profile', label: 'My Profile', icon: Person },
+    { id: 'help', label: 'Getting Started', icon: HelpOutline },
   ];
 
   const renderContent = () => {
@@ -220,7 +220,7 @@ export default function PendingDashboard({ user }: PendingDashboardProps) {
   };
 
   return (
-    <StandardDashboardLayout
+    <TabBasedDashboardLayout
       title="Pending Assignment"
       subtitle="Waiting for Review Group assignment"
       navigationItems={navigationItems}
@@ -228,6 +228,6 @@ export default function PendingDashboard({ user }: PendingDashboardProps) {
       onTabSelect={setSelectedTab}
     >
       {renderContent()}
-    </StandardDashboardLayout>
+    </TabBasedDashboardLayout>
   );
 }

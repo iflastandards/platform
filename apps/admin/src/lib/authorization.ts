@@ -14,7 +14,7 @@
  * @module authorization
  */
 
-import { currentUser } from '@clerk/nextjs/server';
+import { auth as clerkAuth } from '@clerk/nextjs/server';
 import { UserRoles } from './auth';
 import { AuthContextSchema, type AuthContext } from './schemas/auth.schema';
 import { getAuthCache } from './cache/AuthCache';
@@ -68,30 +68,31 @@ export type Action<T extends ResourceType> = typeof ACTIONS[T][number];
  * }
  */
 export async function getAuthContext(): Promise<AuthContext | null> {
-  const user = await currentUser();
-  if (!user) return null;
+  const authResult = await clerkAuth();
+  const { userId, sessionClaims } = authResult;
+  if (!userId || !sessionClaims) return null;
 
   // Check cache first
   const cache = getAuthCache();
-  const cached = cache.getCachedAuthContext(user.id);
+  const cached = cache.getCachedAuthContext(userId);
   if (cached) {
     return cached;
   }
 
-  // Extract structured metadata with proper defaults
-  const metadata = user.publicMetadata as any;
+  // Extract structured metadata with proper defaults from sessionClaims
+  const metadata = sessionClaims.publicMetadata as any;
   
   const roles: UserRoles = {
-    system: metadata?.systemRole, // Maps to system for backward compatibility
-    systemRole: metadata?.systemRole,
+    system: metadata?.role || metadata?.systemRole, // Maps to system for backward compatibility
+    systemRole: metadata?.role || metadata?.systemRole,
     reviewGroups: metadata?.reviewGroups || [],
     teams: metadata?.teams || [],
     translations: metadata?.translations || [],
   };
 
   const context: AuthContext = {
-    userId: user.id,
-    email: user.emailAddresses[0]?.emailAddress || '',
+    userId,
+    email: (sessionClaims.email as string) || (sessionClaims as any)?.emailAddresses?.[0]?.emailAddress || '',
     roles,
   };
 
@@ -99,7 +100,7 @@ export async function getAuthContext(): Promise<AuthContext | null> {
   try {
     const validatedContext = AuthContextSchema.parse(context);
     // Cache the validated context
-    cache.cacheAuthContext(user.id, validatedContext);
+    cache.cacheAuthContext(userId, validatedContext);
     return validatedContext;
   } catch (error) {
     console.error('Invalid auth context structure:', error);

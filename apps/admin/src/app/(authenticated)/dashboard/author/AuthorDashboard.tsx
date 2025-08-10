@@ -34,7 +34,7 @@ import {
 } from '@mui/icons-material';
 import { AppUser } from '@/lib/clerk-github-auth';
 import Link from 'next/link';
-import { StandardDashboardLayout, NavigationItem } from '@/components/layout/StandardDashboardLayout';
+import { TabBasedDashboardLayout, NavigationItem } from '@/components/layout/TabBasedDashboardLayout';
 
 interface AuthorDashboardProps {
   user: AppUser;
@@ -65,13 +65,13 @@ export default function AuthorDashboard({ user }: AuthorDashboardProps) {
   };
 
   const navigationItems: NavigationItem[] = [
-    { id: 'overview', label: 'Overview', icon: <Home /> },
-    { id: 'projects', label: 'My Projects', icon: <ProjectIcon />, badge: authorProjects.length },
-    { id: 'namespaces', label: 'Namespaces', icon: <FolderIcon />, badge: accessibleNamespaces.length },
-    { id: 'tasks', label: 'Active Tasks', icon: <TaskIcon />, badge: 6 },
-    { id: 'review', label: 'Review Queue', icon: <ReviewIcon />, badge: 3 },
-    { id: 'translation', label: 'Translation Tasks', icon: <TranslateIcon />, badge: 2 },
-    { id: 'tools', label: 'Tools & Resources', icon: <ToolsIcon /> },
+    { id: 'overview', label: 'Overview', icon: Home },
+    { id: 'projects', label: 'My Projects', icon: ProjectIcon, badge: authorProjects.length },
+    { id: 'namespaces', label: 'Namespaces', icon: FolderIcon, badge: accessibleNamespaces.length },
+    { id: 'tasks', label: 'Active Tasks', icon: TaskIcon, badge: 6 },
+    { id: 'review', label: 'Review Queue', icon: ReviewIcon, badge: 3 },
+    { id: 'translation', label: 'Translation Tasks', icon: TranslateIcon, badge: 2 },
+    { id: 'tools', label: 'Tools & Resources', icon: ToolsIcon },
   ];
 
   const renderContent = () => {
@@ -413,7 +413,7 @@ export default function AuthorDashboard({ user }: AuthorDashboardProps) {
   };
 
   return (
-    <StandardDashboardLayout
+    <TabBasedDashboardLayout
       title="Author Dashboard"
       subtitle="Content Review & Translation"
       navigationItems={navigationItems}
@@ -421,6 +421,6 @@ export default function AuthorDashboard({ user }: AuthorDashboardProps) {
       onTabSelect={setSelectedTab}
     >
       {renderContent()}
-    </StandardDashboardLayout>
+    </TabBasedDashboardLayout>
   );
 }
