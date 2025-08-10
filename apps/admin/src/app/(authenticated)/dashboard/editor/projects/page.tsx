@@ -8,8 +8,8 @@ export default async function ProjectsPage() {
   const user = await getAppUser();
 
   if (!user) {
-    redirect('/sign-in?redirect_url=/dashboard/author/projects');
+    redirect('/sign-in?redirect_url=/dashboard/editor/projects');
   }
 
-  return <SharedProjectsPage user={user} role="author" />;
+  return <SharedProjectsPage user={user} role="editor" />;
 }

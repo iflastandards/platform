@@ -3,5 +3,5 @@ import { SharedTranslationPage } from '@/components/dashboard/shared/Translation
 export const dynamic = 'force-dynamic';
 
 export default function TranslationPage() {
-  return <SharedTranslationPage role="author" />;
+  return <SharedTranslationPage role="editor" />;
 }

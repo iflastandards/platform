@@ -18,29 +18,52 @@ import {
 import Link from 'next/link';
 import { AppUser } from '@/lib/clerk-github-auth';
 
-interface AuthorProjectsPageProps {
+interface SharedProjectsPageProps {
   user: AppUser;
+  role: 'author' | 'editor';
 }
 
-export function AuthorProjectsPage({ user }: AuthorProjectsPageProps) {
+export function SharedProjectsPage({ user, role }: SharedProjectsPageProps) {
   const userProjects = Object.values(user.projects);
-  const authorProjects = userProjects.filter(p => p.role === 'reviewer' || p.role === 'translator');
+  
+  // Filter projects based on role
+  const filteredProjects = role === 'author' 
+    ? userProjects.filter(p => p.role === 'reviewer' || p.role === 'translator')
+    : userProjects.filter(p => p.role === 'lead' || p.role === 'editor');
 
   // Get role display
-  const getRoleDisplay = (role: string) => {
-    switch (role) {
-      case 'reviewer': return 'Reviewer';
-      case 'translator': return 'Translator';
-      default: return role;
-    }
+  const getRoleDisplay = (projectRole: string) => {
+    const roleMap: Record<string, string> = {
+      'reviewer': 'Reviewer',
+      'translator': 'Translator',
+      'lead': 'Project Lead',
+      'editor': 'Editor',
+    };
+    return roleMap[projectRole] || projectRole;
   };
 
-  // Get role color
-  const getRoleColor = (role: string) => {
-    switch (role) {
+  // Get role color for authors only (editors use primary)
+  const getRoleColor = (projectRole: string) => {
+    if (role === 'editor') return 'primary';
+    
+    switch (projectRole) {
       case 'reviewer': return 'secondary';
       case 'translator': return 'info';
       default: return 'default';
+    }
+  };
+
+  const getEmptyMessage = () => {
+    if (role === 'author') {
+      return {
+        primary: 'No projects assigned',
+        secondary: "You don't have any projects with reviewer or translator roles"
+      };
+    } else {
+      return {
+        primary: 'No projects assigned',
+        secondary: "You don't have any projects with editor or lead roles"
+      };
     }
   };
 
@@ -50,7 +73,7 @@ export function AuthorProjectsPage({ user }: AuthorProjectsPageProps) {
         My Projects
       </Typography>
       <List>
-        {authorProjects.map((project) => (
+        {filteredProjects.map((project) => (
           <ListItem key={project.number} divider>
             <ListItemIcon>
               <ProjectIcon />
@@ -62,7 +85,7 @@ export function AuthorProjectsPage({ user }: AuthorProjectsPageProps) {
                   <Chip
                     label={getRoleDisplay(project.role)}
                     size="small"
-                    color={getRoleColor(project.role) as 'secondary' | 'info' | 'default'}
+                    color={getRoleColor(project.role) as any}
                   />
                   <Typography variant="caption" color="text.secondary" component="span">
                     {project.namespaces.length} namespaces
@@ -74,17 +97,17 @@ export function AuthorProjectsPage({ user }: AuthorProjectsPageProps) {
               component={Link}
               href={`/projects/${project.number}`}
               size="small"
-              aria-label={`View ${project.title} project`}
+              aria-label={role === 'author' ? `View ${project.title} project` : `Edit ${project.title}`}
             >
               <EditIcon />
             </IconButton>
           </ListItem>
         ))}
-        {authorProjects.length === 0 && (
+        {filteredProjects.length === 0 && (
           <ListItem>
             <ListItemText
-              primary="No projects assigned"
-              secondary="You don't have any projects with reviewer or translator roles"
+              primary={getEmptyMessage().primary}
+              secondary={getEmptyMessage().secondary}
             />
           </ListItem>
         )}

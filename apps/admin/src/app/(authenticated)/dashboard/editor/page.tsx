@@ -1,6 +1,6 @@
 import { getAppUser } from '@/lib/clerk-github-auth';
 import { redirect } from 'next/navigation';
-import EditorDashboard from './EditorDashboard';
+import { EditorOverviewPage } from '@/components/dashboard/editor/OverviewPage';
 
 // Force dynamic rendering to avoid static generation issues with auth
 export const dynamic = 'force-dynamic';
@@ -14,7 +14,7 @@ export default async function EditorDashboardPage() {
     redirect('/sign-in?redirect_url=/dashboard/editor');
   }
 
-  // Verify user has editor or lead role
+  // Verify user has editor role (lead or editor)
   const projectRoles = Object.values(user.projects);
   const hasEditorRole = projectRoles.some(p => p.role === 'lead' || p.role === 'editor');
   
@@ -27,5 +27,5 @@ export default async function EditorDashboardPage() {
     }
   }
 
-  return <EditorDashboard user={user} />;
+  return <EditorOverviewPage user={user} />;
 }
