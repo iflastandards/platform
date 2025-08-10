@@ -23,7 +23,7 @@ importers:
         version: 0.40.0
       '@clerk/nextjs':
         specifier: latest
-        version: 6.29.0(next@15.4.4(@babel/core@7.28.0)(@opentelemetry/api@1.9.0)(@playwright/test@1.50.1)(babel-plugin-macros@3.1.0)(react-dom@19.1.1(react@19.1.1))(react@19.1.1)(sass@1.89.2))(react-dom@19.1.1(react@19.1.1))(react@19.1.1)
+        version: 6.30.0(next@15.4.4(@babel/core@7.28.0)(@opentelemetry/api@1.9.0)(@playwright/test@1.50.1)(babel-plugin-macros@3.1.0)(react-dom@19.1.1(react@19.1.1))(react@19.1.1)(sass@1.89.2))(react-dom@19.1.1(react@19.1.1))(react@19.1.1)
       '@docusaurus/core':
         specifier: 3.8.1
         version: 3.8.1(@docusaurus/faster@3.8.1(@docusaurus/types@3.8.1(@swc/core@1.13.2(@swc/helpers@0.5.17))(acorn@8.15.0)(esbuild@0.25.8)(react-dom@19.1.1(react@19.1.1))(react@19.1.1))(@swc/helpers@0.5.17)(esbuild@0.25.8))(@mdx-js/react@3.1.0(@types/react@19.1.9)(react@19.1.1))(@rspack/core@1.4.10(@swc/helpers@0.5.17))(@swc/core@1.13.2(@swc/helpers@0.5.17))(acorn@8.15.0)(debug@4.4.1)(esbuild@0.25.8)(lightningcss@1.30.1)(react-dom@19.1.1(react@19.1.1))(react@19.1.1)(typescript@5.8.3)
@@ -90,18 +90,6 @@ importers:
       '@tanstack/react-query':
         specifier: ^5.83.0
         version: 5.83.0(react@19.1.1)
-      '@trpc/client':
-        specifier: ^11.4.3
-        version: 11.4.3(@trpc/server@11.4.3(typescript@5.8.3))(typescript@5.8.3)
-      '@trpc/next':
-        specifier: ^11.4.3
-        version: 11.4.3(@tanstack/react-query@5.83.0(react@19.1.1))(@trpc/client@11.4.3(@trpc/server@11.4.3(typescript@5.8.3))(typescript@5.8.3))(@trpc/react-query@11.4.3(@tanstack/react-query@5.83.0(react@19.1.1))(@trpc/client@11.4.3(@trpc/server@11.4.3(typescript@5.8.3))(typescript@5.8.3))(@trpc/server@11.4.3(typescript@5.8.3))(react-dom@19.1.1(react@19.1.1))(react@19.1.1)(typescript@5.8.3))(@trpc/server@11.4.3(typescript@5.8.3))(next@15.4.4(@babel/core@7.28.0)(@opentelemetry/api@1.9.0)(@playwright/test@1.50.1)(babel-plugin-macros@3.1.0)(react-dom@19.1.1(react@19.1.1))(react@19.1.1)(sass@1.89.2))(react-dom@19.1.1(react@19.1.1))(react@19.1.1)(typescript@5.8.3)
-      '@trpc/react-query':
-        specifier: ^11.4.3
-        version: 11.4.3(@tanstack/react-query@5.83.0(react@19.1.1))(@trpc/client@11.4.3(@trpc/server@11.4.3(typescript@5.8.3))(typescript@5.8.3))(@trpc/server@11.4.3(typescript@5.8.3))(react-dom@19.1.1(react@19.1.1))(react@19.1.1)(typescript@5.8.3)
-      '@trpc/server':
-        specifier: ^11.4.3
-        version: 11.4.3(typescript@5.8.3)
       '@types/glob':
         specifier: ^9.0.0
         version: 9.0.0
@@ -310,6 +298,9 @@ importers:
       '@axe-core/playwright':
         specifier: ^4.10.2
         version: 4.10.2(playwright-core@1.55.0-alpha-1752701791000)
+      '@clerk/backend':
+        specifier: ^2.7.0
+        version: 2.7.0(react-dom@19.1.1(react@19.1.1))(react@19.1.1)
       '@clerk/testing':
         specifier: ^1.10.9
         version: 1.10.9(@playwright/test@1.50.1)(react-dom@19.1.1(react@19.1.1))(react@19.1.1)
@@ -1562,23 +1553,19 @@ packages:
   '@chevrotain/utils@11.0.3':
     resolution: {integrity: sha512-YslZMgtJUyuMbZ+aKvfF3x1f5liK4mWNxghFRv7jqRR9C3R3fAOGTTKvxXDa2Y1s9zSbcpuO0cAxDYsc9SrXoQ==}
 
-  '@clerk/backend@2.6.2':
-    resolution: {integrity: sha512-IUTjLmA1QkqoJnB97S8Ay/oeFR1QtBxxzi9V2J8zncGdUUpAHRp9PfbUwe203VEZuoDD8n6PGfK4oiiq5CoKhQ==}
+  '@clerk/backend@2.7.0':
+    resolution: {integrity: sha512-YrZwRd1X9Am1HGlIx01LoENZ5S7zDBmvHw0srUI5EhNBNY1HCWAd8iBF678o1qV95/sOB27A7BiKJiDIgnTiZg==}
     engines: {node: '>=18.17.0'}
 
-  '@clerk/backend@2.6.3':
-    resolution: {integrity: sha512-x73eu/zDMc1E2YvvW+KW55B6BOfiUrgFhSJngBsZJ6+W5hWZph+XeCS7oEcZfhvQyUcb9M6tqM2R1w7htNgh1Q==}
-    engines: {node: '>=18.17.0'}
-
-  '@clerk/clerk-react@5.39.0':
-    resolution: {integrity: sha512-c1GJMj8wrzFrT3BbvZ4JwYY91BAY1M4yMypaAs3UNvtU0dDze7bmUVs02eW+z0GgaEQbGBVO4f5ru/pBXCGSKA==}
+  '@clerk/clerk-react@5.40.0':
+    resolution: {integrity: sha512-gRhubPU/U/XEjZv2AujFz5aKKJ5C4ogWxzHILOUjrENJI/EiAyO2B7UtWirW2AC6bHnROoRUQFn0CTi4LVlbig==}
     engines: {node: '>=18.17.0'}
     peerDependencies:
       react: 19.1.1
       react-dom: 19.1.1
 
-  '@clerk/nextjs@6.29.0':
-    resolution: {integrity: sha512-hyu6NYq4LtHwSasHGgCDkUpwC8jib2ZPurKMROOVTl1HdG5R54wRemOkI4SeeS0ITG3SRomhiRJrkq+STLsQUg==}
+  '@clerk/nextjs@6.30.0':
+    resolution: {integrity: sha512-rQePjoKWUx7K/oYpnlPB2+kgsJdPJtWbIwA2ePyyqY1pbKTlB/SwhzMA+tT8fe6eRPUI0Q6cgpeq43DEEIcZig==}
     engines: {node: '>=18.17.0'}
     peerDependencies:
       next: ^13.5.7 || ^14.2.25 || ^15.2.3
@@ -1597,8 +1584,8 @@ packages:
       react-dom:
         optional: true
 
-  '@clerk/shared@3.18.0':
-    resolution: {integrity: sha512-QGYbtPfJEp66AgaI0JtiRX04ejoUI8SmqUqqbAm3UXAeUAsKOyXoNbghNal97X7qeq1vPRRiDugK5B9WYN69uA==}
+  '@clerk/shared@3.18.1':
+    resolution: {integrity: sha512-l/8+X1gM9+Se87USn55B0ZKeSrFgy0ZYHzAptUc1Fgmfyved90JX7n5QgY66DuqbdM5OfGbRNFiCsI2khAgmrA==}
     engines: {node: '>=18.17.0'}
     peerDependencies:
       react: 19.1.1
@@ -1625,8 +1612,8 @@ packages:
     resolution: {integrity: sha512-SEkgiQNeTstC0/mQjHCGBEyX0/ALyWAa5QZBBvVOok204r48MLipfIKsXQhyWE2Hk6FIo5WT6YyqD36jaxUEIw==}
     engines: {node: '>=18.17.0'}
 
-  '@clerk/types@4.73.0':
-    resolution: {integrity: sha512-SFM29RFVqs0KyTds3F7s7DBYNoqeBDSZiWuso/WCgfQVI4H3j0gI+0BdBEiqwCILXr4jKBG2srDmzP5FVvx8Hg==}
+  '@clerk/types@4.74.0':
+    resolution: {integrity: sha512-9Wt2dWyCtCp2FngRkbHuQXPMttRjvGb77bmyCdGkPmNqQIZp7m4AZRdPtXhcGgxzaAYJkK6psgolbvuKDk+1jA==}
     engines: {node: '>=18.17.0'}
 
   '@colors/colors@1.5.0':
@@ -5109,44 +5096,6 @@ packages:
 
   '@tootallnate/quickjs-emscripten@0.23.0':
     resolution: {integrity: sha512-C5Mc6rdnsaJDjO3UpGW/CQTHtCKaYlScZTly4JIu97Jxo/odCiH0ITnDXSJPTOrEKk/ycSZ0AOgTmkDtkOsvIA==}
-
-  '@trpc/client@11.4.3':
-    resolution: {integrity: sha512-i2suttUCfColktXT8bqex5kHW5jpT15nwUh0hGSDiW1keN621kSUQKcLJ095blqQAUgB+lsmgSqSMmB4L9shQQ==}
-    peerDependencies:
-      '@trpc/server': 11.4.3
-      typescript: '>=5.7.2'
-
-  '@trpc/next@11.4.3':
-    resolution: {integrity: sha512-/AqPpzlrQy8ylLEdBAemRU1xmdqJVaXrXI/ZUYl3Oz1Id36gvGMdn5uxm0wgKPpZneM2EICvYcrsLSsdtddW4w==}
-    peerDependencies:
-      '@tanstack/react-query': ^5.59.15
-      '@trpc/client': 11.4.3
-      '@trpc/react-query': 11.4.3
-      '@trpc/server': 11.4.3
-      next: '*'
-      react: 19.1.1
-      react-dom: 19.1.1
-      typescript: '>=5.7.2'
-    peerDependenciesMeta:
-      '@tanstack/react-query':
-        optional: true
-      '@trpc/react-query':
-        optional: true
-
-  '@trpc/react-query@11.4.3':
-    resolution: {integrity: sha512-z+jhAiOBD22NNhHtvF0iFp9hO36YFA7M8AiUu/XtNmMxyLd3Y9/d1SMjMwlTdnGqxEGPo41VEWBrdhDUGtUuHg==}
-    peerDependencies:
-      '@tanstack/react-query': ^5.80.3
-      '@trpc/client': 11.4.3
-      '@trpc/server': 11.4.3
-      react: 19.1.1
-      react-dom: 19.1.1
-      typescript: '>=5.7.2'
-
-  '@trpc/server@11.4.3':
-    resolution: {integrity: sha512-wnWq3wiLlMOlYkaIZz+qbuYA5udPTLS4GVVRyFkr6aT83xpdCHyVtURT+u4hSoIrOXQM9OPCNXSXsAujWZDdaw==}
-    peerDependencies:
-      typescript: '>=5.7.2'
 
   '@trysound/sax@0.2.0':
     resolution: {integrity: sha512-L7z9BgrNEcYyUYtF+HaEfiS5ebkh9jXqbszz7pC0hRBPaatV0XjSD3+eHrpqFemQfgwiFF0QPIarnIihIDn7OA==}
@@ -15894,10 +15843,10 @@ snapshots:
 
   '@chevrotain/utils@11.0.3': {}
 
-  '@clerk/backend@2.6.2(react-dom@19.1.1(react@19.1.1))(react@19.1.1)':
+  '@clerk/backend@2.7.0(react-dom@19.1.1(react@19.1.1))(react@19.1.1)':
     dependencies:
-      '@clerk/shared': 3.17.0(react-dom@19.1.1(react@19.1.1))(react@19.1.1)
-      '@clerk/types': 4.72.0
+      '@clerk/shared': 3.18.1(react-dom@19.1.1(react@19.1.1))(react@19.1.1)
+      '@clerk/types': 4.74.0
       cookie: 1.0.2
       standardwebhooks: 1.0.0
       tslib: 2.8.1
@@ -15905,31 +15854,20 @@ snapshots:
       - react
       - react-dom
 
-  '@clerk/backend@2.6.3(react-dom@19.1.1(react@19.1.1))(react@19.1.1)':
+  '@clerk/clerk-react@5.40.0(react-dom@19.1.1(react@19.1.1))(react@19.1.1)':
     dependencies:
-      '@clerk/shared': 3.18.0(react-dom@19.1.1(react@19.1.1))(react@19.1.1)
-      '@clerk/types': 4.73.0
-      cookie: 1.0.2
-      standardwebhooks: 1.0.0
-      tslib: 2.8.1
-    transitivePeerDependencies:
-      - react
-      - react-dom
-
-  '@clerk/clerk-react@5.39.0(react-dom@19.1.1(react@19.1.1))(react@19.1.1)':
-    dependencies:
-      '@clerk/shared': 3.18.0(react-dom@19.1.1(react@19.1.1))(react@19.1.1)
-      '@clerk/types': 4.73.0
+      '@clerk/shared': 3.18.1(react-dom@19.1.1(react@19.1.1))(react@19.1.1)
+      '@clerk/types': 4.74.0
       react: 19.1.1
       react-dom: 19.1.1(react@19.1.1)
       tslib: 2.8.1
 
-  '@clerk/nextjs@6.29.0(next@15.4.4(@babel/core@7.28.0)(@opentelemetry/api@1.9.0)(@playwright/test@1.50.1)(babel-plugin-macros@3.1.0)(react-dom@19.1.1(react@19.1.1))(react@19.1.1)(sass@1.89.2))(react-dom@19.1.1(react@19.1.1))(react@19.1.1)':
+  '@clerk/nextjs@6.30.0(next@15.4.4(@babel/core@7.28.0)(@opentelemetry/api@1.9.0)(@playwright/test@1.50.1)(babel-plugin-macros@3.1.0)(react-dom@19.1.1(react@19.1.1))(react@19.1.1)(sass@1.89.2))(react-dom@19.1.1(react@19.1.1))(react@19.1.1)':
     dependencies:
-      '@clerk/backend': 2.6.3(react-dom@19.1.1(react@19.1.1))(react@19.1.1)
-      '@clerk/clerk-react': 5.39.0(react-dom@19.1.1(react@19.1.1))(react@19.1.1)
-      '@clerk/shared': 3.18.0(react-dom@19.1.1(react@19.1.1))(react@19.1.1)
-      '@clerk/types': 4.73.0
+      '@clerk/backend': 2.7.0(react-dom@19.1.1(react@19.1.1))(react@19.1.1)
+      '@clerk/clerk-react': 5.40.0(react-dom@19.1.1(react@19.1.1))(react@19.1.1)
+      '@clerk/shared': 3.18.1(react-dom@19.1.1(react@19.1.1))(react@19.1.1)
+      '@clerk/types': 4.74.0
       next: 15.4.4(@babel/core@7.28.0)(@opentelemetry/api@1.9.0)(@playwright/test@1.50.1)(babel-plugin-macros@3.1.0)(react-dom@19.1.1(react@19.1.1))(react@19.1.1)(sass@1.89.2)
       react: 19.1.1
       react-dom: 19.1.1(react@19.1.1)
@@ -15948,9 +15886,9 @@ snapshots:
       react: 19.1.1
       react-dom: 19.1.1(react@19.1.1)
 
-  '@clerk/shared@3.18.0(react-dom@19.1.1(react@19.1.1))(react@19.1.1)':
+  '@clerk/shared@3.18.1(react-dom@19.1.1(react@19.1.1))(react@19.1.1)':
     dependencies:
-      '@clerk/types': 4.73.0
+      '@clerk/types': 4.74.0
       dequal: 2.0.3
       glob-to-regexp: 0.4.1
       js-cookie: 3.0.5
@@ -15962,7 +15900,7 @@ snapshots:
 
   '@clerk/testing@1.10.9(@playwright/test@1.50.1)(react-dom@19.1.1(react@19.1.1))(react@19.1.1)':
     dependencies:
-      '@clerk/backend': 2.6.2(react-dom@19.1.1(react@19.1.1))(react@19.1.1)
+      '@clerk/backend': 2.7.0(react-dom@19.1.1(react@19.1.1))(react@19.1.1)
       '@clerk/shared': 3.17.0(react-dom@19.1.1(react@19.1.1))(react@19.1.1)
       '@clerk/types': 4.72.0
       dotenv: 17.2.0
@@ -15976,7 +15914,7 @@ snapshots:
     dependencies:
       csstype: 3.1.3
 
-  '@clerk/types@4.73.0':
+  '@clerk/types@4.74.0':
     dependencies:
       csstype: 3.1.3
 
@@ -20672,36 +20610,6 @@ snapshots:
   '@tokenizer/token@0.3.0': {}
 
   '@tootallnate/quickjs-emscripten@0.23.0': {}
-
-  '@trpc/client@11.4.3(@trpc/server@11.4.3(typescript@5.8.3))(typescript@5.8.3)':
-    dependencies:
-      '@trpc/server': 11.4.3(typescript@5.8.3)
-      typescript: 5.8.3
-
-  '@trpc/next@11.4.3(@tanstack/react-query@5.83.0(react@19.1.1))(@trpc/client@11.4.3(@trpc/server@11.4.3(typescript@5.8.3))(typescript@5.8.3))(@trpc/react-query@11.4.3(@tanstack/react-query@5.83.0(react@19.1.1))(@trpc/client@11.4.3(@trpc/server@11.4.3(typescript@5.8.3))(typescript@5.8.3))(@trpc/server@11.4.3(typescript@5.8.3))(react-dom@19.1.1(react@19.1.1))(react@19.1.1)(typescript@5.8.3))(@trpc/server@11.4.3(typescript@5.8.3))(next@15.4.4(@babel/core@7.28.0)(@opentelemetry/api@1.9.0)(@playwright/test@1.50.1)(babel-plugin-macros@3.1.0)(react-dom@19.1.1(react@19.1.1))(react@19.1.1)(sass@1.89.2))(react-dom@19.1.1(react@19.1.1))(react@19.1.1)(typescript@5.8.3)':
-    dependencies:
-      '@trpc/client': 11.4.3(@trpc/server@11.4.3(typescript@5.8.3))(typescript@5.8.3)
-      '@trpc/server': 11.4.3(typescript@5.8.3)
-      next: 15.4.4(@babel/core@7.28.0)(@opentelemetry/api@1.9.0)(@playwright/test@1.50.1)(babel-plugin-macros@3.1.0)(react-dom@19.1.1(react@19.1.1))(react@19.1.1)(sass@1.89.2)
-      react: 19.1.1
-      react-dom: 19.1.1(react@19.1.1)
-      typescript: 5.8.3
-    optionalDependencies:
-      '@tanstack/react-query': 5.83.0(react@19.1.1)
-      '@trpc/react-query': 11.4.3(@tanstack/react-query@5.83.0(react@19.1.1))(@trpc/client@11.4.3(@trpc/server@11.4.3(typescript@5.8.3))(typescript@5.8.3))(@trpc/server@11.4.3(typescript@5.8.3))(react-dom@19.1.1(react@19.1.1))(react@19.1.1)(typescript@5.8.3)
-
-  '@trpc/react-query@11.4.3(@tanstack/react-query@5.83.0(react@19.1.1))(@trpc/client@11.4.3(@trpc/server@11.4.3(typescript@5.8.3))(typescript@5.8.3))(@trpc/server@11.4.3(typescript@5.8.3))(react-dom@19.1.1(react@19.1.1))(react@19.1.1)(typescript@5.8.3)':
-    dependencies:
-      '@tanstack/react-query': 5.83.0(react@19.1.1)
-      '@trpc/client': 11.4.3(@trpc/server@11.4.3(typescript@5.8.3))(typescript@5.8.3)
-      '@trpc/server': 11.4.3(typescript@5.8.3)
-      react: 19.1.1
-      react-dom: 19.1.1(react@19.1.1)
-      typescript: 5.8.3
-
-  '@trpc/server@11.4.3(typescript@5.8.3)':
-    dependencies:
-      typescript: 5.8.3
 
   '@trysound/sax@0.2.0': {}
 

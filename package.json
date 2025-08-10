@@ -149,6 +149,8 @@
     "clerk:cleanup": "tsx scripts/cleanup-old-auth.ts",
     "clerk:cleanup:dry": "tsx scripts/cleanup-old-auth.ts --dry-run",
     "clerk:cleanup:apply": "tsx scripts/cleanup-old-auth.ts --clean",
+    "clerk:test-users:verify": "tsx scripts/verify-clerk-test-users.ts",
+    "clerk:test-users:update": "tsx scripts/update-clerk-test-users.ts",
     "serve": "pnpm stop:portal && docusaurus serve portal",
     "serve:admin": "nx serve admin",
     "serve:frbr": "pnpm stop:frbr && docusaurus serve standards/FRBR --port 3003",
@@ -457,6 +459,7 @@
   },
   "devDependencies": {
     "@axe-core/playwright": "^4.10.2",
+    "@clerk/backend": "^2.7.0",
     "@clerk/testing": "^1.10.9",
     "@docusaurus/core": "^3.8.1",
     "@docusaurus/eslint-plugin": "^3.8.1",
