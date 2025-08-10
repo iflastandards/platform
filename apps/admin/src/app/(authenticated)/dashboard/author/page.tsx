@@ -1,6 +1,6 @@
 import { getAppUser } from '@/lib/clerk-github-auth';
 import { redirect } from 'next/navigation';
-import AuthorDashboard from './AuthorDashboard';
+import { AuthorOverviewPage } from '@/components/dashboard/author/OverviewPage';
 
 // Force dynamic rendering to avoid static generation issues with auth
 export const dynamic = 'force-dynamic';
@@ -27,5 +27,5 @@ export default async function AuthorDashboardPage() {
     }
   }
 
-  return <AuthorDashboard user={user} />;
+  return <AuthorOverviewPage user={user} />;
 }
