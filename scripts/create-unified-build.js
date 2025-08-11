@@ -26,7 +26,7 @@ const ENV_CONFIG = {
       'muldicat': { source: 'muldicat', deploy: 'muldicat' }, 
       'unimarc': { source: 'unimarc', deploy: 'unimarc' }
     },
-    outputDir: '_site/platform'
+    outputDir: '_site'
   },
   production: {
     baseUrl: '',

@@ -208,38 +208,37 @@ jobs:
             cp -r portal/build/* _site/
           fi
           
-          # Copy other sites to platform subdirectory
-          mkdir -p _site/platform
-          # Map Nx project names to source directories and deployment paths
-          declare -A PROJECT_TO_SOURCE=(
-            ["isbdm"]="ISBDM"
-            ["lrm"]="LRM" 
-            ["frbr"]="FRBR"
-            ["isbd"]="isbd"
-            ["muldicat"]="muldicat"
-            ["unimarc"]="unimarc"
-          )
-          
-          declare -A PROJECT_TO_DEPLOY=(
-            ["isbdm"]="ISBDM"
-            ["lrm"]="LRM"
-            ["frbr"]="FRBR" 
-            ["isbd"]="isbd"
-            ["muldicat"]="muldicat"
-            ["unimarc"]="unimarc"
-          )
-          
-          for PROJECT in "${!PROJECT_TO_SOURCE[@]}"; do
-            SOURCE_DIR="${PROJECT_TO_SOURCE[$PROJECT]}"
-            DEPLOY_PATH="${PROJECT_TO_DEPLOY[$PROJECT]}"
-            
-            if [ -d "standards/$SOURCE_DIR/build" ]; then
-              cp -r standards/$SOURCE_DIR/build _site/platform/$DEPLOY_PATH
-              echo "✅ Copied $PROJECT (standards/$SOURCE_DIR) to platform/$DEPLOY_PATH"
-            else
-              echo "⚠️ Build not found for $PROJECT: standards/$SOURCE_DIR/build"
-            fi
-          done
+           # Copy other sites directly to _site root (no platform subdirectory)
+           # Map Nx project names to source directories and deployment paths
+           declare -A PROJECT_TO_SOURCE=(
+             ["isbdm"]="ISBDM"
+             ["lrm"]="LRM" 
+             ["frbr"]="FRBR"
+             ["isbd"]="isbd"
+             ["muldicat"]="muldicat"
+             ["unimarc"]="unimarc"
+           )
+           
+           declare -A PROJECT_TO_DEPLOY=(
+             ["isbdm"]="ISBDM"
+             ["lrm"]="LRM"
+             ["frbr"]="FRBR" 
+             ["isbd"]="isbd"
+             ["muldicat"]="muldicat"
+             ["unimarc"]="unimarc"
+           )
+           
+           for PROJECT in "${!PROJECT_TO_SOURCE[@]}"; do
+             SOURCE_DIR="${PROJECT_TO_SOURCE[$PROJECT]}"
+             DEPLOY_PATH="${PROJECT_TO_DEPLOY[$PROJECT]}"
+             
+             if [ -d "standards/$SOURCE_DIR/build" ]; then
+               cp -r standards/$SOURCE_DIR/build _site/$DEPLOY_PATH
+               echo "✅ Copied $PROJECT (standards/$SOURCE_DIR) to $DEPLOY_PATH"
+             else
+               echo "⚠️ Build not found for $PROJECT: standards/$SOURCE_DIR/build"
+             fi
+           done
           
           # Add deployment configuration
           if [ "${{ github.event.inputs.deploy_target }}" != "netlify" ] && [ "${{ github.event.inputs.deploy_target }}" != "vercel" ]; then

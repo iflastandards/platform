@@ -89,14 +89,8 @@ jobs:
           echo "📦 Creating unified build directory..."
           node scripts/create-unified-build.js --env preview
           
-          # Move content from _site/platform to _site root for GitHub Pages
-          if [ -d "_site/platform" ]; then
-            echo "📁 Moving platform content to root level..."
-            mkdir -p _site_temp
-            mv _site/platform/* _site_temp/
-            rm -rf _site
-            mv _site_temp _site
-          fi
+           # Content is already at correct paths in _site root
+           echo "📁 Site structure is correct - no platform subdirectory needed"
           
           # Add GitHub Pages configuration
           echo "iflastandards.github.io" > _site/CNAME
