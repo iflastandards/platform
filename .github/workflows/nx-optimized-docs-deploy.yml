@@ -315,10 +315,11 @@ jobs:
         run: |
           echo "🧪 Running smoke tests for deployed documentation sites..."
           
-          # Run only smoke tests against the deployed site
+          # Run only smoke tests against the deployed site using smoke-specific config
           # These tests verify basic functionality of the deployed environment
+          # Note: Using explicit config to bypass CI detection in main config
           pnpm exec playwright test \
-            --grep "@smoke" \
+            --config=playwright.config.smoke.ts \
             --reporter=list \
             --retries=2 \
             --workers=2

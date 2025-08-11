@@ -16,8 +16,28 @@ This document outlines the five distinct test phases that organize all testing a
 
 **Purpose**: Individual testing for focused development work and TDD
 **When**: During active development, debugging, feature work
-**Optimization**: Uses `nx affected` heavily, smart caching
+**Optimization**: Uses `nx affected` heavily, smart caching, **on-demand server management**
 **Speed**: < 5 seconds per test file
+
+### 🚀 Server Management (NEW - On-Demand Architecture)
+
+Tests now use **intelligent on-demand server management**:
+- Servers are started **only when needed** by specific tests
+- Running servers are **automatically reused** instead of starting duplicates
+- Servers are **left running** after tests complete for reuse by subsequent tests
+- Servers are **only killed** on explicit demand or during comprehensive tests
+
+```bash
+# Manual server management commands
+pnpm test:servers status      # Show status of all test servers
+pnpm test:servers stop        # Stop all test servers
+pnpm test:servers start portal isbdm  # Start specific servers
+
+# Servers auto-start when tests need them:
+pnpm exec playwright test e2e/portal/*.spec.ts  # Auto-starts portal server
+pnpm exec playwright test e2e/admin/*.spec.ts   # Auto-starts admin server
+pnpm exec playwright test --grep "@isbdm"       # Auto-starts ISBDM server
+```
 
 ### Unit Tests
 ```bash
@@ -44,31 +64,42 @@ pnpm test --grep "@rbac"              # Run RBAC tests
 
 ### UI Tests (Playwright Multi-Browser)
 ```bash
-# Individual browser testing
-npx playwright test --project=chromium
-npx playwright test --project=firefox
-npx playwright test --project="Mobile Chrome"
+# Individual browser testing (servers auto-start as needed)
+pnpm exec playwright test --project=chromium
+pnpm exec playwright test --project=firefox
+pnpm exec playwright test --project="Mobile Chrome"
 
-# Specific test files
-npx playwright test e2e/portal-smoke.spec.ts
-npx playwright test e2e/vocabulary-functionality.spec.ts
+# Specific test files (servers auto-detected from path)
+pnpm exec playwright test e2e/portal-smoke.spec.ts        # Auto-starts portal
+pnpm exec playwright test e2e/vocabulary-functionality.spec.ts
 
-# Admin Portal E2E tests
-npx playwright test --project=admin-portal    # All admin portal E2E tests
-npx playwright test e2e/admin-portal/auth.e2e.test.ts
-npx playwright test e2e/admin-portal/site-management-workflow.e2e.test.ts
+# Admin Portal E2E tests (auto-starts admin server)
+pnpm exec playwright test --project=admin-portal    # All admin portal E2E tests
+pnpm exec playwright test e2e/admin-portal/auth.e2e.test.ts
+pnpm exec playwright test e2e/admin-portal/site-management-workflow.e2e.test.ts
 
-# 🎯 Tag-based Playwright test selection (NEW - Phase 1 Complete)
-npx playwright test --grep "@smoke"          # Run smoke tests only
-npx playwright test --grep "@e2e"            # Run all E2E tests
-npx playwright test --grep "@critical"       # Run critical E2E tests
-npx playwright test --grep "@authentication" # Run auth-related tests
-npx playwright test --grep "@navigation"     # Run navigation tests
-npx playwright test --grep-invert "@local-only" # Skip local-only tests
+# 🎯 Tag-based Playwright test selection (servers auto-start based on tags)
+pnpm exec playwright test --grep "@e2e"            # Run all E2E tests
+pnpm exec playwright test --grep "@critical"       # Run critical E2E tests
+pnpm exec playwright test --grep "@authentication" # Run auth-related tests
+pnpm exec playwright test --grep "@navigation"     # Run navigation tests
+pnpm exec playwright test --grep-invert "@local-only" # Skip local-only tests
 
-# Debug mode
-npx playwright test --debug
-npx playwright test --ui
+# Debug mode (servers stay running between debug sessions)
+pnpm exec playwright test --debug
+pnpm exec playwright test --ui
+```
+
+### ⚠️ Important: Smoke Tests Are CI-Only
+```bash
+# Smoke tests run ONLY in CI against deployed environments
+# They are NOT for local development
+# CI smoke tests run against:
+#   Preview: https://admin-iflastandards-preview.onrender.com
+#   Production: (not configured yet)
+
+# To test deployed sites locally (manual verification):
+pnpm exec playwright test --config=playwright.config.smoke.ts
 ```
 
 ### Regression Tests (Targeted)
@@ -157,40 +188,40 @@ pnpm nx run standards-dev:regression:full
 
 ## Phase 5: CI Environment Tests (Automated)
 
-**Purpose**: Validate deployment environment, secrets, and infrastructure-specific issues ONLY
-**When**: GitHub Actions CI pipeline
-**Optimization**: Minimal, focused only on environment-dependent functionality
+**Purpose**: Run smoke tests against deployed environments and collect build warnings
+**When**: GitHub Actions CI pipeline  
+**Optimization**: Tests only deployed services, no local testing
 
-### What CI Tests
+### What CI Tests (Smoke Tests Only)
 ```bash
-# Environment-specific tests ONLY
-pnpm test:ci:env
+# Smoke tests against deployed environments
+# Preview: https://admin-iflastandards-preview.onrender.com
+# Production: (not configured yet)
 
-# This runs:
-# - Environment variable validation
-# - API token verification
-# - External service connectivity checks
-# - CI-specific path and permission validation
-# - Build environment configuration checks
+# CI runs:
+# - Smoke tests against deployed admin portal
+# - API health endpoint validation (/api/health)
+# - Critical user journey validation
+# - Build warning collection (parallel builds)
 
-# NO CODE TESTING - assumes Phases 1-4 passed locally
-# Builds happen for deployment only, not for testing
+# NO LOCAL TESTING - all tests run against deployed URLs
+# NO UNIT/INTEGRATION/E2E TESTS - only smoke tests
 ```
 
-### Updated CI/CD Workflows (Phase 5 Compliant)
+### Updated CI/CD Workflows (Smoke Tests Only)
 
-#### Preview Deployment (`deploy-preview.yml`)
-- ✅ **Environment validation**: API tokens, environment variables, service connectivity
-- ✅ **Build and deploy**: GitHub Pages + Render (if admin affected)
-- ✅ **Post-deployment validation**: Health checks on deployed sites
-- ❌ **Skips**: TypeScript, ESLint, unit tests, integration tests
+#### Preview Deployment (`nx-optimized-docs-deploy.yml`)
+- ✅ **Parallel build with warnings**: Collect and report build warnings
+- ✅ **Deploy documentation**: GitHub Pages for all doc sites
+- ✅ **Deploy admin (if affected)**: Render deployment for admin portal
+- ✅ **Smoke tests**: Test deployed admin portal at preview URL
+- ❌ **Skips**: ALL local testing (unit, integration, E2E, lint, typecheck)
 
-#### Production Deployment (`deploy-production.yml`)
+#### Production Deployment (Future)
 - ✅ **PR validation**: Must be from preview → main branch
-- ✅ **Production environment validation**: Production secrets, API tokens
-- ✅ **Secure deployment**: Production GitHub Pages + Render
-- ✅ **Production health checks**: Full production API integration validation
-- ❌ **Skips**: All code quality checks (assumes local validation)
+- ✅ **Production deployment**: GitHub Pages + Render
+- ✅ **Production smoke tests**: Against production URLs
+- ❌ **Skips**: ALL code quality checks (assumes local validation)
 
 ### What CI Tests Specifically
 - ✅ Environment variables exist and are valid format
@@ -317,12 +348,73 @@ pnpm test:ci:connectivity             # External service connectivity only
 | Pre-push | < 180s | < 300s | Branch-aware, representative testing |
 | CI | < 180s | < 240s | Environment focus, minimal redundancy |
 
+## On-Demand Server Management Architecture
+
+### Philosophy
+Our testing infrastructure follows an **on-demand server management** approach that aligns with Nx's affected testing strategy:
+
+1. **Start Only When Needed**: Servers are started only when specific tests require them
+2. **Reuse Running Servers**: Existing servers are detected and reused, avoiding duplicates
+3. **Leave Running**: Servers remain running after tests complete for reuse
+4. **Kill Only on Demand**: Servers are only stopped explicitly or during comprehensive tests
+
+### How It Works
+
+#### Automatic Server Detection
+Tests automatically detect which servers they need based on:
+- **File path**: `e2e/portal/*` → starts portal server
+- **Test tags**: `@admin` → starts admin server  
+- **Directory name**: `isbdm/` → starts ISBDM server
+- **Explicit requests**: `withServers(['portal', 'admin'])`
+
+#### Server State Management
+```typescript
+// Server state tracked in .test-servers.json
+{
+  "portal": { "pid": 12345, "port": 3000, "startedAt": "2025-08-11T10:00:00Z" },
+  "admin": { "pid": 12346, "port": 3007, "startedAt": "2025-08-11T10:00:10Z" }
+}
+```
+
+#### Test Configuration
+```typescript
+// Tests use on-demand global setup
+// playwright.config.integration.ts
+export default defineConfig({
+  globalSetup: './e2e/global-setup.on-demand.ts',
+  // No globalTeardown - servers stay running
+});
+```
+
+### Manual Server Control
+```bash
+# Check server status
+pnpm test:servers status
+
+# Start specific servers
+pnpm test:servers start portal admin
+
+# Stop all servers
+pnpm test:servers stop
+```
+
+### Benefits
+- **Faster Development**: No waiting for all servers to start
+- **Resource Efficient**: Only run servers you need
+- **Nx Aligned**: Works perfectly with `nx affected`
+- **Reusable**: Servers persist across test runs
+- **Debugger Friendly**: Servers stay running during debug sessions
+
 ## Key Configuration Files
 
 - `.husky/pre-commit`: Runs Phase 2 automatically
 - `.husky/pre-push`: Runs Phase 3 automatically
 - `vitest.config.nx.ts`: Optimized for nx affected tests
-- `vitest.config.ci-env.ts`: Only environment-specific tests
+- `playwright.config.smoke.ts`: CI-only smoke tests against deployed URLs
+- `playwright.config.integration.ts`: Integration tests with on-demand servers
+- `playwright.config.e2e.ts`: E2E tests with on-demand servers
+- `e2e/global-setup.on-demand.ts`: Intelligent server management
+- `e2e/utils/server-manager.ts`: Server detection and reuse logic
 - `.precommitrc.json`: Pre-commit configuration
 - `.prepushrc.json`: Pre-push configuration (can enable E2E)
 

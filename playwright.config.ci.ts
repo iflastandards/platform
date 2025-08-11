@@ -90,7 +90,8 @@ export default defineConfig({
   // Update snapshots only on main branch
   updateSnapshots: process.env.GITHUB_REF === 'refs/heads/main' ? 'all' : 'none',
   
-  // Use global setup only for non-sharded runs
-  globalSetup: !process.env.SHARD ? require.resolve('./e2e/playwright/global-setup') : undefined,
-  globalTeardown: !process.env.SHARD ? require.resolve('./e2e/playwright/global-teardown') : undefined,
+  // No global setup for CI - smoke tests run against deployed environments
+  // Local tests use on-demand server management
+  globalSetup: undefined,
+  globalTeardown: undefined,
 });
