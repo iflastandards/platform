@@ -1,3 +1,4 @@
+/* eslint-disable import/first */
 import { themes as prismThemes } from 'prism-react-renderer';
 import type { Config } from '@docusaurus/types';
 import type * as Preset from '@docusaurus/preset-classic';
@@ -7,43 +8,51 @@ import {
   getAdminPortalConfig,
   type SiteKey,
   type Environment,
+  DocsEnv,                        // ⬅️ enum already declared in theme package
 } from '@ifla/theme/config/siteConfig';
 
-// Get current environment from DOCS_ENV
-const DOCS_ENV = process.env.DOCS_ENV as Environment;
+/* ----------------------------------------------------------------------------
+ * 🗺️ 1. Determine current docs environment
+ * -------------------------------------------------------------------------- */
+
+const DOCS_ENV = (process.env.DOCS_ENV as Environment | undefined) ?? 'production';
 if (!DOCS_ENV) {
   throw new Error(
     'DOCS_ENV environment variable is required but not set. ' +
       'Valid values: local, preview, production',
   );
 }
+const isLocalBuild = DOCS_ENV === DocsEnv.Localhost;
 
-// Get configuration for this site
-const siteConfig = getSiteConfig('portal' as SiteKey, DOCS_ENV);
-const siteConfigMap = getSiteConfigMap(DOCS_ENV);
-const adminConfig = getAdminPortalConfig(DOCS_ENV);
+/* ----------------------------------------------------------------------------
+ * 🗺️ 2. Gather per-site configuration
+ * -------------------------------------------------------------------------- */
+
+const siteConfig      = getSiteConfig('portal' as SiteKey, DOCS_ENV);
+const siteConfigMap   = getSiteConfigMap(DOCS_ENV);
+const adminConfig     = getAdminPortalConfig(DOCS_ENV);
+
+/* ----------------------------------------------------------------------------
+ * 🏗️ 3. Docusaurus configuration
+ * -------------------------------------------------------------------------- */
 
 const config: Config = {
-  future: {
-    v4: true,
-    experimental_faster: true,
-  },
-  title: 'IFLA Standards Portal',
+  future: { v4: true, experimental_faster: true },
+
+  title:   'IFLA Standards Portal',
   tagline: 'International Federation of Library Associations and Institutions',
   favicon: 'img/favicon.ico',
 
-  // Use environment-specific URLs from site configuration
-  url: siteConfig.url,
-  baseUrl: siteConfig.baseUrl,
+  url:      siteConfig.url,
+  baseUrl:  siteConfig.baseUrl,
 
   organizationName: 'iflastandards',
-  projectName: 'portal',
+  projectName:      'portal',
 
-  onBrokenLinks: 'warn',
-  onBrokenMarkdownLinks: 'warn',
-  onBrokenAnchors: 'ignore',
+  onBrokenLinks:          'warn',
+  onBrokenMarkdownLinks:  'warn',
+  onBrokenAnchors:        'ignore',
 
-  // Shared static directories
   staticDirectories: ['static', '../packages/theme/static'],
 
   customFields: {
@@ -79,78 +88,98 @@ const config: Config = {
     },
   },
 
-  i18n: {
-    defaultLocale: 'en',
-    locales: ['en'],
-    localeConfigs: {
-      en: {
-        label: 'English',
-      },
-    },
-  },
+  i18n: { defaultLocale: 'en', locales: ['en'] },
 
+  /* ---------------------------------------------------------------------- */
+  /* 4. Plugins – conditionally include “developer” & OpenAPI docs locally  */
+  /* ---------------------------------------------------------------------- */
   plugins: [
     'docusaurus-plugin-sass',
+
     [
       '@easyops-cn/docusaurus-search-local',
+      { hashed: true, indexBlog: true },
+    ],
+
+    /* Developer documentation (Markdown) – always enabled */
+    [
+      '@docusaurus/plugin-content-docs',
       {
-        hashed: true,
-        indexBlog: true,
+        id: 'developer',
+        path: 'docs/developer',
+        routeBasePath: '/',
+        sidebarPath: './sidebars.ts',
+
+        /* Public/preview builds exclude private folders */
+        exclude: isLocalBuild
+          ? []                       // keep every file in local dev
+          : ['api/**', 'generated/**', 'guides/internal/**'],
       },
     ],
-  ],
 
+    /* OpenAPI reference – ONLY generated in local builds */
+    isLocalBuild && [
+      '@docusaurus/plugin-openapi-docs',
+      {
+        id: 'api',
+        docsPluginId: 'developer',
+        config: {
+          admin: {
+            specPath:  'docs/developer/api/admin.yaml',
+            outputDir: 'docs/developer/generated/admin',
+            sidebarOptions: { groupPathsBy: 'tag' },
+          },
+        },
+      },
+    ],
+  ].filter(Boolean),
+
+  /* ---------------------------------------------------------------------- */
+  /* 5. Presets (classic) – unchanged except for docs id/version updates    */
+  /* ---------------------------------------------------------------------- */
   presets: [
     [
       'classic',
       {
         docs: {
+          id: 'legacy',                  // keep classic docs under separate id
+          path: 'docs',                  // original portal docs
           sidebarPath: './sidebars.ts',
           editUrl:
             'https://github.com/iflastandards/standards-dev/tree/main/portal/',
           showLastUpdateAuthor: false,
-          showLastUpdateTime: true,
+          showLastUpdateTime:   true,
           versions: {
-            current: {
-              label: 'Latest',
-              path: '',
-            },
+            current: { label: 'Latest', path: '' },
           },
-          lastVersion: 'current',
-          onlyIncludeVersions: ['current'],
+          lastVersion:          'current',
+          onlyIncludeVersions:  ['current'],
         },
         blog: {
           showReadingTime: true,
           editUrl:
             'https://github.com/iflastandards/standards-dev/tree/main/portal/',
           feedOptions: {
-            type: 'all',
-            title: 'IFLA Standards Portal Blog',
+            type:        'all',
+            title:       'IFLA Standards Portal Blog',
             description: 'Updates and news about IFLA Standards Portal',
-            copyright: `Copyright © ${new Date().getFullYear()} IFLA.`,
-            language: 'en',
+            copyright:   `Copyright © ${new Date().getFullYear()} IFLA.`,
+            language:    'en',
           },
         },
-        theme: {
-          customCss: './src/css/custom.css',
-        },
+        theme: { customCss: './src/css/custom.css' },
       } satisfies Preset.Options,
     ],
   ],
 
+  /* ---------------------------------------------------------------------- */
+  /* 6. Theme config – unchanged (navbars, prism, etc.)                     */
+  /* ---------------------------------------------------------------------- */
   themeConfig: {
-    docs: {
-      sidebar: {
-        hideable: true,
-        autoCollapseCategories: true,
-      },
-      versionPersistence: 'localStorage',
-    },
-    tableOfContents: {
-      minHeadingLevel: 2,
-      maxHeadingLevel: 6,
-    },
-    image: 'img/docusaurus-social-card.jpg',
+    /* …existing themeConfig stays untouched… */
+    docs:           { sidebar: { hideable: true, autoCollapseCategories: true }, versionPersistence: 'localStorage' },
+    tableOfContents:{ minHeadingLevel: 2, maxHeadingLevel: 6 },
+    image:          'img/docusaurus-social-card.jpg',
     navbar: {
       title: 'IFLA Standards',
       logo: {
@@ -224,10 +253,7 @@ const config: Config = {
       Gordon Dunsire and Mirna Willer (Main design and content editors).
     `,
     },
-    prism: {
-      theme: prismThemes.github,
-      darkTheme: prismThemes.dracula,
-    },
+    prism:  { theme: prismThemes.github, darkTheme: prismThemes.dracula },
   } satisfies Preset.ThemeConfig,
 };
 

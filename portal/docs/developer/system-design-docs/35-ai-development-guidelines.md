@@ -412,10 +412,10 @@ pnpm test:ci:env                      # Environment validation only
 
 ## Related Documentation
 
-- **System Architecture**: [Doc 1 - System Architecture Overview](./01-system-architecture-overview.md)
-- **Platform Guide**: [Doc 20 - Platform-Specific Architecture Guide](./20-platform-specific-architecture-guide.md)
-- **Testing Strategy**: [Doc 6 - Testing Strategy](./06-testing-strategy.md)
-- **RBAC Implementation**: [Doc 14 - RBAC Implementation](./14-rbac-implementation.md)
+- **System Architecture**: [Doc 1 - System Architecture Overview](01-system-architecture-overview.md)
+- **Platform Guide**: [Doc 20 - Platform-Specific Architecture Guide](20-platform-specific-architecture-guide.md)
+- **Testing Strategy**: [Doc 6 - Testing Strategy](06-testing-strategy.md)
+- **RBAC Implementation**: [Doc 14 - RBAC Implementation](14-rbac-implementation.md)
 - **Developer Notes**: See `developer_notes/` for detailed implementation guides
 
 This guide ensures AI assistants and developers maintain consistency, quality, and efficiency when working with the IFLA Standards Platform codebase.

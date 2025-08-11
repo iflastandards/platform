@@ -626,10 +626,10 @@ export async function GET() {
 
 ## Related Documentation
 
-- **System Architecture**: [Doc 1 - System Architecture Overview](./01-system-architecture-overview.md)
-- **Data Architecture**: [Doc 2 - Data Architecture](./02-data-architecture.md)
-- **API Architecture**: [Doc 5 - API Architecture](./05-api-architecture.md)
-- **RBAC Implementation**: [Doc 14 - RBAC Implementation](./14-rbac-implementation.md)
-- **Import/Export**: [Doc 33 - Spreadsheet Import/Export Implementation](./33-spreadsheet-import-export-implementation-checklist.md)
+- **System Architecture**: [Doc 1 - System Architecture Overview](01-system-architecture-overview.md)
+- **Data Architecture**: [Doc 2 - Data Architecture](02-data-architecture.md)
+- **API Architecture**: [Doc 5 - API Architecture](05-api-architecture.md)
+- **RBAC Implementation**: [Doc 14 - RBAC Implementation](14-rbac-implementation.md)
+- **Import/Export**: [Doc 33 - Spreadsheet Import/Export Implementation](33-spreadsheet-import-export-implementation-checklist.md)
 
 This architecture provides a robust, scalable foundation for vocabulary management that balances technical sophistication with user accessibility.

@@ -29,24 +29,31 @@ A comprehensive documentation and vocabulary management system for the Internati
 ```
 standards-dev/
 ├── apps/
-│   └── admin/                    # Next.js admin portal
-├── portal/                       # Main documentation portal
-├── standards/                    # Individual standard sites
-│   ├── ISBDM/                   # ISBD Manifestation
-│   ├── LRM/                     # Library Reference Model
-│   ├── FRBR/                    # Functional Requirements
-│   ├── isbd/                    # International Standard Bibliographic Description
-│   ├── muldicat/                # Multilingual Dictionary of Cataloguing Terms
-│   └── unimarc/                 # UNIMARC formats
+│   └── admin/                      # Next.js admin portal
+├── portal/                         # Main documentation portal
+│   └── docs/                       # developer docs
+│       └── developer/              # developer docs
+│           ├── system-design-docs/ # system design docs
+│           ├── api/                # OpenAPI specs
+│           │   ├─ platform.yaml
+│           │   └─ auth.yaml
+│           └─ generated/           # (auto-generated MD from specs; the plugin fills this)
+├── standards/                      # Individual standard sites
+│   ├── ISBDM/                      # ISBD Manifestation
+│   ├── LRM/                        # Library Reference Model
+│   ├── FRBR/                       # Functional Requirements
+│   ├── isbd/                       # International Standard Bibliographic Description
+│   ├── muldicat/                   # Multilingual Dictionary of Cataloguing Terms
+│   └── unimarc/                    # UNIMARC formats
 ├── packages/
-│   ├── theme/                   # Shared Docusaurus theme
-│   ├── ui/                      # Shared UI components
-│   └── standards-cli/           # CLI tools
-├── scripts/                     # Build and utility scripts
-├── e2e/                         # End-to-end tests
-├── docs/                        # Project documentation
-├── developer_notes/             # Development guides and notes
-└── system-design-docs/          # 📚 Authoritative system architecture docs (00-32)
+│   ├── theme/                      # Shared Docusaurus theme
+│   ├── ui/                         # Shared UI components
+│   └── standards-cli/              # CLI tools
+├── scripts/                        # Build and utility scripts
+├── e2e/                            # End-to-end tests
+├── docs/                           # Project documentation
+├── developer_notes/                # Development guides and notes
+└── system-design-docs/             # 📚 Authoritative system architecture docs (00-32)
 ```
 
 ## 🚀 Quick Start

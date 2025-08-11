@@ -245,7 +245,7 @@ Production Environment:
 - **Role Hierarchy**: Superadmin → Review Group Admin → Namespace Admin → Editor → Translator → Reviewer
 - **Metadata-based**: Roles and permissions stored in Clerk user publicMetadata
 - **Resource-based**: Namespace-level permission inheritance
-- **Comprehensive Documentation**: See [RBAC Authorization Model](./12-rbac-authorization-model.md), [Permission Matrix](./13-permission-matrix-detailed.md), and [RBAC Implementation](./14-rbac-implementation.md)
+- **Comprehensive Documentation**: See [RBAC Authorization Model](12-rbac-authorization-model.md), [Permission Matrix](13-permission-matrix-detailed.md), and [RBAC Implementation](14-rbac-implementation.md)
 
 ### Data Security
 - **At Rest**: Git encryption, Supabase RLS

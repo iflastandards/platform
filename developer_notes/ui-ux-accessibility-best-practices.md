@@ -1,6 +1,6 @@
 # UI/UX Accessibility Best Practices - IFLA Standards Platform
 
-> **Integration Note**: This document works in conjunction with the [Design System UI Patterns](/system-design-docs/11-design-system-ui-patterns.md) to ensure accessible implementation of all UI components.
+> **Integration Note**: This document works in conjunction with the [Design System UI Patterns](/portal/docs/developer/system-design-docs/11-design-system-ui-patterns.md) to ensure accessible implementation of all UI components.
 
 ## Legal Requirements & Standards
 

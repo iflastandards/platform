@@ -11,14 +11,14 @@ This directory contains the comprehensive system design documentation for the IF
 ## 🎯 Quick Platform Reference
 
 **Working on the Admin Portal?** (Next.js, MUI Theme)
-- Start with **[Doc 20 - Platform-Specific Architecture Guide](./20-platform-specific-architecture-guide.md)**
+- Start with **[Doc 20 - Platform-Specific Architecture Guide](20-platform-specific-architecture-guide.md)**
 - Location: `apps/admin/`
 - Tests: `apps/admin/src/test*/`, `apps/admin/e2e/`
 - API Routes: `apps/admin/src/app/api/`
 - **UI Components: Material-UI with MUI theme (NO Tailwind CSS)**
 
 **Working on Documentation Sites?** (Docusaurus, Infima, SASS)
-- Start with **[Doc 20 - Platform-Specific Architecture Guide](./20-platform-specific-architecture-guide.md)**
+- Start with **[Doc 20 - Platform-Specific Architecture Guide](20-platform-specific-architecture-guide.md)**
 - Location: `standards/*/`
 - Tests: `packages/theme/src/tests/`
 - No API routes - static generation only
@@ -26,47 +26,47 @@ This directory contains the comprehensive system design documentation for the IF
 ## Document Structure
 
 ### Core Architecture Documents
-1. **[System Architecture Overview](./01-system-architecture-overview.md)** - High-level architecture, technology stack, and design principles
-2. **[Data Architecture](./02-data-architecture.md)** - Data storage strategy, models, and flow patterns
-3. **[Configuration Architecture](./03-configuration-architecture.md)** - Site configuration, environment management, and routing
+1. **[System Architecture Overview](01-system-architecture-overview.md)** - High-level architecture, technology stack, and design principles
+2. **[Data Architecture](02-data-architecture.md)** - Data storage strategy, models, and flow patterns
+3. **[Configuration Architecture](03-configuration-architecture.md)** - Site configuration, environment management, and routing
 
 ### Development & Workflow
-4. **[Development Workflow](./04-development-workflow.md)** - Standards development lifecycle, roles, and processes
-5. **[API Architecture](./05-api-architecture.md)** - API design, authentication, and integration patterns
-6. **[Testing Strategy](./06-testing-strategy.md)** - Five-phase testing approach and quality gates
+4. **[Development Workflow](04-development-workflow.md)** - Standards development lifecycle, roles, and processes
+5. **[API Architecture](05-api-architecture.md)** - API design, authentication, and integration patterns
+6. **[Testing Strategy](06-testing-strategy.md)** - Five-phase testing approach and quality gates
 
 ### System Components
-7. **[Subsystems Architecture](./07-subsystems-architecture.md)** - Major platform subsystems and their interactions
-8. **[Architecture Evolution](./08-architecture-evolution.md)** - How the architecture has evolved and future directions
-9. **[Collaboration Architecture](./09-collaboration-architecture.md)** - GitHub-based collaboration model and workflows
-10. **[Implementation Strategy](./10-implementation-strategy.md)** - Phased implementation approach and timeline
+7. **[Subsystems Architecture](07-subsystems-architecture.md)** - Major platform subsystems and their interactions
+8. **[Architecture Evolution](08-architecture-evolution.md)** - How the architecture has evolved and future directions
+9. **[Collaboration Architecture](09-collaboration-architecture.md)** - GitHub-based collaboration model and workflows
+10. **[Implementation Strategy](10-implementation-strategy.md)** - Phased implementation approach and timeline
 
 ### UI/UX & Design
-11. **[Design System and UI Patterns](./11-design-system-ui-patterns.md)** - UI/UX guidelines and component library
-34. **[Accessibility Best Practices](./34-accessibility-best-practices.md)** - Standards leadership approach to digital accessibility
+11. **[Design System and UI Patterns](11-design-system-ui-patterns.md)** - UI/UX guidelines and component library
+34. **[Accessibility Best Practices](34-accessibility-best-practices.md)** - Standards leadership approach to digital accessibility
 
 ### Security & Authorization
-12. **[RBAC Authorization Model](./12-rbac-authorization-model.md)** - Comprehensive role-based access control specification
-13. **[Permission Matrix Detailed](./13-permission-matrix-detailed.md)** - Detailed permission mappings for all platform activities
-14. **[RBAC Implementation](./14-rbac-implementation.md)** - Current custom RBAC implementation using Clerk publicMetadata
+12. **[RBAC Authorization Model](12-rbac-authorization-model.md)** - Comprehensive role-based access control specification
+13. **[Permission Matrix Detailed](13-permission-matrix-detailed.md)** - Detailed permission mappings for all platform activities
+14. **[RBAC Implementation](14-rbac-implementation.md)** - Current custom RBAC implementation using Clerk publicMetadata
 
 ### Organization & Teams
-16. **[Projects, Teams, and Review Groups Architecture](./16-projects-teams-review-groups-architecture.md)** - Organizational structure and team management
+16. **[Projects, Teams, and Review Groups Architecture](16-projects-teams-review-groups-architecture.md)** - Organizational structure and team management
 
 ### Platform-Specific Guidance
-20. **[Platform-Specific Architecture Guide](./20-platform-specific-architecture-guide.md)** - Comprehensive guide distinguishing Next.js admin from Docusaurus sites
+20. **[Platform-Specific Architecture Guide](20-platform-specific-architecture-guide.md)** - Comprehensive guide distinguishing Next.js admin from Docusaurus sites
 
 ### Import/Export & Data Management
-31. **[Spreadsheet Export/Import Comprehensive Guide](./31-spreadsheet-export-import-comprehensive-guide.md)** - Complete round-trip workflow for vocabulary management
-32. **[Phase 1 Import/Export Implementation Plan](./32-phase1-import-export-implementation-plan.md)** - Initial implementation roadmap
-33. **[Spreadsheet Import/Export Implementation Checklist](./33-spreadsheet-import-export-implementation-checklist.md)** - Active implementation checklist
+31. **[Spreadsheet Export/Import Comprehensive Guide](31-spreadsheet-export-import-comprehensive-guide.md)** - Complete round-trip workflow for vocabulary management
+32. **[Phase 1 Import/Export Implementation Plan](32-phase1-import-export-implementation-plan.md)** - Initial implementation roadmap
+33. **[Spreadsheet Import/Export Implementation Checklist](33-spreadsheet-import-export-implementation-checklist.md)** - Active implementation checklist
 
 ### Development Standards
-35. **[AI Development Guidelines](./35-ai-development-guidelines.md)** - 🆕 Comprehensive guidelines for AI-assisted development
-36. **[Platform Coding Standards](./36-platform-coding-standards.md)** - 🆕 Coding standards for Next.js, TypeScript, and platform patterns
+35. **[AI Development Guidelines](35-ai-development-guidelines.md)** - 🆕 Comprehensive guidelines for AI-assisted development
+36. **[Platform Coding Standards](36-platform-coding-standards.md)** - 🆕 Coding standards for Next.js, TypeScript, and platform patterns
 
 ### Feature Architecture
-37. **[Vocabulary Management Architecture](./37-vocabulary-management-architecture.md)** - 🆕 Complete vocabulary lifecycle and management system
+37. **[Vocabulary Management Architecture](37-vocabulary-management-architecture.md)** - 🆕 Complete vocabulary lifecycle and management system
 
 ## Quick Reference
 

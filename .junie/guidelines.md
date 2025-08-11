@@ -1,748 +1,241 @@
-# IFLA Standards Project Guidelines
-
-This document provides essential information for developers working on the IFLA Standards project.
-
-## Build/Configuration Instructions
-
-### Project Structure
-The IFLA Standards project is a monorepo containing multiple packages, applications, and standards sites:
-
-- **packages/theme**: Contains the shared theme components and utilities
-- **packages/preset-ifla**: Contains the Docusaurus preset for IFLA standards
-- **standards/**: Contains individual standard sites (FRBR, ISBD, ISBDM, LRM, MulDiCat, UniMARC)
-- **portal/**: The main portal site
-- **apps/admin-portal**: Next.js administrative portal application
-
-### Nx Integration
-The project has been restructured to integrate Nx for optimized builds, testing, and caching. Nx commands are now the **recommended approach** for development.
-
-### Next.js Integration
-The project now includes Next.js support through the addition of a Next.js administrative portal application:
-
-- **Application**: `apps/admin-portal` - Next.js administrative portal
-- **Framework**: Next.js 15.2.4 with TypeScript support
-- **Authentication**: NextAuth.js 5.0.0-beta.29 for authentication
-- **Styling**: Tailwind CSS for styling
-- **Testing**: Vitest for unit/integration testing, Playwright for E2E testing
-- **Port**: 3007 (configured in Nx project.json)
-- **Nx Plugin**: `@nx/next` plugin provides Next.js-specific executors and generators
-
-#### Next.js Nx Configuration
-The project includes comprehensive Nx configuration for Next.js:
-- **Build Executor**: `@nx/next:build` for production builds
-- **Dev Server**: `@nx/next:server` for development and production serving
-- **Generator Defaults**: Tailwind CSS styling, TypeScript support
-- **Workspace Integration**: Included in pnpm workspace (`apps/*`)
-
-#### Next.js Commands
-```bash
-# Development
-nx dev admin-portal              # Start development server
-nx serve admin-portal            # Start development server (alternative)
-
-# Production
-nx build admin-portal            # Build for production
-nx start admin-portal            # Start production server
-
-# Testing
-nx test admin-portal             # Run all tests
-nx run admin-portal:test:unit    # Unit tests only
-nx run admin-portal:test:e2e     # E2E tests only
-```
-
-### Build Commands (Nx Optimized)
-
-```bash
-# Build specific sites (Nx commands - RECOMMENDED)
-nx build portal                  # Portal (port 3000)
-nx build isbdm                   # ISBDM (port 3001)
-nx build lrm                     # LRM (port 3002)
-nx build frbr                    # FRBR (port 3003)
-nx build isbd                    # ISBD (port 3004)
-nx build muldicat                # Muldicat (port 3005)
-nx build unimarc                 # Unimarc (port 3006)
-nx build admin-portal            # Admin Portal (port 3007)
-nx build @ifla/theme             # Build theme package
-
-# Build all sites (Nx optimized)
-nx run-many --target=build --all           # Build all sites in parallel
-nx affected --target=build                 # Build only affected sites (faster)
-pnpm build:all:nx                          # Package.json shortcut
-
-# Legacy pnpm commands (still available)
-pnpm build:portal     # Build the portal site
-pnpm build:isbdm      # Build the ISBDM standard
-pnpm build:lrm        # Build the LRM standard
-pnpm build:frbr       # Build the FRBR standard
-pnpm build:isbd       # Build the ISBD standard
-pnpm build:muldicat   # Build the MulDiCat standard
-pnpm build:unimarc    # Build the UniMARC standard
-pnpm build:admin-portal # Build the Admin Portal
-pnpm build:all        # Build all sites in parallel
-pnpm build:all:safe   # Clear all builds first, then build all sites
-```
-
-### Development Commands (Nx Optimized)
-
-```bash
-# Start development servers with robust port cleanup (RECOMMENDED)
-nx run portal:start:robust       # http://localhost:3000 (with port cleanup)
-nx run isbdm:start:robust        # http://localhost:3001 (with port cleanup)
-nx run lrm:start:robust          # http://localhost:3002 (with port cleanup)
-nx run frbr:start:robust         # http://localhost:3003 (with port cleanup)
-nx run isbd:start:robust         # http://localhost:3004 (with port cleanup)
-nx run muldicat:start:robust     # http://localhost:3005 (with port cleanup)
-nx run unimarc:start:robust      # http://localhost:3006 (with port cleanup)
-nx run admin-portal:start:robust # http://localhost:3007 (with port cleanup)
-
-# Start all sites with port cleanup
-nx run standards-dev:start-all:robust      # Start all sites with port cleanup
-pnpm start:robust                          # Package.json shortcut for robust start
-
-# Port management
-pnpm ports:kill                  # Kill all project ports
-pnpm ports:kill:verbose          # Kill all ports with details
-pnpm ports:kill:site portal      # Kill specific site port
-
-# Legacy pnpm commands (still available)
-pnpm start:portal     # Start the portal site (port 3000)
-pnpm start:isbdm      # Start the ISBDM standard (port 3001)
-pnpm start:lrm        # Start the LRM standard (port 3002)
-pnpm start:frbr       # Start the FRBR standard (port 3003)
-pnpm start:isbd       # Start the ISBD standard (port 3004)
-pnpm start:muldicat   # Start the MulDiCat standard (port 3005)
-pnpm start:unimarc    # Start the UniMARC standard (port 3006)
-pnpm start:admin-portal # Start the Admin Portal (port 3007)
-pnpm start:all        # Start all sites in parallel
-
-# Serve built sites
-pnpm serve:portal     # Serve the built portal site
-pnpm serve:all        # Serve all built sites
-```
-
-### Cache Management
-
-```bash
-# Clear build artifacts
-pnpm clear:all                   # Removes all .docusaurus and build folders
-nx reset                         # Clear Nx cache
-pnpm clear:webpack               # Clear webpack cache only
-```
-
-### Configuration Architecture
-
-The project uses a hierarchical configuration system:
-
-1. **Base configuration**: Defined in `packages/theme/src/config/siteConfigCore.ts`
-2. **Site-specific configuration**: Each standard site has its own `docusaurus.config.ts`
-3. **Environment-specific settings**: Different settings for development, preview, and production environments
-
-## Testing Information
-
-### Testing Framework
-
-The project uses Vitest as the testing framework, with React Testing Library for component testing and jest-axe for accessibility testing.
-
-### 🚀 Automated Testing (Zero Configuration Required)
-
-#### Pre-commit (Runs automatically on `git commit`)
-```bash
-# These run automatically when you commit:
-✅ TypeScript type checking
-✅ ESLint code quality  
-✅ Unit/integration tests (446 tests)
-✅ Site configuration validation
-
-# Duration: ~30-60 seconds
-# Purpose: Fast feedback, prevent broken commits
-```
-
-#### Pre-push (Runs automatically on `git push`)
-```bash
-# Branch-aware testing:
-
-🔒 Protected branches (main/dev):
-✅ Full portal production build
-✅ ISBDM production build  
-✅ Portal E2E testing
-✅ Complete regression suite
-Duration: ~5-10 minutes
-
-📝 Feature branches:
-✅ Configuration validation
-✅ Representative build test
-✅ Abbreviated regression testing  
-Duration: ~2-3 minutes
-```
-
-#### GitHub Actions (Runs automatically on push/PR)
-```bash
-✅ Unit Tests & Type Safety
-✅ Site Configuration Testing
-✅ Matrix Build Testing (7 sites in parallel)
-✅ URL Validation & Link Checking
-✅ Comprehensive Result Reporting
-```
-
-### Testing Strategy - 5 Test Groups
-
-The project implements a comprehensive testing strategy organized into 5 distinct test groups:
-
-#### 1. Selective Tests (On-Demand Development)
-**Purpose**: Individual testing for focused development work
-**When**: During active development, debugging, feature work
-
-```bash
-# Individual project tests
-nx test @ifla/theme                    # Theme package only
-nx test portal                         # Portal site only
-nx test isbdm                          # ISBDM standard only
-
-# Affected unit tests (recommended for development)
-nx affected --target=test              # Only test changed projects
-nx affected --target=test --parallel=3 # Parallel execution
-
-# UI Tests (Playwright Multi-Browser)
-npx playwright test --project=chromium
-npx playwright test --project=firefox
-npx playwright test --project="Mobile Chrome"
-
-# Regression Tests (Targeted)
-nx run standards-dev:regression:visual
-nx run standards-dev:regression:performance
-```
-
-#### 2. Comprehensive Tests (Test Everything)
-**Purpose**: Full validation before major releases
-**When**: Release preparation, major refactoring validation
-
-```bash
-# Everything in parallel (recommended)
-pnpm test:comprehensive
-
-# Individual comprehensive suites
-pnpm test:comprehensive:unit          # All unit tests
-pnpm test:comprehensive:e2e           # All E2E tests  
-pnpm test:comprehensive:builds        # All build validation
-pnpm test:comprehensive:regression    # Full regression suite
-```
-
-#### 3. Pre-Commit Tests (Git Hook)
-**Purpose**: Fast feedback loop preventing broken commits
-**Optimization**: Only affected projects, parallel execution, under 60 seconds
-
-#### 4. Pre-Push Tests (Git Hook - Deployment Focus)
-**Purpose**: Deployment-focused validation before code reaches main branches
-**Optimization**: Branch-aware, affected-only for features, comprehensive for protected branches
-
-#### 5. CI Tests (Environment/Infrastructure Focus)
-**Purpose**: Validate deployment environment, secrets, and infrastructure-specific issues
-**Optimization**: Minimal, focused only on deployment environment issues
-
-### Manual Testing Commands
-
-```bash
-# Development workflow
-pnpm test                    # Unit tests only
-pnpm test:full              # Unit + config validation
-pnpm test:regression        # Full regression suite
-
-# Specific testing
-pnpm test:builds:config     # Fast config validation
-pnpm test:builds:critical   # Portal + ISBDM builds
-pnpm test:portal:e2e        # Portal end-to-end testing
-
-# Individual components
-pnpm typecheck              # TypeScript validation
-pnpm lint --quiet           # Code quality check
-
-# Run specific tests
-npx vitest run [test-file-path]  # Run a specific test file
-npx vitest run packages/theme/src/tests/utils/stringUtils.test.ts  # Example
-
-# Run tests for affected files only
-pnpm test:affected
-```
-
-### Test Coverage
-
-| Test Type | Count | Duration | Automation |
-|-----------|-------|----------|------------|
-| **Unit/Integration** | 446 tests | ~5-10s | ✅ Pre-commit |
-| **TypeScript** | All files | ~10-15s | ✅ Pre-commit |
-| **ESLint** | All files | ~5-10s | ✅ Pre-commit |
-| **Site Configs** | 7 sites | ~30s | ✅ Pre-commit |
-| **Build Tests** | 7 sites | ~2-5min | ✅ Pre-push |
-| **E2E Tests** | Portal | ~2-3min | ✅ Pre-push (main/dev) |
-
-### Performance Targets
-
-| Test Group | Target Time | Fallback Time | Optimization Focus |
-|------------|-------------|---------------|-------------------|
-| Selective | < 30s | < 60s | Affected only, single purpose |
-| Comprehensive | < 300s | < 600s | Parallelization, smart scheduling |
-| Pre-commit | < 60s | < 120s | Affected, essential checks only |
-| Pre-push | < 180s | < 300s | Branch-aware, representative testing |
-| CI | < 180s | < 240s | Environment focus, minimal redundancy |
-
-### Test Structure
-
-Tests are organized in the following structure:
-
-- **Unit/Component Tests**: Located in `packages/theme/src/tests/`
-  - `components/`: Tests for React components
-  - `scripts/`: Tests for utility scripts
-  - `config/`: Tests for configuration
-  - `utils/`: Tests for utility functions
-
-- **End-to-End Tests**: Located in `e2e/` directory and in standard-specific directories like `standards/ISBDM/e2e/`
-
-### Adding New Tests
-
-**Important Guidelines:**
-- **Always add tests to the test suite rather than remove them** - Tests provide valuable validation and should be preserved
-- **Intelligently categorize tests into the correct testing phases (1-5)** based on their purpose and execution requirements
-
-**Test Phase Classification:**
-1. **Selective Tests**: Individual/focused testing during development
-2. **Comprehensive Tests**: Full validation before major releases
-3. **Pre-Commit Tests**: Fast feedback, configuration validation (< 60s)
-4. **Pre-Push Tests**: Deployment-focused validation (< 180s)
-5. **CI Tests**: Environment/infrastructure validation (< 180s)
-
-**Steps to Add New Tests:**
-1. Create a new test file with the `.test.ts` or `.test.tsx` extension
-2. Import the necessary testing utilities:
-   ```typescript
-   import { describe, it, expect } from 'vitest';
-   import { render, screen } from '@testing-library/react'; // For component tests
-   ```
-3. Write your tests using the describe/it structure
-4. **Determine the appropriate test phase** based on the test's purpose and execution time
-5. **Place the test in the correct location** according to the test structure
-6. Run the tests to verify they work
-7. **Document your testing approach** in the developer_notes folder if significant
-
-### Example Test
-
-Here's an example of a simple utility function test:
-
-```typescript
-// File: packages/theme/src/utils/stringUtils.ts
-export function capitalizeFirstLetter(str: string): string {
-  if (!str || str.length === 0) {
-    return str;
-  }
-  return str.charAt(0).toUpperCase() + str.slice(1);
-}
-
-// File: packages/theme/src/tests/utils/stringUtils.test.ts
-import { describe, it, expect } from 'vitest';
-import { capitalizeFirstLetter } from '@ifla/theme/utils/stringUtils';
-
-describe('String Utilities', () => {
-  describe('capitalizeFirstLetter', () => {
-    it('should capitalize the first letter of a string', () => {
-      expect(capitalizeFirstLetter('hello')).toBe('Hello');
-      expect(capitalizeFirstLetter('world')).toBe('World');
-    });
-
-    it('should handle empty strings', () => {
-      expect(capitalizeFirstLetter('')).toBe('');
-    });
-  });
-});
-```
-
-## Port Conflict Resolution
-
-### Problem & Solution
-The project implements a robust port management system that automatically kills conflicting processes before starting new servers. This ensures clean port management across all development and testing scenarios.
-
-### Port Mappings
-- **Portal**: 3000
-- **ISBDM**: 3001
-- **LRM**: 3002
-- **FRBR**: 3003
-- **ISBD**: 3004
-- **MulDiCat**: 3005
-- **UniMARC**: 3006
-- **Admin Portal**: 3007
-- **NewTest**: 3008
-
-### Port Management Commands
-```bash
-# Kill all ports
-pnpm ports:kill                  # Silent mode
-pnpm ports:kill:verbose          # Verbose mode
-
-# Kill specific site port
-pnpm ports:kill:site isbd        # Kill ISBD port (3004)
-pnpm ports:kill:site portal      # Kill portal port (3000)
-
-# Start servers with port cleanup
-pnpm start:robust                # Start all development servers
-pnpm start:robust:site isbd      # Start specific site
-pnpm serve:robust                # Serve all built sites
-
-# Manual port management
-node scripts/utils/port-manager.js all --verbose
-node scripts/utils/port-manager.js port 3004
-node scripts/utils/port-manager.js site isbd
-```
-
-## Development Workflow
-
-### Repository Setup
-
-- **Main Repository**: `iflastandards/standards-dev` (upstream)
-- **Development Fork**: Your personal fork (e.g., `username/standards-dev`)
-- **Local Remotes**:
-  - `origin`: `git@github.com:iflastandards/standards-dev.git`
-  - `fork`: `git@github.com:username/standards-dev.git`
-
-### Environment Deployment
-
-| Environment | Branch | Repository | Deployment URL | Triggers |
-|-------------|--------|------------|----------------|----------|
-| **Development** | `dev` | `username/standards-dev` | `https://username.github.io/standards-dev/` | Push to `dev` branch |
-| **Preview** | `main` | `iflastandards/standards-dev` | `https://iflastandards.github.io/standards-dev/` | Push/PR to `main` branch |
-| **Production** | `main` | `iflastandards/standards-dev` | `https://iflastandards.info/` | Automatic from main |
-
-### Development Process
-
-1. **Development & Testing**:
-   ```bash
-   # Work on dev branch (your personal testing environment)
-   git checkout dev
-   git pull fork dev
-
-   # Make changes, commit as usual
-   git add .
-   git commit -m "your changes"
-
-   # Push to your fork - triggers deploy-dev.yml
-   git push fork dev
-
-   # Test changes at: https://username.github.io/standards-dev/
-   ```
-
-2. **Move to Preview (Create Pull Request)**:
-   ```bash
-   # Create PR from your fork's dev branch to upstream main
-   gh pr create --repo iflastandards/standards-dev --base main --head username:dev --title "Your PR Title" --body "Description of changes"
-   ```
-
-3. **Preview & Production Deployment**:
-   - **PR merge to main** → Triggers `ci-preview.yml` → Deploys to preview site
-   - **Main branch updates** → Triggers `deploy-all.yml` → Deploys to production
-
-### Workflow Summary
-
-1. **Development**: `username/standards-dev:dev` → Test on personal GitHub Pages
-2. **Preview**: PR to `iflastandards/standards-dev:main` → Preview on official staging
-3. **Production**: Automatic deployment from main branch → Live site
-
-### GitHub Actions
-
-- **`deploy-dev.yml`**: Builds and deploys dev branch to personal GitHub Pages
-- **`ci-preview.yml`**: Builds and deploys main branch to preview site (triggers on main branch only)
-- **`deploy-all.yml`**: Handles production deployment
-
-### Environment Configuration
-
-Environment settings are defined in `packages/theme/src/config/siteConfigCore.ts`:
-
-- `DocsEnv.Dev`: Personal development environment (`https://username.github.io`)
-- `DocsEnv.Preview`: Official preview environment (`https://iflastandards.github.io`)
-- `DocsEnv.Production`: Production environment (`https://iflastandards.info`)
-
-## Configuration Architecture
-
-### Current Configuration System
-
-The project uses a hierarchical configuration system:
-
-1. **Base configuration**: Defined in `packages/theme/src/config/siteConfigCore.ts`
-2. **Site-specific configuration**: Each standard site has its own `docusaurus.config.ts`
-3. **Environment-specific settings**: Different settings for development, preview, and production environments
-
-### Configuration Improvements
-
-#### Standardized Site Factory
-The project includes `packages/theme/src/config/standardSiteFactory.ts` with `createStandardSiteConfig()` function that:
-
-- **Reduces boilerplate**: 125+ lines → ~40 lines per site
-- **Ensures consistency**: All sites get same base configuration
-- **Leverages existing infrastructure**: Uses `VOCABULARY_DEFAULTS`, `getSiteUrl`, etc.
-- **Maintains flexibility**: Allows site-specific customizations
-- **Handles complex cases**: Supports custom sidebar generators, redirects, etc.
-
-#### Benefits
-- **66% reduction** in configuration code per site
-- Single source of truth for common patterns
-- Easier to update all sites simultaneously
-- Consistent behavior across environments
-
-## Nx Optimizations Applied
-
-### Task Dependency Orchestration
-The project implements comprehensive Nx optimizations with proper `dependsOn` rules:
-
-```json
-{
-  "build": {
-    "dependsOn": ["^build"],  // Dependencies build first
-    "outputs": ["{projectRoot}/build", "{projectRoot}/dist", "{projectRoot}/.docusaurus"],
-    "cache": true
-  },
-  "test": {
-    "dependsOn": ["^build"],  // Tests run after dependencies are built
-    "outputs": ["{projectRoot}/coverage", "{projectRoot}/test-results"]
-  },
-  "typecheck": {
-    "dependsOn": ["^build"],  // TypeCheck after dependencies built
-    "cache": true
-  }
-}
-```
-
-### Performance Benefits
-
-#### Build Sequence Optimization
-- Theme package builds first, then all sites can build in parallel
-- Automatic orchestration ensures correct dependency order
-- Smart scheduling optimizes resource utilization
-
-#### Caching Improvements
-- **Input-based cache invalidation**: Only affected projects rebuild
-- **Output caching**: Built artifacts shared across environments
-- **Remote caching ready**: Nx Cloud optimization enabled
-
-#### Expected Performance Gains
-- **Theme changes**: All sites rebuild (necessary)
-- **Site-specific changes**: Only affected sites rebuild
-- **Configuration changes**: Smart invalidation based on inputs
-
-### Nx Features Leveraged
-
-1. **Task Pipeline Configuration**: `dependsOn` rules ensure correct build order
-2. **Input/Output Specification**: Precise caching and invalidation
-3. **Named Inputs**: Reusable input patterns across projects
-4. **Implicit Dependencies**: Theme package dependency management
-5. **Affected Detection**: Only build/test what changed
-
-## Additional Development Information
-
-### Code Style
-
-- The project uses ESLint for code quality and Prettier for code formatting
-- TypeScript is used throughout the project for type safety
-- React components follow a functional approach with hooks
-
-### Docusaurus Configuration
-
-- The project uses Docusaurus v3.8 for documentation sites
-- Custom components are available in the `@ifla/theme` package
-- Site configuration is managed through a hierarchical system
-
-#### API Documentation References
-
-**Core Docusaurus v3.8 Documentation**:
-- **Main Documentation**: https://docusaurus.io/docs - Core concepts, configuration, and guides
-- **CLI Reference**: https://docusaurus.io/docs/cli - Command-line interface documentation
-- **API Reference**: https://docusaurus.io/docs/api/docusaurus-config - Configuration API details
-- **Plugin APIs**: https://docusaurus.io/docs/api/plugins - Plugin development and configuration
-- **Theme APIs**: https://docusaurus.io/docs/api/themes - Theme customization and components
-
-**Styling and UI Framework**:
-- **Infima CSS Framework**: https://infima.dev/docs/ - Design system and CSS utilities used by Docusaurus
-- **Styling Guide**: https://docusaurus.io/docs/styling-layout - Layout and styling best practices
-
-**Community Resources**:
-- **Docusaurus Community**: https://docusaurus.community/ - Community plugins and resources
-- **Awesome Docusaurus**: https://github.com/weecology/awesome-docusaurus - Curated list of resources
-- **Official Docusaurus Website Source**: https://github.com/facebook/docusaurus/tree/main/website - Real-world implementation patterns and configurations
-
-**Development Tools**:
-- **TypeScript Support**: https://docusaurus.io/docs/typescript-support - TypeScript configuration and usage
-- **MDX Documentation**: https://mdxjs.com/docs/ - MDX syntax and component integration
-- **React Documentation**: https://react.dev/reference/react - React APIs for custom components
-- **FontAwesome React**: https://docs.fontawesome.com/web/use-with/react - Icon integration for React components
-
-**UI Components**:
-- **MUI X Data Grid**: https://mui.com/x/react-data-grid/ - Advanced data grid component with sorting, filtering, and pagination
-- **MUI X Tree View**: https://mui.com/x/react-tree-view/ - Tree view component for hierarchical data display
-- **Base UI React**: https://base-ui.com/react/overview/quick-start - Headless React components for building custom UIs
-
-#### API Documentation Usage Guidelines
-
-**For Development Planning**:
-1. **Configuration Changes**: Always reference https://docusaurus.io/docs/api/docusaurus-config before modifying `docusaurus.config.ts`
-2. **Plugin Integration**: Check https://docusaurus.io/docs/api/plugins for plugin APIs and lifecycle methods
-3. **Theme Customization**: Use https://docusaurus.io/docs/api/themes for theme component overrides
-4. **Component Development**: Reference React docs for hooks and component patterns
-5. **Icon Integration**: Use https://docs.fontawesome.com/web/use-with/react for FontAwesome icon implementation in React components
-6. **Data Grid Components**: Use https://mui.com/x/react-data-grid/ for advanced table functionality with sorting, filtering, and pagination
-7. **Tree View Components**: Use https://mui.com/x/react-tree-view/ for hierarchical data display and navigation
-8. **Custom UI Components**: Use https://base-ui.com/react/overview/quick-start for headless components when building custom interfaces
-
-**For Code Implementation**:
-1. **Version Compatibility**: Always verify Docusaurus version (≥3.8) before suggesting APIs
-2. **TypeScript Types**: Prefer official TypeScript definitions from Docusaurus packages
-3. **Best Practices**: Follow patterns from official documentation examples
-4. **Performance**: Reference optimization guides for build and runtime performance
-
-**For Troubleshooting**:
-1. **Error Resolution**: Check official troubleshooting guides first
-2. **Migration Issues**: Use migration guides for version updates
-3. **Community Solutions**: Search community resources for common issues
-4. **GitHub Issues**: Reference official Docusaurus GitHub for known issues
-
-#### Context7 MCP Integration
-
-- **Context7 is an MCP server**: Context7 provides Model Context Protocol (MCP) server functionality for development assistance
-- **Real-time Examples**: use `docuserve-context7` mcp for live code examples from Docusaurus community plugins
-- **Type Definitions**: Prefer Context7 over static docs for up-to-date TypeScript types
-- **Plugin Discovery**: Use Context7 to find and evaluate community plugins
-
-
-### Nx Workflow Benefits
-
-- **Smart Caching**: Nx caches build outputs, test results, and lint results locally and in the cloud
-- **Affected Detection**: Only builds/tests projects that have changed or are affected by changes
-- **Parallel Execution**: Runs tasks in parallel across multiple CPU cores
-- **Distributed Execution**: CI jobs can run across multiple agents for faster completion
-- **Build Analytics**: Track performance and optimization opportunities
-
-### Performance Considerations
-
-- **Use Nx commands**: Prefer `nx build portal` over `pnpm build:portal` for better caching
-- **Affected builds**: Use `nx affected --target=build` for faster builds in PRs
-- **Cache management**: Nx automatically handles cache invalidation based on file changes
-- **Parallel testing**: Use `nx run-many --target=test --all` for parallel test execution
-- **Port cleanup**: Use `:robust` variants for development servers to handle port conflicts
-
-### Cost Management Strategy
-
-#### Local Testing (Free)
-- Comprehensive test coverage via git hooks
-- Development tools validation
-- Complete regression testing
-
-#### CI Testing (Paid)
-- Environment-specific validation only
-- Infrastructure connectivity testing
-- Production configuration validation
-- No redundant testing of locally-validated functionality
-
-This approach ensures high confidence in deployments while minimizing CI compute costs through smart local validation and targeted cloud testing.
-
-### Troubleshooting
-
-- **Build issues**: Try `pnpm clear:all` followed by `nx reset` to clear all caches
-- **Port conflicts**: Use `pnpm ports:kill` to kill all project ports, or `pnpm ports:kill:site <sitename>` for specific sites
-- **Test failures**: Check test output for specific error messages; use `pnpm test:ui` for interactive debugging
-- **Dependency issues**: Ensure you're using the correct pnpm version; run `pnpm install` to refresh dependencies
-- **Nx cache issues**: Use `nx reset` to clear Nx cache if builds behave unexpectedly
-- **TypeScript errors**: Run `pnpm typecheck` to check for type errors across all projects
-
-### 🚨 What Happens When Tests Fail
-
-#### Pre-commit Failure
-```bash
-❌ TypeScript errors found. Please fix before committing.
-# Commit is blocked until issues are resolved
-```
-
-#### Pre-push Failure  
-```bash
-❌ Portal build test failed.
-# Push is blocked until issues are resolved
-```
-
-#### CI/CD Failure
-- GitHub Actions provide detailed logs
-- Failed build artifacts are automatically preserved
-- PR status checks prevent merging until fixed
-
-### 🔧 Bypassing Tests (Use Sparingly)
-
-```bash
-# Skip pre-commit (NOT recommended)
-git commit --no-verify
-
-# Skip pre-push (NOT recommended)  
-git push --no-verify
-
-# Run manual tests instead
-pnpm test:pre-commit        # Equivalent to pre-commit hook
-pnpm test:pre-push          # Equivalent to pre-push hook
-```
-
-### 🎉 Benefits
-
-✅ **Automatic Quality Assurance** - No manual test execution required  
-✅ **Fast Feedback** - Issues caught before they reach remote  
-✅ **Branch Protection** - Stricter testing for main/dev branches  
-✅ **Comprehensive Coverage** - Unit, integration, build, and E2E testing  
-✅ **CI/CD Integration** - Seamless GitHub Actions automation  
-✅ **Zero Configuration** - Works immediately for all developers  
-✅ **Smart Caching** - Nx optimizations for faster builds and tests  
-✅ **Port Management** - Automatic conflict resolution  
-✅ **Cost Optimization** - Minimal CI usage through comprehensive local testing
-
-**The testing strategy ensures high code quality and prevents regressions without requiring manual intervention!** 🚀
-
-## How to Request Additions to Guidelines
-
-### Adding New Guidelines
-
-When you want to add something to these guidelines, use the following format:
-
-**"Remember: [your guideline or instruction]"**
-
-This signals that the information should be added to this guidelines document for future reference by all project contributors.
-
-### Examples
-
-- "Remember: Always run tests before committing code"
-- "Remember: Use semantic commit messages following conventional commits"
-- "Remember: Document any new environment variables in the README"
-- "Remember: When we have output of any kind that we wish to keep, we place in the output folder, organized according to purpose for easy retrieval"
-
-### Guidelines for Guidelines
-
-When requesting additions, ensure they are:
-
-- **Clear and actionable**: Specific instructions that can be followed
-- **Project-relevant**: Directly related to IFLA Standards development
-- **Consensus-based**: Agreed upon by the development team
-- **Maintainable**: Can be updated as the project evolves
-
-### Documentation Strategy
-
-**Developer Notes → `developer_notes/` folder**
-- **Purpose**: Organized documentation of development work, solutions, and processes
-- **Organization**: Structured by topic/component for easy retrieval
-- **Examples**: Implementation guides, testing strategies, configuration documentation
-- **Best Practice**: Always document significant work in an organized fashion
-- **Structure**: Use subdirectories to categorize by area (theme/, tools/, testing/, etc.)
-
-### File Organization Strategy
-
-**Output Files We Wish to Keep → `output/` folder**
-- **Purpose**: Files that should be preserved and tracked by git
-- **Organization**: Organized by purpose for easy retrieval
-- **Examples**: Generated spreadsheets, processed vocabularies, validation reports
-- **Git Status**: Tracked and committed to repository
-
-**Output Files We Don't Wish to Keep → `tmp/` folder**
-- **Purpose**: Temporary files that don't need preservation
-- **Cleanup**: Auto-cleaned nightly by automated processes
-- **Git Status**: Not tracked by git (excluded in .gitignore)
-- **Manual Cleanup**: Not required - automatic cleanup handles this
-
----
-
-*This document is maintained as part of the IFLA Standards project documentation.*
+# IFLA Standards – Advanced Dev Guidelines (Junie)
+
+This file captures project-specific practices for build, configuration, testing, and debugging. It is tailored to this monorepo’s Nx/Docusaurus/Next.js setup. Keep this document up to date as architecture evolves.
+
+## 0) System Design Docs First (Mandatory pre-task step)
+
+- Before starting any task, Junie must consult the navigation map in `system-design-docs/README.md` (System Design Documentation) and identify the relevant documents based on the task type.
+- Provide a brief "Setup & Integration Overview" at the top of your first response for each task, using the template below. This ensures consistent environment, platform alignment, and doc references.
+- Use Doc 20 (Platform-Specific Architecture Guide) as the primary fork: Admin (Next.js) vs Docusaurus (Docs). Then include additional docs as directed by the README’s Task-Based Navigation.
+
+Template: Setup & Integration Overview
+- Platform: Admin (Next.js) | Docusaurus (Docs)
+- Key docs: Doc 20 (+ others per task; e.g., 1, 2, 3, 5, 6, 11, 12–14, 31, 33, 35, 36, 37)
+- Critical rules: Admin uses Material-UI (MUI) only; NO Tailwind CSS. Docusaurus uses Infima with SASS/SCSS.
+- Paths: Admin `apps/admin/`; Docs `standards/*/`, shared `packages/theme/`
+- Env/baseline: `pnpm install`; Node/pnpm per repo; caches: `pnpm clear:all`, `nx reset`, `pnpm clear:webpack`
+- Commands (examples): build `nx build <project>`; dev `nx run <project>:start:robust`; tests `nx affected --target=test` or `nx test <project>`
+- Related integrations (if applicable): Auth (Clerk), RBAC (Docs 12–14), Import/Export (Docs 31, 33, 37), Testing (Doc 6, Doc 35), Deployment (Docs 10, 20)
+
+Quick Doc routes from README
+- Admin tasks: Doc 20 → 1 → 5 → 11 (MUI) → 36
+- Docs tasks: Doc 20 → 1 → 3 → 11 (Infima) → 36
+- RBAC/Permissions: 12, 13, 14
+- Import/Export: 31, 33, 37
+- Testing: 6, 35
+- Deployment/CI: 10, 20
+
+## 1) Build/Configuration Instructions (Nx-first)
+
+- Monorepo structure
+  - Apps/Sites: `portal/`, `standards/*` (FRBR, ISBD, ISBDM, LRM, MulDiCat, UniMARC, NewTest), `apps/admin` (Next.js)
+  - Shared packages: `packages/theme` (shared components, config, utils), `packages/preset-ifla` (Docusaurus preset)
+- Primary tooling
+  - Task runner: Nx (preferred; configured for caching and affected detection)
+  - Docs: Docusaurus v3.8 (sites under portal/ and standards/*)
+  - Next.js: apps/admin (Next.js 15 + Clerk)
+  - Tests: Vitest (unit/integration) + Playwright (E2E)
+  - Styling: Admin uses Material-UI (MUI) only (NO Tailwind); Docusaurus uses Infima with SASS/SCSS. Docusaurus components are global by default and should be implemented in `packages/theme/src/components/` unless a site-specific override is explicitly required.
+- Baseline environment
+  - Node and pnpm must match repo standards (see `pnpm-lock.yaml` and CI).
+  - Install deps: `pnpm install`
+  - Clear caches when in doubt:
+    - `pnpm clear:all` (build artifacts)
+    - `nx reset` (Nx cache)
+    - `pnpm clear:webpack` (webpack cache)
+- Build commands (Nx optimized)
+  - Per app/site: e.g. `nx build portal`, `nx build isbdm`, `nx build admin`
+  - Full build matrix: `nx run-many --target=build --all` or `nx affected --target=build`
+  - Legacy pnpm scripts exist but prefer Nx for caching/affected performance.
+- Dev servers with robust port cleanup (recommended)
+  - Examples: `nx run portal:start:robust`, `nx run admin:start:robust`
+  - Start all: `nx run standards-dev:start-all:robust` or `pnpm start:robust`
+- Port management
+  - Mappings: portal 3000, ISBDM 3001, LRM 3002, FRBR 3003, ISBD 3004, MulDiCat 3005, UniMARC 3006, Admin Portal 3007, NewTest 3008
+  - Kill ports: `pnpm ports:kill`, `pnpm ports:kill:site portal`, or `node scripts/utils/port-manager.js port 3004`
+- Config architecture
+  - Base config: `packages/theme/src/config/siteConfigCore.ts`
+  - Site factory: `packages/theme/src/config/standardSiteFactory.ts` (use `createStandardSiteConfig()` to minimize site boilerplate and keep behavior consistent)
+  - Site configs: each site has a `docusaurus.config.ts`
+  - Environments: Dev (user GH pages), Preview (org GH pages), Production (iflastandards.info)
+
+## 2) Testing Information
+
+### 2.1 Running tests
+- Fast unit tests (Vitest):
+  - All unit tests: `pnpm test` or `nx run-many --target=test --all`
+  - Affected only (recommended during development): `nx affected --target=test`
+  - Per project: `nx test @ifla/theme`, `nx test portal`, etc.
+  - Run a single file: `npx vitest run path/to/testfile.test.ts`
+- E2E (Playwright): per various configs in repo (`playwright.config.*.ts`). Example suites: `pnpm test:comprehensive:e2e` or `pnpm test:portal:e2e`.
+- Pre-commit/pre-push hooks (Husky)
+  - Pre-commit runs typecheck, ESLint, and unit tests selectively (<60s target)
+  - Pre-push runs branch-aware suites; protected branches trigger full builds/E2E
+  - You may replicate locally: `pnpm test:pre-commit`, `pnpm test:pre-push`
+
+### 2.2 Vitest configuration specifics
+- Config files: root has `vitest.config.nx.ts` (primary), plus CI variants
+- Path aliases include `@ifla/theme/utils` → `packages/theme/src/utils`
+- Test discovery patterns (see `vitest.config.nx.ts`): include globs under `{packages,apps,standards}/**/*.{test,spec}.*` and `packages/theme/src/tests/**/*.{test,spec}.*`
+- Important: tmp and temp directories are excluded by default (`**/tmp/**`, `**/temp/**`). Place ad-hoc tests within a discovered folder (e.g., `packages/theme/src/tests/`)
+- Exclusions: heavy/integration suites are excluded or separated; prefer the unit-focused paths during local TDD
+
+### 2.3 Adding new unit tests
+- Place tests in the appropriate project area:
+  - Theme unit tests: `packages/theme/src/tests/...`
+  - Portal/site component tests: under respective project’s src/tests (following existing patterns)
+- Naming: `*.test.ts` or `*.test.tsx`
+- Import helpers/utilities using path aliases (preferred) to match production import paths
+- Classification guidance:
+  - Selective (development): run via `nx affected --target=test` or direct `npx vitest run <file>`
+  - Comprehensive (release prep): use `pnpm test:comprehensive:*` scripts
+  - Avoid long-running/integration behaviors in unit test locations; use designated integration/E2E suites
+
+### 2.4 Example: Verified minimal unit test (validated 2025-08-10 10:16 local)
+We validated a minimal test using real repo utilities and vitest config:
+
+- Temporary test file location
+  - packages/theme/src/tests/utils/junie-smoke.test.ts
+- Content
+  - This test uses `formatFileSize` and `isValidUrl` from `@ifla/theme/utils` and verifies expected outputs
+- Command used
+  - `npx vitest run -c vitest.config.nx.ts packages/theme/src/tests/utils/junie-smoke.test.ts`
+- Result
+  - Passed: 2/2 tests
+- Cleanup
+  - The temporary file was removed after validation. If replicating, remember to delete your temporary files or move them into a persistent, properly categorized test suite if they are to be kept
+
+### 2.5 Debugging tests
+- Clear caches if results look stale: `nx reset` then re-run
+- Verify path aliases: ensure imports like `@ifla/theme/utils` match tsconfig and vitest configuration
+- Avoid port conflicts for server-based tests by using `:robust` scripts or the port-manager utilities
+
+## 3) Additional Development Information
+
+- Nx best practices
+  - Prefer `nx affected` workflows during development for speed
+  - Make small, isolated changes; the cache will skip unrelated builds/tests
+  - `dependsOn` orchestrates builds/tests to ensure shared packages (e.g., theme) build first
+- Docusaurus configuration
+  - When changing shared site behavior, update `standardSiteFactory.ts` instead of per-site configs where possible to ensure consistency and reduce risk
+  - Always verify changes against at least one site build locally (e.g., `nx build portal`) before PRs to avoid CI regressions
+- Next.js (Admin)
+  - Runs on port 3007; ensure environment variables are aligned with Clerk expectations (see apps/admin and test-config helpers)
+  - There are testing helpers for Clerk in `apps/admin/src/test-config/`, but for quick unit checks prefer pure functions to avoid auth setup complexity
+- Code style & linting
+  - ESLint + Prettier are enforced via git hooks; fix on save or run `pnpm lint --quiet`
+  - Type safety enforced in hooks as well; run `pnpm typecheck` explicitly when needed
+- Port & environment hygiene
+  - If local ports get stuck, run `pnpm ports:kill` or site-specific kill
+  - For unusual Docusaurus cache issues, `pnpm clear:all` followed by `nx reset`
+- CI awareness
+  - Protected branches execute full build/E2E; keep PRs green by validating locally with affected builds/tests
+
+## 4) Quick Recipes
+
+- Build a single site: `nx build frbr`
+- Start portal with port cleanup: `nx run portal:start:robust`
+- Run unit tests for theme only: `nx test @ifla/theme`
+- Run only tests affected by your changes: `nx affected --target=test`
+- Run one test file: `npx vitest run -c vitest.config.nx.ts packages/theme/src/tests/utils/some.test.ts`
+- Validate full regression before release: `pnpm test:comprehensive`
+
+## 5) Maintenance Notes
+
+- Keep this file focused on project-specific guidance; do not duplicate generic docs
+- Prefer linking to code locations (files/paths) and commands that are already used by the repo/tooling
+- When adding new guidance to the shared team docs, also update the top-level GUIDELINES source if applicable
+
+
+## 6) AI Development Guidelines (Doc 35 Integration)
+
+This section integrates key actionable rules from `system-design-docs/35-ai-development-guidelines.md` (Doc 35). For complete context and examples, always open Doc 35 directly.
+
+- Core Principles (Evidence > Assumptions)
+  - Verify with real code/data before changes; prefer implementation over secondary docs.
+  - Read existing implementations first; align to platform (Admin vs Docs) patterns.
+  - Use MCP servers for authoritative library and codebase info (see below).
+
+- MCP Server Usage (Quick Rules)
+  - Searching/navigating codebase → JetBrains MCP (search, file structure).
+  - External libraries: React/Next/TS → Context7; MUI → MUI MCP; others → Context7.
+  - Building MUI UI → MUI MCP required; general React patterns → Context7.
+  - Complex problems → Sequential Thinking + JetBrains; simple edits → native tools.
+
+- 5‑Phase Testing Strategy (Mapping & Commands)
+  - Phase 1 (Selective/dev, <30s/file): `nx test {project}` or `npx vitest run <file>`; use @unit/@critical grep.
+  - Phase 2 (Pre‑commit, <60s): runs TS, ESLint, unit (affected) via Husky.
+  - Phase 3 (Pre‑push, <180s): integration, builds, E2E when affected.
+  - Phase 4 (Comprehensive, <300s): `pnpm test:comprehensive`.
+  - Phase 5 (CI env): environment validation only.
+
+- Test Classification, Placement, Naming
+  - Decision: env‑dependent → `**/tests/deployment/` (CI only). Else integration? → `*.integration.test.ts`. Else E2E? → `*.e2e.test.ts`. Else unit → `*.test.ts`.
+  - Docusaurus tests live under `packages/theme/src/tests/**`; Admin under `apps/admin/src/tests/**`, E2E under `apps/admin/e2e/**`.
+  - Tagging examples:
+    - `describe('Feature @integration @api @validation', ...)`
+    - `describe('Pure Function @unit', ...)`
+    - `test('User Workflow @e2e @critical @authentication', ...)`
+
+- Authorization (RBAC) Testing Guidelines (Admin)
+  - Custom RBAC via Clerk publicMetadata (not Organizations); 5‑min cache TTL; withAuth middleware required on protected routes.
+  - Unit auth tests: fully mock Clerk; focus on logic functions only.
+  - Integration auth tests: use real Clerk test users via `apps/admin/src/test-config/` helpers; no mocking; verify DB side‑effects.
+  - Debug aids: `AUTH_DEBUG=true AUTH_DEBUG_VERBOSE=true`; debug endpoint `/api/admin/auth/debug?action=logs`.
+
+- Critical Rules for AI Assistants
+  - Never use `any` without an eslint‑disable comment explaining why.
+  - Always run `pnpm typecheck && pnpm lint` before committing.
+  - Fix code to pass tests; do not alter tests to make failures pass.
+  - Ensure local Phases 1–4 pass before pushing.
+  - Do not commit secrets; hooks will block.
+  - Use `workspaceUtils` in integration tests; avoid `process.cwd()`.
+  - Docusaurus configs must include `experimental_faster: true`.
+  - Imports via path aliases; remove unused imports; prefer explicit types.
+
+- Performance Targets & Optimization
+  - Phase targets: P1 <30s/file, P2 <60s, P3 <180s, P4 <300s, P5 <180s.
+  - Share expensive resources with `beforeAll/afterAll`; reuse fixtures; parallelize where safe.
+
+- Troubleshooting Highlights
+  - Integration tests not found → check `*.integration.test.ts` pattern and vitest globs; `nx reset`.
+  - Slow tests → smaller fixtures, shared setup, verbose reporter.
+  - Auth issues → verify Clerk publicMetadata; clear caches; consider `vi.useFakeTimers()` for cache TTL tests.
+
+- Quick Reference Commands
+  - Admin: `nx dev admin`, `nx build admin`, `nx test admin`.
+  - Docs sites: `nx start {site}`, `nx build {site}`.
+  - Affected tests: `pnpm test` (affected), or `nx affected -t test --parallel=3`.
+  - Type/lint: `pnpm typecheck`, `pnpm lint`.
+
+Refer to Doc 35 for detailed examples (integration I/O tests, anti‑patterns) and deeper guidance.
+
+## 7) Platform Coding Standards (Doc 36 Integration)
+
+This section summarizes key, actionable standards from `system-design-docs/36-platform-coding-standards.md` (Doc 36). Refer to Doc 36 for complete guidance.
+
+- Core Platform Rules
+  - Admin (Next.js): Use Next.js Link for internal navigation, standard `fetch('/api/...')` for internal API calls, standard asset paths, and configured middleware matchers. MUI only; NO Tailwind. Types use `NextRequest`/`NextResponse` for API routes. 
+  - Docs (Docusaurus): Use Infima classes and SASS/SCSS; DO NOT use MUI. Components live in `packages/theme/src/components/` and are shared globally. If a site-specific override is required, document the rationale and scope it to that site.
+  - Docusaurus components are always global unless otherwise required. When exceptions are necessary, prefer minimal, clearly named site overrides.
+
+- Imports & Types (TypeScript)
+  - Use ES module imports and workspace path aliases (e.g., `@ifla/theme/...`).
+  - Use `import type { ... }` for type-only imports; avoid CommonJS `require`.
+  - Prefer explicit types; if `any` is unavoidable, add an eslint-disable with justification.
+
+- Naming & Organization
+  - Follow platform file structures (Admin under `apps/admin/src/...`; Docs under `standards/*` with shared components in `packages/theme/src/components/`).
+  - Tests mirror source structure and use appropriate suffixes: `.test.ts[x]`, `.integration.test.ts`.
+
+- Error Handling
+  - Return consistent JSON error shapes in API routes; use try/catch with typed errors.
+  - Use Error Boundaries for component-level failures in React where applicable.
+
+- Security & Auth (Admin)
+  - Validate inputs with zod; use `withAuth` middleware on protected routes.
+
+- Performance
+  - Use dynamic imports for heavy Admin components; client caching with TanStack Query where applicable.
+
+These standards complement Doc 35 (AI Development Guidelines) and Doc 20 (Platform-Specific Architecture). Always verify changes against at least one site build (e.g., `nx build portal`) or the Admin app (`nx build admin`) before PRs.

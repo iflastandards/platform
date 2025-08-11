@@ -295,6 +295,6 @@ describe('Protected API Routes @integration @auth @rbac', () => {
 
 - **Integration-First Guide**: `/developer_notes/AI_TESTING_INSTRUCTIONS.md`
 - **Templates**: `/developer_notes/TEST_TEMPLATES.md`
-- **Comprehensive Strategy**: `/system-design-docs/06-testing-strategy-comprehensive.md`
+- **Comprehensive Strategy**: `/portal/docs/developer/system-design-docs//06-testing-strategy-comprehensive.md`
 - **Auth Testing Guide**: `/developer_notes/CLERK_AUTHENTICATION_TESTING.md`
 - **Test Users Config**: `/apps/admin/src/test-config/clerk-test-users.ts`

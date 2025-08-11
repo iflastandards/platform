@@ -30,7 +30,7 @@ The IFLA Standards Platform follows a comprehensive 8-phase development workflow
 
 ## Role Hierarchy
 
-> **Note**: For comprehensive role definitions, permissions, and access control details, see the authoritative [RBAC Authorization Model](./12-rbac-authorization-model.md) and [Permission Matrix](./13-permission-matrix-detailed.md).
+> **Note**: For comprehensive role definitions, permissions, and access control details, see the authoritative [RBAC Authorization Model](12-rbac-authorization-model.md) and [Permission Matrix](13-permission-matrix-detailed.md).
 
 ### Superadmin
 - **Scope**: Global platform authority

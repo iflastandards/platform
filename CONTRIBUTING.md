@@ -122,7 +122,7 @@ pnpm ports:kill
 ### Documentation
 
 - **Developer Notes**: Comprehensive guides in `developer_notes/`
-- **System Design Documentation**: See `system-design-docs/` for comprehensive system design
+- **System Design Documentation**: See `/portal/docs/developer/system-design-docs/` for comprehensive system design
 - **API Documentation**: Generated from TypeScript interfaces
 - **Architecture Decisions**: Documented in `docs/`
 

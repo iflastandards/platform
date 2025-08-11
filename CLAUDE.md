@@ -6,8 +6,8 @@ This file provides guidance to Claude Code (claude.ai/code) when working with th
 
 ### What am I working on?
 **ASK MYSELF FIRST**: Which part of the monorepo?
-1. **🔴 Admin app** (apps/admin) → Next.js, MUI, Tailwind → See [Platform Guide](system-design-docs/20-platform-specific-architecture-guide.md)
-2. **🟢 Documentation sites** (standards/*) → Docusaurus, Infima, SASS → See [Platform Guide](system-design-docs/20-platform-specific-architecture-guide.md)
+1. **🔴 Admin app** (apps/admin) → Next.js, MUI, Tailwind → See [Platform Guide](portal/docs/developer/system-design-docs/20-platform-specific-architecture-guide.md)
+2. **🟢 Documentation sites** (standards/*) → Docusaurus, Infima, SASS → See [Platform Guide](portal/docs/developer/system-design-docs/20-platform-specific-architecture-guide.md)
 3. **📦 Shared packages** (packages/*) → Used by both platforms
 4. **📚 System Design** (@system-design-docs/) → **AUTHORITATIVE SPECS - ALWAYS READ FIRST!**
 
