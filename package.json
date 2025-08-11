@@ -529,6 +529,8 @@
     "chrome-launcher": "^1.2.0",
     "concurrently": "^9.2.0",
     "devkit@latest": "link:nx/devkit@latest",
+    "docusaurus-plugin-openapi-docs": "^4.5.1",
+    "docusaurus-theme-openapi-docs": "^4.5.1",
     "dotenv": "^17.2.1",
     "esbuild": "^0.25.8",
     "esbuild-sass-plugin": "^3.3.1",

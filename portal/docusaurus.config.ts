@@ -117,7 +117,7 @@ const config: Config = {
 
     /* OpenAPI reference – ONLY generated in local builds */
     isLocalBuild && [
-      '@docusaurus/plugin-openapi-docs',
+      'docusaurus-plugin-openapi-docs',
       {
         id: 'api',
         docsPluginId: 'developer',
