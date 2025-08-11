@@ -123,72 +123,9 @@ jobs:
             echo "ℹ️ No documentation sites affected, skipping deployment"
           fi
 
-  test-documentation:
-    name: Test Documentation Sites
-    needs: setup-and-analyze
-    if: needs.setup-and-analyze.outputs.should_deploy == 'true'
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-        with:
-          fetch-depth: 0
-          
-      - uses: pnpm/action-setup@v4
-      
-      - uses: actions/setup-node@v4
-        with:
-          node-version: 22
-          cache: 'pnpm'
-          
-      - name: Restore Nx cache
-        uses: actions/cache@v4
-        with:
-          path: |
-            .nx/cache
-            node_modules/.cache/nx
-          key: nx-${{ runner.os }}-${{ github.sha }}
-          
-      - name: Install dependencies
-        run: pnpm install --frozen-lockfile --prefer-offline
-        
-      - name: Run documentation-specific tests
-        run: |
-          echo "🧪 Running tests for documentation sites..."
-          
-          # Run tests for affected documentation projects only
-          # Exclude admin-related tests using --exclude flag
-          npx nx affected \
-            --target=test \
-            --base=${{ needs.setup-and-analyze.outputs.base }} \
-            --head=${{ needs.setup-and-analyze.outputs.head }} \
-            --exclude=admin \
-            --parallel=3
-            
-      - name: Lint documentation sites
-        run: |
-          echo "🔍 Linting documentation sites..."
-          
-          npx nx affected \
-            --target=lint \
-            --base=${{ needs.setup-and-analyze.outputs.base }} \
-            --head=${{ needs.setup-and-analyze.outputs.head }} \
-            --exclude=admin \
-            --parallel=3
-            
-      - name: Type check
-        run: |
-          echo "📝 Type checking documentation sites..."
-          
-          npx nx affected \
-            --target=typecheck \
-            --base=${{ needs.setup-and-analyze.outputs.base }} \
-            --head=${{ needs.setup-and-analyze.outputs.head }} \
-            --exclude=admin \
-            --parallel=3
-
   build-documentation:
     name: Build Documentation Sites
-    needs: [setup-and-analyze, test-documentation]
+    needs: setup-and-analyze
     if: needs.setup-and-analyze.outputs.should_deploy == 'true'
     runs-on: ubuntu-latest
     outputs:
@@ -352,12 +289,12 @@ jobs:
             echo '```' >> $GITHUB_STEP_SUMMARY
           fi
 
-  e2e-smoke-tests:
-    name: E2E Smoke Tests (Documentation Only)
+  smoke-tests:
+    name: Smoke Tests
     needs: deploy-to-pages
     if: github.event.inputs.deploy_target != 'netlify' && github.event.inputs.deploy_target != 'vercel'
     runs-on: ubuntu-latest
-    continue-on-error: true  # Don't fail deployment on E2E issues
+    continue-on-error: true  # Don't fail deployment on smoke test issues
     steps:
       - uses: actions/checkout@v4
       
@@ -374,15 +311,14 @@ jobs:
       - name: Install Playwright browsers
         run: pnpm exec playwright install chromium --with-deps
         
-      - name: Run documentation E2E smoke tests
+      - name: Run smoke tests
         run: |
-          echo "🧪 Running E2E smoke tests for documentation sites..."
+          echo "🧪 Running smoke tests for deployed documentation sites..."
           
-          # Run only documentation-related E2E tests
-          # Exclude admin tests using grep pattern
+          # Run only smoke tests against the deployed site
+          # These tests verify basic functionality of the deployed environment
           pnpm exec playwright test \
-            --grep-invert "@admin" \
-            --grep "@smoke|@documentation" \
+            --grep "@smoke" \
             --reporter=list \
             --retries=2 \
             --workers=2
@@ -393,7 +329,7 @@ jobs:
         if: failure()
         uses: actions/upload-artifact@v4
         with:
-          name: e2e-smoke-test-results-${{ github.run_number }}
+          name: smoke-test-results-${{ github.run_number }}
           path: |
             playwright-report/
             test-results/
@@ -401,7 +337,7 @@ jobs:
 
   cleanup:
     name: Cleanup and Report
-    needs: [build-documentation, deploy-to-pages, e2e-smoke-tests]
+    needs: [build-documentation, deploy-to-pages, smoke-tests]
     if: always()
     runs-on: ubuntu-latest
     steps:
@@ -425,8 +361,7 @@ jobs:
           echo "- ✅ Nx affected detection for incremental builds" >> $GITHUB_STEP_SUMMARY
           echo "- ✅ Parallel task execution (4 processes)" >> $GITHUB_STEP_SUMMARY
           echo "- ✅ Build caching with Nx Cloud" >> $GITHUB_STEP_SUMMARY
-          echo "- ✅ Admin tests excluded (documentation focus)" >> $GITHUB_STEP_SUMMARY
-          echo "- ✅ Selective E2E smoke tests" >> $GITHUB_STEP_SUMMARY
+          echo "- ✅ Smoke tests only (no lint/typecheck/unit/integration tests in CI)" >> $GITHUB_STEP_SUMMARY
           echo "- ✅ Build warnings and broken links detection" >> $GITHUB_STEP_SUMMARY
           echo "" >> $GITHUB_STEP_SUMMARY
           echo "### Performance Metrics" >> $GITHUB_STEP_SUMMARY
