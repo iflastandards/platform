@@ -1,0 +1,307 @@
+name: Pull Request Validation
+# Fast validation for pull requests focusing on documentation changes
+
+on:
+  pull_request:
+    types: [opened, synchronize, reopened]
+    paths:
+      - 'standards/**'
+      - 'packages/theme/**'
+      - 'portal/**'
+      - '*.json'
+      - '*.config.*'
+      - '.github/workflows/**'
+
+permissions:
+  contents: read
+  pull-requests: write
+  checks: write
+
+concurrency:
+  group: "pr-validation-${{ github.head_ref }}"
+  cancel-in-progress: true
+
+env:
+  CI: true
+  HUSKY: 0
+  NX_DAEMON: true
+  NX_PARALLEL: 3
+  NODE_OPTIONS: "--max-old-space-size=4096"
+
+jobs:
+  changes-detection:
+    name: Detect Changes
+    runs-on: ubuntu-latest
+    outputs:
+      docs_changed: ${{ steps.filter.outputs.docs }}
+      theme_changed: ${{ steps.filter.outputs.theme }}
+      config_changed: ${{ steps.filter.outputs.config }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          
+      - uses: dorny/paths-filter@v3
+        id: filter
+        with:
+          filters: |
+            docs:
+              - 'standards/**'
+              - 'portal/**'
+            theme:
+              - 'packages/theme/**'
+            config:
+              - '*.json'
+              - '*.config.*'
+              - 'nx.json'
+              - 'project.json'
+
+  validate-code-quality:
+    name: Code Quality Checks
+    needs: changes-detection
+    if: needs.changes-detection.outputs.docs_changed == 'true' || needs.changes-detection.outputs.theme_changed == 'true'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          
+      - uses: pnpm/action-setup@v4
+      
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: 'pnpm'
+          
+      - name: Cache Nx
+        uses: actions/cache@v4
+        with:
+          path: |
+            .nx/cache
+            node_modules/.cache/nx
+          key: nx-pr-${{ runner.os }}-${{ github.sha }}
+          restore-keys: |
+            nx-pr-${{ runner.os }}-
+            
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile --prefer-offline
+        
+      - uses: nrwl/nx-set-shas@v4
+        id: nx-set-shas
+        
+      - name: Format check
+        run: |
+          echo "🎨 Checking code formatting..."
+          npx nx format:check --base=${{ steps.nx-set-shas.outputs.base }}
+          
+      - name: Lint affected
+        run: |
+          echo "🔍 Linting affected projects..."
+          npx nx affected --target=lint \
+            --base=${{ steps.nx-set-shas.outputs.base }} \
+            --exclude=admin \
+            --parallel=3
+            
+      - name: Type check affected
+        run: |
+          echo "📝 Type checking affected projects..."
+          npx nx affected --target=typecheck \
+            --base=${{ steps.nx-set-shas.outputs.base }} \
+            --exclude=admin \
+            --parallel=3
+
+  test-affected:
+    name: Test Affected Projects
+    needs: changes-detection
+    if: needs.changes-detection.outputs.docs_changed == 'true' || needs.changes-detection.outputs.theme_changed == 'true'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          
+      - uses: pnpm/action-setup@v4
+      
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: 'pnpm'
+          
+      - name: Restore Nx cache
+        uses: actions/cache@v4
+        with:
+          path: |
+            .nx/cache
+            node_modules/.cache/nx
+          key: nx-pr-${{ runner.os }}-${{ github.sha }}
+          
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile --prefer-offline
+        
+      - uses: nrwl/nx-set-shas@v4
+        id: nx-set-shas
+        
+      - name: Run affected tests
+        run: |
+          echo "🧪 Testing affected projects..."
+          npx nx affected --target=test \
+            --base=${{ steps.nx-set-shas.outputs.base }} \
+            --exclude=admin \
+            --parallel=3 \
+            --code-coverage
+            
+      - name: Upload coverage
+        uses: codecov/codecov-action@v4
+        with:
+          token: ${{ secrets.CODECOV_TOKEN }}
+          files: ./coverage/lcov.info
+          flags: documentation
+          name: pr-documentation-coverage
+
+  build-preview:
+    name: Build Preview
+    needs: [validate-code-quality, test-affected]
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          
+      - uses: pnpm/action-setup@v4
+      
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: 'pnpm'
+          
+      - name: Restore Nx cache
+        uses: actions/cache@v4
+        with:
+          path: |
+            .nx/cache
+            node_modules/.cache/nx
+          key: nx-pr-${{ runner.os }}-${{ github.sha }}
+          
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile --prefer-offline
+        
+      - uses: nrwl/nx-set-shas@v4
+        id: nx-set-shas
+        
+      - name: Build theme
+        run: |
+          echo "🎨 Building theme package..."
+          npx nx run @ifla/theme:build
+          
+      - name: Build affected sites
+        run: |
+          echo "🏗️ Building affected documentation sites..."
+          npx nx affected --target=build \
+            --base=${{ steps.nx-set-shas.outputs.base }} \
+            --exclude=admin \
+            --parallel=2
+            
+      - name: Upload build artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: pr-build-${{ github.event.pull_request.number }}
+          path: |
+            portal/build
+            standards/*/build
+          retention-days: 7
+
+  lighthouse-audit:
+    name: Lighthouse Audit
+    needs: build-preview
+    runs-on: ubuntu-latest
+    continue-on-error: true
+    steps:
+      - uses: actions/checkout@v4
+      
+      - uses: actions/download-artifact@v4
+        with:
+          name: pr-build-${{ github.event.pull_request.number }}
+          
+      - name: Setup local server
+        run: |
+          npm install -g http-server
+          http-server ./portal/build -p 8080 &
+          sleep 5
+          
+      - name: Run Lighthouse
+        uses: treosh/lighthouse-ci-action@v11
+        with:
+          urls: |
+            http://localhost:8080
+            http://localhost:8080/developer
+          uploadArtifacts: true
+          temporaryPublicStorage: true
+          
+      - name: Format Lighthouse results
+        if: always()
+        run: |
+          echo "## 🔦 Lighthouse Results" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "Performance, Accessibility, Best Practices, and SEO scores" >> $GITHUB_STEP_SUMMARY
+          echo "Check artifacts for detailed reports" >> $GITHUB_STEP_SUMMARY
+
+  pr-summary:
+    name: PR Summary Report
+    needs: [validate-code-quality, test-affected, build-preview, lighthouse-audit]
+    if: always()
+    runs-on: ubuntu-latest
+    steps:
+      - name: Generate PR comment
+        uses: actions/github-script@v7
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          script: |
+            const { data: comments } = await github.rest.issues.listComments({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              issue_number: context.issue.number,
+            });
+            
+            const botComment = comments.find(comment => 
+              comment.user.type === 'Bot' && 
+              comment.body.includes('## PR Validation Report')
+            );
+            
+            const body = `## PR Validation Report
+            
+            ### ✅ Checks Completed
+            - Code Quality: ${{ needs.validate-code-quality.result }}
+            - Tests: ${{ needs.test-affected.result }}
+            - Build: ${{ needs.build-preview.result }}
+            - Lighthouse: ${{ needs.lighthouse-audit.result }}
+            
+            ### 📊 Summary
+            - **Affected Projects**: Check Nx affected output
+            - **Test Coverage**: Available in artifacts
+            - **Build Artifacts**: Available for preview
+            - **Lighthouse Scores**: Check workflow summary
+            
+            ### 🚀 Optimizations Applied
+            - Nx affected detection for incremental validation
+            - Parallel execution of checks
+            - Build caching enabled
+            - Admin tests excluded (documentation focus)
+            
+            ---
+            *This comment is automatically updated on each push*`;
+            
+            if (botComment) {
+              await github.rest.issues.updateComment({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                comment_id: botComment.id,
+                body
+              });
+            } else {
+              await github.rest.issues.createComment({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                issue_number: context.issue.number,
+                body
+              });
+            }

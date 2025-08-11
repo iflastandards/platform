@@ -1,9 +1,14 @@
-name: Simple GitHub Pages Deploy
+name: Simple GitHub Pages Deploy (Fallback)
+# Minimal fallback deployment without optimizations
+# Use nx-optimized-docs-deploy.yml for normal deployments
 
 on:
-  push:
-    branches: [preview]
   workflow_dispatch:
+    inputs:
+      reason:
+        description: 'Reason for using fallback deployment'
+        required: true
+        type: string
 
 permissions:
   contents: read

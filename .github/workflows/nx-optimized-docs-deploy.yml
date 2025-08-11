@@ -1,0 +1,420 @@
+name: Nx Optimized Documentation Deploy
+# Optimized workflow for documentation sites deployment
+# Excludes admin-related tests and focuses on static site generation
+
+on:
+  push:
+    branches: [preview, main]
+  workflow_dispatch:
+    inputs:
+      deploy_target:
+        description: 'Deployment target'
+        required: false
+        default: 'github-pages'
+        type: choice
+        options:
+          - github-pages
+          - netlify
+          - vercel
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+  actions: read
+
+concurrency:
+  group: "docs-deploy-${{ github.ref }}"
+  cancel-in-progress: true
+
+env:
+  # CI environment
+  CI: true
+  HUSKY: 0
+  
+  # Nx Cloud configuration (read-only for public repo)
+  NX_CLOUD_ACCESS_TOKEN: ${{ secrets.NX_CLOUD_ACCESS_TOKEN }}
+  NX_CLOUD_DISTRIBUTED_EXECUTION: false  # Disabled for simpler setup
+  NX_BRANCH: ${{ github.head_ref || github.ref_name }}
+  
+  # Nx optimizations
+  NX_DAEMON: true
+  NX_PARALLEL: 4
+  NX_SKIP_NX_CACHE: false
+  
+  # Environment settings
+  DOCS_ENV: ${{ github.ref_name == 'main' && 'production' || 'preview' }}
+  NODE_OPTIONS: "--max-old-space-size=6144"
+  
+  # pnpm settings
+  FROZEN_LOCKFILE: true
+
+jobs:
+  setup-and-analyze:
+    name: Setup and Analyze Changes
+    runs-on: ubuntu-latest
+    outputs:
+      affected_docs: ${{ steps.affected.outputs.docs }}
+      should_deploy: ${{ steps.affected.outputs.should_deploy }}
+      base: ${{ steps.nx-set-shas.outputs.base }}
+      head: ${{ steps.nx-set-shas.outputs.head }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          
+      - uses: pnpm/action-setup@v4
+        name: Install pnpm
+        
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: 'pnpm'
+          
+      - name: Cache Nx
+        uses: actions/cache@v4
+        with:
+          path: |
+            .nx/cache
+            node_modules/.cache/nx
+          key: nx-${{ runner.os }}-${{ github.sha }}
+          restore-keys: |
+            nx-${{ runner.os }}-
+            
+      - name: Install dependencies
+        run: |
+          echo "📦 Installing dependencies..."
+          pnpm install --frozen-lockfile --prefer-offline
+          
+      - uses: nrwl/nx-set-shas@v4
+        id: nx-set-shas
+        
+      - name: Analyze affected projects
+        id: affected
+        run: |
+          echo "🔍 Analyzing affected documentation sites..."
+          
+          # Get affected projects
+          AFFECTED=$(npx nx show projects --affected --base=${{ steps.nx-set-shas.outputs.base }} --head=${{ steps.nx-set-shas.outputs.head }})
+          
+          # Filter for documentation sites only (exclude admin)
+          DOCS_AFFECTED=""
+          for project in $AFFECTED; do
+            if [[ "$project" != "admin" ]] && [[ "$project" =~ ^(portal|isbd|isbdm|lrm|frbr|muldicat|unimarc|@ifla/theme)$ ]]; then
+              DOCS_AFFECTED="$DOCS_AFFECTED $project"
+            fi
+          done
+          
+          # Determine if we should deploy
+          if [ -n "$DOCS_AFFECTED" ] || [ "${{ github.event_name }}" == "workflow_dispatch" ]; then
+            echo "should_deploy=true" >> $GITHUB_OUTPUT
+            echo "docs=$DOCS_AFFECTED" >> $GITHUB_OUTPUT
+            echo "✅ Documentation sites affected: $DOCS_AFFECTED"
+          else
+            echo "should_deploy=false" >> $GITHUB_OUTPUT
+            echo "ℹ️ No documentation sites affected, skipping deployment"
+          fi
+
+  test-documentation:
+    name: Test Documentation Sites
+    needs: setup-and-analyze
+    if: needs.setup-and-analyze.outputs.should_deploy == 'true'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          
+      - uses: pnpm/action-setup@v4
+      
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: 'pnpm'
+          
+      - name: Restore Nx cache
+        uses: actions/cache@v4
+        with:
+          path: |
+            .nx/cache
+            node_modules/.cache/nx
+          key: nx-${{ runner.os }}-${{ github.sha }}
+          
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile --prefer-offline
+        
+      - name: Run documentation-specific tests
+        run: |
+          echo "🧪 Running tests for documentation sites..."
+          
+          # Run tests for affected documentation projects only
+          # Exclude admin-related tests using --exclude flag
+          npx nx affected \
+            --target=test \
+            --base=${{ needs.setup-and-analyze.outputs.base }} \
+            --head=${{ needs.setup-and-analyze.outputs.head }} \
+            --exclude=admin \
+            --parallel=3
+            
+      - name: Lint documentation sites
+        run: |
+          echo "🔍 Linting documentation sites..."
+          
+          npx nx affected \
+            --target=lint \
+            --base=${{ needs.setup-and-analyze.outputs.base }} \
+            --head=${{ needs.setup-and-analyze.outputs.head }} \
+            --exclude=admin \
+            --parallel=3
+            
+      - name: Type check
+        run: |
+          echo "📝 Type checking documentation sites..."
+          
+          npx nx affected \
+            --target=typecheck \
+            --base=${{ needs.setup-and-analyze.outputs.base }} \
+            --head=${{ needs.setup-and-analyze.outputs.head }} \
+            --exclude=admin \
+            --parallel=3
+
+  build-documentation:
+    name: Build Documentation Sites
+    needs: [setup-and-analyze, test-documentation]
+    if: needs.setup-and-analyze.outputs.should_deploy == 'true'
+    runs-on: ubuntu-latest
+    outputs:
+      warning_count: ${{ steps.build-warnings.outputs.warning_count }}
+      site_summary: ${{ steps.build-warnings.outputs.site_summary }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          
+      - uses: pnpm/action-setup@v4
+      
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: 'pnpm'
+          
+      - name: Setup Pages
+        if: github.event.inputs.deploy_target != 'netlify' && github.event.inputs.deploy_target != 'vercel'
+        uses: actions/configure-pages@v5
+        
+      - name: Cache build outputs
+        uses: actions/cache@v4
+        with:
+          path: |
+            .nx/cache
+            node_modules/.cache/nx
+            portal/build
+            standards/*/build
+            packages/*/dist
+          key: nx-builds-${{ runner.os }}-${{ github.sha }}
+          restore-keys: |
+            nx-builds-${{ runner.os }}-
+            
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile --prefer-offline
+        
+      - name: Build theme package
+        run: |
+          echo "🎨 Building theme package..."
+          npx nx run @ifla/theme:build --skip-nx-cache=false
+          
+      - name: Build documentation sites and collect warnings
+        id: build-warnings
+        run: |
+          echo "🏗️ Building documentation sites and collecting warnings..."
+          
+          # This script builds all sites AND collects warnings in a single pass
+          # It runs: pnpm nx build [site] for each site in parallel
+          # No duplicate builds - this is the only build step needed
+          node scripts/collect-warnings-parallel.js
+          
+          # Extract warning data for later steps
+          if [ -f "output/_reports/build-warnings.json" ]; then
+            WARNING_COUNT=$(jq '[.[] | .warnings | length] | add' output/_reports/build-warnings.json)
+            SITE_SUMMARY=$(jq -c '[.[] | {site: .site, warnings: .warnings | length, success: .success, buildTime: .buildTime}]' output/_reports/build-warnings.json)
+            echo "warning_count=$WARNING_COUNT" >> $GITHUB_OUTPUT
+            echo "site_summary=$SITE_SUMMARY" >> $GITHUB_OUTPUT
+            echo "✅ Collected $WARNING_COUNT warnings across all sites"
+          else
+            echo "warning_count=0" >> $GITHUB_OUTPUT
+            echo "site_summary=[]" >> $GITHUB_OUTPUT
+          fi
+          
+          # Verify builds completed (warnings are OK, but builds must succeed)
+          if [ ! -d "portal/build" ] || [ ! -d "standards/isbd/build" ]; then
+            echo "❌ Some builds failed. Check the warnings report."
+            exit 1
+          fi
+            
+      - name: Create unified build directory
+        run: |
+          echo "📦 Creating unified build directory..."
+          
+          # Create the unified site structure
+          mkdir -p _site
+          
+          # Copy portal as root
+          if [ -d "portal/build" ]; then
+            cp -r portal/build/* _site/
+          fi
+          
+          # Copy other sites to platform subdirectory
+          mkdir -p _site/platform
+          for site in isbdm lrm frbr isbd muldicat unimarc; do
+            if [ -d "standards/$site/build" ]; then
+              # Convert to uppercase for URL path
+              SITE_UPPER=$(echo $site | tr '[:lower:]' '[:upper:]')
+              cp -r standards/$site/build _site/platform/$SITE_UPPER
+              echo "✅ Copied $site to platform/$SITE_UPPER"
+            fi
+          done
+          
+          # Add deployment configuration
+          if [ "${{ github.event.inputs.deploy_target }}" != "netlify" ] && [ "${{ github.event.inputs.deploy_target }}" != "vercel" ]; then
+            # GitHub Pages configuration
+            echo "iflastandards.github.io" > _site/CNAME
+            touch _site/.nojekyll
+          fi
+          
+          # Validate build structure
+          echo "📁 Build structure:"
+          ls -la _site/
+          ls -la _site/platform/ || true
+          
+      - name: Upload build warnings report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: build-warnings-report-${{ github.run_number }}
+          path: |
+            output/_reports/build-warnings.json
+            output/_reports/build-warnings-summary.md
+          retention-days: 30
+          
+      - name: Upload Pages artifact
+        if: github.event.inputs.deploy_target != 'netlify' && github.event.inputs.deploy_target != 'vercel'
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: ./_site
+          
+      - name: Upload build artifacts for alternative deployments
+        if: github.event.inputs.deploy_target == 'netlify' || github.event.inputs.deploy_target == 'vercel'
+        uses: actions/upload-artifact@v4
+        with:
+          name: documentation-build-${{ github.sha }}
+          path: _site/
+          retention-days: 7
+
+  deploy-to-pages:
+    name: Deploy to GitHub Pages
+    needs: build-documentation
+    if: github.event.inputs.deploy_target != 'netlify' && github.event.inputs.deploy_target != 'vercel'
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
+        
+      - name: Post deployment validation
+        run: |
+          echo "✅ Deployment completed successfully"
+          echo "📍 Site URL: ${{ steps.deployment.outputs.page_url }}"
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "## Deployment Summary" >> $GITHUB_STEP_SUMMARY
+          echo "- **Environment**: ${{ env.DOCS_ENV }}" >> $GITHUB_STEP_SUMMARY
+          echo "- **Branch**: ${{ github.ref_name }}" >> $GITHUB_STEP_SUMMARY
+          echo "- **URL**: ${{ steps.deployment.outputs.page_url }}" >> $GITHUB_STEP_SUMMARY
+          echo "- **Deployment Target**: GitHub Pages" >> $GITHUB_STEP_SUMMARY
+          echo "- **Build Warnings**: ${{ needs.build-documentation.outputs.warning_count || '0' }}" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          
+          # Add site-specific warning summary if available
+          if [ -n "${{ needs.build-documentation.outputs.site_summary }}" ]; then
+            echo "### Build Warnings by Site" >> $GITHUB_STEP_SUMMARY
+            echo '```json' >> $GITHUB_STEP_SUMMARY
+            echo '${{ needs.build-documentation.outputs.site_summary }}' | jq '.' >> $GITHUB_STEP_SUMMARY
+            echo '```' >> $GITHUB_STEP_SUMMARY
+          fi
+
+  e2e-smoke-tests:
+    name: E2E Smoke Tests (Documentation Only)
+    needs: deploy-to-pages
+    if: github.event.inputs.deploy_target != 'netlify' && github.event.inputs.deploy_target != 'vercel'
+    runs-on: ubuntu-latest
+    continue-on-error: true  # Don't fail deployment on E2E issues
+    steps:
+      - uses: actions/checkout@v4
+      
+      - uses: pnpm/action-setup@v4
+      
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: 'pnpm'
+          
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile --prefer-offline
+        
+      - name: Install Playwright browsers
+        run: pnpm exec playwright install chromium --with-deps
+        
+      - name: Run documentation E2E smoke tests
+        run: |
+          echo "🧪 Running E2E smoke tests for documentation sites..."
+          
+          # Run only documentation-related E2E tests
+          # Exclude admin tests using grep pattern
+          pnpm exec playwright test \
+            --grep-invert "@admin" \
+            --grep "@smoke|@documentation" \
+            --reporter=list \
+            --retries=2 \
+            --workers=2
+        env:
+          PLAYWRIGHT_BASE_URL: ${{ needs.deploy-to-pages.outputs.page_url }}
+          
+      - name: Upload test results
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: e2e-smoke-test-results-${{ github.run_number }}
+          path: |
+            playwright-report/
+            test-results/
+          retention-days: 7
+
+  cleanup:
+    name: Cleanup and Report
+    needs: [build-documentation, deploy-to-pages, e2e-smoke-tests]
+    if: always()
+    runs-on: ubuntu-latest
+    steps:
+      - name: Generate summary report
+        run: |
+          echo "## 📊 Deployment Pipeline Summary" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "### Configuration" >> $GITHUB_STEP_SUMMARY
+          echo "- **Trigger**: ${{ github.event_name }}" >> $GITHUB_STEP_SUMMARY
+          echo "- **Branch**: ${{ github.ref_name }}" >> $GITHUB_STEP_SUMMARY
+          echo "- **Environment**: ${{ env.DOCS_ENV }}" >> $GITHUB_STEP_SUMMARY
+          echo "- **Deploy Target**: ${{ github.event.inputs.deploy_target || 'github-pages' }}" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "### Optimizations Applied" >> $GITHUB_STEP_SUMMARY
+          echo "- ✅ Nx affected detection for incremental builds" >> $GITHUB_STEP_SUMMARY
+          echo "- ✅ Parallel task execution (4 processes)" >> $GITHUB_STEP_SUMMARY
+          echo "- ✅ Build caching with Nx" >> $GITHUB_STEP_SUMMARY
+          echo "- ✅ Admin tests excluded (documentation focus)" >> $GITHUB_STEP_SUMMARY
+          echo "- ✅ Selective E2E smoke tests" >> $GITHUB_STEP_SUMMARY
+          echo "- ✅ Build warnings and broken links detection" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "### Performance Metrics" >> $GITHUB_STEP_SUMMARY
+          echo "- **Total Duration**: ~$(( ($(date +%s) - ${{ github.run_started_at }}) / 60 )) minutes" >> $GITHUB_STEP_SUMMARY
+          echo "- **Cache Hit Rate**: Check Nx Cloud dashboard" >> $GITHUB_STEP_SUMMARY
