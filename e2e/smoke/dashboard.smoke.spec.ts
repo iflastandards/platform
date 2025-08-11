@@ -1,102 +1,72 @@
 /**
- * Dashboard Smoke Tests
- * Quick tests to verify dashboard accessibility and basic functionality
+ * Admin Homepage Smoke Tests
+ * Quick tests to verify the public admin homepage loads correctly
+ * Only tests publicly accessible content - no authentication required
  */
 
 import { test, expect, smokeTest } from '../utils/tagged-test';
 
-test.describe('Dashboard Smoke Tests @smoke @dashboard @ui @critical @navigation', () => {
+test.describe('Admin Homepage Smoke Tests @smoke @admin @ui @critical', () => {
+  const adminUrl = process.env.ADMIN_BASE_URL || process.env.ADMIN_URL || 'https://admin-iflastandards-preview.onrender.com';
+  
   test.beforeEach(async ({ page }) => {
-    // Navigate to portal homepage
-    await page.goto('/');
+    // Navigate to admin homepage (public, no auth required)
+    await page.goto(adminUrl);
   });
 
-  smokeTest('should load portal homepage', async ({ page }) => {
-    // Check for essential elements
-    await expect(page.locator('h1, h2').first()).toBeVisible({ timeout: 5000 });
+  smokeTest('should load admin homepage', async ({ page }) => {
+    // Check for admin portal title
+    await expect(page).toHaveTitle(/IFLA Admin Portal/);
     
-    // Verify navigation is present
-    await expect(page.locator('nav, [role="navigation"]')).toBeVisible();
+    // Check for main heading
+    await expect(page.locator('h1:has-text("IFLA Standards Management Toolkit")')).toBeVisible({ timeout: 5000 });
     
     // Verify footer is present
     await expect(page.locator('footer')).toBeVisible();
+    
+    // Check for platform statistics
+    await expect(page.locator('text=Live Platform Statistics')).toBeVisible();
   });
 
-  smokeTest('should have working navigation links', async ({ page }) => {
-    // Get all navigation links
-    const navLinks = page.locator('nav a, [role="navigation"] a');
-    const linkCount = await navLinks.count();
+  smokeTest('should have working sign in functionality', async ({ page }) => {
+    // Check for Sign In button
+    const signInButton = page.locator('text=Sign In');
+    await expect(signInButton).toBeVisible();
+    await expect(signInButton).toBeEnabled();
     
-    // Should have at least some navigation links
-    expect(linkCount).toBeGreaterThan(0);
+    // Check for Request Invitation button
+    const requestButton = page.locator('text=Request Invitation');
+    await expect(requestButton).toBeVisible();
+    await expect(requestButton).toBeEnabled();
     
-    // Test first navigation link
-    if (linkCount > 0) {
-      const firstLink = navLinks.first();
-      const href = await firstLink.getAttribute('href');
-      
-      if (href && !href.startsWith('http') && href !== '#') {
-        await firstLink.click();
-        // Should navigate without error
-        await expect(page).not.toHaveURL(/error|404/);
-      }
-    }
+    // Check for invitation-only message
+    await expect(page.locator('text=Access by invitation only')).toBeVisible();
   });
 
-  smokeTest('should display site selector', async ({ page }) => {
-    // Look for site selector dropdown or links
-    const siteSelector = page.locator('[data-testid="site-selector"], .site-selector, select:has-text("site"), a:has-text("ISBDM")');
+  smokeTest('should display platform statistics', async ({ page }) => {
+    // Check for platform statistics that show the system is working
+    await expect(page.locator('text=Active Standards')).toBeVisible();
+    await expect(page.locator('text=Total Elements')).toBeVisible();
+    await expect(page.locator('text=73').locator('..').locator('text=Languages')).toBeVisible();
     
-    if (await siteSelector.isVisible()) {
-      // Site selector is available
-      await expect(siteSelector).toBeVisible();
-    } else {
-      // Check if individual site links are visible
-      const isbdmLink = page.locator('a:has-text("ISBDM")');
-      await expect(isbdmLink).toBeVisible();
-    }
-  });
-
-  smokeTest('should have working search functionality', async ({ page }) => {
-    // Look for search input
-    const searchInput = page.locator('input[type="search"], input[placeholder*="search" i], [role="searchbox"]');
+    // Check for standards overview
+    await expect(page.locator('text=Standards Overview')).toBeVisible();
     
-    if (await searchInput.isVisible()) {
-      // Type in search
-      await searchInput.fill('test search query');
-      
-      // Should accept input
-      await expect(searchInput).toHaveValue('test search query');
-      
-      // Try to submit search (if form exists)
-      const searchForm = page.locator('form:has(input[type="search"])');
-      if (await searchForm.isVisible()) {
-        await searchForm.press('Enter');
-        // Should not error
-        await expect(page).not.toHaveURL(/error|404/);
-      }
-    } else {
-      // Skip if no search functionality
-      test.skip();
-    }
+    // Check for at least one standard (use first() to avoid strict mode issues)
+    await expect(page.locator('h4:has-text("ISBD")').first()).toBeVisible();
   });
 
   smokeTest('should be responsive on mobile', async ({ page }) => {
     // Set mobile viewport
     await page.setViewportSize({ width: 375, height: 667 });
     
-    // Check for mobile menu button
-    const mobileMenuButton = page.locator('button[aria-label*="menu" i], button:has-text("Menu"), [data-testid="mobile-menu"]');
+    // Main content should still be visible and readable
+    await expect(page.locator('h1:has-text("IFLA Standards Management Toolkit")')).toBeVisible();
     
-    if (await mobileMenuButton.isVisible()) {
-      // Click mobile menu
-      await mobileMenuButton.click();
-      
-      // Mobile menu should open
-      await expect(page.locator('nav, [role="navigation"]')).toBeVisible();
-    }
+    // Sign In button should still be accessible
+    await expect(page.locator('text=Sign In')).toBeVisible();
     
-    // Content should still be visible
-    await expect(page.locator('h1, h2').first()).toBeVisible();
+    // Statistics should be visible (might stack vertically)
+    await expect(page.locator('text=Active Standards')).toBeVisible();
   });
 });

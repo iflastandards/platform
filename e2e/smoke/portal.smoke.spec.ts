@@ -1,8 +1,9 @@
 import { smokeTest, expect } from '../utils/tagged-test';
 
 smokeTest.describe('Portal - Smoke Tests @portal @critical @smoke', () => {
-  smokeTest('should load portal homepage', async ({ page }) => {
-    await page.goto('/');
+  smokeTest('should load portal homepage', async ({ page, baseURL }) => {
+    console.log('Portal test baseURL:', baseURL);
+    await page.goto(baseURL || '/');
     
     // Wait for page to load
     await page.waitForLoadState('networkidle');
@@ -17,8 +18,8 @@ smokeTest.describe('Portal - Smoke Tests @portal @critical @smoke', () => {
     await expect(page.locator('main')).toBeVisible();
   });
 
-  smokeTest('should have working navigation to standards', async ({ page }) => {
-    await page.goto('/');
+  smokeTest('should have working navigation to standards', async ({ page, baseURL }) => {
+    await page.goto(baseURL || '/');
     await page.waitForLoadState('networkidle');
     
     // Check for standards links in navigation
@@ -26,8 +27,8 @@ smokeTest.describe('Portal - Smoke Tests @portal @critical @smoke', () => {
     await expect(standardsLinks.first()).toBeVisible();
   });
 
-  smokeTest('should have working search functionality', async ({ page }) => {
-    await page.goto('/');
+  smokeTest('should have working search functionality', async ({ page, baseURL }) => {
+    await page.goto(baseURL || '/');
     await page.waitForLoadState('networkidle');
     
     // Look for search input or button
@@ -37,10 +38,10 @@ smokeTest.describe('Portal - Smoke Tests @portal @critical @smoke', () => {
     }
   });
 
-  smokeTest('should be responsive on mobile @ui', async ({ page }) => {
+  smokeTest('should be responsive on mobile @ui', async ({ page, baseURL }) => {
     // Set mobile viewport
     await page.setViewportSize({ width: 375, height: 667 });
-    await page.goto('/');
+    await page.goto(baseURL || '/');
     await page.waitForLoadState('networkidle');
     
     // Check that content is still accessible

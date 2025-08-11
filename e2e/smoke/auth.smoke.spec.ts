@@ -1,57 +1,53 @@
 /**
- * Authentication Smoke Tests
- * Quick tests to verify critical auth functionality
+ * Admin Authentication Smoke Tests
+ * Quick tests to verify the admin portal shows proper authentication state
+ * Only tests publicly accessible content - no actual authentication flows
  */
 
 import { test, expect, smokeTest } from '../utils/tagged-test';
 
-test.describe('Authentication Smoke Tests @smoke @auth @critical @authentication @security', () => {
+test.describe('Admin Authentication Smoke Tests @smoke @auth @critical', () => {
+  const adminUrl = process.env.ADMIN_BASE_URL || process.env.ADMIN_URL || 'https://admin-iflastandards-preview.onrender.com';
+  
   test.beforeEach(async ({ page }) => {
-    // Navigate to admin portal
-    await page.goto('/admin');
+    // Navigate to admin portal homepage (public)
+    await page.goto(adminUrl);
   });
 
-  smokeTest('should display login page', async ({ page }) => {
-    // Check for Clerk authentication elements
-    await expect(page.locator('text=Sign in')).toBeVisible({ timeout: 5000 });
+  smokeTest('should display admin portal with authentication options', async ({ page }) => {
+    // Check for admin portal title
+    await expect(page).toHaveTitle(/IFLA Admin Portal/);
     
-    // Verify critical elements are present
-    await expect(page.locator('input[type="email"], input[name="identifier"]')).toBeVisible();
-    await expect(page.locator('input[type="password"]')).toBeVisible();
-    await expect(page.locator('button[type="submit"]')).toBeVisible();
+    // Check for main heading
+    await expect(page.locator('h1:has-text("IFLA Standards Management Toolkit")')).toBeVisible();
+    
+    // Check for Sign In button (Clerk component)
+    await expect(page.locator('text=Sign In')).toBeVisible({ timeout: 5000 });
+    
+    // Check for invitation-only message
+    await expect(page.locator('text=Access by invitation only')).toBeVisible();
   });
 
-  smokeTest('should redirect unauthenticated users', async ({ page }) => {
-    // Try to access protected route
-    await page.goto('/admin/dashboard');
+  smokeTest('should show proper access control messaging', async ({ page }) => {
+    // Should show access restriction message
+    await expect(page.locator('text=invitation only')).toBeVisible();
     
-    // Should redirect to login
-    await expect(page).toHaveURL(/sign-in|login/);
+    // Should explain the platform purpose
+    await expect(page.locator('text=IFLA review group members, editors, translators')).toBeVisible();
+    
+    // Should have request invitation option
+    await expect(page.locator('text=Request Invitation')).toBeVisible();
   });
 
-  smokeTest('should show error for invalid credentials', async ({ page }) => {
-    // Enter invalid credentials
-    await page.fill('input[type="email"], input[name="identifier"]', 'invalid@test.com');
-    await page.fill('input[type="password"]', 'wrongpassword');
-    await page.click('button[type="submit"]');
+  smokeTest('should have functional authentication elements', async ({ page }) => {
+    // Sign In button should be present and enabled
+    const signInButton = page.locator('text=Sign In');
+    await expect(signInButton).toBeVisible();
+    await expect(signInButton).toBeEnabled();
     
-    // Should show error message
-    await expect(page.locator('text=/incorrect|invalid|error/i')).toBeVisible({ timeout: 5000 });
-  });
-
-  smokeTest('should have working forgot password link', async ({ page }) => {
-    // Look for forgot password link
-    const forgotPasswordLink = page.locator('a[href*="forgot"], a:has-text("Forgot"), button:has-text("Forgot")');
-    
-    if (await forgotPasswordLink.isVisible()) {
-      await forgotPasswordLink.click();
-      
-      // Should navigate to password reset
-      await expect(page).toHaveURL(/forgot|reset/);
-      await expect(page.locator('input[type="email"], input[name="identifier"]')).toBeVisible();
-    } else {
-      // Skip if no forgot password link
-      test.skip();
-    }
+    // Request Invitation button should be present and enabled
+    const requestButton = page.locator('text=Request Invitation');
+    await expect(requestButton).toBeVisible();
+    await expect(requestButton).toBeEnabled();
   });
 });

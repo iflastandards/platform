@@ -25,19 +25,19 @@ test.describe('API Health Smoke Tests @smoke @api @critical', () => {
     expect(body).toHaveProperty('status');
   });
 
-  smokeTest('should respond to auth session endpoint', async ({ request }) => {
-    const response = await request.get(`${adminUrl}/api/auth/session`);
+  smokeTest('should respond to hello endpoint', async ({ request }) => {
+    const response = await request.get(`${adminUrl}/api/hello`);
     
-    // Should return a response (might be 401 if not authenticated)
-    expect([200, 401, 403]).toContain(response.status());
+    // Should return 200 OK
+    expect(response.status()).toBe(200);
     
-    // Should return JSON
+    // Should return text
     const contentType = response.headers()['content-type'];
-    expect(contentType).toContain('application/json');
+    expect(contentType).toContain('text/plain');
   });
 
   smokeTest('should respond to vocabularies endpoint', async ({ request }) => {
-    const response = await request.get(`${adminUrl}/api/vocabularies`);
+    const response = await request.get(`${adminUrl}/api/admin/vocabularies`);
     
     // Should return a response (might be 401 if not authenticated)
     expect([200, 401, 403]).toContain(response.status());
