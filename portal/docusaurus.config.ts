@@ -1,4 +1,3 @@
-/* eslint-disable import/first */
 import { themes as prismThemes } from 'prism-react-renderer';
 import type { Config } from '@docusaurus/types';
 import type * as Preset from '@docusaurus/preset-classic';
@@ -8,7 +7,6 @@ import {
   getAdminPortalConfig,
   type SiteKey,
   type Environment,
-  DocsEnv,                        // ⬅️ enum already declared in theme package
 } from '@ifla/theme/config/siteConfig';
 
 /* ----------------------------------------------------------------------------
@@ -22,7 +20,7 @@ if (!DOCS_ENV) {
       'Valid values: local, preview, production',
   );
 }
-const isLocalBuild = DOCS_ENV === DocsEnv.Localhost;
+const isLocalBuild = DOCS_ENV === 'local';
 
 /* ----------------------------------------------------------------------------
  * 🗺️ 2. Gather per-site configuration
