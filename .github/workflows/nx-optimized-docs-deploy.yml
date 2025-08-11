@@ -212,10 +212,18 @@ jobs:
           mkdir -p _site/platform
           for site in isbdm lrm frbr isbd muldicat unimarc; do
             if [ -d "standards/$site/build" ]; then
-              # Convert to uppercase for URL path
-              SITE_UPPER=$(echo $site | tr '[:lower:]' '[:upper:]')
-              cp -r standards/$site/build _site/platform/$SITE_UPPER
-              echo "✅ Copied $site to platform/$SITE_UPPER"
+              # Use correct case for URL path based on site configuration
+              case $site in
+                isbdm) SITE_PATH="ISBDM" ;;
+                lrm) SITE_PATH="LRM" ;;
+                frbr) SITE_PATH="FRBR" ;;
+                isbd) SITE_PATH="isbd" ;;
+                muldicat) SITE_PATH="muldicat" ;;
+                unimarc) SITE_PATH="unimarc" ;;
+                *) SITE_PATH="$site" ;;
+              esac
+              cp -r standards/$site/build _site/platform/$SITE_PATH
+              echo "✅ Copied $site to platform/$SITE_PATH"
             fi
           done
           
