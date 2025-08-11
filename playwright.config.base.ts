@@ -13,8 +13,8 @@ export const baseConfig: PlaywrightTestConfig = {
   // Base test directory
   testDir: './e2e',
   
-  // Global setup for authentication
-  globalSetup: require.resolve('./e2e/global-setup'),
+  // No global setup in base - let specific configs handle server management
+  // globalSetup is defined in specific configs (integration, e2e, etc.)
   
   // Shared test configuration
   use: {

@@ -44,9 +44,10 @@ export default defineConfig({
     },
   },
   
-  // Global setup and teardown for E2E tests
-  globalSetup: require.resolve('./e2e/playwright/global-setup'),
-  globalTeardown: require.resolve('./e2e/playwright/global-teardown'),
+  // Use on-demand server startup (servers started only as needed)
+  globalSetup: './e2e/global-setup.on-demand.ts',
+  // No teardown - leave servers running for reuse
+  globalTeardown: undefined,
   
   // Default to Chrome only for E2E tests
   // Use playwright.config.browsers.ts for comprehensive multi-browser testing

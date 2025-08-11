@@ -39,8 +39,8 @@ export default defineConfig({
     },
   },
   
-  // Global setup for integration tests (targeted server startup)
-  globalSetup: './e2e/global-setup.integration.ts',
+  // Use on-demand server startup (servers started only as needed)
+  globalSetup: './e2e/global-setup.on-demand.ts',
   
   // Default to Chrome only for integration tests
   // Use playwright.config.browsers.ts for multi-browser testing
