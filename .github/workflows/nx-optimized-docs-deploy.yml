@@ -32,9 +32,10 @@ env:
   CI: true
   HUSKY: 0
   
-  # Nx Cloud configuration (read-only for public repo)
+  # Nx Cloud configuration with distributed agents
   NX_CLOUD_ACCESS_TOKEN: ${{ secrets.NX_CLOUD_ACCESS_TOKEN }}
-  NX_CLOUD_DISTRIBUTED_EXECUTION: false  # Disabled for simpler setup
+  NX_CLOUD_DISTRIBUTED_EXECUTION: true
+  NX_CLOUD_DISTRIBUTED_EXECUTION_AGENT_COUNT: 4
   NX_BRANCH: ${{ github.head_ref || github.ref_name }}
   
   # Nx optimizations
@@ -65,6 +66,13 @@ jobs:
           
       - uses: pnpm/action-setup@v4
         name: Install pnpm
+        
+      - name: Start Nx Cloud agents
+        run: |
+          pnpm dlx nx-cloud start-ci-run \
+            --distribute-on="4 linux-medium-js" \
+            --stop-agents-after="build" \
+            --with-env-vars="DOCS_ENV,NODE_OPTIONS"
         
       - uses: actions/setup-node@v4
         with:
@@ -397,6 +405,11 @@ jobs:
     if: always()
     runs-on: ubuntu-latest
     steps:
+      - name: Stop Nx Cloud agents
+        run: |
+          pnpm dlx nx-cloud stop-all-agents
+        continue-on-error: true
+        
       - name: Generate summary report
         run: |
           echo "## 📊 Deployment Pipeline Summary" >> $GITHUB_STEP_SUMMARY
@@ -408,9 +421,10 @@ jobs:
           echo "- **Deploy Target**: ${{ github.event.inputs.deploy_target || 'github-pages' }}" >> $GITHUB_STEP_SUMMARY
           echo "" >> $GITHUB_STEP_SUMMARY
           echo "### Optimizations Applied" >> $GITHUB_STEP_SUMMARY
+          echo "- ✅ Nx Cloud distributed execution (4 agents)" >> $GITHUB_STEP_SUMMARY
           echo "- ✅ Nx affected detection for incremental builds" >> $GITHUB_STEP_SUMMARY
           echo "- ✅ Parallel task execution (4 processes)" >> $GITHUB_STEP_SUMMARY
-          echo "- ✅ Build caching with Nx" >> $GITHUB_STEP_SUMMARY
+          echo "- ✅ Build caching with Nx Cloud" >> $GITHUB_STEP_SUMMARY
           echo "- ✅ Admin tests excluded (documentation focus)" >> $GITHUB_STEP_SUMMARY
           echo "- ✅ Selective E2E smoke tests" >> $GITHUB_STEP_SUMMARY
           echo "- ✅ Build warnings and broken links detection" >> $GITHUB_STEP_SUMMARY

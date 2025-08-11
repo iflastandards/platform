@@ -1,6 +1,6 @@
 # UI/UX Accessibility Best Practices - IFLA Standards Platform
 
-> **Integration Note**: This document works in conjunction with the [Design System UI Patterns](/system-design-docs/11-design-system-ui-patterns.md) to ensure accessible implementation of all UI components.
+> **Integration Note**: This document works in conjunction with the [Design System UI Patterns](../system-design-docs/11-design-system-ui-patterns.md) to ensure accessible implementation of all UI components.
 
 ## Legal Requirements & Standards
 
@@ -911,7 +911,7 @@ const accessibleSizing = {
 
 ### IFLA Platform Tools
 - **Mockup References**: `/IFLA_OMR25_link/mockups/` - Visual implementation guides
-- **Design System**: `/system-design-docs/11-design-system-ui-patterns.md`
+- **Design System**: `../system-design-docs/11-design-system-ui-patterns.md`
 - **Component Library**: `@ifla/theme` package with pre-built accessible components
 - **Testing Templates**: Use `@a11y` tags for accessibility-specific tests
 
