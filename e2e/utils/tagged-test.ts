@@ -1,5 +1,5 @@
 import { test as base } from '@playwright/test';
-import { TestTags, shouldRunInEnvironment, getTimeoutFromTags, getRetryCountFromTags } from './test-tags';
+import { TestTags, shouldRunInEnvironment, getTimeoutFromTags, getRetryCountFromTags, tags } from './test-tags';
 
 /**
  * Extended Playwright test with tagging support
@@ -51,16 +51,56 @@ export function describe(title: string, tags: string | string[], callback: () =>
 /**
  * Helper to create a smoke test
  */
-export function smokeTest(title: string, callback: any) {
-  test(`${title} ${TestTags.SMOKE}`, callback);
-}
+export const smokeTest = Object.assign(
+  function(title: string, callback: any) {
+    test(`${title} ${TestTags.SMOKE}`, callback);
+  },
+  {
+    describe: (title: string, callback: () => void) => {
+      test.describe(`${title} ${TestTags.SMOKE}`, callback);
+    },
+    beforeEach: test.beforeEach,
+    afterEach: test.afterEach,
+    beforeAll: test.beforeAll,
+    afterAll: test.afterAll,
+    skip: (title: string, callback: any) => {
+      test.skip(`${title} ${TestTags.SMOKE}`, callback);
+    },
+    only: (title: string, callback: any) => {
+      test.only(`${title} ${TestTags.SMOKE}`, callback);
+    },
+    fixme: (title: string, callback: any) => {
+      test.fixme(`${title} ${TestTags.SMOKE}`, callback);
+    },
+  }
+);
 
 /**
  * Helper to create an integration test
  */
-export function integrationTest(title: string, callback: any) {
-  test(`${title} ${TestTags.INTEGRATION}`, callback);
-}
+export const integrationTest = Object.assign(
+  function(title: string, callback: any) {
+    test(`${title} ${TestTags.INTEGRATION}`, callback);
+  },
+  {
+    describe: (title: string, callback: () => void) => {
+      test.describe(`${title} ${TestTags.INTEGRATION}`, callback);
+    },
+    beforeEach: test.beforeEach,
+    afterEach: test.afterEach,
+    beforeAll: test.beforeAll,
+    afterAll: test.afterAll,
+    skip: (title: string, callback: any) => {
+      test.skip(`${title} ${TestTags.INTEGRATION}`, callback);
+    },
+    only: (title: string, callback: any) => {
+      test.only(`${title} ${TestTags.INTEGRATION}`, callback);
+    },
+    fixme: (title: string, callback: any) => {
+      test.fixme(`${title} ${TestTags.INTEGRATION}`, callback);
+    },
+  }
+);
 
 /**
  * Helper to create an e2e test
@@ -131,3 +171,6 @@ export function flakyTest(title: string, tags: string | string[], callback: any)
 
 // Re-export expect and Page type for convenience
 export { expect, type Page } from '@playwright/test';
+
+// Re-export tags builder for convenience
+export { tags } from './test-tags';

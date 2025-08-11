@@ -157,6 +157,46 @@ export class TestTagBuilder {
     return this;
   }
   
+  performance(): this {
+    this.tags.add(TestTags.PERFORMANCE);
+    return this;
+  }
+  
+  security(): this {
+    this.tags.add('@security');
+    return this;
+  }
+  
+  navigation(): this {
+    this.tags.add(TestTags.NAVIGATION);
+    return this;
+  }
+  
+  validation(): this {
+    this.tags.add('@validation');
+    return this;
+  }
+  
+  authentication(): this {
+    this.tags.add('@authentication');
+    return this;
+  }
+  
+  buildTag(): this {
+    this.tags.add('@build');
+    return this;
+  }
+  
+  standards(): this {
+    this.tags.add('@standards');
+    return this;
+  }
+  
+  portal(): this {
+    this.tags.add('@portal');
+    return this;
+  }
+  
   custom(tag: string): this {
     this.tags.add(tag.startsWith('@') ? tag : `@${tag}`);
     return this;
