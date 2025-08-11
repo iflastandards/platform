@@ -324,6 +324,7 @@ jobs:
             --workers=2
         env:
           PLAYWRIGHT_BASE_URL: ${{ needs.deploy-to-pages.outputs.page_url }}
+          ADMIN_BASE_URL: https://admin-iflastandards-preview.onrender.com
           
       - name: Upload test results
         if: failure()
