@@ -30,6 +30,16 @@ export const test = base.extend({
   }, { auto: true }],
 });
 
+// Ensure test has all the expected methods from base
+test.describe = base.describe;
+test.beforeEach = base.beforeEach;
+test.afterEach = base.afterEach;
+test.beforeAll = base.beforeAll;
+test.afterAll = base.afterAll;
+test.skip = base.skip;
+test.only = base.only;
+test.fixme = base.fixme;
+
 /**
  * Helper to create a describe block with tags
  */
@@ -55,9 +65,29 @@ export function integrationTest(title: string, callback: any) {
 /**
  * Helper to create an e2e test
  */
-export function e2eTest(title: string, callback: any) {
-  test(`${title} ${TestTags.E2E}`, callback);
-}
+export const e2eTest = Object.assign(
+  function(title: string, callback: any) {
+    test(`${title} ${TestTags.E2E}`, callback);
+  },
+  {
+    describe: (title: string, callback: () => void) => {
+      test.describe(`${title} ${TestTags.E2E}`, callback);
+    },
+    beforeEach: test.beforeEach,
+    afterEach: test.afterEach,
+    beforeAll: test.beforeAll,
+    afterAll: test.afterAll,
+    skip: (title: string, callback: any) => {
+      test.skip(`${title} ${TestTags.E2E}`, callback);
+    },
+    only: (title: string, callback: any) => {
+      test.only(`${title} ${TestTags.E2E}`, callback);
+    },
+    fixme: (title: string, callback: any) => {
+      test.fixme(`${title} ${TestTags.E2E}`, callback);
+    },
+  }
+);
 
 /**
  * Helper to create a critical test
@@ -99,5 +129,5 @@ export function flakyTest(title: string, tags: string | string[], callback: any)
   test(`${title} ${TestTags.FLAKY} ${tagString}`, callback);
 }
 
-// Re-export expect for convenience
-export { expect } from '@playwright/test';
+// Re-export expect and Page type for convenience
+export { expect, type Page } from '@playwright/test';

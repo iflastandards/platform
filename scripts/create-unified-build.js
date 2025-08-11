@@ -16,12 +16,29 @@ console.log(`📦 Creating unified build for ${env} environment...`);
 const ENV_CONFIG = {
   preview: {
     baseUrl: '/platform',
-    sites: ['portal', 'ISBDM', 'LRM', 'FRBR', 'isbd', 'muldicat', 'unimarc'],
+    // Map source directory names to deployment paths
+    sites: {
+      'portal': { source: 'portal', deploy: 'portal' },
+      'ISBDM': { source: 'ISBDM', deploy: 'ISBDM' }, 
+      'LRM': { source: 'LRM', deploy: 'LRM' },
+      'FRBR': { source: 'FRBR', deploy: 'FRBR' },
+      'isbd': { source: 'isbd', deploy: 'isbd' },
+      'muldicat': { source: 'muldicat', deploy: 'muldicat' }, 
+      'unimarc': { source: 'unimarc', deploy: 'unimarc' }
+    },
     outputDir: '_site/platform'
   },
   production: {
     baseUrl: '',
-    sites: ['portal', 'ISBDM', 'LRM', 'FRBR', 'isbd', 'muldicat', 'unimarc'],
+    sites: {
+      'portal': { source: 'portal', deploy: 'portal' },
+      'ISBDM': { source: 'ISBDM', deploy: 'ISBDM' },
+      'LRM': { source: 'LRM', deploy: 'LRM' }, 
+      'FRBR': { source: 'FRBR', deploy: 'FRBR' },
+      'isbd': { source: 'isbd', deploy: 'isbd' },
+      'muldicat': { source: 'muldicat', deploy: 'muldicat' },
+      'unimarc': { source: 'unimarc', deploy: 'unimarc' }
+    },
     outputDir: '_site'
   }
 };
@@ -37,7 +54,8 @@ const outputDir = path.join(process.cwd(), config.outputDir);
 fs.mkdirSync(outputDir, { recursive: true });
 
 // Copy portal to root of output
-const portalBuild = path.join(process.cwd(), 'portal/build');
+const portalConfig = config.sites.portal;
+const portalBuild = path.join(process.cwd(), `${portalConfig.source}/build`);
 if (fs.existsSync(portalBuild)) {
   console.log('📄 Copying portal site...');
   execSync(`cp -r ${portalBuild}/* ${outputDir}/`, { stdio: 'inherit' });
@@ -51,18 +69,18 @@ console.log('⏭️ Skipping admin app (focus on Docusaurus sites first)...');
 
 // Copy each standard site
 console.log('📚 Copying standard sites...');
-const standardSites = config.sites.filter(site => site !== 'portal');
+const standardSites = Object.entries(config.sites).filter(([key, siteConfig]) => key !== 'portal');
 
-for (const site of standardSites) {
-  const siteBuild = path.join(process.cwd(), `standards/${site}/build`);
+for (const [siteKey, siteConfig] of standardSites) {
+  const siteBuild = path.join(process.cwd(), `standards/${siteConfig.source}/build`);
   
   if (fs.existsSync(siteBuild)) {
-    console.log(`  ✓ ${site}`);
-    const siteOutput = path.join(outputDir, site);
+    console.log(`  ✓ ${siteKey} (${siteConfig.source} -> ${siteConfig.deploy})`);
+    const siteOutput = path.join(outputDir, siteConfig.deploy);
     fs.mkdirSync(siteOutput, { recursive: true });
     execSync(`cp -r ${siteBuild}/* ${siteOutput}/`, { stdio: 'inherit' });
   } else {
-    console.warn(`  ⚠️  ${site} build not found, skipping...`);
+    console.warn(`  ⚠️  ${siteKey} build not found: standards/${siteConfig.source}/build`);
   }
 }
 
@@ -88,13 +106,13 @@ if (validate) {
   let errors = 0;
   
   // Check each site has an index.html
-  for (const site of config.sites) {
-    const indexPath = site === 'portal' 
+  for (const [siteKey, siteConfig] of Object.entries(config.sites)) {
+    const indexPath = siteKey === 'portal' 
       ? path.join(outputDir, 'index.html')
-      : path.join(outputDir, site, 'index.html');
+      : path.join(outputDir, siteConfig.deploy, 'index.html');
       
     if (!fs.existsSync(indexPath)) {
-      console.error(`❌ Missing index.html for ${site}`);
+      console.error(`❌ Missing index.html for ${siteKey} (${siteConfig.deploy})`);
       errors++;
     }
   }

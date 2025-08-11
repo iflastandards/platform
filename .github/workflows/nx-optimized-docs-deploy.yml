@@ -210,20 +210,34 @@ jobs:
           
           # Copy other sites to platform subdirectory
           mkdir -p _site/platform
-          for site in isbdm lrm frbr isbd muldicat unimarc; do
-            if [ -d "standards/$site/build" ]; then
-              # Use correct case for URL path based on site configuration
-              case $site in
-                isbdm) SITE_PATH="ISBDM" ;;
-                lrm) SITE_PATH="LRM" ;;
-                frbr) SITE_PATH="FRBR" ;;
-                isbd) SITE_PATH="isbd" ;;
-                muldicat) SITE_PATH="muldicat" ;;
-                unimarc) SITE_PATH="unimarc" ;;
-                *) SITE_PATH="$site" ;;
-              esac
-              cp -r standards/$site/build _site/platform/$SITE_PATH
-              echo "✅ Copied $site to platform/$SITE_PATH"
+          # Map Nx project names to source directories and deployment paths
+          declare -A PROJECT_TO_SOURCE=(
+            ["isbdm"]="ISBDM"
+            ["lrm"]="LRM" 
+            ["frbr"]="FRBR"
+            ["isbd"]="isbd"
+            ["muldicat"]="muldicat"
+            ["unimarc"]="unimarc"
+          )
+          
+          declare -A PROJECT_TO_DEPLOY=(
+            ["isbdm"]="ISBDM"
+            ["lrm"]="LRM"
+            ["frbr"]="FRBR" 
+            ["isbd"]="isbd"
+            ["muldicat"]="muldicat"
+            ["unimarc"]="unimarc"
+          )
+          
+          for PROJECT in "${!PROJECT_TO_SOURCE[@]}"; do
+            SOURCE_DIR="${PROJECT_TO_SOURCE[$PROJECT]}"
+            DEPLOY_PATH="${PROJECT_TO_DEPLOY[$PROJECT]}"
+            
+            if [ -d "standards/$SOURCE_DIR/build" ]; then
+              cp -r standards/$SOURCE_DIR/build _site/platform/$DEPLOY_PATH
+              echo "✅ Copied $PROJECT (standards/$SOURCE_DIR) to platform/$DEPLOY_PATH"
+            else
+              echo "⚠️ Build not found for $PROJECT: standards/$SOURCE_DIR/build"
             fi
           done
           

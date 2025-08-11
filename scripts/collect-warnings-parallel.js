@@ -4,8 +4,8 @@ const fs = require('fs');
 const path = require('path');
 const { spawn } = require('child_process');
 
-// Configuration
-const SITES = ['portal', 'isbdm', 'lrm', 'frbr', 'isbd', 'muldicat', 'unimarc'];
+// Configuration - use actual directory names
+const SITES = ['portal', 'ISBDM', 'LRM', 'FRBR', 'isbd', 'muldicat', 'unimarc'];
 
 // Environment-aware parallelism
 const isCI = process.env.CI === 'true' || process.env.GITHUB_ACTIONS === 'true';
