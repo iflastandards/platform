@@ -64,7 +64,7 @@ The IFLA Standards Platform is a comprehensive documentation and vocabulary mana
 | MulDiCat | muldicat | 3005 | muldicat.iflastandards.info | Multilingual Dictionary of Cataloguing Terms |
 | UNIMARC | unimarc | 3006 | unimarc.iflastandards.info | UNIMARC formats |
 
-### System Design Documentation (`portal/docs/developer/system-design-docs/`)
+### System Design Documentation (`system-design-docs/`)
 
 Comprehensive architectural documentation for the platform:
 

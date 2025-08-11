@@ -89,7 +89,7 @@ const config: Config = {
   i18n: { defaultLocale: 'en', locales: ['en'] },
 
   /* ---------------------------------------------------------------------- */
-  /* 4. Plugins – conditionally include “developer” & OpenAPI docs locally  */
+  /* 4. Plugins – conditionally include OpenAPI docs locally               */
   /* ---------------------------------------------------------------------- */
   plugins: [
     'docusaurus-plugin-sass',
@@ -99,32 +99,16 @@ const config: Config = {
       { hashed: true, indexBlog: true },
     ],
 
-    /* Developer documentation (Markdown) – always enabled */
-    [
-      '@docusaurus/plugin-content-docs',
-      {
-        id: 'developer',
-        path: 'docs/developer',
-        routeBasePath: '/',
-        sidebarPath: './sidebars.ts',
-
-        /* Public/preview builds exclude private folders */
-        exclude: isLocalBuild
-          ? []                       // keep every file in local dev
-          : ['api/**', 'generated/**', 'guides/internal/**'],
-      },
-    ],
-
     /* OpenAPI reference – ONLY generated in local builds */
     isLocalBuild && [
       'docusaurus-plugin-openapi-docs',
       {
         id: 'api',
-        docsPluginId: 'developer',
+        docsPluginId: 'classic',
         config: {
           admin: {
-            specPath:  'docs/developer/api/admin.yaml',
-            outputDir: 'docs/developer/generated/admin',
+            specPath:  'docs/api/admin.yaml',
+            outputDir: 'docs/generated/admin',
             sidebarOptions: { groupPathsBy: 'tag' },
           },
         },
@@ -140,8 +124,7 @@ const config: Config = {
       'classic',
       {
         docs: {
-          id: 'legacy',                  // keep classic docs under separate id
-          path: 'docs',                  // original portal docs
+          path: 'docs',
           sidebarPath: './sidebars.ts',
           editUrl:
             'https://github.com/iflastandards/standards-dev/tree/main/portal/',

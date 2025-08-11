@@ -155,8 +155,8 @@ Is this a straightforward code task?
 - **Emergency Override**: If absolutely necessary, remove secrets and commit clean version
 
 ## System Design Documentation - CONSULT BEFORE CODING
-- **Location**: `@portal/docs/developer/system-design-docs/` - Authoritative architecture documentation
-- **Index**: `@portal/docs/developer/system-design-docs/README.md` - Task-based navigation guide
+- **Location**: `@system-design-docs/` - Authoritative architecture documentation
+- **Index**: `@system-design-docs/README.md` - Task-based navigation guide
 - **MANDATORY**: Check relevant docs before implementing features or making architectural changes
 - **Task-Based Quick Reference**:
   - **API Development** → Docs 5, 2, 14 (endpoints, data patterns, RBAC)

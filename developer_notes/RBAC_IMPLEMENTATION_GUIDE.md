@@ -814,7 +814,7 @@ if (process.env.NODE_ENV === 'development') {
 }
 ```
 
-This implementation guide provides the foundation for RBAC in the IFLA Standards Platform. Always refer to the authoritative [RBAC Authorization Model](../portal/docs/developer/system-design-docs/12-rbac-authorization-model.md) and [Permission Matrix](../portal/docs/developer/system-design-docs/13-permission-matrix-detailed.md) for complete specifications.
+This implementation guide provides the foundation for RBAC in the IFLA Standards Platform. Always refer to the authoritative [RBAC Authorization Model](../system-design-docs/12-rbac-authorization-model.md) and [Permission Matrix](../system-design-docs/13-permission-matrix-detailed.md) for complete specifications.
 
 ## Current Implementation: Custom RBAC with Clerk
 
@@ -896,6 +896,6 @@ export function usePermissions() {
 ### Migration Path
 
 For detailed information on the current RBAC implementation, see:
-- [RBAC Implementation](../portal/docs/developer/system-design-docs/14-rbac-implementation.md)
+- [RBAC Implementation](../system-design-docs/14-rbac-implementation.md)
 
 The Clerk approach offers simplified management and better integration with the authentication layer, while maintaining the same permission model and user experience.

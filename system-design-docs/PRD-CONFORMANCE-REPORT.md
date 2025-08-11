@@ -1,7 +1,7 @@
 # PRD Conformance Analysis Report
 
 **Date**: July 2025  
-**Scope**: Analysis of /portal/docs/developer/system-design-docs/* against PRD-IFLA-Standards-Platform.md  
+**Scope**: Analysis of /system-design-docs/* against PRD-IFLA-Standards-Platform.md  
 **Overall Conformance Score**: 87%
 
 ## Executive Summary

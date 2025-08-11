@@ -394,9 +394,9 @@ DOCS_ENV=
 ## References
 
 ### Documentation
-- [System Architecture](../portal/docs/developer/system-design-docs/01-system-architecture-overview.md)
-- [RBAC Model](../portal/docs/developer/system-design-docs/12-rbac-authorization-model.md)
-- [Data Architecture](../portal/docs/developer/system-design-docs/02-data-architecture.md)
+- [System Architecture](../system-design-docs/01-system-architecture-overview.md)
+- [RBAC Model](../system-design-docs/12-rbac-authorization-model.md)
+- [Data Architecture](../system-design-docs/02-data-architecture.md)
 - [CLAUDE.md](../CLAUDE.md) - Development guidelines
 
 ### External Resources
