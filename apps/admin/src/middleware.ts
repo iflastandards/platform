@@ -13,7 +13,7 @@ const isPublicRoute = createRouteMatcher([
   // Add other public routes as needed
 ]);
 
-export default clerkMiddleware((auth, request) => {
+export default clerkMiddleware((auth: any, request: any) => {
   // Skip authentication in test environment
   if (process.env.NODE_ENV === 'test') {
     return;

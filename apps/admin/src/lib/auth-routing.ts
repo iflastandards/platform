@@ -15,7 +15,9 @@ export function getDefaultDashboardRoute(
   const demoParam = isDemo ? '?demo=true' : '';
 
   // Super Admin - goes to super admin dashboard
-  if (user.publicMetadata.iflaRole === 'admin') {
+  // Check both iflaRole and systemRole for compatibility
+  if (user.publicMetadata.iflaRole === 'admin' || 
+      (user.publicMetadata as any).systemRole === 'superadmin') {
     return `/dashboard/admin${demoParam}`;
   }
 
@@ -33,14 +35,15 @@ export function validateRouteAccess(
   route: string,
 ): { hasAccess: boolean; redirectTo?: string } {
   const userRole = user.publicMetadata.iflaRole;
+  const systemRole = (user.publicMetadata as any).systemRole;
   const isReviewGroupAdmin = user.publicMetadata.reviewGroupAdmin?.length;
 
   // Route is already normalized since we run at root
   const normalizedRoute = route;
 
-  // Super admin routes
+  // Super admin routes - check both iflaRole and systemRole
   if (normalizedRoute.startsWith('/dashboard/admin')) {
-    if (userRole === 'admin') {
+    if (userRole === 'admin' || systemRole === 'superadmin') {
       return { hasAccess: true };
     }
     return {

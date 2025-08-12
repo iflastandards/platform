@@ -27,27 +27,52 @@ interface GitHubOrgMembership {
 }
 
 /**
- * Check if a user is an owner of the iflastandards organization
+ * Check if a user is an owner/admin of the iflastandards organization
+ * Note: GitHub API returns 'admin' role for organization owners
  */
 export async function checkIflaOrganizationOwnership(accessToken: string): Promise<boolean> {
   try {
-    // Check organization membership with role
-    const response = await fetch('https://api.github.com/user/memberships/orgs/iflastandards', {
+    // First, check if user is a member of the organization
+    const orgsResponse = await fetch('https://api.github.com/user/orgs', {
       headers: {
         Authorization: `Bearer ${accessToken}`,
         Accept: 'application/vnd.github.v3+json',
       },
     });
 
-    if (!response.ok) {
-      console.error('Failed to check organization membership:', response.status);
+    if (!orgsResponse.ok) {
+      console.error('Failed to fetch user organizations:', orgsResponse.status);
       return false;
     }
 
-    const membership: GitHubOrgMembership = await response.json();
+    const orgs: GitHubOrg[] = await orgsResponse.json();
+    const isIflaOrgMember = orgs.some(org => org.login.toLowerCase() === 'iflastandards');
+    
+    if (!isIflaOrgMember) {
+      console.log('User is not a member of iflastandards organization');
+      return false;
+    }
+
+    // Now check the user's role in the organization
+    const membershipResponse = await fetch('https://api.github.com/user/memberships/orgs/iflastandards', {
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+        Accept: 'application/vnd.github.v3+json',
+      },
+    });
+
+    if (!membershipResponse.ok) {
+      console.error('Failed to check organization membership details:', membershipResponse.status);
+      return false;
+    }
+
+    const membership: GitHubOrgMembership = await membershipResponse.json();
     
     // Check if user is an admin (owner) of the organization
-    return membership.role === 'admin';
+    const isOwner = membership.role === 'admin';
+    console.log(`GitHub org membership check - role: ${membership.role}, is owner: ${isOwner}`);
+    
+    return isOwner;
   } catch (error) {
     console.error('Error checking organization ownership:', error);
     return false;
@@ -174,16 +199,16 @@ export async function syncGitHubProfileWithClerk(
 
 /**
  * Check if user is a known organization owner (manual list)
- * This is a temporary solution until we can access GitHub tokens from Clerk
+ * @deprecated Use isOrganizationOwner from github-org-check.ts instead
+ * This is only kept for backward compatibility and emergency access
  */
 export function isKnownOrganizationOwner(githubUsername: string): boolean {
-  const knownOwners = [
-    'jonphipps',
-    'jphipps',
-    // Add other known organization owners here
-  ];
+  // This function is deprecated - use the proper org check instead
+  console.warn('isKnownOrganizationOwner is deprecated. Use isOrganizationOwner from github-org-check.ts');
   
-  return knownOwners.includes(githubUsername.toLowerCase());
+  // Emergency access list - should be empty in production
+  const emergencyAccess = process.env.GITHUB_EMERGENCY_ADMINS?.split(',') || [];
+  return emergencyAccess.includes(githubUsername.toLowerCase());
 }
 
 /**
@@ -196,7 +221,7 @@ export async function checkAndSyncGitHubData(clerkUserId: string): Promise<void>
     
     // Find GitHub external account
     const githubAccount = user.externalAccounts.find(
-      account => account.provider === 'github'
+      (account: any) => account.provider === 'github'
     );
     
     if (!githubAccount) {
@@ -204,8 +229,9 @@ export async function checkAndSyncGitHubData(clerkUserId: string): Promise<void>
       return;
     }
 
-    // Check if user is a known org owner
-    const isOrgOwner = isKnownOrganizationOwner(githubAccount.username || '');
+    // Check if user is an org owner using the proper method
+    const { isOrganizationOwner } = await import('./github-org-check');
+    const isOrgOwner = await isOrganizationOwner(githubAccount.username || '');
     
     // Prepare update data
     const currentMetadata = (user.publicMetadata as Record<string, unknown>) || {};

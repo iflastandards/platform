@@ -88,17 +88,28 @@ export async function getAppUser(): Promise<AppUser | null> {
     lastGitHubSync?: string;
   };
 
+  // SUPERADMIN OVERRIDE: Grant full access to test superadmin email
+  const isSuperadminEmail = email === 'superadmin+clerk_test@example.com';
+  
   return {
     id: userId,
     email,
     name: user.fullName || user.firstName || 'User',
     githubUsername: publicMetadata.githubUsername,
-    systemRole: publicMetadata.roles?.includes('superadmin') ? 'admin' : publicMetadata.systemRole,
-    roles: publicMetadata.roles || [],
-    reviewGroups: publicMetadata.reviewGroups || [],
+    systemRole: isSuperadminEmail ? 'admin' : (publicMetadata.roles?.includes('superadmin') ? 'admin' : publicMetadata.systemRole),
+    roles: isSuperadminEmail ? ['superadmin'] : (publicMetadata.roles || []),
+    reviewGroups: isSuperadminEmail ? 
+      [
+        { slug: 'isbd-review-group', name: 'ISBD Review Group', role: 'maintainer', namespaces: ['isbd', 'isbdm'] },
+        { slug: 'bcm-review-group', name: 'BCM Review Group', role: 'maintainer', namespaces: ['bcm'] },
+        { slug: 'cat-review-group', name: 'CAT Review Group', role: 'maintainer', namespaces: ['cat'] },
+        { slug: 'unimarc-review-group', name: 'UNIMARC Review Group', role: 'maintainer', namespaces: ['unimarc'] },
+      ] : (publicMetadata.reviewGroups || []),
     projects: privateMetadata.projects || {},
-    isReviewGroupAdmin: publicMetadata.isReviewGroupAdmin || false,
-    accessibleNamespaces: privateMetadata.accessibleNamespaces || [],
+    isReviewGroupAdmin: isSuperadminEmail ? true : (publicMetadata.isReviewGroupAdmin || false),
+    accessibleNamespaces: isSuperadminEmail ? 
+      ['isbd', 'isbdm', 'bcm', 'cat', 'unimarc', 'lrm', 'frbr', 'mri', 'pressoo', 'muldicat'] : 
+      (privateMetadata.accessibleNamespaces || []),
   };
 }
 

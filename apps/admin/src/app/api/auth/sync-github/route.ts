@@ -16,21 +16,16 @@ export async function POST(_request: NextRequest) {
 
     // Find GitHub account
     const githubAccount = user.externalAccounts?.find(
-      (account) => account.provider === 'github',
+      (account: any) => account.provider === 'github',
     );
 
     if (!githubAccount) {
       return NextResponse.json({ error: 'No GitHub account linked' }, { status: 400 });
     }
 
-    // Known organization owners (manual list for now)
-    const organizationOwners = [
-      'jonphipps',
-      'jphipps',
-      // Add other known organization owners here
-    ];
-
-    const isOrgOwner = organizationOwners.includes(githubAccount.username || '');
+    // Check organization ownership using the proper method
+    const { isOrganizationOwner } = await import('@/lib/github-org-check');
+    const isOrgOwner = await isOrganizationOwner(githubAccount.username || '');
     
     // Update user metadata
     const currentMetadata = (user.publicMetadata as Record<string, unknown>) || {};

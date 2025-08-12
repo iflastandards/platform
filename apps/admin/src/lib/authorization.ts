@@ -109,6 +109,12 @@ export async function getAuthContext(): Promise<AuthContext | null> {
     // console.warn(`No valid email found for user ${userId}, using placeholder: ${email}`);
   }
 
+  // SUPERADMIN OVERRIDE: Grant superadmin status to specific test email
+  if (email === 'superadmin+clerk_test@example.com') {
+    roles.system = 'superadmin';
+    roles.systemRole = 'superadmin';
+  }
+
   const context: AuthContext = {
     userId,
     email,

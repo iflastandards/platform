@@ -14,7 +14,7 @@ export async function GET(request: NextRequest) {
 
   // Check for GitHub organization membership
   const githubAccount = user.externalAccounts?.find(
-    (account) => account.provider === 'github',
+    (account: any) => account.provider === 'github',
   );
   let detectedRole: 'member' | 'staff' | 'admin' = 'member';
 
