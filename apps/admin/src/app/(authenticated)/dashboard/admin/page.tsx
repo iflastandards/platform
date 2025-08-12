@@ -9,7 +9,7 @@ export default async function SuperAdminPage() {
   const user = await getAppUser();
   
   if (!user) {
-    redirect('/auth/sign-in');
+    redirect('/sign-in');
   }
 
   // Check if user has system admin role
