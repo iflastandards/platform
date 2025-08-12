@@ -63,9 +63,9 @@ const mockVocabularies = [
  * Authorization: User must have read access to the vocabulary's namespace
  */
 export const GET = withAuth(
-  async (req: AuthenticatedRequest, { params }: { params: Promise<Record<string, string>> }) => {
+  async (req: AuthenticatedRequest, { params }: { params: Promise<Record<string, string>> | Record<string, string> }) => {
     try {
-      const resolvedParams = await params;
+      const resolvedParams = params instanceof Promise ? await params : params;
       const vocabularyId = resolvedParams.id;
 
       // Validate UUID format
@@ -163,9 +163,9 @@ export const GET = withAuth(
  * Authorization: User must have update access to the vocabulary's namespace
  */
 export const PUT = withAuth(
-  async (req: AuthenticatedRequest, { params }: { params: Promise<Record<string, string>> }) => {
+  async (req: AuthenticatedRequest, { params }: { params: Promise<Record<string, string>> | Record<string, string> }) => {
     try {
-      const resolvedParams = await params;
+      const resolvedParams = await Promise.resolve(params);
       const vocabularyId = resolvedParams.id;
 
       // Validate UUID format
@@ -285,9 +285,9 @@ export const PUT = withAuth(
  * Authorization: User must have delete access to the vocabulary's namespace
  */
 export const DELETE = withAuth(
-  async (req: AuthenticatedRequest, { params }: { params: Promise<Record<string, string>> }) => {
+  async (req: AuthenticatedRequest, { params }: { params: Promise<Record<string, string>> | Record<string, string> }) => {
     try {
-      const resolvedParams = await params;
+      const resolvedParams = await Promise.resolve(params);
       const vocabularyId = resolvedParams.id;
 
       // Validate UUID format
