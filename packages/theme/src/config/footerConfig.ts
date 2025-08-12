@@ -38,7 +38,7 @@ export function createStandardFooter(DOCS_ENV: Environment, siteKey: SiteKey, op
           },
           {
             label: 'Management',
-            href: `${adminConfig.dashboardUrl}/sites/${siteKey}`,
+            href: `${adminConfig.dashboardUrl}/${siteKey}`,
           },
         ],
       },

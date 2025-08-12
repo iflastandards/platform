@@ -136,28 +136,28 @@ export const SITE_CONFIG: Record<
 // Admin Portal configuration matrix
 export const ADMIN_PORTAL_CONFIG: Record<Environment, AdminPortalConfig> = {
   local: {
-    url: 'http://localhost:3007/admin',
-    signinUrl: 'http://localhost:3007/admin/auth/signin',
-    dashboardUrl: 'http://localhost:3007/admin/dashboard',
-    signoutUrl: 'http://localhost:3007/admin/api/auth/signout',
-    sessionApiUrl: 'http://localhost:3007/admin/api/auth/session',
+    url: 'http://localhost:3007',
+    signinUrl: 'http://localhost:3007/sign-in',
+    dashboardUrl: 'http://localhost:3007/dashboard',
+    signoutUrl: 'http://localhost:3007/api/auth/signout',
+    sessionApiUrl: 'http://localhost:3007/api/auth/session',
     port: 3007,
   },
   preview: {
-    url: 'https://iflastandards.github.io/platform/admin',
-    signinUrl: 'https://iflastandards.github.io/platform/admin/auth/signin',
-    dashboardUrl: 'https://iflastandards.github.io/platform/admin/dashboard',
+    url: 'https://admin-iflastandards-preview.onrender.com',
+    signinUrl: 'https://admin-iflastandards-preview.onrender.com/sign-in',
+    dashboardUrl: 'https://admin-iflastandards-preview.onrender.com/dashboard',
     signoutUrl:
-      'https://iflastandards.github.io/platform/admin/api/auth/signout',
+      'https://admin-iflastandards-preview.onrender.com/api/auth/signout',
     sessionApiUrl:
-      'https://iflastandards.github.io/platform/admin/api/auth/session',
+      'https://admin-iflastandards-preview.onrender.com/api/auth/session',
   },
   production: {
-    url: 'https://www.iflastandards.info/admin',
-    signinUrl: 'https://www.iflastandards.info/admin/auth/signin',
-    dashboardUrl: 'https://www.iflastandards.info/admin/dashboard',
-    signoutUrl: 'https://www.iflastandards.info/admin/api/auth/signout',
-    sessionApiUrl: 'https://www.iflastandards.info/admin/api/auth/session',
+    url: 'https://admin.iflastandards.info',
+    signinUrl: 'https://admin.iflastandards.info/sign-in',
+    dashboardUrl: 'https://admin.iflastandards.info/dashboard',
+    signoutUrl: 'https://admin.iflastandards.info/api/auth/signout',
+    sessionApiUrl: 'https://admin.iflastandards.info/api/auth/session',
   },
 };
 
