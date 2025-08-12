@@ -63,9 +63,10 @@ const mockVocabularies = [
  * Authorization: User must have read access to the vocabulary's namespace
  */
 export const GET = withAuth(
-  async (req: AuthenticatedRequest, { params }: { params: Record<string, string> }) => {
+  async (req: AuthenticatedRequest, { params }: { params: Promise<Record<string, string>> }) => {
     try {
-      const vocabularyId = params.id;
+      const resolvedParams = await params;
+      const vocabularyId = resolvedParams.id;
 
       // Validate UUID format
       if (!z.string().uuid().safeParse(vocabularyId).success) {
@@ -162,9 +163,10 @@ export const GET = withAuth(
  * Authorization: User must have update access to the vocabulary's namespace
  */
 export const PUT = withAuth(
-  async (req: AuthenticatedRequest, { params }: { params: Record<string, string> }) => {
+  async (req: AuthenticatedRequest, { params }: { params: Promise<Record<string, string>> }) => {
     try {
-      const vocabularyId = params.id;
+      const resolvedParams = await params;
+      const vocabularyId = resolvedParams.id;
 
       // Validate UUID format
       if (!z.string().uuid().safeParse(vocabularyId).success) {
@@ -283,9 +285,10 @@ export const PUT = withAuth(
  * Authorization: User must have delete access to the vocabulary's namespace
  */
 export const DELETE = withAuth(
-  async (req: AuthenticatedRequest, { params }: { params: Record<string, string> }) => {
+  async (req: AuthenticatedRequest, { params }: { params: Promise<Record<string, string>> }) => {
     try {
-      const vocabularyId = params.id;
+      const resolvedParams = await params;
+      const vocabularyId = resolvedParams.id;
 
       // Validate UUID format
       if (!z.string().uuid().safeParse(vocabularyId).success) {

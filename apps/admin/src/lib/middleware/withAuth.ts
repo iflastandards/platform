@@ -74,7 +74,7 @@ export interface AuthenticatedRequest extends NextRequest {
  */
 export type AuthenticatedRouteHandler = (
   req: AuthenticatedRequest,
-  context: { params: Record<string, string> }
+  context: { params: Promise<Record<string, string>> | Record<string, string> }
 ) => Promise<NextResponse> | NextResponse;
 
 /**
@@ -190,7 +190,7 @@ function logAuthDebug(
 export function withAuth<T extends ResourceType = ResourceType>(
   handler: AuthenticatedRouteHandler,
   options: WithAuthOptions<T> = {}
-): (req: NextRequest, context: { params: Record<string, string> }) => Promise<NextResponse> {
+): (req: NextRequest, context: { params: Promise<Record<string, string>> | Record<string, string> }) => Promise<NextResponse> {
   const {
     resourceType,
     action,
@@ -201,7 +201,7 @@ export function withAuth<T extends ResourceType = ResourceType>(
     includeDetails = process.env.NODE_ENV === 'development'
   } = options;
 
-  return async (req: NextRequest, context: { params: Record<string, string> }) => {
+  return async (req: NextRequest, context: { params: Promise<Record<string, string>> | Record<string, string> }) => {
     // Create request context for tracking
     const requestContext = createRequestContext(req);
     const logger = createContextLogger(requestContext);

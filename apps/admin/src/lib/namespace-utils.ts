@@ -108,7 +108,9 @@ async function countRdfFiles(namespacePath: string): Promise<{ elementSets: numb
 }
 
 export async function getAllNamespacesData(): Promise<NamespaceData[]> {
-  const standardsDir = path.join(process.cwd(), 'standards');
+  // Navigate to project root from admin app directory
+  const projectRoot = path.resolve(process.cwd(), '../..');
+  const standardsDir = path.join(projectRoot, 'standards');
   const namespaces: NamespaceData[] = [];
   
   try {

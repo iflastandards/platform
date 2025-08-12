@@ -9,13 +9,16 @@ import path from 'path';
  */
 export const GET = withAuth(async (
   _req: AuthenticatedRequest,
-  { params }: { params: Record<string, string> }
+  { params }: { params: Promise<Record<string, string>> | Record<string, string> }
 ) => {
   try {
-    const { namespace } = params;
+    const resolvedParams = await Promise.resolve(params);
+    const { namespace } = resolvedParams;
     
     // Read site-config.json for the namespace
-    const siteConfigPath = path.join(process.cwd(), 'standards', namespace, 'site-config.json');
+    // Navigate to project root from admin app directory
+    const projectRoot = path.resolve(process.cwd(), '../..');
+    const siteConfigPath = path.join(projectRoot, 'standards', namespace, 'site-config.json');
     let conceptSchemes = [];
     
     try {

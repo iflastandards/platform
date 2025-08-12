@@ -3,13 +3,14 @@ import { RGOverviewPage } from '@/components/dashboard/rg/RGOverviewPage';
 import { getReviewGroupByAcronym } from '@/lib/mock-data/review-groups';
 
 interface ReviewGroupPageProps {
-  params: {
+  params: Promise<{
     key: string;
-  };
+  }>;
 }
 
-export default function ReviewGroupPage({ params }: ReviewGroupPageProps) {
-  const reviewGroup = getReviewGroupByAcronym(params.key);
+export default async function ReviewGroupPage({ params }: ReviewGroupPageProps) {
+  const { key } = await params;
+  const reviewGroup = getReviewGroupByAcronym(key);
   
   if (!reviewGroup) {
     notFound();

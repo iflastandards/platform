@@ -213,10 +213,12 @@ export function createContextLogger(context: RequestContext) {
     error: (message: string, error?: any) => {
       console.error(`${prefix} ERROR:`, message, error || '');
     },
-    debug: (message: string, data?: any) => {
-      if (process.env.NODE_ENV === 'development') {
-        console.log(`${prefix} DEBUG:`, message, data || '');
-      }
+    debug: (_message: string, _data?: any) => {
+      // Debug logging disabled for cleaner terminal output
+      // Uncomment the following lines to enable debug logging
+      // if (process.env.NODE_ENV === 'development') {
+      //   console.log(`${prefix} DEBUG:`, _message, _data || '');
+      // }
     }
   };
 }

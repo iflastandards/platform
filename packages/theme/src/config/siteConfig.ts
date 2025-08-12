@@ -138,7 +138,7 @@ export const ADMIN_PORTAL_CONFIG: Record<Environment, AdminPortalConfig> = {
   local: {
     url: 'http://localhost:3007',
     signinUrl: 'http://localhost:3007/sign-in',
-    dashboardUrl: 'http://localhost:3007/dashboard',
+    dashboardUrl: 'http://localhost:3007',
     signoutUrl: 'http://localhost:3007/api/auth/signout',
     sessionApiUrl: 'http://localhost:3007/api/auth/session',
     port: 3007,
@@ -146,7 +146,7 @@ export const ADMIN_PORTAL_CONFIG: Record<Environment, AdminPortalConfig> = {
   preview: {
     url: 'https://admin-iflastandards-preview.onrender.com',
     signinUrl: 'https://admin-iflastandards-preview.onrender.com/sign-in',
-    dashboardUrl: 'https://admin-iflastandards-preview.onrender.com/dashboard',
+    dashboardUrl: 'https://admin-iflastandards-preview.onrender.com',
     signoutUrl:
       'https://admin-iflastandards-preview.onrender.com/api/auth/signout',
     sessionApiUrl:
@@ -155,7 +155,7 @@ export const ADMIN_PORTAL_CONFIG: Record<Environment, AdminPortalConfig> = {
   production: {
     url: 'https://admin.iflastandards.info',
     signinUrl: 'https://admin.iflastandards.info/sign-in',
-    dashboardUrl: 'https://admin.iflastandards.info/dashboard',
+    dashboardUrl: 'https://admin.iflastandards.info',
     signoutUrl: 'https://admin.iflastandards.info/api/auth/signout',
     sessionApiUrl: 'https://admin.iflastandards.info/api/auth/session',
   },

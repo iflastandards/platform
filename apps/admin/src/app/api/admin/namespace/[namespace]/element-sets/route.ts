@@ -1,13 +1,14 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { readFileSync } from 'fs';
-import { join } from 'path';
+import { join, resolve } from 'path';
 
 export async function GET(
   request: NextRequest,
-  { params }: { params: Promise<{ namespace: string }> }
+  { params }: { params: Promise<{ namespace: string }> | { namespace: string } }
 ) {
   try {
-    const { namespace } = await params;
+    const resolvedParams = await Promise.resolve(params);
+    const { namespace } = resolvedParams;
     
     if (!namespace) {
       return NextResponse.json(
@@ -17,7 +18,9 @@ export async function GET(
     }
     
     // Read the site configuration for the namespace
-    const siteConfigPath = join(process.cwd(), '..', '..', 'standards', namespace, 'site-config.json');
+    // Navigate to project root from admin app directory
+    const projectRoot = resolve(process.cwd(), '../..');
+    const siteConfigPath = join(projectRoot, 'standards', namespace, 'site-config.json');
     
     let siteConfig;
     try {

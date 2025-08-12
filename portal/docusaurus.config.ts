@@ -194,7 +194,7 @@ const config: Config = {
           title: 'Resources',
           items: [
             {
-              label: 'Admin Dashboard',
+              label: 'Admin',
               href: adminConfig.dashboardUrl,
             },
           ],

@@ -90,9 +90,28 @@ export async function getAuthContext(): Promise<AuthContext | null> {
     translations: metadata?.translations || [],
   };
 
+  // Extract email from various possible locations in Clerk session
+  let email = '';
+  if (sessionClaims.email && typeof sessionClaims.email === 'string') {
+    email = sessionClaims.email;
+  } else if ((sessionClaims as any)?.emailAddresses?.[0]?.emailAddress) {
+    email = (sessionClaims as any).emailAddresses[0].emailAddress;
+  } else if ((sessionClaims as any)?.primaryEmailAddress) {
+    email = (sessionClaims as any).primaryEmailAddress;
+  } else if ((sessionClaims as any)?.email_addresses?.[0]) {
+    email = (sessionClaims as any).email_addresses[0];
+  }
+  
+  // Fallback to a placeholder email if none found (for development/testing)
+  if (!email || !email.includes('@')) {
+    email = `${userId}@placeholder.local`;
+    // Silently use placeholder email to avoid cluttering the console
+    // console.warn(`No valid email found for user ${userId}, using placeholder: ${email}`);
+  }
+
   const context: AuthContext = {
     userId,
-    email: (sessionClaims.email as string) || (sessionClaims as any)?.emailAddresses?.[0]?.emailAddress || '',
+    email,
     roles,
   };
 
@@ -104,7 +123,13 @@ export async function getAuthContext(): Promise<AuthContext | null> {
     return validatedContext;
   } catch (error) {
     console.error('Invalid auth context structure:', error);
-    return context; // Return unvalidated for backward compatibility
+    console.error('Context that failed validation:', context);
+    // Return a valid fallback context
+    return {
+      userId,
+      email: `${userId}@placeholder.local`,
+      roles,
+    };
   }
 }
 

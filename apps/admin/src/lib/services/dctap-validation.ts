@@ -104,7 +104,9 @@ for (const record of records as Record<string, unknown>[]) {
     const profiles = new Map<string, string>();
     
     // Define known profiles and their paths
-    const standardsDir = path.join(process.cwd(), 'standards');
+    // Navigate to project root from admin app directory
+    const projectRoot = path.resolve(process.cwd(), '../..');
+    const standardsDir = path.join(projectRoot, 'standards');
     
     profiles.set('isbd-elements', path.join(standardsDir, 'ISBD/static/data/DCTAP/isbd-elements-profile.csv'));
     profiles.set('isbd-concepts', path.join(standardsDir, 'ISBD/static/data/DCTAP/isbd-concepts-profile.csv'));
