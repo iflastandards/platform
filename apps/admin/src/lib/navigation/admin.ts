@@ -1,12 +1,12 @@
 import {
   Home,
   People as PeopleIcon,
-  Language as LanguageIcon,
   Folder as FolderIcon,
   Book as BookIcon,
   Assignment as AssignmentIcon,
   History as HistoryIcon,
   CloudUpload as CloudUploadIcon,
+  Groups as GroupsIcon,
 } from '@mui/icons-material';
 import { NavigationItem } from '@/components/layout/StandardDashboardLayout';
 
@@ -28,7 +28,8 @@ export const adminNavigation: NavigationItem[] = [
     id: 'review-groups',
     label: 'Review Groups',
     href: '/dashboard/admin/review-groups',
-    icon: LanguageIcon,
+    icon: GroupsIcon,
+    badge: () => 4, // 4 review groups
   },
   {
     id: 'projects',

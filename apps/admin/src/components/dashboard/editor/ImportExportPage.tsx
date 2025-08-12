@@ -14,7 +14,6 @@ import Grid from '@mui/material/Grid';
 import {
   FileUpload as ImportIcon,
   FileDownload as ExportIcon,
-  Description as FileIcon,
 } from '@mui/icons-material';
 import Link from 'next/link';
 

@@ -150,15 +150,19 @@ export function StandardDashboardLayout({
                   <IconComponent />
                 </ListItemIcon>
                 <ListItemText 
-                  primary={item.label}
-                  secondary={item.specialAccess && (
-                    <Chip 
-                      label="Restricted" 
-                      size="small" 
-                      color="warning"
-                      aria-label="Restricted access"
-                    />
-                  )}
+                  primary={
+                    <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+                      {item.label}
+                      {item.specialAccess && (
+                        <Chip 
+                          label="Restricted" 
+                          size="small" 
+                          color="warning"
+                          sx={{ height: 20 }}
+                        />
+                      )}
+                    </Box>
+                  }
                 />
                 {item.badge && (
                   <Chip 

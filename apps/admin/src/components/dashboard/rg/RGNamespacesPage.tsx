@@ -1,6 +1,6 @@
 'use client';
 
-import React from 'react';
+
 import {
   Box,
   Typography,
@@ -15,6 +15,7 @@ import Link from 'next/link';
 import { getNamespacesByReviewGroup } from '@/lib/mock-data/namespaces-extended';
 
 interface NamespaceCardProps {
+  slug: string;
   name: string;
   description: string;
   status: 'active' | 'maintenance' | 'archived';
@@ -28,7 +29,7 @@ interface NamespaceCardProps {
   };
 }
 
-function NamespaceCard({ name, description, status, currentVersion, color, statistics }: NamespaceCardProps) {
+function NamespaceCard({ slug, name, description, status, currentVersion, color, statistics }: NamespaceCardProps) {
   const statusConfig = {
     active: { color: 'success', label: 'Active' },
     maintenance: { color: 'warning', label: 'Maintenance' },
@@ -90,7 +91,7 @@ function NamespaceCard({ name, description, status, currentVersion, color, stati
           size="small" 
           fullWidth
           component={Link}
-          href={`/namespaces/${name.toLowerCase()}`}
+          href={`/dashboard/${slug}`}
         >
           Manage Namespace
         </Button>

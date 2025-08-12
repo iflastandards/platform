@@ -1,6 +1,6 @@
 'use client';
 
-import React from 'react';
+
 import Link from 'next/link';
 import {
   Box,
@@ -18,7 +18,8 @@ import {
   PersonAdd as PersonAddIcon,
   AddTask as AddTaskIcon,
 } from '@mui/icons-material';
-import { mockReviewGroups, getNamespacesByReviewGroup } from '@/lib/mock-data/namespaces-extended';
+import { mockReviewGroups, getNamespacesByReviewGroup, mockNamespaces } from '@/lib/mock-data/namespaces-extended';
+import { reviewGroups as allReviewGroups } from '@/lib/mock-data/review-groups';
 
 interface StatsCardProps {
   title: string;
@@ -85,6 +86,7 @@ function ActivityItem({ action, author, time, type }: ActivityItemProps) {
 }
 
 interface NamespaceCardProps {
+  slug: string;
   name: string;
   description: string;
   status: 'active' | 'maintenance' | 'archived';
@@ -98,7 +100,7 @@ interface NamespaceCardProps {
   };
 }
 
-function NamespaceCard({ name, description, status, currentVersion, color, statistics }: NamespaceCardProps) {
+function NamespaceCard({ slug, name, description, status, currentVersion, color, statistics }: NamespaceCardProps) {
   const statusConfig = {
     active: { color: 'success', label: 'Active' },
     maintenance: { color: 'warning', label: 'Maintenance' },
@@ -108,7 +110,21 @@ function NamespaceCard({ name, description, status, currentVersion, color, stati
   const config = statusConfig[status];
   
   return (
-    <Card elevation={0} sx={{ border: 1, borderColor: 'divider', height: '100%' }}>
+    <Card 
+      elevation={0} 
+      sx={{ 
+        border: 1, 
+        borderColor: 'divider', 
+        height: '100%',
+        cursor: 'pointer',
+        '&:hover': {
+          borderColor: 'primary.main',
+          boxShadow: 1,
+        }
+      }}
+      component={Link}
+      href={`/dashboard/${slug}`}
+    >
       <CardContent>
         <Box display="flex" justifyContent="space-between" alignItems="flex-start" mb={2}>
           <Typography variant="h6" fontWeight="bold" sx={{ color }}>
@@ -164,9 +180,29 @@ interface RGOverviewPageProps {
 }
 
 export function RGOverviewPage({ reviewGroups = ['isbd'] }: RGOverviewPageProps) {
-  // Get user's review group info
-  const userReviewGroups = reviewGroups.map(rgId => mockReviewGroups[rgId]).filter(Boolean);
-  const userNamespaces = reviewGroups.flatMap(rgId => getNamespacesByReviewGroup(rgId));
+  // Get user's review group info from both sources
+  const userReviewGroups = reviewGroups.map(rgId => {
+    // Try to find in new review groups data first
+    const newRG = allReviewGroups.find(rg => rg.id === rgId || rg.acronym === rgId.toUpperCase());
+    if (newRG) {
+      return {
+        id: newRG.id,
+        name: newRG.fullName,
+        description: newRG.description,
+        namespaces: newRG.namespaces,
+        chair: newRG.chair,
+        secretary: newRG.secretary,
+        meetingSchedule: newRG.meetingSchedule,
+        color: newRG.color,
+        memberCount: newRG.memberCount,
+      };
+    }
+    // Fallback to old mock data
+    return mockReviewGroups[rgId];
+  }).filter(Boolean);
+  
+  const userNamespaceIds = userReviewGroups.flatMap(rg => rg.namespaces || getNamespacesByReviewGroup(rg.id));
+  const userNamespaces = userNamespaceIds.map(nsId => mockNamespaces[nsId]).filter(Boolean);
   
   const stats = [
     { title: 'My Namespaces', value: userNamespaces.length, change: 'Under your management', changeType: 'neutral' as const },
@@ -181,8 +217,57 @@ export function RGOverviewPage({ reviewGroups = ['isbd'] }: RGOverviewPageProps)
     { action: 'Review group meeting notes published', author: 'You', time: '3 days ago', type: 'project' as const },
   ];
 
+  const currentRG = userReviewGroups[0]; // Get the first (and usually only) review group
+
   return (
     <>
+      {/* Review Group Header */}
+      {currentRG && (
+        <Box sx={{ mb: 4 }}>
+          <Box sx={{ display: 'flex', alignItems: 'center', mb: 2 }}>
+            <Box
+              sx={{
+                width: 8,
+                height: 40,
+                backgroundColor: currentRG.color,
+                borderRadius: 1,
+                mr: 2,
+              }}
+            />
+            <Box>
+              <Typography variant="h4" fontWeight="bold">
+                {currentRG.name}
+              </Typography>
+              <Typography variant="body1" color="text.secondary">
+                {currentRG.description}
+              </Typography>
+            </Box>
+          </Box>
+          <Stack direction="row" spacing={3} sx={{ mt: 2 }}>
+            {currentRG.chair && (
+              <Typography variant="body2" color="text.secondary">
+                <strong>Chair:</strong> {currentRG.chair}
+              </Typography>
+            )}
+            {currentRG.secretary && (
+              <Typography variant="body2" color="text.secondary">
+                <strong>Secretary:</strong> {currentRG.secretary}
+              </Typography>
+            )}
+            {'memberCount' in currentRG && currentRG.memberCount && (
+              <Typography variant="body2" color="text.secondary">
+                <strong>Members:</strong> {currentRG.memberCount}
+              </Typography>
+            )}
+            {currentRG.meetingSchedule && (
+              <Typography variant="body2" color="text.secondary">
+                <strong>Meetings:</strong> {currentRG.meetingSchedule}
+              </Typography>
+            )}
+          </Stack>
+        </Box>
+      )}
+
       {/* Stats Grid */}
       <Grid container spacing={3} sx={{ mb: 4 }}>
         {stats.map((stat) => (
@@ -193,9 +278,9 @@ export function RGOverviewPage({ reviewGroups = ['isbd'] }: RGOverviewPageProps)
       </Grid>
 
       <Grid container spacing={3}>
-        {/* My Namespaces */}
-        <Grid size={{ xs: 12, lg: 8 }}>
+        <Grid size={{ xs: 12, lg: 8 }} key="namespaces-section">
           <Card elevation={0}>
+            {/* My Namespaces */}
             <CardContent>
               <Typography variant="h6" fontWeight="bold" gutterBottom component="h2">
                 My Namespaces
@@ -222,9 +307,9 @@ export function RGOverviewPage({ reviewGroups = ['isbd'] }: RGOverviewPageProps)
           </Card>
         </Grid>
 
-        {/* Recent Activity & Quick Actions */}
-        <Grid size={{ xs: 12, lg: 4 }}>
+        <Grid size={{ xs: 12, lg: 4 }} key="activity-section">
           <Stack spacing={3}>
+            {/* Recent Activity & Quick Actions */}
             {/* Recent Activity */}
             <Card elevation={0}>
               <CardContent>
@@ -233,7 +318,7 @@ export function RGOverviewPage({ reviewGroups = ['isbd'] }: RGOverviewPageProps)
                 </Typography>
                 <Box role="feed" aria-label="Recent review group activity">
                   {recentActivity.map((activity, index) => (
-                    <ActivityItem key={index} {...activity} />
+                    <ActivityItem key={`activity-${index}-${activity.author}-${activity.time}`} {...activity} />
                   ))}
                 </Box>
               </CardContent>
