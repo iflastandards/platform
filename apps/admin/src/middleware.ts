@@ -4,12 +4,14 @@ const isPublicRoute = createRouteMatcher([
   '/', // Public home page with SignInButton modal
   '/sign-in', // Public sign-in page
   '/sign-up', // Public sign-up page
+  '/sign-out', // Public sign-out page
   '/sso-callback', // SSO callback page
   '/request-invite', // Public invitation request
   '/api/auth/callback', // Public auth callback API
   '/api/request-invite', // Public request invite API
   '/api/hello', // Public hello API for testing
   '/api/health', // Public health check endpoint
+  '/api/force-signout', // Force sign-out endpoint
   // Add other public routes as needed
 ]);
 
