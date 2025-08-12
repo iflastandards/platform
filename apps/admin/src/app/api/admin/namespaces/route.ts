@@ -1,8 +1,7 @@
 import { NextResponse } from 'next/server';
 import { getUserAccessibleResources } from '@/lib/authorization';
 import { withAuth, type AuthenticatedRequest } from '@/lib/middleware/withAuth';
-import { promises as fs } from 'fs';
-import path from 'path';
+import { getAllNamespacesData } from '@/lib/namespace-utils';
 
 /**
  * GET /api/admin/namespaces
@@ -20,42 +19,8 @@ export const GET = withAuth(async (req: AuthenticatedRequest) => {
       return NextResponse.json({ success: true, data: [] });
     }
 
-    // Fetch namespaces from file system
-    const standardsDir = path.join(process.cwd(), 'standards');
-    const allNamespaces = [];
-    
-    try {
-      const dirs = await fs.readdir(standardsDir);
-      
-      for (const dir of dirs) {
-        const namespacePath = path.join(standardsDir, dir);
-        const stat = await fs.stat(namespacePath);
-        
-        if (stat.isDirectory()) {
-          // Check if namespace.json exists
-          const configPath = path.join(namespacePath, 'namespace.json');
-          try {
-            const configData = await fs.readFile(configPath, 'utf8');
-            const config = JSON.parse(configData);
-            allNamespaces.push({
-              id: dir,
-              name: config.name || dir,
-              description: config.description || '',
-              reviewGroup: config.reviewGroup || '',
-              visibility: config.visibility || 'public',
-              status: config.status || 'active',
-              ...config
-            });
-          } catch (err) {
-            // If no namespace.json, skip this directory
-            console.warn(`No namespace.json found for ${dir}`);
-          }
-        }
-      }
-    } catch (err) {
-      console.error('Error reading namespaces from file system:', err);
-      throw new Error('Failed to fetch namespaces from file system');
-    }
+    // Fetch namespaces with real data
+    const allNamespaces = await getAllNamespacesData();
 
     // Filter namespaces based on user access
     let namespaces = allNamespaces;
@@ -172,7 +137,7 @@ export const POST = withAuth(
   {
     resourceType: 'namespace',
     action: 'create',
-    getResourceAttributes: (req) => {
+    getResourceAttributes: (_req) => {
       // Parse the body to get reviewGroupId for authorization
       // Note: This is a simplified approach, in production you might want to handle this differently
       return {};
