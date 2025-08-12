@@ -10,7 +10,7 @@ export default [
   {
     ignores: ignorePatterns,
   },
-  
+
   // Base configuration for all JS/TS files
   {
     files: ['**/*.{js,mjs,cjs,jsx,ts,tsx}'],
@@ -28,13 +28,26 @@ export default [
       'no-console': ['warn', { allow: ['warn', 'error', 'info'] }],
       'no-debugger': 'error',
       'no-duplicate-imports': 'error',
-      'no-unused-expressions': ['error', { allowShortCircuit: true, allowTernary: true }],
+      'no-unused-expressions': [
+        'error',
+        { allowShortCircuit: true, allowTernary: true },
+      ],
       'no-var': 'error',
       'prefer-const': 'error',
       'prefer-template': 'error',
-      'eqeqeq': ['error', 'always', { null: 'ignore' }],
-      'curly': ['error', 'all'],
-      
+      eqeqeq: ['error', 'always', { null: 'ignore' }],
+      curly: ['error', 'all'],
+
+      // Ignore unused 'error' variables (common in catch blocks)
+      'no-unused-vars': [
+        'warn',
+        {
+          varsIgnorePattern: '^_|^error$|^err$',
+          argsIgnorePattern: '^_|^error$|^err$',
+          caughtErrors: 'none',
+        },
+      ],
+
       // Code quality
       'no-eval': 'error',
       'no-implied-eval': 'error',
@@ -42,13 +55,13 @@ export default [
       'no-return-await': 'error',
       'no-throw-literal': 'error',
       'prefer-promise-reject-errors': 'error',
-      
+
       // Best practices
       'no-nested-ternary': 'warn',
       'no-unneeded-ternary': 'error',
       'spaced-comment': ['error', 'always', { exceptions: ['-', '+', '*'] }],
       'no-else-return': ['error', { allowElseIf: false }],
-      
+
       // ES6+
       'arrow-body-style': ['error', 'as-needed'],
       'prefer-arrow-callback': ['error', { allowNamedFunctions: true }],
@@ -58,7 +71,7 @@ export default [
       'no-useless-constructor': 'error',
     },
   },
-  
+
   // Relaxed rules for config files
   {
     files: [
@@ -74,7 +87,7 @@ export default [
       'prefer-template': 'off',
     },
   },
-  
+
   // Relaxed rules for scripts
   {
     files: ['scripts/**/*.{js,jsx,ts,tsx}'],
