@@ -75,9 +75,11 @@ export default [
         'warn',
         {
           vars: 'all',
-          varsIgnorePattern: '^_',
+          varsIgnorePattern: '^_|^error$|^err$|^e$',
           args: 'after-used',
-          argsIgnorePattern: '^_',
+          argsIgnorePattern: '^_|^error$|^err$|^e$',
+          caughtErrors: 'all',
+          caughtErrorsIgnorePattern: '^_|^error$|^err$|^e$',
         },
       ],
     },
@@ -101,55 +103,57 @@ export default [
       '**/playwright.*.{js,ts}',
       '**/test-*.{js,jsx,ts,tsx}',
       '**/scripts/test-*.{js,jsx,ts,tsx}',
-      '**/*test*.{js,jsx,ts,tsx}',  // Catch test-server-manager.ts and similar
-      '**/__mocks__/**/*.{js,jsx,ts,tsx}',  // Mock files should have relaxed rules
+      '**/*test*.{js,jsx,ts,tsx}', // Catch test-server-manager.ts and similar
+      '**/__mocks__/**/*.{js,jsx,ts,tsx}', // Mock files should have relaxed rules
     ],
     rules: {
       // Allow any types in tests for mocking
       '@typescript-eslint/no-explicit-any': 'off',
-      
+
       // Turn unused imports into warnings for test files
       'unused-imports/no-unused-imports': 'warn',
-      
+
       // Allow unused vars with _ prefix (common in test setups)
       'unused-imports/no-unused-vars': [
         'warn',
         {
           vars: 'all',
-          varsIgnorePattern: '^_',
+          varsIgnorePattern: '^_|^error$|^err$|^e$',
           args: 'after-used',
-          argsIgnorePattern: '^_',
+          argsIgnorePattern: '^_|^error$|^err$|^e$',
           ignoreRestSiblings: true,
+          caughtErrors: 'all',
+          caughtErrorsIgnorePattern: '^_|^error$|^err$|^e$',
         },
       ],
-      
+
       // Relax strict type checking in tests
       '@typescript-eslint/ban-ts-comment': 'off',
       '@typescript-eslint/no-non-null-assertion': 'off',
-      
+
       // Allow console logs in tests (useful for debugging)
       'no-console': 'off',
-      
+
       // Allow longer functions in tests (test suites can be long)
       'max-lines-per-function': 'off',
-      
+
       // Allow magic numbers in tests
       'no-magic-numbers': 'off',
-      
+
       // Relax import rules for tests
       '@typescript-eslint/no-var-requires': 'off',
       '@typescript-eslint/no-require-imports': 'off',
-      
+
       // Allow empty functions (common in test mocks)
       '@typescript-eslint/no-empty-function': 'off',
-      
+
       // Allow test-specific patterns
       '@typescript-eslint/no-unused-expressions': 'off',
-      
+
       // Relax async requirements in tests
       '@typescript-eslint/no-floating-promises': 'off',
       '@typescript-eslint/require-await': 'off',
-      
+
       // Allow type assertions in tests
       '@typescript-eslint/consistent-type-assertions': 'off',
     },

@@ -62,10 +62,11 @@ export default [
         'warn',
         {
           vars: 'all',
-          varsIgnorePattern: '^_', // Ignore variables starting with _
+          varsIgnorePattern: '^_|^error$|^err$|^e$', // Ignore variables starting with _ or named 'error', 'err', or 'e'
           args: 'after-used',
-          argsIgnorePattern: '^_', // Ignore arguments starting with _
-          caughtErrors: 'none', // Don't warn about ANY unused error variables in catch blocks
+          argsIgnorePattern: '^_|^error$|^err$|^e$', // Ignore arguments starting with _ or named 'error', 'err', or 'e'
+          caughtErrors: 'all',
+          caughtErrorsIgnorePattern: '^_|^error$|^err$|^e$', // Ignore caught errors named 'error', 'err', or 'e'
         },
       ],
 
