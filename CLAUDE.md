@@ -1,97 +1,78 @@
-# CLAUDE.md
+# CLAUDE.md - IFLA Standards Platform
 
-This file provides guidance to Claude Code (claude.ai/code) when working with this repository.
+This file provides guidance to Claude Code when working with this repository.
 
-## 🎯 CONTEXT DETECTION - START HERE
+## 🎯 Context Management Strategy
+This project uses an **agent-based workflow** to preserve context. Complex tasks are delegated to specialized agents with their own context windows.
 
-### What am I working on?
-**ASK MYSELF FIRST**: Which part of the monorepo?
-1. **🔴 Admin app** (apps/admin) → Next.js, MUI, Tailwind → See [Platform Guide](system-design-docs/20-platform-specific-architecture-guide.md)
-2. **🟢 Documentation sites** (standards/*) → Docusaurus, Infima, SASS → See [Platform Guide](system-design-docs/20-platform-specific-architecture-guide.md)
-3. **📦 Shared packages** (packages/*) → Used by both platforms
-4. **📚 System Design** (@system-design-docs/) → **AUTHORITATIVE SPECS - ALWAYS READ FIRST!**
+## 🚀 Core Project Rules
 
-**⚠️ CRITICAL RULE**: System-design-docs are the SOURCE OF TRUTH:
-- **BEFORE ANY TASK**: Check @system-design-docs/README.md "Task-Based Navigation"
-- **Specs override implementation**: If code doesn't match spec, FIX THE CODE
-- **Platform differences**: ALWAYS check Doc 20 for admin vs docs distinctions
-
----
-
-## 🚨 CRITICAL RULES - ALWAYS APPLY
-
-### 📋 Pre-Task Checklist (MANDATORY)
-1. **📚 Read relevant spec** in @system-design-docs/ BEFORE implementing
-2. **🤖 Check MCP Decision Tree** below for tool selection
-3. **📍 Verify working directory** is root (all commands from root)
-4. **🎯 Identify platform** (admin or docs) and apply correct patterns
-5. **📝 Check package.json scripts** before writing bash commands
-6. **🧪 Use `pnpm nx affected`** for tests, not full runs
-7. **🔒 NO undocumented `any`** or `require` in TypeScript
-
-### 🔧 Core Technical Rules
+### Environment
 - **Package manager**: `pnpm` only (never npm/yarn)
+- **Working directory**: Always from repository root
 - **Monorepo tool**: Nx commands via `pnpm nx`
-- **Admin routing**: Standard Next.js patterns
-- **Docs routing**: Standard Docusaurus patterns
-- **API calls**: Standard `fetch('/api/route')`
-- **Authentication**: Clerk (admin only)
-- **Authorization**: Custom RBAC via publicMetadata
+
+### Platform Detection
+- **🔴 Admin Portal** (apps/admin/): Next.js 15, Material-UI, API routes
+- **🟢 Documentation Sites** (standards/*/): Docusaurus, Infima CSS, static only
+- **📦 Shared Packages** (packages/*): Used by both platforms
+
+### Critical Rules
+- **System-design-docs are SOURCE OF TRUTH** - Specs override implementation
+- **Prefer editing** existing files over creating new ones
+- **Never create** documentation files unless explicitly requested
+- **Never commit** unless explicitly asked
+- **Check Doc 20** for platform-specific patterns (admin vs docs)
 
 ---
 
-## 🤖 MCP SERVER DECISION TREE (MANDATORY)
+## 🤖 Agent Delegation Strategy
 
-```
-START: What type of task?
-│
-├─> 🔍 SEARCHING CODEBASE?
-│   └─> USE JetBrains MCP FIRST (file search, content search, structure)
-│
-├─> 📚 USING EXTERNAL LIBRARY?
-│   ├─> React/Next.js/TypeScript → USE Context7
-│   ├─> Material-UI → USE MUI MCP
-│   └─> Other libraries → USE Context7
-│
-├─> 🎨 BUILDING UI?
-│   ├─> MUI component → USE MUI MCP (required)
-│   └─> React patterns → USE Context7
-│
-├─> 🧩 COMPLEX PROBLEM?
-│   └─> USE Sequential Thinking + JetBrains
-│
-└─> ✏️ SIMPLE EDIT? → Use native tools
-```
+Complex tasks should be delegated to specialized agents to preserve main context.
 
-**Priority**: JetBrains for search > Context7/MUI for patterns > Native tools as fallback
+### Search & Analysis
+**Triggers**: "find", "search", "where is", "which files"
+→ **Agent**: Use search agent with `.claude/agents/search-agent-prompt.md`
 
----
+### Test Writing
+**Triggers**: "write test", "add test", "test for", "fix test"
+→ **Agent**: Use test-writer with `.claude/agents/test-writer-prompt.md`
 
-## 📚 DOCUMENTATION NAVIGATION
+### API Development
+**Triggers**: "API endpoint", "add route", "implement API", "withAuth"
+→ **Agent**: Use api-builder with `.claude/agents/api-builder-prompt.md`
 
-### Platform-Specific References
-- **Admin vs Docs differences**: @system-design-docs/20-platform-specific-architecture-guide.md
-- **Task-based navigation**: @system-design-docs/README.md#task-based-navigation
+### UI Components
+**Triggers**: "component", "UI", "MUI", "accessibility", "styling"
+→ **Agent**: Use ui-developer with `.claude/agents/ui-developer-prompt.md`
 
-### By Feature Area
-| Task | Primary Docs | Secondary Refs |
-|------|--------------|----------------|
-| **API Development** | Docs 5, 20 (admin) | @developer_notes/NEXTJS_CODING_STANDARDS.MD |
-| **UI Components** | Docs 11, 20 | Platform-specific sections |
-| **Testing** | Doc 6 | @developer_notes/AI_TESTING_INSTRUCTIONS.md |
-| **RBAC/Auth** | Docs 12-14 | RBAC-IMPLEMENTATION-TASKS.md |
-| **Import/Export** | Doc 33 | tools/sheet-sync/ |
-| **Deployment** | Docs 3, 10 | .github/workflows/ |
+### Database Operations
+**Triggers**: "database", "query", "migration", "Supabase", "schema"
+→ **Agent**: Use database agent with `.claude/agents/database-agent-prompt.md`
 
-### Critical Developer Notes
-- **AI Testing**: @developer_notes/AI_TESTING_INSTRUCTIONS.md (MANDATORY before writing tests)
-- **Test Placement**: @developer_notes/TEST_PLACEMENT_GUIDE.md
-- **Test Templates**: @developer_notes/TEST_TEMPLATES.md
-- **Accessibility**: @developer_notes/ui-ux-accessibility-best-practices.md
+### Build & Dependencies
+**Triggers**: "build", "nx", "dependencies", "affected", "monorepo"
+→ **Agent**: Use build agent with `.claude/agents/build-agent-prompt.md`
+
+### Research & Documentation
+**Triggers**: "research", "best practices", "latest", "compare", "alternatives"
+→ **Agent**: Use research agent with `.claude/agents/research-agent-prompt.md`
+
+### Advanced UI & Animations
+**Triggers**: "animation", "interactive", "particles", "3D", "effects"
+→ **Agent**: Use advanced-ui agent with `.claude/agents/advanced-ui-agent-prompt.md`
+
+### File Operations
+**Triggers**: "batch", "rename files", "move files", "process multiple", "directory"
+→ **Agent**: Use file-operations agent with `.claude/agents/file-operations-agent-prompt.md`
+
+### Documentation Reading
+**Triggers**: "what does the spec say", "according to docs"
+→ **Agent**: Load specific system-design-docs in agent context
 
 ---
 
-## 🎯 QUICK COMMAND REFERENCE
+## 🎯 Quick Command Reference
 
 ### Development
 ```bash
@@ -103,112 +84,81 @@ pnpm nx test admin                    # Test
 # Documentation sites
 pnpm nx start {site}                  # Start dev (e.g., isbd, portal)
 pnpm nx build {site}                  # Build site
-pnpm build:all                        # Build all sites
 
 # Testing (ALWAYS use affected)
-pnpm test                             # Runs nx affected
-pnpm nx affected -t test --parallel=3 # Manual affected
+pnpm nx affected -t test --parallel=3 # Test changed code
 pnpm typecheck                        # Type checking
 pnpm lint                             # Linting
-
-# Utilities
-pnpm fresh                            # Clean install
-pnpm health                           # System check
-pnpm nx:optimize                      # Performance optimization
 ```
 
 ---
 
-## ⚡ PLATFORM QUICK REFERENCE
+## ⚡ Key Patterns
 
 ### Admin Portal (Next.js)
 - **Location**: `apps/admin/`
-- **Components**: `apps/admin/src/components/`
 - **API Routes**: `apps/admin/src/app/api/`
-- **Tests**: `apps/admin/src/test*/`, `apps/admin/e2e/`
-- **Styling**: Tailwind CSS + Material-UI
-- **Auth**: Clerk required
+- **Styling**: Material-UI theme (NO Tailwind)
+- **Auth**: Clerk + custom RBAC
 
 ### Documentation Sites (Docusaurus)
 - **Location**: `standards/{site}/`
-- **Components**: `packages/theme/src/components/` (shared globally)
-- **Tests**: `packages/theme/src/tests/`
+- **Components**: `packages/theme/src/components/`
 - **Styling**: Infima + SASS/SCSS
-- **Content**: MDX files in `docs/`
 - **No API routes** - static generation only
 
 ---
 
-## 🚨 COMMON MISTAKES TO AVOID
+## 📋 Main Context Responsibilities
 
-1. **Not checking specs first** → ALWAYS read system-design-docs
-2. **Using wrong platform patterns** → Check Doc 20 for distinctions
-3. **Not using MCP servers** → Follow decision tree above
-4. **Running all tests** → Use `pnpm nx affected`
-5. **Working from subdirectory** → Always work from root
-6. **Using npm/yarn** → Only use pnpm
-7. **Implementing != spec** → Specs are correct, fix implementation
+Keep the main conversation focused on:
+1. **Understanding** requirements
+2. **Planning** approach  
+3. **Coordinating** agent tasks
+4. **Reviewing** results
+5. **Running** commands
+6. **Simple edits** (single file)
 
----
-
-## 🔗 INTEGRATION NOTES
-
-### MCP Servers Available
-- **JetBrains**: Codebase intelligence and search
-- **Context7**: Library documentation and patterns
-- **MUI**: Material-UI components and examples
-- **Sequential**: Complex problem analysis
-- **Playwright**: Browser automation (E2E tests)
-
-### GitHub Services
-- **Mock GitHub**: @kie/mock-github for testing
-- **Octokit**: GitHub API SDK
-- **GitHub MCP**: Direct API access
-
-### External Services
-- **Clerk**: Authentication (admin only)
-- **Supabase**: Operational data
-- **Google Sheets**: Bulk editing
-- **GitHub**: Version control & teams
+Delegate everything else to agents to preserve context.
 
 ---
 
-## 📋 TROUBLESHOOTING
+## 🚨 Common Mistakes to Avoid
 
-For detailed troubleshooting, see:
-- Platform issues → @system-design-docs/20-platform-specific-architecture-guide.md#common-pitfalls
-- Test failures → @developer_notes/TESTING_STRATEGY.md#troubleshooting
-- Build issues → Check `pnpm health` and `pnpm nx:optimize`
-- Port conflicts → `pnpm ports:kill`
-
----
-
-## 💡 HELPFUL PROMPTS
-
-To help me work better:
-- **"Working on admin:"** → Activates admin-specific context
-- **"Working on docs:"** → Activates documentation context
-- **"Need to implement [feature]"** → I'll check specs first
-- **"Debug [issue]"** → I'll use Sequential + JetBrains MCP
+1. **Loading many files** → Use search agent instead
+2. **Reading all docs** → Load in agent context
+3. **Wrong platform patterns** → Check platform detection
+4. **Using npm/yarn** → Only use pnpm
+5. **Running all tests** → Use `pnpm nx affected`
 
 ---
 
-## IMPORTANT REMINDERS
+## 📚 Key Documentation
 
-- Do what has been asked; nothing more, nothing less
-- NEVER create files unless absolutely necessary
-- ALWAYS prefer editing existing files
-- NEVER proactively create documentation unless requested
-- ALWAYS check system-design-docs before implementing
+When agents need documentation, they should load:
+- Platform differences: `system-design-docs/20-platform-specific-architecture-guide.md`
+- API patterns: `system-design-docs/05-api-architecture.md`
+- RBAC: `system-design-docs/12-rbac-authorization-model.md`
+- Testing: `developer_notes/AI_TESTING_INSTRUCTIONS.md`
+- UI/UX: `developer_notes/ui-ux-accessibility-best-practices.md`
 
 ---
 
-<!-- 
-For comprehensive details on any topic, refer to:
-- System architecture → @system-design-docs/
-- Developer guides → @developer_notes/
-- Test documentation → @developer_notes/AI_TESTING_INSTRUCTIONS.md
-- UI/UX standards → @developer_notes/ui-ux-accessibility-best-practices.md
+## 💡 Agent Workflow Example
 
-This file intentionally kept concise. Full specifications are maintained in system-design-docs.
--->
+```
+You: "Find all API routes using withAuth and add error handling"
+
+Main Context:
+1. Understand requirement ✓
+2. Delegate to search agent → Returns 5 files
+3. Delegate to API agent → Updates error handling
+4. Review changes ✓
+5. Run tests ✓
+
+Result: Task completed with minimal context usage
+```
+
+---
+
+*This configuration optimizes for long conversations by delegating complex work to agents*
