@@ -1,5 +1,9 @@
 #!/usr/bin/env node
 
+// Fix MaxListenersExceededWarning - must be at the very top before any requires
+process.setMaxListeners(0); // 0 = unlimited listeners
+require('events').EventEmitter.defaultMaxListeners = 50;
+
 /**
  * Robust pre-commit check with progress indicators, timeouts, and recovery
  * Addresses the recurring issue of silent failures when pre-commit hooks take too long
