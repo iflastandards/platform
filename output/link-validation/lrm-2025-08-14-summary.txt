@@ -1,0 +1,16 @@
+Link Validation Report for LRM
+==================================================
+
+Environment: local
+Base URL: http://localhost:3002/LRM/
+Timestamp: 2025-08-14T15:13:11.665Z
+Duration: 1s
+
+Summary:
+--------
+Total Links Found: 10
+Links Tested: 3
+Links Passed: 3
+Links Failed: 0
+Links Ignored: 0
+

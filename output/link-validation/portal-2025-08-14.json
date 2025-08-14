@@ -1,0 +1,17 @@
+{
+  "site": "portal",
+  "environment": "local",
+  "baseUrl": "http://localhost:3000/",
+  "timestamp": "2025-08-14T15:24:38.077Z",
+  "summary": {
+    "totalLinks": 13,
+    "testedLinks": 10,
+    "passedLinks": 10,
+    "failedLinks": 0,
+    "ignoredLinks": 0,
+    "duration": 3
+  },
+  "brokenLinks": [],
+  "navigationIssues": [],
+  "contentIssues": []
+}

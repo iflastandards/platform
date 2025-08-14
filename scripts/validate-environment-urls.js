@@ -565,6 +565,47 @@ function generateHtmlReport(siteKey, baseUrl, results, pageDetails, environment 
   fs.writeFileSync(reportFile, html);
   console.log(`📄 HTML report saved: ${reportFile}`);
   
+  // Create a simple server script to view the report
+  const serverScript = path.join(reportDir, 'view-report.js');
+  const serverContent = `#!/usr/bin/env node
+const http = require('http');
+const fs = require('fs');
+const path = require('path');
+
+const PORT = 8080;
+
+const server = http.createServer((req, res) => {
+  let filePath = path.join(__dirname, req.url === '/' ? 'index.html' : req.url);
+  
+  fs.readFile(filePath, (err, content) => {
+    if (err) {
+      res.writeHead(404);
+      res.end('File not found');
+      return;
+    }
+    
+    const ext = path.extname(filePath);
+    let contentType = 'text/html';
+    if (ext === '.json') contentType = 'application/json';
+    if (ext === '.txt') contentType = 'text/plain';
+    
+    res.writeHead(200, { 'Content-Type': contentType });
+    res.end(content);
+  });
+});
+
+server.listen(PORT, () => {
+  console.log(\`\\n🌐 Link Validation Report Server\\n\`);
+  console.log(\`📍 Open in browser: http://localhost:\${PORT}\\n\`);
+  console.log(\`Press Ctrl+C to stop the server\\n\`);
+});
+`;
+  
+  if (!fs.existsSync(serverScript)) {
+    fs.writeFileSync(serverScript, serverContent);
+    fs.chmodSync(serverScript, '755');
+  }
+  
   // Update the index
   updateValidationIndex(siteKey, filename, results, environment, timestamp);
   
@@ -1166,6 +1207,8 @@ async function validateLinksFromSitemap(siteKey, baseUrl, environment = 'unknown
     // Generate HTML report
     const reportFile = generateHtmlReport(siteKey, baseUrl, results, pageDetails, environment);
     console.log(`\n📄 Detailed report available at: ${reportFile}`);
+    console.log(`\n✨ To view the reports in your browser, run:`);
+    console.log(`   node output/link-validation/view-report.js`);
     
     if (missingPages.size === 0 && missingAnchors.size === 0) {
       console.log(`\n✅ All internal links are valid!`);

@@ -1,0 +1,16 @@
+Link Validation Report for ISBD
+==================================================
+
+Environment: local
+Base URL: http://localhost:3004/isbd/
+Timestamp: 2025-08-14T15:13:04.615Z
+Duration: 1s
+
+Summary:
+--------
+Total Links Found: 12
+Links Tested: 5
+Links Passed: 5
+Links Failed: 0
+Links Ignored: 0
+

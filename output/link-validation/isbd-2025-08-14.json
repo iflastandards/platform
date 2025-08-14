@@ -1,0 +1,17 @@
+{
+  "site": "isbd",
+  "environment": "local",
+  "baseUrl": "http://localhost:3004/isbd/",
+  "timestamp": "2025-08-14T15:13:04.615Z",
+  "summary": {
+    "totalLinks": 12,
+    "testedLinks": 5,
+    "passedLinks": 5,
+    "failedLinks": 0,
+    "ignoredLinks": 0,
+    "duration": 1
+  },
+  "brokenLinks": [],
+  "navigationIssues": [],
+  "contentIssues": []
+}

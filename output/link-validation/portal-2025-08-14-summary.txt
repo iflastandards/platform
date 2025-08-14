@@ -1,0 +1,16 @@
+Link Validation Report for PORTAL
+==================================================
+
+Environment: local
+Base URL: http://localhost:3000/
+Timestamp: 2025-08-14T15:24:38.077Z
+Duration: 3s
+
+Summary:
+--------
+Total Links Found: 13
+Links Tested: 10
+Links Passed: 10
+Links Failed: 0
+Links Ignored: 0
+

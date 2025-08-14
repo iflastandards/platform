@@ -1,0 +1,22 @@
+Link Validation Report for ISBDM
+==================================================
+
+Environment: local
+Base URL: http://localhost:3001/ISBDM/
+Timestamp: 2025-08-14T15:11:23.880Z
+Duration: 4s
+
+Summary:
+--------
+Total Links Found: 21
+Links Tested: 21
+Links Passed: 20
+Links Failed: 1
+Links Ignored: 0
+
+CRITICAL Navigation Issues (1):
+========================================
+1. "Management"
+   URL: http://localhost:3007/ISBDM
+   Status: 404
+

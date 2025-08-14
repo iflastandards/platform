@@ -1,0 +1,17 @@
+{
+  "site": "lrm",
+  "environment": "local",
+  "baseUrl": "http://localhost:3002/LRM/",
+  "timestamp": "2025-08-14T15:13:11.665Z",
+  "summary": {
+    "totalLinks": 10,
+    "testedLinks": 3,
+    "passedLinks": 3,
+    "failedLinks": 0,
+    "ignoredLinks": 0,
+    "duration": 1
+  },
+  "brokenLinks": [],
+  "navigationIssues": [],
+  "contentIssues": []
+}
