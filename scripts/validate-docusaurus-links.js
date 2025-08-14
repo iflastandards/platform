@@ -14,7 +14,7 @@
  *   node scripts/check-links.js          # Wrapper with shortcuts
  *   node scripts/validate-environment-urls.js  # Direct usage
  * 
- * See scripts/README-link-validation.md for documentation
+ * See developer_notes/link-validation.md for documentation
  */
 
 console.log(`
@@ -29,7 +29,7 @@ Please use one of these instead:
 The new script finds ALL links via sitemap (hundreds of links)
 instead of just checking the homepage.
 
-See scripts/README-link-validation.md for full documentation.
+See developer_notes/link-validation.md for full documentation.
 `);
 
 process.exit(1);

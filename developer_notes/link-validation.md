@@ -22,10 +22,10 @@ pnpm check:links:portal
 
 ### Using the Wrapper Script
 ```bash
-# Check all sites locally (default)
+# Interactive mode - prompts for site, environment, and type
 node scripts/check-links.js
 
-# Check specific site
+# Check specific site (defaults to local environment, sitemap type)
 node scripts/check-links.js isbdm
 
 # Check on different environment
@@ -49,6 +49,7 @@ node scripts/validate-environment-urls.js --env production --site portal --type 
 ```
 
 ## Features
+- ✅ **Interactive mode** - Prompts for options when none provided
 - ✅ **Finds ALL links** via sitemap crawling (hundreds of links, not just homepage)
 - ✅ **Multi-environment support** (local, preview, production)
 - ✅ **Multiple validation modes**:
@@ -81,11 +82,25 @@ node scripts/validate-environment-urls.js --env production --site portal --type 
 - `--sample-size <number>` - Number of generated links to test
 
 ### check-links.js Shortcuts
+- `check-links` - Interactive mode (prompts for options)
 - `check-links quick` - Quick navigation check for all sites
 - `check-links full` - Full comprehensive check for all sites
 - `check-links --help` - Show help
 
 ## Examples
+
+### Interactive Mode
+```bash
+# Run without arguments for interactive prompts
+node scripts/check-links.js
+# or
+pnpm check:links
+
+# You'll be prompted for:
+# - Environment (local/preview/production)
+# - Site(s) to check
+# - Validation type (static/sitemap/comprehensive)
+```
 
 ### Local Development
 ```bash
@@ -96,7 +111,7 @@ pnpm start:all
 pnpm build:all
 
 # Then check links
-pnpm check:links              # All sites with sitemap
+pnpm check:links:all          # All sites with sitemap
 node scripts/check-links.js isbdm  # Specific site
 ```
 
