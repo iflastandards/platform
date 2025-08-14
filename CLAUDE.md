@@ -44,6 +44,12 @@ This project uses an **agent-based workflow** as the PRIMARY and REQUIRED approa
 - **Never commit** unless explicitly asked
 - **Check Doc 20** for platform-specific patterns (admin vs docs)
 
+### Script Documentation Requirements
+- **ALWAYS update documentation** when modifying any script
+- **Include documentation reference** in every script (e.g., `Documentation: developer_notes/script-name.md`)
+- **Implement --man option** to display documentation location
+- **Document ALL options** including new ones added during modifications
+
 ---
 
 ## 🤖 Agent Delegation Strategy

@@ -77,7 +77,12 @@ node scripts/validate-environment-urls.js --env production --site portal --type 
 - `--env <env>` - Environment to validate (local, preview, production)
 - `--site <site>` - Site(s) to validate ("all", specific, or comma-separated)
 - `--type <type>` - Validation type (static, sitemap, comprehensive, both)
-- `--depth <number>` - Crawl depth for non-sitemap modes
+- `--depth <number>` - Crawl depth for non-sitemap modes:
+  - **Default**: Check ALL links from sitemap (no depth limit)
+  - `--depth 0`: Homepage only
+  - `--depth 1`: Homepage + direct links
+  - `--depth 2`: Two levels deep
+  - `--depth 3+`: Additional levels as specified
 - `--timeout <ms>` - Timeout per link in milliseconds (default: 15000)
 - `--sample-size <number>` - Number of generated links to test
 

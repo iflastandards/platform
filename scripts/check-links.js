@@ -3,6 +3,8 @@
 /**
  * Simple wrapper for common link validation use cases
  * 
+ * Full documentation: developer_notes/link-validation.md
+ * 
  * Examples:
  *   check-links                    # Check all sites on local dev servers
  *   check-links isbdm              # Check ISBDM on local dev server
@@ -42,6 +44,16 @@ Arguments:
                  - comprehensive: Deep validation with all pages
                  - both: Both static and generated links
 
+Advanced Options:
+  For depth control and other options, use the underlying script directly:
+  node scripts/validate-environment-urls.js --depth 1 --site isbdm
+  
+  --depth controls crawl depth:
+    - Default: All links from sitemap (no depth limit)
+    - --depth 0: Homepage only
+    - --depth 1: Homepage + direct links
+    - --depth 2: Two levels deep
+
 Examples:
   check-links                         # Check all sites locally with sitemap
   check-links isbdm                   # Check ISBDM locally with sitemap
@@ -52,6 +64,9 @@ Examples:
 Quick Commands:
   check-links quick                   # Quick homepage check for all sites
   check-links full                    # Full comprehensive check for all sites
+
+Documentation:
+  Full documentation: developer_notes/link-validation.md
 
 After running, view reports with:
   node output/link-validation/view-report.js

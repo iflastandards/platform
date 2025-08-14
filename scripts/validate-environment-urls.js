@@ -1,5 +1,12 @@
 #!/usr/bin/env node
 
+/**
+ * IFLA Standards Link Validation Tool
+ * 
+ * Full documentation: developer_notes/link-validation.md
+ * Run with --man to see documentation location
+ */
+
 const { program } = require('commander');
 const inquirer = require('inquirer').default;
 const puppeteer = require('puppeteer');
@@ -15,10 +22,28 @@ program
   .option('--env <env>', 'Environment to validate (local, preview, production)')
   .option('--site <site>', 'Site to validate (specific site or "all")')
   .option('--type <type>', 'Type of validation: "static" (nav/footer), "generated" (all links), "sitemap", "comprehensive", or "both"', 'both')
-  .option('--depth <number>', 'Crawl depth: 0=homepage only, 1=homepage+direct links, 2=2 levels deep, etc.', '0')
+  .option('--depth <number>', 'Crawl depth: 0=homepage only, 1=homepage+direct links, 2=2 levels deep, etc. (default: all links from sitemap)', undefined)
   .option('--sample-size <number>', 'Number of generated links to test (for non-local)', '10')
   .option('--timeout <ms>', 'Timeout per link in milliseconds', '15000')
+  .option('--man', 'Show documentation location and exit')
   .parse();
+
+// Handle --man option
+if (program.opts().man) {
+  console.log(`
+📚 IFLA Standards Link Validation Documentation
+
+Full documentation is available at:
+  developer_notes/link-validation.md
+
+This includes:
+  • Detailed usage examples
+  • Environment configuration
+  • Troubleshooting guide
+  • CI/CD integration examples
+`);
+  process.exit(0);
+}
 
 // Normalize and validate type option
 const validTypes = ['static', 'generated', 'sitemap', 'comprehensive', 'both'];
@@ -1324,7 +1349,7 @@ async function extractLinksFromPage(page, baseUrl) {
 
 
 async function validateEnvironmentUrls(siteKey, environment, options = {}) {
-  const { type = 'both', depth = 0, sampleSize = 10, timeout = 15000 } = options;
+  const { type = 'both', depth = undefined, sampleSize = 10, timeout = 15000 } = options;
   
   console.log(`\n🔍 Validating URLs for ${siteKey.toUpperCase()} in ${environment.toUpperCase()} environment`);
   
@@ -1337,7 +1362,7 @@ async function validateEnvironmentUrls(siteKey, environment, options = {}) {
   const baseUrl = `${siteConfig.url}${siteConfig.baseUrl}`;
   console.log(`🌐 Expected base URL: ${baseUrl}`);
   console.log(`📋 Testing: ${type}`);
-  console.log(`🕳️  Crawl depth: ${depth} (${depth === 0 ? 'homepage only' : `${depth} level${depth > 1 ? 's' : ''} deep`})`);
+  console.log(`🕳️  Crawl depth: ${depth === undefined ? 'all links from sitemap' : depth === 0 ? 'homepage only' : `${depth} level${depth > 1 ? 's' : ''} deep`})`);
   
   // Handle sitemap-only validation
   if (type === 'sitemap') {
@@ -1454,13 +1479,16 @@ async function validateEnvironmentUrls(siteKey, environment, options = {}) {
       
       // Determine which pages to check based on depth
       let pagesToCheck = [];
-      if (parseInt(depth) === 0) {
+      if (depth !== undefined && parseInt(depth) === 0) {
         // Depth 0: Just check homepage
         pagesToCheck = [testUrl];
-      } else {
-        // Depth > 0: Check multiple pages from the valid pages list
+      } else if (depth !== undefined) {
+        // Specific depth: Check multiple pages from the valid pages list
         const maxPages = Math.min(parseInt(depth) * 10, allValidPages.length, 50); // Reasonable limit
         pagesToCheck = [testUrl, ...allValidPages.slice(0, maxPages)];
+      } else {
+        // Default behavior (depth undefined): Check all pages from sitemap
+        pagesToCheck = allValidPages.length > 0 ? allValidPages : [testUrl];
       }
       
       console.log(`📄 Checking links on ${pagesToCheck.length} page(s)...`);
@@ -1838,7 +1866,7 @@ async function main() {
   // Update options with prompted values
   const finalOptions = { 
     ...options, 
-    depth: depth || options.depth || 0,
+    depth: depth !== undefined ? depth : options.depth,
     sampleSize: sampleSize || options.sampleSize,
     timeout: timeout || options.timeout 
   };
