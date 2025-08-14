@@ -1,0 +1,161 @@
+name: Check Docusaurus Links
+
+on:
+  push:
+    branches: [main, develop]
+  pull_request:
+    paths:
+      - 'portal/**'
+      - 'standards/**'
+      - 'packages/theme/**'
+      - '.github/workflows/check-links.yml'
+      - 'scripts/check-docusaurus-links.js'
+  workflow_dispatch:
+    inputs:
+      sites:
+        description: 'Sites to check (comma-separated, or "all")'
+        required: false
+        default: 'all'
+        type: string
+      verbose:
+        description: 'Enable verbose output'
+        required: false
+        default: false
+        type: boolean
+
+jobs:
+  check-links:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 10.13.1
+
+      - name: Get pnpm store directory
+        id: pnpm-cache
+        shell: bash
+        run: |
+          echo "STORE_PATH=$(pnpm store path)" >> $GITHUB_OUTPUT
+
+      - name: Setup pnpm cache
+        uses: actions/cache@v4
+        with:
+          path: ${{ steps.pnpm-cache.outputs.STORE_PATH }}
+          key: ${{ runner.os }}-pnpm-store-${{ hashFiles('**/pnpm-lock.yaml') }}
+          restore-keys: |
+            ${{ runner.os }}-pnpm-store-
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Build theme package
+        run: pnpm build:theme
+
+      - name: Check links (workflow dispatch)
+        if: github.event_name == 'workflow_dispatch'
+        run: |
+          SITES="${{ github.event.inputs.sites }}"
+          VERBOSE="${{ github.event.inputs.verbose }}"
+
+          if [ "$SITES" = "all" ]; then
+            if [ "$VERBOSE" = "true" ]; then
+              pnpm check:links:all --verbose
+            else
+              pnpm check:links:all
+            fi
+          else
+            if [ "$VERBOSE" = "true" ]; then
+              pnpm check:links:site "$SITES" --verbose
+            else
+              pnpm check:links:site "$SITES"
+            fi
+          fi
+
+      - name: Check links (automatic)
+        if: github.event_name != 'workflow_dispatch'
+        run: |
+          if [ "${{ github.event_name }}" = "push" ] && [ "${{ github.ref }}" = "refs/heads/main" ]; then
+            # Check all sites on main branch push
+            pnpm check:links:all
+          else
+            # Check affected sites for PRs and other pushes
+            pnpm check:links
+          fi
+
+      - name: Upload link check report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: link-check-report-${{ github.run_number }}
+          path: |
+            .github/reports/link-check-*.md
+            .github/reports/link-check-*.json
+          retention-days: 30
+
+      - name: Comment PR with results
+        if: github.event_name == 'pull_request' && always()
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const fs = require('fs');
+            const path = require('path');
+
+            // Find the most recent report
+            const reportsDir = path.join(process.cwd(), '.github', 'reports');
+            let reportPath = null;
+
+            if (fs.existsSync(reportsDir)) {
+              const files = fs.readdirSync(reportsDir)
+                .filter(f => f.startsWith('link-check-') && f.endsWith('.md'))
+                .sort()
+                .reverse();
+              
+              if (files.length > 0) {
+                reportPath = path.join(reportsDir, files[0]);
+              }
+            }
+
+            if (reportPath && fs.existsSync(reportPath)) {
+              const report = fs.readFileSync(reportPath, 'utf8');
+              
+              // Extract summary from report
+              const summaryMatch = report.match(/## Summary[\s\S]*?(?=##|$)/);
+              let summary = summaryMatch ? summaryMatch[0] : 'Link check completed.';
+              
+              // Check if there are broken links
+              const brokenLinksMatch = report.match(/Broken Links Found:\*\* (\d+)/);
+              const hasBrokenLinks = brokenLinksMatch && parseInt(brokenLinksMatch[1]) > 0;
+              
+              // Create comment
+              const comment = `## 🔗 Link Check Results
+              
+              ${summary}
+              
+              ${hasBrokenLinks ? '⚠️ **Action Required**: Please fix the broken links before merging.' : '✅ All links are valid!'}
+              
+              <details>
+              <summary>View full report</summary>
+              
+              ${report}
+              
+              </details>`;
+              
+              // Post comment
+              await github.rest.issues.createComment({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                issue_number: context.issue.number,
+                body: comment
+              });
+            }

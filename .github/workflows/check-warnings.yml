@@ -122,7 +122,9 @@ jobs:
                 console.error('Could not read summary:', e);
               }
               
-              comment += '\n📄 [View full report in build artifacts](https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }})\n';
+              comment += '\n### 📄 Build Artifacts\n';
+              comment += `- [View workflow run](https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }})\n`;
+              comment += `- [Download warnings report](https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}#artifacts) (Look for "docusaurus-build-warnings")\n`;
             }
             
             // Find existing comment
@@ -160,11 +162,54 @@ jobs:
           script: |
             const warningCount = ${{ steps.warnings.outputs.warning_count }};
             const date = new Date().toISOString().split('T')[0];
+            const fs = require('fs');
+            
+            let issueBody = `The daily build check found **${warningCount}** warnings in the documentation sites.\n\n`;
+            
+            // Add site summary if available
+            try {
+              const summaryPath = 'output/_reports/build-warnings-summary.md';
+              if (fs.existsSync(summaryPath)) {
+                const summary = fs.readFileSync(summaryPath, 'utf8');
+                const lines = summary.split('\n');
+                const siteSection = lines.findIndex(line => line.includes('## By Site'));
+                if (siteSection !== -1) {
+                  issueBody += '### Summary by Site\n';
+                  let i = siteSection + 2;
+                  while (i < lines.length && lines[i].startsWith('- ')) {
+                    issueBody += lines[i] + '\n';
+                    i++;
+                  }
+                  issueBody += '\n';
+                }
+                
+                // Add detailed warnings section
+                const warningsSection = lines.findIndex(line => line.includes('## All Warnings'));
+                if (warningsSection !== -1) {
+                  issueBody += '<details>\n<summary>Click to view detailed warnings</summary>\n\n';
+                  for (let i = warningsSection + 2; i < lines.length; i++) {
+                    issueBody += lines[i] + '\n';
+                  }
+                  issueBody += '\n</details>\n\n';
+                }
+              }
+            } catch (e) {
+              console.error('Could not read summary:', e);
+            }
+            
+            issueBody += `### 📄 Build Artifacts\n\n`;
+            issueBody += `- [View workflow run](https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }})\n`;
+            issueBody += `- [Download warnings report artifact](https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}#artifacts) (Look for "docusaurus-build-warnings")\n\n`;
+            issueBody += `The artifact contains:\n`;
+            issueBody += `- \`build-warnings.json\` - Full JSON data\n`;
+            issueBody += `- \`build-warnings-summary.md\` - Markdown summary\n`;
+            issueBody += `- \`check-summary.json\` - CI check metadata\n\n`;
+            issueBody += `---\n_This issue was automatically created by the daily warning check._`;
             
             await github.rest.issues.create({
               owner: context.repo.owner,
               repo: context.repo.repo,
               title: `🚨 Docusaurus Build Warnings - ${date}`,
-              body: `The daily build check found **${warningCount}** warnings in the documentation sites.\n\n[View full report](https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }})\n\n---\n_This issue was automatically created by the daily warning check._`,
+              body: issueBody,
               labels: ['documentation', 'build-warnings', 'automated'],
             });
