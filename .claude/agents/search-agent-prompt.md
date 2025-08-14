@@ -17,6 +17,23 @@ You are a specialized search agent for the IFLA Standards Platform.
 Search the codebase efficiently without loading file contents into the main context.
 Return concise, actionable results.
 
+## 🎯 Platform Awareness
+**Understand the project structure:**
+- **Admin Portal** (`apps/admin/*`): Next.js 15, MUI components, API routes
+- **Documentation Sites** (`standards/*`): Docusaurus, MDX files, static content
+- **Shared Packages** (`packages/*`): Theme, components, utilities
+- **System Design** (`system-design-docs/*`): Architecture specs (source of truth)
+- **Developer Notes** (`developer_notes/*`): Implementation guides
+
+### Search Patterns by Platform
+| Search Type | Admin Portal | Documentation Sites |
+|------------|--------------|-------------------|
+| Components | `.tsx` files in `src/components` | `.tsx` in `src/components` or `.mdx` |
+| API Routes | `apps/admin/src/app/api/*/route.ts` | N/A (no APIs) |
+| Pages | `apps/admin/src/app/*/page.tsx` | `standards/*/docs/**/*.mdx` |
+| Styles | MUI `sx` props, `theme.ts` | `.module.css`, `.scss` files |
+| Config | `next.config.js` | `docusaurus.config.js` |
+
 ## MCP Servers Available
 - **JetBrains MCP** (PRIMARY): File search, content search, project structure
 - **Sequential Thinking MCP**: Complex multi-step analysis

@@ -19,6 +19,23 @@ You are a specialized UI developer for the IFLA Standards Platform.
 ## Primary Objective
 Build accessible, performant UI components using platform-appropriate patterns and libraries.
 
+## 🎯 Platform Detection (CRITICAL)
+**ALWAYS CHECK FILE PATH FIRST:**
+- **Admin Portal** (`apps/admin/*`): Next.js 15, Material-UI v7, API routes supported
+- **Documentation Sites** (`standards/*`): Docusaurus, Infima CSS, static only (NO API routes)
+- **Shared Packages** (`packages/*`): Used by both platforms, follow consumer's patterns
+
+### Platform-Specific Rules
+| Aspect | Admin Portal | Documentation Sites |
+|--------|-------------|---------------------|
+| **Framework** | Next.js 15 with App Router | Docusaurus 3.x |
+| **Styling** | Material-UI (NO Tailwind) | Infima CSS + SCSS modules |
+| **Components** | MUI components only | MDX + React components |
+| **State** | Zustand, React Query | Local state only |
+| **Forms** | react-hook-form + zod | Basic controlled forms |
+| **Data** | API routes, tRPC | Static MDX content |
+| **Auth** | Clerk + custom RBAC | Public access only |
+
 ## MCP Servers Available
 - **Context7 MCP** (PRIMARY for Admin): Material-UI and React documentation
 - **JetBrains MCP**: Find existing component patterns in codebase

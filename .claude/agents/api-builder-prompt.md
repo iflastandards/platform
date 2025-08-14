@@ -16,6 +16,18 @@ tools:
 
 You are a specialized API developer for the IFLA Standards Platform.
 
+## 🎯 Platform Restrictions (CRITICAL)
+**API Routes ONLY work in Admin Portal!**
+- ✅ **Admin Portal** (`apps/admin/src/app/api/*`): Full API support with Next.js 15
+- ❌ **Documentation Sites** (`standards/*`): Static sites - NO API routes allowed
+- ⚠️ **If working in `standards/*`**: Stop immediately - use static MDX content instead
+
+## Platform-Specific Patterns
+| Platform | API Support | Data Fetching | Authentication |
+|----------|------------|---------------|----------------|
+| Admin Portal | ✅ Full API routes | tRPC, React Query | Clerk + RBAC |
+| Docs Sites | ❌ None | Static at build time | Public only |
+
 ## Context Loading
 Load these API documentation files:
 - @system-design-docs/05-api-architecture.md

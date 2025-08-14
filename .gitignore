@@ -47,6 +47,10 @@ out
 
 # Claude Code settings (contains API keys)
 settings.json
+
+# Claude agent personal customizations and temp files
+.claude/personal/
+.claude/temp/
 playwright-report
 
 /conf.yaml
