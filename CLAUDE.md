@@ -2,8 +2,27 @@
 
 This file provides guidance to Claude Code when working with this repository.
 
+## 🚨 CRITICAL: ALWAYS USE AGENTS FIRST
+
+**AGENTS ARE REQUIRED, NOT OPTIONAL**
+
+Before doing ANY task, check if an agent exists for it. Agent delegation is the TOP PRIORITY to preserve context.
+
+### 📢 Agent Announcement Protocol
+Always announce which agent you're using:
+- 🔍 "Using Search Agent to find..."
+- 🧪 "Delegating to Test Writer to..."  
+- 🔧 "API Builder Agent will handle..."
+- 🎨 "UI Developer Agent will create..."
+
+### ⚠️ Direct Tool Use = Context Waste
+- Reading multiple files? → Use Search Agent
+- Writing code? → Use appropriate specialized agent
+- Research needed? → Use Research Agent
+- Simple edit? → Still check for relevant agent first
+
 ## 🎯 Context Management Strategy
-This project uses an **agent-based workflow** to preserve context. Complex tasks are delegated to specialized agents with their own context windows.
+This project uses an **agent-based workflow** as the PRIMARY and REQUIRED approach. ALL applicable tasks MUST be delegated to specialized agents with their own context windows.
 
 ## 🚀 Core Project Rules
 
@@ -18,6 +37,7 @@ This project uses an **agent-based workflow** to preserve context. Complex tasks
 - **📦 Shared Packages** (packages/*): Used by both platforms
 
 ### Critical Rules
+- **DELEGATE TO AGENTS FOR ALL APPLICABLE TASKS** - Agent usage is mandatory
 - **System-design-docs are SOURCE OF TRUTH** - Specs override implementation
 - **Prefer editing** existing files over creating new ones
 - **Never create** documentation files unless explicitly requested
@@ -28,7 +48,9 @@ This project uses an **agent-based workflow** to preserve context. Complex tasks
 
 ## 🤖 Agent Delegation Strategy
 
-Complex tasks should be delegated to specialized agents to preserve main context.
+**ALL APPLICABLE TASKS MUST BE DELEGATED TO AGENTS**
+
+This is not a suggestion - it's a requirement. Even simple tasks should use agents if they match the triggers below. The main context should primarily coordinate agents, not perform direct work.
 
 ### Search & Analysis
 **Triggers**: "find", "search", "where is", "which files"
@@ -65,6 +87,26 @@ Complex tasks should be delegated to specialized agents to preserve main context
 ### File Operations
 **Triggers**: "batch", "rename files", "move files", "process multiple", "directory"
 → **Agent**: Use file-operations agent with `.claude/agents/file-operations-agent-prompt.md`
+
+### Context Fetcher
+**Triggers**: "get from [file]", "retrieve section", "extract from spec"
+→ **Agent**: Use context-fetcher with `.claude/agents/context-fetcher.md`
+
+### Date Checker
+**Triggers**: "current date", "today's date", "what's the date"
+→ **Agent**: Use date-checker with `.claude/agents/date-checker.md`
+
+### File Creator
+**Triggers**: "create spec file", "generate template", "batch create"
+→ **Agent**: Use file-creator with `.claude/agents/file-creator.md`
+
+### Git Workflow
+**Triggers**: "commit", "create PR", "git workflow", "push changes"
+→ **Agent**: Use git-workflow with `.claude/agents/git-workflow.md`
+
+### Test Runner
+**Triggers**: "run tests", "execute tests", "check test failures"
+→ **Agent**: Use test-runner with `.claude/agents/test-runner.md`
 
 ### Documentation Reading
 **Triggers**: "what does the spec say", "according to docs"
@@ -111,25 +153,39 @@ pnpm lint                             # Linting
 
 ## 📋 Main Context Responsibilities
 
-Keep the main conversation focused on:
-1. **Understanding** requirements
-2. **Planning** approach  
-3. **Coordinating** agent tasks
-4. **Reviewing** results
-5. **Running** commands
-6. **Simple edits** (single file)
+**PRIMARY ROLE: AGENT COORDINATOR**
 
-Delegate everything else to agents to preserve context.
+The main context should ONLY handle:
+1. **Understanding** requirements and identifying which agent to use
+2. **Announcing** which agent is being delegated to
+3. **Coordinating** multiple agent interactions
+4. **Running** final commands after agent work is complete
+5. **Reviewing** agent results and providing feedback
+
+**STRICTLY AVOID IN MAIN CONTEXT:**
+- Direct file reading (use Search Agent)
+- Code writing (use specialized agents)
+- Research tasks (use Research Agent)
+- Multi-file operations (use appropriate agents)
+- Even "simple" edits if an agent exists for the task type
+
+**Remember**: Context preservation through agent delegation is more important than speed.
 
 ---
 
 ## 🚨 Common Mistakes to Avoid
 
-1. **Loading many files** → Use search agent instead
-2. **Reading all docs** → Load in agent context
-3. **Wrong platform patterns** → Check platform detection
-4. **Using npm/yarn** → Only use pnpm
-5. **Running all tests** → Use `pnpm nx affected`
+1. **Using tools directly instead of agents** → ALWAYS check for applicable agent first
+2. **Loading any files in main context** → Use Search Agent for ALL file operations
+3. **Writing code in main context** → Delegate to specialized coding agents
+4. **Doing research directly** → Use Research Agent
+5. **Reading documentation directly** → Load in agent context
+6. **"Just a quick edit"** → Still use agents to preserve context
+7. **Wrong platform patterns** → Check platform detection
+8. **Using npm/yarn** → Only use pnpm
+9. **Running all tests** → Use `pnpm nx affected`
+
+**GOLDEN RULE**: When in doubt, use an agent. Context preservation is paramount.
 
 ---
 
@@ -144,21 +200,58 @@ When agents need documentation, they should load:
 
 ---
 
-## 💡 Agent Workflow Example
+## 💡 Agent Workflow Examples
 
+### Example 1: API Task
 ```
 You: "Find all API routes using withAuth and add error handling"
 
-Main Context:
-1. Understand requirement ✓
-2. Delegate to search agent → Returns 5 files
-3. Delegate to API agent → Updates error handling
-4. Review changes ✓
-5. Run tests ✓
+Main Context Response:
+🔍 "Using Search Agent to find API routes with withAuth..."
+🔧 "Delegating to API Builder Agent to add error handling..."
+✅ "Running tests to verify changes..."
 
-Result: Task completed with minimal context usage
+Result: Task completed with preserved context
+```
+
+### Example 2: UI Task  
+```
+You: "Create a new dashboard component with charts"
+
+Main Context Response:
+🎨 "Using UI Developer Agent to create dashboard component..."
+📊 "Advanced UI Agent will handle chart implementations..."
+🧪 "Test Writer Agent will add component tests..."
+
+Result: Full feature implemented via agent coordination
+```
+
+### Example 3: Even "Simple" Tasks
+```
+You: "Fix a typo in the API documentation"
+
+WRONG Approach:
+❌ Read file directly and make edit
+
+CORRECT Approach:
+🔍 "Using Search Agent to locate the documentation file..."
+📝 "File Operations Agent will handle the correction..."
+
+Result: Context preserved for more complex work later
 ```
 
 ---
 
-*This configuration optimizes for long conversations by delegating complex work to agents*
+## 🎯 Agent-First Mindset
+
+**Think: "Which agent handles this?" NOT "How do I do this directly?"**
+
+This approach ensures:
+- ✅ Maximum context preservation
+- ✅ Consistent patterns across tasks  
+- ✅ Ability to handle complex multi-step projects
+- ✅ Clear audit trail of what was done
+
+---
+
+*This configuration prioritizes agent delegation above all else to maximize conversation longevity*
