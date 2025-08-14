@@ -1281,23 +1281,88 @@ function validateSitemap(siteKey, baseUrl) {
 // Check if an anchor exists on a page
 async function checkAnchorExists(page, pageUrl, anchorId) {
   try {
-    await page.goto(pageUrl, { waitUntil: 'domcontentloaded', timeout: 10000 });
+    // Navigate to the page with proper waiting for SPA content
+    await page.goto(pageUrl, { waitUntil: 'domcontentloaded', timeout: 15000 });
+    
+    // Wait for Docusaurus content to render
+    await page.waitForFunction(() => {
+      // Wait for main content to be present
+      return document.querySelector('main, article, .markdown, [role="main"]') !== null;
+    }, { timeout: 5000 }).catch(() => {
+      console.log(`⚠️  Content not fully loaded for anchor check: ${pageUrl}`);
+    });
+    
+    // Additional wait for React hydration and anchor generation
+    await new Promise(resolve => setTimeout(resolve, 1000));
     
     const anchorExists = await page.evaluate((id) => {
-      // Check for element with matching id
-      if (document.getElementById(id)) return true;
+      // Decode the anchor ID in case it's URL-encoded
+      const decodedId = decodeURIComponent(id);
+      
+      // Check for element with matching id (most common)
+      if (document.getElementById(id) || document.getElementById(decodedId)) return true;
       
       // Check for element with matching name attribute
-      if (document.querySelector(`[name="${id}"]`)) return true;
+      if (document.querySelector(`[name="${id}"]`) || document.querySelector(`[name="${decodedId}"]`)) return true;
       
-      // Check for headings with matching id (auto-generated anchors)
-      if (document.querySelector(`h1[id="${id}"], h2[id="${id}"], h3[id="${id}"], h4[id="${id}"], h5[id="${id}"], h6[id="${id}"]`)) return true;
+      // Check for any element with the id as an attribute value
+      if (document.querySelector(`[id="${id}"]`) || document.querySelector(`[id="${decodedId}"]`)) return true;
+      
+      // Check for Docusaurus-generated heading anchors (they often have special prefixes)
+      // Docusaurus sometimes adds 'user-content-' or other prefixes
+      const possibleIds = [
+        id,
+        decodedId,
+        `user-content-${id}`,
+        `user-content-${decodedId}`,
+        id.toLowerCase(),
+        decodedId.toLowerCase(),
+        id.replace(/[^\w-]/g, '-'), // Replace special chars with hyphens
+        decodedId.replace(/[^\w-]/g, '-')
+      ];
+      
+      for (const possibleId of possibleIds) {
+        if (document.getElementById(possibleId)) return true;
+        if (document.querySelector(`[id="${possibleId}"]`)) return true;
+      }
+      
+      // Check if there's a heading with text that would generate this anchor
+      // Docusaurus converts heading text to anchors by lowercasing and replacing spaces with hyphens
+      const headings = document.querySelectorAll('h1, h2, h3, h4, h5, h6');
+      for (const heading of headings) {
+        const headingId = heading.id;
+        if (headingId && (headingId === id || headingId === decodedId)) return true;
+        
+        // Check if the heading text would generate this anchor
+        const headingText = heading.textContent || '';
+        const generatedId = headingText.toLowerCase()
+          .trim()
+          .replace(/[^\w\s-]/g, '') // Remove special characters
+          .replace(/\s+/g, '-')      // Replace spaces with hyphens
+          .replace(/-+/g, '-')       // Replace multiple hyphens with single
+          .replace(/^-|-$/g, '');    // Remove leading/trailing hyphens
+        
+        if (generatedId === id || generatedId === decodedId) return true;
+      }
+      
+      // Final check: see if clicking on a link with this hash would scroll somewhere
+      const testLink = document.createElement('a');
+      testLink.href = `#${id}`;
+      document.body.appendChild(testLink);
+      testLink.click();
+      const scrolled = window.pageYOffset > 0;
+      document.body.removeChild(testLink);
+      if (scrolled) {
+        window.scrollTo(0, 0); // Reset scroll
+        return true;
+      }
       
       return false;
     }, anchorId);
     
     return anchorExists;
   } catch (error) {
+    console.warn(`⚠️  Error checking anchor #${anchorId} on ${pageUrl}: ${error.message}`);
     return false;
   }
 }
@@ -1497,18 +1562,22 @@ async function validateEnvironmentUrls(siteKey, environment, options = {}) {
       for (const pageUrl of pagesToCheck) {
         try {
           console.log(`📄 Loading: ${pageUrl}`);
-          await page.goto(pageUrl, { waitUntil: 'networkidle0', timeout: 30000 });
+          // Use domcontentloaded for faster page loads, networkidle0 can hang indefinitely
+          await page.goto(pageUrl, { waitUntil: 'domcontentloaded', timeout: 20000 }).catch(async (error) => {
+            console.log(`⚠️  Page load timeout, trying with networkidle2...`);
+            await page.goto(pageUrl, { waitUntil: 'networkidle2', timeout: 10000 });
+          });
           
           // Wait for Docusaurus to finish rendering (SPA content)
           await page.waitForFunction(() => {
             // Wait for either navigation or main content to be present
             return document.querySelector('nav a, .navbar a, [class*="navbar"] a, main a, .main a, [role="main"] a, .markdown a') !== null;
-          }, { timeout: 15000 }).catch(() => {
+          }, { timeout: 5000 }).catch(() => {
             console.log('📄 No navigation or content links found yet, checking anyway...');
           });
           
-          // Additional wait for React/Docusaurus to fully hydrate
-          await new Promise(resolve => setTimeout(resolve, 2000));
+          // Shorter wait for React/Docusaurus to fully hydrate
+          await new Promise(resolve => setTimeout(resolve, 1000));
           
           // Debug: Check if page loaded correctly
           const title = await page.title();
@@ -1526,9 +1595,21 @@ async function validateEnvironmentUrls(siteKey, environment, options = {}) {
           });
           console.log(`📄 Link counts:`, selectorCounts);
           
-          const pageLinks = await extractLinksFromPage(page, baseUrl);
-          console.log(`📄 Found ${pageLinks.length} links on this page`);
-          allLinks.push(...pageLinks);
+          // Add timeout wrapper for link extraction to prevent hanging
+          const pageLinks = await Promise.race([
+            extractLinksFromPage(page, baseUrl),
+            new Promise((_, reject) => 
+              setTimeout(() => reject(new Error('Link extraction timeout')), 10000)
+            )
+          ]).catch(error => {
+            console.warn(`⚠️  Failed to extract links: ${error.message}`);
+            return [];
+          });
+          
+          if (pageLinks.length > 0) {
+            console.log(`📄 Found ${pageLinks.length} links on this page`);
+            allLinks.push(...pageLinks);
+          }
         } catch (error) {
           console.warn(`⚠️  Skipped ${pageUrl}: ${error.message}`);
         }
@@ -1599,6 +1680,23 @@ async function validateEnvironmentUrls(siteKey, environment, options = {}) {
           try {
             const anchorExists = await checkAnchorExists(page, pageUrl, link.anchorId);
             if (!anchorExists) {
+              // Get available anchors for debugging
+              const availableAnchors = await page.evaluate(() => {
+                const anchors = new Set();
+                // Get all elements with an id
+                document.querySelectorAll('[id]').forEach(el => {
+                  if (el.id) anchors.add(el.id);
+                });
+                // Get all headings that might have generated anchors
+                document.querySelectorAll('h1, h2, h3, h4, h5, h6').forEach(el => {
+                  if (el.id) anchors.add(el.id);
+                });
+                return Array.from(anchors).slice(0, 10); // Return first 10 for debugging
+              });
+              
+              console.log(`   ❌ Anchor not found: #${link.anchorId} on ${pageUrl}`);
+              console.log(`      Available anchors: ${availableAnchors.join(', ')}${availableAnchors.length >= 10 ? '...' : ''}`);
+              
               results.failed++;
               results.issues.push({
                 type: 'BROKEN_ANCHOR',
@@ -1607,7 +1705,8 @@ async function validateEnvironmentUrls(siteKey, environment, options = {}) {
                 text: link.text,
                 anchor: link.anchorId,
                 page: pageUrl,
-                category: 'navigation'
+                category: 'navigation',
+                availableAnchors: availableAnchors.slice(0, 5) // Include first 5 in report
               });
             } else {
               results.passed++;
@@ -1683,6 +1782,23 @@ async function validateEnvironmentUrls(siteKey, environment, options = {}) {
           try {
             const anchorExists = await checkAnchorExists(page, pageUrl, link.anchorId);
             if (!anchorExists) {
+              // Get available anchors for debugging
+              const availableAnchors = await page.evaluate(() => {
+                const anchors = new Set();
+                // Get all elements with an id
+                document.querySelectorAll('[id]').forEach(el => {
+                  if (el.id) anchors.add(el.id);
+                });
+                // Get all headings that might have generated anchors
+                document.querySelectorAll('h1, h2, h3, h4, h5, h6').forEach(el => {
+                  if (el.id) anchors.add(el.id);
+                });
+                return Array.from(anchors).slice(0, 10); // Return first 10 for debugging
+              });
+              
+              console.log(`   ❌ Anchor not found: #${link.anchorId} on ${pageUrl}`);
+              console.log(`      Available anchors: ${availableAnchors.join(', ')}${availableAnchors.length >= 10 ? '...' : ''}`);
+              
               results.failed++;
               results.issues.push({
                 type: 'BROKEN_ANCHOR',
@@ -1691,7 +1807,8 @@ async function validateEnvironmentUrls(siteKey, environment, options = {}) {
                 text: link.text,
                 anchor: link.anchorId,
                 page: pageUrl,
-                category: 'generated'
+                category: 'generated',
+                availableAnchors: availableAnchors.slice(0, 5) // Include first 5 in report
               });
             } else {
               results.passed++;
