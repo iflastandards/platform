@@ -118,6 +118,10 @@ This is not a suggestion - it's a requirement. Even simple tasks should use agen
 **Triggers**: "what does the spec say", "according to docs"
 → **Agent**: Load specific system-design-docs in agent context
 
+### Example Responder
+**Triggers**: "show example", "formatting example", "brevity example", "response patterns"
+→ **Agent**: Use example-responder with `.claude/agents/example-responder-prompt.md`
+
 ---
 
 ## 🎯 Quick Command Reference
