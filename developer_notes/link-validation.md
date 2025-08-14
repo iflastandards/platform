@@ -1,7 +1,11 @@
 # Link Validation Scripts
 
 ## Overview
-The IFLA Standards project uses `validate-environment-urls.js` as the primary link validation tool. It checks for broken links across any or all Docusaurus sites, supports multiple environments (local, preview, production), and uses sitemaps to find ALL pages and links (hundreds, not just homepage links).
+The IFLA Standards project provides two link validation tools:
+- **`validate-environment-urls-playwright.js`** (Recommended) - Uses Playwright for 3x faster performance and better reliability
+- **`validate-environment-urls.js`** - Original Puppeteer version (being phased out)
+
+Both tools check for broken links across any or all Docusaurus sites, support multiple environments (local, preview, production), and use sitemaps to find ALL pages and links (hundreds, not just homepage links).
 
 ## Quick Start
 

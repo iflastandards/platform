@@ -46,7 +46,7 @@ Arguments:
 
 Advanced Options:
   For depth control and other options, use the underlying script directly:
-  node scripts/validate-environment-urls.js --depth 1 --site isbdm
+  node scripts/validate-environment-urls-playwright.js --depth 1 --site isbdm
   
   --depth controls crawl depth:
     - Default: All links from sitemap (no depth limit)
@@ -85,8 +85,8 @@ if (site === 'quick') {
   console.log('🔍 Running full comprehensive check for all sites...');
 }
 
-// Build the command
-const scriptPath = path.join(__dirname, 'validate-environment-urls.js');
+// Build the command - use Playwright version for better performance
+const scriptPath = path.join(__dirname, 'validate-environment-urls-playwright.js');
 let command;
 
 // If no arguments provided, run in interactive mode
