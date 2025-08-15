@@ -24,29 +24,29 @@ permissions:
   actions: read
 
 concurrency:
-  group: "docs-deploy-${{ github.ref }}"
+  group: 'docs-deploy-${{ github.ref }}'
   cancel-in-progress: true
 
 env:
   # CI environment
   CI: true
   HUSKY: 0
-  
+
   # Nx Cloud configuration with distributed agents
   NX_CLOUD_ACCESS_TOKEN: ${{ secrets.NX_CLOUD_ACCESS_TOKEN }}
   NX_CLOUD_DISTRIBUTED_EXECUTION: true
   NX_CLOUD_DISTRIBUTED_EXECUTION_AGENT_COUNT: 4
   NX_BRANCH: ${{ github.head_ref || github.ref_name }}
-  
+
   # Nx optimizations
   NX_DAEMON: true
   NX_PARALLEL: 4
   NX_SKIP_NX_CACHE: false
-  
+
   # Environment settings
   DOCS_ENV: ${{ github.ref_name == 'main' && 'production' || 'preview' }}
-  NODE_OPTIONS: "--max-old-space-size=6144"
-  
+  NODE_OPTIONS: '--max-old-space-size=6144'
+
   # pnpm settings
   FROZEN_LOCKFILE: true
 
@@ -63,22 +63,22 @@ jobs:
       - uses: actions/checkout@v4
         with:
           fetch-depth: 0
-          
+
       - uses: pnpm/action-setup@v4
         name: Install pnpm
-        
+
       - name: Start Nx Cloud agents
         run: |
           pnpm dlx nx-cloud start-ci-run \
             --distribute-on="4 linux-medium-js" \
             --stop-agents-after="build" \
             --with-env-vars="DOCS_ENV,NODE_OPTIONS"
-        
+
       - uses: actions/setup-node@v4
         with:
           node-version: 22
           cache: 'pnpm'
-          
+
       - name: Cache Nx
         uses: actions/cache@v4
         with:
@@ -88,23 +88,23 @@ jobs:
           key: nx-${{ runner.os }}-${{ github.sha }}
           restore-keys: |
             nx-${{ runner.os }}-
-            
+
       - name: Install dependencies
         run: |
           echo "📦 Installing dependencies..."
           pnpm install --frozen-lockfile --prefer-offline
-          
+
       - uses: nrwl/nx-set-shas@v4
         id: nx-set-shas
-        
+
       - name: Analyze affected projects
         id: affected
         run: |
           echo "🔍 Analyzing affected documentation sites..."
-          
+
           # Get affected projects
           AFFECTED=$(npx nx show projects --affected --base=${{ steps.nx-set-shas.outputs.base }} --head=${{ steps.nx-set-shas.outputs.head }})
-          
+
           # Filter for documentation sites only (exclude admin)
           DOCS_AFFECTED=""
           for project in $AFFECTED; do
@@ -112,7 +112,7 @@ jobs:
               DOCS_AFFECTED="$DOCS_AFFECTED $project"
             fi
           done
-          
+
           # Determine if we should deploy
           if [ -n "$DOCS_AFFECTED" ] || [ "${{ github.event_name }}" == "workflow_dispatch" ]; then
             echo "should_deploy=true" >> $GITHUB_OUTPUT
@@ -135,18 +135,18 @@ jobs:
       - uses: actions/checkout@v4
         with:
           fetch-depth: 0
-          
+
       - uses: pnpm/action-setup@v4
-      
+
       - uses: actions/setup-node@v4
         with:
           node-version: 22
           cache: 'pnpm'
-          
+
       - name: Setup Pages
         if: github.event.inputs.deploy_target != 'netlify' && github.event.inputs.deploy_target != 'vercel'
         uses: actions/configure-pages@v5
-        
+
       - name: Cache build outputs
         uses: actions/cache@v4
         with:
@@ -159,26 +159,29 @@ jobs:
           key: nx-builds-${{ runner.os }}-${{ github.sha }}
           restore-keys: |
             nx-builds-${{ runner.os }}-
-            
+
       - name: Install dependencies
         run: pnpm install --frozen-lockfile --prefer-offline
-        
+
       - name: Build theme package
         run: |
           echo "🎨 Building theme package..."
           npx nx run @ifla/theme:build --skip-nx-cache=false
-          
+
       - name: Build documentation sites and collect warnings
         id: build-warnings
         run: |
           echo "🏗️ Building documentation sites and collecting warnings..."
-          
+
           # This script builds all sites AND collects warnings in a single pass
           # It runs: pnpm nx build [site] for each site in parallel
-          # No duplicate builds - this is the only build step needed
-          node scripts/collect-warnings-parallel.js
-          
-          # Extract warning data for later steps
+          # The script will exit with code 1 if any builds fail
+          if ! node scripts/collect-warnings-parallel.js; then
+            echo "❌ Build failed! Check the logs above for details."
+            exit 1
+          fi
+
+          # Extract warning data for later steps (only runs if builds succeeded)
           if [ -f "output/_reports/build-warnings.json" ]; then
             WARNING_COUNT=$(jq '[.[] | .warnings | length] | add' output/_reports/build-warnings.json)
             SITE_SUMMARY=$(jq -c '[.[] | {site: .site, warnings: .warnings | length, success: .success, buildTime: .buildTime}]' output/_reports/build-warnings.json)
@@ -189,25 +192,27 @@ jobs:
             echo "warning_count=0" >> $GITHUB_OUTPUT
             echo "site_summary=[]" >> $GITHUB_OUTPUT
           fi
-          
-          # Verify builds completed (warnings are OK, but builds must succeed)
+
+          # Double-check critical build directories exist
           if [ ! -d "portal/build" ] || [ ! -d "standards/isbd/build" ]; then
-            echo "❌ Some builds failed. Check the warnings report."
+            echo "❌ Critical build directories missing after successful build script!"
+            echo "Portal build exists: $([ -d "portal/build" ] && echo "yes" || echo "no")"
+            echo "ISBD build exists: $([ -d "standards/isbd/build" ] && echo "yes" || echo "no")"
             exit 1
           fi
-            
+
       - name: Create unified build directory
         run: |
           echo "📦 Creating unified build directory..."
-          
+
           # Create the unified site structure
           mkdir -p _site
-          
+
           # Copy portal as root
           if [ -d "portal/build" ]; then
             cp -r portal/build/* _site/
           fi
-          
+
            # Copy other sites directly to _site root (no platform subdirectory)
            # Map Nx project names to source directories and deployment paths
            declare -A PROJECT_TO_SOURCE=(
@@ -239,19 +244,19 @@ jobs:
                echo "⚠️ Build not found for $PROJECT: standards/$SOURCE_DIR/build"
              fi
            done
-          
+
           # Add deployment configuration
           if [ "${{ github.event.inputs.deploy_target }}" != "netlify" ] && [ "${{ github.event.inputs.deploy_target }}" != "vercel" ]; then
             # GitHub Pages configuration
             echo "iflastandards.github.io" > _site/CNAME
             touch _site/.nojekyll
           fi
-          
+
           # Validate build structure
           echo "📁 Build structure:"
           ls -la _site/
           ls -la _site/platform/ || true
-          
+
       - name: Upload build warnings report
         if: always()
         uses: actions/upload-artifact@v4
@@ -261,13 +266,13 @@ jobs:
             output/_reports/build-warnings.json
             output/_reports/build-warnings-summary.md
           retention-days: 30
-          
+
       - name: Upload Pages artifact
         if: github.event.inputs.deploy_target != 'netlify' && github.event.inputs.deploy_target != 'vercel'
         uses: actions/upload-pages-artifact@v3
         with:
           path: ./_site
-          
+
       - name: Upload build artifacts for alternative deployments
         if: github.event.inputs.deploy_target == 'netlify' || github.event.inputs.deploy_target == 'vercel'
         uses: actions/upload-artifact@v4
@@ -288,7 +293,7 @@ jobs:
       - name: Deploy to GitHub Pages
         id: deployment
         uses: actions/deploy-pages@v4
-        
+
       - name: Post deployment validation
         run: |
           echo "✅ Deployment completed successfully"
@@ -301,7 +306,7 @@ jobs:
           echo "- **Deployment Target**: GitHub Pages" >> $GITHUB_STEP_SUMMARY
           echo "- **Build Warnings**: ${{ needs.build-documentation.outputs.warning_count || '0' }}" >> $GITHUB_STEP_SUMMARY
           echo "" >> $GITHUB_STEP_SUMMARY
-          
+
           # Add site-specific warning summary if available
           if [ -n "${{ needs.build-documentation.outputs.site_summary }}" ]; then
             echo "### Build Warnings by Site" >> $GITHUB_STEP_SUMMARY
@@ -315,27 +320,27 @@ jobs:
     needs: deploy-to-pages
     if: github.event.inputs.deploy_target != 'netlify' && github.event.inputs.deploy_target != 'vercel'
     runs-on: ubuntu-latest
-    continue-on-error: true  # Don't fail deployment on smoke test issues
+    continue-on-error: true # Don't fail deployment on smoke test issues
     steps:
       - uses: actions/checkout@v4
-      
+
       - uses: pnpm/action-setup@v4
-      
+
       - uses: actions/setup-node@v4
         with:
           node-version: 22
           cache: 'pnpm'
-          
+
       - name: Install dependencies
         run: pnpm install --frozen-lockfile --prefer-offline
-        
+
       - name: Install Playwright browsers
         run: pnpm exec playwright install chromium --with-deps
-        
+
       - name: Run smoke tests
         run: |
           echo "🧪 Running smoke tests for deployed documentation sites..."
-          
+
           # Run only smoke tests against the deployed site using smoke-specific config
           # These tests verify basic functionality of the deployed environment
           # Note: Using explicit config to bypass CI detection in main config
@@ -347,7 +352,7 @@ jobs:
         env:
           PLAYWRIGHT_BASE_URL: ${{ needs.deploy-to-pages.outputs.page_url }}
           ADMIN_BASE_URL: https://admin-iflastandards-preview.onrender.com
-          
+
       - name: Upload test results
         if: failure()
         uses: actions/upload-artifact@v4
