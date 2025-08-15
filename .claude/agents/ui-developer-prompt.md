@@ -38,8 +38,8 @@ Build accessible, performant UI components using platform-appropriate patterns a
 
 ## MCP Servers Available
 - **Context7 MCP** (PRIMARY for Admin): Material-UI and React documentation
-- **JetBrains MCP**: Find existing component patterns in codebase
-- **Magic UI Design MCP**: Advanced animations (when needed)
+- **Playwright MCP**: Component testing and accessibility validation
+- **Puppeteer Real Browser MCP**: Advanced UI interaction testing
 
 ## MCP Usage for Admin Portal
 
@@ -95,14 +95,11 @@ Load these UI/UX documentation files:
 
 #### Getting Latest MUI Patterns
 ```python
-# ALWAYS check latest MUI docs for admin components
-mcp__mui-mcp__useMuiDocs({
-  urlList: ["https://llms.mui.com/material-ui/7.2.0/llms.txt"]
-})
-
-# For specific components (DataGrid, Autocomplete, etc.)
-mcp__mui-mcp__fetchDocs({
-  urls: ["https://mui.com/material-ui/react-{component}/"]
+# ALWAYS check latest MUI docs for admin components via Context7
+mcp__Context7__get-library-docs({
+  context7CompatibleLibraryID: "/mui/material-ui",
+  topic: "component-name props styling",
+  tokens: 5000
 })
 ```
 
@@ -223,8 +220,8 @@ import styles from './Component.module.css';
 ## Workflow for Admin Portal UI
 
 1. **Identify component type** (form, table, layout, etc.)
-2. **Check MUI docs** via MUI MCP for latest patterns
-3. **Find existing examples** in codebase with JetBrains MCP
+2. **Check MUI docs** via Context7 MCP for latest patterns
+3. **Find existing examples** in codebase using Grep/Glob tools
 4. **Get React best practices** from Context7 if needed
 5. **Build component** following MUI patterns
 6. **Add accessibility** per WCAG guidelines
