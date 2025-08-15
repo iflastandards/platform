@@ -14,6 +14,30 @@ const MAX_PARALLEL = isCI ? 3 : 8; // Conservative in CI (3), optimized locally 
 class ParallelWarningCollector {
   constructor() {
     this.results = new Map();
+    this.filteredCount = 0;
+    this.loadIgnoredPatterns();
+  }
+
+  /**
+   * Load ignored warning patterns from configuration
+   */
+  loadIgnoredPatterns() {
+    this.ignoredPatterns = [];
+    try {
+      const configPath = path.join(__dirname, 'warnings-ignore.json');
+      if (fs.existsSync(configPath)) {
+        const config = JSON.parse(fs.readFileSync(configPath, 'utf8'));
+        this.ignoredPatterns = config.ignoredPatterns.map((item) => ({
+          pattern: new RegExp(item.pattern, 'i'),
+          reason: item.reason,
+        }));
+        console.log(
+          `📋 Loaded ${this.ignoredPatterns.length} ignored warning patterns`,
+        );
+      }
+    } catch (error) {
+      console.warn('⚠️  Could not load warnings-ignore.json:', error.message);
+    }
   }
 
   /**
@@ -110,6 +134,31 @@ class ParallelWarningCollector {
    * Check if a line contains a warning
    */
   isWarning(line) {
+    // Check if this line should be ignored based on loaded patterns
+    if (this.ignoredPatterns && this.ignoredPatterns.length > 0) {
+      if (this.ignoredPatterns.some(({ pattern }) => pattern.test(line))) {
+        this.filteredCount++;
+        return false;
+      }
+    }
+
+    // Fallback ignored patterns if config file couldn't be loaded
+    const fallbackIgnorePatterns = [
+      // Node.js fs.rmdir deprecation - expected and will be fixed in future Node versions
+      /DeprecationWarning:.*fs\.rmdir.*recursive option is deprecated/i,
+      /Use fs\.rm\(path, \{ recursive: true \}\)/i,
+      // Node.js experimental features warnings
+      /ExperimentalWarning:/i,
+    ];
+
+    // Check fallback patterns if config wasn't loaded
+    if (!this.ignoredPatterns || this.ignoredPatterns.length === 0) {
+      if (fallbackIgnorePatterns.some((pattern) => pattern.test(line))) {
+        this.filteredCount++;
+        return false;
+      }
+    }
+
     const warningPatterns = [
       /\[WARNING\]/i,
       /\[WARN\]/i,
@@ -254,6 +303,14 @@ class ParallelWarningCollector {
       (sum, r) => sum + r.warnings.length,
       0,
     );
+
+    // Report filtered warnings count
+    if (this.filteredCount > 0) {
+      console.log(
+        `\n🔇 Filtered ${this.filteredCount} known/expected warnings`,
+      );
+    }
+
     if (totalWarnings > 0) {
       console.log(`\n⚠️  Found ${totalWarnings} warnings`);
     } else {

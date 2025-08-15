@@ -1,0 +1,19 @@
+{
+  "ignoredPatterns": [
+    {
+      "pattern": "DeprecationWarning:.*fs\\.rmdir.*recursive option is deprecated",
+      "reason": "Node.js fs.rmdir deprecation - will be fixed in future Node versions",
+      "addedDate": "2025-01-15"
+    },
+    {
+      "pattern": "Use fs\\.rm\\(path, \\{ recursive: true \\}\\)",
+      "reason": "Part of fs.rmdir deprecation message",
+      "addedDate": "2025-01-15"
+    },
+    {
+      "pattern": "ExperimentalWarning:",
+      "reason": "Node.js experimental features are expected in development",
+      "addedDate": "2025-01-15"
+    }
+  ]
+}
