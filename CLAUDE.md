@@ -1,25 +1,130 @@
 # CLAUDE.md - IFLA Standards Platform
 
+⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️
+## 🛑 MANDATORY AGENT USAGE - READ THIS FIRST!
+
+**BEFORE DOING ANYTHING:**
+1. STOP and identify the appropriate agent
+2. DELEGATE to that agent immediately
+3. NEVER use tools directly in main context
+
+**YOU ARE AN AGENT DISPATCHER, NOT A WORKER**
+- Your ONLY job is to delegate to agents
+- Direct tool use = FAILURE
+- "Quick tasks" still require agents
+
+**Start every response by identifying which agent(s) to use!**
+⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️
+
 This file provides guidance to Claude Code when working with this repository.
 
-## 🚨 CRITICAL: ALWAYS USE AGENTS FIRST
+## 🚨 STOP! AGENT CHECK REQUIRED
 
-**AGENTS ARE REQUIRED, NOT OPTIONAL**
-For every instruction:
-1. Decide if an agent or tool can perform this step.
-2. If so, ALWAYS delegate it, even if you can perform it yourself.
-3. Only provide an answer when agent results have been collected.
+**BEFORE ANY ACTION, ASK YOURSELF:**
+1. Can an agent do this? → YES? USE THE AGENT
+2. Is there even a 10% chance an agent could help? → YES? USE THE AGENT
+3. About to use Read/Edit/Write/Bash directly? → STOP! CHECK AGENTS FIRST
 
-Agent delegation is the TOP PRIORITY to preserve context.
+## ⛔ DIRECT TOOL USE = VIOLATION
 
-### ⚠️ Direct Tool Use = Context Waste
-- Reading multiple files? → Use Search Agent
-- Writing code? → Use appropriate specialized agent
-- Research needed? → Use Research Agent
-- Simple edit? → Still check for relevant agent first
+**FORBIDDEN IN MAIN CONTEXT:**
+- ❌ Read tool → Use Search Agent or Context Fetcher
+- ❌ Edit/Write tools → Use appropriate coding agent
+- ❌ Bash commands → Use Build/Test Runner agents
+- ❌ Grep/Glob/LS → Use Search Agent
+- ❌ WebSearch/WebFetch → Use Research Agent
+
+**AGENTS ARE MANDATORY, NOT OPTIONAL**
+
+### 📏 The 1-Second Rule
+If it takes more than 1 second to complete, an agent should do it.
+Even reading a single file wastes context - agents have their own.
 
 ## 🎯 Context Management Strategy
 This project uses an **agent-based workflow** as the PRIMARY and REQUIRED approach. ALL applicable tasks MUST be delegated to specialized agents with their own context windows.
+
+## 📝 CRITICAL: How to Delegate to Agents Correctly
+
+### Understanding Agent Types
+
+Our agents fall into two categories:
+
+#### 🔧 EXECUTOR Agents (27% of agents)
+**Purpose**: Perform mechanical, specific tasks with exact instructions
+**Examples**: context-fetcher, date-checker, file-creator, test-runner
+**Delegation Style**: Provide exact, detailed instructions
+
+#### 🧠 PROBLEM SOLVER Agents (73% of agents)  
+**Purpose**: Analyze complex requirements and implement solutions
+**Examples**: api-builder, ui-developer, test-writer, database-agent, search-agent
+**Delegation Style**: Provide goals, context, and requirements
+
+### ✅ CORRECT Delegation Patterns
+
+#### For EXECUTOR Agents (Mechanical Tasks)
+```
+"Create file X with this exact content: [content]"
+"Fetch the authentication section from docs/auth.md"
+"Run test suite and return results"
+```
+**Key**: Give exact specifications, no analysis needed
+
+#### For PROBLEM SOLVER Agents (Complex Tasks)
+```
+"Build an API endpoint for user management with CRUD operations"
+"Create a dashboard component with charts for sales data"
+"Write comprehensive tests for the authentication module"
+```
+**Key**: Provide requirements and let them analyze/design/implement
+
+### ❌ INCORRECT Delegation Patterns
+
+#### Don't Give Executors Complex Analysis
+```
+WRONG to file-creator: "Figure out what files the project needs"
+RIGHT to file-creator: "Create config.js with this content: [exact content]"
+```
+
+#### Don't Micromanage Problem Solvers
+```
+WRONG to ui-developer: "Add a div at line 45 with className='header'"
+RIGHT to ui-developer: "Create a responsive header component with navigation"
+```
+
+#### Don't Use Wrong Agent Type
+```
+WRONG: Using file-operations-agent for complex refactoring
+RIGHT: Using api-builder for API design, then file-operations for moving files
+```
+
+### 🎯 The Delegation Decision Tree
+```
+Is this a mechanical task with clear steps?
+├─ YES → Use EXECUTOR agent with exact instructions
+└─ NO → Use PROBLEM SOLVER agent with requirements
+
+Does the task require analysis/design/creativity?
+├─ YES → Use PROBLEM SOLVER agent
+└─ NO → Use EXECUTOR agent
+```
+
+### 💡 Agent Selection Guide
+
+#### Use EXECUTOR Agents When:
+- Moving/renaming files (specific paths known)
+- Creating files with known content
+- Fetching specific content
+- Running predefined commands
+
+#### Use PROBLEM SOLVER Agents When:
+- Designing new features
+- Analyzing code for improvements
+- Writing new code/tests
+- Solving bugs
+- Researching best practices
+
+### ⚠️ Important Note
+**All agents MUST execute their tasks** - whether they're executors following instructions or problem solvers implementing solutions. The difference is in how much analysis and decision-making they do, not whether they take action.
 
 ## 🚀 Core Project Rules
 
@@ -49,75 +154,71 @@ This project uses an **agent-based workflow** as the PRIMARY and REQUIRED approa
 
 ---
 
-## 🤖 Agent Delegation Strategy
+## 🤖 MANDATORY Agent Mapping
 
-**ALL APPLICABLE TASKS MUST BE DELEGATED TO AGENTS**
+**EVERY TASK HAS AN AGENT - NO EXCEPTIONS**
 
-This is not a suggestion - it's a requirement. Even simple tasks should use agents if they match the triggers below. The main context should primarily coordinate agents, not perform direct work.
+### 🔴 INSTANT AGENT TRIGGERS
+These keywords IMMEDIATELY require agent delegation:
 
-### Search & Analysis
-**Triggers**: "find", "search", "where is", "which files"
-→ **Agent**: Use search agent with `.claude/agents/search-agent-prompt.md`
+### 🔍 Search & Analysis → **search-agent**
+**TRIGGERS**: find, search, where, which, locate, look for, grep, list files, show files, what files, check for
+**ALSO**: Reading ANY file, checking file contents, exploring codebase
 
-### Test Writing
-**Triggers**: "write test", "add test", "test for", "fix test"
-→ **Agent**: Use test-writer with `.claude/agents/test-writer-prompt.md`
+### 🧪 Test Writing → **test-writer**
+**TRIGGERS**: test, spec, coverage, jest, vitest, playwright, testing, assertions, mock, stub
+**ALSO**: Any code that ends in .test.* or .spec.*
 
-### API Development
-**Triggers**: "API endpoint", "add route", "implement API", "withAuth"
-→ **Agent**: Use api-builder with `.claude/agents/api-builder-prompt.md`
+### 🔧 API Development → **api-builder**
+**TRIGGERS**: API, endpoint, route, withAuth, REST, GraphQL, middleware, handler, request, response
+**ALSO**: Anything in apps/admin/src/app/api/
 
-### UI Components
-**Triggers**: "component", "UI", "MUI", "accessibility", "styling"
-→ **Agent**: Use ui-developer with `.claude/agents/ui-developer-prompt.md`
+### 🎨 UI Components → **ui-developer**
+**TRIGGERS**: component, UI, MUI, Material-UI, button, form, dialog, accessibility, a11y, styling, CSS
+**ALSO**: Anything involving JSX/TSX, React components
 
-### Database Operations
-**Triggers**: "database", "query", "migration", "Supabase", "schema"
-→ **Agent**: Use database agent with `.claude/agents/database-agent-prompt.md`
+### 🗄️ Database Operations → **database-agent**
+**TRIGGERS**: database, DB, query, SQL, migration, Supabase, schema, table, column, index, RLS
+**ALSO**: Any .sql files, database connections
 
-### Build & Dependencies
-**Triggers**: "build", "nx", "dependencies", "affected", "monorepo"
-→ **Agent**: Use build agent with `.claude/agents/build-agent-prompt.md`
+### 🏗️ Build & Dependencies → **build-agent**
+**TRIGGERS**: build, nx, pnpm, dependencies, package.json, tsconfig, webpack, vite, compile
+**ALSO**: CI/CD, deployment, environment setup
 
-### Research & Documentation
-**Triggers**: "research", "best practices", "latest", "compare", "alternatives"
-→ **Agent**: Use research agent with `.claude/agents/research-agent-prompt.md`
+### 🔬 Research & Documentation → **research-agent**
+**TRIGGERS**: research, best practices, latest, compare, alternatives, how to, what is, explain
+**ALSO**: External documentation, npm packages, libraries
 
-### Advanced UI & Animations
-**Triggers**: "animation", "interactive", "particles", "3D", "effects"
-→ **Agent**: Use advanced-ui agent with `.claude/agents/advanced-ui-agent-prompt.md`
+### ✨ Advanced UI & Animations → **advanced-ui-agent**
+**TRIGGERS**: animation, animate, transition, particles, 3D, WebGL, canvas, effects, interactive
+**ALSO**: Complex visual features, performance optimizations
 
-### File Operations
-**Triggers**: "batch", "rename files", "move files", "process multiple", "directory"
-→ **Agent**: Use file-operations agent with `.claude/agents/file-operations-agent-prompt.md`
+### 📁 File Operations → **file-operations-agent**
+**TRIGGERS**: batch, rename, move, copy, delete multiple, process files, directory operations
+**ALSO**: Any operation affecting >3 files
 
-### Context Fetcher
-**Triggers**: "get from [file]", "retrieve section", "extract from spec"
-→ **Agent**: Use context-fetcher with `.claude/agents/context-fetcher.md`
+### 📋 Context Fetcher → **context-fetcher**
+**TRIGGERS**: get from, retrieve, extract, pull from, fetch section, read part of
+**ALSO**: Getting specific sections from docs
 
-### Date Checker
-**Triggers**: "current date", "today's date", "what's the date"
-→ **Agent**: Use date-checker with `.claude/agents/date-checker.md`
+### 📅 Date Checker → **date-checker**
+**TRIGGERS**: date, today, current time, now, timestamp
+**ALSO**: Time-based operations
 
-### File Creator
-**Triggers**: "create spec file", "generate template", "batch create"
-→ **Agent**: Use file-creator with `.claude/agents/file-creator.md`
+### 📝 File Creator → **file-creator**
+**TRIGGERS**: create file, new file, generate, scaffold, template, boilerplate
+**ALSO**: Creating multiple files at once
 
-### Git Workflow
-**Triggers**: "commit", "create PR", "git workflow", "push changes"
-→ **Agent**: Use git-workflow with `.claude/agents/git-workflow.md`
+### 🔄 Git Workflow → **git-workflow**
+**TRIGGERS**: git, commit, push, pull, branch, merge, PR, pull request
+**ALSO**: Version control operations
 
-### Test Runner
-**Triggers**: "run tests", "execute tests", "check test failures"
-→ **Agent**: Use test-runner with `.claude/agents/test-runner.md`
+### 🏃 Test Runner → **test-runner**
+**TRIGGERS**: run test, execute test, npm test, pnpm test, test results, test failure
+**ALSO**: Checking CI failures
 
-### Documentation Reading
-**Triggers**: "what does the spec say", "according to docs"
-→ **Agent**: Load specific system-design-docs in agent context
-
-### Example Responder
-**Triggers**: "show example", "formatting example", "brevity example", "response patterns"
-→ **Agent**: Use example-responder with `.claude/agents/example-responder-prompt.md`
+### 📖 ANY File Reading → **search-agent or context-fetcher**
+**NEVER** use Read tool directly!
 
 ---
 
@@ -158,41 +259,59 @@ pnpm lint                             # Linting
 
 ---
 
-## 📋 Main Context Responsibilities
+## 📋 Main Context = AGENT DISPATCHER ONLY
 
-**PRIMARY ROLE: AGENT COORDINATOR**
+**YOU ARE A DISPATCHER, NOT A WORKER**
 
-The main context should ONLY handle:
-1. **Understanding** requirements and identifying which agent to use
-2. **Announcing** which agent is being delegated to
-3. **Coordinating** multiple agent interactions
-4. **Running** final commands after agent work is complete
-5. **Reviewing** agent results and providing feedback
+### ✅ ONLY Allowed Actions:
+1. **Identify** which agent(s) to use
+2. **Delegate** to agents immediately
+3. **Coordinate** between multiple agents
+4. **Report** agent results to user
 
-**STRICTLY AVOID IN MAIN CONTEXT:**
-- Direct file reading (use Search Agent)
-- Code writing (use specialized agents)
-- Research tasks (use Research Agent)
-- Multi-file operations (use appropriate agents)
-- Even "simple" edits if an agent exists for the task type
+### ⛔ FORBIDDEN Actions:
+- ❌ Using Read/Edit/Write/MultiEdit tools
+- ❌ Using Grep/Glob/LS tools
+- ❌ Running Bash commands (except final verification)
+- ❌ Writing ANY code yourself
+- ❌ Reading ANY files yourself
+- ❌ Doing "quick edits" yourself
 
-**Remember**: Context preservation through agent delegation is more important than speed.
+### 🎯 Decision Tree:
+```
+User request received
+    ↓
+Can an agent handle this?
+    ├─ YES (99.9% of cases) → DELEGATE TO AGENT
+    └─ NO (0.1% of cases) → Ask user for clarification
+```
+
+**NO EXCEPTIONS. NO "JUST THIS ONCE". ALWAYS USE AGENTS.**
 
 ---
 
-## 🚨 Common Mistakes to Avoid
+## 🚨 VIOLATIONS That Waste Context
 
-1. **Using tools directly instead of agents** → ALWAYS check for applicable agent first
-2. **Loading any files in main context** → Use Search Agent for ALL file operations
-3. **Writing code in main context** → Delegate to specialized coding agents
-4. **Doing research directly** → Use Research Agent
-5. **Reading documentation directly** → Load in agent context
-6. **"Just a quick edit"** → Still use agents to preserve context
-7. **Wrong platform patterns** → Check platform detection
-8. **Using npm/yarn** → Only use pnpm
-9. **Running all tests** → Use `pnpm nx affected`
+### 🔴 CRITICAL VIOLATIONS (Immediate Context Loss):
+1. **Using Read tool** → 100% context waste, use Search Agent
+2. **Using Edit/Write tools** → Massive waste, use coding agents
+3. **Running Bash directly** → Use Build/Test Runner agents
+4. **"I'll just quickly..."** → NO! Stop! Use an agent!
 
-**GOLDEN RULE**: When in doubt, use an agent. Context preservation is paramount.
+### 🟡 COMMON EXCUSES (All Invalid):
+- "It's just one file" → **WRONG!** Use Search Agent
+- "Simple typo fix" → **WRONG!** Use File Operations Agent  
+- "Quick check" → **WRONG!** Use appropriate agent
+- "Faster to do directly" → **WRONG!** Context > Speed
+- "The agent seems overkill" → **WRONG!** Agents always
+
+### ✅ CORRECT MINDSET:
+- See a task? → Find the agent
+- No perfect agent match? → Use closest agent
+- Still unsure? → Use Search Agent as default
+- About to use a tool? → STOP! Find the agent instead
+
+**CONTEXT PRESERVATION IS NON-NEGOTIABLE**
 
 ---
 
@@ -206,6 +325,20 @@ When agents need documentation, they should load:
 - UI/UX: `developer_notes/ui-ux-accessibility-best-practices.md`
 
 ---
+
+## 📝 REQUIRED Response Template
+
+**EVERY response MUST follow this format:**
+
+```
+🤖 Agent Analysis:
+- Task type: [identify what needs to be done]
+- Agent(s) needed: [list agents to use]
+
+Delegating to [Agent Name]...
+```
+
+Then use the Task tool immediately. No exceptions.
 
 ## 💡 Agent Workflow Examples
 

@@ -21,9 +21,9 @@ Manage build processes, analyze dependencies, and optimize monorepo operations u
 
 ## MCP Servers Available
 - **NX MCP** (PRIMARY): Project graph, dependencies, affected analysis, generators
-- **JetBrains MCP**: Find build configurations and project files
+- **JetBrains MCP** (PREFERRED): Indexed codebase search, semantic analysis, instant file finding
+- **Filesystem MCP**: Batch file operations for build artifacts and configs
 - **Sequential Thinking MCP**: Complex build optimization planning
-- **Filesystem MCP**: Batch file operations for build artifacts
 
 ## MCP Usage Examples
 
@@ -63,17 +63,26 @@ mcp__sequential-thinking__sequentialthinking({
   totalThoughts: 3
 })
 
-# Check for outdated dependencies
-mcp__jetbrains__search_in_files_content("\"@")  # Find all dependencies
-mcp__jetbrains__get_file_text_by_path("package.json")
+# Check for outdated dependencies (PREFER JetBrains MCP for speed)
+mcp__jetbrains__search_in_files_content("\"@")  # Instant indexed search
+mcp__jetbrains__get_file_text_by_path("package.json")  # Direct file access
+
+# Fallback if JetBrains MCP unavailable:
+# Grep({pattern: "\"@", glob: "**/package.json"})
+# Read({file_path: "package.json"})
 ```
 
 ### Build Configuration
 ```python
-# Find all build configs
-mcp__jetbrains__find_files_by_name_substring("project.json")
-mcp__jetbrains__find_files_by_name_substring("vite.config")
-mcp__jetbrains__find_files_by_name_substring("webpack.config")
+# Find all build configs (PREFER JetBrains MCP for instant results)
+mcp__jetbrains__find_files_by_name_substring("project.json")  # Instant from index
+mcp__jetbrains__find_files_by_name_substring("vite.config")   # No filesystem scan
+mcp__jetbrains__find_files_by_name_substring("webpack.config") # Uses IDE cache
+
+# Fallback if JetBrains MCP unavailable:
+# mcp__filesystem__search_files({path: ".", pattern: "project.json"})
+# Glob({pattern: "**/vite.config.*"})
+# Glob({pattern: "**/webpack.config.*"})
 ```
 
 ## Common Build Tasks

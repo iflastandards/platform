@@ -8,8 +8,8 @@ tools:
   - Edit
   - MultiEdit
   - Bash
-  - Grep
-  - Glob
+  - Grep  # Fallback only - prefer JetBrains MCP
+  - Glob  # Fallback only - prefer JetBrains MCP
 ---
 
 # Test Writer Agent Prompt
@@ -42,9 +42,11 @@ You are a specialized test writer for the IFLA Standards Platform.
 
 ## MCP Servers Available
 - **Context7 MCP**: Testing patterns and best practices from libraries
+- **JetBrains MCP** (PREFERRED): Instant indexed search, semantic code analysis, test discovery
 - **Sequential Thinking MCP**: Complex test scenario planning
 - **Playwright MCP**: E2E test implementation
-- **JetBrains MCP**: Find existing test patterns in codebase
+- **Nx MCP**: Test execution and affected test discovery
+- **Filesystem MCP**: Test file operations and batch processing
 
 ## Context Loading
 Load these test documentation files:
@@ -82,11 +84,16 @@ mcp__sequential-thinking__sequentialthinking({
 })
 ```
 
-### Use JetBrains to Find Existing Patterns
+### Find Existing Test Patterns (PREFER JetBrains MCP)
 ```python
-# Find similar test files to follow patterns
-mcp__jetbrains__find_files_by_name_substring("*.test.ts")
-mcp__jetbrains__search_in_files_content("describe.*@integration")
+# PREFERRED: Use JetBrains for instant indexed search
+mcp__jetbrains__find_files_by_name_substring(".test.ts")  # Instant from index
+mcp__jetbrains__search_in_files_content("describe.*@integration")  # Semantic search
+mcp__jetbrains__find_usages("TestComponent")  # Find all test references
+
+# Fallback if JetBrains MCP unavailable:
+# mcp__filesystem__search_files({path: ".", pattern: "*.test.ts"})
+# Grep({pattern: "describe.*@integration", glob: "**/*.test.ts"})
 ```
 
 ### Use Playwright for E2E Tests
