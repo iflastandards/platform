@@ -48,8 +48,10 @@ class ParallelWarningCollector {
   buildSite(site) {
     return new Promise((resolve) => {
       const warnings = [];
+      const brokenLinks = [];
       const startTime = Date.now();
       let output = '';
+      let currentBrokenLinkSource = null;
 
       console.log(`🏗️  Starting build: ${site}`);
 
@@ -77,13 +79,38 @@ class ParallelWarningCollector {
         const text = data.toString();
         output += text;
 
-        // Real-time warning detection
+        // Real-time warning detection and broken link parsing
         const lines = text.split('\n');
         lines.forEach((line) => {
+          // Check for broken link source page
+          const brokenLinkSourceMatch = line.match(
+            /Broken link on source page path = (.+?):/,
+          );
+          if (brokenLinkSourceMatch) {
+            currentBrokenLinkSource = brokenLinkSourceMatch[1].trim();
+          }
+
+          // Check for broken link target
+          const brokenLinkTargetMatch = line.match(/-> linking to (.+)/);
+          if (brokenLinkTargetMatch && currentBrokenLinkSource) {
+            // Strip ANSI color codes from the target link
+            const targetLink = brokenLinkTargetMatch[1]
+              .trim()
+              .replace(/\u001b\[[0-9;]*m/g, '');
+            brokenLinks.push({
+              site,
+              sourcePage: currentBrokenLinkSource,
+              targetLink,
+              timestamp: new Date().toISOString(),
+            });
+          }
+
           if (this.isWarning(line)) {
+            // Strip ANSI color codes from the warning line
+            const cleanLine = line.trim().replace(/\u001b\[[0-9;]*m/g, '');
             warnings.push({
               site,
-              line: line.trim(),
+              line: cleanLine,
               timestamp: new Date().toISOString(),
             });
           }
@@ -95,13 +122,38 @@ class ParallelWarningCollector {
         const text = data.toString();
         output += text;
 
-        // Check stderr for warnings too
+        // Check stderr for warnings and broken links too
         const lines = text.split('\n');
         lines.forEach((line) => {
+          // Check for broken link source page
+          const brokenLinkSourceMatch = line.match(
+            /Broken link on source page path = (.+?):/,
+          );
+          if (brokenLinkSourceMatch) {
+            currentBrokenLinkSource = brokenLinkSourceMatch[1].trim();
+          }
+
+          // Check for broken link target
+          const brokenLinkTargetMatch = line.match(/-> linking to (.+)/);
+          if (brokenLinkTargetMatch && currentBrokenLinkSource) {
+            // Strip ANSI color codes from the target link
+            const targetLink = brokenLinkTargetMatch[1]
+              .trim()
+              .replace(/\u001b\[[0-9;]*m/g, '');
+            brokenLinks.push({
+              site,
+              sourcePage: currentBrokenLinkSource,
+              targetLink,
+              timestamp: new Date().toISOString(),
+            });
+          }
+
           if (this.isWarning(line)) {
+            // Strip ANSI color codes from the warning line
+            const cleanLine = line.trim().replace(/\u001b\[[0-9;]*m/g, '');
             warnings.push({
               site,
-              line: line.trim(),
+              line: cleanLine,
               timestamp: new Date().toISOString(),
             });
           }
@@ -112,8 +164,13 @@ class ParallelWarningCollector {
         const buildTime = ((Date.now() - startTime) / 1000).toFixed(2);
         const success = code === 0;
 
+        const warningMsg =
+          warnings.length > 0 ? `${warnings.length} warnings` : 'no warnings';
+        const brokenLinkMsg =
+          brokenLinks.length > 0 ? `, ${brokenLinks.length} broken links` : '';
+
         console.log(
-          `${success ? '✅' : '❌'} ${site}: ${buildTime}s, ${warnings.length} warnings`,
+          `${success ? '✅' : '❌'} ${site}: ${buildTime}s, ${warningMsg}${brokenLinkMsg}`,
         );
 
         // If build failed, show the last part of the output for debugging
@@ -147,6 +204,7 @@ class ParallelWarningCollector {
           success,
           buildTime,
           warnings,
+          brokenLinks,
           exitCode: code,
           errorOutput: !success ? output : undefined,
         });
@@ -234,17 +292,51 @@ class ParallelWarningCollector {
       (sum, r) => sum + r.warnings.length,
       0,
     );
+    const totalBrokenLinks = results.reduce(
+      (sum, r) => sum + (r.brokenLinks ? r.brokenLinks.length : 0),
+      0,
+    );
     const failedBuilds = results.filter((r) => !r.success).length;
 
     let summary = '# Build Warnings Summary\n\n';
     summary += `- Total warnings: ${totalWarnings}\n`;
+    summary += `- Total broken links: ${totalBrokenLinks}\n`;
     summary += `- Failed builds: ${failedBuilds}\n`;
     summary += `- Timestamp: ${new Date().toISOString()}\n\n`;
 
     summary += '## By Site\n\n';
-    results.forEach(({ site, success, warnings, buildTime }) => {
-      summary += `- **${site}**: ${success ? '✅' : '❌'} ${warnings.length} warnings (${buildTime}s)\n`;
+    results.forEach(({ site, success, warnings, brokenLinks, buildTime }) => {
+      const brokenLinkCount = brokenLinks ? brokenLinks.length : 0;
+      summary += `- **${site}**: ${success ? '✅' : '❌'} ${warnings.length} warnings, ${brokenLinkCount} broken links (${buildTime}s)\n`;
     });
+
+    // Add broken links section if any exist
+    if (totalBrokenLinks > 0) {
+      summary += '\n## Broken Links Details\n\n';
+      results.forEach(({ site, brokenLinks }) => {
+        if (brokenLinks && brokenLinks.length > 0) {
+          summary += `### ${site}\n\n`;
+
+          // Group broken links by source page
+          const linksBySource = {};
+          brokenLinks.forEach((link) => {
+            if (!linksBySource[link.sourcePage]) {
+              linksBySource[link.sourcePage] = [];
+            }
+            linksBySource[link.sourcePage].push(link.targetLink);
+          });
+
+          // Display grouped broken links
+          Object.entries(linksBySource).forEach(([source, targets]) => {
+            summary += `**Page: ${source}**\n`;
+            targets.forEach((target) => {
+              summary += `  - → ${target}\n`;
+            });
+            summary += '\n';
+          });
+        }
+      });
+    }
 
     if (totalWarnings > 0) {
       summary += '\n## All Warnings\n\n';
@@ -322,6 +414,22 @@ class ParallelWarningCollector {
     // Also save as JSON for processing
     const jsonPath = path.join(reportsDir, 'build-warnings.json');
     fs.writeFileSync(jsonPath, JSON.stringify(results, null, 2));
+
+    // Save broken links separately for easier processing
+    const allBrokenLinks = results.flatMap((r) =>
+      (r.brokenLinks || []).map((link) => ({
+        ...link,
+        site: r.site,
+      })),
+    );
+    if (allBrokenLinks.length > 0) {
+      const brokenLinksPath = path.join(reportsDir, 'broken-links.json');
+      fs.writeFileSync(
+        brokenLinksPath,
+        JSON.stringify(allBrokenLinks, null, 2),
+      );
+      console.log(`\n🔗 Broken links saved to: ${brokenLinksPath}`);
+    }
 
     // GitHub Actions summary
     if (process.env.GITHUB_STEP_SUMMARY) {
