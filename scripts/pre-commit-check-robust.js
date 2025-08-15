@@ -1,13 +1,18 @@
 #!/usr/bin/env node
 
 // Fix MaxListenersExceededWarning - must be at the very top before any requires
+// This warning occurs because Nx spawns multiple child processes that all register listeners
 process.setMaxListeners(0); // 0 = unlimited listeners
 require('events').EventEmitter.defaultMaxListeners = 50;
+
+// Also set for the EventEmitter prototype to catch all instances
+const EventEmitter = require('events');
+EventEmitter.prototype.setMaxListeners(50);
 
 /**
  * Robust pre-commit check with progress indicators, timeouts, and recovery
  * Addresses the recurring issue of silent failures when pre-commit hooks take too long
- * 
+ *
  * Features:
  * - Progress indicators with time estimates
  * - Configurable timeouts with graceful handling
@@ -25,17 +30,17 @@ const path = require('path');
 // Configuration
 const CONFIG = {
   // Timeouts in milliseconds
-  TYPECHECK_TIMEOUT: 5 * 60 * 1000,    // 5 minutes
-  TEST_TIMEOUT: 10 * 60 * 1000,        // 10 minutes
-  LINT_TIMEOUT: 3 * 60 * 1000,         // 3 minutes
-  SECRETS_TIMEOUT: 30 * 1000,          // 30 seconds
-  
+  TYPECHECK_TIMEOUT: 5 * 60 * 1000, // 5 minutes
+  TEST_TIMEOUT: 10 * 60 * 1000, // 10 minutes
+  LINT_TIMEOUT: 3 * 60 * 1000, // 3 minutes
+  SECRETS_TIMEOUT: 30 * 1000, // 30 seconds
+
   // Progress update intervals
-  PROGRESS_INTERVAL: 10 * 1000,        // 10 seconds
-  
+  PROGRESS_INTERVAL: 10 * 1000, // 10 seconds
+
   // Retry configuration
   MAX_RETRIES: 2,
-  RETRY_DELAY: 5 * 1000,               // 5 seconds
+  RETRY_DELAY: 5 * 1000, // 5 seconds
 };
 
 // State management
@@ -53,30 +58,39 @@ class PreCommitRunner {
 
   log(message, type = 'info') {
     const timestamp = new Date().toLocaleTimeString();
-    const prefix = {
-      'info': '📋',
-      'success': '✅',
-      'error': '❌',
-      'warning': '⚠️',
-      'progress': '🔄'
-    }[type] || 'ℹ️';
-    
+    const prefix =
+      {
+        info: '📋',
+        success: '✅',
+        error: '❌',
+        warning: '⚠️',
+        progress: '🔄',
+      }[type] || 'ℹ️';
+
     console.log(`${prefix} [${timestamp}] ${message}`);
   }
 
   logProgress(message) {
     const elapsed = Math.round((Date.now() - this.startTime) / 1000);
-    const progress = this.totalSteps > 0 ? `(${this.completedSteps}/${this.totalSteps})` : '';
+    const progress =
+      this.totalSteps > 0 ? `(${this.completedSteps}/${this.totalSteps})` : '';
     this.log(`${message} ${progress} - ${elapsed}s elapsed`, 'progress');
   }
 
   saveState(state) {
     try {
-      fs.writeFileSync(STATE_FILE, JSON.stringify({
-        ...state,
-        timestamp: Date.now(),
-        pid: process.pid
-      }, null, 2));
+      fs.writeFileSync(
+        STATE_FILE,
+        JSON.stringify(
+          {
+            ...state,
+            timestamp: Date.now(),
+            pid: process.pid,
+          },
+          null,
+          2,
+        ),
+      );
     } catch (error) {
       this.log(`Warning: Could not save state: ${error.message}`, 'warning');
     }
@@ -110,14 +124,14 @@ class PreCommitRunner {
   async runWithTimeout(command, args, options = {}) {
     const timeout = options.timeout || 5 * 60 * 1000; // 5 minutes default
     const description = options.description || command;
-    
+
     return new Promise((resolve, reject) => {
       this.logProgress(`Starting: ${description}`);
-      
+
       const child = spawn(command, args, {
         stdio: 'pipe',
         encoding: 'utf8',
-        ...options.spawnOptions
+        ...options.spawnOptions,
       });
 
       let stdout = '';
@@ -133,12 +147,18 @@ class PreCommitRunner {
       // Timeout handling
       timeoutTimer = setTimeout(() => {
         this.log(`Timeout reached for: ${description}`, 'warning');
-        this.log(`Process has been running for ${Math.round(timeout / 1000)}s`, 'warning');
+        this.log(
+          `Process has been running for ${Math.round(timeout / 1000)}s`,
+          'warning',
+        );
         this.log('You can:', 'info');
         this.log('  1. Wait longer (process is still running)', 'info');
-        this.log('  2. Press Ctrl+C to cancel and use: git commit --no-verify', 'info');
+        this.log(
+          '  2. Press Ctrl+C to cancel and use: git commit --no-verify',
+          'info',
+        );
         this.log('  3. Use: pnpm commit:fast for urgent commits', 'info');
-        
+
         // Don't kill the process, just warn the user
         // child.kill('SIGTERM');
       }, timeout);
@@ -147,8 +167,13 @@ class PreCommitRunner {
         stdout += data;
         // Show important output immediately
         const lines = data.toString().split('\n');
-        lines.forEach(line => {
-          if (line.includes('✓') || line.includes('✗') || line.includes('error') || line.includes('failed')) {
+        lines.forEach((line) => {
+          if (
+            line.includes('✓') ||
+            line.includes('✗') ||
+            line.includes('error') ||
+            line.includes('failed')
+          ) {
             console.log(line);
           }
         });
@@ -160,10 +185,17 @@ class PreCommitRunner {
         console.error(data.toString());
       });
 
-      child.on('close', (code) => {
+      // Define handlers as named functions so we can remove them later
+      const handleClose = (code) => {
         clearInterval(progressTimer);
         clearTimeout(timeoutTimer);
-        
+
+        // Clean up all listeners
+        child.stdout.removeAllListeners();
+        child.stderr.removeAllListeners();
+        child.removeListener('close', handleClose);
+        child.removeListener('error', handleError);
+
         if (code === 0) {
           this.log(`Completed: ${description}`, 'success');
           resolve({ code, stdout, stderr });
@@ -171,25 +203,38 @@ class PreCommitRunner {
           this.log(`Failed: ${description} (exit code: ${code})`, 'error');
           reject(new Error(`${description} failed with exit code ${code}`));
         }
-      });
+      };
 
-      child.on('error', (error) => {
+      const handleError = (error) => {
         clearInterval(progressTimer);
         clearTimeout(timeoutTimer);
+
+        // Clean up all listeners
+        child.stdout.removeAllListeners();
+        child.stderr.removeAllListeners();
+        child.removeListener('close', handleClose);
+        child.removeListener('error', handleError);
+
         this.log(`Error running: ${description} - ${error.message}`, 'error');
         reject(error);
-      });
+      };
+
+      child.on('close', handleClose);
+      child.on('error', handleError);
     });
   }
 
   async runStep(stepName, command, args, options = {}) {
     this.currentStep = stepName;
-    this.saveState({ currentStep: stepName, completedSteps: this.completedSteps });
-    
+    this.saveState({
+      currentStep: stepName,
+      completedSteps: this.completedSteps,
+    });
+
     try {
       await this.runWithTimeout(command, args, {
         description: stepName,
-        ...options
+        ...options,
       });
       this.completedSteps++;
       this.log(`✅ ${stepName} completed`, 'success');
@@ -205,22 +250,30 @@ class PreCommitRunner {
     try {
       await this.runWithTimeout('node', ['scripts/check-secrets-staged.js'], {
         timeout: CONFIG.SECRETS_TIMEOUT,
-        description: 'Secrets detection'
+        description: 'Secrets detection',
       });
       return true;
     } catch (error) {
-      this.log('❌ Secrets detected! Please remove sensitive information before committing.', 'error');
-      this.log('You can use: pnpm check:secrets:fix to attempt automatic fixes.', 'info');
+      this.log(
+        '❌ Secrets detected! Please remove sensitive information before committing.',
+        'error',
+      );
+      this.log(
+        'You can use: pnpm check:secrets:fix to attempt automatic fixes.',
+        'info',
+      );
       return false;
     }
   }
 
   async analyzeChanges() {
     this.log('Analyzing staged changes...', 'info');
-    
+
     let stagedFiles = [];
     try {
-      const output = execSync('git diff --cached --name-only', { encoding: 'utf8' }).trim();
+      const output = execSync('git diff --cached --name-only', {
+        encoding: 'utf8',
+      }).trim();
       stagedFiles = output ? output.split('\n').filter(Boolean) : [];
     } catch (error) {
       this.log('⚠️  No staged files found or git error', 'warning');
@@ -232,22 +285,35 @@ class PreCommitRunner {
     }
 
     // Categorize changes
-    const dependencyFiles = ['package.json', 'pnpm-lock.yaml', 'yarn.lock', 'package-lock.json'];
-    const docFiles = stagedFiles.filter(f => f.endsWith('.md') || f.startsWith('developer_notes/'));
-    const codeFiles = stagedFiles.filter(f => 
-      !dependencyFiles.includes(f) && 
-      !f.endsWith('.md') && 
-      !f.startsWith('developer_notes/')
+    const dependencyFiles = [
+      'package.json',
+      'pnpm-lock.yaml',
+      'yarn.lock',
+      'package-lock.json',
+    ];
+    const docFiles = stagedFiles.filter(
+      (f) => f.endsWith('.md') || f.startsWith('developer_notes/'),
+    );
+    const codeFiles = stagedFiles.filter(
+      (f) =>
+        !dependencyFiles.includes(f) &&
+        !f.endsWith('.md') &&
+        !f.startsWith('developer_notes/'),
     );
 
-    const isDependencyOnly = codeFiles.length === 0 && stagedFiles.some(f => dependencyFiles.includes(f));
+    const isDependencyOnly =
+      codeFiles.length === 0 &&
+      stagedFiles.some((f) => dependencyFiles.includes(f));
     const isDocumentationOnly = codeFiles.length === 0 && docFiles.length > 0;
 
-    this.log(`📊 Change analysis:
+    this.log(
+      `📊 Change analysis:
   - Total files: ${stagedFiles.length}
   - Code files: ${codeFiles.length}
   - Documentation files: ${docFiles.length}
-  - Dependency files: ${stagedFiles.filter(f => dependencyFiles.includes(f)).length}`, 'info');
+  - Dependency files: ${stagedFiles.filter((f) => dependencyFiles.includes(f)).length}`,
+      'info',
+    );
 
     if (isDependencyOnly) {
       this.totalSteps = 3; // secrets, typecheck, lint
@@ -268,12 +334,17 @@ class PreCommitRunner {
       return await this.runFastMode();
     }
 
-    console.log('\n🚀 Running robust pre-commit checks with progress tracking...\n');
-    
+    console.log(
+      '\n🚀 Running robust pre-commit checks with progress tracking...\n',
+    );
+
     // Check for previous failed state
     const previousState = this.loadState();
     if (previousState) {
-      this.log(`Found previous incomplete run from ${new Date(previousState.timestamp).toLocaleString()}`, 'warning');
+      this.log(
+        `Found previous incomplete run from ${new Date(previousState.timestamp).toLocaleString()}`,
+        'warning',
+      );
       this.log(`Last step: ${previousState.currentStep}`, 'info');
       this.log('Starting fresh run...', 'info');
     }
@@ -283,7 +354,7 @@ class PreCommitRunner {
 
     // Analyze changes
     const analysis = await this.analyzeChanges();
-    
+
     if (analysis.type === 'none') {
       this.log('✅ No staged files - skipping pre-commit checks', 'success');
       this.clearState();
@@ -291,12 +362,18 @@ class PreCommitRunner {
     }
 
     this.log(`🎯 Running ${analysis.type} validation workflow`, 'info');
-    this.log(`⏱️  Estimated time: ${this.getEstimatedTime(analysis.type)}`, 'info');
-    this.log('💡 You can cancel anytime with Ctrl+C and use: git commit --no-verify', 'info');
+    this.log(
+      `⏱️  Estimated time: ${this.getEstimatedTime(analysis.type)}`,
+      'info',
+    );
+    this.log(
+      '💡 You can cancel anytime with Ctrl+C and use: git commit --no-verify',
+      'info',
+    );
     console.log('');
 
     // Always run secrets check first
-    if (!await this.runSecretsCheck()) {
+    if (!(await this.runSecretsCheck())) {
       this.hasErrors = true;
       this.saveState({ failed: true, reason: 'secrets_detected' });
       return false;
@@ -308,38 +385,79 @@ class PreCommitRunner {
       // Only secrets check needed
     } else if (analysis.type === 'dependency') {
       this.log('📦 Dependency-only changes - light validation', 'info');
-      
-      if (!await this.runStep('TypeScript Check', 'pnpm', ['nx', 'run', 'admin:typecheck'], {
-        timeout: CONFIG.TYPECHECK_TIMEOUT
-      })) {
+
+      if (
+        !(await this.runStep(
+          'TypeScript Check',
+          'pnpm',
+          ['nx', 'run', 'admin:typecheck'],
+          {
+            timeout: CONFIG.TYPECHECK_TIMEOUT,
+          },
+        ))
+      ) {
         this.hasErrors = true;
       }
 
-      if (!await this.runStep('ESLint', 'pnpm', ['nx', 'affected', '--target=lint', '--parallel=3'], {
-        timeout: CONFIG.LINT_TIMEOUT
-      })) {
+      if (
+        !(await this.runStep(
+          'ESLint',
+          'pnpm',
+          ['nx', 'affected', '--target=lint', '--parallel=3'],
+          {
+            timeout: CONFIG.LINT_TIMEOUT,
+          },
+        ))
+      ) {
         // Lint warnings don't fail the commit
         this.log('⚠️  ESLint completed with warnings (this is OK)', 'warning');
       }
     } else {
       this.log('🔍 Code changes - full validation', 'info');
-      
-      if (!await this.runStep('TypeScript Check', 'pnpm', ['nx', 'affected', '--target=typecheck', '--parallel=3'], {
-        timeout: CONFIG.TYPECHECK_TIMEOUT
-      })) {
+
+      if (
+        !(await this.runStep(
+          'TypeScript Check',
+          'pnpm',
+          ['nx', 'affected', '--target=typecheck', '--parallel=3'],
+          {
+            timeout: CONFIG.TYPECHECK_TIMEOUT,
+          },
+        ))
+      ) {
         this.hasErrors = true;
       }
 
       // Run unit tests only for pre-commit (fast feedback)
-      if (!await this.runStep('Tests', 'pnpm', ['nx', 'affected', '--target=test:unit', '--parallel=3', '--exclude=platform,@ifla/dev-servers,unified-spreadsheet,standards-cli'], {
-        timeout: CONFIG.TEST_TIMEOUT
-      })) {
+      if (
+        !(await this.runStep(
+          'Tests',
+          'pnpm',
+          [
+            'nx',
+            'affected',
+            '--target=test:unit',
+            '--parallel=3',
+            '--exclude=platform,@ifla/dev-servers,unified-spreadsheet,standards-cli',
+          ],
+          {
+            timeout: CONFIG.TEST_TIMEOUT,
+          },
+        ))
+      ) {
         this.hasErrors = true;
       }
 
-      if (!await this.runStep('ESLint', 'pnpm', ['nx', 'affected', '--target=lint', '--parallel=3'], {
-        timeout: CONFIG.LINT_TIMEOUT
-      })) {
+      if (
+        !(await this.runStep(
+          'ESLint',
+          'pnpm',
+          ['nx', 'affected', '--target=lint', '--parallel=3'],
+          {
+            timeout: CONFIG.LINT_TIMEOUT,
+          },
+        ))
+      ) {
         // Lint warnings don't fail the commit
         this.log('⚠️  ESLint completed with warnings (this is OK)', 'warning');
       }
@@ -347,10 +465,13 @@ class PreCommitRunner {
 
     // Final summary
     const totalTime = Math.round((Date.now() - this.startTime) / 1000);
-    
+
     if (this.hasErrors) {
       this.log(`❌ Pre-commit checks failed after ${totalTime}s`, 'error');
-      this.log('🔧 To fix and retry: fix the issues and run git commit again', 'info');
+      this.log(
+        '🔧 To fix and retry: fix the issues and run git commit again',
+        'info',
+      );
       this.log('🚀 For urgent commits: git commit --no-verify', 'info');
       this.log('⚡ For fast commits: pnpm commit:fast', 'info');
       this.saveState({ failed: true, reason: 'validation_failed', totalTime });
@@ -368,7 +489,7 @@ class PreCommitRunner {
     this.totalSteps = 1;
 
     // Only run secrets check in fast mode
-    if (!await this.runSecretsCheck()) {
+    if (!(await this.runSecretsCheck())) {
       this.hasErrors = true;
       this.saveState({ failed: true, reason: 'secrets_detected' });
       return false;
@@ -383,25 +504,38 @@ class PreCommitRunner {
 
   getEstimatedTime(type) {
     switch (type) {
-      case 'documentation': return '~10 seconds';
-      case 'dependency': return '~1-2 minutes';
-      case 'code': return '~3-5 minutes';
-      default: return '~2-3 minutes';
+      case 'documentation':
+        return '~10 seconds';
+      case 'dependency':
+        return '~1-2 minutes';
+      case 'code':
+        return '~3-5 minutes';
+      default:
+        return '~2-3 minutes';
     }
   }
 }
 
-// Handle graceful shutdown
-process.on('SIGINT', () => {
+// Handle graceful shutdown - remove existing listeners first to avoid duplicates
+process.removeAllListeners('SIGINT');
+process.removeAllListeners('SIGTERM');
+process.removeAllListeners('SIGHUP');
+
+process.once('SIGINT', () => {
   console.log('\n\n🛑 Pre-commit checks interrupted by user');
   console.log('💡 To commit without checks: git commit --no-verify');
   console.log('⚡ For fast commits: pnpm commit:fast');
   process.exit(130); // Standard exit code for SIGINT
 });
 
-process.on('SIGTERM', () => {
+process.once('SIGTERM', () => {
   console.log('\n\n🛑 Pre-commit checks terminated');
   process.exit(143); // Standard exit code for SIGTERM
+});
+
+process.once('SIGHUP', () => {
+  console.log('\n\n🛑 Pre-commit checks disconnected');
+  process.exit(129); // Standard exit code for SIGHUP
 });
 
 // Main execution
@@ -412,7 +546,7 @@ async function main() {
 }
 
 if (require.main === module) {
-  main().catch(error => {
+  main().catch((error) => {
     console.error('💥 Unexpected error:', error.message);
     console.log('🚀 For urgent commits: git commit --no-verify');
     process.exit(1);
