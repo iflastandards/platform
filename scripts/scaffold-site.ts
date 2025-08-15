@@ -2,6 +2,9 @@
 /**
  * Site Scaffolding Script for IFLA Standards
  * 
+ * ⚠️ DEPRECATED: This script is deprecated. Use create-ifla-standard.ts instead.
+ * Documentation: developer_notes/script-documentation/02-scaffold-site.md
+ * 
  * Creates a complete new site using the proven template that eliminates contamination.
  *
  * Usage:

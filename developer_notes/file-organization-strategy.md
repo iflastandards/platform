@@ -54,6 +54,55 @@ When creating scripts or processes that generate temporary files:
 ./tmp/downloads/dependency-check.json
 ```
 
+## Vocabulary Files Organization (`vocabs/`)
+
+The `vocabs/` directory contains all vocabulary-related assets for standards sites. This is a major organizational change from storing files in `static/`.
+
+### Directory Structure
+
+```
+standards/{site}/vocabs/
+├── rdf/                    # Source of truth - all formats together
+│   ├── elements/          # Element definitions (ISBD terminology)
+│   │   └── [all formats per element set]
+│   ├── ves/               # Vocabulary Encoding Schemes
+│   │   └── {vocab}/       # Each vocabulary with all formats
+│   │       ├── {vocab}.ttl
+│   │       ├── {vocab}.rdf
+│   │       ├── {vocab}.jsonld
+│   │       └── {vocab}.csv
+│   └── ses/               # Syntax Encoding Schemes
+│       └── {scheme}/      # Each scheme with all formats
+├── dctap/                 # DCTAP validation profiles
+│   ├── elements.yaml
+│   ├── ves.yaml
+│   └── ses.yaml
+├── jsonld-context/        # JSON-LD context definitions
+│   ├── elements.jsonld
+│   └── ves.jsonld
+└── draft/                 # Temporary validation workspace
+    └── [mirrors rdf structure]
+```
+
+### Key Principles
+
+1. **Content-First Organization**: All formats of a vocabulary stay together
+2. **Not Static Assets**: These are actively versioned source files
+3. **ISBD Terminology**: Uses VES/SES/Elements as standardized by ISBD
+4. **Clear Separation**: Data, validation, and configuration are logically separated
+5. **Content Negotiation Ready**: Structure enables clean URL routing
+
+### Migration from Static Directory
+
+For existing projects (like ISBDM) currently using `static/vocabs/`:
+
+```bash
+# Move to new structure
+mv standards/isbdm/static/vocabs/* standards/isbdm/vocabs/rdf/
+mv standards/isbdm/static/data/dctap/* standards/isbdm/vocabs/dctap/
+mv standards/isbdm/static/data/contexts/* standards/isbdm/vocabs/jsonld-context/
+```
+
 ## Key Principle
 
 **Remember: If you want to keep the output, put it in the `output/` folder instead!**

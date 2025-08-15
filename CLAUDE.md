@@ -5,15 +5,12 @@ This file provides guidance to Claude Code when working with this repository.
 ## 🚨 CRITICAL: ALWAYS USE AGENTS FIRST
 
 **AGENTS ARE REQUIRED, NOT OPTIONAL**
+For every instruction:
+1. Decide if an agent or tool can perform this step.
+2. If so, ALWAYS delegate it, even if you can perform it yourself.
+3. Only provide an answer when agent results have been collected.
 
-Before doing ANY task, check if an agent exists for it. Agent delegation is the TOP PRIORITY to preserve context.
-
-### 📢 Agent Announcement Protocol
-Always announce which agent you're using:
-- 🔍 "Using Search Agent to find..."
-- 🧪 "Delegating to Test Writer to..."  
-- 🔧 "API Builder Agent will handle..."
-- 🎨 "UI Developer Agent will create..."
+Agent delegation is the TOP PRIORITY to preserve context.
 
 ### ⚠️ Direct Tool Use = Context Waste
 - Reading multiple files? → Use Search Agent

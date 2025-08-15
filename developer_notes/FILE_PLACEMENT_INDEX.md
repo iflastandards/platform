@@ -79,6 +79,37 @@ The monorepo contains two distinct platform types:
 | **Auth Components** | `apps/admin/src/components/auth/` | Authentication UI |
 | **Accessibility** | `apps/admin/src/components/accessibility/` | A11y utilities |
 
+## Vocabulary and RDF Files
+
+### Standards Site Vocabulary Structure
+
+| File Type | Location | Purpose |
+|-----------|----------|---------|
+| **Element Definitions** | `standards/{site}/vocabs/rdf/elements/` | Element sets in all formats (TTL, RDF, JSON-LD, CSV) |
+| **VES (Vocabulary Encoding Schemes)** | `standards/{site}/vocabs/rdf/ves/{vocab}/` | Vocabularies with all formats together |
+| **SES (Syntax Encoding Schemes)** | `standards/{site}/vocabs/rdf/ses/{scheme}/` | Syntax schemes with all formats together |
+| **DCTAP Profiles** | `standards/{site}/vocabs/dctap/` | CSV validation profiles (YAML) |
+| **JSON-LD Contexts** | `standards/{site}/vocabs/jsonld-context/` | Context definitions for JSON-LD |
+| **Draft/Validation** | `standards/{site}/vocabs/draft/` | Temporary workspace for validation |
+
+### Content Organization Principle
+
+All formats of a vocabulary stay together:
+```
+vocabs/rdf/ves/contentform/
+├── contentform.ttl
+├── contentform.rdf
+├── contentform.jsonld
+└── contentform.csv
+```
+
+### IMPORTANT: Not in Static Directory
+
+Vocabulary files are **NOT** static assets. They are:
+- Actively versioned source files
+- Content-negotiated at runtime
+- The source of truth for standards
+
 ## Backend/Service Code Placement
 
 ### Admin App Backend
@@ -258,3 +289,52 @@ if (isSpreadsheetRelated) {
 - **Use explicit test type suffixes** for clarity
 - **Follow platform conventions** (Next.js vs Docusaurus)
 - **Check for existing utilities** before creating new ones
+
+## Vocabulary File Placement Guide
+
+### When Working with Standards Vocabulary Files
+
+```typescript
+// Determine correct location for vocabulary files
+if (isVocabularyData) {
+  const basePath = `standards/${site}/vocabs/rdf/`;
+  
+  if (isElementDefinition) {
+    // Elements go in elements/ directory
+    path = `${basePath}elements/${elementSet}.${format}`
+    // Example: standards/isbd/vocabs/rdf/elements/isbd-elements.ttl
+  } 
+  else if (isVES) {  // Vocabulary Encoding Scheme
+    // VES files organized by vocabulary, all formats together
+    path = `${basePath}ves/${vocabName}/${vocabName}.${format}`
+    // Example: standards/isbd/vocabs/rdf/ves/contentform/contentform.csv
+  } 
+  else if (isSES) {  // Syntax Encoding Scheme
+    // SES files organized by scheme, all formats together
+    path = `${basePath}ses/${schemeName}/${schemeName}.${format}`
+    // Example: standards/isbd/vocabs/rdf/ses/punctuation/punctuation.ttl
+  }
+}
+
+// For vocabulary configuration files
+if (isDCTAP) {
+  path = `standards/${site}/vocabs/dctap/${profile}.yaml`
+} 
+else if (isJSONLDContext) {
+  path = `standards/${site}/vocabs/jsonld-context/${context}.jsonld`
+}
+
+// For validation/draft files
+if (isDraftValidation) {
+  // Draft structure mirrors rdf/ structure
+  path = `standards/${site}/vocabs/draft/${samePath}`
+}
+```
+
+### Key Principles for Vocabulary Files
+
+1. **Content-First Organization**: All formats of a vocabulary stay together in one directory
+2. **Not in Static**: Vocabulary files are source data, NOT static assets
+3. **Use ISBD Terminology**: VES (Vocabulary Encoding Schemes), SES (Syntax Encoding Schemes), Elements
+4. **Clear Separation**: Data (rdf/), validation (dctap/), configuration (jsonld-context/) are separate
+5. **Draft Mirrors Source**: The draft/ directory structure matches rdf/ for easy comparison

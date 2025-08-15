@@ -224,6 +224,25 @@ The IFLA Standards Platform follows a comprehensive 8-phase development workflow
 
 **Tools**: Release scripts, GitHub releases
 
+**Versioning Strategy**:
+- Independent versioning per standard using Git tags
+- Format: `{standard}-v{version}` (e.g., `isbd-v1.2.0`)
+- All RDF formats and CSV version together
+- External publication via PR to versioned repositories
+
+**Release Command Flow**:
+```bash
+# Validate round-trip (CSV → Docs → RDF)
+pnpm nx run isbd:validate-rdf
+
+# Tag the release
+git tag -a isbd-v1.2.0 -m "ISBD Release 1.2.0: Description"
+git push origin isbd-v1.2.0
+
+# Publish to external repository
+./scripts/publish-standard.sh isbd 1.2.0
+```
+
 ### Phase 7: Translation Management
 
 **Purpose**: Create multilingual versions with global collaboration
@@ -709,7 +728,8 @@ The ISBD CSV to MDX conversion demonstrates a complete vocabulary import workflo
 **Current Infrastructure**:
 - `populate-from-csv.ts` script for MDX generation
 - Templates in `/standards/isbd/templates/`
-- CSV data in `/standards/isbd/csv/ns/isbd/`
+- CSV data in `/standards/isbd/vocabs/rdf/` organized by elements/ves/ses
+- Draft validation in `/standards/isbd/vocabs/draft/`
 
 **CSV Format Structure**:
 ```csv
@@ -724,7 +744,7 @@ uri,reg:identifier,reg:status,rdf:type,skos:definition@en,skos:definition@fr,sko
      "templates": {
        "vocabulary": {
          "path": "vocabulary.mdx",
-         "csvSource": "../csv/ns/isbd/terms/{vocabularyId}.csv",
+         "csvSource": "../vocabs/rdf/ves/{vocabularyId}/{vocabularyId}.csv",
          "csvMapping": {
            "id": { "source": "uri", "transform": "extractId" },
            "title": { "source": "skos:prefLabel@en" },

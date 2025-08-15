@@ -40,13 +40,44 @@ Different data types are stored in systems optimized for their access patterns:
 standards/
   {namespace}/
     namespace.json          # Namespace metadata
-    dctap/                  # Validation profiles
-      *.yaml
     docs/                   # MDX with embedded RDF
       elements/*.mdx        # Element definitions with RDF front matter
       concepts/*.mdx        # Concept definitions with RDF front matter
-    rdf/generated/          # Generated RDF outputs from MDX
-      *.ttl, *.xml, *.jsonld
+      vocabularies/*.mdx    # Vocabulary definitions with RDF front matter
+    vocabs/                 # All vocabulary-related assets
+      rdf/                  # Source of truth - all formats together
+        elements/           # Element definitions (ISBD terminology)
+          isbd-elements.ttl
+          isbd-elements.rdf
+          isbd-elements.jsonld
+          isbd-elements.csv # All formats together
+        ves/                # Vocabulary Encoding Schemes
+          contentform/
+            contentform.ttl
+            contentform.rdf
+            contentform.jsonld
+            contentform.csv # Each vocabulary in all formats
+          mediatype/
+            [all formats]
+          contentqualification/
+            motion/
+              [all formats]
+        ses/                # Syntax Encoding Schemes
+          punctuation/
+            [all formats]
+      dctap/                # DCTAP validation profiles
+        elements.yaml
+        ves.yaml
+        ses.yaml
+      jsonld-context/       # JSON-LD context definitions
+        elements.jsonld
+        ves.jsonld
+        ses.jsonld
+      draft/                # Temporary validation workspace
+        elements/           # Mirrors rdf structure
+        ves/
+        ses/
+        validation-report.md
 ```
 
 **MDX with RDF Front Matter**:
@@ -64,9 +95,10 @@ broader: http://iflastandards.info/ns/isbd/terms/C2001
 ```
 
 **Access Patterns**:
-- Build-time: Static generation reads MDX and generates RDF
-- Runtime: API serves cached content
-- Updates: Through PR workflow or import service
+- Build-time: Scaffold docs from vocabs/rdf/**/*.csv, validate against vocabs/rdf/**/*.ttl
+- Runtime: API serves cached content, content negotiation for RDF formats
+- Updates: CSV → Docs → vocabs/draft validation → vocabs/rdf update cycle
+- Versioning: Git tags per standard (e.g., isbd-v1.2.0, isbdm-v1.1.0)
 
 ### 2. Clerk (User Identity)
 **Purpose**: Authentication and minimal user metadata
@@ -435,6 +467,60 @@ graph LR
     note1[No API calls]
     note2[No authentication]
     note3[All data pre-rendered]
+```
+
+## RDF/CSV Management and Versioning
+
+### Directory Structure Philosophy
+The `rdf/` directory serves as the single source of truth for all vocabulary data formats. CSV is treated as a first-class format alongside RDF serializations (TTL, RDF/XML, JSON-LD) because:
+- All formats represent the same semantic data
+- CSV enables spreadsheet workflows and bulk editing
+- All formats version together as a cohesive unit
+
+### Round-Trip Validation Workflow
+```mermaid
+graph LR
+    A[rdf/*.csv] -->|Scaffold| B[docs/*.mdx]
+    B -->|Harvest| C[draft_rdf/*.ttl]
+    C -->|Compare| D[rdf/*.ttl]
+    D -->|Match| E[Ready to Release]
+    D -->|Mismatch| F[Fix & Iterate]
+```
+
+1. **CSV to Docs**: Scripts scaffold MDX documentation from CSV files
+2. **Docs to Draft RDF**: Harvest RDF from MDX frontmatter to `draft_rdf/`
+3. **Validation**: Compare `draft_rdf/` against source `rdf/` for consistency
+4. **Update Cycle**: If validation passes, update source RDF; if not, fix issues
+
+### Versioning Strategy
+Standards are versioned independently using Git tags:
+
+```bash
+# Tag format: {standard}-v{version}
+git tag isbd-v1.2.0    # ISBD release 1.2.0
+git tag isbdm-v1.1.0   # ISBDM release 1.1.0
+git tag lrm-v2.0.0     # LRM release 2.0.0
+```
+
+**Version Tracking**:
+- Each standard versions independently
+- No version files needed (Git tags are the source of truth)
+- Release includes all formats (TTL, RDF, JSON-LD, CSV)
+- External publication via PR to versioned repositories
+
+**Release Process**:
+```bash
+# 1. Validate round-trip
+pnpm nx run isbd:validate-rdf
+
+# 2. Tag release
+git tag -a isbd-v1.2.0 -m "ISBD v1.2.0: Content qualification update"
+
+# 3. Push to origin
+git push origin isbd-v1.2.0
+
+# 4. Export to external repo (all formats)
+./scripts/publish-standard.sh isbd 1.2.0
 ```
 
 ## Four-Phase Vocabulary Lifecycle

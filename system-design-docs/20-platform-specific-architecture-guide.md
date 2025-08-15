@@ -120,9 +120,20 @@ standards/{site}/
 │       └── MDXComponents.tsx
 ├── docs/                    # Documentation content
 │   ├── elements/           # Element sets
-│   └── vocabularies/       # Concept schemes
+│   └── vocabularies/       # Concept schemes  
+├── vocabs/                 # All vocabulary-related assets
+│   ├── rdf/               # Source RDF/CSV files (all formats)
+│   │   ├── elements/      # Element definitions (ISBD terminology)
+│   │   │   └── [all formats per element set]
+│   │   ├── ves/           # Vocabulary Encoding Schemes
+│   │   │   └── [vocabularies with all formats]
+│   │   └── ses/           # Syntax Encoding Schemes
+│   │       └── [syntax schemes with all formats]
+│   ├── dctap/             # DCTAP validation profiles
+│   ├── jsonld-context/    # JSON-LD context definitions
+│   └── draft/             # Validation workspace (temporary)
 ├── static/                 # Static assets
-│   └── rdf/               # Generated RDF files
+│   └── data/              # Public data files (if needed)
 ├── docusaurus.config.ts   # Site configuration
 └── sidebars.ts            # Navigation config
 ```

@@ -124,6 +124,12 @@ function isTestFile(filePath) {
     return false;
   }
 
+  // Exclude vocabulary data files in standards/*/vocabs/tests/ directories
+  // These are experimental vocabulary files, not TypeScript test files
+  if (filePath.includes('standards/') && filePath.includes('/vocabs/tests/')) {
+    return false;
+  }
+
   // Check file naming patterns
   const hasValidPattern = VALID_FILE_PATTERNS.some(pattern => pattern.test(fileName));
   
