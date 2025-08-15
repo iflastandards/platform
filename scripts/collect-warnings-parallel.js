@@ -9,7 +9,9 @@ const SITES = ['portal', 'ISBDM', 'LRM', 'FRBR', 'isbd', 'muldicat', 'unimarc'];
 
 // Environment-aware parallelism
 const isCI = process.env.CI === 'true' || process.env.GITHUB_ACTIONS === 'true';
-const MAX_PARALLEL = isCI ? 3 : 8; // Conservative in CI (3), optimized locally (8)
+const isDistributedCI = process.env.NX_CLOUD_DISTRIBUTED_EXECUTION === 'true';
+// When Nx Cloud distributed execution is active, run sequentially to avoid conflicts
+const MAX_PARALLEL = isDistributedCI ? 1 : isCI ? 3 : 8; // Sequential in distributed CI, conservative in regular CI (3), optimized locally (8)
 
 class ParallelWarningCollector {
   constructor() {
@@ -57,7 +59,13 @@ class ParallelWarningCollector {
         DOCS_ENV: process.env.DOCS_ENV || 'preview',
       };
 
-      const buildProcess = spawn('pnpm', ['nx', 'build', site], {
+      // If running in distributed CI mode, bypass Nx Cloud for individual builds
+      // to avoid "No additional tasks detected" errors
+      const buildCommand = isDistributedCI
+        ? ['nx', 'build', site, '--skip-nx-cache']
+        : ['nx', 'build', site];
+
+      const buildProcess = spawn('pnpm', buildCommand, {
         shell: true,
         stdio: ['pipe', 'pipe', 'pipe'],
         env,
@@ -111,10 +119,26 @@ class ParallelWarningCollector {
         // If build failed, show the last part of the output for debugging
         if (!success && output) {
           const lines = output.split('\n');
-          const relevantLines = lines.slice(-20).filter((line) => line.trim());
-          if (relevantLines.length > 0) {
-            console.log(`    Error output from ${site}:`);
-            relevantLines.forEach((line) => console.log(`      ${line}`));
+
+          // Check for specific Nx Cloud error
+          const hasNxCloudError = output.includes(
+            'No additional tasks detected',
+          );
+          if (hasNxCloudError) {
+            console.log(
+              `    ⚠️  Nx Cloud distributed execution conflict detected for ${site}`,
+            );
+            console.log(
+              `    💡 Suggestion: Re-run with --skip-nx-cache or disable distributed execution`,
+            );
+          } else {
+            const relevantLines = lines
+              .slice(-20)
+              .filter((line) => line.trim());
+            if (relevantLines.length > 0) {
+              console.log(`    Error output from ${site}:`);
+              relevantLines.forEach((line) => console.log(`      ${line}`));
+            }
           }
         }
 
@@ -242,11 +266,16 @@ class ParallelWarningCollector {
    * Main execution
    */
   async run() {
+    let modeDescription = isDistributedCI
+      ? 'Distributed CI mode (sequential)'
+      : isCI
+        ? 'CI mode'
+        : 'Local mode';
     console.log(
-      `🚀 Running parallel build warning collection (${isCI ? 'CI mode' : 'Local mode'}: ${MAX_PARALLEL} parallel builds)...\n`,
+      `🚀 Running build warning collection (${modeDescription}: ${MAX_PARALLEL} parallel build${MAX_PARALLEL === 1 ? '' : 's'})...\n`,
     );
 
-    // Debug: Check if nx is available
+    // Debug: Check environment and Nx configuration
     if (isCI) {
       const { execSync } = require('child_process');
       try {
@@ -256,6 +285,17 @@ class ParallelWarningCollector {
         console.log(`📦 Using Nx version: ${nxVersion}`);
         console.log(`📁 Working directory: ${process.cwd()}`);
         console.log(`🌍 DOCS_ENV: ${process.env.DOCS_ENV || 'not set'}`);
+
+        // Show Nx Cloud configuration
+        if (isDistributedCI) {
+          console.log(`☁️  Nx Cloud Distributed Execution: ENABLED`);
+          console.log(
+            `⚠️  Running builds sequentially to avoid Nx Cloud conflicts`,
+          );
+          console.log(
+            `📊 Agent Count: ${process.env.NX_CLOUD_DISTRIBUTED_EXECUTION_AGENT_COUNT || 'not set'}`,
+          );
+        }
       } catch (e) {
         console.error('❌ Failed to get Nx version:', e.message);
       }
