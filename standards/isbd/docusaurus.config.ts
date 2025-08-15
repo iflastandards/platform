@@ -108,7 +108,7 @@ const config: Config = {
       {
         docs: {
           sidebarPath: './sidebars.ts',
-          editUrl: 'https://github.com/iflastandards/standards-dev/tree/main/standards/isbd/',
+          editUrl: 'https://github.com/iflastandards/platform/edit/preview/standards/isbd/docs/',
           showLastUpdateAuthor: true,
           showLastUpdateTime: true,
           versions: {
@@ -122,7 +122,7 @@ const config: Config = {
         },
         blog: {
           showReadingTime: true,
-          editUrl: 'https://github.com/iflastandards/standards-dev/tree/main/standards/isbd/',
+          editUrl: 'https://github.com/iflastandards/platform/edit/preview/standards/isbd/blog/',
           feedOptions: {
             type: 'all',
             title: 'ISBD: International Standard Bibliographic Description Blog',
