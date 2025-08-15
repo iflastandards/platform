@@ -369,13 +369,22 @@ jobs:
     if: always()
     runs-on: ubuntu-latest
     steps:
+      - uses: actions/checkout@v4
+        with:
+          sparse-checkout: |
+            nx.json
+            .nx
+          sparse-checkout-cone-mode: false
+
       - name: Stop Nx Cloud agents
         run: |
           pnpm dlx nx-cloud stop-all-agents
         continue-on-error: true
 
-      - run: npx nx-cloud fix-ci
+      - name: Fix CI Configuration
+        run: npx nx-cloud fix-ci
         if: always()
+        continue-on-error: true
 
       - name: Generate summary report
         run: |
