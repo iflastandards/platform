@@ -368,7 +368,10 @@ jobs:
         run: |
           pnpm dlx nx-cloud stop-all-agents
         continue-on-error: true
-        
+
+      - run: npx nx-cloud fix-ci
+        if: always()
+
       - name: Generate summary report
         run: |
           echo "## 📊 Deployment Pipeline Summary" >> $GITHUB_STEP_SUMMARY
