@@ -27,9 +27,17 @@ class ParallelWarningCollector {
 
       console.log(`🏗️  Starting build: ${site}`);
 
+      // Add environment variables that might be needed
+      const env = {
+        ...process.env,
+        DOCS_ENV: process.env.DOCS_ENV || 'preview',
+      };
+
       const buildProcess = spawn('pnpm', ['nx', 'build', site], {
         shell: true,
         stdio: ['pipe', 'pipe', 'pipe'],
+        env,
+        cwd: process.cwd(),
       });
 
       // Capture stdout
@@ -76,12 +84,23 @@ class ParallelWarningCollector {
           `${success ? '✅' : '❌'} ${site}: ${buildTime}s, ${warnings.length} warnings`,
         );
 
+        // If build failed, show the last part of the output for debugging
+        if (!success && output) {
+          const lines = output.split('\n');
+          const relevantLines = lines.slice(-20).filter((line) => line.trim());
+          if (relevantLines.length > 0) {
+            console.log(`    Error output from ${site}:`);
+            relevantLines.forEach((line) => console.log(`      ${line}`));
+          }
+        }
+
         resolve({
           site,
           success,
           buildTime,
           warnings,
           exitCode: code,
+          errorOutput: !success ? output : undefined,
         });
       });
     });
@@ -177,6 +196,22 @@ class ParallelWarningCollector {
     console.log(
       `🚀 Running parallel build warning collection (${isCI ? 'CI mode' : 'Local mode'}: ${MAX_PARALLEL} parallel builds)...\n`,
     );
+
+    // Debug: Check if nx is available
+    if (isCI) {
+      const { execSync } = require('child_process');
+      try {
+        const nxVersion = execSync('npx nx --version', {
+          encoding: 'utf8',
+        }).trim();
+        console.log(`📦 Using Nx version: ${nxVersion}`);
+        console.log(`📁 Working directory: ${process.cwd()}`);
+        console.log(`🌍 DOCS_ENV: ${process.env.DOCS_ENV || 'not set'}`);
+      } catch (e) {
+        console.error('❌ Failed to get Nx version:', e.message);
+      }
+    }
+
     const startTime = Date.now();
 
     const results = await this.runParallel();
