@@ -1,46 +1,21 @@
 #!/usr/bin/env node
 
-// Fix MaxListenersExceededWarning - must be at the very top before any requires
-// This warning occurs because Nx spawns multiple child processes that all register listeners
-process.setMaxListeners(0); // 0 = unlimited listeners
+// Set higher max listeners limit to prevent warnings during parallel operations
 require('events').EventEmitter.defaultMaxListeners = 50;
-
-// Also set for the EventEmitter prototype to catch all instances
-const EventEmitter = require('events');
-EventEmitter.prototype.setMaxListeners(50);
-
-/**
- * Robust pre-commit check with progress indicators, timeouts, and recovery
- * Addresses the recurring issue of silent failures when pre-commit hooks take too long
- *
- * Features:
- * - Progress indicators with time estimates
- * - Configurable timeouts with graceful handling
- * - Automatic retry mechanism for transient failures
- * - Clear user feedback and guidance
- * - Emergency bypass options
- * - Commit state preservation for recovery
- */
+process.setMaxListeners(50);
 
 const { spawn, execSync } = require('child_process');
-const { ensureDaemon } = require('./ensure-nx-daemon');
 const fs = require('fs');
 const path = require('path');
 
 // Configuration
 const CONFIG = {
-  // Timeouts in milliseconds
-  TYPECHECK_TIMEOUT: 5 * 60 * 1000, // 5 minutes
-  TEST_TIMEOUT: 10 * 60 * 1000, // 10 minutes
-  LINT_TIMEOUT: 3 * 60 * 1000, // 3 minutes
-  SECRETS_TIMEOUT: 30 * 1000, // 30 seconds
-
-  // Progress update intervals
-  PROGRESS_INTERVAL: 10 * 1000, // 10 seconds
-
-  // Retry configuration
-  MAX_RETRIES: 2,
-  RETRY_DELAY: 5 * 1000, // 5 seconds
+  SECRETS_TIMEOUT: 30000, // 30 seconds for secrets check
+  TYPECHECK_TIMEOUT: 5 * 60 * 1000, // 5 minutes for typecheck
+  TEST_TIMEOUT: 5 * 60 * 1000, // 5 minutes for tests
+  LINT_TIMEOUT: 3 * 60 * 1000, // 3 minutes for lint
+  PROGRESS_INTERVAL: 10000, // Update progress every 10 seconds
+  MAX_CONCURRENT_PROCESSES: 3, // Limit concurrent child processes
 };
 
 // State management
@@ -54,6 +29,8 @@ class PreCommitRunner {
     this.totalSteps = 0;
     this.completedSteps = 0;
     this.retryCount = 0;
+    this.activeProcesses = 0;
+    this.processQueue = [];
   }
 
   log(message, type = 'info') {
@@ -138,6 +115,30 @@ class PreCommitRunner {
       let stderr = '';
       let progressTimer;
       let timeoutTimer;
+      let cleaned = false;
+
+      // Cleanup function to ensure we only clean up once
+      const cleanup = () => {
+        if (cleaned) return;
+        cleaned = true;
+
+        clearInterval(progressTimer);
+        clearTimeout(timeoutTimer);
+
+        // Remove all listeners
+        child.stdout.removeAllListeners();
+        child.stderr.removeAllListeners();
+        child.removeAllListeners();
+
+        // Ensure child process is terminated
+        try {
+          if (!child.killed) {
+            child.kill('SIGTERM');
+          }
+        } catch (e) {
+          // Ignore errors when killing already dead process
+        }
+      };
 
       // Progress updates
       progressTimer = setInterval(() => {
@@ -163,7 +164,8 @@ class PreCommitRunner {
         // child.kill('SIGTERM');
       }, timeout);
 
-      child.stdout.on('data', (data) => {
+      // Use once() for data handlers to reduce listener accumulation
+      const stdoutHandler = (data) => {
         stdout += data;
         // Show important output immediately
         const lines = data.toString().split('\n');
@@ -177,24 +179,20 @@ class PreCommitRunner {
             console.log(line);
           }
         });
-      });
+      };
 
-      child.stderr.on('data', (data) => {
+      const stderrHandler = (data) => {
         stderr += data;
         // Show errors immediately
         console.error(data.toString());
-      });
+      };
 
-      // Define handlers as named functions so we can remove them later
-      const handleClose = (code) => {
-        clearInterval(progressTimer);
-        clearTimeout(timeoutTimer);
+      child.stdout.on('data', stdoutHandler);
+      child.stderr.on('data', stderrHandler);
 
-        // Clean up all listeners
-        child.stdout.removeAllListeners();
-        child.stderr.removeAllListeners();
-        child.removeListener('close', handleClose);
-        child.removeListener('error', handleError);
+      // Use once() for exit handlers to ensure single execution
+      child.once('close', (code) => {
+        cleanup();
 
         if (code === 0) {
           this.log(`Completed: ${description}`, 'success');
@@ -203,24 +201,22 @@ class PreCommitRunner {
           this.log(`Failed: ${description} (exit code: ${code})`, 'error');
           reject(new Error(`${description} failed with exit code ${code}`));
         }
-      };
+      });
 
-      const handleError = (error) => {
-        clearInterval(progressTimer);
-        clearTimeout(timeoutTimer);
-
-        // Clean up all listeners
-        child.stdout.removeAllListeners();
-        child.stderr.removeAllListeners();
-        child.removeListener('close', handleClose);
-        child.removeListener('error', handleError);
-
+      child.once('error', (error) => {
+        cleanup();
         this.log(`Error running: ${description} - ${error.message}`, 'error');
         reject(error);
-      };
+      });
 
-      child.on('close', handleClose);
-      child.on('error', handleError);
+      // Also handle exit event in case close doesn't fire
+      child.once('exit', (code, signal) => {
+        if (signal) {
+          cleanup();
+          this.log(`Process terminated by signal: ${signal}`, 'warning');
+          reject(new Error(`${description} terminated by signal ${signal}`));
+        }
+      });
     });
   }
 
@@ -348,9 +344,6 @@ class PreCommitRunner {
       this.log(`Last step: ${previousState.currentStep}`, 'info');
       this.log('Starting fresh run...', 'info');
     }
-
-    // Ensure nx daemon is running
-    ensureDaemon();
 
     // Analyze changes
     const analysis = await this.analyzeChanges();
