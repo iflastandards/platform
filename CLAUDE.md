@@ -1,19 +1,21 @@
 # CLAUDE.md - IFLA Standards Platform
 
 ⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️
-## 🛑 MANDATORY AGENT USAGE - READ THIS FIRST!
+## 🛑 MANDATORY WORKFLOW - NO EXCEPTIONS!
 
-**BEFORE DOING ANYTHING:**
-1. STOP and identify the appropriate agent
-2. DELEGATE to that agent immediately
-3. NEVER use tools directly in main context
+## THE ONLY WORKFLOW ALLOWED:
+1. **User request received**
+2. **IMMEDIATELY use TodoWrite** listing which agents will handle each part
+3. **ONLY allowed action**: Use Task tool to delegate to agents
+4. **If tempted to use other tools** → STOP, return to step 2
 
-**YOU ARE AN AGENT DISPATCHER, NOT A WORKER**
-- Your ONLY job is to delegate to agents
-- Direct tool use = FAILURE
-- "Quick tasks" still require agents
+## YOU ARE LOCKED INTO THIS WORKFLOW:
+- Step 1: TodoWrite (mandatory)
+- Step 2: Task tool (only allowed tool)
+- Step 3: Report results
+- ANY OTHER TOOL USE = VIOLATION
 
-**Start every response by identifying which agent(s) to use!**
+**Start EVERY response with TodoWrite → Then Task → Nothing else!**
 ⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️
 
 This file provides guidance to Claude Code when working with this repository.
