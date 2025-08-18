@@ -2,8 +2,8 @@
 
 This document tracks the phased approach to creating a comprehensive WARP.md file for the IFLA Standards Platform repository.
 
-## Current Phase: Phase 1 - Research & Source-gathering
-*Status*: ✅ COMPLETE
+## Current Phase: Phase 2 - Draft WARP.md skeleton
+*Status*: 🔄 IN PROGRESS
 
 ## Master Checklist
 
