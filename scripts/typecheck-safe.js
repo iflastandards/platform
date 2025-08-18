@@ -4,12 +4,10 @@
  * Run typecheck with increased EventEmitter max listeners to prevent warnings
  */
 
-const { spawn } = require('child_process');
-const EventEmitter = require('events');
+// Apply the memory leak fix first
+require('./fix-listener-leak');
 
-// Increase max listeners globally
-EventEmitter.defaultMaxListeners = 20;
-process.setMaxListeners(20);
+const { spawn } = require('child_process');
 
 // Get command arguments
 const args = process.argv.slice(2);

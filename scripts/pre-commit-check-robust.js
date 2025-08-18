@@ -1,8 +1,7 @@
 #!/usr/bin/env node
 
-// Set higher max listeners limit to prevent warnings during parallel operations
-require('events').EventEmitter.defaultMaxListeners = 50;
-process.setMaxListeners(50);
+// Apply the memory leak fix first
+require('./fix-listener-leak');
 
 const { spawn, execSync } = require('child_process');
 const fs = require('fs');
