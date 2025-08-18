@@ -1,0 +1,44 @@
+{
+  "name": "@ifla/fixtures",
+  "version": "0.1.0",
+  "description": "Static JSON fixtures and mock data for MSW and testing",
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "import": "./dist/index.js",
+      "require": "./dist/index.js",
+      "types": "./dist/index.d.ts"
+    },
+    "./jobs": {
+      "import": "./dist/jobs.js",
+      "require": "./dist/jobs.js",
+      "types": "./dist/jobs.d.ts"
+    },
+    "./vocabularies": {
+      "import": "./dist/vocabularies.js",
+      "require": "./dist/vocabularies.js",
+      "types": "./dist/vocabularies.d.ts"
+    }
+  },
+  "scripts": {
+    "build": "tsup",
+    "dev": "tsup --watch",
+    "clean": "rimraf dist",
+    "typecheck": "tsc --noEmit",
+    "validate": "tsx scripts/validate-fixtures.ts"
+  },
+  "dependencies": {
+    "@ifla/contracts": "workspace:*"
+  },
+  "devDependencies": {
+    "@types/node": "^20.10.0",
+    "rimraf": "^5.0.5",
+    "tsup": "^8.0.0",
+    "tsx": "^4.7.0",
+    "typescript": "^5.3.0"
+  },
+  "publishConfig": {
+    "access": "restricted"
+  }
+}

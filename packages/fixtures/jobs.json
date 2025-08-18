@@ -1,0 +1,83 @@
+[
+  {
+    "id": "550e8400-e29b-41d4-a716-446655440001",
+    "type": "vocabulary_import",
+    "status": "success",
+    "progress": 100,
+    "createdAt": "2024-01-15T10:00:00Z",
+    "updatedAt": "2024-01-15T10:05:00Z",
+    "finishedAt": "2024-01-15T10:05:00Z",
+    "outputUrl": "https://example.com/downloads/vocab-import-001.json",
+    "vocabularyId": "vocab-001",
+    "standardId": "isbd",
+    "userId": "user-001",
+    "metadata": {
+      "termsImported": 245,
+      "termsUpdated": 12,
+      "sourceSheet": "ISBD Vocabulary Master v2.1"
+    }
+  },
+  {
+    "id": "550e8400-e29b-41d4-a716-446655440002",
+    "type": "export_rdf",
+    "status": "running",
+    "progress": 65,
+    "createdAt": "2024-01-15T14:30:00Z",
+    "updatedAt": "2024-01-15T14:32:00Z",
+    "vocabularyId": "vocab-002",
+    "standardId": "lrm",
+    "userId": "user-002",
+    "metadata": {
+      "format": "turtle",
+      "namespace": "http://iflastandards.info/ns/lrm/",
+      "totalTerms": 189
+    }
+  },
+  {
+    "id": "550e8400-e29b-41d4-a716-446655440003",
+    "type": "validate_terms",
+    "status": "failed",
+    "progress": 0,
+    "createdAt": "2024-01-14T09:15:00Z",
+    "updatedAt": "2024-01-14T09:18:00Z",
+    "finishedAt": "2024-01-14T09:18:00Z",
+    "error": "Invalid term format in row 23: missing required 'code' field",
+    "vocabularyId": "vocab-003",
+    "standardId": "frbr",
+    "userId": "user-001",
+    "metadata": {
+      "sourceFile": "frbr_terms_update.csv",
+      "validationRules": ["required_fields", "unique_codes", "valid_hierarchy"]
+    }
+  },
+  {
+    "id": "550e8400-e29b-41d4-a716-446655440004",
+    "type": "generate_docs",
+    "status": "queued",
+    "progress": 0,
+    "createdAt": "2024-01-15T16:45:00Z",
+    "standardId": "muldicat",
+    "userId": "user-003",
+    "metadata": {
+      "outputFormat": "html",
+      "includeExamples": true,
+      "language": "en"
+    }
+  },
+  {
+    "id": "550e8400-e29b-41d4-a716-446655440005",
+    "type": "vocabulary_import",
+    "status": "cancelled",
+    "progress": 25,
+    "createdAt": "2024-01-13T11:20:00Z",
+    "updatedAt": "2024-01-13T11:25:00Z",
+    "finishedAt": "2024-01-13T11:25:00Z",
+    "vocabularyId": "vocab-004",
+    "standardId": "unimarc",
+    "userId": "user-002",
+    "metadata": {
+      "cancelledBy": "user-002",
+      "cancelReason": "Source data format changed, restarting with updated mapping"
+    }
+  }
+]
