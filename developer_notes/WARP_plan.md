@@ -2,7 +2,7 @@
 
 This document tracks the phased approach to creating a comprehensive WARP.md file for the IFLA Standards Platform repository.
 
-## Current Phase: Phase 0 - Planning
+## Current Phase: Phase 1 - Research & Source-gathering
 *Status*: ✅ COMPLETE
 
 ## Master Checklist
@@ -14,17 +14,17 @@ This document tracks the phased approach to creating a comprehensive WARP.md fil
 - [x] Commit planning document
 
 ### Phase 1 - Research & Source-gathering
-- [ ] Scan and bookmark key files/dirs:
-  - [ ] README.md, nx.json, package.json, tsconfig.*
-  - [ ] developer_notes/**/* 
-  - [ ] system-design-docs/**/*
-  - [ ] docs/**/*
-  - [ ] scripts/, packages/theme/src/config/, siteConfig.ts
-- [ ] Use `rg -i "warp"` & `rg -i "architecture"` for existing notes
-- [ ] Copy relevant snippets or links into "Research Notes" section below
-- [ ] Highlight mandatory rules to surface in the final doc
-- [ ] Fill "Research Notes" section with all source links
-- [ ] Update checklist, pause for user approval to start Phase 2
+- [x] Scan and bookmark key files/dirs:
+  - [x] README.md, nx.json, package.json, tsconfig.*
+  - [x] developer_notes/**/* 
+  - [x] system-design-docs/**/*
+  - [x] docs/**/*
+  - [x] scripts/, packages/theme/src/config/, siteConfig.ts
+- [x] Use `rg -i "warp"` & `rg -i "architecture"` for existing notes
+- [x] Copy relevant snippets or links into "Research Notes" section below
+- [x] Highlight mandatory rules to surface in the final doc
+- [x] Fill "Research Notes" section with all source links
+- [x] Update checklist, pause for user approval to start Phase 2
 
 ### Phase 2 - Draft WARP.md skeleton
 - [ ] Create <root>/WARP.md with high-level outline:
@@ -89,22 +89,63 @@ This document tracks the phased approach to creating a comprehensive WARP.md fil
 - [ ] Announce completion
 
 ## Research Notes
-*To be filled during Phase 1*
+*Completed during Phase 1*
 
 ### Key Files Analyzed:
-- 
+- **README.md** - High-level overview, tech stack, quick start, site URLs, deployment
+- **package.json** - Massive script library (400+ scripts), tech versions, port mappings
+- **nx.json** - Monorepo configuration, target defaults, parallelism settings (12 cores)
+- **tsconfig.json** - TypeScript config with strict settings, path mappings (@ifla/*)
+- **vitest.config.nx.ts** - Nx-optimized test config with global mocks and exclusions
+- **packages/theme/src/config/siteConfig.ts** - SINGLE SOURCE OF TRUTH for all site URLs across environments
+- **system-design-docs/** - 38 comprehensive architecture documents (numbered 00-38)
+- **developer_notes/** - Implementation guides, testing strategies, auth architecture
 
 ### Important Rules Identified:
-- 
+1. **MANDATORY**: Use `pnpm` exclusively (never npm/yarn) 
+2. **MANDATORY**: All git commands must exit immediately on errors (no hanging)
+3. **MANDATORY**: No basePath hardcoding - use root-relative paths (/dashboard) and addBasePath() utility
+4. **MANDATORY**: Always use ES Module import/export syntax, never require()
+5. **MANDATORY**: Strict TypeScript - no `any` without documented justification
+6. **MANDATORY**: Nx affected commands for performance (`nx affected -t test --parallel=3`)
+7. **MANDATORY**: Pre-commit hooks with typecheck/lint/test validation
+8. **AUTH**: Only Clerk for authentication (Cerbos eliminated)
+9. **TESTING**: 5-phase testing strategy (selective→comprehensive→pre-commit→pre-push→CI)
+10. **ADMIN**: Next.js admin uses Material-UI (NO Tailwind CSS)
+11. **DOCS**: Docusaurus sites use Infima + SASS/SCSS
 
 ### Architecture Patterns Found:
-- 
+- **Nx Monorepo**: 21.3.11 with aggressive parallelization (12 cores)
+- **Two-Platform System**: 
+  - Admin Portal: Next.js 15.2.5 + MUI + Clerk + API routes
+  - Doc Sites: Docusaurus 3.8+ + Infima + Static generation
+- **Data Storage Strategy**: Distributed across Git→Clerk(8KB)→Supabase→GitHub
+- **Single Config Source**: `packages/theme/src/config/siteConfig.ts` for all URLs
+- **Environment Matrix**: local|preview|production with TypeScript config (not .env files)
+- **Git-Centric Workflow**: Git as source of truth, PR-based review, branch protection
+- **Role-Based Architecture**: Custom RBAC via Clerk publicMetadata
+- **Progressive Enhancement**: Static-first with dynamic layers
 
 ### Commands & Scripts Found:
-- 
+- **Essential Dev**: `pnpm nx dev admin --turbopack`, `pnpm dev:servers`, `pnpm health`
+- **Testing**: `pnpm test` (affected), `pnpm test:comprehensive`, `pnpm test:e2e`
+- **Building**: `pnpm build:all`, `pnpm nx build {site}`, `pnpm nx affected -t build`
+- **Performance**: `pnpm nx:optimize`, `pnpm nx:daemon:start`, `pnpm nx:cache:clear`
+- **Port Management**: `pnpm ports:kill`, development servers on 3000-3008
+- **Quality**: `pnpm typecheck`, `pnpm lint`, pre-commit/pre-push hooks via Husky
+- **Site Management**: `pnpm tsx scripts/scaffold-site.ts`, vocabulary tools
+- **Database**: Supabase integration, Google Sheets API for bulk editing
 
 ### Links to Deeper Documentation:
-- 
+- **System Design**: `system-design-docs/README.md` - 38 numbered docs (00-38)
+- **Platform Guide**: `system-design-docs/20-platform-specific-architecture-guide.md` - **CRITICAL**
+- **Testing Strategy**: `system-design-docs/06-testing-strategy.md` + `developer_notes/TESTING_STRATEGY.md`
+- **Development Workflow**: `system-design-docs/04-development-workflow.md` - 8-phase lifecycle
+- **Auth Architecture**: `developer_notes/authentication-authorization-architecture.md`
+- **AI Development**: `system-design-docs/35-ai-development-guidelines.md`
+- **Coding Standards**: `system-design-docs/36-platform-coding-standards.md`
+- **Performance Config**: `developer_notes/SYSTEM_CONFIGURATION.md` (16-core Apple Silicon)
+- **Import/Export**: `system-design-docs/31-spreadsheet-export-import-comprehensive-guide.md`
 
 ---
 *Last Updated*: 2025-01-18 by Warp Agent
