@@ -46,8 +46,8 @@ export class SupabaseJobsClient {
   /**
    * List jobs with filtering and pagination
    */
-  async listJobs(query: JobQuery = {}): Promise<{ jobs: Job[]; total: number }> {
-    // Validate query parameters
+  async listJobs(query: Partial<JobQuery> = {}): Promise<{ jobs: Job[]; total: number }> {
+    // Validate query parameters with defaults
     const validatedQuery = JobQuerySchema.parse(query);
 
     let supabaseQuery = this.supabase
@@ -181,7 +181,7 @@ export class SupabaseJobsClient {
    * Get jobs by status for monitoring
    */
   async getJobsByStatus(status: Job['status']): Promise<Job[]> {
-    const query: JobQuery = { status, limit: 100 };
+    const query: Partial<JobQuery> = { status, limit: 100 };
     const result = await this.listJobs(query);
     return result.jobs;
   }
