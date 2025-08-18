@@ -86,7 +86,3 @@ output/_reports/
 # Performance optimization
 .env.performance
 _site
-
-# Script inventory temporary files (malformed JS causing TypeScript errors)
-scripts/script-inventory/
-output/script-inventory*

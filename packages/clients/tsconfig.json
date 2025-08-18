@@ -2,13 +2,14 @@
   "extends": "../../tsconfig.json",
   "compilerOptions": {
     "outDir": "./dist",
-    "rootDir": "./",
+    "rootDir": "../../",
     "declaration": true,
     "declarationMap": true,
     "sourceMap": true
   },
   "include": [
-    "ts/**/*"
+    "ts/**/*",
+    "../contracts/schemas/**/*"
   ],
   "exclude": [
     "dist",
