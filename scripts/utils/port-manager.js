@@ -15,7 +15,8 @@ const SITE_PORTS = {
   muldicat: 3005,
   unimarc: 3006,
   admin: 3007,
-  newtest: 3008
+  newtest: 3008,
+  docs: 3030, // Admin documentation site
 };
 
 // All ports used by the project
@@ -49,14 +50,16 @@ async function killPort(port, verbose = false) {
 
     if (pids) {
       if (verbose) {
-        console.log(`🔄 Killing processes on port ${port}: ${pids.replace(/\n/g, ', ')}`);
+        console.log(
+          `🔄 Killing processes on port ${port}: ${pids.replace(/\n/g, ', ')}`,
+        );
       }
 
       // Kill the processes
       execSync(`kill -9 ${pids.replace(/\n/g, ' ')}`, { stdio: 'pipe' });
 
       // Wait a moment for processes to die
-      await new Promise(resolve => setTimeout(resolve, 1000));
+      await new Promise((resolve) => setTimeout(resolve, 1000));
 
       if (verbose) {
         console.log(`✅ Successfully cleared port ${port}`);
@@ -84,10 +87,10 @@ async function killPorts(ports, verbose = false) {
   }
 
   const results = await Promise.all(
-    ports.map(port => killPort(port, verbose))
+    ports.map((port) => killPort(port, verbose)),
   );
 
-  const success = results.every(result => result);
+  const success = results.every((result) => result);
 
   if (verbose) {
     if (success) {
@@ -118,8 +121,12 @@ async function killAllPorts(verbose = false) {
     if (verbose) {
       console.log(`🔄 Killing any remaining docusaurus processes...`);
     }
-    execSync('pkill -f "docusaurus start" 2>/dev/null || true', { stdio: 'pipe' });
-    execSync('pkill -f "docusaurus serve" 2>/dev/null || true', { stdio: 'pipe' });
+    execSync('pkill -f "docusaurus start" 2>/dev/null || true', {
+      stdio: 'pipe',
+    });
+    execSync('pkill -f "docusaurus serve" 2>/dev/null || true', {
+      stdio: 'pipe',
+    });
   } catch (error) {
     // Ignore errors - these commands are best effort
   }
@@ -164,7 +171,7 @@ async function waitForPortFree(port, timeout = 10000, verbose = false) {
       if (verbose) {
         console.log(`⏳ Port ${port} still in use, waiting...`);
       }
-      await new Promise(resolve => setTimeout(resolve, 500));
+      await new Promise((resolve) => setTimeout(resolve, 500));
     } catch (error) {
       // Port is free
       if (verbose) {
@@ -187,7 +194,7 @@ module.exports = {
   killPorts,
   killAllPorts,
   killSitePort,
-  waitForPortFree
+  waitForPortFree,
 };
 
 // CLI interface
@@ -244,7 +251,7 @@ Examples:
     }
   }
 
-  main().catch(error => {
+  main().catch((error) => {
     console.error(`❌ Error: ${error.message}`);
     process.exit(1);
   });

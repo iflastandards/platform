@@ -51,6 +51,61 @@ const config: Config = {
     locales: ['en'],
   },
 
+  plugins: [
+    [
+      '@docusaurus/plugin-content-docs',
+      {
+        id: 'system-design',
+        path: '../../system-design-docs', // Path relative to the docusaurus site
+        routeBasePath: 'system-design',
+        sidebarPath: './sidebarsSystemDesign.js',
+      },
+    ],
+    [
+      '@docusaurus/plugin-content-docs',
+      {
+        id: 'user-docs',
+        path: '../../docs', // Path to the main docs folder
+        routeBasePath: 'docs',
+        sidebarPath: './sidebarsUserDocs.js',
+      },
+    ],
+    [
+      '@docusaurus/plugin-content-docs',
+      {
+        id: 'developer-notes',
+        path: '../../developer_notes', // Path to developer notes
+        routeBasePath: 'developer-notes',
+        sidebarPath: './sidebarsDevNotes.js',
+      },
+    ],
+    [
+      'docusaurus-plugin-redoc',
+      {
+        id: 'api-specs',
+        spec: '../../apps/admin/src/openapi.json', // Path to your OpenAPI spec
+        route: '/api',
+      },
+    ],
+    [
+      'docusaurus-plugin-typedoc',
+      {
+        id: 'typedoc',
+        entryPoints: [
+          '../../apps/admin/src/index.ts', // Entry point for your admin app
+          '../../libs/supabase-types/src/database.ts', // Entry point for generated Supabase types
+        ],
+        tsconfig: '../../apps/admin/tsconfig.json',
+        out: 'generated-api', // Output directory within the docs site
+        routeBasePath: 'generated-api',
+        sidebar: {
+          categoryLabel: 'Code Reference',
+          position: 1,
+        },
+        plugin: ['typedoc-plugin-zod'], // Enable the Zod plugin
+      },
+    ],
+  ],
   presets: [
     [
       'classic',
@@ -95,10 +150,30 @@ const config: Config = {
       },
       items: [
         {
-          type: 'docSidebar',
-          sidebarId: 'tutorialSidebar',
+          to: '/docs', // Your main user-facing docs
+          label: 'Dev Docs',
           position: 'left',
-          label: 'Tutorial',
+          activeBaseRegex: `/docs`,
+        },
+        {
+          to: '/system-design',
+          label: 'System Design',
+          position: 'left',
+        },
+        {
+          to: '/developer-notes',
+          label: 'Developer Notes',
+          position: 'left',
+        },
+        {
+          to: '/generated-api', // Link to your TypeDoc generated API
+          label: 'Code Reference',
+          position: 'left',
+        },
+        {
+          to: '/api', // Link to your OpenAPI specs
+          label: 'REST API',
+          position: 'left',
         },
         {to: '/blog', label: 'Blog', position: 'left'},
         {

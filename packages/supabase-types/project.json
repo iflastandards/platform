@@ -1,0 +1,22 @@
+{
+  "name": "supabase-types",
+  "$schema": "../../node_modules/nx/schemas/project-schema.json",
+  "projectType": "library",
+  "sourceRoot": "packages/supabase-types/src",
+  "targets": {
+    "typecheck": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "tsc --noEmit --project packages/supabase-types/tsconfig.json"
+      }
+    },
+    "gen": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "supabase gen types typescript --project-id svzyuugszvggpatxtytg --schema public > packages/supabase-types/src/database.ts"
+      },
+      "outputs": ["{workspaceRoot}/packages/supabase-types/src/database.ts"]
+    }
+  },
+  "tags": ["type:library", "scope:shared"]
+}
