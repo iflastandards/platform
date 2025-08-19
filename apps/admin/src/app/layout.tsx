@@ -2,6 +2,7 @@ import './global.css';
 import { ClerkProvider } from '@clerk/nextjs';
 import { ThemeProvider } from '@/contexts/theme-context';
 import { QueryClientContextProvider } from '@/contexts/query-client-context';
+import { RefineProvider } from '@/providers/RefineProvider';
 import type { Metadata } from 'next';
 
 export const metadata: Metadata = {
@@ -27,12 +28,16 @@ export default function RootLayout({
               card: 'shadow-none',
             },
           }}
-          signInUrl={process.env.NEXT_PUBLIC_CLERK_SIGN_IN_URL || "/sign-in"}
-          signUpUrl={process.env.NEXT_PUBLIC_CLERK_SIGN_UP_URL || "/sign-up"}
-          afterSignOutUrl={process.env.NEXT_PUBLIC_CLERK_AFTER_SIGN_OUT_URL || "/"}
+          signInUrl={process.env.NEXT_PUBLIC_CLERK_SIGN_IN_URL || '/sign-in'}
+          signUpUrl={process.env.NEXT_PUBLIC_CLERK_SIGN_UP_URL || '/sign-up'}
+          afterSignOutUrl={
+            process.env.NEXT_PUBLIC_CLERK_AFTER_SIGN_OUT_URL || '/'
+          }
         >
           <QueryClientContextProvider>
-            <ThemeProvider>{children}</ThemeProvider>
+            <ThemeProvider>
+              <RefineProvider>{children}</RefineProvider>
+            </ThemeProvider>
           </QueryClientContextProvider>
         </ClerkProvider>
       </body>
