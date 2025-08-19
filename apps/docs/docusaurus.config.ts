@@ -1,5 +1,5 @@
-import {themes as prismThemes} from 'prism-react-renderer';
-import type {Config} from '@docusaurus/types';
+import { themes as prismThemes } from 'prism-react-renderer';
+import type { Config } from '@docusaurus/types';
 import type * as Preset from '@docusaurus/preset-classic';
 import {
   getAdminDocsConfig,
@@ -7,11 +7,12 @@ import {
 } from '@ifla/theme/config/siteConfig';
 
 // This runs in Node.js - Don't use client-side code here (browser APIs, JSX...)
-const DOCS_ENV = (process.env.DOCS_ENV as Environment | undefined) ?? 'production';
+const DOCS_ENV =
+  (process.env.DOCS_ENV as Environment | undefined) ?? 'production';
 if (!DOCS_ENV) {
   throw new Error(
     'DOCS_ENV environment variable is required but not set. ' +
-    'Valid values: local, preview, production',
+      'Valid values: local, preview, production',
   );
 }
 
@@ -19,29 +20,28 @@ if (!DOCS_ENV) {
  * 🗺️ 2. Gather per-site configuration
  * -------------------------------------------------------------------------- */
 
-const adminConfig     = getAdminDocsConfig(DOCS_ENV);
+const adminConfig = getAdminDocsConfig(DOCS_ENV);
 
 const config: Config = {
   title: 'IFLA Standards Documentation',
   tagline: 'The complete guide to our platform and architecture.',
   favicon: 'img/favicon.ico',
 
-
-// Future flags, see https://docusaurus.io/docs/api/docusaurus-config#future
+  // Future flags, see https://docusaurus.io/docs/api/docusaurus-config#future
   future: {
     v4: true, // Improve compatibility with the upcoming Docusaurus v4
     experimental_faster: true,
   },
 
-  url:      adminConfig.url,
-  baseUrl:  '/',
+  url: adminConfig.url,
+  baseUrl: '/',
 
   organizationName: 'iflastandards',
-  projectName:      'portal',
+  projectName: 'portal',
 
-  onBrokenLinks:          'warn',
-  onBrokenMarkdownLinks:  'warn',
-  onBrokenAnchors:        'ignore',
+  onBrokenLinks: 'warn',
+  onBrokenMarkdownLinks: 'warn',
+  onBrokenAnchors: 'ignore',
 
   // Even if you don't use internationalization, you can use this field to set
   // useful metadata like html lang. For example, if your site is Chinese, you
@@ -58,7 +58,7 @@ const config: Config = {
         id: 'system-design',
         path: '../../system-design-docs', // Path relative to the docusaurus site
         routeBasePath: 'system-design',
-        sidebarPath: './sidebarsSystemDesign.js',
+        sidebarPath: './sidebarsSystemDesign.ts',
       },
     ],
     [
@@ -67,7 +67,7 @@ const config: Config = {
         id: 'user-docs',
         path: '../../docs', // Path to the main docs folder
         routeBasePath: 'docs',
-        sidebarPath: './sidebarsUserDocs.js',
+        sidebarPath: './sidebarsUserDocs.ts',
       },
     ],
     [
@@ -76,7 +76,7 @@ const config: Config = {
         id: 'developer-notes',
         path: '../../developer_notes', // Path to developer notes
         routeBasePath: 'developer-notes',
-        sidebarPath: './sidebarsDevNotes.js',
+        sidebarPath: './sidebarsDevNotes.ts',
       },
     ],
     [
@@ -175,7 +175,7 @@ const config: Config = {
           label: 'REST API',
           position: 'left',
         },
-        {to: '/blog', label: 'Blog', position: 'left'},
+        { to: '/blog', label: 'Blog', position: 'left' },
         {
           href: 'https://github.com/facebook/docusaurus',
           label: 'GitHub',
