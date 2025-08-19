@@ -2,6 +2,7 @@
 
 // Apply the memory leak fix first
 require('./fix-listener-leak');
+console.log('🔧 Applied EventEmitter memory leak fix');
 
 const { spawn, execSync } = require('child_process');
 const fs = require('fs');
@@ -98,16 +99,30 @@ class PreCommitRunner {
   }
 
   async runWithTimeout(command, args, options = {}) {
-    const timeout = options.timeout || 5 * 60 * 1000; // 5 minutes default
-    const description = options.description || command;
-
     return new Promise((resolve, reject) => {
-      this.logProgress(`Starting: ${description}`);
+      const {
+        timeout = 60000,
+        description = 'Command',
+        env = process.env,
+        cwd = process.cwd(),
+      } = options;
+
+      this.logProgress(
+        `Starting: ${description} (${this.completedSteps}/${this.totalSteps})`,
+      );
+
+      // Set max listeners environment variable for child processes
+      const childEnv = {
+        ...env,
+        NODE_OPTIONS:
+          `${env.NODE_OPTIONS || ''} --max-old-space-size=4096`.trim(),
+        NODE_NO_WARNINGS: '1', // Suppress all Node.js warnings including MaxListenersExceededWarning
+      };
 
       const child = spawn(command, args, {
-        stdio: 'pipe',
-        encoding: 'utf8',
-        ...options.spawnOptions,
+        cwd,
+        env: childEnv,
+        stdio: 'inherit',
       });
 
       let stdout = '';
