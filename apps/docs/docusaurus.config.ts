@@ -83,7 +83,7 @@ const config: Config = {
       'docusaurus-plugin-redoc',
       {
         id: 'api-specs',
-        spec: '../../apps/admin/src/openapi.json', // Path to your OpenAPI spec
+        spec: '../../apps/admin/public/openapi.json', // Generated OpenAPI spec
         route: '/api',
       },
     ],
@@ -92,8 +92,10 @@ const config: Config = {
       {
         id: 'typedoc',
         entryPoints: [
-          '../../apps/admin/src/index.ts', // Entry point for your admin app
-          '../../libs/supabase-types/src/database.ts', // Entry point for generated Supabase types
+          '../../packages/contracts/schemas/index.ts', // Zod schemas and contracts
+          '../../packages/supabase-types/src/database.ts', // Generated Supabase types
+          '../../apps/admin/src/providers/dataProvider.ts', // Data provider implementations
+          '../../apps/admin/src/lib/supabase/client.ts', // Supabase client utilities
         ],
         tsconfig: '../../apps/admin/tsconfig.json',
         out: 'generated-api', // Output directory within the docs site
