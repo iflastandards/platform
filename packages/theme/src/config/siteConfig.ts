@@ -36,6 +36,15 @@ export interface AdminPortalConfig {
   port?: number; // Only for local environment
 }
 
+export interface AdminDocsConfig {
+  url: string;
+  signinUrl: string;
+  dashboardUrl: string;
+  signoutUrl: string;
+  sessionApiUrl: string;
+  port?: number; // Only for local environment
+}
+
 // Type for Docusaurus site configuration objects (used in tests and components)
 export interface SiteConfig {
   title?: string;
@@ -161,6 +170,34 @@ export const ADMIN_PORTAL_CONFIG: Record<Environment, AdminPortalConfig> = {
   },
 };
 
+// Admin Docs configuration matrix
+export const ADMIN_DOCS_CONFIG: Record<Environment, AdminDocsConfig> = {
+  local: {
+    url: 'http://localhost:3030',
+    signinUrl: 'http://localhost:3030/sign-in',
+    dashboardUrl: 'http://localhost:3030',
+    signoutUrl: 'http://localhost:3030/api/auth/signout',
+    sessionApiUrl: 'http://localhost:3030/api/auth/session',
+    port: 3030,
+  },
+  preview: {
+    url: 'https://docs-iflastandards-preview.onrender.com',
+    signinUrl: 'https://docs-iflastandards-preview.onrender.com/sign-in',
+    dashboardUrl: 'https://docs-iflastandards-preview.onrender.com',
+    signoutUrl:
+      'https://docs-iflastandards-preview.onrender.com/api/auth/signout',
+    sessionApiUrl:
+      'https://docs-iflastandards-preview.onrender.com/api/auth/session',
+  },
+  production: {
+    url: 'https://docs.iflastandards.info',
+    signinUrl: 'https://docs.iflastandards.info/sign-in',
+    dashboardUrl: 'https://docs.iflastandards.info',
+    signoutUrl: 'https://docs.iflastandards.info/api/auth/signout',
+    sessionApiUrl: 'https://docs.iflastandards.info/api/auth/session',
+  },
+};
+
 /**
  * Get the configuration for a specific site and environment.
  * This function creates a new object to avoid shared references when
@@ -263,6 +300,70 @@ export function getAdminPortalConfigAuto(): AdminPortalConfig {
 
   // Local development (default)
   return getAdminPortalConfig('local');
+}
+
+/**
+ * Get the admin docs configuration for a specific environment.
+ *
+ * @param env - The environment
+ * @returns The admin docs configuration
+ * @throws Error if configuration is missing
+ */
+export function getAdminDocsConfig(env: Environment): AdminDocsConfig {
+  const config = ADMIN_DOCS_CONFIG[env];
+  if (!config) {
+    throw new Error(`Admin docs configuration missing for ${env}`);
+  }
+  // Return a new object to avoid shared references
+  return { ...config };
+}
+
+/**
+ * Auto-detect environment and get admin docs configuration.
+ * This is useful for client-side code that needs to determine the environment dynamically.
+ *
+ * @returns The admin docs configuration for the detected environment
+ */
+export function getAdminDocsConfigAuto(): AdminDocsConfig {
+  // Server-side default (local development)
+  if (typeof window === 'undefined') {
+    return getAdminDocsConfig('local');
+  }
+
+  // Client-side: determine environment from window.location
+  const { hostname } = window.location;
+
+  // Production environment - docs specific domain
+  if (hostname === 'docs.iflastandards.info') {
+    return getAdminDocsConfig('production');
+  }
+
+  // Preview environment - docs specific Render domain
+  if (hostname === 'docs-iflastandards-preview.onrender.com') {
+    return getAdminDocsConfig('preview');
+  }
+
+  // General production environment fallback
+  if (hostname === 'standards.ifla.org' || hostname.includes('ifla.org')) {
+    return getAdminDocsConfig('production');
+  }
+
+  // Preview environment (GitHub Pages - iflastandards org)
+  if (hostname === 'iflastandards.github.io') {
+    return getAdminDocsConfig('preview');
+  }
+
+  // Preview environment (Render or other hosting)
+  if (
+    hostname.includes('github.io') ||
+    hostname.includes('netlify') ||
+    hostname.includes('onrender.com')
+  ) {
+    return getAdminDocsConfig('preview');
+  }
+
+  // Local development (default)
+  return getAdminDocsConfig('local');
 }
 
 /**

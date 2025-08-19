@@ -49,6 +49,14 @@ export function getSiteUrl(siteKey: SiteKey, path: string, environment: Environm
 
 // Map DOCS_ENV values to Environment types
 export function mapDocsEnvToEnvironment(docsEnv?: string): Environment
+
+// Admin Portal configuration functions
+export function getAdminPortalConfig(env: Environment): AdminPortalConfig
+export function getAdminPortalConfigAuto(): AdminPortalConfig
+
+// Admin Docs configuration functions (NEW as of January 2025)
+export function getAdminDocsConfig(env: Environment): AdminDocsConfig
+export function getAdminDocsConfigAuto(): AdminDocsConfig
 ```
 
 ## Configuration Flow (Current)
@@ -84,6 +92,27 @@ graph TD
 - **Features**: Management tools, standards overview, unique navigation
 - **Justification**: Unique requirements warrant custom configuration
 
+### Admin Portals (Separate Configuration System)
+- **Purpose**: Administrative interfaces for content management and development documentation
+- **Configuration**: Dedicated admin configuration functions separate from documentation sites
+- **Types**: Two admin portals with distinct purposes and URLs
+
+#### Admin Portal (Next.js Application)
+- **Purpose**: Content management, user workflows, vocabulary editing
+- **Technology**: Next.js 15 with App Router
+- **Environments**:
+  - Local: `http://localhost:3007`
+  - Preview: `https://admin-iflastandards-preview.onrender.com`
+  - Production: `https://admin.iflastandards.info`
+
+#### Admin Docs (Docusaurus Application) 
+- **Purpose**: Development documentation, architecture guides, API references
+- **Technology**: Docusaurus with specialized development theme
+- **Environments**:
+  - Local: `http://localhost:3030`
+  - Preview: `https://docs-iflastandards-preview.onrender.com`
+  - Production: `https://docs.iflastandards.info`
+
 ## Environment Handling
 
 ### URL Generation
@@ -105,6 +134,36 @@ const currentEnv = mapDocsEnvToEnvironment(process.env.DOCS_ENV);
 // Always use getSiteUrl for cross-site links
 const portalUrl = getSiteUrl('portal', '/', currentEnv);
 const lrmUrl = getSiteUrl('LRM', '/docs/intro', currentEnv);
+```
+
+### Admin Portal Configuration Usage
+```typescript
+// Get specific admin portal configuration
+import { getAdminPortalConfig } from '@ifla/theme/config/siteConfig';
+const adminConfig = getAdminPortalConfig('production');
+console.log(adminConfig.url); // 'https://admin.iflastandards.info'
+
+// Auto-detect environment and get admin portal configuration
+import { getAdminPortalConfigAuto } from '@ifla/theme/config/siteConfig';
+const adminConfig = getAdminPortalConfigAuto();
+// Returns configuration based on current hostname
+```
+
+### Admin Docs Configuration Usage
+```typescript
+// Get specific admin docs configuration 
+import { getAdminDocsConfig } from '@ifla/theme/config/siteConfig';
+const docsConfig = getAdminDocsConfig('local');
+console.log(docsConfig.url); // 'http://localhost:3030'
+console.log(docsConfig.port); // 3030
+
+// Auto-detect environment and get admin docs configuration
+import { getAdminDocsConfigAuto } from '@ifla/theme/config/siteConfig';
+const docsConfig = getAdminDocsConfigAuto();
+// Returns configuration based on current hostname:
+// - docs.iflastandards.info → production config
+// - docs-iflastandards-preview.onrender.com → preview config
+// - localhost:3030 → local config (default)
 ```
 
 ## Inter-Site Navigation

@@ -4,6 +4,7 @@ import type * as Preset from '@docusaurus/preset-classic';
 import {
   getSiteConfig,
   getSiteConfigMap,
+  getAdminDocsConfig,
   type SiteKey,
   type Environment,
 } from '@ifla/theme/config/siteConfig';
