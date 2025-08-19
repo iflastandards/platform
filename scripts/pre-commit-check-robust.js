@@ -402,7 +402,7 @@ class PreCommitRunner {
         !(await this.runStep(
           'ESLint',
           'pnpm',
-          ['nx', 'affected', '--target=lint', '--parallel=3'],
+          ['nx', 'affected', '--target=lint', '--parallel=3', '--uncommitted'],
           {
             timeout: CONFIG.LINT_TIMEOUT,
           },
@@ -418,7 +418,13 @@ class PreCommitRunner {
         !(await this.runStep(
           'TypeScript Check',
           'pnpm',
-          ['nx', 'affected', '--target=typecheck', '--parallel=3'],
+          [
+            'nx',
+            'affected',
+            '--target=typecheck',
+            '--parallel=3',
+            '--uncommitted',
+          ],
           {
             timeout: CONFIG.TYPECHECK_TIMEOUT,
           },
@@ -437,6 +443,7 @@ class PreCommitRunner {
             'affected',
             '--target=test:unit',
             '--parallel=3',
+            '--uncommitted',
             '--exclude=platform,@ifla/dev-servers,unified-spreadsheet,standards-cli',
           ],
           {
@@ -451,7 +458,7 @@ class PreCommitRunner {
         !(await this.runStep(
           'ESLint',
           'pnpm',
-          ['nx', 'affected', '--target=lint', '--parallel=3'],
+          ['nx', 'affected', '--target=lint', '--parallel=3', '--uncommitted'],
           {
             timeout: CONFIG.LINT_TIMEOUT,
           },

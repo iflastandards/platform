@@ -126,6 +126,8 @@
     "lint:workspace": "node scripts/lint-commands.mjs lint:workspace",
     "lint:cached": "node scripts/lint-commands.mjs lint:cached",
     "lint:report": "node scripts/lint-commands.mjs lint:report",
+    "generate:openapi": "tsx apps/admin/scripts/generate-openapi.ts",
+    "generate:openapi:watch": "nodemon --watch 'apps/admin/src/app/api/**/*' --ext ts,tsx --exec 'pnpm generate:openapi'",
     "next-list": "cd ~/code/ifla/standards-dev/apps/admin && next-list",
     "nx:affected": "nx affected --target=build --dry-run",
     "nx:cache:clear": "nx reset",
