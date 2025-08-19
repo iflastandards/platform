@@ -10,7 +10,7 @@ import {
   getAdminDocsConfigAuto,
   ADMIN_DOCS_CONFIG
 } from '../siteConfig';
-import type { Environment, AdminDocsConfig } from '../siteConfig';
+import type { Environment } from '../siteConfig';
 
 describe('getAdminDocsConfig', () => {
   it('should return the correct config for local environment', () => {

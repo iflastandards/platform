@@ -2,9 +2,11 @@ import { defineConfig } from 'vitest/config';
 import path from 'path';
 
 /**
- * Nx-optimized Vitest configuration
- * This configuration is designed to work with nx affected commands
- * and exclude build artifacts properly.
+ * Integration Testing Configuration (Phase 3: Pre-Push)
+ * This configuration is specifically for integration tests that:
+ * - Test multiple components working together
+ * - Use real I/O, files, APIs
+ * - Include scripts and deployment validation
  */
 export default defineConfig({
   resolve: {
@@ -31,63 +33,52 @@ export default defineConfig({
     },
   },
   test: {
-    // Override with Nx-optimized settings
     globals: true,
     environment: 'jsdom',
-    watch: false, // Ensure tests don't run in watch mode and exit properly
+    watch: false,
     setupFiles: [
       path.resolve(__dirname, 'packages/theme/src/tests/setup.ts'),
     ],
-    // Use glob patterns that work well with nx affected
+    // ONLY include integration tests (Phase 3)
     include: [
-      '{packages,apps,standards}/**/*.{test,spec}.{js,mjs,cjs,ts,mts,cts,jsx,tsx}',
-      'packages/theme/src/tests/**/*.{test,spec}.{js,mjs,cjs,ts,mts,cts,jsx,tsx}',
-      'packages/theme/src/**/__tests__/**/*.{test,spec}.{js,mjs,cjs,ts,mts,cts,jsx,tsx}',
+      // Integration test patterns
+      '**/*.integration.test.{js,mjs,cjs,ts,mts,cts,jsx,tsx}',
+      '**/tests/integration/**/*.{test,spec}.{js,mjs,cjs,ts,mts,cts,jsx,tsx}',
+      // Scripts tests (these are integration tests)
+      '**/tests/scripts/**/*.{test,spec}.{js,mjs,cjs,ts,mts,cts,jsx,tsx}',
+      '**/scripts/**/*.{test,spec}.{js,mjs,cjs,ts,mts,cts,jsx,tsx}',
+      // Deployment tests (Phase 3 validation)
+      '**/tests/deployment/**/*.{test,spec}.{js,mjs,cjs,ts,mts,cts,jsx,tsx}',
       // Additional patterns for when run from within package directories
-      'src/tests/**/*.{test,spec}.{js,mjs,cjs,ts,mts,cts,jsx,tsx}',
-      'src/**/__tests__/**/*.{test,spec}.{js,mjs,cjs,ts,mts,cts,jsx,tsx}',
+      'src/tests/scripts/**/*.{test,spec}.{js,mjs,cjs,ts,mts,cts,jsx,tsx}',
+      'src/tests/integration/**/*.{test,spec}.{js,mjs,cjs,ts,mts,cts,jsx,tsx}',
+      'src/tests/deployment/**/*.{test,spec}.{js,mjs,cjs,ts,mts,cts,jsx,tsx}',
     ],
     exclude: [
       '**/node_modules/**',
       '**/dist/**',
       '**/build/**',
       '**/e2e/**',
-      '**/tests/visual-regression.spec.ts',
-      '**/navbarComponentIntegration.test.ts',
-      '**/VocabularyTable-improved.test.tsx',
-      '**/multilingual-vocabulary.test.tsx',
-      // CRITICAL: Exclude integration tests for pre-commit phase
-      '**/*.integration.test.{ts,tsx,js,jsx}',
-      '**/tests/integration/**',
-      '**/test/integration/**',
-      // Exclude server-dependent tests
-      '**/server-dependent/**',
-      // Exclude environment tests (CI only)
-      '**/tests/deployment/**',
-      // Exclude dev-servers tests (run on-demand only due to mocking issues in global test environment)
-      '**/packages/dev-servers/src/**/*.{test,spec}.{ts,tsx,js,jsx}',
-      // Comprehensive exclusion of build artifacts
+      // Exclude unit tests (they run in Phase 2)
+      '**/__tests__/**/*.{test,spec}.{js,mjs,cjs,ts,mts,cts,jsx,tsx}',
+      '**/tests/components/**/*.{test,spec}.{js,mjs,cjs,ts,mts,cts,jsx,tsx}',
+      '**/tests/config/**/*.{test,spec}.{js,mjs,cjs,ts,mts,cts,jsx,tsx}',
+      '**/tests/utils/**/*.{test,spec}.{js,mjs,cjs,ts,mts,cts,jsx,tsx}',
+      // Build artifacts
       '**/.next/**',
       '**/apps/*/.next/**',
       '**/dist/**/.next/**',
       '**/.nx/**',
       '**/.docusaurus/**',
-      '**/standards/*/.docusaurus/**',
-      '**/portal/.docusaurus/**',
-      // Exclude coverage directories
       '**/coverage/**',
-      // Exclude IDE directories
       '**/.idea/**',
       '**/.vscode/**',
-      // Exclude temporary files
       '**/*.tmp',
       '**/*.temp',
       '**/tmp/**',
       '**/temp/**',
     ],
-    // Optimize for nx affected
-    passWithNoTests: true, // Allow projects without tests
-    // Use a single thread for more predictable behavior with nx
+    passWithNoTests: true,
     maxConcurrency: 1,
     pool: 'threads',
     poolOptions: {
@@ -98,16 +89,11 @@ export default defineConfig({
         minThreads: 1,
       },
     },
-    // Reasonable timeouts
     testTimeout: 30000,
     hookTimeout: 10000,
-    // Disable bail to see all test results
     bail: 0,
-    // Disable force rerun triggers in nx context
     forceRerunTriggers: [],
-    // Simple reporters for nx
     reporters: ['default'],
-    // Coverage configuration
     coverage: {
       reporter: ['text', 'lcov'],
       reportsDirectory: './coverage',
