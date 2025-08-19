@@ -2,10 +2,7 @@ import {themes as prismThemes} from 'prism-react-renderer';
 import type {Config} from '@docusaurus/types';
 import type * as Preset from '@docusaurus/preset-classic';
 import {
-  getSiteConfig,
-  getSiteConfigMap,
   getAdminDocsConfig,
-  type SiteKey,
   type Environment,
 } from '@ifla/theme/config/siteConfig';
 
@@ -17,14 +14,11 @@ if (!DOCS_ENV) {
     'Valid values: local, preview, production',
   );
 }
-const isLocalBuild = DOCS_ENV === 'local';
 
 /* ----------------------------------------------------------------------------
  * 🗺️ 2. Gather per-site configuration
  * -------------------------------------------------------------------------- */
 
-const siteConfig      = getSiteConfig('portal' as SiteKey, DOCS_ENV);
-const siteConfigMap   = getSiteConfigMap(DOCS_ENV);
 const adminConfig     = getAdminDocsConfig(DOCS_ENV);
 
 const config: Config = {
@@ -39,19 +33,15 @@ const config: Config = {
     experimental_faster: true,
   },
 
-  // Set the production url of your site here
-  url: 'https://your-docusaurus-site.example.com',
-  // Set the /<baseUrl>/ pathname under which your site is served
-  // For GitHub pages deployment, it is often '/<projectName>/'
-  baseUrl: '/',
+  url:      adminConfig.url,
+  baseUrl:  '/',
 
-  // GitHub pages deployment config.
-  // If you aren't using GitHub pages, you don't need these.
-  organizationName: 'facebook', // Usually your GitHub org/user name.
-  projectName: 'docusaurus', // Usually your repo name.
+  organizationName: 'iflastandards',
+  projectName:      'portal',
 
-  onBrokenLinks: 'throw',
-  onBrokenMarkdownLinks: 'warn',
+  onBrokenLinks:          'warn',
+  onBrokenMarkdownLinks:  'warn',
+  onBrokenAnchors:        'ignore',
 
   // Even if you don't use internationalization, you can use this field to set
   // useful metadata like html lang. For example, if your site is Chinese, you
