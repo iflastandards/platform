@@ -122,7 +122,7 @@ class PreCommitRunner {
       const child = spawn(command, args, {
         cwd,
         env: childEnv,
-        stdio: 'inherit',
+        stdio: ['inherit', 'pipe', 'pipe'], // stdin inherits, stdout/stderr are piped
       });
 
       let stdout = '';
@@ -180,25 +180,17 @@ class PreCommitRunner {
 
       // Use once() for data handlers to reduce listener accumulation
       const stdoutHandler = (data) => {
-        stdout += data;
-        // Show important output immediately
-        const lines = data.toString().split('\n');
-        lines.forEach((line) => {
-          if (
-            line.includes('✓') ||
-            line.includes('✗') ||
-            line.includes('error') ||
-            line.includes('failed')
-          ) {
-            console.log(line);
-          }
-        });
+        const dataStr = data.toString();
+        stdout += dataStr;
+        // Show output immediately for better feedback
+        process.stdout.write(dataStr);
       };
 
       const stderrHandler = (data) => {
-        stderr += data;
+        const dataStr = data.toString();
+        stderr += dataStr;
         // Show errors immediately
-        console.error(data.toString());
+        process.stderr.write(dataStr);
       };
 
       child.stdout.on('data', stdoutHandler);
