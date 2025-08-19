@@ -1,0 +1,31 @@
+{
+  "name": "docs",
+  "$schema": "../../node_modules/nx/schemas/project-schema.json",
+  "projectType": "application",
+  "sourceRoot": "apps/docs",
+  "targets": {
+    "serve": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "docusaurus start",
+        "cwd": "apps/docs"
+      }
+    },
+    "build": {
+      "executor": "nx:run-commands",
+      "outputs": ["{workspaceRoot}/dist/apps/docs"],
+      "options": {
+        "command": "npm run docs:gen-supabase-types && docusaurus build --out-dir ../../dist/apps/docs",
+        "cwd": "apps/docs"
+      }
+    },
+    "gen-supabase-types": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "supabase gen types typescript --project-id \"your-project-ref\" --schema \"public\" > ../../libs/supabase-types/src/database.ts"
+      },
+      "outputs": ["{workspaceRoot}/libs/supabase-types/src/database.ts"]
+    }
+  },
+  "tags": ["type:docs"]
+}

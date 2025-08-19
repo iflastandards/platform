@@ -1,17 +1,41 @@
 import {themes as prismThemes} from 'prism-react-renderer';
 import type {Config} from '@docusaurus/types';
 import type * as Preset from '@docusaurus/preset-classic';
+import {
+  getSiteConfig,
+  getSiteConfigMap,
+  type SiteKey,
+  type Environment,
+} from '@ifla/theme/config/siteConfig';
 
 // This runs in Node.js - Don't use client-side code here (browser APIs, JSX...)
+const DOCS_ENV = (process.env.DOCS_ENV as Environment | undefined) ?? 'production';
+if (!DOCS_ENV) {
+  throw new Error(
+    'DOCS_ENV environment variable is required but not set. ' +
+    'Valid values: local, preview, production',
+  );
+}
+const isLocalBuild = DOCS_ENV === 'local';
+
+/* ----------------------------------------------------------------------------
+ * 🗺️ 2. Gather per-site configuration
+ * -------------------------------------------------------------------------- */
+
+const siteConfig      = getSiteConfig('portal' as SiteKey, DOCS_ENV);
+const siteConfigMap   = getSiteConfigMap(DOCS_ENV);
+const adminConfig     = getAdminDocsConfig(DOCS_ENV);
 
 const config: Config = {
-  title: 'My Site',
-  tagline: 'Dinosaurs are cool',
+  title: 'IFLA Standards Documentation',
+  tagline: 'The complete guide to our platform and architecture.',
   favicon: 'img/favicon.ico',
 
-  // Future flags, see https://docusaurus.io/docs/api/docusaurus-config#future
+
+// Future flags, see https://docusaurus.io/docs/api/docusaurus-config#future
   future: {
     v4: true, // Improve compatibility with the upcoming Docusaurus v4
+    experimental_faster: true,
   },
 
   // Set the production url of your site here
