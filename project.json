@@ -8,7 +8,7 @@
     "test": {
       "executor": "@nx/vite:test",
       "options": {
-        "config": "./vitest.config.nx.ts"
+        "config": "./vitest.config.platform.ts"
       }
     },
     "lint": {
@@ -54,9 +54,7 @@
         "{projectRoot}/e2e/**/*",
         "{projectRoot}/playwright.config.pre-push.ts"
       ],
-      "outputs": [
-        "{projectRoot}/tmp/playwright-results-pre-push"
-      ]
+      "outputs": ["{projectRoot}/tmp/playwright-results-pre-push"]
     },
     "e2e:fail-fast": {
       "executor": "nx:run-commands",

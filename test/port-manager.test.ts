@@ -1,5 +1,5 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest';
-import { killPort, killPorts, SITE_PORTS } from './utils/port-manager';
+import { killPort, killPorts, SITE_PORTS } from '../scripts/utils/port-manager';
 import { execSync } from 'child_process';
 
 vi.mock('child_process', () => ({
@@ -7,7 +7,6 @@ vi.mock('child_process', () => ({
 }));
 
 const mockExecSync = vi.mocked(execSync);
-
 
 function mockExecSyncImplementation(command: string) {
   if (command.includes('lsof')) {
@@ -19,14 +18,7 @@ function mockExecSyncImplementation(command: string) {
 
 mockExecSync.mockImplementation(mockExecSyncImplementation);
 
-
-
-
-
-
-
-
-describe('port-manager utilities @unit @utility', () => {
+describe('port-manager utilities @unit @api @low-priority', () => {
   beforeEach(() => {
     vi.clearAllMocks();
   });
@@ -45,11 +37,8 @@ describe('port-manager utilities @unit @utility', () => {
   });*/
 
   it('should kill all ports', async () => {
-
-      const result = await killPorts(Object.values(SITE_PORTS));
-      expect(result).toBe(true);
-      expect(mockExecSync).toHaveBeenCalledWith(expect.stringContaining('kill'));
-
+    const result = await killPorts(Object.values(SITE_PORTS));
+    expect(result).toBe(true);
+    expect(mockExecSync).toHaveBeenCalledWith(expect.stringContaining('kill'));
   });
-
 });
