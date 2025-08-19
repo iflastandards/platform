@@ -105,6 +105,8 @@
     "format:mdx": "remark --rc-path .remarkrc.js \"docs/**/*.{md,mdx}\" --output",
     "fresh": "pnpm nx:cache:clear && rm -rf node_modules pnpm-lock.yaml && pnpm setup",
     "generate-next-routes-list": "cd ~/code/ifla/standards-dev/apps/admin/src && generate-next-routes-list -o routes.ts",
+    "generate:types": "tsx tools/codegen/generate-types.ts",
+    "generate:types:watch": "nodemon --watch packages/contracts/openapi --ext yaml,yml --exec 'pnpm generate:types'",
     "health": "node scripts/health-check.js",
     "lint": "pnpm nx affected --target=lint --parallel=3",
     "lint:admin:docs": "nx lint docs",

@@ -1,0 +1,39 @@
+[
+  {
+    "id": "1",
+    "vocabularyId": "vocab-1",
+    "buildType": "full",
+    "status": "completed",
+    "startedAt": "2024-01-15T10:00:00Z",
+    "completedAt": "2024-01-15T10:05:00Z",
+    "format": "turtle",
+    "outputUrl": "https://example.com/builds/vocab-1-full.ttl",
+    "metadata": {
+      "triplesCount": 1500,
+      "fileSize": 45000
+    }
+  },
+  {
+    "id": "2",
+    "vocabularyId": "vocab-2",
+    "buildType": "incremental",
+    "status": "in_progress",
+    "startedAt": "2024-01-15T11:00:00Z",
+    "completedAt": null,
+    "format": "jsonld",
+    "outputUrl": null,
+    "metadata": null
+  },
+  {
+    "id": "3",
+    "vocabularyId": "vocab-1",
+    "buildType": "validation",
+    "status": "failed",
+    "startedAt": "2024-01-15T09:00:00Z",
+    "completedAt": "2024-01-15T09:01:00Z",
+    "format": "ntriples",
+    "outputUrl": null,
+    "error": "Validation failed: Missing required property 'label'",
+    "metadata": null
+  }
+]
