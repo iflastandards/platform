@@ -1,399 +1,207 @@
-# CLAUDE.md - IFLA Standards Platform
+# CLAUDE.md
 
-⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️
-## 🛑 MANDATORY WORKFLOW - NO EXCEPTIONS!
+This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
 
-## THE ONLY WORKFLOW ALLOWED:
-1. **User request received**
-2. **IMMEDIATELY use TodoWrite** listing which agents will handle each part
-3. **ONLY allowed action**: Use Task tool to delegate to agents
-4. **If tempted to use other tools** → STOP, return to step 2
+## Build, Test, and Development Commands
 
-## YOU ARE LOCKED INTO THIS WORKFLOW:
-- Step 1: TodoWrite (mandatory)
-- Step 2: Task tool (only allowed tool)
-- Step 3: Report results
-- ANY OTHER TOOL USE = VIOLATION
-
-**Start EVERY response with TodoWrite → Then Task → Nothing else!**
-⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️
-
-This file provides guidance to Claude Code when working with this repository.
-
-## 🚨 STOP! AGENT CHECK REQUIRED
-
-**BEFORE ANY ACTION, ASK YOURSELF:**
-1. Can an agent do this? → YES? USE THE AGENT
-2. Is there even a 10% chance an agent could help? → YES? USE THE AGENT
-3. About to use Read/Edit/Write/Bash directly? → STOP! CHECK AGENTS FIRST
-
-## ⛔ DIRECT TOOL USE = VIOLATION
-
-**FORBIDDEN IN MAIN CONTEXT:**
-- ❌ Read tool → Use Search Agent or Context Fetcher
-- ❌ Edit/Write tools → Use appropriate coding agent
-- ❌ Bash commands → Use Build/Test Runner agents
-- ❌ Grep/Glob/LS → Use Search Agent
-- ❌ WebSearch/WebFetch → Use Research Agent
-
-**AGENTS ARE MANDATORY, NOT OPTIONAL**
-
-### 📏 The 1-Second Rule
-If it takes more than 1 second to complete, an agent should do it.
-Even reading a single file wastes context - agents have their own.
-
-## 🎯 Context Management Strategy
-This project uses an **agent-based workflow** as the PRIMARY and REQUIRED approach. ALL applicable tasks MUST be delegated to specialized agents with their own context windows.
-
-## 📝 CRITICAL: How to Delegate to Agents Correctly
-
-### Understanding Agent Types
-
-Our agents fall into two categories:
-
-#### 🔧 EXECUTOR Agents (27% of agents)
-**Purpose**: Perform mechanical, specific tasks with exact instructions
-**Examples**: context-fetcher, date-checker, file-creator, test-runner
-**Delegation Style**: Provide exact, detailed instructions
-
-#### 🧠 PROBLEM SOLVER Agents (73% of agents)  
-**Purpose**: Analyze complex requirements and implement solutions
-**Examples**: api-builder, ui-developer, test-writer, database-agent, search-agent
-**Delegation Style**: Provide goals, context, and requirements
-
-### ✅ CORRECT Delegation Patterns
-
-#### For EXECUTOR Agents (Mechanical Tasks)
-```
-"Create file X with this exact content: [content]"
-"Fetch the authentication section from docs/auth.md"
-"Run test suite and return results"
-```
-**Key**: Give exact specifications, no analysis needed
-
-#### For PROBLEM SOLVER Agents (Complex Tasks)
-```
-"Build an API endpoint for user management with CRUD operations"
-"Create a dashboard component with charts for sales data"
-"Write comprehensive tests for the authentication module"
-```
-**Key**: Provide requirements and let them analyze/design/implement
-
-### ❌ INCORRECT Delegation Patterns
-
-#### Don't Give Executors Complex Analysis
-```
-WRONG to file-creator: "Figure out what files the project needs"
-RIGHT to file-creator: "Create config.js with this content: [exact content]"
-```
-
-#### Don't Micromanage Problem Solvers
-```
-WRONG to ui-developer: "Add a div at line 45 with className='header'"
-RIGHT to ui-developer: "Create a responsive header component with navigation"
-```
-
-#### Don't Use Wrong Agent Type
-```
-WRONG: Using file-operations-agent for complex refactoring
-RIGHT: Using api-builder for API design, then file-operations for moving files
-```
-
-### 🎯 The Delegation Decision Tree
-```
-Is this a mechanical task with clear steps?
-├─ YES → Use EXECUTOR agent with exact instructions
-└─ NO → Use PROBLEM SOLVER agent with requirements
-
-Does the task require analysis/design/creativity?
-├─ YES → Use PROBLEM SOLVER agent
-└─ NO → Use EXECUTOR agent
-```
-
-### 💡 Agent Selection Guide
-
-#### Use EXECUTOR Agents When:
-- Moving/renaming files (specific paths known)
-- Creating files with known content
-- Fetching specific content
-- Running predefined commands
-
-#### Use PROBLEM SOLVER Agents When:
-- Designing new features
-- Analyzing code for improvements
-- Writing new code/tests
-- Solving bugs
-- Researching best practices
-
-### ⚠️ Important Note
-**All agents MUST execute their tasks** - whether they're executors following instructions or problem solvers implementing solutions. The difference is in how much analysis and decision-making they do, not whether they take action.
-
-## 🚀 Core Project Rules
-
-### Environment
-- **Package manager**: `pnpm` only (never npm/yarn)
-- **Working directory**: Always from repository root
-- **Monorepo tool**: Nx commands via `pnpm nx`
-
-### Platform Detection
-- **🔴 Admin Portal** (apps/admin/): Next.js 15, Material-UI, API routes
-- **🟢 Documentation Sites** (standards/*/): Docusaurus, Infima CSS, static only
-- **📦 Shared Packages** (packages/*): Used by both platforms
-
-### Critical Rules
-- **DELEGATE TO AGENTS FOR ALL APPLICABLE TASKS** - Agent usage is mandatory
-- **System-design-docs are SOURCE OF TRUTH** - Specs override implementation
-- **Prefer editing** existing files over creating new ones
-- **Never create** documentation files unless explicitly requested
-- **Never commit** unless explicitly asked
-- **Check Doc 20** for platform-specific patterns (admin vs docs)
-
-### Script Documentation Requirements
-- **ALWAYS update documentation** when modifying any script
-- **Include documentation reference** in every script (e.g., `Documentation: developer_notes/script-name.md`)
-- **Implement --man option** to display documentation location
-- **Document ALL options** including new ones added during modifications
-
----
-
-## 🤖 MANDATORY Agent Mapping
-
-**EVERY TASK HAS AN AGENT - NO EXCEPTIONS**
-
-### 🔴 INSTANT AGENT TRIGGERS
-These keywords IMMEDIATELY require agent delegation:
-
-### 🔍 Search & Analysis → **search-agent**
-**TRIGGERS**: find, search, where, which, locate, look for, grep, list files, show files, what files, check for
-**ALSO**: Reading ANY file, checking file contents, exploring codebase
-
-### 🧪 Test Writing → **test-writer**
-**TRIGGERS**: test, spec, coverage, jest, vitest, playwright, testing, assertions, mock, stub
-**ALSO**: Any code that ends in .test.* or .spec.*
-
-### 🔧 API Development → **api-builder**
-**TRIGGERS**: API, endpoint, route, withAuth, REST, GraphQL, middleware, handler, request, response
-**ALSO**: Anything in apps/admin/src/app/api/
-
-### 🎨 UI Components → **ui-developer**
-**TRIGGERS**: component, UI, MUI, Material-UI, button, form, dialog, accessibility, a11y, styling, CSS
-**ALSO**: Anything involving JSX/TSX, React components
-
-### 🗄️ Database Operations → **database-agent**
-**TRIGGERS**: database, DB, query, SQL, migration, Supabase, schema, table, column, index, RLS
-**ALSO**: Any .sql files, database connections
-
-### 🏗️ Build & Dependencies → **build-agent**
-**TRIGGERS**: build, nx, pnpm, dependencies, package.json, tsconfig, webpack, vite, compile
-**ALSO**: CI/CD, deployment, environment setup
-
-### 🔬 Research & Documentation → **research-agent**
-**TRIGGERS**: research, best practices, latest, compare, alternatives, how to, what is, explain
-**ALSO**: External documentation, npm packages, libraries
-
-### ✨ Advanced UI & Animations → **advanced-ui-agent**
-**TRIGGERS**: animation, animate, transition, particles, 3D, WebGL, canvas, effects, interactive
-**ALSO**: Complex visual features, performance optimizations
-
-### 📁 File Operations → **file-operations-agent**
-**TRIGGERS**: batch, rename, move, copy, delete multiple, process files, directory operations
-**ALSO**: Any operation affecting >3 files
-
-### 📋 Context Fetcher → **context-fetcher**
-**TRIGGERS**: get from, retrieve, extract, pull from, fetch section, read part of
-**ALSO**: Getting specific sections from docs
-
-### 📅 Date Checker → **date-checker**
-**TRIGGERS**: date, today, current time, now, timestamp
-**ALSO**: Time-based operations
-
-### 📝 File Creator → **file-creator**
-**TRIGGERS**: create file, new file, generate, scaffold, template, boilerplate
-**ALSO**: Creating multiple files at once
-
-### 🔄 Git Workflow → **git-workflow**
-**TRIGGERS**: git, commit, push, pull, branch, merge, PR, pull request
-**ALSO**: Version control operations
-
-### 🏃 Test Runner → **test-runner**
-**TRIGGERS**: run test, execute test, npm test, pnpm test, test results, test failure
-**ALSO**: Checking CI failures
-
-### 📖 ANY File Reading → **search-agent or context-fetcher**
-**NEVER** use Read tool directly!
-
----
-
-## 🎯 Quick Command Reference
-
-### Development
+### Essential Commands
 ```bash
-# Admin portal
-pnpm nx dev admin --turbopack         # Start dev server
-pnpm nx build admin                   # Build
-pnpm nx test admin                    # Test
+# Install dependencies and set up the project
+pnpm setup
 
-# Documentation sites
-pnpm nx start {site}                  # Start dev (e.g., isbd, portal)
-pnpm nx build {site}                  # Build site
+# Development servers
+pnpm dev:servers                    # Start all dev servers with helper tool
+pnpm dev:interactive                 # Interactive mode with Chrome browser
+pnpm dev:headless                    # Headless mode (no browser windows)
+pnpm nx start [site]                 # Start specific site (portal, isbd, admin, etc.)
 
-# Testing (ALWAYS use affected)
-pnpm nx affected -t test --parallel=3 # Test changed code
-pnpm typecheck                        # Type checking
-pnpm lint                             # Linting
+# Building
+pnpm build:all                       # Build all sites
+pnpm nx build [site]                 # Build specific site (portal, isbd, admin, etc.)
+pnpm build:affected                  # Build only affected projects
+
+# Testing
+pnpm test                            # Run affected tests with daemon
+pnpm test:comprehensive              # Full validation suite (typecheck, lint, test, build)
+pnpm test:pre-commit:robust          # Pre-commit validation (fast feedback)
+pnpm test:e2e                        # Run E2E tests
+pnpm test:unit                       # Run unit tests only
+pnpm nx test [project]               # Test specific project
+
+# Type checking and linting
+pnpm typecheck                       # Run TypeScript type checking on affected projects
+pnpm lint                            # Run ESLint on affected projects
+pnpm lint:fix                        # Fix ESLint issues
+
+# Utility commands
+pnpm nx:cache:clear                  # Clear Nx build cache
+pnpm ports:kill                      # Kill all development servers
+pnpm health                          # System health check
+pnpm check:secrets:staged            # Check for secrets in staged files
 ```
 
----
+### Running a Single Test
+```bash
+# Using Vitest for unit tests
+pnpm vitest run path/to/test.test.ts
 
-## ⚡ Key Patterns
+# Using Playwright for E2E tests
+pnpm playwright test path/to/test.spec.ts
 
-### Admin Portal (Next.js)
-- **Location**: `apps/admin/`
+# Run tests for a specific project
+pnpm nx test [project] --testFile=path/to/test.test.ts
+```
+
+## Architecture Overview
+
+### Monorepo Structure (Nx-based)
+```
+standards-dev/
+├── apps/
+│   └── admin/                      # Next.js admin portal (App Router)
+├── portal/                         # Main documentation portal (Docusaurus)
+├── standards/                      # Individual standard sites (Docusaurus)
+│   ├── ISBDM/                      
+│   ├── LRM/                        
+│   ├── FRBR/                       
+│   ├── isbd/                       
+│   ├── muldicat/                   
+│   └── unimarc/                    
+├── packages/
+│   ├── theme/                      # Shared Docusaurus theme & components
+│   ├── ui/                         # Shared UI components
+│   ├── dev-servers/                # Development server management
+│   └── unified-spreadsheet/        # Spreadsheet processing
+├── system-design-docs/             # Authoritative system architecture (00-38)
+├── e2e/                            # End-to-end tests (Playwright)
+└── scripts/                        # Build and utility scripts
+```
+
+### Technology Stack
+- **Build System**: Nx monorepo (v21.3.11) with pnpm workspace
+- **Frontend**: 
+  - Docusaurus 3.8.1 for documentation sites
+  - Next.js 15.4.4 (App Router) for admin portal
+  - React 19.1.1 with TypeScript 5.8.3
+- **Testing**: 
+  - Vitest for unit tests
+  - Playwright for E2E tests
+  - Test files co-located with source code
+- **Authentication**: Clerk with GitHub OAuth
+- **Authorization**: Custom RBAC via Clerk publicMetadata
+- **Data Storage**: Git as primary source of truth, Supabase for temporary data
+- **Deployment**: GitHub Pages (preview/production)
+
+### Key Architectural Decisions
+
+1. **Git-Centric Data Management**: All vocabulary content and DCTAP profiles are version-controlled in Git. Changes require PR review, ensuring quality and traceability.
+
+2. **Static Site Generation**: Documentation sites use Docusaurus for optimal performance with static generation, while the admin portal uses Next.js App Router for dynamic features.
+
+3. **Shared Theme Package**: The `@ifla/theme` package contains shared Docusaurus components, configurations, and utilities used across all documentation sites.
+
+4. **Environment-Aware Configuration**: The platform supports multiple environments (local, preview, production) with environment-specific URLs and configurations managed through TypeScript config files.
+
+5. **Testing Strategy**: 
+   - Unit tests are co-located with source files
+   - Integration tests in `test/integration/` directories
+   - E2E tests in root `e2e/` directory
+   - Tests use tags (@unit, @integration, @critical) for selective execution
+
+### Component Locations
+
+#### Admin Portal (Next.js)
+- **Components**: `apps/admin/src/components/`
 - **API Routes**: `apps/admin/src/app/api/`
-- **Styling**: Material-UI theme (NO Tailwind)
-- **Auth**: Clerk + custom RBAC
+- **Tests**: `apps/admin/src/test/` and `apps/admin/src/tests/`
+- **Lib/Services**: `apps/admin/src/lib/`
 
-### Documentation Sites (Docusaurus)
-- **Location**: `standards/{site}/`
-- **Components**: `packages/theme/src/components/`
-- **Styling**: Infima + SASS/SCSS
-- **No API routes** - static generation only
+#### Docusaurus Sites
+- **Shared Components**: `packages/theme/src/components/`
+- **Site-specific**: `[site]/src/components/`
+- **MDX Content**: `[site]/docs/`
+- **Tests**: `packages/theme/src/tests/`
 
----
+### Critical Configuration Files
+- **Nx Configuration**: `nx.json` - Project dependencies and build configuration
+- **TypeScript**: `tsconfig.json` - Path aliases and compiler options
+- **Vitest**: `vitest.config.nx.ts` - Test runner configuration
+- **Playwright**: `playwright.config.ts` - E2E test configuration
+- **Site Configs**: `packages/theme/src/config/siteConfig.ts` - Multi-site URL management
 
-## 📋 Main Context = AGENT DISPATCHER ONLY
+### Development Workflow
 
-**YOU ARE A DISPATCHER, NOT A WORKER**
+1. **Feature Development**:
+   - Create feature branch from `preview`
+   - Write tests first (TDD approach)
+   - Implement feature
+   - Run `pnpm test` for affected tests
+   - Run `pnpm lint:fix` to fix linting issues
+   - Create PR to `preview` branch
 
-### ✅ ONLY Allowed Actions:
-1. **Identify** which agent(s) to use
-2. **Delegate** to agents immediately
-3. **Coordinate** between multiple agents
-4. **Report** agent results to user
+2. **Pre-commit Hooks**:
+   - Secrets detection
+   - TypeScript checking (affected only)
+   - Unit tests (affected only)
+   - ESLint (affected only)
 
-### ⛔ FORBIDDEN Actions:
-- ❌ Using Read/Edit/Write/MultiEdit tools
-- ❌ Using Grep/Glob/LS tools
-- ❌ Running Bash commands (except final verification)
-- ❌ Writing ANY code yourself
-- ❌ Reading ANY files yourself
-- ❌ Doing "quick edits" yourself
+3. **Pre-push Hooks**:
+   - Comprehensive affected tests
+   - Build validation for critical sites
 
-### 🎯 Decision Tree:
-```
-User request received
-    ↓
-Can an agent handle this?
-    ├─ YES (99.9% of cases) → DELEGATE TO AGENT
-    └─ NO (0.1% of cases) → Ask user for clarification
-```
+### Common Development Tasks
 
-**NO EXCEPTIONS. NO "JUST THIS ONCE". ALWAYS USE AGENTS.**
-
----
-
-## 🚨 VIOLATIONS That Waste Context
-
-### 🔴 CRITICAL VIOLATIONS (Immediate Context Loss):
-1. **Using Read tool** → 100% context waste, use Search Agent
-2. **Using Edit/Write tools** → Massive waste, use coding agents
-3. **Running Bash directly** → Use Build/Test Runner agents
-4. **"I'll just quickly..."** → NO! Stop! Use an agent!
-
-### 🟡 COMMON EXCUSES (All Invalid):
-- "It's just one file" → **WRONG!** Use Search Agent
-- "Simple typo fix" → **WRONG!** Use File Operations Agent  
-- "Quick check" → **WRONG!** Use appropriate agent
-- "Faster to do directly" → **WRONG!** Context > Speed
-- "The agent seems overkill" → **WRONG!** Agents always
-
-### ✅ CORRECT MINDSET:
-- See a task? → Find the agent
-- No perfect agent match? → Use closest agent
-- Still unsure? → Use Search Agent as default
-- About to use a tool? → STOP! Find the agent instead
-
-**CONTEXT PRESERVATION IS NON-NEGOTIABLE**
-
----
-
-## 📚 Key Documentation
-
-When agents need documentation, they should load:
-- Platform differences: `system-design-docs/20-platform-specific-architecture-guide.md`
-- API patterns: `system-design-docs/05-api-architecture.md`
-- RBAC: `system-design-docs/12-rbac-authorization-model.md`
-- Testing: `developer_notes/AI_TESTING_INSTRUCTIONS.md`
-- UI/UX: `developer_notes/ui-ux-accessibility-best-practices.md`
-
----
-
-## 📝 REQUIRED Response Template
-
-**EVERY response MUST follow this format:**
-
-```
-🤖 Agent Analysis:
-- Task type: [identify what needs to be done]
-- Agent(s) needed: [list agents to use]
-
-Delegating to [Agent Name]...
+#### Adding a New Docusaurus Site
+```bash
+pnpm tsx scripts/scaffold-site.ts --siteKey=newsite --title="New Standard"
+pnpm tsx scripts/page-template-generator.ts --namespace=newsite
 ```
 
-Then use the Task tool immediately. No exceptions.
+#### Working with Vocabularies
+```bash
+# Create vocabulary sheet
+pnpm vocabulary:create
 
-## 💡 Agent Workflow Examples
+# Compare vocabularies
+pnpm compare:vocabulary --markdown
 
-### Example 1: API Task
-```
-You: "Find all API routes using withAuth and add error handling"
-
-Main Context Response:
-🔍 "Using Search Agent to find API routes with withAuth..."
-🔧 "Delegating to API Builder Agent to add error handling..."
-✅ "Running tests to verify changes..."
-
-Result: Task completed with preserved context
+# Generate vocabulary sites
+npx tsx scripts/generate-vocabulary-sites.ts --sites new-namespace
 ```
 
-### Example 2: UI Task  
-```
-You: "Create a new dashboard component with charts"
+#### Performance Optimization
+```bash
+# Optimize Nx configuration
+pnpm nx:optimize
 
-Main Context Response:
-🎨 "Using UI Developer Agent to create dashboard component..."
-📊 "Advanced UI Agent will handle chart implementations..."
-🧪 "Test Writer Agent will add component tests..."
+# Clear all caches
+pnpm nx:cache:clear
 
-Result: Full feature implemented via agent coordination
-```
-
-### Example 3: Even "Simple" Tasks
-```
-You: "Fix a typo in the API documentation"
-
-WRONG Approach:
-❌ Read file directly and make edit
-
-CORRECT Approach:
-🔍 "Using Search Agent to locate the documentation file..."
-📝 "File Operations Agent will handle the correction..."
-
-Result: Context preserved for more complex work later
+# View dependency graph
+pnpm nx:graph
 ```
 
----
+### Important Notes
 
-## 🎯 Agent-First Mindset
+1. **Nx Affected Commands**: Most commands use `nx affected` to only run on changed projects, significantly speeding up development.
 
-**Think: "Which agent handles this?" NOT "How do I do this directly?"**
+2. **Environment Variables**: The platform uses TypeScript configuration instead of `.env` files. Configuration is centralized in `packages/theme/src/config/siteConfig.ts`.
 
-This approach ensures:
-- ✅ Maximum context preservation
-- ✅ Consistent patterns across tasks  
-- ✅ Ability to handle complex multi-step projects
-- ✅ Clear audit trail of what was done
+3. **Test Exclusions**: Integration tests and server-dependent tests are excluded from pre-commit hooks for speed. They run in CI/CD.
 
----
+4. **Build Artifacts**: Build outputs go to `build/` for Docusaurus sites and `.next/` for the admin portal. These are git-ignored.
 
-*This configuration prioritizes agent delegation above all else to maximize conversation longevity*
+5. **Port Allocation**:
+   - Portal: 3000
+   - ISBDM: 3001
+   - LRM: 3002
+   - FRBR: 3003
+   - ISBD: 3004
+   - MulDiCat: 3005
+   - UNIMARC: 3006
+   - Admin: 3007
+
+6. **Testing Best Practices**:
+   - Always run `pnpm test` before committing
+   - Use `pnpm test:comprehensive` before creating PRs
+   - For quick iteration, use `pnpm nx test [project] --watch`

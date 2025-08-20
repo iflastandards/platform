@@ -1,0 +1,94 @@
+{
+  "$schema": "https://json.schemastore.org/claude-code-settings.json",
+  "permissions": {
+    "allow": [
+      "WebFetch(domain:docs.anthropic.com)",
+      "Bash(pnpm nx start:*)",
+      "Bash(node:*)",
+      "Bash(rm:*)",
+      "Bash(git add:*)",
+      "Bash(pnpm list:*)",
+      "Bash(chmod:*)",
+      "Bash(time node:*)",
+      "Bash(timeout 30 node scripts/validate-environment-urls-playwright.js:*)",
+      "Bash(pnpm check:links:quick:*)",
+      "Bash(mv:*)",
+      "Bash(mkdir:*)",
+      "Bash(touch:*)",
+      "Bash(git push:*)",
+      "Bash(for site in FRBR isbd ISBDM LRM muldicat unimarc)",
+      "Bash(do echo \"=== $site/rdf ===\")",
+      "Bash(ls:*)",
+      "Bash(done)",
+      "Bash(find:*)",
+      "Bash(for fmt in ttl jsonld nt xml)",
+      "Bash(do)",
+      "Bash([ -f \"rdf/$fmt/ns/isbd/elements.$fmt%ld\" ])",
+      "Bash(cp:*)",
+      "Bash([ -f \"rdf/$fmt/ns/isbd/unc/elements.$fmt%ld\" ])",
+      "Bash([ -f \"rdf/$fmt/ns/isbd/terms/contentform.$ext\" ])",
+      "Bash([ -f \"rdf/$fmt/ns/isbd/terms/contentformbase.$ext\" ])",
+      "Bash([ -f \"rdf/$fmt/ns/isbd/terms/mediatype.$ext\" ])",
+      "Bash(for vocab in dimensionality motion sensoryspecfication type)",
+      "Bash([ -f \"rdf/$fmt/ns/isbd/terms/contentqualification/$vocab.$ext\" ])",
+      "Bash([ -d \"rdf/$fmt/ns/unimarc/unimarcb/elements\" ])",
+      "Bash(if [ -d \"rdf/$fmt/ns/unimarc/terms\" ])",
+      "Bash(then)",
+      "Bash(for file in rdf/$fmt/ns/unimarc/terms/*.$ext)",
+      "Bash(if [ -f \"$file\" ])",
+      "Bash(fi)",
+      "Bash([ -f \"rdf/$fmt/ns/fr/frad.$ext\" ])",
+      "Bash([ -f \"rdf/$fmt/ns/fr/frsad.$ext\" ])",
+      "Bash([ -f \"rdf/$fmt/ns/fr/frsad/frsadusertask.$ext\" ])",
+      "Bash([ -f \"rdf/$fmt/ns/fr/frbr/frbrer.$ext\" ])",
+      "Bash([ -f \"rdf/$fmt/ns/fr/frbr/frbrer/frbrerusertask.$ext\" ])",
+      "Bash([ -f \"rdf/$fmt/ns/fr/frbr/frbroo.$ext\" ])",
+      "Bash([ -f \"rdf/$fmt/ns/lrm/lrmer.$ext\" ])",
+      "Bash([ -f \"rdf/$fmt/ns/muldicat.$ext\" ])",
+      "Bash(for site in FRBR isbd LRM muldicat unimarc)",
+      "Bash(echo:*)",
+      "Bash(for site in FRBR isbd LRM muldicat unimarc ISBDM)",
+      "Bash(if [ -d \"standards/$site/vocabs\" ])",
+      "Bash(else)",
+      "Bash(pnpm install:*)",
+      "Bash(pnpm dev:admin:docs:*)",
+      "Bash(grep:*)",
+      "Bash(cat:*)",
+      "Bash(pnpm dev:*)",
+      "Bash(curl:*)",
+      "Bash(pnpm nx lint:*)",
+      "Bash(pnpm eslint:*)"
+    ],
+    "deny": [],
+    "ask": [],
+    "defaultMode": "acceptEdits",
+    "additionalDirectories": [
+      "/Users/jonphipps/.claude",
+      "/Users/jonphipps/.config/claude"
+    ]
+  },
+  "hooks": {
+    "Stop": [
+      {
+        "matcher": "*",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "afplay -v 0.5 /System/Library/Sounds/Glass.aiff"
+          }
+        ]
+      }
+    ],
+    "PostToolUse": [
+      {
+        "matcher": "Write|Edit",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "afplay -v 0.2 /System/Library/Sounds/Tink.aiff"
+          }
+        ]
+      }
+    ]
+  }
+}
