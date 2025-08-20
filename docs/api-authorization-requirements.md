@@ -227,7 +227,7 @@ interface AuthContext {
 3. **Test Coverage**: 🔄 ~80% coverage for authorization logic (target: 90%)
 4. **Performance**: ✅ 95% of API requests respond within 200ms (with caching)
 5. **Security**: 🔄 Security measures implemented, audit pending
-6. **Developer Satisfaction**: ✅ Reduced time to implement new authorized endpoints by >50%
+6. **Developer Satisfaction**: ✅ Reduced time to implement new authorized endpoints by &gt;50%
 
 ## Risk Mitigation
 
@@ -275,7 +275,7 @@ Any changes to these requirements must be:
 1. **Completed Phases 1-3**: All documentation, type safety, and authorization enhancement tasks completed
 2. **Vocabulary Management API**: Full CRUD implementation with namespace-level authorization
 3. **Comprehensive Testing**: Integration tests for all API endpoints with role-based scenarios
-4. **Performance Optimization**: AuthCache reducing permission checks from ~50ms to <1ms
+4. **Performance Optimization**: AuthCache reducing permission checks from ~50ms to &lt;1ms
 5. **Developer Experience**: withAuth middleware and usePermission hooks simplifying development
 
 ### Key Implementations

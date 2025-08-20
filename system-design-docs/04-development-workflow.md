@@ -271,7 +271,7 @@ git push origin isbd-v1.2.0
 - **Cultural Adaptation**: Beyond literal translation to cultural appropriateness
 
 **Quality Gates**:
-- Translation completeness (>95%)
+- Translation completeness (&gt;95%)
 - Terminology consistency
 - Native speaker review
 - Technical validation
@@ -620,7 +620,7 @@ export function checkEditPermissions(
 
 **Feature Branches**:
 - Released content → Create feature branch
-- Draft content → Use draft/{namespace} branch
+- Draft content → Use draft/\{namespace\} branch
 - Automatic PR creation for released content changes
 
 ## Translation Management Procedures

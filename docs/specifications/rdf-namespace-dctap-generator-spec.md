@@ -387,10 +387,10 @@ pnpm rdf-to-dctap \
 - Zero data loss during generation
 
 ### Performance Metrics
-- Process 1000 properties in <5 seconds
-- Generate DCTAP for namespace in <10 seconds
-- Incremental updates in <2 seconds
-- Memory usage <100MB for large namespaces
+- Process 1000 properties in &lt;5 seconds
+- Generate DCTAP for namespace in &lt;10 seconds
+- Incremental updates in &lt;2 seconds
+- Memory usage &lt;100MB for large namespaces
 
 ### Quality Metrics
 - 100% test coverage for core logic

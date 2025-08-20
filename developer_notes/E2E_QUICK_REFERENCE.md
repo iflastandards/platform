@@ -20,9 +20,9 @@ pnpm test:e2e:ui                   # Visual debugging
 
 | Type | Time | Command | Use When |
 |------|------|---------|----------|
-| 🏃 **Smoke** | <5min | `pnpm test:e2e:smoke` | Quick validation |
-| 🚶 **Integration** | <15min | `pnpm test:e2e:integration` | Service interactions |
-| 🐌 **E2E** | <20min | `pnpm test:e2e:full` | Complete workflows |
+| 🏃 **Smoke** | &lt;5min | `pnpm test:e2e:smoke` | Quick validation |
+| 🚶 **Integration** | &lt;15min | `pnpm test:e2e:integration` | Service interactions |
+| 🐌 **E2E** | &lt;20min | `pnpm test:e2e:full` | Complete workflows |
 
 ## 🏷️ Tag Reference
 

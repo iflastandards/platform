@@ -154,7 +154,7 @@ Massive expansion of the PRD's basic requirements:
 - Dedicated redirect service
 
 **Performance Requirements** (beyond PRD):
-- Redirect latency < 10ms (95th percentile)
+- Redirect latency &lt; 10ms (95th percentile)
 - Support 10K+ mappings per namespace
 - Handle 1000+ requests/second
 - Zero downtime deployments
@@ -184,10 +184,10 @@ Far more sophisticated than PRD's "version locking":
 
 ### Performance & Scalability
 Integration designs include specific metrics not in PRD:
-- Preview render time: <2s
-- Edit load time: <3s
-- Build time increase: <20%
-- Memory usage: <500MB for redirect server
+- Preview render time: &lt;2s
+- Edit load time: &lt;3s
+- Build time increase: &lt;20%
+- Memory usage: &lt;500MB for redirect server
 
 ## 6. Risk Management
 
@@ -219,7 +219,7 @@ Specific, measurable criteria not in PRD:
 - Editor productivity: 2x improvement
 - Task completion time: 50% reduction
 - Error rate: 75% reduction
-- User satisfaction: >8/10
+- User satisfaction: &gt;8/10
 
 ## 8. Key Innovations Beyond PRD
 

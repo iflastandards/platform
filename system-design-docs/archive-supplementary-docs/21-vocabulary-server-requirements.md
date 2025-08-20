@@ -116,7 +116,7 @@ graph LR
 **Requirements**:
 - Efficient pathmap loading (10K+ mappings)
 - Caching strategy for redirects
-- Minimal latency impact (<10ms)
+- Minimal latency impact (&lt;10ms)
 - Hot reload without downtime
 
 ## Technical Architecture
@@ -235,11 +235,11 @@ app.get('/ns/*', async (req, res) => {
 - [ ] Pathmap updates deploy without downtime
 
 ### Performance Requirements
-- [ ] Redirect latency < 10ms (95th percentile)
+- [ ] Redirect latency &lt; 10ms (95th percentile)
 - [ ] Support 10K+ mappings per namespace
 - [ ] Handle 1000+ requests/second
 - [ ] Zero downtime deployments
-- [ ] Memory usage < 500MB
+- [ ] Memory usage &lt; 500MB
 
 ### Operational Requirements
 - [ ] Automated pathmap generation

@@ -10,7 +10,7 @@ This document describes the migration from the vulnerable `xlsx` package (CVE-20
 - **CVE**: CVE-2024-22899
 - **Severity**: High (7.5)
 - **Issue**: Prototype pollution vulnerability allowing arbitrary code execution
-- **Affected Versions**: < 0.20.3
+- **Affected Versions**: &lt; 0.20.3
 - **Status**: No patch available for versions we use
 
 ## Migration Strategy

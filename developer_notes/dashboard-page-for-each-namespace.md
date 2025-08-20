@@ -669,7 +669,7 @@ This approach gives you:
 
 Your admin section will function as a full-featured SPA while maintaining the benefits of Docusaurus's static site generation for the public portions of your documentation site.
 
-<div style="text-align: center">⁂</div>
+<div style={{textAlign: 'center'}}>⁂</div>
 
 [^1]: https://stackoverflow.com/questions/63271765/how-to-integrate-dynamic-routes-in-docusaurus-with-react-router
 

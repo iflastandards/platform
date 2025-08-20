@@ -371,22 +371,22 @@ Fallback: Direct Git editing remains available
 ## Success Metrics
 
 ### Technical Metrics
-- Build time increase: <20%
-- Bundle size increase: <100KB
-- API response time: <200ms
-- Error rate: <5%
+- Build time increase: &lt;20%
+- Bundle size increase: &lt;100KB
+- API response time: &lt;200ms
+- Error rate: &lt;5%
 
 ### User Metrics
 - Task completion time: 50% reduction
 - Error rate: 75% reduction
-- Training time: <2 hours
-- Satisfaction score: >8/10
+- Training time: &lt;2 hours
+- Satisfaction score: &gt;8/10
 
 ### Business Metrics
 - Editor productivity: 2x improvement
 - Support tickets: 50% reduction
 - Time to publish: 75% reduction
-- Adoption rate: >80%
+- Adoption rate: &gt;80%
 
 ## Conclusion
 

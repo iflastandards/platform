@@ -56,7 +56,7 @@ The goal is to redefine our E2E strategy for a monorepo containing Docusaurus v3
 
 #### 3.2 Non-Functional
 
-- [ ] Pre-push validation must finish in <5min for affected projects
+- [ ] Pre-push validation must finish in &lt;5min for affected projects
 - [ ] All E2E and integration tests must be atomic and maintain full isolation
 - [ ] Comprehensive E2E must be reserved for dedicated, high-confidence branches
 - [ ] Documentation in `/docs/testing/strategy.md` maintained
@@ -67,9 +67,9 @@ The goal is to redefine our E2E strategy for a monorepo containing Docusaurus v3
 
 | Test Type | Environment | Coverage | Time limit | Must Pass Rate |
 | :-- | :-- | :-- | :-- | :-- |
-| Smoke | Local/CI/Prod | Auth, dashboard, API | <5min | 100% |
-| Integration | Vercel Preview | RBAC, cross-service, admin | <15min | 95% |
-| Full E2E | pre-push/dev | All user journeys/docs | <20min | 90% |
+| Smoke | Local/CI/Prod | Auth, dashboard, API | &lt;5min | 100% |
+| Integration | Vercel Preview | RBAC, cross-service, admin | &lt;15min | 95% |
+| Full E2E | pre-push/dev | All user journeys/docs | &lt;20min | 90% |
 
 ### 5. Deliverables
 

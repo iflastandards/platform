@@ -213,5 +213,5 @@ MOCK_ERRORS=true pnpm nx dev admin --turbopack
 
 ---
 
-**Last Updated**: {{ Current Date }}  
+**Last Updated**: [Current Date]  
 **Next Review**: Tomorrow's standup

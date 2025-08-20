@@ -17,7 +17,7 @@ This document outlines the five distinct test phases that organize all testing a
 **Purpose**: Individual testing for focused development work and TDD
 **When**: During active development, debugging, feature work
 **Optimization**: Uses `nx affected` heavily, smart caching, **on-demand server management**
-**Speed**: < 5 seconds per test file
+**Speed**: &lt; 5 seconds per test file
 
 ### 🚀 Server Management (NEW - On-Demand Architecture)
 
@@ -119,7 +119,7 @@ pnpm nx run standards-dev:regression:affected
 **Purpose**: Fast feedback loop preventing broken commits
 **When**: Automatically on every `git commit`
 **Optimization**: Only affected projects, parallel execution
-**Speed**: < 60 seconds for typical changes
+**Speed**: &lt; 60 seconds for typical changes
 
 ### What Runs
 ```bash
@@ -140,7 +140,7 @@ pnpm nx affected --target=test --parallel=3       # Unit tests only
 **Purpose**: Integration tests and deployment readiness validation
 **When**: Automatically on every `git push`
 **Optimization**: Assumes pre-commit passed, no redundant testing
-**Speed**: < 180 seconds
+**Speed**: &lt; 180 seconds
 
 ### What Runs
 ```bash
@@ -161,7 +161,7 @@ pnpm nx affected --target=e2e                          # If portal/admin affecte
 **Purpose**: Full validation before major releases
 **When**: Release preparation, major refactoring validation
 **Optimization**: Parallelized where possible, uses all available cores
-**Speed**: < 300 seconds
+**Speed**: &lt; 300 seconds
 
 ### Full Test Suite
 ```bash
@@ -257,7 +257,7 @@ pnpm nx run standards-dev:regression:full
 - ✅ Never use `--no-verify` unless absolutely necessary
 
 ### Speed Targets
-- **Target time**: < 180 seconds total
+- **Target time**: &lt; 180 seconds total
 - **Focus**: Environment-specific failures only
 
 ## Deployment Flow
@@ -342,11 +342,11 @@ pnpm test:ci:connectivity             # External service connectivity only
 
 | Test Group | Target Time | Fallback Time | Optimization Focus |
 |------------|-------------|---------------|-------------------|
-| Selective | < 30s | < 60s | Affected only, single purpose |
-| Comprehensive | < 300s | < 600s | Parallelization, smart scheduling |
-| Pre-commit | < 60s | < 120s | Affected, essential checks only |
-| Pre-push | < 180s | < 300s | Branch-aware, representative testing |
-| CI | < 180s | < 240s | Environment focus, minimal redundancy |
+| Selective | &lt; 30s | &lt; 60s | Affected only, single purpose |
+| Comprehensive | &lt; 300s | &lt; 600s | Parallelization, smart scheduling |
+| Pre-commit | &lt; 60s | &lt; 120s | Affected, essential checks only |
+| Pre-push | &lt; 180s | &lt; 300s | Branch-aware, representative testing |
+| CI | &lt; 180s | &lt; 240s | Environment focus, minimal redundancy |
 
 ## On-Demand Server Management Architecture
 

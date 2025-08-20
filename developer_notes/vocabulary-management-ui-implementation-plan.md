@@ -245,7 +245,7 @@ interface MockVocabulary {
 
 ### 2. GitHub Issue Integration
 - Issues appear as cards in namespace dashboard
-- Template: "[Import] {Namespace} {Description}"
+- Template: "[Import] \{Namespace\} \{Description\}"
 - Labels indicate status: 'import-request', 'validated', 'processing'
 - One-click navigation to import workflow
 

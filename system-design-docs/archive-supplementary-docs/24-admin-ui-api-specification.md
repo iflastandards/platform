@@ -1407,9 +1407,9 @@ GET    /api/admin/activity/project/:projectId     // Get project activity
 ## Performance Requirements
 
 ### Response Times
-- Dashboard load: <2 seconds
-- API responses: <500ms average
-- Search results: <1 second
+- Dashboard load: &lt;2 seconds
+- API responses: &lt;500ms average
+- Search results: &lt;1 second
 - MDX generation: Progress updates every 5 seconds
 
 ### Scalability

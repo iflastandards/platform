@@ -296,7 +296,7 @@ French: http://iflastandards.info/ns/isbd/terms/Texte
 ```
 
 **Performance Requirements** (beyond PRD):
-- Redirect latency < 10ms (95th percentile)
+- Redirect latency &lt; 10ms (95th percentile)
 - Support 10K+ mappings per namespace
 - Handle 1000+ requests/second
 - Zero downtime deployments

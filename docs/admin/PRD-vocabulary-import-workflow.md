@@ -26,7 +26,7 @@ Create a complete vocabulary management system with export/import workflows, col
 - Successfully migrate all existing vocabularies within 2 weeks
 - Zero data loss during round-trip workflows
 - 100% of validation errors clearly reported with fixes
-- Export/import cycle completes in <5 minutes
+- Export/import cycle completes in &lt;5 minutes
 - 24-hour rollback window for all imports
 - Support for 3 translation modes (vocabulary, documentation, hybrid)
 
@@ -223,9 +223,9 @@ Create a complete vocabulary management system with export/import workflows, col
 - **Existing scripts** for processing
 
 ### Performance Requirements
-- Import wizard loads in <2 seconds
-- Validation completes in <30 seconds
-- Import process completes in <5 minutes
+- Import wizard loads in &lt;2 seconds
+- Validation completes in &lt;30 seconds
+- Import process completes in &lt;5 minutes
 - Support files up to 10MB
 
 ### Security Requirements
@@ -326,7 +326,7 @@ Create a complete vocabulary management system with export/import workflows, col
 - [ ] Profile changes persist
 
 ### User Experience
-- [ ] <5 clicks to complete import
+- [ ] &lt;5 clicks to complete import
 - [ ] Clear error messages
 - [ ] Successful import notification
 - [ ] Can resume interrupted import

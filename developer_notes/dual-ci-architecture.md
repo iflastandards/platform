@@ -33,7 +33,7 @@ git config --local alias.push-preview "push origin dev"
 
 ## Benefits Achieved
 - ✅ Comprehensive testing during development (475+ tests)
-- ✅ Fast client preview updates (< 3 minutes)
+- ✅ Fast client preview updates (&lt; 3 minutes)
 - ✅ Cost-efficient Nx Cloud usage on personal account
 - ✅ Clean separation between development and preview environments
 - ✅ Proper Nx Cloud workspace association
@@ -114,17 +114,17 @@ pnpm test:portal:e2e        # Portal end-to-end testing
 
 ### Build Regression Categories
 
-1. **Configuration Validation** (< 30s)
+1. **Configuration Validation** (&lt; 30s)
    - Validates all site configurations
    - Checks for build configuration errors
    - Ensures environment compatibility
 
-2. **Critical Site Builds** (< 3 min)
+2. **Critical Site Builds** (&lt; 3 min)
    - Portal (main documentation hub)
    - ISBDM (largest vocabulary site)
    - Represents 80% of typical issues
 
-3. **Production Build Suite** (< 10 min)
+3. **Production Build Suite** (&lt; 10 min)
    - All 15+ sites in production mode
    - Parallel execution with Nx
    - Full deployment validation
@@ -133,10 +133,10 @@ pnpm test:portal:e2e        # Portal end-to-end testing
 
 | Test Category | Target Time | Actual Time |
 |--------------|-------------|-------------|
-| Pre-commit | < 60s | ~45s |
-| Pre-push (feature) | < 3 min | ~2 min |
-| Pre-push (main) | < 10 min | ~8 min |
-| Full regression | < 15 min | ~12 min |
+| Pre-commit | &lt; 60s | ~45s |
+| Pre-push (feature) | &lt; 3 min | ~2 min |
+| Pre-push (main) | &lt; 10 min | ~8 min |
+| Full regression | &lt; 15 min | ~12 min |
 
 ### Optimization Techniques
 

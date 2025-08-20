@@ -1232,10 +1232,10 @@ pnpm test                             # nx affected --target=test
 
 ### Performance Targets
 
-- **Integration tests**: < 30 seconds per file (primary test type)
-- **Unit tests**: < 5 seconds per file (rare)
-- **E2E tests**: < 60 seconds per workflow
-- **Environment tests**: < 30 seconds per service
+- **Integration tests**: &lt; 30 seconds per file (primary test type)
+- **Unit tests**: &lt; 5 seconds per file (rare)
+- **E2E tests**: &lt; 60 seconds per workflow
+- **Environment tests**: &lt; 30 seconds per service
 </conditional-block>
 
 <conditional-block context-check="test-build-infrastructure" task-condition="working-with-test-infrastructure">
@@ -1254,8 +1254,8 @@ ELSE:
 
 1. **Selective Tests** (Development): `pnpm test` - Affected tests only
 2. **Comprehensive Tests** (Release): `pnpm test:comprehensive` - Full validation
-3. **Pre-commit Tests** (Git Hook): < 60 seconds - Essential checks only
-4. **Pre-push Tests** (Git Hook): < 180 seconds - Production readiness
+3. **Pre-commit Tests** (Git Hook): &lt; 60 seconds - Essential checks only
+4. **Pre-push Tests** (Git Hook): &lt; 180 seconds - Production readiness
 5. **CI Tests** (GitHub Actions): Environment validation only
 
 ### Performance Targets & Commands
@@ -1476,7 +1476,7 @@ ELSE:
 
 - **Optimize for affected builds**: Only build what changed
 - **Use Nx Cloud caching**: Distributed builds with 6-8 agents
-- **Monitor build times**: Target < 5 minutes for full builds
+- **Monitor build times**: Target &lt; 5 minutes for full builds
 </conditional-block>
 
 ## Summary of IFLA-Specific Augmentations

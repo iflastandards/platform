@@ -268,7 +268,7 @@ Production Environment:
 - **Image Optimization**: Next.js automatic optimization
 
 ### Developer Experience
-- **Fast Feedback**: <5s for unit tests
+- **Fast Feedback**: &lt;5s for unit tests
 - **Smart Testing**: Affected-only test runs
 - **Hot Reload**: Instant development updates
 - **Type Safety**: Full TypeScript coverage
@@ -399,13 +399,13 @@ Production Environment:
 ## Success Metrics
 
 ### Technical Metrics
-- Build time: <5 minutes with caching
-- Page load: <3 seconds globally
-- API response: <200ms average
+- Build time: &lt;5 minutes with caching
+- Page load: &lt;3 seconds globally
+- API response: &lt;200ms average
 - Uptime: 99.9% availability
 
 ### Quality Metrics
-- Test coverage: >90% critical paths
+- Test coverage: &gt;90% critical paths
 - Type coverage: 100% for core modules
 - Accessibility: WCAG 2.1 AA compliant
 - Documentation: 100% API coverage

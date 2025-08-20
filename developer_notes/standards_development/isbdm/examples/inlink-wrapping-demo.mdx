@@ -14,15 +14,15 @@ This page demonstrates how the InLink component handles text wrapping, especiall
 The InLink component automatically inserts zero-width spaces before opening parentheses, allowing text to break at those points when needed:
 
 <div style={{width: '300px', border: '1px solid #ccc', padding: '10px', marginBottom: '20px'}}>
-  <InLink href="/example">
+  <a href="/example">
     Catalogue of shipwrecked books (2018; William Collins; volume; case binding)
-  </InLink>
+  </a>
 </div>
 
 <div style={{width: '200px', border: '1px solid #ccc', padding: '10px', marginBottom: '20px'}}>
-  <InLink href="/example">
+  <a href="/example">
     A very long title that contains (some parenthetical information) and continues afterwards
-  </InLink>
+  </a>
 </div>
 
 ## Multiple Parentheses
@@ -30,9 +30,9 @@ The InLink component automatically inserts zero-width spaces before opening pare
 The component handles multiple sets of parentheses:
 
 <div style={{width: '250px', border: '1px solid #ccc', padding: '10px', marginBottom: '20px'}}>
-  <InLink href="/example">
+  <a href="/example">
     Book title (author) published by (publisher) in year (2024)
-  </InLink>
+  </a>
 </div>
 
 ## Word Breaking
@@ -40,9 +40,9 @@ The component handles multiple sets of parentheses:
 If text still overflows after breaking at parentheses, it will break between words:
 
 <div style={{width: '150px', border: '1px solid #ccc', padding: '10px', marginBottom: '20px'}}>
-  <InLink href="/example">
+  <a href="/example">
     Verylongwordwithoutspaces (parenthetical) anotherlongword
-  </InLink>
+  </a>
 </div>
 
 ## Disabled Smart Wrap
@@ -50,9 +50,9 @@ If text still overflows after breaking at parentheses, it will break between wor
 You can disable smart wrapping by setting `smartWrap={false}`:
 
 <div style={{width: '300px', border: '1px solid #ccc', padding: '10px', marginBottom: '20px'}}>
-  <InLink href="/example" smartWrap={false}>
+  <a href="/example" smartWrap={false}>
     Catalogue of shipwrecked books (2018; William Collins; volume; case binding)
-  </InLink>
+  </a>
 </div>
 
 ## Usage
@@ -61,14 +61,14 @@ You can disable smart wrapping by setting `smartWrap={false}`:
 import { InLink } from '@ifla/theme';
 
 // Default usage with smart wrapping
-<InLink href="/docs/example">
+<a href="/docs/example">
   Text with (parentheses) that will wrap smartly
-</InLink>
+</a>
 
 // Disable smart wrapping
-<InLink href="/docs/example" smartWrap={false}>
+<a href="/docs/example" smartWrap={false}>
   Text with (parentheses) without smart wrapping
-</InLink>
+</a>
 ```
 
 ## How It Works

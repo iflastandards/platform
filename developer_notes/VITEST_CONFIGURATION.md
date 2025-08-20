@@ -118,7 +118,7 @@ If tests are scanning .next or other build directories:
 ## Best Practices
 
 1. **Always use nx affected**: Don't run all tests unless necessary
-2. **Keep tests fast**: Unit tests should complete in <30s
+2. **Keep tests fast**: Unit tests should complete in &lt;30s
 3. **Separate concerns**: Run typecheck/lint/test as separate steps
 4. **Use proper exclusions**: Ensure build artifacts are excluded
 5. **Monitor performance**: Use `pnpm nx:performance` to check

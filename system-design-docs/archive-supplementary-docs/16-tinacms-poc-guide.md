@@ -310,9 +310,9 @@ const baselineSize = fs.statSync('dist/newtest/main.js').size;
   - [ ] Validation rules enforce DCTAP
 
 - [ ] **Performance**
-  - [ ] Build time increase < 20%
-  - [ ] Bundle size increase < 100KB
-  - [ ] Editor responsiveness < 200ms
+  - [ ] Build time increase &lt; 20%
+  - [ ] Bundle size increase &lt; 100KB
+  - [ ] Editor responsiveness &lt; 200ms
 
 - [ ] **Integration**
   - [ ] Changes commit to Git correctly
@@ -341,7 +341,7 @@ const baselineSize = fs.statSync('dist/newtest/main.js').size;
 - ✅ Edit vocabulary MDX files
 - ✅ Multilingual support
 - ✅ Git integration
-- ✅ Build time impact < 20%
+- ✅ Build time impact &lt; 20%
 
 **Should Have**:
 - ⚡ Real-time preview

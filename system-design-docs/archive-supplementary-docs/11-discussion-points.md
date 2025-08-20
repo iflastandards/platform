@@ -242,9 +242,9 @@ graph TD
 Performance targets are specified but validation methods are unclear.
 
 ### Targets Needing Clarification
-- **Build Time**: <5 minutes (with or without cache?)
-- **Page Load**: <3 seconds (which percentile?)
-- **API Response**: <200ms (for which operations?)
+- **Build Time**: &lt;5 minutes (with or without cache?)
+- **Page Load**: &lt;3 seconds (which percentile?)
+- **API Response**: &lt;200ms (for which operations?)
 - **Test Execution**: Various targets (in which environment?)
 
 ### Monitoring Questions

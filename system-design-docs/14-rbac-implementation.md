@@ -15,7 +15,7 @@ This document describes the **actual implemented** authorization architecture fo
 - **Authorization**: Custom RBAC via `publicMetadata` (NOT Clerk Organizations)
 - **API Layer**: Standard Next.js App Router API routes (NOT tRPC)
 - **Data Storage**: Supabase for operational data, Git for content
-- **Performance**: AuthCache with 5-minute TTL (reduces checks from ~50ms to <1ms)
+- **Performance**: AuthCache with 5-minute TTL (reduces checks from ~50ms to &lt;1ms)
 
 ### Key Design Decisions
 1. **Metadata-based roles**: Using Clerk publicMetadata for role storage

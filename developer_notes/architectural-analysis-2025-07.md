@@ -764,10 +764,10 @@ const { data, error, isLoading } = useSWR(
 
 | Metric | Current | Target | Action |
 |--------|---------|--------|--------|
-| First Load JS | 100-200KB | <75KB | Code splitting |
-| TTI | Unknown | <3.5s | Lazy loading |
-| FCP | Unknown | <1.5s | Critical CSS |
-| CLS | Unknown | <0.1 | Layout stability |
+| First Load JS | 100-200KB | &lt;75KB | Code splitting |
+| TTI | Unknown | &lt;3.5s | Lazy loading |
+| FCP | Unknown | &lt;1.5s | Critical CSS |
+| CLS | Unknown | &lt;0.1 | Layout stability |
 
 ---
 
@@ -801,7 +801,7 @@ const { data, error, isLoading } = useSWR(
 - [ ] Add comprehensive logging
 
 #### Code Quality
-- [ ] Break down large components (>300 lines)
+- [ ] Break down large components (&gt;300 lines)
 - [ ] Implement component testing strategy
 - [ ] Add Storybook for component documentation
 - [ ] Create coding standards document

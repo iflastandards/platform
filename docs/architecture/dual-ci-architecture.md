@@ -192,14 +192,14 @@ Purpose: Live public site
 - ESLint validation
 - Unit tests
 - Configuration validation
-- **Target**: < 60 seconds
+- **Target**: &lt; 60 seconds
 
 ### Pre-push Tests (Automatic)
 **File**: `.husky/pre-push-optimized`
 - Branch-aware testing
 - Protected branches: Full validation
 - Feature branches: Affected testing only
-- **Target**: < 180 seconds
+- **Target**: &lt; 180 seconds
 
 ### Comprehensive Testing
 ```bash

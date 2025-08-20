@@ -320,8 +320,8 @@ node analyze-fixed.js
 
 - Initial analysis: ~30-60 seconds for 400 scripts
 - Database size: ~500KB for 400 scripts
-- Query response: <100ms for most queries
-- Export generation: <1 second for all formats
+- Query response: &lt;100ms for most queries
+- Export generation: &lt;1 second for all formats
 
 ## Future Enhancements
 

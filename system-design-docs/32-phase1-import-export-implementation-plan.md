@@ -1007,7 +1007,7 @@ export function ExportDialogV2({ namespace }: { namespace: string }) {
 - [ ] All integration tests pass
 - [ ] End-to-end workflow completes successfully
 - [ ] Error handling tested for all failure scenarios
-- [ ] Performance targets met (import <2min for 100 elements)
+- [ ] Performance targets met (import &lt;2min for 100 elements)
 - [ ] UI/UX validated with sample vocabularies
 - [ ] Security review completed
 - [ ] Documentation updated
@@ -1024,20 +1024,20 @@ export function ExportDialogV2({ namespace }: { namespace: string }) {
 
 ### Technical Metrics
 - **Integration Success**: 100% of existing tools accessible through integration layer
-- **Workflow Completion**: <2 minutes for 100-element vocabulary import
-- **Error Rate**: <1% for valid inputs
-- **API Response Time**: <500ms for all non-workflow endpoints
-- **Cache Hit Rate**: >80% for repeated operations
+- **Workflow Completion**: &lt;2 minutes for 100-element vocabulary import
+- **Error Rate**: &lt;1% for valid inputs
+- **API Response Time**: &lt;500ms for all non-workflow endpoints
+- **Cache Hit Rate**: &gt;80% for repeated operations
 
 ### User Experience Metrics
-- **Wizard Completion Rate**: >90% of users complete import process
-- **Error Understanding**: <5% of users require support for error resolution
+- **Wizard Completion Rate**: &gt;90% of users complete import process
+- **Error Understanding**: &lt;5% of users require support for error resolution
 - **Feature Adoption**: All export formats successfully used
-- **User Satisfaction**: >85% positive feedback on import/export experience
+- **User Satisfaction**: &gt;85% positive feedback on import/export experience
 
 ### Business Metrics
 - **Time to Value**: 50% reduction in vocabulary import time
-- **Data Quality**: >95% successful validation rate
+- **Data Quality**: &gt;95% successful validation rate
 - **Process Efficiency**: 75% reduction in manual intervention
 - **System Reliability**: 99.5% uptime for import/export services
 

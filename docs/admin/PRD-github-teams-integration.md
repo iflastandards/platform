@@ -105,9 +105,9 @@ The current admin portal uses mock authentication and role management that doesn
 ## Non-Functional Requirements
 
 ### Performance
-- Dashboard load time < 2 seconds
-- GitHub sync completion < 30 seconds
-- Navbar render < 100ms
+- Dashboard load time &lt; 2 seconds
+- GitHub sync completion &lt; 30 seconds
+- Navbar render &lt; 100ms
 
 ### Scalability
 - Support 100+ users across teams
@@ -128,11 +128,11 @@ The current admin portal uses mock authentication and role management that doesn
 
 ## Success Metrics
 
-1. **Authentication Success Rate** > 99%
+1. **Authentication Success Rate** &gt; 99%
 2. **Correct Dashboard Display** for 100% of test users
-3. **GitHub Sync Reliability** > 99.5%
-4. **Metadata Size** < 6KB average (75% of limit)
-5. **User Navigation Time** < 5 seconds to any section
+3. **GitHub Sync Reliability** &gt; 99.5%
+4. **Metadata Size** &lt; 6KB average (75% of limit)
+5. **User Navigation Time** &lt; 5 seconds to any section
 
 ## Test Users
 

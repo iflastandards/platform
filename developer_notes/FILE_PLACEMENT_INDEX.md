@@ -17,8 +17,8 @@ The monorepo contains two distinct platform types:
 
 | Test Type | Primary Location | Secondary Locations | Pattern |
 |-----------|------------------|---------------------|---------|
-| **Unit Tests** | `apps/admin/src/test/unit/` | `apps/admin/src/lib/__tests__/`<br>`apps/admin/src/components/**/__tests__/` | `*.test.{ts,tsx}` |
-| **Integration Tests** | `apps/admin/src/test/integration/`<br>`apps/admin/src/tests/integration/` | `apps/admin/src/app/api/**/__tests__/` | `*.integration.test.{ts,tsx}` or `*.test.{ts,tsx}` |
+| **Unit Tests** | `apps/admin/src/test/unit/` | `apps/admin/src/lib/__tests__/`<br/>`apps/admin/src/components/**/__tests__/` | `*.test.{ts,tsx}` |
+| **Integration Tests** | `apps/admin/src/test/integration/`<br/>`apps/admin/src/tests/integration/` | `apps/admin/src/app/api/**/__tests__/` | `*.integration.test.{ts,tsx}` or `*.test.{ts,tsx}` |
 | **Server-Dependent** | `apps/admin/src/test/integration/server-dependent/` | - | `*.test.{ts,tsx}` |
 | **E2E Tests** | `e2e/e2e/admin/` | - | `*.e2e.spec.ts` or `*.spec.ts` |
 | **Accessibility** | Mixed in component tests | `e2e/accessibility/` | `*.a11y.test.tsx` |
@@ -39,7 +39,7 @@ The monorepo contains two distinct platform types:
 |---------|---------------|---------|
 | `unified-spreadsheet` | `packages/unified-spreadsheet/tests/integration/` | `*.integration.test.ts` |
 | `dev-servers` | `packages/dev-servers/src/` (co-located) | `*.test.ts` |
-| `theme` | `packages/theme/src/tests/` (centralized)<br>`packages/theme/src/components/**/__tests__/` (some co-located) | Mixed patterns |
+| `theme` | `packages/theme/src/tests/` (centralized)<br/>`packages/theme/src/components/**/__tests__/` (some co-located) | Mixed patterns |
 
 ### 🔴 INCONSISTENCY ALERT
 

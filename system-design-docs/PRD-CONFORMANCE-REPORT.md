@@ -11,7 +11,7 @@ The system design documents demonstrate strong alignment with the Product Requir
 ### Key Strengths
 - ✅ **Technical Architecture**: 95% alignment with enhanced implementation details
 - ✅ **Core Features**: All PRD features covered with additional enhancements
-- ✅ **Performance**: Exceeds PRD targets (<5min builds, <3s page loads)
+- ✅ **Performance**: Exceeds PRD targets (&lt;5min builds, &lt;3s page loads)
 - ✅ **Security**: More comprehensive than PRD requirements
 - ✅ **Testing Strategy**: 5-phase approach exceeds PRD expectations
 

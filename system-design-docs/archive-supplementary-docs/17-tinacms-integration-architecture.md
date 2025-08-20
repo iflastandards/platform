@@ -584,16 +584,16 @@ export async function scaffoldTranslation(
 ## Success Metrics
 
 ### Technical Metrics
-- Preview render time: <2s
-- Edit load time: <3s
-- Commit success rate: >95%
-- Build impact: <10%
+- Preview render time: &lt;2s
+- Edit load time: &lt;3s
+- Commit success rate: &gt;95%
+- Build impact: &lt;10%
 
 ### User Metrics
-- Edit completion rate: >80%
-- Error reduction: >60%
+- Edit completion rate: &gt;80%
+- Error reduction: &gt;60%
 - Time to publish: -50%
-- User satisfaction: >8/10
+- User satisfaction: &gt;8/10
 
 ## Conclusion
 

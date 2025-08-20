@@ -43,7 +43,7 @@
 | 1     | **Use nx move (or @nx/workspace:move) for any file/folder relocation.** | Auto-rewrites project.json, tsconfig.*, import paths, Jest/Vitest configs. |
 | 2     | **Mark before you delete.** Tag unused code with /** @deprecated scheduled-removal YYYY-MM-DD */ and run the full test suite once. | Prevents accidental removal of transitive deps.              |
 | 3     | **One TS & one TSUP config to rule them all.** Root-level tsconfig.base.json and tsup.config.ts are canonical; children only extends. | Consistent flags + faster incremental builds.                |
-| 4     | **Scripts graduate to packages.** Every runnable script eventually lives in packages/<toolset>/src/ and is triggered by an Nx executor. | Cache-aware, typed, discoverable.                            |
+| 4     | **Scripts graduate to packages.** Every runnable script eventually lives in packages/`<toolset>`/src/ and is triggered by an Nx executor. | Cache-aware, typed, discoverable.                            |
 | 5     | **Document drift checks in CI.** Any deviation (e.g., rogue tsup config) fails GitHub Actions. | Keeps future contributors honest.                            |
 
 

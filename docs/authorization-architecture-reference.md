@@ -55,16 +55,16 @@ Review Group
 
 | Role | Abilities | Description |
 |------|-----------|-------------|
-| **Translator** | - View namespace content<br>- Edit translations<br>- Comment on content | Translates standards content |
-| **Author** | - All translator abilities<br>- Edit documentation pages<br>- Create examples<br>- Edit instructional content | Creates and maintains documentation |
-| **Editor** | - All author abilities<br>- Import spreadsheets<br>- Edit vocabularies<br>- Create versions<br>- Manage releases | Full content management |
+| **Translator** | - View namespace content<br/>- Edit translations<br/>- Comment on content | Translates standards content |
+| **Author** | - All translator abilities<br/>- Edit documentation pages<br/>- Create examples<br/>- Edit instructional content | Creates and maintains documentation |
+| **Editor** | - All author abilities<br/>- Import spreadsheets<br/>- Edit vocabularies<br/>- Create versions<br/>- Manage releases | Full content management |
 
 ### Administrative Roles
 
 | Role | Abilities | Scope |
 |------|-----------|-------|
-| **Review Group Admin** | - Create/manage teams<br>- Create/manage projects<br>- Assign teams to projects<br>- All editor abilities within RG | Review Group |
-| **Superadmin** | - All system permissions<br>- Create review groups<br>- System configuration | System-wide |
+| **Review Group Admin** | - Create/manage teams<br/>- Create/manage projects<br/>- Assign teams to projects<br/>- All editor abilities within RG | Review Group |
+| **Superadmin** | - All system permissions<br/>- Create review groups<br/>- System configuration | System-wide |
 
 ## Permission Flow
 

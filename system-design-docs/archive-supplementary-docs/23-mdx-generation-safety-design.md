@@ -628,7 +628,7 @@ Recovery Playbook:
 
 1. **Zero Data Loss**: No vocabulary data lost during any operation
 2. **Preview Accuracy**: Dry-run exactly matches actual generation
-3. **Rollback Speed**: Full rollback completes in <30 seconds
+3. **Rollback Speed**: Full rollback completes in &lt;30 seconds
 4. **Audit Completeness**: 100% of operations logged with full context
 5. **User Confidence**: Clear feedback at every step
 

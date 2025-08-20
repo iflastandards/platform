@@ -101,7 +101,7 @@ The IFLA Standards Platform provides:
 
 - 100% of new IFLA standards use the platform within 2 years
 - 90% user satisfaction rating from review groups
-- < 5 minute average time to generate vocabularies from spreadsheets
+- &lt; 5 minute average time to generate vocabularies from spreadsheets
 - 99.9% uptime for published vocabularies
 
 ---
@@ -861,11 +861,11 @@ interface GitHubService {
 
 | Operation | Target | Maximum |
 |-----------|--------|---------|
-| Page Load | < 1s | 3s |
-| API Response | < 200ms | 1s |
-| Spreadsheet Import | < 30s | 2m |
-| RDF Generation | < 10s | 30s |
-| Search Results | < 500ms | 2s |
+| Page Load | &lt; 1s | 3s |
+| API Response | &lt; 200ms | 1s |
+| Spreadsheet Import | &lt; 30s | 2m |
+| RDF Generation | &lt; 10s | 30s |
+| Search Results | &lt; 500ms | 2s |
 
 ### 13.2 Scalability
 

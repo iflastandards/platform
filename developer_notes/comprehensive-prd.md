@@ -588,15 +588,15 @@ ifla-standards-platform/
 
 ### Technical Metrics
 - **Build Performance**: Sub-5 minute full builds with Nx caching
-- **Test Coverage**: >90% unit test coverage, >80% E2E coverage
-- **API Performance**: <200ms response times for all endpoints
-- **Deployment Success**: >99% successful deployments
+- **Test Coverage**: &gt;90% unit test coverage, &gt;80% E2E coverage
+- **API Performance**: &lt;200ms response times for all endpoints
+- **Deployment Success**: &gt;99% successful deployments
 - **Security**: Zero critical security vulnerabilities
 
 ### User Experience Metrics
-- **Page Load Times**: <3 seconds for all pages
-- **Navigation Success**: >95% successful inter-namespace navigation
-- **Search Effectiveness**: >90% successful search result clicks
+- **Page Load Times**: &lt;3 seconds for all pages
+- **Navigation Success**: &gt;95% successful inter-namespace navigation
+- **Search Effectiveness**: &gt;90% successful search result clicks
 - **Mobile Responsiveness**: Full functionality on mobile devices
 - **Accessibility**: WCAG 2.1 AA compliance
 

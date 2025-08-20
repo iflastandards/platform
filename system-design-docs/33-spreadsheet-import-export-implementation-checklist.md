@@ -276,9 +276,9 @@
 - [ ] No TypeScript errors: `pnpm typecheck`
 - [ ] No linting errors: `pnpm lint`
 - [ ] Performance targets met:
-  - [ ] Import <2min for 100 elements
-  - [ ] Export <30s for any format
-  - [ ] API response <500ms
+  - [ ] Import &lt;2min for 100 elements
+  - [ ] Export &lt;30s for any format
+  - [ ] API response &lt;500ms
 
 ### Security Review
 - [ ] Input validation on all endpoints
@@ -337,7 +337,7 @@
 
 ### Overall Success Criteria
 - [ ] 100% of existing tools integrated
-- [ ] <2min import time achieved
+- [ ] &lt;2min import time achieved
 - [ ] All export formats working
 - [ ] Zero critical bugs
 - [ ] Positive user feedback

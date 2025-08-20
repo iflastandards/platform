@@ -11,7 +11,7 @@ Our E2E tests use real Clerk authentication with pre-configured test users. Test
 - **No Clerk Organizations**: We do NOT use Clerk's built-in organization features
 - **No tRPC**: Standard Next.js API routes with fetch()
 - **withAuth Middleware**: All protected routes use our custom middleware
-- **Caching**: AuthCache reduces permission checks from ~50ms to <1ms
+- **Caching**: AuthCache reduces permission checks from ~50ms to &lt;1ms
 - **Debug Mode**: Comprehensive authorization debugging available
 
 ## Setup

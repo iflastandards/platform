@@ -7,7 +7,7 @@ Copy these templates when creating new tests to ensure proper placement and stru
 ## Integration Test Template (Primary - Phase 1/3)
 
 **Phase Context**: Phase 1 (Selective) and Phase 3 (Pre-push)  
-**Performance Target**: < 30 seconds per file  
+**Performance Target**: &lt; 30 seconds per file  
 **Purpose**: Testing multiple components working together with real file I/O, databases, and services.
 
 ```typescript
@@ -62,7 +62,7 @@ describe('ServiceName @integration @api @validation', () => {
 ## Unit Test Template (Rare - Phase 2)
 
 **Phase Context**: Phase 2 (Pre-commit)  
-**Performance Target**: < 5 seconds per file  
+**Performance Target**: &lt; 5 seconds per file  
 **Purpose**: Only use for pure functions without external dependencies. Most code should be tested with integration tests.
 
 ```typescript
@@ -86,7 +86,7 @@ describe('Utility Functions @unit', () => {
 ## E2E Test Template (Phase 3 - Smart Trigger)
 
 **Phase Context**: Phase 3 (Pre-push) - Auto-triggers when portal/admin affected  
-**Performance Target**: < 60 seconds per workflow  
+**Performance Target**: &lt; 60 seconds per workflow  
 **Purpose**: Testing complete user workflows through the browser.
 
 ```typescript
@@ -137,7 +137,7 @@ test.describe('Feature Name E2E @e2e @critical', () => {
 ## Environment Test Template (Phase 5 - CI Only)
 
 **Phase Context**: Phase 5 (CI Environment Tests)  
-**Performance Target**: < 30 seconds per service  
+**Performance Target**: &lt; 30 seconds per service  
 **Purpose**: Testing deployment configuration and external service connectivity.
 
 ```typescript

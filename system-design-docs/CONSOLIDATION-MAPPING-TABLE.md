@@ -11,27 +11,27 @@ This table shows how to incorporate supplementary documents into the core system
 
 | Doc # | Title | Main Topic/Purpose | Target Core Doc | Key Information to Preserve |
 |-------|-------|-------------------|----------------|---------------------------|
-| **11** | discussion-points.md | Tracks resolved/unresolved architectural decisions | **10** (Implementation Strategy) | • Environment strategy decision<br>• Repository naming rationale<br>• TinaCMS status and recommendations<br>• Translation complexity notes |
-| **12** | environment-strategy-final.md | Documents 3-environment strategy | **01** (System Architecture) | • Final 3-environment approach<br>• Deployment workflow<br>• Domain strategy<br>• Deprecated approaches |
-| **13** | environment-migration-guide.md | Step-by-step migration instructions | **04** (Development Workflow) | • Git commands for migration<br>• Deployment updates<br>• Local development setup<br>• CI/CD configuration |
-| **14** | repository-structure-current.md | Explains intentional naming difference | **03** (Configuration Architecture) | • Local vs remote naming rationale<br>• Historical context<br>• Warning against "cleanup" |
-| **15** | tinacms-integration-design.md | TinaCMS strategy and POC plan | **09** (Collaboration Architecture) | • Integration options<br>• POC evaluation criteria<br>• Risk assessment<br>• User experience goals |
-| **16** | tinacms-poc-guide.md | Detailed POC implementation steps | **10** (Implementation Strategy) | • Technical setup steps<br>• Test workflows<br>• Success criteria<br>• Evaluation framework |
-| **17** | tinacms-integration-architecture.md | Technical architecture for TinaCMS | **07** (Subsystems Architecture) | • Component architecture<br>• GitHub integration<br>• Version locking<br>• Permission model |
-| **18** | multilingual-strategy-design.md | Unified vs separated language approach | **02** (Data Architecture) | • Hybrid approach recommendation<br>• Implementation patterns<br>• Migration strategy<br>• Technical considerations |
-| **19** | edit-permissions-workflow.md | Permission matrix and workflows | **09** (Collaboration Architecture) | • User type permissions<br>• TinaCMS integration<br>• Draft site management<br>• External contributor handling |
-| **20** | translation-workflow-integration.md | Version-based sync strategy | **09** (Collaboration Architecture) | • Three workflow comparison<br>• Version boundaries concept<br>• English modification handling<br>• Implementation plan |
-| **21** | vocabulary-server-requirements.md | Content negotiation server specs | **05** (API Architecture) | • Pathmap requirements<br>• Lexical alias support<br>• Performance metrics<br>• Architecture options |
-| **22** | omr25-comparison-analysis.md | Evolution from original spec | **08** (Architecture Evolution) | • Architecture transformation<br>• Technology stack changes<br>• Feature additions/removals<br>• Lessons learned |
-| **23** | mdx-generation-safety-design.md | Dry-run and rollback system | **07** (Subsystems Architecture) | • Preview generation system<br>• Backup strategy<br>• Atomic operations<br>• Recovery procedures |
-| **24** | admin-ui-api-specification.md | Comprehensive UI/API specs | **05** (API Architecture) | • 170+ API endpoints<br>• 60+ UI screens<br>• Navigation architecture<br>• Accessibility requirements |
-| **25** | design-system-specification.md | Complete design tokens and patterns | **New Doc 11** | • Color system<br>• Typography scale<br>• Component specifications<br>• Animation patterns |
-| **26** | ui-component-patterns.md | Practical UI implementations | **New Doc 11** | • Navigation components<br>• Data display patterns<br>• Form components<br>• Responsive patterns |
-| **27** | mvp-critical-path.md | MVP implementation timeline | **10** (Implementation Strategy) | • 12-week critical path<br>• Vocabulary server priority<br>• Risk mitigation<br>• Success metrics |
-| **28** | isbd-csv-to-mdx-plan.md | ISBD integration execution plan | **10** (Implementation Strategy) | • CSV processing approach<br>• Template configuration<br>• Google Sheets integration<br>• Update workflow |
-| **29** | admin-dashboard-mockup-reference.md | Maps SVG mockups to design system | **New Doc 11** | • Color mapping<br>• Layout patterns<br>• Component patterns<br>• Implementation guidelines |
-| **30** | integration-prd-alignment-analysis.md | Shows how designs enhance PRD | **08** (Architecture Evolution) | • PRD vs implementation comparison<br>• Key innovations<br>• Enhanced features<br>• Technical improvements |
-| **31** | multi-element-set-architecture.md | Handles complex namespace structure | **02** (Data Architecture) | • Multi-element set support<br>• Navigation design<br>• Component architecture<br>• Migration path |
+| **11** | discussion-points.md | Tracks resolved/unresolved architectural decisions | **10** (Implementation Strategy) | • Environment strategy decision<br/>• Repository naming rationale<br/>• TinaCMS status and recommendations<br/>• Translation complexity notes |
+| **12** | environment-strategy-final.md | Documents 3-environment strategy | **01** (System Architecture) | • Final 3-environment approach<br/>• Deployment workflow<br/>• Domain strategy<br/>• Deprecated approaches |
+| **13** | environment-migration-guide.md | Step-by-step migration instructions | **04** (Development Workflow) | • Git commands for migration<br/>• Deployment updates<br/>• Local development setup<br/>• CI/CD configuration |
+| **14** | repository-structure-current.md | Explains intentional naming difference | **03** (Configuration Architecture) | • Local vs remote naming rationale<br/>• Historical context<br/>• Warning against "cleanup" |
+| **15** | tinacms-integration-design.md | TinaCMS strategy and POC plan | **09** (Collaboration Architecture) | • Integration options<br/>• POC evaluation criteria<br/>• Risk assessment<br/>• User experience goals |
+| **16** | tinacms-poc-guide.md | Detailed POC implementation steps | **10** (Implementation Strategy) | • Technical setup steps<br/>• Test workflows<br/>• Success criteria<br/>• Evaluation framework |
+| **17** | tinacms-integration-architecture.md | Technical architecture for TinaCMS | **07** (Subsystems Architecture) | • Component architecture<br/>• GitHub integration<br/>• Version locking<br/>• Permission model |
+| **18** | multilingual-strategy-design.md | Unified vs separated language approach | **02** (Data Architecture) | • Hybrid approach recommendation<br/>• Implementation patterns<br/>• Migration strategy<br/>• Technical considerations |
+| **19** | edit-permissions-workflow.md | Permission matrix and workflows | **09** (Collaboration Architecture) | • User type permissions<br/>• TinaCMS integration<br/>• Draft site management<br/>• External contributor handling |
+| **20** | translation-workflow-integration.md | Version-based sync strategy | **09** (Collaboration Architecture) | • Three workflow comparison<br/>• Version boundaries concept<br/>• English modification handling<br/>• Implementation plan |
+| **21** | vocabulary-server-requirements.md | Content negotiation server specs | **05** (API Architecture) | • Pathmap requirements<br/>• Lexical alias support<br/>• Performance metrics<br/>• Architecture options |
+| **22** | omr25-comparison-analysis.md | Evolution from original spec | **08** (Architecture Evolution) | • Architecture transformation<br/>• Technology stack changes<br/>• Feature additions/removals<br/>• Lessons learned |
+| **23** | mdx-generation-safety-design.md | Dry-run and rollback system | **07** (Subsystems Architecture) | • Preview generation system<br/>• Backup strategy<br/>• Atomic operations<br/>• Recovery procedures |
+| **24** | admin-ui-api-specification.md | Comprehensive UI/API specs | **05** (API Architecture) | • 170+ API endpoints<br/>• 60+ UI screens<br/>• Navigation architecture<br/>• Accessibility requirements |
+| **25** | design-system-specification.md | Complete design tokens and patterns | **New Doc 11** | • Color system<br/>• Typography scale<br/>• Component specifications<br/>• Animation patterns |
+| **26** | ui-component-patterns.md | Practical UI implementations | **New Doc 11** | • Navigation components<br/>• Data display patterns<br/>• Form components<br/>• Responsive patterns |
+| **27** | mvp-critical-path.md | MVP implementation timeline | **10** (Implementation Strategy) | • 12-week critical path<br/>• Vocabulary server priority<br/>• Risk mitigation<br/>• Success metrics |
+| **28** | isbd-csv-to-mdx-plan.md | ISBD integration execution plan | **10** (Implementation Strategy) | • CSV processing approach<br/>• Template configuration<br/>• Google Sheets integration<br/>• Update workflow |
+| **29** | admin-dashboard-mockup-reference.md | Maps SVG mockups to design system | **New Doc 11** | • Color mapping<br/>• Layout patterns<br/>• Component patterns<br/>• Implementation guidelines |
+| **30** | integration-prd-alignment-analysis.md | Shows how designs enhance PRD | **08** (Architecture Evolution) | • PRD vs implementation comparison<br/>• Key innovations<br/>• Enhanced features<br/>• Technical improvements |
+| **31** | multi-element-set-architecture.md | Handles complex namespace structure | **02** (Data Architecture) | • Multi-element set support<br/>• Navigation design<br/>• Component architecture<br/>• Migration path |
 
 ## Consolidation Strategy
 

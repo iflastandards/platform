@@ -168,7 +168,7 @@ So that I can edit content directly and manage translations effectively
 - [ ] Admin portal renders correctly on all devices
 - [ ] Dashboard provides clear overview of system status
 - [ ] Authentication via GitHub OAuth functional
-- [ ] Performance meets requirements (<3s page loads)
+- [ ] Performance meets requirements (&lt;3s page loads)
 
 #### Task 2.2: Complete Pipeline Implementation (CRITICAL)
 **Estimated Hours:** 40  
@@ -379,7 +379,7 @@ So that I can efficiently maintain the platform and user accounts
 - [ ] Validation catches format and content errors
 - [ ] Conversion between formats maintains data integrity
 - [ ] Bulk operations handle large datasets efficiently
-- [ ] API responses meet performance requirements (<200ms)
+- [ ] API responses meet performance requirements (&lt;200ms)
 
 #### Task 4.2: Google Sheets Integration
 **Estimated Hours:** 28  
@@ -573,7 +573,7 @@ So that I can effectively use and manage the platform
 **Dependencies:** Epic 5 completion  
 
 **Subtasks:**
-- [ ] Create unit tests for all components and utilities (>90% coverage)
+- [ ] Create unit tests for all components and utilities (&gt;90% coverage)
 - [ ] Build integration tests for all API endpoints and workflows
 - [ ] Implement E2E tests for critical user journeys
 - [ ] Create performance and load testing suites
@@ -602,7 +602,7 @@ So that I can effectively use and manage the platform
 - [ ] Implement security scanning and compliance checking
 
 **Acceptance Criteria:**
-- [ ] Deployment pipeline works reliably with >99% success rate
+- [ ] Deployment pipeline works reliably with &gt;99% success rate
 - [ ] Rollback procedures work quickly and safely
 - [ ] Monitoring provides real-time system health insights
 - [ ] Security scanning catches vulnerabilities
@@ -660,12 +660,12 @@ So that I can effectively use and manage the platform
 ### Epic 1: Foundation Setup
 - All Nx workspace builds complete successfully
 - Shared packages imported without errors
-- Development environment starts in <2 minutes
+- Development environment starts in &lt;2 minutes
 - All quality tools (lint, test, format) pass
 
 ### Epic 2: Core Applications
-- Admin portal loads in <3 seconds
-- Authentication success rate >99%
+- Admin portal loads in &lt;3 seconds
+- Authentication success rate &gt;99%
 - Public portal passes accessibility audit
 - Cross-application navigation works seamlessly
 
@@ -673,22 +673,22 @@ So that I can effectively use and manage the platform
 - Zero content loss during migration
 - All legacy URLs redirect properly
 - Search indexing completes within 48 hours
-- User satisfaction >90% for migrated content
+- User satisfaction &gt;90% for migrated content
 
 ### Epic 4: API and Edge Functions
-- API response times <200ms average
-- RDF generation success rate >99%
-- Google Sheets integration reliability >95%
+- API response times &lt;200ms average
+- RDF generation success rate &gt;99%
+- Google Sheets integration reliability &gt;95%
 - API documentation completeness 100%
 
 ### Epic 5: Advanced Features
 - Workflow completion time reduced by 50%
 - Translation consistency errors reduced by 75%
-- Quality assurance coverage >95%
-- User adoption of advanced features >80%
+- Quality assurance coverage &gt;95%
+- User adoption of advanced features &gt;80%
 
 ### Epic 6: Testing and Deployment
-- Test coverage >90% unit, >80% E2E
-- Deployment success rate >99%
+- Test coverage &gt;90% unit, &gt;80% E2E
+- Deployment success rate &gt;99%
 - Zero critical security vulnerabilities
-- Documentation satisfaction score >4.5/5
+- Documentation satisfaction score &gt;4.5/5

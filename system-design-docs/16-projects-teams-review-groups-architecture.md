@@ -484,9 +484,9 @@ GET    /api/users/:id/projects
 - Response time to issues
 
 ### Technical Metrics
-- Permission check performance (<50ms)
-- GitHub sync reliability (>99.9%)
-- API response times (<200ms)
+- Permission check performance (&lt;50ms)
+- GitHub sync reliability (&gt;99.9%)
+- API response times (&lt;200ms)
 - Zero security incidents
 
 ## Risk Mitigation

@@ -15,7 +15,7 @@ Our platform uses a **custom RBAC system** built on top of Clerk authentication:
 * **Custom Metadata**: Role information stored in Clerk's `publicMetadata` field (NOT Clerk Organizations)
 * **No tRPC**: Standard Next.js API routes with `fetch()` calls
 * **withAuth Middleware**: All protected routes use our custom middleware wrapper
-* **Performance**: AuthCache reduces permission checks from ~50ms to <1ms with 5-minute TTL
+* **Performance**: AuthCache reduces permission checks from ~50ms to &lt;1ms with 5-minute TTL
 * **Debug Support**: Comprehensive debugging via environment variables and `/api/admin/auth/debug` endpoint
 * **Test Users**: 5 pre-configured Clerk users with specific roles (all use verification code `424242`)
 
@@ -28,7 +28,7 @@ We use a **layered testing approach** where each test type has a distinct purpos
 #### Unit Tests (Isolated Logic)
 * **Purpose**: Test pure logic in complete isolation with mocks
 * **Use for**: Authorization functions, utility functions, complex algorithms
-* **Characteristics**: Fast (<5s), no external dependencies, comprehensive edge cases
+* **Characteristics**: Fast (&lt;5s), no external dependencies, comprehensive edge cases
 * **Mocking**: Mock ALL external dependencies (Clerk, databases, file systems)
 
 #### Integration Tests (Real I/O, Multiple Components)  
@@ -82,25 +82,25 @@ Our testing approach follows a **5-phase strategy** that progressively validates
 ### Phase 1: Selective Tests (Development Focus)
 - **Purpose**: Individual testing for focused development work and TDD
 - **When**: During active development, debugging, feature work  
-- **Speed**: < 30 seconds per test file
+- **Speed**: &lt; 30 seconds per test file
 - **Commands**: `nx test {project}`, `pnpm test --grep "@unit"`, `pnpm test --grep "@critical"`
 
 ### Phase 2: Pre-Commit Tests (Automated Git Hook)
 - **Purpose**: Fast feedback loop preventing broken commits
 - **When**: Automatically on every `git commit`
-- **Speed**: < 60 seconds for typical changes
+- **Speed**: &lt; 60 seconds for typical changes
 - **What runs**: TypeScript, ESLint, unit tests (affected only)
 
 ### Phase 3: Pre-Push Tests (Automated Git Hook)  
 - **Purpose**: Integration tests and deployment readiness validation
 - **When**: Automatically on every `git push`
-- **Speed**: < 180 seconds
+- **Speed**: &lt; 180 seconds
 - **What runs**: Integration tests, builds, E2E (if portal/admin affected)
 
 ### Phase 4: Comprehensive Tests (Manual/Release)
 - **Purpose**: Full validation before major releases
 - **When**: Release preparation, major refactoring validation
-- **Speed**: < 300 seconds
+- **Speed**: &lt; 300 seconds
 - **Commands**: `pnpm test:comprehensive`
 
 ### Phase 5: CI Environment Tests (Automated Pipeline)
@@ -340,7 +340,7 @@ describe('Date Utils @unit', () => {
 
 Our platform uses custom RBAC with Clerk's publicMetadata (NOT Clerk Organizations). All authorization tests should account for:
 
-* **Caching Layer**: Permission checks are cached for 5 minutes (reduces latency from ~50ms to <1ms)
+* **Caching Layer**: Permission checks are cached for 5 minutes (reduces latency from ~50ms to &lt;1ms)
 * **withAuth Middleware**: All protected API routes use our custom middleware
 * **Debug Mode**: Comprehensive debugging available via environment variables and debug endpoint
 
@@ -754,11 +754,11 @@ pnpm test:ci:env                      # Environment validation only
 
 ### Phase-Specific Performance Targets
 
-* **Phase 1 (Selective)**: < 30 seconds per test file
-* **Phase 2 (Pre-commit)**: < 60 seconds total
-* **Phase 3 (Pre-push)**: < 180 seconds total  
-* **Phase 4 (Comprehensive)**: < 300 seconds total
-* **Phase 5 (CI Environment)**: < 180 seconds total
+* **Phase 1 (Selective)**: &lt; 30 seconds per test file
+* **Phase 2 (Pre-commit)**: &lt; 60 seconds total
+* **Phase 3 (Pre-push)**: &lt; 180 seconds total  
+* **Phase 4 (Comprehensive)**: &lt; 300 seconds total
+* **Phase 5 (CI Environment)**: &lt; 180 seconds total
 
 ### Integration Test Performance
 

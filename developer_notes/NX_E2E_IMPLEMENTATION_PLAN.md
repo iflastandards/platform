@@ -8,9 +8,9 @@ This plan implements the PRD requirements for an Nx-optimized E2E test strategy 
 ### High Priority
 - [ ] **Task 1**: Create base Playwright configuration files for different test types
   - `playwright.config.base.ts` - Shared base configuration
-  - `playwright.config.smoke.ts` - Smoke tests only (<5min)
-  - `playwright.config.integration.ts` - Integration tests (<15min)
-  - `playwright.config.e2e.ts` - Full E2E suite (<20min)
+  - `playwright.config.smoke.ts` - Smoke tests only (&lt;5min)
+  - `playwright.config.integration.ts` - Integration tests (&lt;15min)
+  - `playwright.config.e2e.ts` - Full E2E suite (&lt;20min)
   - `playwright.config.ci.ts` - CI-specific optimizations
 
 - [ ] **Task 2**: Update nx.json with optimized E2E configurations and test categorization
@@ -86,9 +86,9 @@ Update nx.json with optimized E2E configurations:
 ### 1.2 Playwright Configuration Refactoring
 Create multiple Playwright configs:
 - `playwright.config.base.ts` - Shared base configuration
-- `playwright.config.smoke.ts` - Smoke tests only (<5min)
-- `playwright.config.integration.ts` - Integration tests (<15min)
-- `playwright.config.e2e.ts` - Full E2E suite (<20min)
+- `playwright.config.smoke.ts` - Smoke tests only (&lt;5min)
+- `playwright.config.integration.ts` - Integration tests (&lt;15min)
+- `playwright.config.e2e.ts` - Full E2E suite (&lt;20min)
 - `playwright.config.ci.ts` - CI-specific optimizations
 
 ### 1.3 Test Tagging Infrastructure
@@ -244,7 +244,7 @@ Update project.json files with new test targets:
 - Production Deploy: Smoke tests (mandatory)
 
 ## Success Metrics
-- Pre-push validation < 5 minutes
+- Pre-push validation &lt; 5 minutes
 - Smoke tests 100% pass rate
 - Integration tests 95% pass rate
 - Full E2E 90% pass rate

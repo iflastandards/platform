@@ -69,7 +69,7 @@ This document outlines a comprehensive plan to improve E2E and integration test 
 - [ ] Add test result dashboards
 
 #### Task 0.4: Performance Optimization
-- [ ] Audit current pre-push time (target <5min)
+- [ ] Audit current pre-push time (target &lt;5min)
 - [ ] Implement test splitting strategies
 - [ ] Optimize server startup times
 - [ ] Add performance monitoring
@@ -229,25 +229,25 @@ This document outlines a comprehensive plan to improve E2E and integration test 
 
 ### Coverage Targets
 - **Phase 1 Complete**: RBAC tests active (6 → 6 passing)
-- **Phase 2 Complete**: CRUD coverage >80%
+- **Phase 2 Complete**: CRUD coverage &gt;80%
 - **Phase 3 Complete**: Critical user journeys covered
-- **Phase 4 Complete**: Integration test coverage >70%
+- **Phase 4 Complete**: Integration test coverage &gt;70%
 - **Phase 5 Complete**: Performance baselines established
 - **Overall Target**: 80% critical path coverage
 
 ### Quality Metrics
-- Test execution time <5 minutes for smoke tests
-- Test flakiness <2%
-- Test maintenance time <10% of development time
+- Test execution time &lt;5 minutes for smoke tests
+- Test flakiness &lt;2%
+- Test maintenance time &lt;10% of development time
 - Zero false positives in CI/CD pipeline
 
 ### PRD Acceptance Criteria Mapping
 
 | Test Type | Environment | Coverage | Time Limit | Must Pass Rate | Current Status |
 |-----------|-------------|----------|------------|----------------|----------------|
-| Smoke | Local/CI/Prod | Auth, dashboard, API | <5min | 100% | ✅ Partially Met |
-| Integration | Vercel Preview | RBAC, cross-service, admin | <15min | 95% | ❌ Not Met (RBAC skipped) |
-| Full E2E | pre-push/dev | All user journeys/docs | <20min | 90% | ❌ Exceeds time limit |
+| Smoke | Local/CI/Prod | Auth, dashboard, API | &lt;5min | 100% | ✅ Partially Met |
+| Integration | Vercel Preview | RBAC, cross-service, admin | &lt;15min | 95% | ❌ Not Met (RBAC skipped) |
+| Full E2E | pre-push/dev | All user journeys/docs | &lt;20min | 90% | ❌ Exceeds time limit |
 
 ## Resource Requirements
 

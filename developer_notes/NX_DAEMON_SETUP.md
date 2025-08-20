@@ -129,7 +129,7 @@ pnpm nx:optimize
 1. **Always keep daemon running**: Use `pnpm setup` after clone
 2. **Health checks**: Run `pnpm nx:daemon:health` if performance degrades
 3. **Restart after major changes**: When updating nx.json or workspace structure
-4. **Monitor resources**: Daemon should use <500MB RAM for this project
+4. **Monitor resources**: Daemon should use &lt;500MB RAM for this project
 
 ## Environment Variables
 

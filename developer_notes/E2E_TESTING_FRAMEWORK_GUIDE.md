@@ -24,13 +24,13 @@ The new E2E testing framework is designed to:
 ### Key Features
 - **Tag-based categorization**: Run specific test types using tags
 - **Nx affected integration**: Only run tests for changed projects
-- **Multiple test speeds**: Smoke (<5min), Integration (<15min), Full E2E (<20min)
+- **Multiple test speeds**: Smoke (&lt;5min), Integration (&lt;15min), Full E2E (&lt;20min)
 - **Clerk authentication**: Built-in support for RBAC testing
 - **Parallel execution**: Leverages Nx agents for faster runs
 
 ## Test Categories
 
-### Smoke Tests (🏃 <5 minutes)
+### Smoke Tests (🏃 &lt;5 minutes)
 Quick validation tests that verify basic functionality is working.
 - **Pass Rate Target**: 100%
 - **No retries allowed**
@@ -44,7 +44,7 @@ pnpm test:e2e:smoke
 pnpm test:e2e:smoke:affected
 ```
 
-### Integration Tests (🚶 <15 minutes)
+### Integration Tests (🚶 &lt;15 minutes)
 Tests that verify interactions between different services and components.
 - **Pass Rate Target**: 95%
 - **1 retry allowed**
@@ -58,7 +58,7 @@ pnpm test:e2e:integration
 pnpm test:e2e:integration:affected
 ```
 
-### Full E2E Tests (🐌 <20 minutes)
+### Full E2E Tests (🐌 &lt;20 minutes)
 Complete end-to-end workflows including complex user journeys.
 - **Pass Rate Target**: 90%
 - **2 retries allowed**
@@ -236,7 +236,7 @@ test('admin access', async ({ page }) => {
 | `@api` | API tests | Backend endpoints |
 | `@ui` | UI tests | Frontend interactions |
 | `@performance` | Performance tests | Speed, load testing |
-| `@slow` | Long-running tests | Tests >30s |
+| `@slow` | Long-running tests | Tests &gt;30s |
 | `@flaky` | Known flaky tests | Temporarily unstable |
 
 ### Tag Combinations

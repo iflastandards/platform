@@ -321,7 +321,7 @@ DOCS_ENV=production pnpm build
 ### Environment Characteristics
 | Environment | URL Pattern | Purpose | Deployment | Branch |
 |------------|-------------|---------|------------|--------|
-| local | http://localhost:300X | Development | Local machine | any |
+| local | `http://localhost:300X` | Development | Local machine | any |
 | preview | https://iflastandards.github.io/platform/ | Staging/Review | GitHub Pages | preview |
 | production | https://www.iflastandards.info/ | Live platform | GitHub Pages | main |
 

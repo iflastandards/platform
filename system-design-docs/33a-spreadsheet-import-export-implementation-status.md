@@ -331,7 +331,7 @@ CREATE TABLE dctap_versions (
 - Unit tests: 80% coverage
 - Integration tests: Key workflows
 - E2E tests: Critical paths
-- Performance: <2min for 100 elements
+- Performance: &lt;2min for 100 elements
 
 ### Test Priorities
 1. Import workflow end-to-end
@@ -379,17 +379,17 @@ CREATE TABLE dctap_versions (
 ## Success Metrics
 
 ### Technical Metrics
-- Integration success rate: >99%
-- Import time: <2min for 100 elements
-- Export time: <30s any format
-- API response: <500ms
-- Error rate: <1%
+- Integration success rate: &gt;99%
+- Import time: &lt;2min for 100 elements
+- Export time: &lt;30s any format
+- API response: &lt;500ms
+- Error rate: &lt;1%
 
 ### User Metrics
-- Wizard completion: >90%
-- Error understanding: >95%
+- Wizard completion: &gt;90%
+- Error understanding: &gt;95%
 - Feature adoption: All formats used
-- User satisfaction: >85%
+- User satisfaction: &gt;85%
 
 ## Conclusion
 

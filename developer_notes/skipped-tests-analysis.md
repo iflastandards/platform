@@ -213,8 +213,8 @@ vi.mock('@clerk/nextjs', () => ({
 
 ### Success Criteria
 - **0 skipped tests** in critical paths
-- **>80% test coverage** overall
-- **<5% flaky tests**
+- **&gt;80% test coverage** overall
+- **&lt;5% flaky tests**
 - **All E2E scenarios** passing
 
 ### Tracking Progress

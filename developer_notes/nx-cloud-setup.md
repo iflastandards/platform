@@ -141,7 +141,7 @@ pnpm nx:cache:stats
 - View run details, timings, and cache hits
 
 ### Key Metrics to Monitor
-1. **Cache Hit Rate**: Should be >80% for unchanged code
+1. **Cache Hit Rate**: Should be &gt;80% for unchanged code
 2. **Average Build Time**: Track improvements
 3. **DTE Efficiency**: Time saved by distribution
 4. **Failed Runs**: Identify flaky tests

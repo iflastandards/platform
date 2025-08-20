@@ -20,7 +20,7 @@ nx affected --target=typecheck --parallel=3
 nx affected --target=lint --parallel=3       # warnings allowed
 nx affected --target=test --parallel=3       # unit tests only
 ```
-- **Time**: < 60 seconds
+- **Time**: &lt; 60 seconds
 - **Focus**: Fast feedback, catch basic errors
 
 #### Pre-Push (Phase 3)
@@ -29,7 +29,7 @@ nx affected --target=test:integration --parallel=3
 nx affected --target=build --parallel=3
 nx affected --target=e2e                    # if portal/admin affected
 ```
-- **Time**: < 180 seconds
+- **Time**: &lt; 180 seconds
 - **Assumes**: typecheck ✓, lint ✓, unit tests ✓
 - **Focus**: Integration and deployment readiness
 
@@ -37,7 +37,7 @@ nx affected --target=e2e                    # if portal/admin affected
 ```bash
 pnpm test:ci:env    # ONLY environment-specific tests
 ```
-- **Time**: < 180 seconds
+- **Time**: &lt; 180 seconds
 - **Assumes**: All local tests passed
 - **Focus**: Environment variables, API tokens, external services
 

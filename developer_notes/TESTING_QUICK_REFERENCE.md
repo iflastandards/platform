@@ -4,7 +4,7 @@
 
 **📋 Full Strategy**: See [TESTING_STRATEGY.md](./TESTING_STRATEGY.md) for complete 5-phase approach.
 
-**🔐 Auth Context**: Custom RBAC with Clerk metadata (NOT Organizations). All protected routes use `withAuth` middleware. Permission checks cached for 5min (50ms→<1ms).
+**🔐 Auth Context**: Custom RBAC with Clerk metadata (NOT Organizations). All protected routes use `withAuth` middleware. Permission checks cached for 5min (50ms→&lt;1ms).
 
 ## 🎯 Test Decision Tree (30 Seconds)
 
@@ -102,16 +102,16 @@ packages/[package-name]/
 
 ## ⏱️ Performance Targets (Phase-Aligned)
 
-- **Phase 1 (Selective)**: < 30s per test file
-- **Phase 2 (Pre-commit)**: < 60s total
-- **Phase 3 (Pre-push)**: < 180s total
-- **Phase 4 (Comprehensive)**: < 300s total
-- **Phase 5 (CI Environment)**: < 180s total
+- **Phase 1 (Selective)**: &lt; 30s per test file
+- **Phase 2 (Pre-commit)**: &lt; 60s total
+- **Phase 3 (Pre-push)**: &lt; 180s total
+- **Phase 4 (Comprehensive)**: &lt; 300s total
+- **Phase 5 (CI Environment)**: &lt; 180s total
 
 ### Test Type Targets
-- **Integration**: <30s per file (primary test type)
-- **E2E**: <60s per workflow
-- **Unit**: <5s per file (rare)
+- **Integration**: &lt;30s per file (primary test type)
+- **E2E**: &lt;60s per workflow
+- **Unit**: &lt;5s per file (rare)
 
 ## 🔧 5-Phase Testing Strategy
 
@@ -263,7 +263,7 @@ describe('Protected API Routes @integration @auth @rbac', () => {
 ### 🔐 Auth Testing Tips
 7. **Test users available** - 5 pre-configured Clerk users (code: `424242`)
 8. **Use withAuth middleware** - All protected routes use our custom wrapper
-9. **Cache impacts timing** - Permission checks cached 5min (50ms→<1ms)
+9. **Cache impacts timing** - Permission checks cached 5min (50ms→&lt;1ms)
 10. **Debug with endpoint** - `/api/admin/auth/debug` for troubleshooting
 11. **Clear cache in tests** - `clearTestUsersCache()` between test suites
 
@@ -274,7 +274,7 @@ describe('Protected API Routes @integration @auth @rbac', () => {
 ### Unit Tests (Isolated Logic)
 - ✅ Mock ALL external dependencies (Clerk, databases, file systems)
 - ✅ Test pure logic and algorithms in complete isolation
-- ✅ Fast feedback (<5s per file)
+- ✅ Fast feedback (&lt;5s per file)
 - ✅ Comprehensive edge cases and error conditions
 - ❌ Don't test integration between components
 

@@ -17,8 +17,10 @@ This document provides a comprehensive guide on how to transform HTML elements t
     <tr><td>Domain</td><td>Manifestation</td></tr>
   </table>
 </div>
+```
 
-// After (MDX):
+After (MDX):
+```mdx
 ---
 RDF:
   label: "element name"
@@ -26,7 +28,8 @@ RDF:
   domain: "Manifestation"
   uri: "http://example.org/element/123"
 ---
-<ElementReference frontMatter={frontMatter} />
+<!-- ElementReference component would be used here -->
+<!-- <ElementReference frontMatter={frontMatter} /> -->
 ```
 
 ## 2. ExampleTable
@@ -156,7 +159,7 @@ RDF:
 
 ## 8. Unique
 
-**Search Pattern**: `<span class="unique">1</span>`
+**Search Pattern**: `<span class="unique"&gt;1</span>`
 
 **Props**: `symbol`, `tooltipText`
 

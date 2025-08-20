@@ -68,7 +68,7 @@ Our testing approach follows a progressive validation strategy:
 ### Phase 1: Selective Tests (Development Focus)
 - **Purpose**: Individual testing for focused development work and TDD
 - **When**: During active development, debugging, feature work  
-- **Speed**: < 30 seconds per test file
+- **Speed**: &lt; 30 seconds per test file
 - **Commands**: 
   ```bash
   pnpm nx test {project}
@@ -79,19 +79,19 @@ Our testing approach follows a progressive validation strategy:
 ### Phase 2: Pre-Commit Tests (Automated Git Hook)
 - **Purpose**: Fast feedback loop preventing broken commits
 - **When**: Automatically on every `git commit`
-- **Speed**: < 60 seconds for typical changes
+- **Speed**: &lt; 60 seconds for typical changes
 - **What runs**: TypeScript, ESLint, unit tests (affected only)
 
 ### Phase 3: Pre-Push Tests (Automated Git Hook)  
 - **Purpose**: Integration tests and deployment readiness validation
 - **When**: Automatically on every `git push`
-- **Speed**: < 180 seconds
+- **Speed**: &lt; 180 seconds
 - **What runs**: Integration tests, builds, E2E (if portal/admin affected)
 
 ### Phase 4: Comprehensive Tests (Manual/Release)
 - **Purpose**: Full validation before major releases
 - **When**: Release preparation, major refactoring validation
-- **Speed**: < 300 seconds
+- **Speed**: &lt; 300 seconds
 - **Commands**: `pnpm test:comprehensive`
 
 ### Phase 5: CI Environment Tests (Automated Pipeline)
@@ -153,7 +153,7 @@ describe('Deployment @env @ci-only', () => {
 
 Our platform uses custom RBAC with Clerk's publicMetadata (NOT Clerk Organizations):
 
-- **Caching Layer**: Permission checks cached for 5 minutes (reduces latency from ~50ms to <1ms)
+- **Caching Layer**: Permission checks cached for 5 minutes (reduces latency from ~50ms to &lt;1ms)
 - **withAuth Middleware**: All protected API routes use our custom middleware
 - **Debug Mode**: Comprehensive debugging via environment variables and `/api/admin/auth/debug` endpoint
 - **Test Users**: 5 pre-configured Clerk users with specific roles (all use verification code `424242`)
@@ -310,11 +310,11 @@ test('should read file', async () => {
 
 ### Phase-Specific Performance Targets
 
-- **Phase 1 (Selective)**: < 30 seconds per test file
-- **Phase 2 (Pre-commit)**: < 60 seconds total
-- **Phase 3 (Pre-push)**: < 180 seconds total  
-- **Phase 4 (Comprehensive)**: < 300 seconds total
-- **Phase 5 (CI Environment)**: < 180 seconds total
+- **Phase 1 (Selective)**: &lt; 30 seconds per test file
+- **Phase 2 (Pre-commit)**: &lt; 60 seconds total
+- **Phase 3 (Pre-push)**: &lt; 180 seconds total  
+- **Phase 4 (Comprehensive)**: &lt; 300 seconds total
+- **Phase 5 (CI Environment)**: &lt; 180 seconds total
 
 ### Optimization Techniques
 

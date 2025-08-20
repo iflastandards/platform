@@ -540,9 +540,9 @@ sequenceDiagram
 ## Success Metrics
 
 - **Edit Permission Accuracy**: 100% correct permission decisions
-- **Workflow Completion Rate**: >90% successful edits
-- **Time to Edit**: <5 seconds to load editor
-- **PR Creation Success**: >95% successful PR creation
+- **Workflow Completion Rate**: &gt;90% successful edits
+- **Time to Edit**: &lt;5 seconds to load editor
+- **PR Creation Success**: &gt;95% successful PR creation
 - **Security Incidents**: 0 unauthorized edits
 
 This design provides a flexible yet secure editing system that accommodates different user types while maintaining version integrity and providing smooth workflows for all participants.

@@ -1,8 +1,10 @@
 ---
 sidebar_position: 1
+id: getting-started
+title: Getting Started
 ---
 
-# Tutorial Intro
+# Getting Started with IFLA Standards Platform
 
 Let's discover **Docusaurus in less than 5 minutes**.
 

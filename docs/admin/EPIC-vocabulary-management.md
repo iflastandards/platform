@@ -227,9 +227,9 @@ Implement the core vocabulary management system for the IFLA Standards Admin Pla
 - Performance benchmarks
 
 ### Success Metrics
-- Import success rate: >95%
+- Import success rate: &gt;95%
 - Validation accuracy: 100%
-- User task completion: <5 minutes
+- User task completion: &lt;5 minutes
 - System uptime: 99.9%
 
 ## Next Steps After Epic

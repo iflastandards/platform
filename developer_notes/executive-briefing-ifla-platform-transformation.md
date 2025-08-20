@@ -585,23 +585,23 @@ Each workflow phase includes specific approval requirements matching IFLA govern
 
 **Technical Performance Metrics:**
 - **Build Performance**: Sub-5 minute full builds with Nx caching (currently 10+ minutes)
-- **Deployment Success**: >99% successful deployments (currently ~85%)
-- **API Performance**: <200ms response times for all endpoints
-- **Site Performance**: <3 seconds page load times across all properties
-- **Availability**: >99.9% uptime with comprehensive monitoring
+- **Deployment Success**: &gt;99% successful deployments (currently ~85%)
+- **API Performance**: &lt;200ms response times for all endpoints
+- **Site Performance**: &lt;3 seconds page load times across all properties
+- **Availability**: &gt;99.9% uptime with comprehensive monitoring
 
 **Content Quality Metrics:**
 - **RDF Validation**: 100% W3C compliance for all generated RDF
-- **Content Accuracy**: <1 error per 1000 content elements
-- **Translation Quality**: >95% accuracy scores for all translations
+- **Content Accuracy**: &lt;1 error per 1000 content elements
+- **Translation Quality**: &gt;95% accuracy scores for all translations
 - **Accessibility**: 100% WCAG 2.1 AA compliance across all properties
 - **Cross-reference Integrity**: 100% functional internal and external links
 
 **User Experience Metrics:**
 - **Task Completion**: 50% reduction in time for common content management tasks
 - **User Adoption**: 100% migration of existing users to new system
-- **Training Effectiveness**: >90% successful completion of user training programs
-- **Satisfaction**: >4.5/5 user satisfaction scores across all roles
+- **Training Effectiveness**: &gt;90% successful completion of user training programs
+- **Satisfaction**: &gt;4.5/5 user satisfaction scores across all roles
 - **Error Reduction**: 75% reduction in user-reported content errors
 
 **Business Impact Metrics:**

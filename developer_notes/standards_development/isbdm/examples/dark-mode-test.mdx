@@ -19,13 +19,19 @@ RDF:
     label: Test Sub-type 2
 ---
 
+{/* Note: InLink component import would be needed for this to work
+import { InLink } from '@ifla/theme';
+*/}
+
 # Dark Mode Test Page
 
 This page tests all components and styles in dark mode.
 
 ## Element Reference Component
 
+{/* ElementReference component not yet available
 <ElementReference frontMatter={frontMatter} />
+*/}
 
 ## Guide Blocks
 
@@ -35,7 +41,7 @@ This is a guide block testing dark mode. It should have a dark blue-grey backgro
 ### Header in Guide Block
 This header should be visible in dark mode.
 
-Here's a link: <InLink href="/docs/test">Test InLink in Guide</InLink>
+Here's a link: <a href="/docs/test">Test InLink in Guide</a>
 </div>
 
 ## Stipulation Blocks
@@ -52,7 +58,7 @@ Here's a link: <InLink href="/docs/test">Test InLink in Guide</InLink>
   | Column 1 | Column 2 |
   |:---------|:---------|
   | Test Value 1 | Test Value 2 |
-  | Another Value | <InLink href="/docs/test">InLink in table</InLink> |
+  | Another Value | <a href="/docs/test">InLink in table</a> |
   
   *This is emphasized text in the collapsible section.*
   </details>
@@ -61,16 +67,16 @@ Here's a link: <InLink href="/docs/test">Test InLink in Guide</InLink>
 ## InLink Component Tests
 
 ### InLink in regular content
-Here's an <InLink href="/docs/test">InLink in regular content</InLink> that should be visible in dark mode.
+Here's an <a href="/docs/test">InLink in regular content</a> that should be visible in dark mode.
 
 ### InLink in guide block
 <div className="guid">
-  Testing <InLink href="/docs/test">InLink inside guide block</InLink>
+  Testing <a href="/docs/test">InLink inside guide block</a>
 </div>
 
 ### InLink in stip block
 <div className="stip">
-  Testing <InLink href="/docs/test">InLink inside stip block</InLink>
+  Testing <a href="/docs/test">InLink inside stip block</a>
 </div>
 
 ## Table Tests
@@ -89,7 +95,7 @@ Here's an <InLink href="/docs/test">InLink in regular content</InLink> that shou
   | Property | Value |
   |:---------|:------|
   | Test Property | Test Value |
-  | Another Property | <InLink href="/docs/test">InLink in table</InLink> |
+  | Another Property | <a href="/docs/test">InLink in table</a> |
   
   </details>
 </div>
@@ -110,14 +116,14 @@ Here's an <InLink href="/docs/test">InLink in regular content</InLink> that shou
   ### Nested Header
   
   This section contains:
-  - A list item with <InLink href="/docs/test">an InLink</InLink>
+  - A list item with <a href="/docs/test">an InLink</a>
   - Another list item
   - A third item with *emphasized text*
   
   | Complex Table | With Links |
   |:--------------|:-----------|
-  | Regular text  | <InLink href="/docs/test1">Link 1</InLink> |
-  | More text     | <InLink href="/docs/test2">Link 2</InLink> |
+  | Regular text  | <a href="/docs/test1">Link 1</a> |
+  | More text     | <a href="/docs/test2">Link 2</a> |
   
   **Bold text** and *italic text* should both be visible.
   

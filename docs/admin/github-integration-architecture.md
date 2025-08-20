@@ -597,9 +597,9 @@ export const githubSyncRateLimiter = rateLimit({
    - Use Clerk as primary cache
 
 2. **Load Time Targets**
-   - Navbar render < 100ms
-   - Dashboard load < 2 seconds
-   - GitHub sync < 30 seconds
+   - Navbar render &lt; 100ms
+   - Dashboard load &lt; 2 seconds
+   - GitHub sync &lt; 30 seconds
 
 3. **Scalability**
    - Support 100+ concurrent users
@@ -621,8 +621,8 @@ export const githubSyncRateLimiter = rateLimit({
    - Sync operations
 
 3. **Alerts**
-   - Sync failures > 5%
-   - Metadata > 7KB (warning)
+   - Sync failures &gt; 5%
+   - Metadata &gt; 7KB (warning)
    - Authentication errors spike
 
 ## Future Enhancements

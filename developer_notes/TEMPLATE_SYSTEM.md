@@ -94,8 +94,8 @@ isbd:elements/P1001,has content form,tiene forma del contenido,"Relates a resour
 
 ### Key CSV Columns:
 - **uri**: Full URI of the element
-- **rdfs:label@{lang}**: Labels in different languages
-- **skos:definition@{lang}**: Definitions
+- **rdfs:label@\{lang\}**: Labels in different languages
+- **skos:definition@\{lang\}**: Definitions
 - **rdfs:domain/range**: For properties
 - **rdf:type**: Element type (Property, Class)
 - **reg:hasSubproperty**: Sub-elements

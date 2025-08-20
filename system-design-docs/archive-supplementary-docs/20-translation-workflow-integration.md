@@ -497,7 +497,7 @@ The version-based approach significantly reduces synchronization risks:
 
 ### Efficiency Metrics
 - Translation time: -40% reduction
-- Sync conflicts: <5% require manual intervention
+- Sync conflicts: &lt;5% require manual intervention
 - Error rate: -60% reduction
 
 ### Quality Metrics

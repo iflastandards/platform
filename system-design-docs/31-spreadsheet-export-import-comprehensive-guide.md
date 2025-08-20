@@ -1098,7 +1098,7 @@ policies:
 1. **Input Validation**
    - Sanitize all CSV uploads
    - Validate URIs format
-   - Check file size limits (<10MB)
+   - Check file size limits (&lt;10MB)
    - Scan for malicious patterns
 
 2. **API Security**
@@ -1181,7 +1181,7 @@ Conflict: Element 'dataset' has different translations
 ### Performance Issues
 
 #### Slow Import Processing
-- **Check**: Large file size (>5MB)
+- **Check**: Large file size (&gt;5MB)
 - **Solution**: Split into smaller vocabularies
 - **Alternative**: Use batch import mode
 

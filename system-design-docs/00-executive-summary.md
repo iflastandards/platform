@@ -129,20 +129,20 @@ The IFLA Standards Platform is a modern, Git-centric system for managing interna
 ## Performance Achievements
 
 ### Build Performance
-- **Full Build**: <5 minutes with Nx caching
-- **Incremental Build**: <30 seconds for affected projects
+- **Full Build**: &lt;5 minutes with Nx caching
+- **Incremental Build**: &lt;30 seconds for affected projects
 - **Parallel Execution**: Utilizing all available cores
 
 ### Runtime Performance
-- **Page Load**: <3 seconds globally
-- **API Response**: <200ms average
+- **Page Load**: &lt;3 seconds globally
+- **API Response**: &lt;200ms average
 - **Static Assets**: CDN-distributed
 
 ### Test Performance
-- **Unit Tests**: <60s for affected projects
-- **Integration Tests**: <15min with parallelization
-- **E2E Tests**: <20min for full suite
-- **Smoke Tests**: <5min critical paths only
+- **Unit Tests**: &lt;60s for affected projects
+- **Integration Tests**: &lt;15min with parallelization
+- **E2E Tests**: &lt;20min for full suite
+- **Smoke Tests**: &lt;5min critical paths only
 
 ## Security Model
 
@@ -185,7 +185,7 @@ The IFLA Standards Platform is a modern, Git-centric system for managing interna
 - **Post-merge**: Deployment verification
 
 ### Coverage Targets
-- **Unit Tests**: >90% critical paths
+- **Unit Tests**: &gt;90% critical paths
 - **Integration Tests**: All workflows
 - **E2E Tests**: Critical user journeys
 - **Accessibility**: WCAG 2.1 AA compliant
@@ -231,22 +231,22 @@ The IFLA Standards Platform is a modern, Git-centric system for managing interna
 
 ### Technical KPIs
 - **Uptime**: 99.9% availability
-- **Performance**: <2s page load, <200ms API response
+- **Performance**: &lt;2s page load, &lt;200ms API response
 - **Security**: Zero critical vulnerabilities
-- **Quality**: >90% test coverage
+- **Quality**: &gt;90% test coverage
 
 ### Business KPIs
-- **Project Success Rate**: >90% deliverables on time
-- **External Contributors**: >30% participation
+- **Project Success Rate**: &gt;90% deliverables on time
+- **External Contributors**: &gt;30% participation
 - **Time to Publish**: 50% reduction
 - **Global Participation**: 40% non-English contributors
 - **Community Growth**: 25% increase via Projects model
 
 ### Operational KPIs
 - **Support Tickets**: 50% reduction
-- **Content Quality**: >95% validation pass rate
+- **Content Quality**: &gt;95% validation pass rate
 - **Process Efficiency**: 3x faster workflows
-- **Error Rates**: <0.1% in production
+- **Error Rates**: &lt;0.1% in production
 
 ## Conclusion
 

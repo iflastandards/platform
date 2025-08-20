@@ -231,11 +231,11 @@ Implement GitHub Teams as the source of truth for IFLA Review Groups and enable 
 - [ ] Metadata size validation
   - [ ] Measure actual sizes
   - [ ] Test with max data
-  - [ ] Verify < 8KB limit
+  - [ ] Verify &lt; 8KB limit
 - [ ] Load time measurements
-  - [ ] Dashboard < 2 seconds
-  - [ ] Navigation < 100ms
-  - [ ] Sync < 30 seconds
+  - [ ] Dashboard &lt; 2 seconds
+  - [ ] Navigation &lt; 100ms
+  - [ ] Sync &lt; 30 seconds
 
 ### Integration Testing
 - [ ] GitHub API integration

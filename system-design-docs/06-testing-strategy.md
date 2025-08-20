@@ -21,7 +21,7 @@ The IFLA Standards Platform employs a comprehensive Nx-optimized testing strateg
 ### 1. **Progressive Validation**
 - Each phase builds on previous phases
 - No redundant testing between phases
-- Fast feedback in early phases (<5s for unit tests)
+- Fast feedback in early phases (&lt;5s for unit tests)
 - Comprehensive validation before deployment
 
 ### 2. **Nx-Optimized Execution**
@@ -86,12 +86,12 @@ When writing tests, AI agents should:
 ### Tag-Based Execution Strategy
 | Tag | Environment | Frequency | Time Limit | Pass Rate |
 |-----|------------|-----------|------------|-----------|
-| @smoke | All | Every deploy | <5min | 100% |
-| @integration | Preview/Local | Pre-merge | <15min | 95% |
-| @e2e | Local | Pre-push | <20min | 90% |
-| @unit | Local | Pre-commit | <60s | 100% |
-| @perf | Preview | Weekly | <30min | Baseline |
-| @a11y | All | Pre-merge | <10min | 100% |
+| @smoke | All | Every deploy | &lt;5min | 100% |
+| @integration | Preview/Local | Pre-merge | &lt;15min | 95% |
+| @e2e | Local | Pre-push | &lt;20min | 90% |
+| @unit | Local | Pre-commit | &lt;60s | 100% |
+| @perf | Preview | Weekly | &lt;30min | Baseline |
+| @a11y | All | Pre-merge | &lt;10min | 100% |
 
 ## Test Placement Guide for AI Agents
 
@@ -170,7 +170,7 @@ Start: Need to write a test
 
 ### Phase 1: Unit Tests (Pre-commit)
 **Purpose**: Fast feedback for business logic  
-**Speed**: <60s for affected projects  
+**Speed**: &lt;60s for affected projects  
 **Automatic**: Via Husky pre-commit hook
 
 #### Admin Portal Tests
@@ -193,7 +193,7 @@ pnpm nx run-many --target=test --projects=tag:docusaurus
 
 ### Phase 2: Integration Tests (Pre-merge)
 **Purpose**: Validate service integrations  
-**Speed**: <15min  
+**Speed**: &lt;15min  
 **Scope**: API endpoints, database, external services
 
 #### Admin Portal Integration
@@ -213,7 +213,7 @@ pnpm nx run-many --target=test:build --projects=tag:docusaurus
 
 ### Phase 3: E2E Tests (Pre-push)
 **Purpose**: Full user journey validation  
-**Speed**: <20min  
+**Speed**: &lt;20min  
 **Scope**: Complete workflows, RBAC scenarios
 
 ```bash
@@ -228,7 +228,7 @@ nx run-many --target=e2e --all --parallel=2
 
 ### Phase 4: Smoke Tests (All Environments)
 **Purpose**: Critical path validation  
-**Speed**: <5min  
+**Speed**: &lt;5min  
 **Scope**: Auth, core features, API health
 
 ```bash
@@ -242,7 +242,7 @@ BASE_URL=https://iflastandards.info nx e2e standards-dev --grep="@smoke"
 
 ### Phase 5: CI Environment Tests (Automated)
 **Purpose**: Validate deployment environment  
-**Speed**: <180s  
+**Speed**: &lt;180s  
 **Scope**: Environment variables, external services, API tokens
 
 ## AI Agent Testing Guidelines
@@ -502,11 +502,11 @@ jobs:
 - **Accessibility Tests**: WCAG 2.1 AA compliance
 
 ### Performance Targets
-- **Unit Tests**: <5 seconds per file
-- **Integration Tests**: <30 seconds per suite
-- **E2E Tests**: <60 seconds per workflow
-- **Total Pre-commit**: <60 seconds
-- **Total Pre-push**: <180 seconds
+- **Unit Tests**: &lt;5 seconds per file
+- **Integration Tests**: &lt;30 seconds per suite
+- **E2E Tests**: &lt;60 seconds per workflow
+- **Total Pre-commit**: &lt;60 seconds
+- **Total Pre-push**: &lt;180 seconds
 
 ### Accessibility Excellence Testing
 
@@ -536,10 +536,10 @@ describe('Component @a11y @integration', () => {
 ```
 
 **Continuous Improvement Metrics:**
-- **Accessibility Score**: Maintain >95% on Lighthouse
+- **Accessibility Score**: Maintain &gt;95% on Lighthouse
 - **Screen Reader Compatibility**: Test with NVDA, JAWS, VoiceOver
 - **Keyboard Navigation**: 100% functionality without mouse
-- **Response Times**: <100ms for assistive technology interactions
+- **Response Times**: &lt;100ms for assistive technology interactions
 
 **Best Practice Alignment:**
 - Follow EU Web Accessibility Directive guidelines voluntarily

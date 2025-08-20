@@ -27,7 +27,7 @@ This document tracks the phased approach to creating a comprehensive WARP.md fil
 - [x] Update checklist, pause for user approval to start Phase 2
 
 ### Phase 2 - Draft WARP.md skeleton
-- [ ] Create <root>/WARP.md with high-level outline:
+- [ ] Create `<root>`/WARP.md with high-level outline:
   - [ ] 1. Purpose & Audience
   - [ ] 2. Quick-Start Commands  
   - [ ] 3. Repository & Nx Monorepo Structure

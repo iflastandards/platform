@@ -232,11 +232,11 @@ This statement was last updated on [Date].
 ## Success Metrics
 
 ### Quantitative Metrics
-- **Accessibility Score**: Maintain >95% on Lighthouse
-- **WCAG Compliance**: 100% Level AA, >60% Level AAA
-- **User Satisfaction**: >4.5/5 accessibility rating in surveys
-- **Response Time**: <5 days average for accessibility issues
-- **Fix Time**: <30 days for critical accessibility bugs
+- **Accessibility Score**: Maintain &gt;95% on Lighthouse
+- **WCAG Compliance**: 100% Level AA, &gt;60% Level AAA
+- **User Satisfaction**: &gt;4.5/5 accessibility rating in surveys
+- **Response Time**: &lt;5 days average for accessibility issues
+- **Fix Time**: &lt;30 days for critical accessibility bugs
 
 ### Qualitative Metrics
 - **User Testimonials**: Positive feedback from users with disabilities

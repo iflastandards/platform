@@ -609,21 +609,21 @@ For detailed TinaCMS implementation, see the POC guide and technical architectur
 ## Success Metrics
 
 ### Efficiency Metrics
-- Time from issue to resolution: <30 days
-- PR review turnaround: <7 days
-- External contributor onboarding: <2 hours
-- Project setup time: <1 day
+- Time from issue to resolution: &lt;30 days
+- PR review turnaround: &lt;7 days
+- External contributor onboarding: &lt;2 hours
+- Project setup time: &lt;1 day
 
 ### Participation Metrics
-- Active Projects: >10
-- External contributors: >30%
-- Geographic distribution: >20 countries
-- New contributors/month: >5
+- Active Projects: &gt;10
+- External contributors: &gt;30%
+- Geographic distribution: &gt;20 countries
+- New contributors/month: &gt;5
 
 ### Quality Metrics
-- First-time contributor success: >80%
-- PR acceptance rate: >90%
-- Test coverage maintained: >90%
+- First-time contributor success: &gt;80%
+- PR acceptance rate: &gt;90%
+- Test coverage maintained: &gt;90%
 - Documentation completeness: 100%
 
 This collaboration architecture provides a robust foundation for IFLA's distributed standards development, enabling efficient global participation while maintaining quality and governance standards through the Projects/Teams/Review Groups model.

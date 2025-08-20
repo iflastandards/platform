@@ -202,21 +202,21 @@ Located alongside API routes:
 ## Test Categorization Guidelines
 
 ### Smoke Tests (@smoke)
-- Quick validation (<10s per test)
+- Quick validation (&lt;10s per test)
 - Core functionality only
 - No complex setup
 - No external dependencies
 - 100% pass rate required
 
 ### Integration Tests (@integration)
-- Cross-service functionality (<30s per test)
+- Cross-service functionality (&lt;30s per test)
 - May require database/API setup
 - Can test multiple components
 - 95% pass rate required
 - 1 retry allowed
 
 ### E2E Tests (@e2e)
-- Complete user journeys (<60s per test)
+- Complete user journeys (&lt;60s per test)
 - Full application flows
 - May be slower/more complex
 - 90% pass rate required
