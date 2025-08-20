@@ -9,6 +9,7 @@ import accessibilityConfig from './configs/accessibility.mjs';
 import nextConfig from './configs/next.mjs';
 import docusaurusConfig from './configs/docusaurus.mjs';
 import testConfig from './configs/test.mjs';
+import nxConfig from './configs/nx.mjs';
 
 /**
  * Create a preset configuration by combining multiple configs
@@ -24,6 +25,7 @@ function createPreset(configs) {
 export const typescript = createPreset([
   baseConfig,
   typescriptConfig,
+  nxConfig,
   testConfig,
 ]);
 
@@ -35,6 +37,7 @@ export const react = createPreset([
   typescriptConfig,
   reactConfig,
   accessibilityConfig,
+  nxConfig,
   testConfig,
 ]);
 
@@ -47,6 +50,7 @@ export const next = createPreset([
   reactConfig,
   accessibilityConfig,
   nextConfig,
+  nxConfig,
   testConfig,
 ]);
 
@@ -59,6 +63,7 @@ export const docusaurus = createPreset([
   reactConfig,
   accessibilityConfig,
   docusaurusConfig,
+  nxConfig,
   testConfig,
 ]);
 
@@ -68,16 +73,14 @@ export const docusaurus = createPreset([
 export const node = createPreset([
   baseConfig,
   typescriptConfig,
+  nxConfig,
   testConfig,
 ]);
 
 /**
  * Minimal configuration for JavaScript-only projects
  */
-export const javascript = createPreset([
-  baseConfig,
-  testConfig,
-]);
+export const javascript = createPreset([baseConfig, testConfig]);
 
 /**
  * Default export is the full TypeScript + React configuration
@@ -95,4 +98,5 @@ export {
   nextConfig,
   docusaurusConfig,
   testConfig,
+  nxConfig,
 };

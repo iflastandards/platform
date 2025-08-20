@@ -302,6 +302,12 @@
       "options": {
         "command": "echo 'Workspace root - no build needed'"
       }
+    },
+    "dependency-checks": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "node scripts/check-dependencies.js"
+      }
     }
   }
 }

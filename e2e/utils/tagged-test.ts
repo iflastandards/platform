@@ -1,5 +1,5 @@
 import { test as base } from '@playwright/test';
-import { TestTags, shouldRunInEnvironment, getTimeoutFromTags, getRetryCountFromTags, tags } from './test-tags';
+import { TestTags, shouldRunInEnvironment, getTimeoutFromTags, getRetryCountFromTags } from './test-tags';
 
 /**
  * Extended Playwright test with tagging support
