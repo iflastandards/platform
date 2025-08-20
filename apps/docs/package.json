@@ -4,7 +4,9 @@
   "private": true,
   "scripts": {
     "docusaurus": "docusaurus",
+    "prestart": "cd ../.. && pnpm gen:typedoc",
     "start": "docusaurus start",
+    "prebuild": "cd ../.. && pnpm gen:typedoc",
     "build": "docusaurus build",
     "swizzle": "docusaurus swizzle",
     "deploy": "docusaurus deploy",
@@ -19,11 +21,18 @@
     "@docusaurus/core": "3.8.1",
     "@docusaurus/preset-classic": "3.8.1",
     "@mdx-js/react": "^3.0.0",
+    "@redocly/openapi-core": "^2.0.6",
     "@supabase/supabase-js": "^2.55.0",
     "clsx": "^2.0.0",
+    "docusaurus-plugin-redoc": "^2.5.0",
+    "docusaurus-plugin-typedoc": "^1.4.2",
+    "docusaurus-theme-redoc": "^2.5.0",
     "prism-react-renderer": "^2.3.0",
     "react": "^19.0.0",
-    "react-dom": "^19.0.0"
+    "react-dom": "^19.0.0",
+    "typedoc": "^0.28.10",
+    "typedoc-plugin-markdown": "^4.8.1",
+    "typedoc-plugin-zod": "^1.4.2"
   },
   "devDependencies": {
     "@docusaurus/module-type-aliases": "3.8.1",

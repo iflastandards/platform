@@ -64,10 +64,19 @@ const config: Config = {
     [
       '@docusaurus/plugin-content-docs',
       {
-        id: 'user-docs',
+        id: 'main-docs',
         path: '../../docs', // Path to the main docs folder
         routeBasePath: 'docs',
         sidebarPath: './sidebarsUserDocs.ts',
+      },
+    ],
+    [
+      '@docusaurus/plugin-content-docs',
+      {
+        id: 'intro',
+        path: './docs', // Local docs folder
+        routeBasePath: 'intro',
+        sidebarPath: './sidebars.ts',
       },
     ],
     [
@@ -88,23 +97,12 @@ const config: Config = {
       },
     ],
     [
-      'docusaurus-plugin-typedoc',
+      '@docusaurus/plugin-content-docs',
       {
-        id: 'typedoc',
-        entryPoints: [
-          '../../packages/contracts/schemas/index.ts', // Zod schemas and contracts
-          '../../packages/supabase-types/src/database.ts', // Generated Supabase types
-          '../../apps/admin/src/providers/dataProvider.ts', // Data provider implementations
-          '../../apps/admin/src/lib/supabase/client.ts', // Supabase client utilities
-        ],
-        tsconfig: '../../apps/admin/tsconfig.json',
-        out: 'generated-api', // Output directory within the docs site
+        id: 'generated-api',
+        path: './static/generated-api',
         routeBasePath: 'generated-api',
-        sidebar: {
-          categoryLabel: 'Code Reference',
-          position: 1,
-        },
-        plugin: ['typedoc-plugin-zod'], // Enable the Zod plugin
+        sidebarPath: false,
       },
     ],
   ],
@@ -112,13 +110,7 @@ const config: Config = {
     [
       'classic',
       {
-        docs: {
-          sidebarPath: './sidebars.ts',
-          // Please change this to your repo.
-          // Remove this to remove the "edit this page" links.
-          editUrl:
-            'https://github.com/facebook/docusaurus/tree/main/packages/create-docusaurus/templates/shared/',
-        },
+        docs: false, // Disable default docs plugin since we're using custom instances
         blog: {
           showReadingTime: true,
           feedOptions: {
@@ -140,6 +132,8 @@ const config: Config = {
       } satisfies Preset.Options,
     ],
   ],
+
+  themes: ['docusaurus-theme-redoc'],
 
   themeConfig: {
     // Replace with your project's social card
