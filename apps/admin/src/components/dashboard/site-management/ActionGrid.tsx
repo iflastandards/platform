@@ -2,22 +2,21 @@
 
 import React from 'react';
 import {
-  Box,
   Card,
-  CardContent,
   Typography,
-  Grid,
+  Row,
+  Col,
   Button,
-  Chip,
-  Stack,
-} from '@mui/material';
+  Tag,
+  Space,
+} from 'antd';
 import {
-  ElectricBolt,
-  Computer,
-  Build,
-  Link as LinkIcon,
-  Description as FileText,
-} from '@mui/icons-material';
+  ThunderboltOutlined,
+  DesktopOutlined,
+  BuildOutlined,
+  LinkOutlined,
+  FileTextOutlined,
+} from '@ant-design/icons';
 
 export interface ManagementAction {
   id: string;
@@ -33,19 +32,21 @@ interface ActionGridProps {
   isSuperAdmin?: boolean;
 }
 
+const { Title, Text } = Typography;
+
 export function ActionGrid({ actions, isSuperAdmin }: ActionGridProps) {
   const getActionTypeIcon = (type: ManagementAction['type']) => {
     switch (type) {
       case 'github-cli':
-        return <ElectricBolt />;
+        return <ThunderboltOutlined />;
       case 'codespaces':
-        return <Computer />;
+        return <DesktopOutlined />;
       case 'internal':
-        return <Build />;
+        return <BuildOutlined />;
       case 'external':
-        return <LinkIcon />;
+        return <LinkOutlined />;
       default:
-        return <FileText />;
+        return <FileTextOutlined />;
     }
   };
 
@@ -70,57 +71,52 @@ export function ActionGrid({ actions, isSuperAdmin }: ActionGridProps) {
   };
 
   return (
-    <Grid container spacing={3}>
+    <Row gutter={[24, 24]}>
       {actions.map((action) => {
         const hasAccess = canAccessAction(action);
         return (
-          <Grid size={{ xs: 12, md: 6, lg: 4 }} key={action.id}>
+          <Col xs={24} md={12} lg={8} key={action.id}>
             <Card 
-              sx={{ height: '100%', opacity: hasAccess ? 1 : 0.6 }}
+              style={{ height: '100%', opacity: hasAccess ? 1 : 0.6 }}
               role="article"
               aria-labelledby={`action-${action.id}-title`}
             >
-              <CardContent>
-                <Box sx={{ display: 'flex', alignItems: 'flex-start', mb: 2 }}>
-                  <Box aria-hidden="true">
-                    {getActionTypeIcon(action.type)}
-                  </Box>
-                  <Box sx={{ ml: 2, flex: 1 }}>
-                    <Typography 
-                      variant="h6" 
-                      gutterBottom
-                      id={`action-${action.id}-title`}
-                      component="h3"
+              <div style={{ display: 'flex', alignItems: 'flex-start' }}>
+                <div aria-hidden="true" style={{ fontSize: 20, marginRight: 16 }}>
+                  {getActionTypeIcon(action.type)}
+                </div>
+                <div style={{ flex: 1 }}>
+                  <Title 
+                    level={5}
+                    id={`action-${action.id}-title`}
+                    style={{ marginBottom: 8 }}
+                  >
+                    {action.title}
+                  </Title>
+                  <Text type="secondary" style={{ display: 'block', marginBottom: 16 }}>
+                    {action.description}
+                  </Text>
+                  <Space>
+                    <Button
+                      type="primary"
+                      size="small"
+                      disabled={!hasAccess || action.disabled !== false}
+                      aria-label={`${action.title}: ${!hasAccess ? 'Superadmin Only' : action.disabled !== false ? 'Coming Soon' : 'Run Action'}`}
                     >
-                      {action.title}
-                    </Typography>
-                    <Typography variant="body2" color="textSecondary" paragraph>
-                      {action.description}
-                    </Typography>
-                    <Stack direction="row" spacing={1} alignItems="center">
-                      <Button
-                        variant="contained"
-                        size="small"
-                        disabled={!hasAccess || action.disabled !== false}
-                        aria-label={`${action.title}: ${!hasAccess ? 'Superadmin Only' : action.disabled !== false ? 'Coming Soon' : 'Run Action'}`}
-                        sx={{ minHeight: 36 }}
-                      >
-                        {!hasAccess ? 'Superadmin Only' : action.disabled !== false ? 'Coming Soon' : 'Run Action'}
-                      </Button>
-                      <Chip 
-                        label={getActionTypeLabel(action.type)} 
-                        size="small" 
-                        variant="outlined"
-                        aria-label={`Action type: ${getActionTypeLabel(action.type)}`}
-                      />
-                    </Stack>
-                  </Box>
-                </Box>
-              </CardContent>
+                      {!hasAccess ? 'Superadmin Only' : action.disabled !== false ? 'Coming Soon' : 'Run Action'}
+                    </Button>
+                    <Tag 
+                      aria-label={`Action type: ${getActionTypeLabel(action.type)}`}
+                    >
+                      {getActionTypeLabel(action.type)}
+                    </Tag>
+                  </Space>
+                </div>
+              </div>
             </Card>
-          </Grid>
+          </Col>
         );
       })}
-    </Grid>
+    </Row>
   );
 }

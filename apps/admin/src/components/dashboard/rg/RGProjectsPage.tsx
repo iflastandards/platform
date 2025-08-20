@@ -3,17 +3,18 @@
 import React from 'react';
 import Link from 'next/link';
 import {
-  Box,
   Typography,
   Button,
   Card,
-  CardContent,
-  Chip,
-  Stack,
-} from '@mui/material';
+  Tag,
+  Space,
+  Progress,
+} from 'antd';
 import {
-  AddTask as AddTaskIcon,
-} from '@mui/icons-material';
+  PlusOutlined,
+} from '@ant-design/icons';
+
+const { Title, Text } = Typography;
 
 export function RGProjectsPage() {
   const projects = [
@@ -44,84 +45,67 @@ export function RGProjectsPage() {
   ];
 
   return (
-    <Box>
-      <Box display="flex" justifyContent="space-between" alignItems="center" mb={3}>
-        <Typography variant="h4" component="h1">
-          My Projects
-        </Typography>
-        <Button
-          variant="contained"
-          startIcon={<AddTaskIcon />}
-          component={Link}
-          href="/dashboard/rg/projects/new"
-        >
-          Start New Project
-        </Button>
-      </Box>
+    <div>
+      <div style={{ 
+        display: 'flex', 
+        justifyContent: 'space-between', 
+        alignItems: 'center', 
+        marginBottom: 24 
+      }}>
+        <Title level={2}>My Projects</Title>
+        <Link href="/dashboard/rg/projects/new">
+          <Button type="primary" icon={<PlusOutlined />}>
+            Start New Project
+          </Button>
+        </Link>
+      </div>
 
-      <Stack spacing={3}>
+      <Space direction="vertical" size="large" style={{ width: '100%' }}>
         {projects.map((project) => (
-          <Card key={project.id} elevation={0}>
-            <CardContent>
-              <Box display="flex" justifyContent="space-between" alignItems="flex-start" mb={2}>
-                <Box>
-                  <Typography variant="h6" gutterBottom>
-                    {project.name}
-                  </Typography>
-                  <Stack direction="row" spacing={1}>
-                    <Chip 
-                      label={project.status} 
-                      size="small" 
-                      color={project.status === 'active' ? 'success' : 'warning'}
-                    />
-                    <Chip 
-                      label={`Deadline: ${project.deadline}`} 
-                      size="small" 
-                      variant="outlined"
-                    />
-                  </Stack>
-                </Box>
-                <Button 
-                  variant="outlined" 
-                  size="small"
-                  component={Link}
-                  href={`/dashboard/rg/projects/${project.id}`}
-                >
+          <Card key={project.id}>
+            <div style={{ 
+              display: 'flex', 
+              justifyContent: 'space-between', 
+              alignItems: 'flex-start', 
+              marginBottom: 16 
+            }}>
+              <div>
+                <Title level={4} style={{ marginBottom: 8 }}>
+                  {project.name}
+                </Title>
+                <Space>
+                  <Tag color={project.status === 'active' ? 'success' : 'warning'}>
+                    {project.status}
+                  </Tag>
+                  <Tag>
+                    Deadline: {project.deadline}
+                  </Tag>
+                </Space>
+              </div>
+              <Link href={`/dashboard/rg/projects/${project.id}`}>
+                <Button type="default">
                   View Details
                 </Button>
-              </Box>
-              
-              <Box mb={2}>
-                <Typography variant="body2" color="text.secondary" gutterBottom>
-                  Progress: {project.progress}%
-                </Typography>
-                <Box 
-                  sx={{ 
-                    width: '100%', 
-                    height: 8, 
-                    bgcolor: 'grey.200', 
-                    borderRadius: 1,
-                    overflow: 'hidden'
-                  }}
-                >
-                  <Box 
-                    sx={{ 
-                      width: `${project.progress}%`, 
-                      height: '100%', 
-                      bgcolor: 'primary.main',
-                      transition: 'width 0.3s ease'
-                    }} 
-                  />
-                </Box>
-              </Box>
-              
-              <Typography variant="body2" color="text.secondary">
-                Team: {project.team.join(', ')}
-              </Typography>
-            </CardContent>
+              </Link>
+            </div>
+            
+            <div style={{ marginBottom: 16 }}>
+              <Text type="secondary" style={{ display: 'block', marginBottom: 8 }}>
+                Progress: {project.progress}%
+              </Text>
+              <Progress 
+                percent={project.progress} 
+                showInfo={false}
+                strokeColor="#1890ff"
+              />
+            </div>
+            
+            <Text type="secondary">
+              Team: {project.team.join(', ')}
+            </Text>
           </Card>
         ))}
-      </Stack>
-    </Box>
+      </Space>
+    </div>
   );
 }

@@ -3,28 +3,28 @@
 import React, { useState } from 'react';
 import Link from 'next/link';
 import {
-  Box,
   Card,
-  CardContent,
   Typography,
-  Chip,
-  Link as MuiLink,
+  Tag,
   Button,
-  Stack,
-  useTheme,
-} from '@mui/material';
-import Grid from '@mui/material/Grid';
+  Space,
+  Row,
+  Col,
+  Statistic,
+} from 'antd';
 import {
-  Dashboard as DashboardIcon,
-  People as PeopleIcon,
-  Folder as FolderIcon,
-  Assignment as AssignmentIcon,
-  History as HistoryIcon,
-  PersonAdd as PersonAddIcon,
-  AddTask as AddTaskIcon,
-} from '@mui/icons-material';
+  DashboardOutlined,
+  TeamOutlined,
+  FolderOutlined,
+  ProjectOutlined,
+  HistoryOutlined,
+  UserAddOutlined,
+  PlusCircleOutlined,
+} from '@ant-design/icons';
 import { mockReviewGroups, getNamespacesByReviewGroup } from '@/lib/mock-data/namespaces-extended';
 import { TabBasedDashboardLayout, NavigationItem } from '@/components/layout/TabBasedDashboardLayout';
+
+const { Text, Title } = Typography;
 
 interface ReviewGroupDashboardProps {
   userRoles: string[];
@@ -41,25 +41,27 @@ interface StatsCardProps {
 }
 
 function StatsCard({ title, value, change, changeType }: StatsCardProps) {
-  const theme = useTheme();
   const changeColor = 
-    changeType === 'increase' ? theme.palette.success.main : 
-    changeType === 'decrease' ? theme.palette.error.main : 
-    theme.palette.text.secondary;
+    changeType === 'increase' ? '#52c41a' : 
+    changeType === 'decrease' ? '#ff4d4f' : 
+    '#8c8c8c';
   
   return (
-    <Card elevation={0}>
-      <CardContent>
-        <Typography variant="body2" color="text.secondary" gutterBottom>
-          {title}
-        </Typography>
-        <Typography variant="h4" component="div" fontWeight="bold" color="primary.main">
-          {value.toLocaleString()}
-        </Typography>
-        <Typography variant="body2" sx={{ color: changeColor, mt: 1 }}>
-          {change}
-        </Typography>
-      </CardContent>
+    <Card>
+      <Text type="secondary" style={{ display: 'block', marginBottom: 8 }}>
+        {title}
+      </Text>
+      <Statistic
+        value={value}
+        valueStyle={{ 
+          fontSize: 32,
+          fontWeight: 'bold',
+          color: '#1890ff'
+        }}
+      />
+      <Text style={{ color: changeColor, marginTop: 8, display: 'block' }}>
+        {change}
+      </Text>
     </Card>
   );
 }
@@ -81,19 +83,21 @@ function ActivityItem({ action, author, time, type }: ActivityItemProps) {
   };
   
   return (
-    <Box py={2} borderBottom={1} borderColor="divider">
-      <Stack direction="row" spacing={2} alignItems="flex-start">
-        <Typography fontSize={24}>{typeIcons[type]}</Typography>
-        <Box flex={1}>
-          <Typography variant="body1" fontWeight="medium">
+    <div style={{ paddingTop: 16, paddingBottom: 16, borderBottom: '1px solid #f0f0f0' }}>
+      <Space align="start" size="middle">
+        <Text style={{ fontSize: 24 }}>{typeIcons[type]}</Text>
+        <div style={{ flex: 1 }}>
+          <Text strong>
             {action}
-          </Typography>
-          <Typography variant="caption" color="text.secondary">
-            By {author} • {time}
-          </Typography>
-        </Box>
-      </Stack>
-    </Box>
+          </Text>
+          <div>
+            <Text type="secondary" style={{ fontSize: 12 }}>
+              By {author} • {time}
+            </Text>
+          </div>
+        </div>
+      </Space>
+    </div>
   );
 }
 
@@ -121,53 +125,57 @@ function NamespaceCard({ name, description, status, currentVersion, color, stati
   const config = statusConfig[status];
   
   return (
-    <Card elevation={0} sx={{ border: 1, borderColor: 'divider', height: '100%' }}>
-      <CardContent>
-        <Box display="flex" justifyContent="space-between" alignItems="flex-start" mb={2}>
-          <Typography variant="h6" fontWeight="bold" sx={{ color }}>
-            {name}
-          </Typography>
-          <Chip 
-            label={config.label} 
-            color={config.color} 
-            size="small"
-            sx={{ fontWeight: 600 }}
+    <Card bordered style={{ height: '100%' }}>
+      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: 16 }}>
+        <Title level={5} style={{ color, margin: 0 }}>
+          {name}
+        </Title>
+        <Tag color={config.color}>
+          {config.label}
+        </Tag>
+      </div>
+      <Text type="secondary" style={{ display: 'block', marginBottom: 8 }}>
+        {description}
+      </Text>
+      <Text type="secondary" style={{ fontSize: 12, display: 'block', marginBottom: 16 }}>
+        Version {currentVersion}
+      </Text>
+      
+      <Row gutter={16}>
+        <Col span={8} style={{ textAlign: 'center' }}>
+          <Statistic
+            value={statistics.elements + statistics.concepts}
+            valueStyle={{ fontSize: 14, fontWeight: 'bold', color: '#1890ff' }}
+            suffix={
+              <Text type="secondary" style={{ fontSize: 12 }}>
+                Items
+              </Text>
+            }
           />
-        </Box>
-        <Typography variant="body2" color="text.secondary" gutterBottom>
-          {description}
-        </Typography>
-        <Typography variant="caption" color="text.secondary" display="block" mb={2}>
-          Version {currentVersion}
-        </Typography>
-        
-        <Stack direction="row" spacing={2}>
-          <Box textAlign="center">
-            <Typography variant="body2" fontWeight="bold" color="primary.main">
-              {statistics.elements + statistics.concepts}
-            </Typography>
-            <Typography variant="caption" color="text.secondary">
-              Items
-            </Typography>
-          </Box>
-          <Box textAlign="center">
-            <Typography variant="body2" fontWeight="bold" color="primary.main">
-              {statistics.translations}
-            </Typography>
-            <Typography variant="caption" color="text.secondary">
-              Languages
-            </Typography>
-          </Box>
-          <Box textAlign="center">
-            <Typography variant="body2" fontWeight="bold" color="primary.main">
-              {statistics.contributors}
-            </Typography>
-            <Typography variant="caption" color="text.secondary">
-              Contributors
-            </Typography>
-          </Box>
-        </Stack>
-      </CardContent>
+        </Col>
+        <Col span={8} style={{ textAlign: 'center' }}>
+          <Statistic
+            value={statistics.translations}
+            valueStyle={{ fontSize: 14, fontWeight: 'bold', color: '#1890ff' }}
+            suffix={
+              <Text type="secondary" style={{ fontSize: 12 }}>
+                Languages
+              </Text>
+            }
+          />
+        </Col>
+        <Col span={8} style={{ textAlign: 'center' }}>
+          <Statistic
+            value={statistics.contributors}
+            valueStyle={{ fontSize: 14, fontWeight: 'bold', color: '#1890ff' }}
+            suffix={
+              <Text type="secondary" style={{ fontSize: 12 }}>
+                Contributors
+              </Text>
+            }
+          />
+        </Col>
+      </Row>
     </Card>
   );
 }
@@ -185,11 +193,11 @@ export default function ReviewGroupDashboard({
   const userNamespaces = reviewGroups.flatMap(rgId => getNamespacesByReviewGroup(rgId));
   
   const navigationItems: NavigationItem[] = [
-    { id: 'overview', label: 'RG Dashboard', icon: DashboardIcon },
-    { id: 'projects', label: 'My Projects', icon: AssignmentIcon },
-    { id: 'namespaces', label: 'My Namespaces', icon: FolderIcon, badge: userNamespaces.length },
-    { id: 'team', label: 'Team Members', icon: PeopleIcon },
-    { id: 'activity', label: 'Activity Log', icon: HistoryIcon },
+    { id: 'overview', label: 'RG Dashboard', icon: DashboardOutlined },
+    { id: 'projects', label: 'My Projects', icon: ProjectOutlined },
+    { id: 'namespaces', label: 'My Namespaces', icon: FolderOutlined, badge: userNamespaces.length },
+    { id: 'team', label: 'Team Members', icon: TeamOutlined },
+    { id: 'activity', label: 'Activity Log', icon: HistoryOutlined },
   ];
 
   const stats = [
@@ -211,161 +219,154 @@ export default function ReviewGroupDashboard({
         return (
           <>
             {/* Stats Grid */}
-            <Grid container spacing={3} sx={{ mb: 4 }}>
+            <Row gutter={[24, 24]} style={{ marginBottom: 32 }}>
               {stats.map((stat) => (
-                <Grid size={{ xs: 12, sm: 6, md: 4 }} key={stat.title}>
+                <Col xs={24} sm={12} md={8} key={stat.title}>
                   <StatsCard {...stat} />
-                </Grid>
+                </Col>
               ))}
-            </Grid>
+            </Row>
 
-            <Grid container spacing={3}>
+            <Row gutter={[24, 24]}>
               {/* My Namespaces */}
-              <Grid size={{ xs: 12, lg: 8 }}>
-                <Card elevation={0}>
-                  <CardContent>
-                    <Typography variant="h6" fontWeight="bold" gutterBottom component="h2">
-                      My Namespaces
-                    </Typography>
-                    <Grid container spacing={2}>
-                      {userNamespaces.map((namespace) => (
-                        <Grid size={{ xs: 12, md: 6 }} key={namespace.id}>
-                          <NamespaceCard {...namespace} />
-                        </Grid>
-                      ))}
-                    </Grid>
-                    <Box mt={3} pt={2} borderTop={1} borderColor="divider">
-                      <MuiLink
-                        component={Link}
-                        href="/dashboard/rg/namespaces?demo=true"
-                        color="primary"
-                        underline="hover"
-                        fontSize="small"
-                      >
+              <Col xs={24} lg={16}>
+                <Card>
+                  <Title level={4} style={{ marginBottom: 16 }}>
+                    My Namespaces
+                  </Title>
+                  <Row gutter={[16, 16]}>
+                    {userNamespaces.map((namespace) => (
+                      <Col xs={24} md={12} key={namespace.id}>
+                        <NamespaceCard {...namespace} />
+                      </Col>
+                    ))}
+                  </Row>
+                  <div style={{ marginTop: 24, paddingTop: 16, borderTop: '1px solid #f0f0f0' }}>
+                    <Link href="/dashboard/rg/namespaces?demo=true">
+                      <Button type="link" style={{ padding: 0 }}>
                         Manage all namespaces →
-                      </MuiLink>
-                    </Box>
-                  </CardContent>
+                      </Button>
+                    </Link>
+                  </div>
                 </Card>
-              </Grid>
+              </Col>
 
               {/* Recent Activity & Quick Actions */}
-              <Grid size={{ xs: 12, lg: 4 }}>
-                <Stack spacing={3}>
+              <Col xs={24} lg={8}>
+                <Space direction="vertical" size="large" style={{ width: '100%' }}>
                   {/* Recent Activity */}
-                  <Card elevation={0}>
-                    <CardContent>
-                      <Typography variant="h6" fontWeight="bold" gutterBottom component="h2">
-                        Recent Activity
-                      </Typography>
-                      <Box role="feed" aria-label="Recent review group activity">
-                        {recentActivity.map((activity, index) => (
-                          <ActivityItem key={index} {...activity} />
-                        ))}
-                      </Box>
-                    </CardContent>
+                  <Card>
+                    <Title level={4} style={{ marginBottom: 16 }}>
+                      Recent Activity
+                    </Title>
+                    <div role="feed" aria-label="Recent review group activity">
+                      {recentActivity.map((activity, index) => (
+                        <ActivityItem key={index} {...activity} />
+                      ))}
+                    </div>
                   </Card>
 
                   {/* Quick Actions */}
-                  <Card elevation={0}>
-                    <CardContent>
-                      <Typography variant="h6" fontWeight="bold" gutterBottom component="h2">
-                        Quick Actions
-                      </Typography>
-                      <Stack spacing={2}>
+                  <Card>
+                    <Title level={4} style={{ marginBottom: 16 }}>
+                      Quick Actions
+                    </Title>
+                    <Space direction="vertical" size="middle" style={{ width: '100%' }}>
+                      <Link href="/dashboard/rg/projects/new?demo=true" style={{ width: '100%' }}>
                         <Button
-                          variant="contained"
-                          fullWidth
-                          startIcon={<AddTaskIcon />}
-                          component={Link}
-                          href="/dashboard/rg/projects/new?demo=true"
+                          type="primary"
+                          block
+                          icon={<PlusCircleOutlined />}
                           aria-label="Start a new project"
                         >
                           Start New Project
                         </Button>
+                      </Link>
+                      <Link href="/dashboard/rg/team/invite?demo=true" style={{ width: '100%' }}>
                         <Button
-                          variant="outlined"
-                          fullWidth
-                          startIcon={<PersonAddIcon />}
-                          component={Link}
-                          href="/dashboard/rg/team/invite?demo=true"
+                          block
+                          icon={<UserAddOutlined />}
                           aria-label="Invite a team member"
                         >
                           Invite Team Member
                         </Button>
-                      </Stack>
-                    </CardContent>
+                      </Link>
+                    </Space>
                   </Card>
-                </Stack>
-              </Grid>
-            </Grid>
+                </Space>
+              </Col>
+            </Row>
           </>
         );
 
       case 'projects':
         return (
-          <Box>
-            <Typography variant="h4" component="h1" gutterBottom>
+          <div>
+            <Title level={2} style={{ marginBottom: 16 }}>
               My Projects
-            </Typography>
-            <Button component={Link} href="/dashboard/rg/projects" variant="contained">
-              View All Projects
-            </Button>
-          </Box>
+            </Title>
+            <Link href="/dashboard/rg/projects">
+              <Button type="primary">
+                View All Projects
+              </Button>
+            </Link>
+          </div>
         );
 
       case 'namespaces':
         return (
-          <Box>
-            <Typography variant="h4" component="h1" gutterBottom>
+          <div>
+            <Title level={2} style={{ marginBottom: 16 }}>
               My Namespaces
-            </Typography>
-            <Grid container spacing={2}>
+            </Title>
+            <Row gutter={[16, 16]}>
               {userNamespaces.map((namespace) => (
-                <Grid size={{ xs: 12, sm: 6, md: 4 }} key={namespace.id}>
+                <Col xs={24} sm={12} md={8} key={namespace.id}>
                   <NamespaceCard {...namespace} />
-                </Grid>
+                </Col>
               ))}
-            </Grid>
-          </Box>
+            </Row>
+          </div>
         );
 
       case 'team':
         return (
-          <Box>
-            <Typography variant="h4" component="h1" gutterBottom>
+          <div>
+            <Title level={2} style={{ marginBottom: 16 }}>
               Team Members
-            </Typography>
-            <Button component={Link} href="/dashboard/rg/team" variant="contained">
-              View All Team Members
-            </Button>
-          </Box>
+            </Title>
+            <Link href="/dashboard/rg/team">
+              <Button type="primary">
+                View All Team Members
+              </Button>
+            </Link>
+          </div>
         );
 
       case 'activity':
         return (
-          <Box>
-            <Typography variant="h4" component="h1" gutterBottom>
+          <div>
+            <Title level={2} style={{ marginBottom: 16 }}>
               Activity Log
-            </Typography>
-            <Box role="feed" aria-label="Review group activity log">
+            </Title>
+            <div role="feed" aria-label="Review group activity log">
               {recentActivity.map((activity, index) => (
                 <ActivityItem key={index} {...activity} />
               ))}
-            </Box>
-          </Box>
+            </div>
+          </div>
         );
 
       default:
         return (
-          <Box>
-            <Typography variant="h4" component="h1" gutterBottom>
+          <div>
+            <Title level={2} style={{ marginBottom: 16 }}>
               {navigationItems.find(item => item.id === selectedTab)?.label}
-            </Typography>
-            <Typography variant="body1" color="text.secondary">
+            </Title>
+            <Text type="secondary">
               This section is under development.
-            </Typography>
-          </Box>
+            </Text>
+          </div>
         );
     }
   };

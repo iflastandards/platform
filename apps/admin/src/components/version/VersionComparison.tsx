@@ -2,42 +2,35 @@
 
 import React, { useState } from 'react';
 import {
-  Box,
   Card,
-  CardContent,
   Typography,
   Button,
   Table,
-  TableBody,
-  TableCell,
-  TableContainer,
-  TableHead,
-  TableRow,
-  Chip,
+  Tag,
   Tabs,
-  Tab,
   Alert,
-  Stack,
+  Space,
   List,
-  ListItem,
-  ListItemIcon,
-  ListItemText,
-  Paper,
-  IconButton,
-} from '@mui/material';
-import Grid from '@mui/material/Grid';
+  Row,
+  Col,
+  Badge,
+  Statistic,
+} from 'antd';
 import {
-  Add as AddIcon,
-  Remove as RemoveIcon,
-  Edit as EditIcon,
-  ArrowForward as ArrowIcon,
-  Download as DownloadIcon,
-  Share as ShareIcon,
-  Close as CloseIcon,
-  CheckCircle as CheckIcon,
-  Warning as WarningIcon,
-  Info as InfoIcon,
-} from '@mui/icons-material';
+  PlusOutlined,
+  MinusOutlined,
+  EditOutlined,
+  ArrowRightOutlined,
+  DownloadOutlined,
+  ShareAltOutlined,
+  CloseOutlined,
+  CheckCircleOutlined,
+  WarningOutlined,
+  InfoCircleOutlined,
+} from '@ant-design/icons';
+
+const { Title, Text, Link } = Typography;
+const { TabPane } = Tabs;
 
 interface Version {
   id: string;
@@ -83,24 +76,12 @@ interface VersionComparisonProps {
   onClose?: () => void;
 }
 
-function TabPanel({ children, value, index }: { children: React.ReactNode; value: number; index: number }) {
-  return (
-    <div role="tabpanel" hidden={value !== index}>
-      {value === index && (
-        <Box sx={{ py: 3 }}>
-          {children}
-        </Box>
-      )}
-    </div>
-  );
-}
-
 export default function VersionComparison({
   version1,
   version2,
   onClose,
 }: VersionComparisonProps) {
-  const [tabValue, setTabValue] = useState(0);
+  const [activeTab, setActiveTab] = useState('changelog');
 
   // Mock data for demonstration
   const fileDiffs: FileDiff[] = [
@@ -157,58 +138,58 @@ export default function VersionComparison({
   const getStatusIcon = (status: string) => {
     switch (status) {
       case 'added':
-        return <AddIcon color="success" />;
+        return <PlusOutlined style={{ color: '#52c41a' }} />;
       case 'removed':
-        return <RemoveIcon color="error" />;
+        return <MinusOutlined style={{ color: '#ff4d4f' }} />;
       case 'modified':
-        return <EditIcon color="info" />;
+        return <EditOutlined style={{ color: '#1890ff' }} />;
       default:
-        return <InfoIcon />;
+        return <InfoCircleOutlined />;
     }
   };
 
-  const getStatusColor = (status: string): 'success' | 'error' | 'info' | 'warning' => {
+  const getStatusColor = (status: string) => {
     switch (status) {
       case 'added':
         return 'success';
       case 'removed':
         return 'error';
       case 'modified':
-        return 'info';
-      default:
-        return 'warning';
-    }
-  };
-
-  const getChangeTypeColor = (type: string): 'default' | 'primary' | 'secondary' | 'error' | 'info' | 'success' | 'warning' => {
-    switch (type) {
-      case 'added':
-        return 'success';
-      case 'changed':
-        return 'info';
-      case 'deprecated':
-        return 'warning';
-      case 'removed':
-        return 'error';
-      case 'fixed':
-        return 'primary';
-      case 'security':
-        return 'error';
+        return 'processing';
       default:
         return 'default';
     }
   };
 
-  const getImpactColor = (impact?: string): 'error' | 'warning' | 'info' => {
+  const getChangeTypeColor = (type: string) => {
+    switch (type) {
+      case 'added':
+        return 'success';
+      case 'changed':
+        return 'processing';
+      case 'deprecated':
+        return 'warning';
+      case 'removed':
+        return 'error';
+      case 'fixed':
+        return 'blue';
+      case 'security':
+        return 'red';
+      default:
+        return 'default';
+    }
+  };
+
+  const getImpactColor = (impact?: string) => {
     switch (impact) {
       case 'breaking':
         return 'error';
       case 'minor':
         return 'warning';
       case 'patch':
-        return 'info';
+        return 'processing';
       default:
-        return 'info';
+        return 'default';
     }
   };
 
@@ -217,367 +198,337 @@ export default function VersionComparison({
   const modificationsCount = [...fileDiffs, ...conceptDiffs].filter(item => item.status === 'modified').length;
   const removalsCount = [...fileDiffs, ...conceptDiffs].filter(item => item.status === 'removed').length;
 
+  const fileColumns = [
+    {
+      title: 'File',
+      dataIndex: 'path',
+      key: 'path',
+      render: (path: string) => (
+        <Text code style={{ fontSize: 12 }}>
+          {path}
+        </Text>
+      ),
+    },
+    {
+      title: 'Status',
+      dataIndex: 'status',
+      key: 'status',
+      render: (status: string) => (
+        <Space>
+          {getStatusIcon(status)}
+          <Tag color={getStatusColor(status)}>
+            {status.toUpperCase()}
+          </Tag>
+        </Space>
+      ),
+    },
+    {
+      title: 'Changes',
+      key: 'changes',
+      render: (_: any, record: FileDiff) => (
+        <Space>
+          {record.linesAdded > 0 && (
+            <Text type="success">+{record.linesAdded}</Text>
+          )}
+          {record.linesAdded > 0 && record.linesRemoved > 0 && '/'}
+          {record.linesRemoved > 0 && (
+            <Text type="danger">-{record.linesRemoved}</Text>
+          )}
+        </Space>
+      ),
+    },
+    {
+      title: 'Preview',
+      dataIndex: 'preview',
+      key: 'preview',
+      render: (preview: string) => (
+        <Text type="secondary" ellipsis style={{ maxWidth: 300 }}>
+          {preview}
+        </Text>
+      ),
+    },
+  ];
+
   return (
-    <Box>
+    <div>
       {/* Header */}
-      <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', mb: 3 }}>
-        <Box>
-          <Typography variant="h5" gutterBottom>
-            Version Comparison
-          </Typography>
-          <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
-            <Chip 
-              label={`v${version1.version}`} 
-              color="primary" 
-              variant="outlined"
-            />
-            <ArrowIcon color="action" />
-            <Chip 
-              label={`v${version2.version}`} 
-              color="secondary" 
-              variant="outlined"
-            />
-          </Box>
-        </Box>
+      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: 24 }}>
+        <div>
+          <Title level={4} style={{ marginBottom: 8 }}>Version Comparison</Title>
+          <Space>
+            <Tag color="blue">v{version1.version}</Tag>
+            <ArrowRightOutlined />
+            <Tag color="green">v{version2.version}</Tag>
+          </Space>
+        </div>
         
-        <Stack direction="row" spacing={1}>
-          <Button startIcon={<DownloadIcon />} variant="outlined" size="small">
+        <Space>
+          <Button icon={<DownloadOutlined />} size="small">
             Export Diff
           </Button>
-          <Button startIcon={<ShareIcon />} variant="outlined" size="small">
+          <Button icon={<ShareAltOutlined />} size="small">
             Share
           </Button>
           {onClose && (
-            <IconButton onClick={onClose}>
-              <CloseIcon />
-            </IconButton>
+            <Button 
+              icon={<CloseOutlined />} 
+              onClick={onClose}
+              type="text"
+              size="small"
+            />
           )}
-        </Stack>
-      </Box>
+        </Space>
+      </div>
 
       {/* Summary Cards */}
-      <Grid container spacing={2} sx={{ mb: 3 }}>
-        <Grid size={{ xs: 6, sm: 3 }}>
+      <Row gutter={16} style={{ marginBottom: 24 }}>
+        <Col xs={24} sm={12} md={6}>
           <Card>
-            <CardContent sx={{ textAlign: 'center', py: 2 }}>
-              <Typography variant="h4" color="text.primary">
-                {totalChanges}
-              </Typography>
-              <Typography variant="caption" color="text.secondary">
-                Total Changes
-              </Typography>
-            </CardContent>
+            <Statistic
+              title="Total Changes"
+              value={totalChanges}
+            />
           </Card>
-        </Grid>
+        </Col>
         
-        <Grid size={{ xs: 6, sm: 3 }}>
+        <Col xs={24} sm={12} md={6}>
           <Card>
-            <CardContent sx={{ textAlign: 'center', py: 2 }}>
-              <Typography variant="h4" color="success.main">
-                +{additionsCount}
-              </Typography>
-              <Typography variant="caption" color="text.secondary">
-                Additions
-              </Typography>
-            </CardContent>
+            <Statistic
+              title="Additions"
+              value={additionsCount}
+              prefix="+"
+              valueStyle={{ color: '#52c41a' }}
+            />
           </Card>
-        </Grid>
+        </Col>
         
-        <Grid size={{ xs: 6, sm: 3 }}>
+        <Col xs={24} sm={12} md={6}>
           <Card>
-            <CardContent sx={{ textAlign: 'center', py: 2 }}>
-              <Typography variant="h4" color="info.main">
-                ~{modificationsCount}
-              </Typography>
-              <Typography variant="caption" color="text.secondary">
-                Modifications
-              </Typography>
-            </CardContent>
+            <Statistic
+              title="Modifications"
+              value={modificationsCount}
+              prefix="~"
+              valueStyle={{ color: '#1890ff' }}
+            />
           </Card>
-        </Grid>
+        </Col>
         
-        <Grid size={{ xs: 6, sm: 3 }}>
+        <Col xs={24} sm={12} md={6}>
           <Card>
-            <CardContent sx={{ textAlign: 'center', py: 2 }}>
-              <Typography variant="h4" color="error.main">
-                -{removalsCount}
-              </Typography>
-              <Typography variant="caption" color="text.secondary">
-                Removals
-              </Typography>
-            </CardContent>
+            <Statistic
+              title="Removals"
+              value={removalsCount}
+              prefix="-"
+              valueStyle={{ color: '#ff4d4f' }}
+            />
           </Card>
-        </Grid>
-      </Grid>
+        </Col>
+      </Row>
 
       {/* Version Details */}
-      <Grid container spacing={3} sx={{ mb: 3 }}>
-        <Grid size={{ xs: 12, md: 6 }}>
-          <Card>
-            <CardContent>
-              <Typography variant="h6" gutterBottom color="primary">
-                Version {version1.version}
-              </Typography>
-              <Box component="dl" sx={{ '& dt': { fontWeight: 'medium' }, '& dd': { ml: 0, mb: 1 } }}>
-                <Box component="dt">Status:</Box>
-                <Box component="dd">
-                  <Chip label={version1.status} size="small" />
-                </Box>
-                
-                <Box component="dt">Author:</Box>
-                <Box component="dd">{version1.author}</Box>
-                
-                <Box component="dt">Date:</Box>
-                <Box component="dd">{new Date(version1.createdDate).toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' })}</Box>
-                
-                <Box component="dt">Files:</Box>
-                <Box component="dd">{version1.fileCount}</Box>
-                
-                <Box component="dt">Concepts:</Box>
-                <Box component="dd">{version1.conceptCount}</Box>
-              </Box>
-            </CardContent>
+      <Row gutter={16} style={{ marginBottom: 24 }}>
+        <Col span={12}>
+          <Card title={<Text strong>Version {version1.version}</Text>}>
+            <Space direction="vertical" style={{ width: '100%' }}>
+              <div>
+                <Text type="secondary">Status:</Text>{' '}
+                <Tag>{version1.status}</Tag>
+              </div>
+              <div>
+                <Text type="secondary">Author:</Text>{' '}
+                <Text>{version1.author}</Text>
+              </div>
+              <div>
+                <Text type="secondary">Date:</Text>{' '}
+                <Text>{new Date(version1.createdDate).toLocaleDateString()}</Text>
+              </div>
+              <div>
+                <Text type="secondary">Files:</Text>{' '}
+                <Text>{version1.fileCount}</Text>
+              </div>
+              <div>
+                <Text type="secondary">Concepts:</Text>{' '}
+                <Text>{version1.conceptCount}</Text>
+              </div>
+            </Space>
           </Card>
-        </Grid>
+        </Col>
         
-        <Grid size={{ xs: 12, md: 6 }}>
-          <Card>
-            <CardContent>
-              <Typography variant="h6" gutterBottom color="secondary">
-                Version {version2.version}
-              </Typography>
-              <Box component="dl" sx={{ '& dt': { fontWeight: 'medium' }, '& dd': { ml: 0, mb: 1 } }}>
-                <Box component="dt">Status:</Box>
-                <Box component="dd">
-                  <Chip label={version2.status} size="small" />
-                </Box>
-                
-                <Box component="dt">Author:</Box>
-                <Box component="dd">{version2.author}</Box>
-                
-                <Box component="dt">Date:</Box>
-                <Box component="dd">{new Date(version2.createdDate).toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' })}</Box>
-                
-                <Box component="dt">Files:</Box>
-                <Box component="dd">{version2.fileCount}</Box>
-                
-                <Box component="dt">Concepts:</Box>
-                <Box component="dd">{version2.conceptCount}</Box>
-              </Box>
-            </CardContent>
+        <Col span={12}>
+          <Card title={<Text strong>Version {version2.version}</Text>}>
+            <Space direction="vertical" style={{ width: '100%' }}>
+              <div>
+                <Text type="secondary">Status:</Text>{' '}
+                <Tag>{version2.status}</Tag>
+              </div>
+              <div>
+                <Text type="secondary">Author:</Text>{' '}
+                <Text>{version2.author}</Text>
+              </div>
+              <div>
+                <Text type="secondary">Date:</Text>{' '}
+                <Text>{new Date(version2.createdDate).toLocaleDateString()}</Text>
+              </div>
+              <div>
+                <Text type="secondary">Files:</Text>{' '}
+                <Text>{version2.fileCount}</Text>
+              </div>
+              <div>
+                <Text type="secondary">Concepts:</Text>{' '}
+                <Text>{version2.conceptCount}</Text>
+              </div>
+            </Space>
           </Card>
-        </Grid>
-      </Grid>
+        </Col>
+      </Row>
 
       {/* Tabs */}
       <Card>
-        <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
-          <Tabs value={tabValue} onChange={(e, newValue) => setTabValue(newValue)}>
-            <Tab label={`Changelog (${version2.changelog.length})`} />
-            <Tab label={`Files (${fileDiffs.length})`} />
-            <Tab label={`Concepts (${conceptDiffs.length})`} />
-            <Tab label="Summary" />
-          </Tabs>
-        </Box>
+        <Tabs activeKey={activeTab} onChange={setActiveTab}>
+          <TabPane 
+            tab={
+              <Badge count={version2.changelog.length} offset={[10, 0]}>
+                Changelog
+              </Badge>
+            } 
+            key="changelog"
+          >
+            <List
+              dataSource={version2.changelog}
+              renderItem={(entry) => (
+                <List.Item>
+                  <Space align="start" style={{ width: '100%' }}>
+                    <Tag color={getChangeTypeColor(entry.type)}>
+                      {entry.type.toUpperCase()}
+                    </Tag>
+                    <div style={{ flex: 1 }}>
+                      <Text>{entry.description}</Text>
+                      {entry.impact && (
+                        <div style={{ marginTop: 4 }}>
+                          <Tag color={getImpactColor(entry.impact)} style={{ fontSize: 11 }}>
+                            {entry.impact} change
+                          </Tag>
+                        </div>
+                      )}
+                    </div>
+                  </Space>
+                </List.Item>
+              )}
+            />
+          </TabPane>
 
-        {/* Changelog Tab */}
-        <TabPanel value={tabValue} index={0}>
-          <List>
-            {version2.changelog.map((entry, index) => (
-              <ListItem key={index}>
-                <ListItemIcon>
-                  <Chip
-                    label={entry.type}
-                    size="small"
-                    color={getChangeTypeColor(entry.type)}
-                    variant="outlined"
-                  />
-                </ListItemIcon>
-                <ListItemText
-                  primary={entry.description}
-                  secondary={entry.impact && (
-                    <Chip 
-                      label={`${entry.impact} change`}
-                      size="small"
-                      color={getImpactColor(entry.impact)}
-                      variant="outlined"
-                      sx={{ mt: 0.5 }}
-                    />
+          <TabPane 
+            tab={
+              <Badge count={fileDiffs.length} offset={[10, 0]}>
+                Files
+              </Badge>
+            } 
+            key="files"
+          >
+            <Table
+              columns={fileColumns}
+              dataSource={fileDiffs}
+              rowKey="path"
+              pagination={false}
+            />
+          </TabPane>
+
+          <TabPane 
+            tab={
+              <Badge count={conceptDiffs.length} offset={[10, 0]}>
+                Concepts
+              </Badge>
+            } 
+            key="concepts"
+          >
+            <List
+              dataSource={conceptDiffs}
+              renderItem={(concept) => (
+                <List.Item>
+                  <Space align="start" style={{ width: '100%' }}>
+                    {getStatusIcon(concept.status)}
+                    <div style={{ flex: 1 }}>
+                      <Space>
+                        <Text code style={{ fontSize: 12 }}>{concept.conceptId}</Text>
+                        <Text>{concept.label}</Text>
+                        <Tag color={getStatusColor(concept.status)}>
+                          {concept.status.toUpperCase()}
+                        </Tag>
+                      </Space>
+                      {concept.changes && concept.changes.length > 0 && (
+                        <div style={{ marginTop: 8 }}>
+                          {concept.changes.map((change, index) => (
+                            <div key={index} style={{ marginBottom: 8 }}>
+                              <Text type="secondary" strong>{change.field}:</Text>
+                              <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginTop: 4 }}>
+                                <Card size="small" style={{ backgroundColor: '#fff1f0', flex: 1 }}>
+                                  <Text style={{ fontSize: 12 }}>{change.oldValue}</Text>
+                                </Card>
+                                <ArrowRightOutlined style={{ fontSize: 12 }} />
+                                <Card size="small" style={{ backgroundColor: '#f6ffed', flex: 1 }}>
+                                  <Text style={{ fontSize: 12 }}>{change.newValue}</Text>
+                                </Card>
+                              </div>
+                            </div>
+                          ))}
+                        </div>
+                      )}
+                    </div>
+                  </Space>
+                </List.Item>
+              )}
+            />
+          </TabPane>
+
+          <TabPane tab="Summary" key="summary">
+            <Space direction="vertical" size="large" style={{ width: '100%' }}>
+              <Alert
+                message="Compatibility"
+                description={`This version contains ${modificationsCount} modifications and ${removalsCount} removals. Review breaking changes before upgrading.`}
+                type="info"
+                showIcon
+              />
+              
+              <div>
+                <Title level={5}>Key Changes</Title>
+                <List
+                  size="small"
+                  dataSource={[
+                    { icon: <CheckCircleOutlined style={{ color: '#52c41a' }} />, text: 'Enhanced digital resource support' },
+                    { icon: <CheckCircleOutlined style={{ color: '#52c41a' }} />, text: 'Improved area 7 definitions' },
+                    { icon: <WarningOutlined style={{ color: '#faad14' }} />, text: 'Deprecated legacy elements (migration guide available)' },
+                  ]}
+                  renderItem={(item) => (
+                    <List.Item>
+                      <Space>
+                        {item.icon}
+                        <Text>{item.text}</Text>
+                      </Space>
+                    </List.Item>
                   )}
                 />
-              </ListItem>
-            ))}
-          </List>
-        </TabPanel>
+              </div>
 
-        {/* Files Tab */}
-        <TabPanel value={tabValue} index={1}>
-          <TableContainer>
-            <Table>
-              <TableHead>
-                <TableRow>
-                  <TableCell>File</TableCell>
-                  <TableCell>Status</TableCell>
-                  <TableCell>Changes</TableCell>
-                  <TableCell>Preview</TableCell>
-                </TableRow>
-              </TableHead>
-              <TableBody>
-                {fileDiffs.map((file, index) => (
-                  <TableRow key={index}>
-                    <TableCell>
-                      <Typography variant="body2" sx={{ fontFamily: 'monospace' }}>
-                        {file.path}
-                      </Typography>
-                    </TableCell>
-                    <TableCell>
-                      <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-                        {getStatusIcon(file.status)}
-                        <Chip
-                          label={file.status}
-                          size="small"
-                          color={getStatusColor(file.status)}
-                          variant="outlined"
-                        />
-                      </Box>
-                    </TableCell>
-                    <TableCell>
-                      <Box>
-                        {file.linesAdded > 0 && (
-                          <Typography variant="caption" color="success.main">
-                            +{file.linesAdded}
-                          </Typography>
-                        )}
-                        {file.linesAdded > 0 && file.linesRemoved > 0 && ' / '}
-                        {file.linesRemoved > 0 && (
-                          <Typography variant="caption" color="error.main">
-                            -{file.linesRemoved}
-                          </Typography>
-                        )}
-                      </Box>
-                    </TableCell>
-                    <TableCell>
-                      <Typography variant="caption" color="text.secondary">
-                        {file.preview}
-                      </Typography>
-                    </TableCell>
-                  </TableRow>
-                ))}
-              </TableBody>
-            </Table>
-          </TableContainer>
-        </TabPanel>
-
-        {/* Concepts Tab */}
-        <TabPanel value={tabValue} index={2}>
-          <List>
-            {conceptDiffs.map((concept, index) => (
-              <ListItem key={index}>
-                <ListItemIcon>
-                  {getStatusIcon(concept.status)}
-                </ListItemIcon>
-                <ListItemText
-                  primary={
-                    <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-                      <Typography variant="body2" sx={{ fontFamily: 'monospace' }}>
-                        {concept.conceptId}
-                      </Typography>
-                      <Typography variant="body2">
-                        {concept.label}
-                      </Typography>
-                      <Chip
-                        label={concept.status}
-                        size="small"
-                        color={getStatusColor(concept.status)}
-                        variant="outlined"
-                      />
-                    </Box>
-                  }
-                  secondary={
-                    concept.changes && concept.changes.length > 0 && (
-                      <Box sx={{ mt: 1 }}>
-                        {concept.changes.map((change, changeIndex) => (
-                          <Box key={changeIndex} sx={{ mb: 1 }}>
-                            <Typography variant="caption" color="text.secondary">
-                              <strong>{change.field}:</strong>
-                            </Typography>
-                            <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, mt: 0.5 }}>
-                              <Paper variant="outlined" sx={{ p: 1, bgcolor: 'error.50', maxWidth: 200 }}>
-                                <Typography variant="caption" sx={{ wordBreak: 'break-word' }}>
-                                  {change.oldValue}
-                                </Typography>
-                              </Paper>
-                              <ArrowIcon fontSize="small" />
-                              <Paper variant="outlined" sx={{ p: 1, bgcolor: 'success.50', maxWidth: 200 }}>
-                                <Typography variant="caption" sx={{ wordBreak: 'break-word' }}>
-                                  {change.newValue}
-                                </Typography>
-                              </Paper>
-                            </Box>
-                          </Box>
-                        ))}
-                      </Box>
-                    )
-                  }
+              <div>
+                <Title level={5}>Migration Notes</Title>
+                <List
+                  size="small"
+                  dataSource={[
+                    '• Update references to deprecated elements',
+                    '• Review digital resource mappings',
+                    '• Test validation rules with new constraints',
+                  ]}
+                  renderItem={(item) => (
+                    <List.Item>
+                      <Text>{item}</Text>
+                    </List.Item>
+                  )}
                 />
-              </ListItem>
-            ))}
-          </List>
-        </TabPanel>
-
-        {/* Summary Tab */}
-        <TabPanel value={tabValue} index={3}>
-          <Stack spacing={3}>
-            <Alert severity="info">
-              <Typography variant="body2">
-                <strong>Compatibility:</strong> This version contains {modificationsCount} modifications and {removalsCount} removals. 
-                Review breaking changes before upgrading.
-              </Typography>
-            </Alert>
-            
-            <Box>
-              <Typography variant="h6" gutterBottom>
-                Key Changes
-              </Typography>
-              <List dense>
-                <ListItem>
-                  <ListItemIcon>
-                    <CheckIcon color="success" />
-                  </ListItemIcon>
-                  <ListItemText primary="Enhanced digital resource support" />
-                </ListItem>
-                <ListItem>
-                  <ListItemIcon>
-                    <CheckIcon color="success" />
-                  </ListItemIcon>
-                  <ListItemText primary="Improved area 7 definitions" />
-                </ListItem>
-                <ListItem>
-                  <ListItemIcon>
-                    <WarningIcon color="warning" />
-                  </ListItemIcon>
-                  <ListItemText primary="Deprecated legacy elements (migration guide available)" />
-                </ListItem>
-              </List>
-            </Box>
-
-            <Box>
-              <Typography variant="h6" gutterBottom>
-                Migration Notes
-              </Typography>
-              <Typography variant="body2" paragraph>
-                • Update references to deprecated elements
-              </Typography>
-              <Typography variant="body2" paragraph>
-                • Review digital resource mappings
-              </Typography>
-              <Typography variant="body2" paragraph>
-                • Test validation rules with new constraints
-              </Typography>
-            </Box>
-          </Stack>
-        </TabPanel>
+              </div>
+            </Space>
+          </TabPane>
+        </Tabs>
       </Card>
-    </Box>
+    </div>
   );
 }

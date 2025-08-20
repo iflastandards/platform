@@ -2,65 +2,70 @@
 
 import React, { useState } from 'react';
 import {
-  Box,
+  Layout,
   Drawer,
   List,
-  ListItem,
-  ListItemButton,
-  ListItemIcon,
-  ListItemText,
   Typography,
-  Divider,
-  AppBar,
-  Toolbar,
-  IconButton,
-  useTheme,
-  useMediaQuery,
-  Link,
-  Chip,
-  Breadcrumbs,
-} from '@mui/material';
-import { Menu as MenuIcon, NavigateNext } from '@mui/icons-material';
+  Button,
+  Tag,
+  Breadcrumb,
+  Grid,
+  theme,
+} from 'antd';
+import {
+  MenuOutlined,
+  RightOutlined,
+} from '@ant-design/icons';
 import { usePathname } from 'next/navigation';
-import NextLink from 'next/link';
+import Link from 'next/link';
 import { generateBreadcrumbs } from '@/lib/navigation/breadcrumbs';
+
+const { Header, Sider, Content } = Layout;
+const { Title, Text } = Typography;
+const { useBreakpoint } = Grid;
 
 // Skip Links Component (Required for Accessibility)
 const SkipLinks = () => (
-  <Box
-    sx={{
+  <div
+    style={{
       position: 'absolute',
       left: '-9999px',
       top: 0,
-      '&:focus-within': {
-        position: 'static',
-        left: 'auto',
-        top: 'auto',
-        zIndex: 9999,
-        p: 2,
-        bgcolor: 'primary.main',
-      },
+    }}
+    onFocus={(e) => {
+      const target = e.target as HTMLElement;
+      target.style.position = 'static';
+      target.style.left = 'auto';
+      target.style.top = 'auto';
+      target.style.zIndex = '9999';
+      target.style.padding = '16px';
+      target.style.backgroundColor = '#1890ff';
+    }}
+    onBlur={(e) => {
+      const target = e.target as HTMLElement;
+      target.style.position = 'absolute';
+      target.style.left = '-9999px';
     }}
   >
-    <Link href="#main-content" sx={{ color: 'white', mr: 2 }}>
+    <a href="#main-content" style={{ color: 'white', marginRight: 16 }}>
       Skip to main content
-    </Link>
-    <Link href="#navigation" sx={{ color: 'white', mr: 2 }}>
+    </a>
+    <a href="#navigation" style={{ color: 'white', marginRight: 16 }}>
       Skip to navigation
-    </Link>
-    <Link href="#external-resources" sx={{ color: 'white' }}>
+    </a>
+    <a href="#external-resources" style={{ color: 'white' }}>
       Skip to external resources
-    </Link>
-  </Box>
+    </a>
+  </div>
 );
 
 // Live Region for Screen Reader Announcements
 const LiveRegion = ({ message }: { message: string }) => (
-  <Box
+  <div
     role="status"
     aria-live="polite"
     aria-atomic="true"
-    sx={{ 
+    style={{ 
       position: 'absolute',
       left: '-9999px',
       width: '1px',
@@ -69,14 +74,14 @@ const LiveRegion = ({ message }: { message: string }) => (
     }}
   >
     {message}
-  </Box>
+  </div>
 );
 
 export interface NavigationItem {
   id: string;
   label: string;
   href: string;
-  icon: React.ComponentType;
+  icon: React.ComponentType<{ style?: React.CSSProperties }>;
   badge?: () => number | string;
   specialAccess?: boolean;
 }
@@ -97,12 +102,12 @@ export function StandardDashboardLayout({
   footerContent,
 }: StandardDashboardLayoutProps) {
   const [mobileOpen, setMobileOpen] = useState(false);
+  const [collapsed, setCollapsed] = useState(false);
   const [liveMessage, setLiveMessage] = useState('');
-  const theme = useTheme();
-  const isMobile = useMediaQuery(theme.breakpoints.down('md'));
+  const screens = useBreakpoint();
+  const isMobile = !screens.md;
   const pathname = usePathname();
   const breadcrumbs = generateBreadcrumbs(pathname);
-  const drawerWidth = 240;
 
   const handleDrawerToggle = () => {
     setMobileOpen(!mobileOpen);
@@ -118,197 +123,208 @@ export function StandardDashboardLayout({
     setTimeout(() => setLiveMessage(''), 1000);
   };
 
-  const drawer = (
-    <Box role="navigation" aria-label="Dashboard navigation">
-      <Box sx={{ p: 2, borderBottom: 1, borderColor: 'divider' }}>
-        <Typography variant="h6" noWrap component="h2">
+  const drawerContent = (
+    <div role="navigation" aria-label="Dashboard navigation">
+      <div style={{ 
+        padding: 16, 
+        borderBottom: '1px solid #f0f0f0',
+        minHeight: 64,
+        display: 'flex',
+        flexDirection: 'column',
+        justifyContent: 'center'
+      }}>
+        <Title level={5} style={{ margin: 0 }}>
           {title}
-        </Typography>
+        </Title>
         {subtitle && (
-          <Typography variant="caption" color="textSecondary">
+          <Text type="secondary" style={{ fontSize: 12 }}>
             {subtitle}
-          </Typography>
+          </Text>
         )}
-      </Box>
-      <List id="navigation">
-        {navigation.map((item) => {
+      </div>
+      
+      <List
+        id="navigation"
+        dataSource={navigation}
+        renderItem={(item) => {
           const IconComponent = item.icon;
           const isActive = pathname === item.href || 
             (item.href !== '/dashboard' && pathname.startsWith(item.href));
           
           return (
-            <ListItem key={item.id} disablePadding>
-              <ListItemButton
-                component={NextLink}
+            <List.Item
+              key={item.id}
+              style={{ 
+                padding: 0,
+                borderBottom: 'none'
+              }}
+            >
+              <Link
                 href={item.href}
-                selected={isActive}
+                style={{ 
+                  display: 'flex',
+                  alignItems: 'center',
+                  width: '100%',
+                  padding: '12px 16px',
+                  color: isActive ? '#1890ff' : 'inherit',
+                  backgroundColor: isActive ? '#e6f7ff' : 'transparent',
+                  textDecoration: 'none',
+                  transition: 'all 0.3s',
+                }}
                 onClick={() => handleNavigation(item.label)}
                 aria-current={isActive ? 'page' : undefined}
                 aria-label={`${item.label}${item.specialAccess ? ' (Restricted)' : ''}`}
+                onMouseEnter={(e) => {
+                  if (!isActive) {
+                    e.currentTarget.style.backgroundColor = '#fafafa';
+                  }
+                }}
+                onMouseLeave={(e) => {
+                  if (!isActive) {
+                    e.currentTarget.style.backgroundColor = 'transparent';
+                  }
+                }}
               >
-                <ListItemIcon aria-hidden="true">
-                  <IconComponent />
-                </ListItemIcon>
-                <ListItemText 
-                  primary={
-                    <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+                <IconComponent style={{ 
+                  fontSize: 20,
+                  marginRight: collapsed ? 0 : 12,
+                  color: isActive ? '#1890ff' : '#8c8c8c'
+                }} />
+                {!collapsed && (
+                  <>
+                    <span style={{ flex: 1 }}>
                       {item.label}
                       {item.specialAccess && (
-                        <Chip 
-                          label="Restricted" 
-                          size="small" 
-                          color="warning"
-                          sx={{ height: 20 }}
-                        />
+                        <Tag color="warning" style={{ marginLeft: 8 }}>
+                          Restricted
+                        </Tag>
                       )}
-                    </Box>
-                  }
-                />
-                {item.badge && (
-                  <Chip 
-                    label={item.badge()} 
-                    size="small" 
-                    color="primary"
-                  />
+                    </span>
+                    {item.badge && (
+                      <Tag color="blue">
+                        {item.badge()}
+                      </Tag>
+                    )}
+                  </>
                 )}
-              </ListItemButton>
-            </ListItem>
+              </Link>
+            </List.Item>
           );
-        })}
-      </List>
-      {footerContent && (
+        }}
+      />
+      
+      {footerContent && !collapsed && (
         <>
-          <Divider />
-          <Box sx={{ p: 2 }}>
+          <div style={{ borderTop: '1px solid #f0f0f0', margin: '16px 0' }} />
+          <div style={{ padding: 16 }}>
             {footerContent}
-          </Box>
+          </div>
         </>
       )}
-    </Box>
+    </div>
   );
+
+  const { token } = theme.useToken();
 
   return (
     <>
       <SkipLinks />
       <LiveRegion message={liveMessage} />
       
-      <Box sx={{ display: 'flex', minHeight: '100vh' }}>
-        {/* Mobile App Bar */}
+      <Layout style={{ minHeight: '100vh' }}>
+        {/* Mobile Header */}
         {isMobile && (
-          <AppBar
-            position="fixed"
-            sx={{
+          <Header
+            style={{
+              position: 'fixed',
+              top: 0,
+              zIndex: 1000,
               width: '100%',
-              ml: 0,
-              zIndex: theme.zIndex.drawer + 1,
+              padding: '0 16px',
+              background: token.colorBgContainer,
+              borderBottom: '1px solid #f0f0f0',
+              display: 'flex',
+              alignItems: 'center',
             }}
           >
-            <Toolbar>
-              <IconButton
-                color="inherit"
-                aria-label="open navigation menu"
-                edge="start"
-                onClick={handleDrawerToggle}
-                sx={{ mr: 2 }}
-              >
-                <MenuIcon />
-              </IconButton>
-              <Typography variant="h6" noWrap component="h1">
-                {title}
-              </Typography>
-            </Toolbar>
-          </AppBar>
+            <Button
+              type="text"
+              icon={<MenuOutlined />}
+              onClick={handleDrawerToggle}
+              aria-label="open navigation menu"
+              style={{ marginRight: 16 }}
+            />
+            <Title level={4} style={{ margin: 0 }}>
+              {title}
+            </Title>
+          </Header>
         )}
 
-        {/* Sidebar Drawer */}
-        <Box
-          component="nav"
-          sx={{ width: { md: drawerWidth }, flexShrink: { md: 0 } }}
-        >
-          {/* Mobile Drawer */}
+        {/* Mobile Drawer */}
+        {isMobile && (
           <Drawer
-            variant="temporary"
+            placement="left"
             open={mobileOpen}
             onClose={handleDrawerToggle}
-            ModalProps={{
-              keepMounted: true, // Better open performance on mobile
-            }}
-            sx={{
-              display: { xs: 'block', md: 'none' },
-              '& .MuiDrawer-paper': { 
-                boxSizing: 'border-box', 
-                width: drawerWidth,
-                pt: { xs: '64px', md: 0 }, // Account for app bar on mobile
-              },
+            width={240}
+            styles={{
+              body: { padding: 0 },
             }}
           >
-            {drawer}
+            {drawerContent}
           </Drawer>
+        )}
 
-          {/* Desktop Drawer */}
-          <Drawer
-            variant="permanent"
-            sx={{
-              display: { xs: 'none', md: 'block' },
-              '& .MuiDrawer-paper': { 
-                boxSizing: 'border-box', 
-                width: drawerWidth,
-                position: 'relative',
-                height: '100%',
-                borderRight: 1,
-                borderColor: 'divider',
-              },
+        {/* Desktop Sidebar */}
+        {!isMobile && (
+          <Sider
+            width={240}
+            collapsedWidth={80}
+            collapsible
+            collapsed={collapsed}
+            onCollapse={setCollapsed}
+            style={{
+              background: token.colorBgContainer,
+              borderRight: '1px solid #f0f0f0',
             }}
-            open
           >
-            {drawer}
-          </Drawer>
-        </Box>
+            {drawerContent}
+          </Sider>
+        )}
 
         {/* Main Content */}
-        <Box
-          component="main"
-          id="main-content"
-          sx={{
-            flexGrow: 1,
-            p: 3,
-            width: { md: `calc(100% - ${drawerWidth}px)` },
-            mt: { xs: 8, md: 0 },
-            minHeight: '100vh',
-            bgcolor: 'background.default',
-          }}
-        >
-          {/* Breadcrumbs */}
-          {breadcrumbs.length > 1 && (
-            <nav aria-label="Breadcrumb navigation" style={{ marginBottom: '1rem' }}>
-              <Breadcrumbs
-                separator={<NavigateNext fontSize="small" />}
-                aria-label="breadcrumb"
-              >
-                {breadcrumbs.map((crumb, index) => (
-                  index < breadcrumbs.length - 1 ? (
-                    <Link
-                      key={crumb.href}
-                      component={NextLink}
-                      href={crumb.href}
-                      underline="hover"
-                      color="inherit"
-                    >
-                      {crumb.label}
-                    </Link>
-                  ) : (
-                    <Typography key={crumb.href} color="text.primary">
-                      {crumb.label}
-                    </Typography>
-                  )
-                ))}
-              </Breadcrumbs>
-            </nav>
-          )}
+        <Layout>
+          <Content
+            id="main-content"
+            style={{
+              padding: 24,
+              marginTop: isMobile ? 64 : 0,
+              background: token.colorBgLayout,
+              minHeight: 'calc(100vh - 64px)',
+            }}
+          >
+            {/* Breadcrumbs */}
+            {breadcrumbs.length > 1 && (
+              <nav aria-label="Breadcrumb navigation" style={{ marginBottom: 16 }}>
+                <Breadcrumb
+                  separator={<RightOutlined style={{ fontSize: 10 }} />}
+                  items={breadcrumbs.map((crumb, index) => ({
+                    title: index < breadcrumbs.length - 1 ? (
+                      <Link href={crumb.href}>
+                        {crumb.label}
+                      </Link>
+                    ) : (
+                      crumb.label
+                    ),
+                  }))}
+                />
+              </nav>
+            )}
 
-          {children}
-        </Box>
-      </Box>
+            {children}
+          </Content>
+        </Layout>
+      </Layout>
     </>
   );
 }

@@ -3,44 +3,31 @@
 import { useState, useEffect, useMemo } from 'react';
 import Link from 'next/link';
 import {
-  Box,
   Typography,
   Button,
   Card,
-  CardContent,
   Table,
-  TableBody,
-  TableCell,
-  TableContainer,
-  TableHead,
-  TableRow,
-  TableSortLabel,
-  Chip,
-  IconButton,
-  Stack,
-  TextField,
-  InputAdornment,
+  Tag,
+  Input,
   Select,
-  MenuItem,
-  FormControl,
-  InputLabel,
-  TablePagination,
-  Skeleton,
+  Space,
   Alert,
   Tooltip,
-} from '@mui/material';
+  message,
+} from 'antd';
+import type { ColumnsType, TableProps } from 'antd/es/table';
 import {
-  Edit as EditIcon,
-  Delete as DeleteIcon,
-  Add as AddIcon,
-  Search as SearchIcon,
-  Visibility as VisibilityIcon,
-  OpenInNew as OpenInNewIcon,
-  Refresh as RefreshIcon,
-} from '@mui/icons-material';
+  EditOutlined,
+  DeleteOutlined,
+  PlusOutlined,
+  SearchOutlined,
+  EyeOutlined,
+  ExportOutlined,
+  ReloadOutlined,
+} from '@ant-design/icons';
 import { mockNamespaceData } from '@/lib/mock-namespace-data';
 
-type Order = 'asc' | 'desc';
+const { Title, Text } = Typography;
 
 interface Namespace {
   id: string;
@@ -55,23 +42,6 @@ interface Namespace {
   lastModified?: string;
   createdAt?: string;
 }
-
-interface HeadCell {
-  id: keyof Namespace | 'statistics' | 'actions';
-  label: string;
-  numeric: boolean;
-  sortable: boolean;
-}
-
-const headCells: HeadCell[] = [
-  { id: 'name', label: 'Namespace', numeric: false, sortable: true },
-  { id: 'reviewGroup', label: 'Review Group', numeric: false, sortable: true },
-  { id: 'statistics', label: 'Statistics', numeric: false, sortable: false },
-  { id: 'visibility', label: 'Visibility', numeric: false, sortable: true },
-  { id: 'status', label: 'Status', numeric: false, sortable: true },
-  { id: 'lastModified', label: 'Last Modified', numeric: false, sortable: true },
-  { id: 'actions', label: 'Actions', numeric: false, sortable: false },
-];
 
 async function fetchNamespaces(): Promise<Namespace[]> {
   try {
@@ -132,13 +102,9 @@ async function fetchNamespaceStats(namespaceId: string) {
 }
 
 export function AdminNamespacesPage() {
-  const [order, setOrder] = useState<Order>('asc');
-  const [orderBy, setOrderBy] = useState<keyof Namespace>('name');
   const [searchQuery, setSearchQuery] = useState('');
   const [statusFilter, setStatusFilter] = useState<string>('all');
   const [visibilityFilter, setVisibilityFilter] = useState<string>('all');
-  const [page, setPage] = useState(0);
-  const [rowsPerPage, setRowsPerPage] = useState(10);
   const [namespaceStats, setNamespaceStats] = useState<Record<string, any>>({});
   const [namespaces, setNamespaces] = useState<Namespace[]>([]);
   const [isLoading, setIsLoading] = useState(true);
@@ -154,6 +120,7 @@ export function AdminNamespacesPage() {
         setError(null);
       } catch (err) {
         setError(err as Error);
+        message.error('Failed to load namespaces');
       } finally {
         setIsLoading(false);
       }
@@ -168,8 +135,10 @@ export function AdminNamespacesPage() {
       const data = await fetchNamespaces();
       setNamespaces(data);
       setError(null);
+      message.success('Namespaces refreshed');
     } catch (err) {
       setError(err as Error);
+      message.error('Failed to refresh namespaces');
     } finally {
       setIsLoading(false);
     }
@@ -198,21 +167,6 @@ export function AdminNamespacesPage() {
     }
   }, [namespaces]);
 
-  const handleRequestSort = (property: keyof Namespace) => {
-    const isAsc = orderBy === property && order === 'asc';
-    setOrder(isAsc ? 'desc' : 'asc');
-    setOrderBy(property);
-  };
-
-  const handleChangePage = (_event: unknown, newPage: number) => {
-    setPage(newPage);
-  };
-
-  const handleChangeRowsPerPage = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setRowsPerPage(parseInt(event.target.value, 10));
-    setPage(0);
-  };
-
   const filteredNamespaces = useMemo(() => {
     let filtered = [...namespaces];
 
@@ -237,33 +191,8 @@ export function AdminNamespacesPage() {
       filtered = filtered.filter((ns) => ns.visibility === visibilityFilter);
     }
 
-    // Apply sorting
-    filtered.sort((a, b) => {
-      let aValue = a[orderBy];
-      let bValue = b[orderBy];
-
-      // Handle undefined values
-      if (aValue === undefined) aValue = '';
-      if (bValue === undefined) bValue = '';
-
-      // Convert to lowercase for string comparison
-      if (typeof aValue === 'string') aValue = aValue.toLowerCase();
-      if (typeof bValue === 'string') bValue = bValue.toLowerCase();
-
-      if (order === 'asc') {
-        return aValue < bValue ? -1 : aValue > bValue ? 1 : 0;
-      } else {
-        return aValue > bValue ? -1 : aValue < bValue ? 1 : 0;
-      }
-    });
-
     return filtered;
-  }, [namespaces, searchQuery, statusFilter, visibilityFilter, order, orderBy]);
-
-  const paginatedNamespaces = useMemo(() => {
-    const start = page * rowsPerPage;
-    return filteredNamespaces.slice(start, start + rowsPerPage);
-  }, [filteredNamespaces, page, rowsPerPage]);
+  }, [namespaces, searchQuery, statusFilter, visibilityFilter]);
 
   const getStatusColor = (status: string) => {
     switch (status) {
@@ -279,279 +208,222 @@ export function AdminNamespacesPage() {
   };
 
   const getVisibilityColor = (visibility: string) => {
-    return visibility === 'public' ? 'info' : 'default';
+    return visibility === 'public' ? 'blue' : 'default';
+  };
+
+  const handleDelete = async (id: string) => {
+    // Implement delete logic
+    message.info('Delete functionality not implemented');
+  };
+
+  const columns: ColumnsType<Namespace> = [
+    {
+      title: 'Namespace',
+      dataIndex: 'name',
+      key: 'name',
+      sorter: (a, b) => a.name.localeCompare(b.name),
+      render: (name: string, record) => (
+        <Tooltip title={record.description || name} placement="top">
+          <Link
+            href={`/namespaces/${record.id}`}
+            style={{ color: '#1890ff', fontWeight: 500 }}
+          >
+            {name}
+          </Link>
+        </Tooltip>
+      ),
+    },
+    {
+      title: 'Review Group',
+      dataIndex: 'reviewGroup',
+      key: 'reviewGroup',
+      sorter: (a, b) => (a.reviewGroup || '').localeCompare(b.reviewGroup || ''),
+      render: (reviewGroup: string) =>
+        reviewGroup ? (
+          <Link href={`/dashboard/admin/review-groups/${reviewGroup}`}>
+            <Tag style={{ cursor: 'pointer' }}>{reviewGroup}</Tag>
+          </Link>
+        ) : (
+          <Text type="secondary">—</Text>
+        ),
+    },
+    {
+      title: 'Statistics',
+      key: 'statistics',
+      render: (_, record) => {
+        const stats = namespaceStats[record.id] || {
+          conceptSchemes: record.conceptSchemes || 0,
+          elementSets: record.elementSets || 0,
+          vocabularies: 0,
+        };
+        return (
+          <Space>
+            <Tooltip title="Element Sets">
+              <Tag>Elements: {record.elementSets || stats.elementSets || 0}</Tag>
+            </Tooltip>
+            <Tooltip title="Vocabularies / Concept Schemes">
+              <Tag>
+                Vocabularies: {record.conceptSchemes || stats.conceptSchemes || stats.vocabularies || 0}
+              </Tag>
+            </Tooltip>
+          </Space>
+        );
+      },
+    },
+    {
+      title: 'Visibility',
+      dataIndex: 'visibility',
+      key: 'visibility',
+      sorter: (a, b) => a.visibility.localeCompare(b.visibility),
+      render: (visibility: string) => (
+        <Tag color={getVisibilityColor(visibility)}>{visibility}</Tag>
+      ),
+    },
+    {
+      title: 'Status',
+      dataIndex: 'status',
+      key: 'status',
+      sorter: (a, b) => (a.status || 'active').localeCompare(b.status || 'active'),
+      render: (status: string) => (
+        <Tag color={getStatusColor(status || 'active')}>{status || 'active'}</Tag>
+      ),
+    },
+    {
+      title: 'Last Modified',
+      dataIndex: 'lastModified',
+      key: 'lastModified',
+      sorter: (a, b) => {
+        const dateA = a.lastModified || a.createdAt || '';
+        const dateB = b.lastModified || b.createdAt || '';
+        return dateA.localeCompare(dateB);
+      },
+      render: (lastModified: string, record) => (
+        <Text type="secondary" style={{ fontSize: 12 }}>
+          {lastModified
+            ? new Date(lastModified).toLocaleDateString()
+            : record.createdAt
+            ? new Date(record.createdAt).toLocaleDateString()
+            : '—'}
+        </Text>
+      ),
+    },
+    {
+      title: 'Actions',
+      key: 'actions',
+      align: 'right',
+      render: (_, record) => (
+        <Space>
+          <Tooltip title="View">
+            <Link href={`/namespaces/${record.id}`}>
+              <Button icon={<EyeOutlined />} size="small" />
+            </Link>
+          </Tooltip>
+          <Tooltip title="Open in Portal">
+            <a
+              href={`https://standards.iflastandards.info/${record.id}`}
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              <Button icon={<ExportOutlined />} size="small" />
+            </a>
+          </Tooltip>
+          <Tooltip title="Edit">
+            <Link href={`/dashboard/admin/namespaces/${record.id}/edit`}>
+              <Button icon={<EditOutlined />} size="small" />
+            </Link>
+          </Tooltip>
+          <Tooltip title="Delete">
+            <Button
+              icon={<DeleteOutlined />}
+              size="small"
+              danger
+              onClick={() => handleDelete(record.id)}
+            />
+          </Tooltip>
+        </Space>
+      ),
+    },
+  ];
+
+  const tableProps: TableProps<Namespace> = {
+    columns,
+    dataSource: filteredNamespaces,
+    rowKey: 'id',
+    loading: isLoading,
+    pagination: {
+      defaultPageSize: 10,
+      showSizeChanger: true,
+      showTotal: (total) => `Total ${total} namespaces`,
+    },
+    scroll: { x: 1200 },
   };
 
   if (error) {
     return (
-      <Box>
-        <Alert severity="error" sx={{ mb: 2 }}>
-          Failed to load namespaces. Please try again.
-        </Alert>
-        <Button onClick={() => refetch()} startIcon={<RefreshIcon />}>
+      <div>
+        <Alert
+          message="Failed to load namespaces. Please try again."
+          type="error"
+          showIcon
+          style={{ marginBottom: 16 }}
+        />
+        <Button onClick={refetch} icon={<ReloadOutlined />}>
           Retry
         </Button>
-      </Box>
+      </div>
     );
   }
 
   return (
-    <Box>
-      <Box display="flex" justifyContent="space-between" alignItems="center" mb={3}>
-        <Typography variant="h4" component="h1">
-          Namespace Management
-        </Typography>
-        <Button
-          variant="contained"
-          startIcon={<AddIcon />}
-          component={Link}
-          href="/dashboard/admin/namespaces/create"
-        >
-          Create Namespace
-        </Button>
-      </Box>
+    <div>
+      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 24 }}>
+        <Title level={2}>Namespace Management</Title>
+        <Link href="/dashboard/admin/namespaces/create">
+          <Button type="primary" icon={<PlusOutlined />}>
+            Create Namespace
+          </Button>
+        </Link>
+      </div>
 
-      <Card elevation={0}>
-        <CardContent>
-          {/* Filters */}
-          <Box sx={{ mb: 3 }}>
-            <Stack direction="row" spacing={2} alignItems="center">
-              <TextField
-                size="small"
-                placeholder="Search namespaces..."
-                value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
-                sx={{ flexGrow: 1, maxWidth: 400 }}
-                slotProps={{
-                  input: {
-                    startAdornment: (
-                      <InputAdornment position="start">
-                        <SearchIcon />
-                      </InputAdornment>
-                    ),
-                  },
-                }}
-              />
-              <FormControl size="small" sx={{ minWidth: 120 }}>
-                <InputLabel>Status</InputLabel>
-                <Select
-                  value={statusFilter}
-                  label="Status"
-                  onChange={(e) => setStatusFilter(e.target.value)}
-                >
-                  <MenuItem value="all">All</MenuItem>
-                  <MenuItem value="active">Active</MenuItem>
-                  <MenuItem value="inactive">Inactive</MenuItem>
-                  <MenuItem value="archived">Archived</MenuItem>
-                </Select>
-              </FormControl>
-              <FormControl size="small" sx={{ minWidth: 120 }}>
-                <InputLabel>Visibility</InputLabel>
-                <Select
-                  value={visibilityFilter}
-                  label="Visibility"
-                  onChange={(e) => setVisibilityFilter(e.target.value)}
-                >
-                  <MenuItem value="all">All</MenuItem>
-                  <MenuItem value="public">Public</MenuItem>
-                  <MenuItem value="private">Private</MenuItem>
-                </Select>
-              </FormControl>
-              <IconButton onClick={() => refetch()} size="small">
-                <RefreshIcon />
-              </IconButton>
-            </Stack>
-          </Box>
-
-          {/* Table */}
-          <TableContainer>
-            <Table>
-              <TableHead>
-                <TableRow>
-                  {headCells.map((headCell) => (
-                    <TableCell
-                      key={headCell.id}
-                      align={headCell.numeric ? 'right' : 'left'}
-                      sortDirection={orderBy === headCell.id ? order : false}
-                    >
-                      {headCell.sortable ? (
-                        <TableSortLabel
-                          active={orderBy === headCell.id}
-                          direction={orderBy === headCell.id ? order : 'asc'}
-                          onClick={() => handleRequestSort(headCell.id as keyof Namespace)}
-                        >
-                          {headCell.label}
-                        </TableSortLabel>
-                      ) : (
-                        headCell.label
-                      )}
-                    </TableCell>
-                  ))}
-                </TableRow>
-              </TableHead>
-              <TableBody>
-                {isLoading ? (
-                  // Loading skeletons
-                  Array.from({ length: 5 }).map((_, index) => (
-                    <TableRow key={index}>
-                      {headCells.map((cell) => (
-                        <TableCell key={cell.id}>
-                          <Skeleton variant="text" />
-                        </TableCell>
-                      ))}
-                    </TableRow>
-                  ))
-                ) : paginatedNamespaces.length === 0 ? (
-                  <TableRow>
-                    <TableCell colSpan={headCells.length} align="center">
-                      <Typography variant="body2" color="text.secondary" sx={{ py: 3 }}>
-                        No namespaces found
-                      </Typography>
-                    </TableCell>
-                  </TableRow>
-                ) : (
-                  paginatedNamespaces.map((namespace) => {
-                    const stats = namespaceStats[namespace.id] || {
-                      conceptSchemes: namespace.conceptSchemes || 0,
-                      elementSets: namespace.elementSets || 0,
-                      vocabularies: 0,
-                    };
-                    return (
-                      <TableRow key={namespace.id} hover>
-                        <TableCell>
-                          <Tooltip title={namespace.description || namespace.name} arrow placement="top">
-                            <Typography
-                              component={Link}
-                              href={`/namespaces/${namespace.id}`}
-                              sx={{
-                                textDecoration: 'none',
-                                color: 'primary.main',
-                                fontWeight: 500,
-                                '&:hover': { textDecoration: 'underline' },
-                                cursor: 'pointer',
-                              }}
-                            >
-                              {namespace.name}
-                            </Typography>
-                          </Tooltip>
-                        </TableCell>
-                        <TableCell>
-                          {namespace.reviewGroup ? (
-                            <Chip
-                              label={namespace.reviewGroup}
-                              size="small"
-                              component={Link}
-                              href={`/dashboard/admin/review-groups/${namespace.reviewGroup}`}
-                              sx={{ cursor: 'pointer' }}
-                            />
-                          ) : (
-                            <Typography variant="body2" color="text.secondary">
-                              —
-                            </Typography>
-                          )}
-                        </TableCell>
-                        <TableCell>
-                          <Stack direction="row" spacing={1}>
-                            <Tooltip title="Element Sets">
-                              <Chip
-                                label={`Elements: ${namespace.elementSets || stats.elementSets || 0}`}
-                                size="small"
-                                variant="outlined"
-                              />
-                            </Tooltip>
-                            <Tooltip title="Vocabularies / Concept Schemes">
-                              <Chip
-                                label={`Vocabularies: ${namespace.conceptSchemes || stats.conceptSchemes || stats.vocabularies || 0}`}
-                                size="small"
-                                variant="outlined"
-                              />
-                            </Tooltip>
-                          </Stack>
-                        </TableCell>
-                        <TableCell>
-                          <Chip
-                            label={namespace.visibility}
-                            size="small"
-                            color={getVisibilityColor(namespace.visibility)}
-                          />
-                        </TableCell>
-                        <TableCell>
-                          <Chip
-                            label={namespace.status || 'active'}
-                            size="small"
-                            color={getStatusColor(namespace.status || 'active')}
-                          />
-                        </TableCell>
-                        <TableCell>
-                          <Typography variant="caption">
-                            {namespace.lastModified
-                              ? new Date(namespace.lastModified).toLocaleDateString()
-                              : namespace.createdAt
-                              ? new Date(namespace.createdAt).toLocaleDateString()
-                              : '—'}
-                          </Typography>
-                        </TableCell>
-                        <TableCell align="right">
-                          <Stack direction="row" spacing={1} justifyContent="flex-end">
-                            <Tooltip title="View">
-                              <IconButton
-                                size="small"
-                                component={Link}
-                                href={`/namespaces/${namespace.id}`}
-                              >
-                                <VisibilityIcon fontSize="small" />
-                              </IconButton>
-                            </Tooltip>
-                            <Tooltip title="Edit">
-                              <IconButton
-                                size="small"
-                                component={Link}
-                                href={`/dashboard/admin/namespaces/${namespace.id}/edit`}
-                              >
-                                <EditIcon fontSize="small" />
-                              </IconButton>
-                            </Tooltip>
-                            <Tooltip title="Open in GitHub">
-                              <IconButton
-                                size="small"
-                                component={Link}
-                                href={`https://github.com/iflastandards/${namespace.id}`}
-                                target="_blank"
-                              >
-                                <OpenInNewIcon fontSize="small" />
-                              </IconButton>
-                            </Tooltip>
-                            <Tooltip title="Delete">
-                              <IconButton
-                                size="small"
-                                color="error"
-                                aria-label={`Delete ${namespace.name}`}
-                              >
-                                <DeleteIcon fontSize="small" />
-                              </IconButton>
-                            </Tooltip>
-                          </Stack>
-                        </TableCell>
-                      </TableRow>
-                    );
-                  })
-                )}
-              </TableBody>
-            </Table>
-          </TableContainer>
-
-          {/* Pagination */}
-          <TablePagination
-            rowsPerPageOptions={[5, 10, 25, 50]}
-            component="div"
-            count={filteredNamespaces.length}
-            rowsPerPage={rowsPerPage}
-            page={page}
-            onPageChange={handleChangePage}
-            onRowsPerPageChange={handleChangeRowsPerPage}
+      <Card>
+        {/* Filters */}
+        <Space style={{ marginBottom: 24 }} wrap>
+          <Input
+            placeholder="Search namespaces..."
+            prefix={<SearchOutlined />}
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+            style={{ width: 300 }}
           />
-        </CardContent>
+          <Select
+            value={statusFilter}
+            onChange={setStatusFilter}
+            style={{ width: 120 }}
+            options={[
+              { value: 'all', label: 'All Status' },
+              { value: 'active', label: 'Active' },
+              { value: 'inactive', label: 'Inactive' },
+              { value: 'archived', label: 'Archived' },
+            ]}
+          />
+          <Select
+            value={visibilityFilter}
+            onChange={setVisibilityFilter}
+            style={{ width: 120 }}
+            options={[
+              { value: 'all', label: 'All Visibility' },
+              { value: 'public', label: 'Public' },
+              { value: 'private', label: 'Private' },
+            ]}
+          />
+          <Button icon={<ReloadOutlined />} onClick={refetch}>
+            Refresh
+          </Button>
+        </Space>
+
+        {/* Table */}
+        <Table {...tableProps} />
       </Card>
-    </Box>
+    </div>
   );
 }

@@ -1,8 +1,10 @@
 'use client';
 
 import React from 'react';
-import { Typography, Box } from '@mui/material';
+import { Typography } from 'antd';
 import { ActionGrid, ManagementAction } from './ActionGrid';
+
+const { Title, Text } = Typography;
 
 interface SiteContentManagementPageProps {
   siteKey: string;
@@ -43,17 +45,15 @@ const contentActions: ManagementAction[] = [
 
 export function SiteContentManagementPage({ siteKey }: SiteContentManagementPageProps) {
   return (
-    <Box>
-      <Box sx={{ mb: 3 }}>
-        <Typography variant="h4" gutterBottom component="h1">
-          Content Management
-        </Typography>
-        <Typography variant="body1" color="textSecondary">
+    <div>
+      <div style={{ marginBottom: 24 }}>
+        <Title level={2}>Content Management</Title>
+        <Text type="secondary">
           Manage documentation content, pages, and site structure for {siteKey.toUpperCase()}
-        </Typography>
-      </Box>
+        </Text>
+      </div>
 
       <ActionGrid actions={contentActions} />
-    </Box>
+    </div>
   );
 }

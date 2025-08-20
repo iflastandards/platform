@@ -1,8 +1,10 @@
 'use client';
 
 import React from 'react';
-import { Typography, Box } from '@mui/material';
+import { Typography } from 'antd';
 import { ActionGrid, ManagementAction } from './ActionGrid';
+
+const { Title, Text } = Typography;
 
 interface SiteElementsPageProps {
   siteKey: string;
@@ -37,17 +39,15 @@ const elementActions: ManagementAction[] = [
 
 export function SiteElementsPage({ siteKey }: SiteElementsPageProps) {
   return (
-    <Box>
-      <Box sx={{ mb: 3 }}>
-        <Typography variant="h4" gutterBottom component="h1">
-          Elements
-        </Typography>
-        <Typography variant="body1" color="textSecondary">
+    <div>
+      <div style={{ marginBottom: 24 }}>
+        <Title level={2}>Elements</Title>
+        <Text type="secondary">
           Manage element sets and definitions for {siteKey.toUpperCase()}
-        </Typography>
-      </Box>
+        </Text>
+      </div>
 
       <ActionGrid actions={elementActions} />
-    </Box>
+    </div>
   );
 }

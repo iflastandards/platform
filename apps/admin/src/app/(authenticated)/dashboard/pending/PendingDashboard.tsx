@@ -1,26 +1,22 @@
 'use client';
 
-import React, { useState } from 'react';
+import { useState } from 'react';
+import { Typography, Alert, Button, Card, Space, Tag } from 'antd';
 import {
-  Typography,
-  Box,
-  Paper,
-  Alert,
-  Button,
-  Card,
-  CardContent,
-  Stack,
-  Chip,
-} from '@mui/material';
-import {
-  Email,
-  GitHub,
-  AccessTime,
-  HelpOutline,
-  Person,
-} from '@mui/icons-material';
+  MailOutlined,
+  GithubOutlined,
+  ClockCircleOutlined,
+  QuestionCircleOutlined,
+  UserOutlined,
+  ReloadOutlined,
+} from '@ant-design/icons';
 import { AppUser } from '@/lib/clerk-github-auth';
-import { TabBasedDashboardLayout, NavigationItem } from '@/components/layout/TabBasedDashboardLayout';
+import {
+  TabBasedDashboardLayout,
+  NavigationItem,
+} from '@/components/layout/TabBasedDashboardLayout';
+
+const { Title, Text, Paragraph } = Typography;
 
 interface PendingDashboardProps {
   user: AppUser;
@@ -29,11 +25,11 @@ interface PendingDashboardProps {
 export default function PendingDashboard({ user }: PendingDashboardProps) {
   const [selectedTab, setSelectedTab] = useState('status');
   const isDemo = process.env.NEXT_PUBLIC_IFLA_DEMO === 'true';
-  
+
   const navigationItems: NavigationItem[] = [
-    { id: 'status', label: 'Account Status', icon: AccessTime },
-    { id: 'profile', label: 'My Profile', icon: Person },
-    { id: 'help', label: 'Getting Started', icon: HelpOutline },
+    { id: 'status', label: 'Account Status', icon: ClockCircleOutlined },
+    { id: 'profile', label: 'My Profile', icon: UserOutlined },
+    { id: 'help', label: 'Getting Started', icon: QuestionCircleOutlined },
   ];
 
   const renderContent = () => {
@@ -41,177 +37,191 @@ export default function PendingDashboard({ user }: PendingDashboardProps) {
       case 'status':
         return (
           <>
-            <Box sx={{ textAlign: 'center', mb: 4 }}>
-              <AccessTime sx={{ fontSize: 64, color: 'warning.main', mb: 2 }} aria-hidden="true" />
-              <Typography variant="h4" component="h1" gutterBottom>
-                Welcome to IFLA Standards Admin Portal
-              </Typography>
-              <Typography variant="h6" color="text.secondary" gutterBottom>
+            <div style={{ textAlign: 'center', marginBottom: '32px' }}>
+              <ClockCircleOutlined
+                style={{
+                  fontSize: '64px',
+                  color: '#faad14',
+                  marginBottom: '16px',
+                }}
+                aria-hidden="true"
+              />
+              <Title level={2}>Welcome to IFLA Standards Admin Portal</Title>
+              <Title level={4} type="secondary">
                 Your account is pending assignment
-              </Typography>
-            </Box>
+              </Title>
+            </div>
 
-            <Alert severity="info" sx={{ mb: 4 }}>
-              <Typography variant="body1">
-                Hello <strong>{user.name}</strong>, your account has been created successfully, 
-                but you haven&apos;t been assigned to any Review Groups or Projects yet.
-              </Typography>
-            </Alert>
+            <Alert
+              type="info"
+              message={
+                <Text>
+                  Hello <strong>{user.name}</strong>, your account has been
+                  created successfully, but you haven&apos;t been assigned to
+                  any Review Groups or Projects yet.
+                </Text>
+              }
+              style={{ marginBottom: '32px' }}
+            />
 
-            <Paper sx={{ p: 3, bgcolor: 'background.default' }}>
-              <Typography variant="h6" gutterBottom sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-                <HelpOutline aria-hidden="true" /> What happens next?
-              </Typography>
-              <Typography variant="body1" paragraph>
-                A Review Group administrator needs to:
-              </Typography>
+            <Card style={{ backgroundColor: '#fafafa' }}>
+              <Space align="start" style={{ marginBottom: '16px' }}>
+                <QuestionCircleOutlined aria-hidden="true" />
+                <Title level={5} style={{ margin: 0 }}>
+                  What happens next?
+                </Title>
+              </Space>
+              <Paragraph>A Review Group administrator needs to:</Paragraph>
               <ol>
                 <li>
-                  <Typography variant="body1">
+                  <Text>
                     Add you to one or more Review Groups (GitHub Teams)
-                  </Typography>
+                  </Text>
                 </li>
                 <li>
-                  <Typography variant="body1">
+                  <Text>
                     Assign you to specific Projects within those groups
-                  </Typography>
+                  </Text>
                 </li>
                 <li>
-                  <Typography variant="body1">
-                    Grant you access to the relevant namespaces
-                  </Typography>
+                  <Text>Grant you access to the relevant namespaces</Text>
                 </li>
               </ol>
-              <Typography variant="body2" color="text.secondary" sx={{ mt: 2 }}>
-                Once you&apos;ve been assigned, you&apos;ll automatically gain access to the appropriate 
-                dashboards and tools based on your role.
-              </Typography>
-            </Paper>
+              <Text
+                type="secondary"
+                style={{ display: 'block', marginTop: '16px' }}
+              >
+                Once you&apos;ve been assigned, you&apos;ll automatically gain
+                access to the appropriate dashboards and tools based on your
+                role.
+              </Text>
+            </Card>
 
-            <Box sx={{ mt: 4, textAlign: 'center' }}>
-              <Stack spacing={2} direction="row" justifyContent="center">
+            <div style={{ marginTop: '32px', textAlign: 'center' }}>
+              <Space size="middle">
                 <Button
-                  variant="outlined"
+                  icon={<MailOutlined />}
                   href="mailto:ifla-standards-admin@ifla.org"
-                  startIcon={<Email />}
                   aria-label="Send email to administrator"
                 >
                   Contact Administrator
                 </Button>
                 <Button
-                  variant="contained"
+                  type="primary"
+                  icon={<ReloadOutlined />}
                   onClick={() => window.location.reload()}
-                  startIcon={<AccessTime />}
                   aria-label="Refresh page to check for updates"
                 >
                   Check Again
                 </Button>
-              </Stack>
-            </Box>
+              </Space>
+            </div>
           </>
         );
 
       case 'profile':
         return (
-          <Box>
-            <Typography variant="h4" component="h1" gutterBottom>
-              My Profile
-            </Typography>
+          <div>
+            <Title level={2}>My Profile</Title>
             <Card>
-              <CardContent>
-                <Typography variant="h6" gutterBottom>
-                  Account Information
-                </Typography>
-                <Stack spacing={2}>
-                  <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-                    <Email color="action" aria-hidden="true" />
-                    <Typography>{user.email}</Typography>
-                  </Box>
-                  {user.githubUsername && (
-                    <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-                      <GitHub aria-hidden="true" />
-                      <Typography>@{user.githubUsername}</Typography>
-                      {isDemo && <Chip label="Demo Mode" size="small" color="warning" />}
-                    </Box>
-                  )}
-                  <Box sx={{ mt: 2 }}>
-                    <Chip label="Pending Assignment" color="warning" />
-                  </Box>
-                </Stack>
-              </CardContent>
+              <Title level={4}>Account Information</Title>
+              <Space
+                direction="vertical"
+                size="middle"
+                style={{ width: '100%' }}
+              >
+                <Space>
+                  <MailOutlined
+                    style={{ color: 'rgba(0, 0, 0, 0.45)' }}
+                    aria-hidden="true"
+                  />
+                  <Text>{user.email}</Text>
+                </Space>
+                {user.githubUsername && (
+                  <Space>
+                    <GithubOutlined aria-hidden="true" />
+                    <Text>@{user.githubUsername}</Text>
+                    {isDemo && <Tag color="warning">Demo Mode</Tag>}
+                  </Space>
+                )}
+                <div style={{ marginTop: '16px' }}>
+                  <Tag color="warning">Pending Assignment</Tag>
+                </div>
+              </Space>
             </Card>
-          </Box>
+          </div>
         );
 
       case 'help':
         return (
-          <Box>
-            <Typography variant="h4" component="h1" gutterBottom>
-              Getting Started
-            </Typography>
-            <Stack spacing={3}>
+          <div>
+            <Title level={2}>Getting Started</Title>
+            <Space direction="vertical" size="large" style={{ width: '100%' }}>
               <Card>
-                <CardContent>
-                  <Typography variant="h6" gutterBottom>
-                    About IFLA Standards Platform
-                  </Typography>
-                  <Typography variant="body1" paragraph>
-                    The IFLA Standards Platform is a collaborative environment for managing 
-                    and developing international library standards. Once you&apos;re assigned to 
-                    a Review Group, you&apos;ll be able to:
-                  </Typography>
-                  <ul>
-                    <li>
-                      <Typography variant="body2">
-                        Access and edit vocabulary namespaces
-                      </Typography>
-                    </li>
-                    <li>
-                      <Typography variant="body2">
-                        Participate in review cycles
-                      </Typography>
-                    </li>
-                    <li>
-                      <Typography variant="body2">
-                        Contribute translations
-                      </Typography>
-                    </li>
-                    <li>
-                      <Typography variant="body2">
-                        Export and import vocabulary data
-                      </Typography>
-                    </li>
-                  </ul>
-                </CardContent>
+                <Title level={4}>About IFLA Standards Platform</Title>
+                <Paragraph>
+                  The IFLA Standards Platform is a collaborative environment for
+                  managing and developing international library standards. Once
+                  you&apos;re assigned to a Review Group, you&apos;ll be able
+                  to:
+                </Paragraph>
+                <ul>
+                  <li>
+                    <Text>Access and edit vocabulary namespaces</Text>
+                  </li>
+                  <li>
+                    <Text>Participate in review cycles</Text>
+                  </li>
+                  <li>
+                    <Text>Contribute translations</Text>
+                  </li>
+                  <li>
+                    <Text>Export and import vocabulary data</Text>
+                  </li>
+                </ul>
               </Card>
 
               <Card>
-                <CardContent>
-                  <Typography variant="h6" gutterBottom>
-                    Roles and Permissions
-                  </Typography>
-                  <Typography variant="body2" paragraph>
-                    The platform uses role-based access control. Common roles include:
-                  </Typography>
-                  <Stack spacing={1}>
-                    <Chip label="Maintainer" size="small" /> - Full control over Review Group
-                  </Stack>
-                  <Stack spacing={1} sx={{ mt: 1 }}>
-                    <Chip label="Lead" size="small" /> - Project management capabilities
-                  </Stack>
-                  <Stack spacing={1} sx={{ mt: 1 }}>
-                    <Chip label="Editor" size="small" /> - Content editing permissions
-                  </Stack>
-                  <Stack spacing={1} sx={{ mt: 1 }}>
-                    <Chip label="Reviewer" size="small" /> - Review and approve changes
-                  </Stack>
-                  <Stack spacing={1} sx={{ mt: 1 }}>
-                    <Chip label="Translator" size="small" /> - Multilingual content contribution
-                  </Stack>
-                </CardContent>
+                <Title level={4}>Roles and Permissions</Title>
+                <Paragraph>
+                  The platform uses role-based access control. Common roles
+                  include:
+                </Paragraph>
+                <Space
+                  direction="vertical"
+                  size="small"
+                  style={{ width: '100%' }}
+                >
+                  <Space>
+                    <Tag>Maintainer</Tag>
+                    <Text type="secondary">
+                      - Full control over Review Group
+                    </Text>
+                  </Space>
+                  <Space>
+                    <Tag>Lead</Tag>
+                    <Text type="secondary">
+                      - Project management capabilities
+                    </Text>
+                  </Space>
+                  <Space>
+                    <Tag>Editor</Tag>
+                    <Text type="secondary">- Content editing permissions</Text>
+                  </Space>
+                  <Space>
+                    <Tag>Reviewer</Tag>
+                    <Text type="secondary">- Review and approve changes</Text>
+                  </Space>
+                  <Space>
+                    <Tag>Translator</Tag>
+                    <Text type="secondary">
+                      - Multilingual content contribution
+                    </Text>
+                  </Space>
+                </Space>
               </Card>
-            </Stack>
-          </Box>
+            </Space>
+          </div>
         );
 
       default:

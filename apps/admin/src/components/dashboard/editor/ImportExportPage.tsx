@@ -2,91 +2,79 @@
 
 import React from 'react';
 import {
-  Box,
   Typography,
   Card,
-  CardContent,
   Button,
   Alert,
-  AlertTitle,
-} from '@mui/material';
-import Grid from '@mui/material/Grid';
+  Row,
+  Col,
+} from 'antd';
 import {
-  FileUpload as ImportIcon,
-  FileDownload as ExportIcon,
-} from '@mui/icons-material';
+  UploadOutlined,
+  DownloadOutlined,
+} from '@ant-design/icons';
 import Link from 'next/link';
+
+const { Title, Text } = Typography;
 
 export function ImportExportPage() {
   return (
-    <Box>
-      <Typography variant="h4" component="h1" gutterBottom>
-        Import/Export Tools
-      </Typography>
+    <div>
+      <Title level={2} style={{ marginBottom: 24 }}>Import/Export Tools</Title>
       
-      <Alert severity="info" sx={{ mb: 3 }}>
-        <AlertTitle>Vocabulary Management</AlertTitle>
-        Import vocabularies from spreadsheets or export them for external editing and review.
-      </Alert>
+      <Alert
+        message="Vocabulary Management"
+        description="Import vocabularies from spreadsheets or export them for external editing and review."
+        type="info"
+        showIcon
+        style={{ marginBottom: 24 }}
+      />
 
-      <Grid container spacing={3}>
-        <Grid size={{ xs: 12, md: 6 }}>
-          <Card>
-            <CardContent>
-              <Typography variant="h6" gutterBottom>
-                Import Vocabulary
-              </Typography>
-              <Typography variant="body2" color="text.secondary" sx={{ mb: 2 }}>
-                Import vocabulary from CSV, Excel, or Google Sheets
-              </Typography>
+      <Row gutter={[24, 24]}>
+        <Col xs={24} md={12}>
+          <Card title="Import Vocabulary">
+            <Text type="secondary" style={{ display: 'block', marginBottom: 16 }}>
+              Import vocabulary from CSV, Excel, or Google Sheets
+            </Text>
+            <Link href="/import">
               <Button
-                component={Link}
-                href="/import"
-                variant="contained"
-                startIcon={<ImportIcon />}
-                fullWidth
+                type="primary"
+                icon={<UploadOutlined />}
+                block
+                size="large"
               >
                 Start Import
               </Button>
-            </CardContent>
+            </Link>
           </Card>
-        </Grid>
+        </Col>
 
-        <Grid size={{ xs: 12, md: 6 }}>
-          <Card>
-            <CardContent>
-              <Typography variant="h6" gutterBottom>
-                Export to Sheets
-              </Typography>
-              <Typography variant="body2" color="text.secondary" sx={{ mb: 2 }}>
-                Export vocabulary to Google Sheets for collaborative editing
-              </Typography>
+        <Col xs={24} md={12}>
+          <Card title="Export to Sheets">
+            <Text type="secondary" style={{ display: 'block', marginBottom: 16 }}>
+              Export vocabulary to Google Sheets for collaborative editing
+            </Text>
+            <Link href="/export">
               <Button
-                component={Link}
-                href="/export"
-                variant="contained"
-                startIcon={<ExportIcon />}
-                fullWidth
+                type="primary"
+                icon={<DownloadOutlined />}
+                block
+                size="large"
               >
                 Start Export
               </Button>
-            </CardContent>
+            </Link>
           </Card>
-        </Grid>
+        </Col>
 
-        <Grid size={12}>
-          <Card>
-            <CardContent>
-              <Typography variant="h6" gutterBottom>
-                Recent Import/Export Activities
-              </Typography>
-              <Typography variant="body2" color="text.secondary">
-                No recent activities
-              </Typography>
-            </CardContent>
+        <Col span={24}>
+          <Card title="Recent Import/Export Activities">
+            <Text type="secondary">
+              No recent activities
+            </Text>
           </Card>
-        </Grid>
-      </Grid>
-    </Box>
+        </Col>
+      </Row>
+    </div>
   );
 }

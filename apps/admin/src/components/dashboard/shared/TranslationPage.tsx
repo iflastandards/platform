@@ -2,20 +2,20 @@
 
 import React from 'react';
 import {
-  Box,
   Typography,
   Alert,
-  AlertTitle,
   Button,
-} from '@mui/material';
+} from 'antd';
 import {
-  Translate as TranslateIcon,
-} from '@mui/icons-material';
+  TranslationOutlined,
+} from '@ant-design/icons';
 import Link from 'next/link';
 
 interface SharedTranslationPageProps {
   role: 'author' | 'editor';
 }
+
+const { Title } = Typography;
 
 export function SharedTranslationPage({ role }: SharedTranslationPageProps) {
   const getContent = () => {
@@ -37,22 +37,23 @@ export function SharedTranslationPage({ role }: SharedTranslationPageProps) {
   const content = getContent();
 
   return (
-    <Box>
-      <Typography variant="h4" component="h1" gutterBottom>
-        {content.title}
-      </Typography>
-      <Alert severity="info" sx={{ mb: 2 }}>
-        <AlertTitle>{content.alertTitle}</AlertTitle>
-        {content.alertMessage}
-      </Alert>
-      <Button
-        component={Link}
-        href="/translation"
-        variant="contained"
-        startIcon={<TranslateIcon />}
-      >
-        Go to Translation Interface
-      </Button>
-    </Box>
+    <div>
+      <Title level={2} style={{ marginBottom: 24 }}>{content.title}</Title>
+      <Alert
+        message={content.alertTitle}
+        description={content.alertMessage}
+        type="info"
+        showIcon
+        style={{ marginBottom: 16 }}
+      />
+      <Link href="/translation">
+        <Button
+          type="primary"
+          icon={<TranslationOutlined />}
+        >
+          Go to Translation Interface
+        </Button>
+      </Link>
+    </div>
   );
 }

@@ -1,276 +1,132 @@
 'use client';
 
-import { useState, useEffect } from 'react';
-import { Show } from '@refinedev/mui';
-import { useShow, useCustomMutation } from '@refinedev/core';
-import {
-  Box,
-  Typography,
-  Chip,
-  Button,
-  LinearProgress,
-  Alert,
-  Paper,
-  Link,
-} from '@mui/material';
-import {
-  Refresh as RefreshIcon,
-  Download as DownloadIcon,
-} from '@mui/icons-material';
+import { Show } from '@refinedev/antd';
+import { useShow, useNavigation } from '@refinedev/core';
+import { Typography, Tag, Card, Descriptions, Button, Skeleton, Alert } from 'antd';
+import { ArrowLeftOutlined } from '@ant-design/icons';
 import type { RdfBuild } from '@/../../packages/contracts/schemas/RdfBuild.zod';
 
-/**
- * RDF Build Show Page
- * Displays details of a specific RDF build with polling for status updates
- */
-export default function RdfBuildShowPage({
-  params,
-}: {
-  params: { id: string };
-}) {
-  const [pollingEnabled, setPollingEnabled] = useState(true);
+const { Title, Text } = Typography;
 
-  const { query } = useShow<RdfBuild>({
+/**
+ * RDF Build Detail Page
+ */
+export default function RdfBuildDetailPage({ params }: { params: { id: string } }) {
+  const { list } = useNavigation();
+  const { queryResult } = useShow<RdfBuild>({
     resource: 'rdf-builds',
     id: params.id,
   });
 
-  const { data, isLoading, isError, error, refetch } = query;
+  const { data, isLoading, isError, error } = queryResult;
   const record = data?.data;
-
-  // Custom hook for retry action
-  const { mutate: retryBuild } = useCustomMutation();
-
-  // Disable polling when job is complete
-  useEffect(() => {
-    if (
-      record?.status === 'success' ||
-      record?.status === 'failed' ||
-      record?.status === 'cancelled'
-    ) {
-      setPollingEnabled(false);
-    }
-  }, [record?.status]);
-
-  const handleRetry = () => {
-    retryBuild(
-      {
-        url: `/api/jobs/${params.id}/retry`,
-        method: 'put',
-        values: {},
-      },
-      {
-        onSuccess: () => {
-          setPollingEnabled(true);
-          refetch();
-        },
-      },
-    );
-  };
-
-  const handleDownload = () => {
-    if (record?.outputUrl) {
-      window.open(record.outputUrl, '_blank');
-    }
-  };
 
   if (isLoading) {
     return (
-      <Show>
-        <Box sx={{ p: 2 }}>
-          <LinearProgress />
-          <Typography sx={{ mt: 2 }}>Loading RDF build details...</Typography>
-        </Box>
-      </Show>
+      <div style={{ padding: 24 }}>
+        <Skeleton active paragraph={{ rows: 10 }} />
+      </div>
     );
   }
 
   if (isError) {
     return (
-      <Show>
-        <Alert severity="error">
-          Failed to load RDF build: {error?.message || 'Unknown error'}
-        </Alert>
-      </Show>
+      <div style={{ padding: 24 }}>
+        <Alert
+          message="Error loading RDF build"
+          description={error?.message || 'An error occurred while loading the data'}
+          type="error"
+        />
+      </div>
     );
   }
 
   if (!record) {
     return (
-      <Show>
-        <Alert severity="warning">RDF build not found</Alert>
-      </Show>
+      <div style={{ padding: 24 }}>
+        <Alert
+          message="RDF Build not found"
+          description="The requested RDF build could not be found"
+          type="warning"
+        />
+      </div>
     );
   }
 
-  const statusColor = {
-    queued: 'default',
-    running: 'info',
-    success: 'success',
-    failed: 'error',
-    cancelled: 'warning',
-  }[record.status] as 'default' | 'info' | 'success' | 'error' | 'warning';
+  const statusConfig: Record<string, { color: string; text: string }> = {
+    pending: { color: 'default', text: 'Pending' },
+    queued: { color: 'default', text: 'Queued' },
+    in_progress: { color: 'processing', text: 'In Progress' },
+    running: { color: 'processing', text: 'Running' },
+    completed: { color: 'success', text: 'Completed' },
+    success: { color: 'success', text: 'Success' },
+    failed: { color: 'error', text: 'Failed' },
+    cancelled: { color: 'warning', text: 'Cancelled' },
+  };
+
+  const config = statusConfig[record.status] || statusConfig.pending;
 
   return (
     <Show
-      title={`RDF Build: ${record.id}`}
-      headerButtons={
-        <>
-          <Button
-            startIcon={<RefreshIcon />}
-            onClick={() => refetch()}
-            disabled={isLoading}
-          >
-            Refresh
-          </Button>
-          {record.status === 'failed' && (
-            <Button
-              variant="contained"
-              color="warning"
-              onClick={handleRetry}
-              disabled={false}
-            >
-              Retry
-            </Button>
-          )}
-          {record.status === 'success' && record.outputUrl && (
-            <Button
-              variant="contained"
-              color="success"
-              startIcon={<DownloadIcon />}
-              onClick={handleDownload}
-            >
-              Download
-            </Button>
-          )}
-        </>
+      title={`RDF Build #${record.id}`}
+      breadcrumb={
+        <Button
+          icon={<ArrowLeftOutlined />}
+          onClick={() => list('rdf-builds')}
+        >
+          Back to List
+        </Button>
       }
     >
-      <Paper sx={{ p: 3 }}>
-        <Box sx={{ display: 'flex', flexDirection: 'column', gap: 3 }}>
-          {/* Status Section */}
-          <Box>
-            <Typography variant="subtitle2" color="text.secondary">
-              Status
-            </Typography>
-            <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, mt: 1 }}>
-              <Chip label={record.status} color={statusColor} />
-              {record.status === 'running' && (
-                <Typography variant="body2" color="text.secondary">
-                  (Auto-refreshing every 1.5s)
-                </Typography>
-              )}
-            </Box>
-          </Box>
-
-          {/* Progress Section */}
-          <Box>
-            <Typography variant="subtitle2" color="text.secondary">
-              Progress
-            </Typography>
-            <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, mt: 1 }}>
-              <Box sx={{ width: '100%', maxWidth: 400 }}>
-                <LinearProgress
-                  variant="determinate"
-                  value={record.progress || 0}
-                  sx={{ height: 8, borderRadius: 4 }}
-                />
-              </Box>
-              <Typography variant="body2">{record.progress || 0}%</Typography>
-            </Box>
-          </Box>
-
-          {/* Details Section */}
-          <Box sx={{ display: 'flex', gap: 4, flexWrap: 'wrap' }}>
-            <Box>
-              <Typography variant="subtitle2" color="text.secondary">
-                Namespace ID
-              </Typography>
-              <Typography variant="body1" sx={{ mt: 1 }}>
-                {record.namespaceId || 'N/A'}
-              </Typography>
-            </Box>
-
-            <Box>
-              <Typography variant="subtitle2" color="text.secondary">
-                Format
-              </Typography>
-              <Typography variant="body1" sx={{ mt: 1 }}>
-                {record.format || 'turtle'}
-              </Typography>
-            </Box>
-
-            <Box>
-              <Typography variant="subtitle2" color="text.secondary">
-                Created At
-              </Typography>
-              <Typography variant="body1" sx={{ mt: 1 }}>
-                {new Date(record.createdAt).toLocaleString()}
-              </Typography>
-            </Box>
-
-            <Box>
-              <Typography variant="subtitle2" color="text.secondary">
-                Finished At
-              </Typography>
-              <Typography variant="body1" sx={{ mt: 1 }}>
-                {record.finishedAt
-                  ? new Date(record.finishedAt).toLocaleString()
-                  : 'In Progress'}
-              </Typography>
-            </Box>
-          </Box>
-
-          {/* Output URL */}
-          {record.status === 'success' && record.outputUrl && (
-            <Box>
-              <Typography variant="subtitle2" color="text.secondary">
-                Output URL
-              </Typography>
-              <Link
-                href={record.outputUrl}
-                target="_blank"
-                rel="noopener noreferrer"
-                sx={{ mt: 1, display: 'inline-block' }}
-              >
-                {record.outputUrl}
-              </Link>
-            </Box>
+      <Card>
+        <Descriptions bordered column={1}>
+          <Descriptions.Item label="ID">
+            {record.id}
+          </Descriptions.Item>
+          <Descriptions.Item label="Namespace">
+            <Tag color="blue">{record.namespace}</Tag>
+          </Descriptions.Item>
+          <Descriptions.Item label="Status">
+            <Tag color={config.color}>{config.text}</Tag>
+          </Descriptions.Item>
+          <Descriptions.Item label="Format">
+            {record.format || 'N/A'}
+          </Descriptions.Item>
+          <Descriptions.Item label="Created At">
+            {new Date(record.createdAt).toLocaleString()}
+          </Descriptions.Item>
+          {(record as any).completedAt && (
+            <Descriptions.Item label="Completed At">
+              {new Date((record as any).completedAt).toLocaleString()}
+            </Descriptions.Item>
           )}
-
-          {/* Error Message */}
-          {record.status === 'failed' && record.error && (
-            <Alert severity="error">
-              <Typography variant="subtitle2" gutterBottom>
-                Error Message:
-              </Typography>
-              <Typography variant="body2">{record.error}</Typography>
-            </Alert>
+          {(record as any).downloadUrl && (
+            <Descriptions.Item label="Download">
+              <Button type="link" href={(record as any).downloadUrl} target="_blank">
+                Download RDF File
+              </Button>
+            </Descriptions.Item>
           )}
-
-          {/* Build Configuration */}
-          {record.buildConfig && (
-            <Box>
-              <Typography variant="subtitle2" color="text.secondary">
-                Build Configuration
-              </Typography>
-              <Box sx={{ mt: 1, p: 2, bgcolor: 'grey.100', borderRadius: 1 }}>
-                <Typography variant="body2">
-                  Include Deprecated:{' '}
-                  {record.buildConfig.includeDeprecated ? 'Yes' : 'No'}
-                </Typography>
-                <Typography variant="body2">
-                  Include History:{' '}
-                  {record.buildConfig.includeHistory ? 'Yes' : 'No'}
-                </Typography>
-                <Typography variant="body2">
-                  Compression: {record.buildConfig.compression ? 'Yes' : 'No'}
-                </Typography>
-              </Box>
-            </Box>
+          {record.error && (
+            <Descriptions.Item label="Error">
+              <Text type="danger">{record.error}</Text>
+            </Descriptions.Item>
           )}
-        </Box>
-      </Paper>
+          {(record as any).logs && (record as any).logs.length > 0 && (
+            <Descriptions.Item label="Build Logs">
+              <pre style={{ 
+                backgroundColor: '#f5f5f5', 
+                padding: 12, 
+                borderRadius: 4,
+                maxHeight: 300,
+                overflow: 'auto'
+              }}>
+                {(record as any).logs.join('\n')}
+              </pre>
+            </Descriptions.Item>
+          )}
+        </Descriptions>
+      </Card>
     </Show>
   );
 }

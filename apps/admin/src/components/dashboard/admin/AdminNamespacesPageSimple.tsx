@@ -1,8 +1,10 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import { Box, Typography, Card, CardContent, CircularProgress } from '@mui/material';
+import { Typography, Card, Spin } from 'antd';
 import { mockNamespaceData } from '@/lib/mock-namespace-data';
+
+const { Title, Text } = Typography;
 
 export function AdminNamespacesPageSimple() {
   const [namespaces, setNamespaces] = useState<any[]>([]);
@@ -17,37 +19,43 @@ export function AdminNamespacesPageSimple() {
   }, []);
 
   return (
-    <Box>
-      <Typography variant="h4" component="h1" mb={3}>
+    <div>
+      <Title level={2} style={{ marginBottom: 24 }}>
         Namespace Management (Simple Test)
-      </Typography>
+      </Title>
 
       {loading ? (
-        <Box display="flex" justifyContent="center" p={4}>
-          <CircularProgress />
-        </Box>
+        <div style={{ display: 'flex', justifyContent: 'center', padding: 32 }}>
+          <Spin size="large" />
+        </div>
       ) : (
         <Card>
-          <CardContent>
-            <Typography variant="h6" mb={2}>
-              Found {namespaces.length} namespaces
-            </Typography>
-            {namespaces.map((ns) => (
-              <Box key={ns.id} p={2} border={1} borderColor="divider" mb={1}>
-                <Typography variant="subtitle1" fontWeight="bold">
-                  {ns.name} ({ns.id})
-                </Typography>
-                <Typography variant="body2" color="text.secondary">
-                  {ns.description}
-                </Typography>
-                <Typography variant="caption">
-                  Review Group: {ns.reviewGroup} | Status: {ns.status} | Visibility: {ns.visibility}
-                </Typography>
-              </Box>
-            ))}
-          </CardContent>
+          <Title level={4} style={{ marginBottom: 16 }}>
+            Found {namespaces.length} namespaces
+          </Title>
+          {namespaces.map((ns) => (
+            <div
+              key={ns.id}
+              style={{
+                padding: 16,
+                border: '1px solid #f0f0f0',
+                marginBottom: 8,
+                borderRadius: 4,
+              }}
+            >
+              <Text strong style={{ fontSize: 16 }}>
+                {ns.name} ({ns.id})
+              </Text>
+              <br />
+              <Text type="secondary">{ns.description}</Text>
+              <br />
+              <Text style={{ fontSize: 12 }}>
+                Review Group: {ns.reviewGroup} | Status: {ns.status} | Visibility: {ns.visibility}
+              </Text>
+            </div>
+          ))}
         </Card>
       )}
-    </Box>
+    </div>
   );
 }

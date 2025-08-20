@@ -16,8 +16,8 @@ export default async function ReviewGroupPage({ params }: ReviewGroupPageProps) 
     notFound();
   }
 
-  // Pass the review group's namespaces to the RGOverviewPage
-  return <RGOverviewPage reviewGroups={[reviewGroup.id]} />;
+  // Pass the review group's acronym to the RGOverviewPage
+  return <RGOverviewPage reviewGroupName={reviewGroup.acronym} />;
 }
 
 // Generate static params for all review groups

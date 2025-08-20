@@ -3,22 +3,20 @@
 import React from 'react';
 import Link from 'next/link';
 import {
-  Box,
   Typography,
   Button,
   Card,
-  CardContent,
   Avatar,
   List,
-  ListItem,
-  ListItemAvatar,
-  ListItemText,
-  Chip,
-  Stack,
-} from '@mui/material';
+  Tag,
+  Space,
+  Divider,
+} from 'antd';
 import {
-  PersonAdd as PersonAddIcon,
-} from '@mui/icons-material';
+  UserAddOutlined,
+} from '@ant-design/icons';
+
+const { Title, Text } = Typography;
 
 export function RGTeamPage() {
   const teamMembers = [
@@ -58,80 +56,73 @@ export function RGTeamPage() {
 
   const getRoleColor = (role: string) => {
     switch (role) {
-      case 'lead': return 'primary';
-      case 'editor': return 'secondary';
-      case 'reviewer': return 'info';
+      case 'lead': return 'blue';
+      case 'editor': return 'purple';
+      case 'reviewer': return 'cyan';
       case 'translator': return 'success';
       default: return 'default';
     }
   };
 
   return (
-    <Box>
-      <Box display="flex" justifyContent="space-between" alignItems="center" mb={3}>
-        <Typography variant="h4" component="h1">
-          Team Members
-        </Typography>
-        <Button
-          variant="contained"
-          startIcon={<PersonAddIcon />}
-          component={Link}
-          href="/dashboard/rg/team/invite"
-        >
-          Invite Team Member
-        </Button>
-      </Box>
+    <div>
+      <div style={{ 
+        display: 'flex', 
+        justifyContent: 'space-between', 
+        alignItems: 'center', 
+        marginBottom: 24 
+      }}>
+        <Title level={2}>Team Members</Title>
+        <Link href="/dashboard/rg/team/invite">
+          <Button type="primary" icon={<UserAddOutlined />}>
+            Invite Team Member
+          </Button>
+        </Link>
+      </div>
 
-      <Card elevation={0}>
-        <CardContent>
-          <Typography variant="h6" gutterBottom>
-            ISBD Review Group Team
-          </Typography>
-          <List>
-            {teamMembers.map((member, index) => (
-              <React.Fragment key={member.id}>
-                <ListItem 
-                  sx={{ 
-                    borderBottom: index < teamMembers.length - 1 ? 1 : 0, 
-                    borderColor: 'divider',
-                    py: 2
-                  }}
-                >
-                  <ListItemAvatar>
-                    <Avatar sx={{ bgcolor: 'primary.main' }}>
+      <Card>
+        <Title level={4} style={{ marginBottom: 16 }}>
+          ISBD Review Group Team
+        </Title>
+        <List
+          dataSource={teamMembers}
+          renderItem={(member, index) => (
+            <>
+              <List.Item
+                style={{ paddingTop: 16, paddingBottom: 16 }}
+              >
+                <List.Item.Meta
+                  avatar={
+                    <Avatar 
+                      style={{ backgroundColor: '#1890ff' }}
+                      size="large"
+                    >
                       {member.avatar}
                     </Avatar>
-                  </ListItemAvatar>
-                  <ListItemText
-                    primary={
-                      <Stack direction="row" spacing={1} alignItems="center">
-                        <Typography variant="body1" fontWeight="medium">
-                          {member.name}
-                        </Typography>
-                        <Chip 
-                          label={member.role} 
-                          size="small" 
-                          color={getRoleColor(member.role) as any}
-                        />
-                      </Stack>
-                    }
-                    secondary={
-                      <Box>
-                        <Typography variant="body2" color="text.secondary">
-                          {member.email}
-                        </Typography>
-                        <Typography variant="caption" color="text.secondary">
-                          Projects: {member.projects.join(', ')}
-                        </Typography>
-                      </Box>
-                    }
-                  />
-                </ListItem>
-              </React.Fragment>
-            ))}
-          </List>
-        </CardContent>
+                  }
+                  title={
+                    <Space>
+                      <Text strong>{member.name}</Text>
+                      <Tag color={getRoleColor(member.role)}>
+                        {member.role}
+                      </Tag>
+                    </Space>
+                  }
+                  description={
+                    <Space direction="vertical" size="small">
+                      <Text type="secondary">{member.email}</Text>
+                      <Text type="secondary" style={{ fontSize: 12 }}>
+                        Projects: {member.projects.join(', ')}
+                      </Text>
+                    </Space>
+                  }
+                />
+              </List.Item>
+              {index < teamMembers.length - 1 && <Divider />}
+            </>
+          )}
+        />
       </Card>
-    </Box>
+    </div>
   );
 }

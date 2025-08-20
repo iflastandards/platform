@@ -2,16 +2,18 @@
 
 import React from 'react';
 import {
-  Box,
   Card,
-  CardContent,
   Typography,
-  TextField,
+  Input,
   Button,
-  Stack,
+  Space,
   Alert,
-} from '@mui/material';
+  Form,
+} from 'antd';
 import { useRouter } from 'next/navigation';
+
+const { Title, Text } = Typography;
+const { TextArea } = Input;
 
 interface SiteVocabularyCreatePageProps {
   siteKey: string;
@@ -19,79 +21,85 @@ interface SiteVocabularyCreatePageProps {
 
 export function SiteVocabularyCreatePage({ siteKey }: SiteVocabularyCreatePageProps) {
   const router = useRouter();
+  const [form] = Form.useForm();
 
   const handleCancel = () => {
     router.push(`/dashboard/${siteKey}/content/vocabularies`);
   };
 
-  const handleSubmit = (event: React.FormEvent) => {
-    event.preventDefault();
+  const handleSubmit = (values: any) => {
     // TODO: Implement vocabulary creation logic
-    console.log('Creating vocabulary for site:', siteKey);
+    console.log('Creating vocabulary for site:', siteKey, values);
     // After successful creation, redirect back to vocabularies list
     router.push(`/dashboard/${siteKey}/content/vocabularies`);
   };
 
   return (
-    <Box>
-      <Box sx={{ mb: 3 }}>
-        <Typography variant="h4" gutterBottom component="h1">
-          Create New Vocabulary
-        </Typography>
-        <Typography variant="body1" color="textSecondary">
+    <div>
+      <div style={{ marginBottom: 24 }}>
+        <Title level={2}>Create New Vocabulary</Title>
+        <Text type="secondary">
           Add a new controlled vocabulary for {siteKey.toUpperCase()}
-        </Typography>
-      </Box>
+        </Text>
+      </div>
 
-      <Alert severity="info" sx={{ mb: 3 }}>
-        <Typography variant="body2">
-          This is a placeholder form. In the full implementation, this would connect to the vocabulary management system.
-        </Typography>
-      </Alert>
+      <Alert
+        message="This is a placeholder form. In the full implementation, this would connect to the vocabulary management system."
+        type="info"
+        style={{ marginBottom: 24 }}
+      />
 
       <Card>
-        <CardContent>
-          <form onSubmit={handleSubmit}>
-            <Stack spacing={3}>
-              <TextField
-                label="Vocabulary Name"
-                required
-                fullWidth
-                placeholder="e.g., Content Types"
-              />
-              
-              <TextField
-                label="Description"
-                multiline
-                rows={3}
-                fullWidth
-                placeholder="Describe the purpose and scope of this vocabulary"
-              />
-              
-              <TextField
-                label="Namespace URI"
-                fullWidth
-                placeholder="e.g., http://iflastandards.info/ns/isbd/content-types/"
-              />
-              
-              <TextField
-                label="Prefix"
-                fullWidth
-                placeholder="e.g., isbd-ct"
-              />
+        <Form
+          form={form}
+          layout="vertical"
+          onFinish={handleSubmit}
+          autoComplete="off"
+        >
+          <Form.Item
+            label="Vocabulary Name"
+            name="name"
+            rules={[{ required: true, message: 'Please enter a vocabulary name' }]}
+          >
+            <Input placeholder="e.g., Content Types" />
+          </Form.Item>
 
-              <Stack direction="row" spacing={2} justifyContent="flex-end">
-                <Button variant="outlined" onClick={handleCancel}>
-                  Cancel
-                </Button>
-                <Button variant="contained" type="submit">
-                  Create Vocabulary
-                </Button>
-              </Stack>
-            </Stack>
-          </form>
-        </CardContent>
+          <Form.Item
+            label="Description"
+            name="description"
+          >
+            <TextArea
+              rows={3}
+              placeholder="Describe the purpose and scope of this vocabulary"
+            />
+          </Form.Item>
+
+          <Form.Item
+            label="Namespace URI"
+            name="namespaceUri"
+          >
+            <Input placeholder="e.g., http://iflastandards.info/ns/isbd/content-types/" />
+          </Form.Item>
+
+          <Form.Item
+            label="Prefix"
+            name="prefix"
+          >
+            <Input placeholder="e.g., isbd-ct" />
+          </Form.Item>
+
+          <Form.Item>
+            <Space style={{ display: 'flex', justifyContent: 'flex-end' }}>
+              <Button onClick={handleCancel}>
+                Cancel
+              </Button>
+              <Button type="primary" htmlType="submit">
+                Create Vocabulary
+              </Button>
+            </Space>
+          </Form.Item>
+        </Form>
       </Card>
-    </Box>
+    </div>
   );
 }

@@ -209,3 +209,4 @@ pnpm nx:graph
 NEVER, EVER USE --no-verify without explicit approval or pre-instructions
 FIXING TEST FAILURES IS MORE IMPORTANT THAN A SUCCESSFUL COMMIT OR PUSH
 see @developer_notes/AI_TESTING_INSTRUCTIONS.md and @developer_notes/TESTING_QUICK_REFERENCE.md
+- always use internal grep instead of bash grep

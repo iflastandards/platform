@@ -1,8 +1,10 @@
 'use client';
 
 import React from 'react';
-import { Typography, Box } from '@mui/material';
+import { Typography } from 'antd';
 import { ActionGrid, ManagementAction } from './ActionGrid';
+
+const { Title, Text } = Typography;
 
 interface SiteRdfManagementPageProps {
   siteKey: string;
@@ -49,17 +51,15 @@ const rdfActions: ManagementAction[] = [
 
 export function SiteRdfManagementPage({ siteKey }: SiteRdfManagementPageProps) {
   return (
-    <Box>
-      <Box sx={{ mb: 3 }}>
-        <Typography variant="h4" gutterBottom component="h1">
-          RDF & Vocabularies
-        </Typography>
-        <Typography variant="body1" color="textSecondary">
+    <div>
+      <div style={{ marginBottom: 24 }}>
+        <Title level={2}>RDF & Vocabularies</Title>
+        <Text type="secondary">
           Manage RDF data, vocabularies, and semantic web resources for {siteKey.toUpperCase()}
-        </Typography>
-      </Box>
+        </Text>
+      </div>
 
       <ActionGrid actions={rdfActions} />
-    </Box>
+    </div>
   );
 }

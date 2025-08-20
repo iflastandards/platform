@@ -2,10 +2,11 @@
 
 import { ReactNode, useEffect, useState } from 'react';
 import { Refine } from '@refinedev/core';
-import { RefineSnackbarProvider } from '@refinedev/mui';
+import { App as AntdApp, ConfigProvider } from 'antd';
 import routerProvider from '@refinedev/nextjs-router';
 import { dataProvider } from './dataProvider';
 import { initMsw } from '@/lib/msw-init';
+import { antdTheme } from '@/lib/antd-theme';
 
 interface RefineProviderProps {
   children: ReactNode;
@@ -31,11 +32,12 @@ export function RefineProvider({ children }: RefineProviderProps) {
   }
 
   return (
-    <RefineSnackbarProvider>
-      <Refine
-        dataProvider={dataProvider}
-        routerProvider={routerProvider}
-        resources={[
+    <ConfigProvider theme={antdTheme}>
+      <AntdApp>
+        <Refine
+          dataProvider={dataProvider}
+          routerProvider={routerProvider}
+          resources={[
           {
             name: 'rdf-builds',
             list: '/rdf-builds',
@@ -62,8 +64,9 @@ export function RefineProvider({ children }: RefineProviderProps) {
           projectId: 'ifla-admin',
         }}
       >
-        {children}
-      </Refine>
-    </RefineSnackbarProvider>
+          {children}
+        </Refine>
+      </AntdApp>
+    </ConfigProvider>
   );
 }

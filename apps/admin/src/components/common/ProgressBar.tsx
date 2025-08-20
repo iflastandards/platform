@@ -2,14 +2,16 @@
 
 import React from 'react';
 import { 
-  Box, 
-  LinearProgress, 
-  LinearProgressProps, 
+  Progress, 
+  Tooltip, 
   Typography,
-  Tooltip,
-} from '@mui/material';
+  Space,
+} from 'antd';
+import type { ProgressProps } from 'antd';
 
-interface ProgressBarProps extends LinearProgressProps {
+const { Text } = Typography;
+
+interface ProgressBarProps extends Omit<ProgressProps, 'percent'> {
   value: number;
   showLabel?: boolean;
   labelFormat?: 'percentage' | 'fraction' | 'custom';
@@ -55,39 +57,31 @@ export function ProgressBar({
   const label = getLabel();
   const defaultTooltip = tooltipContent || `Progress: ${label}`;
 
+  // Map height to Ant Design size
+  const getSize = () => {
+    if (height && height <= 5) return 'small';
+    if (height && height >= 20) return undefined; // Use default for large
+    return 'default';
+  };
+
   const progressBar = (
-    <Box sx={{ width: '100%' }}>
-      <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
-        <Box sx={{ flexGrow: 1 }}>
-          <LinearProgress
-            {...progressProps}
-            variant={animated ? 'determinate' : 'determinate'}
-            value={value}
-            sx={{
-              height,
-              borderRadius: height / 2,
-              backgroundColor: 'grey.200',
-              '& .MuiLinearProgress-bar': {
-                borderRadius: height / 2,
-                transition: animated ? 'transform 0.4s ease' : 'none',
-              },
-              ...progressProps.sx,
-            }}
-          />
-        </Box>
-        {showLabel && (
-          <Box sx={{ minWidth: 60 }}>
-            <Typography 
-              variant="body2" 
-              color="text.secondary"
-              sx={{ fontWeight: 'medium' }}
-            >
-              {label}
-            </Typography>
-          </Box>
-        )}
-      </Box>
-    </Box>
+    <div style={{ width: '100%' }}>
+      <Space style={{ width: '100%' }}>
+        <Progress
+          {...progressProps}
+          percent={value}
+          size={getSize()}
+          showInfo={showLabel}
+          format={() => label}
+          strokeLinecap="round"
+          style={{ 
+            flex: 1,
+            margin: 0,
+            ...(height && height !== 8 ? { lineHeight: `${height}px` } : {})
+          }}
+        />
+      </Space>
+    </div>
   );
 
   if (showTooltip) {
@@ -105,7 +99,7 @@ export function ProgressBar({
 interface SegmentedProgressBarProps {
   segments: {
     value: number;
-    color?: LinearProgressProps['color'];
+    color?: string;
     label?: string;
   }[];
   height?: number;
@@ -119,51 +113,61 @@ export function SegmentedProgressBar({
 }: SegmentedProgressBarProps) {
   const total = segments.reduce((sum, segment) => sum + segment.value, 0);
 
+  // Map color names to Ant Design colors
+  const getColor = (color?: string) => {
+    const colorMap: Record<string, string> = {
+      primary: '#1890ff',
+      secondary: '#722ed1',
+      error: '#ff4d4f',
+      warning: '#faad14',
+      info: '#13c2c2',
+      success: '#52c41a',
+    };
+    return color ? (colorMap[color] || color) : '#1890ff';
+  };
+
   return (
-    <Box>
-      <Box 
-        sx={{ 
+    <div>
+      <div 
+        style={{ 
           display: 'flex', 
-          height,
+          height: height,
           borderRadius: height / 2,
           overflow: 'hidden',
-          backgroundColor: 'grey.200',
+          backgroundColor: '#f0f0f0',
         }}
       >
         {segments.map((segment, index) => {
           const percentage = (segment.value / total) * 100;
           return (
-            <Box
+            <div
               key={index}
-              sx={{
+              style={{
                 width: `${percentage}%`,
-                backgroundColor: 
-                  segment.color === 'primary' ? 'primary.main' :
-                  segment.color === 'secondary' ? 'secondary.main' :
-                  segment.color === 'error' ? 'error.main' :
-                  segment.color === 'warning' ? 'warning.main' :
-                  segment.color === 'info' ? 'info.main' :
-                  segment.color === 'success' ? 'success.main' :
-                  'grey.500',
+                backgroundColor: getColor(segment.color),
                 transition: 'width 0.4s ease',
               }}
             />
           );
         })}
-      </Box>
+      </div>
       {showLabels && (
-        <Box sx={{ display: 'flex', justifyContent: 'space-between', mt: 1 }}>
+        <div style={{ 
+          display: 'flex', 
+          justifyContent: 'space-between', 
+          marginTop: 8 
+        }}>
           {segments.map((segment, index) => (
-            <Typography 
+            <Text 
               key={index} 
-              variant="caption" 
-              color="text.secondary"
+              type="secondary"
+              style={{ fontSize: 12 }}
             >
               {segment.label || `${segment.value}`}
-            </Typography>
+            </Text>
           ))}
-        </Box>
+        </div>
       )}
-    </Box>
+    </div>
   );
 }

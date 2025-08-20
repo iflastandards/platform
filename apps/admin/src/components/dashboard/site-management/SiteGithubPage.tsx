@@ -1,8 +1,10 @@
 'use client';
 
 import React from 'react';
-import { Typography, Box } from '@mui/material';
+import { Typography } from 'antd';
 import { ActionGrid, ManagementAction } from './ActionGrid';
+
+const { Title, Text } = Typography;
 
 interface SiteGithubPageProps {
   siteKey: string;
@@ -43,17 +45,15 @@ const githubActions: ManagementAction[] = [
 
 export function SiteGithubPage({ siteKey }: SiteGithubPageProps) {
   return (
-    <Box>
-      <Box sx={{ mb: 3 }}>
-        <Typography variant="h4" gutterBottom component="h1">
-          GitHub Integration
-        </Typography>
-        <Typography variant="body1" color="textSecondary">
+    <div>
+      <div style={{ marginBottom: 24 }}>
+        <Title level={2}>GitHub Integration</Title>
+        <Text type="secondary">
           Manage GitHub repository and development workflow for {siteKey.toUpperCase()}
-        </Typography>
-      </Box>
+        </Text>
+      </div>
 
       <ActionGrid actions={githubActions} />
-    </Box>
+    </div>
   );
 }

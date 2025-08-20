@@ -1,10 +1,10 @@
 import {
-  Dashboard as DashboardIcon,
-  People as PeopleIcon,
-  Folder as FolderIcon,
-  Assignment as AssignmentIcon,
-  History as HistoryIcon,
-} from '@mui/icons-material';
+  DashboardOutlined,
+  TeamOutlined,
+  FolderOutlined,
+  ProjectOutlined,
+  HistoryOutlined,
+} from '@ant-design/icons';
 import { NavigationItem } from '@/components/layout/StandardDashboardLayout';
 
 export const rgNavigation: NavigationItem[] = [
@@ -12,31 +12,31 @@ export const rgNavigation: NavigationItem[] = [
     id: 'overview',
     label: 'RG Dashboard',
     href: '/dashboard/rg',
-    icon: DashboardIcon,
+    icon: DashboardOutlined,
   },
   {
     id: 'projects',
     label: 'My Projects',
     href: '/dashboard/rg/projects',
-    icon: AssignmentIcon,
+    icon: ProjectOutlined,
   },
   {
     id: 'namespaces',
     label: 'My Namespaces',
     href: '/dashboard/rg/namespaces',
-    icon: FolderIcon,
+    icon: FolderOutlined,
     badge: () => 4, // This would be dynamic in production
   },
   {
     id: 'team',
     label: 'Team Members',
     href: '/dashboard/rg/team',
-    icon: PeopleIcon,
+    icon: TeamOutlined,
   },
   {
     id: 'activity',
     label: 'Activity Log',
     href: '/dashboard/rg/activity',
-    icon: HistoryIcon,
+    icon: HistoryOutlined,
   },
 ];

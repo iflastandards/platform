@@ -2,32 +2,33 @@
 
 import React from 'react';
 import {
-  Box,
   Typography,
   Card,
-  CardContent,
-  CardHeader,
   Button,
   Alert,
-  AlertTitle,
-} from '@mui/material';
-import Grid from '@mui/material/Grid';
+  Row,
+  Col,
+  Space,
+  Statistic,
+} from 'antd';
 import {
-  FileUpload as ImportIcon,
-  FileDownload as ExportIcon,
-  Settings as SettingsIcon,
-  GitHub as GitHubIcon,
-  Assignment as ProjectIcon,
-  Folder as FolderIcon,
-  RateReview as ReviewIcon,
-  Translate as TranslateIcon,
-} from '@mui/icons-material';
+  UploadOutlined,
+  DownloadOutlined,
+  SettingOutlined,
+  GithubOutlined,
+  ProjectOutlined,
+  FolderOutlined,
+  FileSearchOutlined,
+  TranslationOutlined,
+} from '@ant-design/icons';
 import Link from 'next/link';
 import { AppUser } from '@/lib/clerk-github-auth';
 
 interface EditorOverviewPageProps {
   user: AppUser;
 }
+
+const { Title, Text } = Typography;
 
 export function EditorOverviewPage({ user }: EditorOverviewPageProps) {
   const userProjects = Object.values(user.projects);
@@ -37,198 +38,167 @@ export function EditorOverviewPage({ user }: EditorOverviewPageProps) {
   return (
     <>
       {/* Header */}
-      <Box sx={{ mb: 4 }}>
-        <Typography variant="h4" gutterBottom component="h1">
-          Editor Dashboard
-        </Typography>
-        <Typography variant="body1" color="text.secondary">
+      <div style={{ marginBottom: 32 }}>
+        <Title level={2}>Editor Dashboard</Title>
+        <Text type="secondary">
           Welcome, {user.name}. You have editorial control over projects, namespaces, and export/import workflows.
-        </Typography>
-      </Box>
+        </Text>
+      </div>
 
       {/* Alert for Editor Responsibilities */}
-      <Alert severity="info" sx={{ mb: 3 }}>
-        <AlertTitle>Editor Responsibilities</AlertTitle>
-        As an editor, you have extensive control over project management, namespace configuration, 
-        and vocabulary export/import workflows. Use these tools to maintain quality and consistency 
-        across IFLA standards.
-      </Alert>
+      <Alert
+        message="Editor Responsibilities"
+        description="As an editor, you have extensive control over project management, namespace configuration, and vocabulary export/import workflows. Use these tools to maintain quality and consistency across IFLA standards."
+        type="info"
+        showIcon
+        style={{ marginBottom: 24 }}
+      />
 
       {/* Quick Actions */}
-      <Card sx={{ mb: 3 }}>
-        <CardHeader title="Quick Actions" />
-        <CardContent>
-          <Grid container spacing={2}>
-            <Grid size={{ xs: 12, sm: 6, md: 3 }}>
+      <Card title="Quick Actions" style={{ marginBottom: 24 }}>
+        <Row gutter={[16, 16]}>
+          <Col xs={24} sm={12} md={6}>
+            <Link href="/dashboard/editor/import-export">
               <Button
-                component={Link}
-                href="/dashboard/editor/import-export"
-                variant="contained"
-                startIcon={<ImportIcon />}
-                fullWidth
-                sx={{ height: 56 }}
+                type="primary"
+                icon={<UploadOutlined />}
+                block
+                size="large"
+                style={{ height: 56 }}
                 aria-label="Import vocabulary from external source"
               >
                 Import Vocabulary
               </Button>
-            </Grid>
-            <Grid size={{ xs: 12, sm: 6, md: 3 }}>
+            </Link>
+          </Col>
+          <Col xs={24} sm={12} md={6}>
+            <Link href="/dashboard/editor/import-export">
               <Button
-                component={Link}
-                href="/dashboard/editor/import-export"
-                variant="outlined"
-                startIcon={<ExportIcon />}
-                fullWidth
-                sx={{ height: 56 }}
+                icon={<DownloadOutlined />}
+                block
+                size="large"
+                style={{ height: 56 }}
                 aria-label="Export vocabulary to Google Sheets"
               >
                 Export to Sheets
               </Button>
-            </Grid>
-            <Grid size={{ xs: 12, sm: 6, md: 3 }}>
+            </Link>
+          </Col>
+          <Col xs={24} sm={12} md={6}>
+            <Link href="/dashboard/editor/namespaces">
               <Button
-                component={Link}
-                href="/dashboard/editor/namespaces"
-                variant="outlined"
-                startIcon={<SettingsIcon />}
-                fullWidth
-                sx={{ height: 56 }}
+                icon={<SettingOutlined />}
+                block
+                size="large"
+                style={{ height: 56 }}
                 aria-label="Manage namespace configurations"
               >
                 Manage Namespaces
               </Button>
-            </Grid>
-            <Grid size={{ xs: 12, sm: 6, md: 3 }}>
+            </Link>
+          </Col>
+          <Col xs={24} sm={12} md={6}>
+            <Link href="/github">
               <Button
-                component={Link}
-                href="/github"
-                variant="outlined"
-                startIcon={<GitHubIcon />}
-                fullWidth
-                sx={{ height: 56 }}
+                icon={<GithubOutlined />}
+                block
+                size="large"
+                style={{ height: 56 }}
                 aria-label="Configure GitHub integration"
               >
                 GitHub Integration
               </Button>
-            </Grid>
-          </Grid>
-        </CardContent>
+            </Link>
+          </Col>
+        </Row>
       </Card>
 
       {/* Overview Stats */}
-      <Grid container spacing={3}>
-        <Grid size={{ xs: 12, sm: 6, md: 3 }}>
+      <Row gutter={[24, 24]}>
+        <Col xs={24} sm={12} md={6}>
           <Card
-            sx={{ 
-              minHeight: 140,
-              display: 'flex',
-              flexDirection: 'column',
-              justifyContent: 'space-between',
-            }}
+            style={{ minHeight: 140 }}
             role="region"
             aria-labelledby="projects-stat"
           >
-            <CardContent>
-              <Box sx={{ display: 'flex', alignItems: 'center', mb: 2 }}>
-                <ProjectIcon sx={{ mr: 1, color: 'primary.main' }} aria-hidden="true" />
-                <Typography id="projects-stat" variant="h6" component="h2">
+            <Space direction="vertical" style={{ width: '100%' }}>
+              <Space>
+                <ProjectOutlined style={{ fontSize: 24, color: '#1890ff' }} aria-hidden="true" />
+                <Title id="projects-stat" level={5} style={{ margin: 0 }}>
                   Projects
-                </Typography>
-              </Box>
-              <Typography variant="h4" sx={{ fontWeight: 'bold' }}>
-                {editorProjects.length}
-              </Typography>
-              <Typography variant="body2" color="text.secondary" sx={{ mt: 1 }}>
-                As lead or editor
-              </Typography>
-            </CardContent>
+                </Title>
+              </Space>
+              <Statistic
+                value={editorProjects.length}
+                suffix={<Text type="secondary" style={{ fontSize: 14 }}>As lead or editor</Text>}
+              />
+            </Space>
           </Card>
-        </Grid>
+        </Col>
 
-        <Grid size={{ xs: 12, sm: 6, md: 3 }}>
+        <Col xs={24} sm={12} md={6}>
           <Card
-            sx={{ 
-              minHeight: 140,
-              display: 'flex',
-              flexDirection: 'column',
-              justifyContent: 'space-between',
-            }}
+            style={{ minHeight: 140 }}
             role="region"
             aria-labelledby="namespaces-stat"
           >
-            <CardContent>
-              <Box sx={{ display: 'flex', alignItems: 'center', mb: 2 }}>
-                <FolderIcon sx={{ mr: 1, color: 'secondary.main' }} aria-hidden="true" />
-                <Typography id="namespaces-stat" variant="h6" component="h2">
+            <Space direction="vertical" style={{ width: '100%' }}>
+              <Space>
+                <FolderOutlined style={{ fontSize: 24, color: '#52c41a' }} aria-hidden="true" />
+                <Title id="namespaces-stat" level={5} style={{ margin: 0 }}>
                   Namespaces
-                </Typography>
-              </Box>
-              <Typography variant="h4" sx={{ fontWeight: 'bold' }}>
-                {accessibleNamespaces.length}
-              </Typography>
-              <Typography variant="body2" color="text.secondary" sx={{ mt: 1 }}>
-                Accessible to you
-              </Typography>
-            </CardContent>
+                </Title>
+              </Space>
+              <Statistic
+                value={accessibleNamespaces.length}
+                suffix={<Text type="secondary" style={{ fontSize: 14 }}>Accessible to you</Text>}
+              />
+            </Space>
           </Card>
-        </Grid>
+        </Col>
 
-        <Grid size={{ xs: 12, sm: 6, md: 3 }}>
+        <Col xs={24} sm={12} md={6}>
           <Card
-            sx={{ 
-              minHeight: 140,
-              display: 'flex',
-              flexDirection: 'column',
-              justifyContent: 'space-between',
-            }}
+            style={{ minHeight: 140 }}
             role="region"
             aria-labelledby="reviews-stat"
           >
-            <CardContent>
-              <Box sx={{ display: 'flex', alignItems: 'center', mb: 2 }}>
-                <ReviewIcon sx={{ mr: 1, color: 'info.main' }} aria-hidden="true" />
-                <Typography id="reviews-stat" variant="h6" component="h2">
+            <Space direction="vertical" style={{ width: '100%' }}>
+              <Space>
+                <FileSearchOutlined style={{ fontSize: 24, color: '#722ed1' }} aria-hidden="true" />
+                <Title id="reviews-stat" level={5} style={{ margin: 0 }}>
                   Pending Reviews
-                </Typography>
-              </Box>
-              <Typography variant="h4" sx={{ fontWeight: 'bold' }}>
-                0
-              </Typography>
-              <Typography variant="body2" color="text.secondary" sx={{ mt: 1 }}>
-                Awaiting your review
-              </Typography>
-            </CardContent>
+                </Title>
+              </Space>
+              <Statistic
+                value={0}
+                suffix={<Text type="secondary" style={{ fontSize: 14 }}>Awaiting your review</Text>}
+              />
+            </Space>
           </Card>
-        </Grid>
+        </Col>
 
-        <Grid size={{ xs: 12, sm: 6, md: 3 }}>
+        <Col xs={24} sm={12} md={6}>
           <Card
-            sx={{ 
-              minHeight: 140,
-              display: 'flex',
-              flexDirection: 'column',
-              justifyContent: 'space-between',
-            }}
+            style={{ minHeight: 140 }}
             role="region"
             aria-labelledby="translations-stat"
           >
-            <CardContent>
-              <Box sx={{ display: 'flex', alignItems: 'center', mb: 2 }}>
-                <TranslateIcon sx={{ mr: 1, color: 'success.main' }} aria-hidden="true" />
-                <Typography id="translations-stat" variant="h6" component="h2">
+            <Space direction="vertical" style={{ width: '100%' }}>
+              <Space>
+                <TranslationOutlined style={{ fontSize: 24, color: '#fa8c16' }} aria-hidden="true" />
+                <Title id="translations-stat" level={5} style={{ margin: 0 }}>
                   Translations
-                </Typography>
-              </Box>
-              <Typography variant="h4" sx={{ fontWeight: 'bold' }}>
-                0
-              </Typography>
-              <Typography variant="body2" color="text.secondary" sx={{ mt: 1 }}>
-                In progress
-              </Typography>
-            </CardContent>
+                </Title>
+              </Space>
+              <Statistic
+                value={0}
+                suffix={<Text type="secondary" style={{ fontSize: 14 }}>In progress</Text>}
+              />
+            </Space>
           </Card>
-        </Grid>
-      </Grid>
+        </Col>
+      </Row>
     </>
   );
 }

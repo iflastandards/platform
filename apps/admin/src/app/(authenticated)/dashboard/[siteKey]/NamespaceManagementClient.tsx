@@ -2,84 +2,70 @@
 
 import React, { useState } from 'react';
 import {
-  Box,
   Card,
-  CardContent,
   Typography,
-  Grid,
   Button,
   Alert,
-  AlertTitle,
-  Chip,
+  Tag,
   List,
-  ListItem,
-  ListItemButton,
-  ListItemIcon,
-  ListItemText,
   Divider,
-  Stack,
+  Space,
   Drawer,
-  IconButton,
-  useTheme,
-  useMediaQuery,
-  Toolbar,
-  AppBar,
-  Link,
-} from '@mui/material';
-import {
-  Dashboard as LayoutDashboard,
-  Description as FileText,
-  Storage as Database,
-  AccountTree as GitBranch,
-  People as Users,
-  Inventory as Package,
-  Security as Shield,
-  GitHub,
-  Settings,
-  Build as Wrench,
+  Row,
+  Col,
   Menu,
-  ElectricBolt,
-  Computer,
-  Link as LinkIcon,
-  Build,
-} from '@mui/icons-material';
+  Badge,
+} from 'antd';
+import {
+  DashboardOutlined,
+  FileTextOutlined,
+  DatabaseOutlined,
+  BranchesOutlined,
+  TeamOutlined,
+  DeploymentUnitOutlined,
+  SafetyCertificateOutlined,
+  GithubOutlined,
+  SettingOutlined,
+  ToolOutlined,
+  MenuOutlined,
+  ThunderboltOutlined,
+  DesktopOutlined,
+  BuildOutlined,
+  LinkOutlined,
+} from '@ant-design/icons';
+import type { MenuProps } from 'antd';
+
+const { Title, Text, Paragraph } = Typography;
 
 // Skip Links Component
 const SkipLinks = () => (
-  <Box
-    sx={{
+  <div
+    style={{
       position: 'absolute',
       left: '-9999px',
       top: 0,
-      '&:focus-within': {
-        position: 'static',
-        left: 'auto',
-        top: 'auto',
-        zIndex: 9999,
-        p: 2,
-        bgcolor: 'primary.main',
-      },
     }}
+    className="skip-links"
   >
-    <Link href="#main-content" sx={{ color: 'white', mr: 2 }}>
+    <a href="#main-content" style={{ color: 'white', marginRight: 16 }}>
       Skip to main content
-    </Link>
-    <Link href="#navigation" sx={{ color: 'white', mr: 2 }}>
+    </a>
+    <a href="#navigation" style={{ color: 'white', marginRight: 16 }}>
       Skip to navigation
-    </Link>
-    <Link href="#external-resources" sx={{ color: 'white' }}>
+    </a>
+    <a href="#external-resources" style={{ color: 'white' }}>
       Skip to external resources
-    </Link>
-  </Box>
+    </a>
+  </div>
 );
 
 // Live Region for announcements
 const LiveRegion = ({ message }: { message: string }) => (
-  <Box
+  <div
     role="status"
     aria-live="polite"
     aria-atomic="true"
-    sx={{ 
+    style={{ 
       position: 'absolute',
       left: '-9999px',
       width: '1px',
@@ -88,7 +74,7 @@ const LiveRegion = ({ message }: { message: string }) => (
     }}
   >
     {message}
-  </Box>
+  </div>
 );
 
 interface ManagementAction {
@@ -452,8 +438,6 @@ const specialCaseTabs: TabData[] = [
   },
 ];
 
-const drawerWidth = 240;
-
 function NamespaceDashboard({
   namespaceTitle,
   namespaceCode,
@@ -466,12 +450,12 @@ function NamespaceDashboard({
   isSpecialCase?: boolean;
 }) {
   return (
-    <Box>
+    <div>
       {isSpecialCase && (
-        <Alert severity="warning" sx={{ mb: 3 }} role="alert">
-          <AlertTitle>Special Management Area</AlertTitle>
-          <Typography variant="body2">
-            {namespaceKey === 'portal' ? (
+        <Alert
+          message="Special Management Area"
+          description={
+            namespaceKey === 'portal' ? (
               <>
                 The Portal is not a standard namespace. It serves as the main IFLA standards platform 
                 and requires superadmin permissions for all management operations.
@@ -481,280 +465,142 @@ function NamespaceDashboard({
                 This is a development/testing environment, not a standard namespace. 
                 It requires superadmin permissions and should be used with caution.
               </>
-            )}
-          </Typography>
-        </Alert>
+            )
+          }
+          type="warning"
+          showIcon
+          style={{ marginBottom: 24 }}
+        />
       )}
 
-      <Grid container spacing={3}>
-        <Grid size={{ xs: 12, md: 6 }}>
+      <Row gutter={[24, 24]}>
+        <Col xs={24} md={12}>
           <Card 
-            role="region"
-            aria-labelledby={`${namespaceKey}-status-title`}
+            title={isSpecialCase ? 'System Status' : 'Namespace Status'}
           >
-            <CardContent>
-              <Typography 
-                variant="h6" 
-                gutterBottom
-                id={`${namespaceKey}-status-title`}
-                component="h2"
-              >
-                {isSpecialCase ? 'System' : 'Namespace'} Status
-              </Typography>
-              <List dense>
-                <ListItem>
-                  <ListItemText 
-                    primary="Type"
-                    secondary={isSpecialCase ? 'Special System Area' : 'Standard Namespace'}
-                  />
-                </ListItem>
-                <Divider />
-                <ListItem>
-                  <ListItemText 
-                    primary="Last Updated"
-                    secondary="2 hours ago"
-                  />
-                </ListItem>
-                <Divider />
-                <ListItem>
-                  <ListItemText 
-                    primary="Build Status"
-                    secondary={
-                      <Chip 
-                        label="Passing" 
-                        color="success" 
-                        size="small"
-                        aria-label="Build status: Passing"
-                      />
-                    }
-                    secondaryTypographyProps={{ component: 'div' }}
-                  />
-                </ListItem>
-                <Divider />
-                <ListItem>
-                  <ListItemText 
-                    primary={isSpecialCase ? 'System Issues' : 'Open PRs'}
-                    secondary={<span aria-label={`${isSpecialCase ? 'System Issues' : 'Open PRs'}: 3`}>3</span>}
-                    secondaryTypographyProps={{ component: 'div' }}
-                  />
-                </ListItem>
-                <Divider />
-                <ListItem>
-                  <ListItemText 
-                    primary={isSpecialCase ? 'Active Tasks' : 'Pending Reviews'}
-                    secondary={<span aria-label={`${isSpecialCase ? 'Active Tasks' : 'Pending Reviews'}: 5`}>5</span>}
-                    secondaryTypographyProps={{ component: 'div' }}
-                  />
-                </ListItem>
-              </List>
-            </CardContent>
+            <List
+              size="small"
+              split
+              dataSource={[
+                { label: 'Type', value: isSpecialCase ? 'Special System Area' : 'Standard Namespace' },
+                { label: 'Last Updated', value: '2 hours ago' },
+                { label: 'Build Status', value: <Tag color="success">Passing</Tag> },
+                { label: isSpecialCase ? 'System Issues' : 'Open PRs', value: '3' },
+                { label: isSpecialCase ? 'Active Tasks' : 'Pending Reviews', value: '5' },
+              ]}
+              renderItem={(item) => (
+                <List.Item>
+                  <Text strong>{item.label}:</Text> {item.value}
+                </List.Item>
+              )}
+            />
           </Card>
-        </Grid>
+        </Col>
 
-        <Grid size={{ xs: 12, md: 6 }}>
+        <Col xs={24} md={12}>
           <Card 
-            role="region"
-            aria-labelledby={`${namespaceKey}-activity-title`}
+            title={`Recent Activity - ${namespaceCode}`}
           >
-            <CardContent>
-              <Typography 
-                variant="h6" 
-                gutterBottom
-                id={`${namespaceKey}-activity-title`}
-                component="h2"
-              >
-                Recent Activity - {namespaceCode}
-              </Typography>
-              <List dense>
-                {isSpecialCase ? (
-                  <>
-                    <ListItem>
-                      <ListItemText 
-                        primary="System configuration updated"
-                        secondary="1h ago"
-                      />
-                    </ListItem>
-                    <ListItem>
-                      <ListItemText 
-                        primary="New namespace created: test-ns"
-                        secondary="3h ago"
-                      />
-                    </ListItem>
-                    <ListItem>
-                      <ListItemText 
-                        primary="Platform deployment completed"
-                        secondary="1d ago"
-                      />
-                    </ListItem>
-                  </>
-                ) : (
-                  <>
-                    <ListItem>
-                      <ListItemText 
-                        primary="Updated element C2001"
-                        secondary="2h ago"
-                      />
-                    </ListItem>
-                    <ListItem>
-                      <ListItemText 
-                        primary="Merged PR #45"
-                        secondary="1d ago"
-                      />
-                    </ListItem>
-                    <ListItem>
-                      <ListItemText 
-                        primary="Added new vocabulary terms"
-                        secondary="2d ago"
-                      />
-                    </ListItem>
-                  </>
-                )}
-              </List>
-            </CardContent>
+            <List
+              size="small"
+              dataSource={
+                isSpecialCase ? [
+                  { text: 'System configuration updated', time: '1h ago' },
+                  { text: 'New namespace created: test-ns', time: '3h ago' },
+                  { text: 'Platform deployment completed', time: '1d ago' },
+                ] : [
+                  { text: 'Updated element C2001', time: '2h ago' },
+                  { text: 'Merged PR #45', time: '1d ago' },
+                  { text: 'Added new vocabulary terms', time: '2d ago' },
+                ]
+              }
+              renderItem={(item) => (
+                <List.Item>
+                  <Space direction="vertical" size={0}>
+                    <Text>{item.text}</Text>
+                    <Text type="secondary" style={{ fontSize: 12 }}>{item.time}</Text>
+                  </Space>
+                </List.Item>
+              )}
+            />
           </Card>
-        </Grid>
+        </Col>
 
-        <Grid size={{ xs: 12, md: 6 }}>
-          <Card
-            role="region"
-            aria-labelledby={`${namespaceKey}-actions-title`}
-          >
-            <CardContent>
-              <Typography 
-                variant="h6" 
-                gutterBottom
-                id={`${namespaceKey}-actions-title`}
-                component="h2"
+        <Col xs={24} md={12}>
+          <Card title="Quick Actions">
+            <Space direction="vertical" style={{ width: '100%' }}>
+              <Button
+                type="primary"
+                disabled
+                block
+                style={{ minHeight: 44 }}
               >
-                Quick Actions
-              </Typography>
-              <Stack spacing={2}>
-                <Button
-                  variant="contained"
-                  disabled
-                  fullWidth
-                  aria-label={`${isSpecialCase ? 'System Config' : 'New Content'} (Coming Soon)`}
-                  sx={{ minHeight: 44 }}
-                >
-                  {isSpecialCase ? 'System Config' : 'New Content'}
-                </Button>
-                <Button
-                  variant="outlined"
-                  disabled
-                  fullWidth
-                  aria-label={`${isSpecialCase ? 'User Management' : 'Sync Sheets'} (Coming Soon)`}
-                  sx={{ minHeight: 44 }}
-                >
-                  {isSpecialCase ? 'User Management' : 'Sync Sheets'}
-                </Button>
-                <Button
-                  variant="outlined"
-                  disabled
-                  fullWidth
-                  aria-label={`${isSpecialCase ? 'Deploy' : 'View PRs'} (Coming Soon)`}
-                  sx={{ minHeight: 44 }}
-                >
-                  {isSpecialCase ? 'Deploy' : 'View PRs'}
-                </Button>
-              </Stack>
-            </CardContent>
+                {isSpecialCase ? 'System Config' : 'New Content'}
+              </Button>
+              <Button
+                disabled
+                block
+                style={{ minHeight: 44 }}
+              >
+                {isSpecialCase ? 'User Management' : 'Sync Sheets'}
+              </Button>
+              <Button
+                disabled
+                block
+                style={{ minHeight: 44 }}
+              >
+                {isSpecialCase ? 'Deploy' : 'View PRs'}
+              </Button>
+            </Space>
           </Card>
-        </Grid>
+        </Col>
 
-        <Grid size={{ xs: 12, md: 6 }}>
-          <Card
-            role="region"
-            aria-labelledby={`${namespaceKey}-overview-title`}
-          >
-            <CardContent>
-              <Typography 
-                variant="h6" 
-                gutterBottom
-                id={`${namespaceKey}-overview-title`}
-                component="h2"
-              >
-                {isSpecialCase ? 'System Overview' : 'Team Overview'}
-              </Typography>
-              <Grid container spacing={3}>
-                {isSpecialCase ? (
-                  <>
-                    <Grid size={{ xs: 6 }}>
-                      <Box textAlign="center">
-                        <Typography 
-                          variant="h3" 
-                          color="primary"
-                          aria-label="12 namespaces"
-                        >
-                          12
-                        </Typography>
-                        <Typography variant="caption" color="textSecondary">
-                          NAMESPACES
-                        </Typography>
-                      </Box>
-                    </Grid>
-                    <Grid size={{ xs: 6 }}>
-                      <Box textAlign="center">
-                        <Typography 
-                          variant="h3" 
-                          color="primary"
-                          aria-label="156 total users"
-                        >
-                          156
-                        </Typography>
-                        <Typography variant="caption" color="textSecondary">
-                          TOTAL USERS
-                        </Typography>
-                      </Box>
-                    </Grid>
-                  </>
-                ) : (
-                  <>
-                    <Grid size={{ xs: 6 }}>
-                      <Box textAlign="center">
-                        <Typography 
-                          variant="h3" 
-                          color="primary"
-                          aria-label="8 team members"
-                        >
-                          8
-                        </Typography>
-                        <Typography variant="caption" color="textSecondary">
-                          TEAM MEMBERS
-                        </Typography>
-                      </Box>
-                    </Grid>
-                    <Grid size={{ xs: 6 }}>
-                      <Box textAlign="center">
-                        <Typography 
-                          variant="h3" 
-                          color="primary"
-                          aria-label="3 active reviewers"
-                        >
-                          3
-                        </Typography>
-                        <Typography variant="caption" color="textSecondary">
-                          ACTIVE REVIEWERS
-                        </Typography>
-                      </Box>
-                    </Grid>
-                  </>
-                )}
-              </Grid>
-            </CardContent>
+        <Col xs={24} md={12}>
+          <Card title={isSpecialCase ? 'System Overview' : 'Team Overview'}>
+            <Row gutter={24}>
+              {isSpecialCase ? (
+                <>
+                  <Col span={12} style={{ textAlign: 'center' }}>
+                    <Title level={2} style={{ color: '#1890ff', margin: 0 }}>12</Title>
+                    <Text type="secondary" style={{ fontSize: 12 }}>NAMESPACES</Text>
+                  </Col>
+                  <Col span={12} style={{ textAlign: 'center' }}>
+                    <Title level={2} style={{ color: '#1890ff', margin: 0 }}>156</Title>
+                    <Text type="secondary" style={{ fontSize: 12 }}>TOTAL USERS</Text>
+                  </Col>
+                </>
+              ) : (
+                <>
+                  <Col span={12} style={{ textAlign: 'center' }}>
+                    <Title level={2} style={{ color: '#1890ff', margin: 0 }}>8</Title>
+                    <Text type="secondary" style={{ fontSize: 12 }}>TEAM MEMBERS</Text>
+                  </Col>
+                  <Col span={12} style={{ textAlign: 'center' }}>
+                    <Title level={2} style={{ color: '#1890ff', margin: 0 }}>3</Title>
+                    <Text type="secondary" style={{ fontSize: 12 }}>ACTIVE REVIEWERS</Text>
+                  </Col>
+                </>
+              )}
+            </Row>
           </Card>
-        </Grid>
-      </Grid>
+        </Col>
+      </Row>
 
       {!isSpecialCase && (
-        <Alert severity="info" sx={{ mt: 3 }} role="status">
-          <AlertTitle>Namespace Management</AlertTitle>
-          <Typography variant="body2">
-            This dashboard manages the <strong>{namespaceTitle}</strong> namespace. 
-            Each namespace represents a distinct IFLA standard with its own content, team, and workflow.
-          </Typography>
-        </Alert>
+        <Alert
+          message="Namespace Management"
+          description={
+            <>
+              This dashboard manages the <strong>{namespaceTitle}</strong> namespace. 
+              Each namespace represents a distinct IFLA standard with its own content, team, and workflow.
+            </>
+          }
+          type="info"
+          showIcon
+          style={{ marginTop: 24 }}
+        />
       )}
-    </Box>
+    </div>
   );
 }
 
@@ -768,15 +614,15 @@ function ActionGrid({
   const getActionTypeIcon = (type: ManagementAction['type']) => {
     switch (type) {
       case 'github-cli':
-        return <ElectricBolt />;
+        return <ThunderboltOutlined />;
       case 'codespaces':
-        return <Computer />;
+        return <DesktopOutlined />;
       case 'internal':
-        return <Build />;
+        return <BuildOutlined />;
       case 'external':
-        return <LinkIcon />;
+        return <LinkOutlined />;
       default:
-        return <FileText />;
+        return <FileTextOutlined />;
     }
   };
 
@@ -801,73 +647,54 @@ function ActionGrid({
   };
 
   return (
-    <Grid container spacing={3}>
+    <Row gutter={[24, 24]}>
       {actions.map((action) => {
         const hasAccess = canAccessAction(action);
         return (
-          <Grid size={{ xs: 12, md: 6, lg: 4 }} key={action.id}>
+          <Col xs={24} md={12} lg={8} key={action.id}>
             <Card 
-              sx={{ height: '100%', opacity: hasAccess ? 1 : 0.6 }}
-              role="article"
-              aria-labelledby={`action-${action.id}-title`}
+              style={{ height: '100%', opacity: hasAccess ? 1 : 0.6 }}
             >
-              <CardContent>
-                <Box sx={{ display: 'flex', alignItems: 'flex-start', mb: 2 }}>
-                  <Box aria-hidden="true">
-                    {getActionTypeIcon(action.type)}
-                  </Box>
-                  <Box sx={{ ml: 2, flex: 1 }}>
-                    <Typography 
-                      variant="h6" 
-                      gutterBottom
-                      id={`action-${action.id}-title`}
-                      component="h3"
-                    >
-                      {action.title}
-                    </Typography>
-                    <Typography variant="body2" color="textSecondary" paragraph>
-                      {action.description}
-                    </Typography>
-                    <Stack direction="row" spacing={1} alignItems="center">
-                      <Button
-                        variant="contained"
-                        size="small"
-                        disabled={!hasAccess || action.disabled !== false}
-                        aria-label={`${action.title}: ${!hasAccess ? 'Superadmin Only' : action.disabled !== false ? 'Coming Soon' : 'Run Action'}`}
-                        sx={{ minHeight: 36 }}
-                      >
-                        {!hasAccess ? 'Superadmin Only' : action.disabled !== false ? 'Coming Soon' : 'Run Action'}
-                      </Button>
-                      <Chip 
-                        label={getActionTypeLabel(action.type)} 
-                        size="small" 
-                        variant="outlined"
-                        aria-label={`Action type: ${getActionTypeLabel(action.type)}`}
-                      />
-                    </Stack>
-                  </Box>
-                </Box>
-              </CardContent>
+              <Space direction="vertical" style={{ width: '100%' }}>
+                <Space>
+                  {getActionTypeIcon(action.type)}
+                  <Title level={5} style={{ margin: 0 }}>{action.title}</Title>
+                </Space>
+                <Paragraph type="secondary">
+                  {action.description}
+                </Paragraph>
+                <Space>
+                  <Button
+                    type="primary"
+                    size="small"
+                    disabled={!hasAccess || action.disabled !== false}
+                    style={{ minHeight: 36 }}
+                  >
+                    {!hasAccess ? 'Superadmin Only' : action.disabled !== false ? 'Coming Soon' : 'Run Action'}
+                  </Button>
+                  <Tag>{getActionTypeLabel(action.type)}</Tag>
+                </Space>
+              </Space>
             </Card>
-          </Grid>
+          </Col>
         );
       })}
-    </Grid>
+    </Row>
   );
 }
 
 function getTabIcon(tabId: string) {
   switch(tabId) {
-    case 'overview': return <LayoutDashboard />;
-    case 'content': return <FileText />;
-    case 'rdf': return <Database />;
-    case 'workflow': return <GitBranch />;
-    case 'team': return <Users />;
-    case 'releases': return <Package />;
-    case 'quality': return <Shield />;
-    case 'github': return <GitHub />;
-    case 'settings': return <Settings />;
-    case 'system': return <Wrench />;
+    case 'overview': return <DashboardOutlined />;
+    case 'content': return <FileTextOutlined />;
+    case 'rdf': return <DatabaseOutlined />;
+    case 'workflow': return <BranchesOutlined />;
+    case 'team': return <TeamOutlined />;
+    case 'releases': return <DeploymentUnitOutlined />;
+    case 'quality': return <SafetyCertificateOutlined />;
+    case 'github': return <GithubOutlined />;
+    case 'settings': return <SettingOutlined />;
+    case 'system': return <ToolOutlined />;
     default: return null;
   }
 }
@@ -879,13 +706,10 @@ export default function NamespaceManagementClient({
   githubRepo = 'iflastandards/standards-dev',
   isSpecialCase = false,
   isSuperAdmin = false,
-  namespaceDescription,
 }: NamespaceManagementClientProps) {
   const [selectedTab, setSelectedTab] = useState('overview');
   const [mobileOpen, setMobileOpen] = useState(false);
   const [liveMessage, setLiveMessage] = useState('');
-  const theme = useTheme();
-  const isMobile = useMediaQuery(theme.breakpoints.down('md'));
 
   const availableTabs = isSpecialCase && isSuperAdmin 
     ? [...standardNamespaceTabs, ...specialCaseTabs]
@@ -901,65 +725,49 @@ export default function NamespaceManagementClient({
   const handleTabSelect = (tabId: string, tabLabel: string) => {
     setSelectedTab(tabId);
     setLiveMessage(`Switched to ${tabLabel} section`);
-    if (isMobile) {
-      setMobileOpen(false);
-    }
+    setMobileOpen(false);
     // Clear message after announcement
     setTimeout(() => setLiveMessage(''), 1000);
   };
 
-  const drawer = (
-    <Box role="navigation" aria-label="Dashboard navigation">
-      <Box sx={{ p: 2, borderBottom: 1, borderColor: 'divider' }}>
-        <Typography variant="h6" noWrap component="h2">
-          {namespaceCode}
-        </Typography>
-        <Typography variant="caption" color="textSecondary">
+  const menuItems: MenuProps['items'] = availableTabs.map((tab) => ({
+    key: tab.id,
+    icon: getTabIcon(tab.id),
+    label: (
+      <Space>
+        {tab.label}
+        {tab.specialCaseOnly && <Tag color="warning">System</Tag>}
+      </Space>
+    ),
+    onClick: () => handleTabSelect(tab.id, tab.label),
+  }));
+
+  const drawerContent = (
+    <div role="navigation" aria-label="Dashboard navigation">
+      <div style={{ padding: 16, borderBottom: '1px solid #f0f0f0' }}>
+        <Title level={4} style={{ margin: 0 }}>{namespaceCode}</Title>
+        <Text type="secondary" style={{ fontSize: 12 }}>
           {isSpecialCase ? 'System Management' : 'Namespace Management'}
-        </Typography>
-      </Box>
-      <List id="navigation">
-        {availableTabs.map((tab) => (
-          <ListItem key={tab.id} disablePadding>
-            <ListItemButton
-              selected={selectedTab === tab.id}
-              onClick={() => handleTabSelect(tab.id, tab.label)}
-              aria-current={selectedTab === tab.id ? 'page' : undefined}
-              aria-label={`${tab.label}${tab.specialCaseOnly ? ' (System only)' : ''}`}
-            >
-              <ListItemIcon aria-hidden="true">
-                {getTabIcon(tab.id)}
-              </ListItemIcon>
-              <ListItemText 
-                primary={tab.label}
-                secondary={tab.specialCaseOnly && (
-                  <Chip 
-                    label="System" 
-                    size="small" 
-                    color="warning"
-                    aria-label="System administrator only"
-                  />
-                )}
-              />
-            </ListItemButton>
-          </ListItem>
-        ))}
-      </List>
+        </Text>
+      </div>
+      <Menu
+        id="navigation"
+        mode="inline"
+        selectedKeys={[selectedTab]}
+        items={menuItems}
+        style={{ border: 'none' }}
+      />
       <Divider />
-      <Box sx={{ p: 2 }}>
-        <Typography variant="caption" color="textSecondary">
+      <div style={{ padding: 16 }}>
+        <Text type="secondary" style={{ fontSize: 12 }}>
           {namespaceTitle}
-        </Typography>
-        <Box sx={{ display: 'flex', alignItems: 'center', mt: 1 }}>
-          <Box 
-            sx={{ width: 8, height: 8, bgcolor: 'success.main', borderRadius: '50%', mr: 1 }}
-            role="img"
-            aria-label="Status: Connected"
-          />
-          <Typography variant="caption">Connected</Typography>
-        </Box>
-      </Box>
-    </Box>
+        </Text>
+        <div style={{ display: 'flex', alignItems: 'center', marginTop: 8 }}>
+          <Badge status="success" />
+          <Text style={{ fontSize: 12, marginLeft: 8 }}>Connected</Text>
+        </div>
+      </div>
+    </div>
   );
 
   return (
@@ -967,93 +775,76 @@ export default function NamespaceManagementClient({
       <SkipLinks />
       <LiveRegion message={liveMessage} />
       
-      <Box sx={{ display: 'flex' }}>
-        {/* Mobile App Bar */}
-        {isMobile && (
-          <AppBar
-            position="fixed"
-            sx={{
-              width: '100%',
-              ml: 0,
-            }}
-          >
-            <Toolbar>
-              <IconButton
-                color="inherit"
-                aria-label="open navigation menu"
-                edge="start"
-                onClick={handleDrawerToggle}
-                sx={{ mr: 2 }}
-              >
-                <Menu />
-              </IconButton>
-              <Typography variant="h6" noWrap component="h1">
-                {namespaceTitle}
-              </Typography>
-            </Toolbar>
-          </AppBar>
-        )}
-
-        {/* Sidebar Drawer */}
-        <Box
-          component="nav"
-          sx={{ width: { md: drawerWidth }, flexShrink: { md: 0 } }}
+      <div style={{ display: 'flex', minHeight: '100vh' }}>
+        {/* Mobile Header */}
+        <div style={{ 
+          display: 'none',
+          position: 'fixed',
+          top: 0,
+          left: 0,
+          right: 0,
+          height: 64,
+          background: '#fff',
+          borderBottom: '1px solid #f0f0f0',
+          padding: '0 16px',
+          alignItems: 'center',
+          zIndex: 100,
+        }}
+        className="mobile-header"
         >
-          {/* Mobile Drawer */}
-          <Drawer
-            variant="temporary"
-            open={mobileOpen}
-            onClose={handleDrawerToggle}
-            ModalProps={{
-              keepMounted: true, // Better open performance on mobile.
-            }}
-            sx={{
-              display: { xs: 'block', md: 'none' },
-              '& .MuiDrawer-paper': { boxSizing: 'border-box', width: drawerWidth },
-            }}
-          >
-            {drawer}
-          </Drawer>
+          <Button
+            icon={<MenuOutlined />}
+            onClick={handleDrawerToggle}
+            style={{ marginRight: 16 }}
+          />
+          <Title level={4} style={{ margin: 0 }}>{namespaceTitle}</Title>
+        </div>
 
-          {/* Desktop Drawer */}
-          <Drawer
-            variant="permanent"
-            sx={{
-              display: { xs: 'none', md: 'block' },
-              '& .MuiDrawer-paper': { 
-                boxSizing: 'border-box', 
-                width: drawerWidth,
-                position: 'relative',
-                height: '100%',
-                borderRight: 1,
-                borderColor: 'divider',
-              },
-            }}
-            open
-          >
-            {drawer}
-          </Drawer>
-        </Box>
+        {/* Mobile Drawer */}
+        <Drawer
+          title={null}
+          placement="left"
+          onClose={handleDrawerToggle}
+          open={mobileOpen}
+          width={240}
+          closable={false}
+          className="mobile-drawer"
+        >
+          {drawerContent}
+        </Drawer>
+
+        {/* Desktop Sidebar */}
+        <div 
+          style={{ 
+            width: 240,
+            background: '#fff',
+            borderRight: '1px solid #f0f0f0',
+            height: '100vh',
+            position: 'sticky',
+            top: 0,
+          }}
+          className="desktop-sidebar"
+        >
+          {drawerContent}
+        </div>
 
         {/* Main Content */}
-        <Box
-          component="main"
+        <div
           id="main-content"
-          sx={{
-            flexGrow: 1,
-            p: 3,
-            width: { md: `calc(100% - ${drawerWidth}px)` },
-            mt: { xs: 8, md: 0 },
+          style={{
+            flex: 1,
+            padding: 24,
+            background: '#f5f5f5',
+            minHeight: '100vh',
           }}
+          className="main-content"
         >
-          <Box sx={{ mb: 3 }}>
-            <Typography variant="h4" gutterBottom component="h1">
-              {currentTab?.label}
-            </Typography>
-            <Typography variant="body1" color="textSecondary">
+          <div style={{ marginBottom: 24 }}>
+            <Title level={2}>{currentTab?.label}</Title>
+            <Text type="secondary">
               {namespaceTitle} - Dashboard and status overview
-            </Typography>
-          </Box>
+            </Text>
+          </div>
 
           {selectedTab === 'overview' ? (
             <NamespaceDashboard 
@@ -1069,66 +860,83 @@ export default function NamespaceManagementClient({
             />
           )}
 
-          <Box 
-            sx={{ mt: 4 }}
+          <div 
+            style={{ marginTop: 32 }}
             id="external-resources"
             role="region"
             aria-labelledby="external-resources-title"
           >
-            <Typography 
-              variant="h6" 
-              gutterBottom
+            <Title 
+              level={4}
               id="external-resources-title"
-              component="h2"
             >
               External Resources
-            </Typography>
-            <Stack direction="row" spacing={2} flexWrap="wrap">
+            </Title>
+            <Space wrap>
               <Button
-                variant="outlined"
-                startIcon={<GitHub aria-hidden="true" />}
+                icon={<GithubOutlined />}
                 href={`https://github.com/${githubRepo}`}
                 target="_blank"
                 rel="noopener noreferrer"
-                aria-label="GitHub Repository (opens in new tab)"
-                sx={{ minHeight: 44 }}
+                style={{ minHeight: 44 }}
               >
                 GitHub Repository
               </Button>
               <Button
-                variant="outlined"
                 href={`https://github.com/${githubRepo}/issues`}
                 target="_blank"
                 rel="noopener noreferrer"
-                aria-label="GitHub Issues (opens in new tab)"
-                sx={{ minHeight: 44 }}
+                style={{ minHeight: 44 }}
               >
                 Issues
               </Button>
               <Button
-                variant="outlined"
                 href={`https://github.com/${githubRepo}/pulls`}
                 target="_blank"
                 rel="noopener noreferrer"
-                aria-label="GitHub Pull Requests (opens in new tab)"
-                sx={{ minHeight: 44 }}
+                style={{ minHeight: 44 }}
               >
                 Pull Requests
               </Button>
               <Button
-                variant="outlined"
                 href="https://github.com/orgs/iflastandards/teams"
                 target="_blank"
                 rel="noopener noreferrer"
-                aria-label="Team Management (opens in new tab)"
-                sx={{ minHeight: 44 }}
+                style={{ minHeight: 44 }}
               >
                 Team Management
               </Button>
-            </Stack>
-          </Box>
-        </Box>
-      </Box>
+            </Space>
+          </div>
+        </div>
+      </div>
+
+      <style jsx>{`
+        @media (max-width: 768px) {
+          .mobile-header {
+            display: flex !important;
+          }
+          .desktop-sidebar {
+            display: none !important;
+          }
+          .main-content {
+            padding-top: 88px !important;
+          }
+        }
+        @media (min-width: 769px) {
+          .mobile-drawer {
+            display: none !important;
+          }
+        }
+        .skip-links:focus-within {
+          position: static !important;
+          left: auto !important;
+          top: auto !important;
+          z-index: 9999;
+          padding: 16px;
+          background: #1890ff;
+        }
+      `}</style>
     </>
   );
 }

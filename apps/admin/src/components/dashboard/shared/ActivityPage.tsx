@@ -2,17 +2,12 @@
 
 import React from 'react';
 import {
-  Box,
   Typography,
   Card,
-  CardContent,
-  Stack,
-  Chip,
-  FormControl,
-  InputLabel,
+  Space,
+  Tag,
   Select,
-  MenuItem,
-} from '@mui/material';
+} from 'antd';
 
 interface ActivityItemProps {
   action: string;
@@ -30,6 +25,8 @@ interface ActivityItem {
   severity?: 'info' | 'warning' | 'error' | 'success';
 }
 
+const { Title, Text } = Typography;
+
 function ActivityItemComponent({ action, author, time, type, severity }: ActivityItemProps) {
   const typeIcons = {
     project: '📁',
@@ -40,41 +37,32 @@ function ActivityItemComponent({ action, author, time, type, severity }: Activit
   };
 
   const severityColors = {
-    info: 'info',
+    info: 'processing',
     warning: 'warning',
     error: 'error',
     success: 'success',
   } as const;
   
   return (
-    <Box py={2} borderBottom={1} borderColor="divider">
-      <Stack direction="row" spacing={2} alignItems="flex-start">
-        <Typography fontSize={24} aria-hidden="true">{typeIcons[type]}</Typography>
-        <Box flex={1}>
-          {severity && (
-            <Stack direction="row" spacing={1} alignItems="center" mb={1}>
-              <Chip 
-                label={severity} 
-                size="small" 
-                color={severityColors[severity]}
-              />
-              <Chip label={type} size="small" variant="outlined" />
-            </Stack>
-          )}
-          {!severity && (
-            <Stack direction="row" spacing={1} alignItems="center" mb={1}>
-              <Chip label={type} size="small" variant="outlined" />
-            </Stack>
-          )}
-          <Typography variant="body1" fontWeight="medium">
-            {action}
-          </Typography>
-          <Typography variant="caption" color="text.secondary">
+    <div style={{ paddingTop: 16, paddingBottom: 16, borderBottom: '1px solid #f0f0f0' }}>
+      <Space align="start" size={16}>
+        <Text style={{ fontSize: 24 }} aria-hidden="true">{typeIcons[type]}</Text>
+        <div style={{ flex: 1 }}>
+          <Space style={{ marginBottom: 8 }}>
+            {severity && (
+              <Tag color={severityColors[severity]}>{severity}</Tag>
+            )}
+            <Tag>{type}</Tag>
+          </Space>
+          <div>
+            <Text strong>{action}</Text>
+          </div>
+          <Text type="secondary" style={{ fontSize: 12 }}>
             By {author} • {time}
-          </Typography>
-        </Box>
-      </Stack>
-    </Box>
+          </Text>
+        </div>
+      </Space>
+    </div>
   );
 }
 
@@ -203,48 +191,37 @@ export function SharedActivityPage({
     : `${reviewGroupName} Review Group Activity`;
 
   return (
-    <Box>
-      <Box mb={3}>
-        <Typography variant="h4" component="h1" gutterBottom>
-          {title}
-        </Typography>
-        <Typography variant="body1" color="text.secondary">
-          {subtitle}
-        </Typography>
-      </Box>
+    <div>
+      <div style={{ marginBottom: 24 }}>
+        <Title level={2}>{title}</Title>
+        <Text type="secondary">{subtitle}</Text>
+      </div>
 
-      <Card elevation={0}>
-        <CardContent>
-          <Box display="flex" justifyContent="space-between" alignItems="center" mb={3}>
-            <Typography variant="h6">
-              {cardTitle}
-            </Typography>
-            {role === 'admin' && (
-              <FormControl size="small" sx={{ minWidth: 120 }}>
-                <InputLabel id="filter-label">Filter</InputLabel>
-                <Select
-                  labelId="filter-label"
-                  value={filter}
-                  label="Filter"
-                  onChange={(e) => setFilter(e.target.value)}
-                >
-                  <MenuItem value="all">All</MenuItem>
-                  <MenuItem value="info">Info</MenuItem>
-                  <MenuItem value="success">Success</MenuItem>
-                  <MenuItem value="warning">Warning</MenuItem>
-                  <MenuItem value="error">Error</MenuItem>
-                </Select>
-              </FormControl>
-            )}
-          </Box>
-          
-          <Box role="feed" aria-label={`${role === 'admin' ? 'System' : 'Review group'} activity feed`}>
-            {filteredActivities.map((activity, index) => (
-              <ActivityItemComponent key={index} {...activity} />
-            ))}
-          </Box>
-        </CardContent>
+      <Card>
+        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 24 }}>
+          <Title level={4} style={{ margin: 0 }}>{cardTitle}</Title>
+          {role === 'admin' && (
+            <Select
+              value={filter}
+              style={{ width: 120 }}
+              onChange={(value) => setFilter(value)}
+              options={[
+                { value: 'all', label: 'All' },
+                { value: 'info', label: 'Info' },
+                { value: 'success', label: 'Success' },
+                { value: 'warning', label: 'Warning' },
+                { value: 'error', label: 'Error' },
+              ]}
+            />
+          )}
+        </div>
+        
+        <div role="feed" aria-label={`${role === 'admin' ? 'System' : 'Review group'} activity feed`}>
+          {filteredActivities.map((activity, index) => (
+            <ActivityItemComponent key={index} {...activity} />
+          ))}
+        </div>
       </Card>
-    </Box>
+    </div>
   );
 }

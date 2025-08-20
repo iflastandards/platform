@@ -1,44 +1,36 @@
 'use client';
 
-import React, { useState } from 'react';
+import { useState } from 'react';
 import {
-  Box,
   Typography,
-  Paper,
   Card,
-  CardContent,
   Button,
-  Chip,
+  Tag,
   Avatar,
-  Link,
-  IconButton,
   Badge,
-  Menu,
-  MenuItem,
-  useTheme,
-  LinearProgress,
-  Skeleton,
-} from '@mui/material';
-import Grid from '@mui/material/Grid';
+  Dropdown,
+  Progress,
+  Row,
+  Col,
+  Space,
+  Statistic,
+  Empty,
+} from 'antd';
 import {
-  GitHub as GitHubIcon,
-  Assignment as AssignmentIcon,
-  CheckCircle as CheckCircleIcon,
-  Error as ErrorIcon,
-  Schedule as ScheduleIcon,
-  Refresh as RefreshIcon,
-  MoreVert as MoreVertIcon,
-  CloudUpload as CloudUploadIcon,
-  Edit as EditIcon,
-  Translate as TranslateIcon,
-  Timeline as TimelineIcon,
-  Build as BuildIcon,
-  OpenInNew as OpenInNewIcon,
-  Label as LabelIcon,
-  Comment as CommentIcon,
-  Dashboard as DashboardIcon,
-  BarChart as MetricsIcon,
-} from '@mui/icons-material';
+  GithubOutlined,
+  ProjectOutlined,
+  ReloadOutlined,
+  MoreOutlined,
+  CloudUploadOutlined,
+  EditOutlined,
+  TranslationOutlined,
+  LineChartOutlined,
+  BuildOutlined,
+  ExportOutlined,
+  CommentOutlined,
+  DashboardOutlined,
+  BarChartOutlined,
+} from '@ant-design/icons';
 import { format } from 'date-fns';
 import {
   mockNamespaces,
@@ -49,7 +41,13 @@ import { mockEditorialCycles } from '@/lib/mock-data/supabase/editorial-cycles';
 import { mockNightlyBuilds } from '@/lib/mock-data/supabase/nightly-builds';
 import { mockImportJobs } from '@/lib/mock-data/supabase/import-jobs';
 import { ActivityFeed, StatusChip } from '@/components/common';
-import { TabBasedDashboardLayout, NavigationItem } from '@/components/layout/TabBasedDashboardLayout';
+import {
+  TabBasedDashboardLayout,
+  NavigationItem,
+} from '@/components/layout/TabBasedDashboardLayout';
+import type { MenuProps } from 'antd';
+
+const { Title, Text, Link, Paragraph } = Typography;
 
 interface NamespaceDashboardProps {
   namespace: string;
@@ -57,17 +55,12 @@ interface NamespaceDashboardProps {
   isDemo?: boolean;
 }
 
-
 export default function NamespaceDashboard({
   namespace,
   userId: _userId = 'user-admin-1',
   isDemo: _isDemo = false,
 }: NamespaceDashboardProps) {
-  const theme = useTheme();
   const [selectedTab, setSelectedTab] = useState('overview');
-  const [issueMenuAnchor, setIssueMenuAnchor] = useState<null | HTMLElement>(
-    null,
-  );
   const [_selectedIssue, setSelectedIssue] = useState<string | null>(null);
   const [refreshing, setRefreshing] = useState(false);
 
@@ -76,7 +69,7 @@ export default function NamespaceDashboard({
     (ns) => ns.slug === namespace,
   );
   if (!namespaceData) {
-    return <Typography>Namespace not found</Typography>;
+    return <Text>Namespace not found</Text>;
   }
 
   // Get related data
@@ -153,154 +146,135 @@ export default function NamespaceDashboard({
     setRefreshing(false);
   };
 
-  const handleIssueMenuOpen = (
-    event: React.MouseEvent<HTMLElement>,
-    issueId: string,
-  ) => {
-    setIssueMenuAnchor(event.currentTarget);
-    setSelectedIssue(issueId);
-  };
-
-  const handleIssueMenuClose = () => {
-    setIssueMenuAnchor(null);
-    setSelectedIssue(null);
-  };
+  const issueMenuItems: MenuProps['items'] = [
+    {
+      key: 'edit',
+      icon: <EditOutlined />,
+      label: 'Edit Issue',
+    },
+    {
+      key: 'translate',
+      icon: <TranslationOutlined />,
+      label: 'Request Translation',
+    },
+    {
+      key: 'build',
+      icon: <BuildOutlined />,
+      label: 'Trigger Build',
+    },
+  ];
 
   const navigationItems: NavigationItem[] = [
-    { id: 'overview', label: 'Overview', icon: DashboardIcon },
-    { id: 'issues', label: 'GitHub Issues', icon: GitHubIcon, badge: allIssues.filter(i => i.state === 'open').length },
-    { id: 'activity', label: 'Recent Activity', icon: TimelineIcon },
-    { id: 'projects', label: 'Projects', icon: AssignmentIcon, badge: projects.length },
-    { id: 'metrics', label: 'Metrics', icon: MetricsIcon },
+    { id: 'overview', label: 'Overview', icon: DashboardOutlined },
+    {
+      id: 'issues',
+      label: 'GitHub Issues',
+      icon: GithubOutlined,
+      badge: allIssues.filter((i) => i.state === 'open').length,
+    },
+    { id: 'activity', label: 'Recent Activity', icon: LineChartOutlined },
+    {
+      id: 'projects',
+      label: 'Projects',
+      icon: ProjectOutlined,
+      badge: projects.length,
+    },
+    { id: 'metrics', label: 'Metrics', icon: BarChartOutlined },
   ];
 
   const renderIssueCard = (issue: any) => {
-    // TODO: Define proper issue type
-    const labelColors: Record<string, string> = {
-      'import-request': theme.palette.primary.main,
-      validation: theme.palette.success.main,
-      translation: theme.palette.info.main,
-      bug: theme.palette.error.main,
-      enhancement: theme.palette.secondary.main,
+    const labelColorMap: Record<string, string> = {
+      'import-request': 'blue',
+      validation: 'success',
+      translation: 'cyan',
+      bug: 'error',
+      enhancement: 'purple',
     };
 
     return (
-      <Card sx={{ mb: 2 }}>
-        <CardContent>
-          <Box
-            sx={{
-              display: 'flex',
-              justifyContent: 'space-between',
-              alignItems: 'flex-start',
-              mb: 2,
-            }}
-          >
-            <Box sx={{ flex: 1 }}>
-              <Typography variant="h6" gutterBottom>
-                <Link
-                  href={issue.html_url}
-                  target="_blank"
-                  rel="noopener"
-                  sx={{
-                    textDecoration: 'none',
-                    color: 'inherit',
-                    '&:hover': { textDecoration: 'underline' },
-                  }}
-                >
-                  {issue.title}
-                </Link>
-              </Typography>
-              <Box
-                sx={{ display: 'flex', gap: 1, alignItems: 'center', mb: 1 }}
+      <Card key={`issue-${issue.number}`} style={{ marginBottom: '16px' }}>
+        <div
+          style={{
+            display: 'flex',
+            justifyContent: 'space-between',
+            alignItems: 'flex-start',
+            marginBottom: '16px',
+          }}
+        >
+          <div style={{ flex: 1 }}>
+            <Title level={4}>
+              <Link
+                href={issue.html_url}
+                target="_blank"
+                rel="noopener noreferrer"
               >
-                <Chip
-                  label={`#${issue.number}`}
-                  size="small"
-                  variant="outlined"
-                />
-                <StatusChip
-                  status={issue.state === 'open' ? 'active' : 'completed'}
-                  size="small"
-                />
-                <Typography variant="caption" color="text.secondary">
-                  in {issue.projectName}
-                </Typography>
-              </Box>
-            </Box>
-            <IconButton
-              size="small"
-              onClick={(e) => handleIssueMenuOpen(e, issue.id)}
-            >
-              <MoreVertIcon />
-            </IconButton>
-          </Box>
-
-          <Box sx={{ display: 'flex', gap: 1, flexWrap: 'wrap', mb: 2 }}>
-            {issue.labels.map((label: string) => (
-              <Chip
-                key={label}
-                label={label}
-                size="small"
-                icon={<LabelIcon />}
-                sx={{
-                  bgcolor: labelColors[label]
-                    ? `${labelColors[label]}20`
-                    : undefined,
-                  color: labelColors[label] || undefined,
-                  borderColor: labelColors[label] || undefined,
-                }}
-                variant="outlined"
-              />
-            ))}
-          </Box>
-
-          <Box
-            sx={{
-              display: 'flex',
-              justifyContent: 'space-between',
-              alignItems: 'center',
+                {issue.title}
+              </Link>
+            </Title>
+            <Space size="small">
+              <Text type="secondary">#{issue.number}</Text>
+              <Text type="secondary">•</Text>
+              <Text type="secondary">{issue.projectName}</Text>
+              <Text type="secondary">•</Text>
+              <Text type="secondary">
+                opened {format(new Date(issue.created_at), 'MMM d, yyyy')}
+              </Text>
+            </Space>
+          </div>
+          <Dropdown
+            menu={{
+              items: issueMenuItems,
+              onClick: () => setSelectedIssue(`issue-${issue.number}`),
             }}
+            placement="bottomRight"
+            trigger={['click']}
           >
-            <Box sx={{ display: 'flex', gap: 2, alignItems: 'center' }}>
-              {issue.author && (
-                <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-                  <Avatar
-                    src={`https://i.pravatar.cc/150?u=${issue.author}`}
-                    sx={{ width: 24, height: 24 }}
-                  >
-                    {typeof issue.author === 'string' ? issue.author.charAt(0) : 'U'}
-                  </Avatar>
-                  <Typography variant="caption">{issue.author}</Typography>
-                </Box>
-              )}
-              {issue.assignee && (
-                <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.5 }}>
-                  <Typography variant="caption" color="text.secondary">
-                    →
-                  </Typography>
-                  <Avatar
-                    src={`https://i.pravatar.cc/150?u=${issue.assignee}`}
-                    sx={{ width: 24, height: 24 }}
-                  >
-                    {typeof issue.assignee === 'string' ? issue.assignee.charAt(0) : 'U'}
-                  </Avatar>
-                  <Typography variant="caption">{issue.assignee}</Typography>
-                </Box>
-              )}
-            </Box>
-            <Box sx={{ display: 'flex', gap: 2, alignItems: 'center' }}>
-              <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.5 }}>
-                <CommentIcon sx={{ fontSize: 16, color: 'text.secondary' }} />
-                <Typography variant="caption" color="text.secondary">
-                  {issue.comments}
-                </Typography>
-              </Box>
-              <Typography variant="caption" color="text.secondary">
-                {format(new Date(issue.updated_at), 'MMM d, yyyy')}
-              </Typography>
-            </Box>
-          </Box>
-        </CardContent>
+            <Button type="text" icon={<MoreOutlined />} />
+          </Dropdown>
+        </div>
+
+        <Paragraph ellipsis={{ rows: 2 }}>
+          {issue.body || 'No description provided'}
+        </Paragraph>
+
+        <div
+          style={{
+            display: 'flex',
+            justifyContent: 'space-between',
+            alignItems: 'center',
+            marginTop: '16px',
+          }}
+        >
+          <Space size="small">
+            {issue.labels.map((label: string) => (
+              <Tag
+                key={label}
+                color={labelColorMap[label] || 'default'}
+                icon={
+                  label === 'import-request' ? (
+                    <CloudUploadOutlined />
+                  ) : undefined
+                }
+              >
+                {label}
+              </Tag>
+            ))}
+          </Space>
+          <Space size="small">
+            {issue.assignee && (
+              <Avatar
+                size="small"
+                src={`https://i.pravatar.cc/150?u=${issue.assignee}`}
+              >
+                {issue.assignee.charAt(0).toUpperCase()}
+              </Avatar>
+            )}
+            <Space size={4}>
+              <CommentOutlined />
+              <Text type="secondary">{issue.comments}</Text>
+            </Space>
+          </Space>
+        </div>
       </Card>
     );
   };
@@ -309,280 +283,313 @@ export default function NamespaceDashboard({
     switch (selectedTab) {
       case 'overview':
         return (
-          <>
+          <div>
             {/* Header */}
-            <Box sx={{ mb: 4 }}>
-              <Box
-                sx={{
-                  display: 'flex',
-                  justifyContent: 'space-between',
-                  alignItems: 'center',
-                  mb: 2,
-                }}
-              >
-                <Box>
-                  <Typography variant="h4" component="h1" fontWeight="bold" gutterBottom>
-                    {namespaceData.name}
-                  </Typography>
-                  <Typography variant="body1" color="text.secondary">
-                    {namespaceData.description}
-                  </Typography>
-                </Box>
-                <Box sx={{ display: 'flex', gap: 2 }}>
-                  <IconButton onClick={handleRefresh} disabled={refreshing} aria-label="Refresh data">
-                    <RefreshIcon />
-                  </IconButton>
-                  <Button
-                    variant="outlined"
-                    startIcon={<GitHubIcon />}
-                    href={`https://github.com/iflastandards/${namespace}`}
-                    target="_blank"
-                    endIcon={<OpenInNewIcon />}
-                    aria-label={`View ${namespace} on GitHub`}
-                  >
-                    View on GitHub
-                  </Button>
-                  <Button
-                    variant="contained"
-                    startIcon={<CloudUploadIcon />}
-                    onClick={() => {
-                      /* Navigate to import */
+            <div
+              style={{
+                display: 'flex',
+                justifyContent: 'space-between',
+                alignItems: 'center',
+                marginBottom: '24px',
+              }}
+            >
+              <div>
+                <Title level={2}>{namespaceData.name}</Title>
+                <Text type="secondary">{namespaceData.description}</Text>
+              </div>
+              <Space>
+                <Button
+                  icon={<ReloadOutlined spin={refreshing} />}
+                  onClick={handleRefresh}
+                  loading={refreshing}
+                >
+                  Refresh
+                </Button>
+                <Button
+                  type="primary"
+                  icon={<CloudUploadOutlined />}
+                  href={`/import?namespace=${namespace}&demo=true`}
+                >
+                  New Import
+                </Button>
+              </Space>
+            </div>
+
+            {/* Stats Cards */}
+            <Row gutter={[16, 16]} style={{ marginBottom: '24px' }}>
+              <Col xs={24} sm={12} lg={6}>
+                <Card>
+                  <Statistic
+                    title="Open Issues"
+                    value={allIssues.filter((i) => i.state === 'open').length}
+                    prefix={<ProjectOutlined />}
+                  />
+                </Card>
+              </Col>
+              <Col xs={24} sm={12} lg={6}>
+                <Card>
+                  <Statistic
+                    title="Active Projects"
+                    value={projects.filter((p) => p.state === 'open').length}
+                    prefix={<GithubOutlined />}
+                  />
+                </Card>
+              </Col>
+              <Col xs={24} sm={12} lg={6}>
+                <Card>
+                  <Statistic
+                    title="Editorial Phase"
+                    value={latestCycle?.phase || 'None'}
+                    valueStyle={{ fontSize: '24px' }}
+                  />
+                </Card>
+              </Col>
+              <Col xs={24} sm={12} lg={6}>
+                <Card>
+                  <Statistic
+                    title="Build Status"
+                    value={latestBuild?.status || 'Unknown'}
+                    valueStyle={{
+                      fontSize: '24px',
+                      color:
+                        latestBuild?.status === 'success'
+                          ? '#52c41a'
+                          : '#faad14',
                     }}
-                    aria-label="Start new import process"
-                  >
-                    New Import
-                  </Button>
-                </Box>
-              </Box>
+                  />
+                </Card>
+              </Col>
+            </Row>
 
-              {refreshing && <LinearProgress sx={{ mb: 2 }} />}
-
-              {/* Status Bar */}
-              <Paper sx={{ p: 2 }}>
-                <Grid container spacing={3}>
-                  <Grid size={{ xs: 12, sm: 6, md: 3 }}>
-                    <Box role="region" aria-labelledby="editorial-cycle-label">
-                      <Typography id="editorial-cycle-label" variant="body2" color="text.secondary" gutterBottom>
-                        Editorial Cycle
-                      </Typography>
-                      {latestCycle ? (
-                        <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-                          <TimelineIcon color="primary" aria-hidden="true" />
-                          <Box>
-                            <Typography variant="h6">
-                              {latestCycle.phase.charAt(0).toUpperCase() +
-                                latestCycle.phase.slice(1)}
-                            </Typography>
-                            <Typography variant="caption" color="text.secondary">
-                              Started{' '}
-                              {format(
-                                new Date(latestCycle.started_at),
-                                'MMM d, yyyy',
-                              )}
-                            </Typography>
-                          </Box>
-                        </Box>
-                      ) : (
-                        <Skeleton variant="text" width={150} height={40} />
+            {/* Active Imports */}
+            {activeImports.length > 0 && (
+              <Card
+                title="Active Imports"
+                extra={<Tag color="processing">In Progress</Tag>}
+                style={{ marginBottom: '24px' }}
+              >
+                <Space direction="vertical" style={{ width: '100%' }}>
+                  {activeImports.map((job) => (
+                    <div key={job.id}>
+                      <div
+                        style={{
+                          display: 'flex',
+                          justifyContent: 'space-between',
+                          alignItems: 'center',
+                          marginBottom: '8px',
+                        }}
+                      >
+                        <div>
+                          <Text strong>
+                            {job.google_sheet_url.split('/').pop()}
+                          </Text>
+                          <Text type="secondary" style={{ marginLeft: '8px' }}>
+                            {job.status === 'processing'
+                              ? 'Processing...'
+                              : 'Queued'}
+                          </Text>
+                        </div>
+                        <Text type="secondary">
+                          {format(new Date(job.started_at), 'MMM d, h:mm a')}
+                        </Text>
+                      </div>
+                      {job.status === 'processing' && (
+                        <Progress percent={75} status="active" />
                       )}
-                    </Box>
-                  </Grid>
+                    </div>
+                  ))}
+                </Space>
+              </Card>
+            )}
 
-                  <Grid size={{ xs: 12, sm: 6, md: 3 }}>
-                    <Box role="region" aria-labelledby="latest-build-label">
-                      <Typography id="latest-build-label" variant="body2" color="text.secondary" gutterBottom>
-                        Latest Build
-                      </Typography>
-                      {latestBuild ? (
-                        <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-                          {latestBuild.status === 'success' ? (
-                            <CheckCircleIcon color="success" aria-label="Build successful" />
-                          ) : latestBuild.status === 'failure' ? (
-                            <ErrorIcon color="error" aria-label="Build failed" />
-                          ) : (
-                            <ScheduleIcon color="warning" aria-label="Build pending" />
+            {/* Recent Activity and Build Status */}
+            <Row gutter={[16, 16]}>
+              <Col xs={24} lg={12}>
+                <Card
+                  title="Recent Activity"
+                  extra={
+                    <Button
+                      type="link"
+                      href="#"
+                      onClick={() => setSelectedTab('activity')}
+                    >
+                      View All
+                    </Button>
+                  }
+                >
+                  <ActivityFeed activities={recentActivity.slice(0, 5)} />
+                </Card>
+              </Col>
+              <Col xs={24} lg={12}>
+                <Card title="Latest Build Details">
+                  {latestBuild ? (
+                    <Space direction="vertical" style={{ width: '100%' }}>
+                      <div
+                        style={{
+                          display: 'flex',
+                          justifyContent: 'space-between',
+                        }}
+                      >
+                        <Text>Status</Text>
+                        <StatusChip
+                          status={
+                            latestBuild.status === 'success'
+                              ? 'active'
+                              : 'error'
+                          }
+                        />
+                      </div>
+                      <div
+                        style={{
+                          display: 'flex',
+                          justifyContent: 'space-between',
+                        }}
+                      >
+                        <Text>Date</Text>
+                        <Text>
+                          {format(
+                            new Date(latestBuild.run_date),
+                            'MMM d, yyyy h:mm a',
                           )}
-                          <Box>
-                            <Typography variant="h6">
-                              v{latestBuild.suggested_version}
-                            </Typography>
-                            <Typography variant="caption" color="text.secondary">
-                              {format(
-                                new Date(latestBuild.run_date),
-                                'MMM d, h:mm a',
-                              )}
-                            </Typography>
-                          </Box>
-                        </Box>
-                      ) : (
-                        <Skeleton variant="text" width={150} height={40} />
-                      )}
-                    </Box>
-                  </Grid>
-
-                  <Grid size={{ xs: 12, sm: 6, md: 3 }}>
-                    <Box role="region" aria-labelledby="open-issues-label">
-                      <Typography id="open-issues-label" variant="body2" color="text.secondary" gutterBottom>
-                        Open Issues
-                      </Typography>
-                      <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-                        <AssignmentIcon color="primary" aria-hidden="true" />
-                        <Box>
-                          <Typography variant="h6" aria-label={`${allIssues.filter((i) => i.state === 'open').length} open issues`}>
-                            {allIssues.filter((i) => i.state === 'open').length}
-                          </Typography>
-                          <Typography variant="caption" color="text.secondary">
-                            {
-                              allIssues.filter((i) =>
-                                i.labels.includes('import-request'),
-                              ).length
-                            }{' '}
-                            imports pending
-                          </Typography>
-                        </Box>
-                      </Box>
-                    </Box>
-                  </Grid>
-
-                  <Grid size={{ xs: 12, sm: 6, md: 3 }}>
-                    <Box role="region" aria-labelledby="active-imports-label">
-                      <Typography id="active-imports-label" variant="body2" color="text.secondary" gutterBottom>
-                        Active Imports
-                      </Typography>
-                      <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-                        <Badge badgeContent={activeImports.length} color="primary">
-                          <CloudUploadIcon color="primary" aria-hidden="true" />
-                        </Badge>
-                        <Box>
-                          <Typography variant="h6" aria-label={`${activeImports.length} imports running`}>
-                            {activeImports.length} running
-                          </Typography>
-                          <Typography variant="caption" color="text.secondary">
-                            {
-                              activeImports.filter((i) => i.status === 'processing')
-                                .length
-                            }{' '}
-                            processing
-                          </Typography>
-                        </Box>
-                      </Box>
-                    </Box>
-                  </Grid>
-                </Grid>
-              </Paper>
-            </Box>
-          </>
+                        </Text>
+                      </div>
+                      <div
+                        style={{
+                          display: 'flex',
+                          justifyContent: 'space-between',
+                        }}
+                      >
+                        <Text>Changes</Text>
+                        <Text>{latestBuild.changes.total}</Text>
+                      </div>
+                      <div
+                        style={{
+                          display: 'flex',
+                          justifyContent: 'space-between',
+                        }}
+                      >
+                        <Text>Errors</Text>
+                        <Text>{latestBuild.validation_summary.errors}</Text>
+                      </div>
+                      <div
+                        style={{
+                          display: 'flex',
+                          justifyContent: 'space-between',
+                        }}
+                      >
+                        <Text>Warnings</Text>
+                        <Text>{latestBuild.validation_summary.warnings}</Text>
+                      </div>
+                      <Button
+                        type="link"
+                        icon={<ExportOutlined />}
+                        href={latestBuild.artifact_path || '#'}
+                        target="_blank"
+                        style={{ padding: 0, marginTop: '8px' }}
+                      >
+                        View Build Artifacts
+                      </Button>
+                    </Space>
+                  ) : (
+                    <Empty description="No build data available" />
+                  )}
+                </Card>
+              </Col>
+            </Row>
+          </div>
         );
 
       case 'issues':
         return (
-          <Box>
-            <Typography variant="h4" component="h1" gutterBottom>
-              GitHub Issues
-            </Typography>
-            <Box
-              sx={{
+          <div>
+            <Title level={2}>GitHub Issues</Title>
+            <div
+              style={{
                 display: 'flex',
                 justifyContent: 'space-between',
                 alignItems: 'center',
-                mb: 3,
+                marginBottom: '24px',
               }}
             >
-              <Typography variant="h6">
-                All Issues ({allIssues.length})
-              </Typography>
-              <Box sx={{ display: 'flex', gap: 1 }}>
-                <Chip
-                  label="Open"
-                  size="small"
-                  color="primary"
-                  onClick={() => {}}
-                />
-                <Chip
-                  label="Import Requests"
-                  size="small"
-                  variant="outlined"
-                  onClick={() => {}}
-                />
-                <Chip
-                  label="Validation"
-                  size="small"
-                  variant="outlined"
-                  onClick={() => {}}
-                />
-              </Box>
-            </Box>
-            {allIssues.map((issue) => (
-              <React.Fragment key={`issue-${issue.number}`}>
-                {renderIssueCard(issue)}
-              </React.Fragment>
-            ))}
-          </Box>
+              <Space>
+                <Badge
+                  count={allIssues.filter((i) => i.state === 'open').length}
+                  showZero
+                >
+                  <Tag>Open</Tag>
+                </Badge>
+                <Badge
+                  count={allIssues.filter((i) => i.state === 'closed').length}
+                  showZero
+                >
+                  <Tag>Closed</Tag>
+                </Badge>
+              </Space>
+              <Space>
+                <Tag style={{ cursor: 'pointer' }} onClick={() => {}}>
+                  Import Requests
+                </Tag>
+                <Tag style={{ cursor: 'pointer' }} onClick={() => {}}>
+                  Validation
+                </Tag>
+              </Space>
+            </div>
+            {allIssues.map((issue) => renderIssueCard(issue))}
+          </div>
         );
 
       case 'activity':
         return (
-          <Box>
-            <Typography variant="h4" component="h1" gutterBottom>
-              Recent Activity
-            </Typography>
-            <ActivityFeed activities={recentActivity} maxItems={20} />
-          </Box>
+          <div>
+            <Title level={2}>Recent Activity</Title>
+            <ActivityFeed activities={recentActivity.slice(0, 20)} />
+          </div>
         );
 
       case 'projects':
         return (
-          <Box>
-            <Typography variant="h4" component="h1" gutterBottom>
-              Projects
-            </Typography>
-            <Grid container spacing={3}>
+          <div>
+            <Title level={2}>Projects</Title>
+            <Row gutter={[16, 16]}>
               {projects.map((project) => (
-                <Grid key={project.id} size={{ xs: 12, md: 6 }}>
+                <Col key={project.id} xs={24} md={12}>
                   <Card>
-                    <CardContent>
-                      <Typography variant="h6" gutterBottom>
-                        {project.name}
-                      </Typography>
-                      <Typography variant="body2" color="text.secondary" paragraph>
-                        {project.body}
-                      </Typography>
-                      <Box
-                        sx={{
-                          display: 'flex',
-                          justifyContent: 'space-between',
-                          alignItems: 'center',
-                        }}
+                    <Title level={4}>{project.name}</Title>
+                    <Paragraph type="secondary">{project.body}</Paragraph>
+                    <div
+                      style={{
+                        display: 'flex',
+                        justifyContent: 'space-between',
+                        alignItems: 'center',
+                      }}
+                    >
+                      <StatusChip
+                        status={
+                          project.state === 'open' ? 'active' : 'completed'
+                        }
+                      />
+                      <Button
+                        size="small"
+                        icon={<ExportOutlined />}
+                        href={`https://github.com/iflastandards/${namespace}/projects/${project.number}`}
+                        target="_blank"
                       >
-                        <StatusChip status={project.state} />
-                        <Button
-                          size="small"
-                          href={`https://github.com/iflastandards/${namespace}/projects/${project.number}`}
-                          target="_blank"
-                          endIcon={<OpenInNewIcon />}
-                          aria-label={`View ${project.name} project on GitHub`}
-                        >
-                          View Project
-                        </Button>
-                      </Box>
-                    </CardContent>
+                        View Project
+                      </Button>
+                    </div>
                   </Card>
-                </Grid>
+                </Col>
               ))}
-            </Grid>
-          </Box>
+            </Row>
+          </div>
         );
 
       case 'metrics':
         return (
-          <Box>
-            <Typography variant="h4" component="h1" gutterBottom>
-              Metrics
-            </Typography>
-            <Typography variant="body1" color="text.secondary">
-              Metrics dashboard coming soon...
-            </Typography>
-          </Box>
+          <div>
+            <Title level={2}>Metrics</Title>
+            <Text type="secondary">Metrics dashboard coming soon...</Text>
+          </div>
         );
 
       default:
@@ -591,36 +598,14 @@ export default function NamespaceDashboard({
   };
 
   return (
-    <>
-      <TabBasedDashboardLayout
-        title={namespaceData.name}
-        subtitle={namespaceData.description}
-        navigationItems={navigationItems}
-        selectedTab={selectedTab}
-        onTabSelect={setSelectedTab}
-      >
-        {renderContent()}
-      </TabBasedDashboardLayout>
-
-      {/* Issue Action Menu */}
-      <Menu
-        anchorEl={issueMenuAnchor}
-        open={Boolean(issueMenuAnchor)}
-        onClose={handleIssueMenuClose}
-      >
-        <MenuItem onClick={handleIssueMenuClose}>
-          <EditIcon sx={{ mr: 1 }} fontSize="small" />
-          Edit Issue
-        </MenuItem>
-        <MenuItem onClick={handleIssueMenuClose}>
-          <TranslateIcon sx={{ mr: 1 }} fontSize="small" />
-          Request Translation
-        </MenuItem>
-        <MenuItem onClick={handleIssueMenuClose}>
-          <BuildIcon sx={{ mr: 1 }} fontSize="small" />
-          Trigger Build
-        </MenuItem>
-      </Menu>
-    </>
+    <TabBasedDashboardLayout
+      title={namespaceData.name}
+      subtitle={namespaceData.description}
+      navigationItems={navigationItems}
+      selectedTab={selectedTab}
+      onTabSelect={setSelectedTab}
+    >
+      {renderContent()}
+    </TabBasedDashboardLayout>
   );
 }

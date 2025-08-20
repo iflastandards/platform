@@ -1,8 +1,10 @@
 'use client';
 
 import React from 'react';
-import { Typography, Box } from '@mui/material';
+import { Typography } from 'antd';
 import { ActionGrid, ManagementAction } from './ActionGrid';
+
+const { Title, Text } = Typography;
 
 interface SiteQualityPageProps {
   siteKey: string;
@@ -43,17 +45,15 @@ const qualityActions: ManagementAction[] = [
 
 export function SiteQualityPage({ siteKey }: SiteQualityPageProps) {
   return (
-    <Box>
-      <Box sx={{ mb: 3 }}>
-        <Typography variant="h4" gutterBottom component="h1">
-          Quality Assurance
-        </Typography>
-        <Typography variant="body1" color="textSecondary">
+    <div>
+      <div style={{ marginBottom: 24 }}>
+        <Title level={2}>Quality Assurance</Title>
+        <Text type="secondary">
           Ensure quality, consistency, and accessibility for {siteKey.toUpperCase()}
-        </Typography>
-      </Box>
+        </Text>
+      </div>
 
       <ActionGrid actions={qualityActions} />
-    </Box>
+    </div>
   );
 }

@@ -3,21 +3,22 @@
 import React from 'react';
 import { 
   Typography, 
-  Box, 
   Button, 
-  Stack, 
   Card, 
-  CardContent, 
   List, 
-  ListItem, 
-  ListItemText, 
-  ListItemSecondaryAction, 
-  IconButton,
-  Chip,
-} from '@mui/material';
-import { Add, Edit, Delete } from '@mui/icons-material';
+  Space,
+  Tag,
+  Divider,
+} from 'antd';
+import { 
+  PlusOutlined, 
+  EditOutlined, 
+  DeleteOutlined 
+} from '@ant-design/icons';
 import Link from 'next/link';
 import { ActionGrid, ManagementAction } from './ActionGrid';
+
+const { Title, Text } = Typography;
 
 interface SiteVocabulariesPageProps {
   siteKey: string;
@@ -71,86 +72,80 @@ const mockVocabularies = [
 
 export function SiteVocabulariesPage({ siteKey }: SiteVocabulariesPageProps) {
   return (
-    <Box>
-      <Box sx={{ mb: 3, display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
-        <Box>
-          <Typography variant="h4" gutterBottom component="h1">
-            Vocabularies
-          </Typography>
-          <Typography variant="body1" color="textSecondary">
+    <div>
+      <div style={{ 
+        marginBottom: 24, 
+        display: 'flex', 
+        justifyContent: 'space-between', 
+        alignItems: 'flex-start' 
+      }}>
+        <div>
+          <Title level={2}>Vocabularies</Title>
+          <Text type="secondary">
             Manage controlled vocabularies and terminology for {siteKey.toUpperCase()}
-          </Typography>
-        </Box>
-        <Button
-          variant="contained"
-          startIcon={<Add />}
-          component={Link}
-          href={`/dashboard/${siteKey}/content/vocabularies/new`}
-        >
-          Create Vocabulary
-        </Button>
-      </Box>
+          </Text>
+        </div>
+        <Link href={`/dashboard/${siteKey}/content/vocabularies/new`}>
+          <Button type="primary" icon={<PlusOutlined />}>
+            Create Vocabulary
+          </Button>
+        </Link>
+      </div>
 
-      <Card sx={{ mb: 4 }}>
-        <CardContent>
-          <Typography variant="h6" gutterBottom>
-            Existing Vocabularies
-          </Typography>
-          <List>
-            {mockVocabularies.map((vocab, index) => (
-              <React.Fragment key={vocab.id}>
-                <ListItem>
-                  <ListItemText
-                    primary={vocab.name}
-                    secondary={
-                      <Stack direction="row" spacing={1} alignItems="center" sx={{ mt: 1 }}>
-                        <Typography variant="body2" color="textSecondary">
-                          {vocab.description}
-                        </Typography>
-                        <Chip 
-                          label={`${vocab.termCount} terms`} 
-                          size="small" 
-                          variant="outlined" 
-                        />
-                        <Chip 
-                          label={vocab.status} 
-                          size="small" 
-                          color={vocab.status === 'active' ? 'success' : 'warning'}
-                        />
-                      </Stack>
-                    }
-                  />
-                  <ListItemSecondaryAction>
-                    <Stack direction="row" spacing={1}>
-                      <IconButton
-                        edge="end"
-                        aria-label={`Edit ${vocab.name}`}
-                        component={Link}
-                        href={`/dashboard/${siteKey}/content/vocabularies/${vocab.id}/edit`}
-                      >
-                        <Edit />
-                      </IconButton>
-                      <IconButton
-                        edge="end"
-                        aria-label={`Delete ${vocab.name}`}
-                        color="error"
-                      >
-                        <Delete />
-                      </IconButton>
-                    </Stack>
-                  </ListItemSecondaryAction>
-                </ListItem>
-                {index < mockVocabularies.length - 1 && <Box component="hr" sx={{ border: 'none', borderTop: 1, borderColor: 'divider', my: 1 }} />}
-              </React.Fragment>
-            ))}
-          </List>
-        </CardContent>
+      <Card style={{ marginBottom: 32 }}>
+        <Title level={4} style={{ marginBottom: 16 }}>
+          Existing Vocabularies
+        </Title>
+        <List
+          dataSource={mockVocabularies}
+          renderItem={(vocab, index) => (
+            <>
+              <List.Item
+                actions={[
+                  <Link
+                    key="edit"
+                    href={`/dashboard/${siteKey}/content/vocabularies/${vocab.id}/edit`}
+                  >
+                    <Button
+                      type="text"
+                      icon={<EditOutlined />}
+                      aria-label={`Edit ${vocab.name}`}
+                    />
+                  </Link>,
+                  <Button
+                    key="delete"
+                    type="text"
+                    danger
+                    icon={<DeleteOutlined />}
+                    aria-label={`Delete ${vocab.name}`}
+                  />,
+                ]}
+              >
+                <List.Item.Meta
+                  title={vocab.name}
+                  description={
+                    <Space direction="vertical" size="small">
+                      <Text type="secondary">{vocab.description}</Text>
+                      <Space>
+                        <Tag>{vocab.termCount} terms</Tag>
+                        <Tag color={vocab.status === 'active' ? 'success' : 'warning'}>
+                          {vocab.status}
+                        </Tag>
+                      </Space>
+                    </Space>
+                  }
+                />
+              </List.Item>
+              {index < mockVocabularies.length - 1 && <Divider />}
+            </>
+          )}
+        />
       </Card>
 
-      <Typography variant="h6" gutterBottom sx={{ mt: 4 }}>
+      <Title level={4} style={{ marginBottom: 16, marginTop: 32 }}>
         Vocabulary Management Tools
-      </Typography>
+      </Title>
       <ActionGrid actions={vocabularyActions} />
-    </Box>
+    </div>
   );
 }

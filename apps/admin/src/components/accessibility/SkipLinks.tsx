@@ -1,7 +1,5 @@
 'use client';
 
-import { Box, Link } from '@mui/material';
-
 interface SkipLink {
   href: string;
   label: string;
@@ -13,9 +11,9 @@ interface SkipLinksProps {
 
 export default function SkipLinks({ links }: SkipLinksProps) {
   return (
-    <Box
+    <div
       className="skip-links"
-      sx={{
+      style={{
         position: 'absolute',
         top: 0,
         left: 0,
@@ -23,32 +21,37 @@ export default function SkipLinks({ links }: SkipLinksProps) {
       }}
     >
       {links.map((link) => (
-        <Link
+        <a
           key={link.href}
           href={link.href}
-          sx={{
+          style={{
             position: 'absolute',
             left: '-9999px',
             top: 0,
             padding: '8px 16px',
-            backgroundColor: 'primary.main',
-            color: 'primary.contrastText',
+            backgroundColor: '#1890ff',
+            color: 'white',
             textDecoration: 'none',
-            borderRadius: 1,
+            borderRadius: 4,
             fontWeight: 600,
-            fontSize: '0.875rem',
-            
-            '&:focus': {
-              left: 8,
-              top: 8,
-              outline: 'none',
-              boxShadow: '0 0 0 3px rgba(15, 118, 110, 0.2)',
-            },
+            fontSize: '14px',
+          }}
+          onFocus={(e) => {
+            const target = e.target as HTMLAnchorElement;
+            target.style.left = '8px';
+            target.style.top = '8px';
+            target.style.outline = 'none';
+            target.style.boxShadow = '0 0 0 3px rgba(24, 144, 255, 0.2)';
+          }}
+          onBlur={(e) => {
+            const target = e.target as HTMLAnchorElement;
+            target.style.left = '-9999px';
+            target.style.boxShadow = 'none';
           }}
         >
           {link.label}
-        </Link>
+        </a>
       ))}
-    </Box>
+    </div>
   );
 }

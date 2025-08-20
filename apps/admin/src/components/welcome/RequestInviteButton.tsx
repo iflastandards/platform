@@ -1,78 +1,102 @@
+'use client';
+
 import { useState } from 'react';
 import {
   Button,
-  TextField,
-  Dialog,
-  DialogTitle,
-  DialogContent,
-  DialogActions,
+  Modal,
+  Form,
+  Input,
   Typography,
-} from '@mui/material';
+  message,
+} from 'antd';
+
+const { Text } = Typography;
 
 export default function RequestInviteButton() {
   const [open, setOpen] = useState(false);
-  const [email, setEmail] = useState('');
-  const [status, setStatus] = useState('');
+  const [loading, setLoading] = useState(false);
+  const [form] = Form.useForm();
 
   const handleRequest = async () => {
-    setStatus('Sending...');
-    const res = await fetch('/api/request-invite', {
-      method: 'POST',
-      body: JSON.stringify({ email }),
-      headers: { 'Content-Type': 'application/json' },
-    });
-    if (res.ok) setStatus('Invitation sent!');
-    else setStatus('Error sending invitation.');
+    try {
+      const values = await form.validateFields();
+      setLoading(true);
+      
+      const res = await fetch('/api/request-invite', {
+        method: 'POST',
+        body: JSON.stringify({ email: values.email }),
+        headers: { 'Content-Type': 'application/json' },
+      });
+      
+      if (res.ok) {
+        message.success('Invitation sent successfully!');
+        setOpen(false);
+        form.resetFields();
+      } else {
+        message.error('Error sending invitation. Please try again.');
+      }
+    } catch (error) {
+      console.error('Validation failed:', error);
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
     <>
       <Button
-        variant="text"
+        type="link"
         size="small"
-        sx={{ 
+        style={{ 
           fontWeight: 'bold', 
-          fontSize: '0.875rem',
-          textTransform: 'none',
-          color: 'info.main',
+          fontSize: '14px',
           textDecoration: 'underline',
-          minWidth: 'auto',
-          px: 1,
-          py: 0.5,
-          '&:hover': {
-            textDecoration: 'underline',
-            bgcolor: 'transparent',
-            color: 'info.dark',
-          },
+          padding: '4px 8px',
         }}
         onClick={() => setOpen(true)}
       >
         Request Invitation
       </Button>
-      <Dialog open={open} onClose={() => setOpen(false)}>
-        <DialogTitle>Request an Invitation</DialogTitle>
-        <DialogContent>
-          <TextField
-            autoFocus
-            margin="dense"
+      
+      <Modal
+        title="Request an Invitation"
+        open={open}
+        onCancel={() => {
+          setOpen(false);
+          form.resetFields();
+        }}
+        onOk={handleRequest}
+        confirmLoading={loading}
+        okText="Send"
+        cancelText="Cancel"
+      >
+        <Form
+          form={form}
+          layout="vertical"
+          style={{ marginTop: 16 }}
+        >
+          <Form.Item
+            name="email"
             label="Your Email"
-            type="email"
-            fullWidth
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-          />
-          {status && <Typography sx={{ mt: 2 }}>{status}</Typography>}
-        </DialogContent>
-        <DialogActions>
-          <Button onClick={() => setOpen(false)}>Cancel</Button>
-          <Button
-            onClick={handleRequest}
-            disabled={!email || status === 'Sending...'}
+            rules={[
+              {
+                required: true,
+                message: 'Please enter your email',
+              },
+              {
+                type: 'email',
+                message: 'Please enter a valid email',
+              },
+            ]}
           >
-            Send
-          </Button>
-        </DialogActions>
-      </Dialog>
+            <Input 
+              type="email" 
+              placeholder="Enter your email address"
+              autoFocus
+            />
+          </Form.Item>
+        </Form>
+      </Modal>
     </>
   );
 }

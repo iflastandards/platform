@@ -2,52 +2,41 @@
 
 import React, { useState } from 'react';
 import {
-  Box,
   Card,
-  CardContent,
   Typography,
   Button,
-  IconButton,
   Table,
-  TableBody,
-  TableCell,
-  TableContainer,
-  TableHead,
-  TableRow,
-  Chip,
-  Dialog,
-  DialogTitle,
-  DialogContent,
-  DialogActions,
-  TextField,
-  FormControl,
-  Stack,
+  Tag,
+  Modal,
+  Form,
+  Input,
+  Checkbox,
+  Space,
   Alert,
-  Stepper,
-  Step,
-  StepLabel,
-  StepContent,
+  Steps,
   List,
-  ListItem,
-  ListItemIcon,
-  ListItemText,
   Tooltip,
-  LinearProgress,
-} from '@mui/material';
-import Grid from '@mui/material/Grid';
+  Progress,
+  Row,
+  Col,
+  Badge,
+} from 'antd';
 import {
-  Add as AddIcon,
-  Tag as TagIcon,
-  Publish as PublishIcon,
-  Compare as CompareIcon,
-  Download as DownloadIcon,
-  CheckCircle as CheckIcon,
-  Warning as WarningIcon,
-  Error as ErrorIcon,
-  Info as InfoIcon,
-  Edit as EditIcon,
-  Delete as DeleteIcon,
-} from '@mui/icons-material';
+  PlusOutlined,
+  TagOutlined,
+  CloudUploadOutlined,
+  DiffOutlined,
+  DownloadOutlined,
+  CheckCircleOutlined,
+  WarningOutlined,
+  ExclamationCircleOutlined,
+  InfoCircleOutlined,
+  EditOutlined,
+  DeleteOutlined,
+} from '@ant-design/icons';
+
+const { Title, Text, Paragraph } = Typography;
+const { Step } = Steps;
 
 interface Version {
   id: string;
@@ -90,49 +79,42 @@ export default function VersionManager({
   onCompareVersions,
 }: VersionManagerProps) {
   const [selectedVersions, setSelectedVersions] = useState<string[]>([]);
-  const [createDialogOpen, setCreateDialogOpen] = useState(false);
-  const [publishDialogOpen, setPublishDialogOpen] = useState(false);
+  const [createModalVisible, setCreateModalVisible] = useState(false);
+  const [publishModalVisible, setPublishModalVisible] = useState(false);
   const [selectedVersion, setSelectedVersion] = useState<Version | null>(null);
-  const [activeStep] = useState(0);
+  const [currentStep, setCurrentStep] = useState(0);
+  const [form] = Form.useForm();
 
-  const [newVersion, setNewVersion] = useState({
-    version: '',
-    description: '',
-    preRelease: false,
-    changelog: [] as ChangelogEntry[],
-  });
-
-  const getStatusColor = (status: string): 'default' | 'primary' | 'secondary' | 'error' | 'info' | 'success' | 'warning' => {
+  const getStatusColor = (status: string) => {
     switch (status) {
       case 'published':
         return 'success';
       case 'approved':
-        return 'info';
+        return 'processing';
       case 'review':
         return 'warning';
       case 'deprecated':
         return 'error';
       case 'draft':
-        return 'default';
       default:
         return 'default';
     }
   };
 
-  const getChangeTypeColor = (type: string): 'default' | 'primary' | 'secondary' | 'error' | 'info' | 'success' | 'warning' => {
+  const getChangeTypeColor = (type: string) => {
     switch (type) {
       case 'added':
         return 'success';
       case 'changed':
-        return 'info';
+        return 'processing';
       case 'deprecated':
         return 'warning';
       case 'removed':
         return 'error';
       case 'fixed':
-        return 'primary';
+        return 'blue';
       case 'security':
-        return 'error';
+        return 'red';
       default:
         return 'default';
     }
@@ -141,19 +123,19 @@ export default function VersionManager({
   const getChangeTypeIcon = (type: string) => {
     switch (type) {
       case 'added':
-        return <AddIcon fontSize="small" />;
+        return <PlusOutlined />;
       case 'changed':
-        return <EditIcon fontSize="small" />;
+        return <EditOutlined />;
       case 'deprecated':
-        return <WarningIcon fontSize="small" />;
+        return <WarningOutlined />;
       case 'removed':
-        return <DeleteIcon fontSize="small" />;
+        return <DeleteOutlined />;
       case 'fixed':
-        return <CheckIcon fontSize="small" />;
+        return <CheckCircleOutlined />;
       case 'security':
-        return <ErrorIcon fontSize="small" />;
+        return <ExclamationCircleOutlined />;
       default:
-        return <InfoIcon fontSize="small" />;
+        return <InfoCircleOutlined />;
     }
   };
 
@@ -175,364 +157,359 @@ export default function VersionManager({
     }
   };
 
-  const handleCreateVersion = () => {
-    onCreateVersion?.(newVersion);
-    setCreateDialogOpen(false);
-    setNewVersion({
-      version: '',
-      description: '',
-      preRelease: false,
+  const handleCreateVersion = (values: any) => {
+    onCreateVersion?.({
+      version: values.version,
+      description: values.description,
+      preRelease: values.preRelease || false,
       changelog: [],
     });
+    setCreateModalVisible(false);
+    form.resetFields();
   };
 
   const handlePublishVersion = () => {
     if (selectedVersion) {
       onPublishVersion?.(selectedVersion);
-      setPublishDialogOpen(false);
+      setPublishModalVisible(false);
       setSelectedVersion(null);
     }
   };
 
   const publishSteps = [
-    'Pre-publish Validation',
-    'Generate Release Notes',
-    'Create GitHub Release',
-    'Update Documentation',
-    'Notify Stakeholders',
+    {
+      title: 'Pre-publish Validation',
+      description: 'Validating vocabulary files and ensuring all requirements are met...',
+    },
+    {
+      title: 'Generate Release Notes',
+      description: 'Generating release notes from changelog and recent commits...',
+    },
+    {
+      title: 'Create GitHub Release',
+      description: 'Creating GitHub release with downloadable assets...',
+    },
+    {
+      title: 'Update Documentation',
+      description: 'Updating documentation and API references...',
+    },
+    {
+      title: 'Notify Stakeholders',
+      description: 'Sending notifications to subscribers and stakeholders...',
+    },
+  ];
+
+  const columns = [
+    {
+      title: '',
+      key: 'select',
+      width: 50,
+      render: (_: any, record: Version) => (
+        <Checkbox
+          checked={selectedVersions.includes(record.id)}
+          onChange={() => handleVersionSelection(record.id)}
+        />
+      ),
+    },
+    {
+      title: 'Version',
+      dataIndex: 'version',
+      key: 'version',
+      render: (version: string, record: Version) => (
+        <Space>
+          <Text strong>{version}</Text>
+          {record.preRelease && (
+            <Tag>Pre-release</Tag>
+          )}
+          {version === currentVersion && (
+            <Tag color="success">Current</Tag>
+          )}
+        </Space>
+      ),
+    },
+    {
+      title: 'Status',
+      dataIndex: 'status',
+      key: 'status',
+      render: (status: string) => (
+        <Tag color={getStatusColor(status)}>
+          {status.toUpperCase()}
+        </Tag>
+      ),
+    },
+    {
+      title: 'Author',
+      dataIndex: 'author',
+      key: 'author',
+    },
+    {
+      title: 'Created',
+      dataIndex: 'createdDate',
+      key: 'createdDate',
+      render: (date: string) => new Date(date).toLocaleDateString(),
+    },
+    {
+      title: 'Downloads',
+      dataIndex: 'downloadCount',
+      key: 'downloadCount',
+      render: (count: number) => count.toLocaleString(),
+    },
+    {
+      title: 'Actions',
+      key: 'actions',
+      render: (_: any, record: Version) => (
+        <Space>
+          {record.status === 'approved' && (
+            <Tooltip title="Publish Version">
+              <Button
+                type="text"
+                icon={<CloudUploadOutlined />}
+                onClick={() => {
+                  setSelectedVersion(record);
+                  setPublishModalVisible(true);
+                }}
+              />
+            </Tooltip>
+          )}
+          <Tooltip title="Download">
+            <Button type="text" icon={<DownloadOutlined />} />
+          </Tooltip>
+        </Space>
+      ),
+    },
   ];
 
   return (
-    <Box>
+    <div>
       {/* Header */}
-      <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', mb: 3 }}>
-        <Box>
-          <Typography variant="h5" gutterBottom>
-            Version Management
-          </Typography>
-          <Typography variant="body2" color="text.secondary">
+      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: 24 }}>
+        <div>
+          <Title level={4} style={{ marginBottom: 4 }}>Version Management</Title>
+          <Text type="secondary">
             {namespace} • {versions.length} versions
-          </Typography>
-        </Box>
+          </Text>
+        </div>
         
-        <Stack direction="row" spacing={1}>
+        <Space>
           {selectedVersions.length === 2 && (
             <Button
-              startIcon={<CompareIcon />}
-              variant="outlined"
+              icon={<DiffOutlined />}
               onClick={handleCompareSelected}
             >
               Compare Selected
             </Button>
           )}
           <Button
-            startIcon={<TagIcon />}
-            variant="contained"
-            onClick={() => setCreateDialogOpen(true)}
+            type="primary"
+            icon={<TagOutlined />}
+            onClick={() => setCreateModalVisible(true)}
           >
             Create Version
           </Button>
-        </Stack>
-      </Box>
+        </Space>
+      </div>
 
       {/* Current Version Alert */}
       {currentVersion && (
-        <Alert severity="info" sx={{ mb: 3 }}>
-          <Typography variant="body2">
-            <strong>Current Published Version:</strong> {currentVersion}
-          </Typography>
-        </Alert>
+        <Alert
+          message={
+            <Text>
+              <strong>Current Published Version:</strong> {currentVersion}
+            </Text>
+          }
+          type="info"
+          style={{ marginBottom: 24 }}
+        />
       )}
 
-      <Grid container spacing={3}>
+      <Row gutter={24}>
         {/* Versions Table */}
-        <Grid size={{ xs: 12, lg: 8 }}>
+        <Col xs={24} lg={18}>
           <Card>
-            <CardContent>
-              <Typography variant="h6" gutterBottom>
-                All Versions
-              </Typography>
-              
-              <TableContainer>
-                <Table>
-                  <TableHead>
-                    <TableRow>
-                      <TableCell padding="checkbox"></TableCell>
-                      <TableCell>Version</TableCell>
-                      <TableCell>Status</TableCell>
-                      <TableCell>Author</TableCell>
-                      <TableCell>Created</TableCell>
-                      <TableCell>Downloads</TableCell>
-                      <TableCell>Actions</TableCell>
-                    </TableRow>
-                  </TableHead>
-                  <TableBody>
-                    {versions.map((version) => (
-                      <TableRow 
-                        key={version.id}
-                        selected={selectedVersions.includes(version.id)}
-                        hover
-                      >
-                        <TableCell padding="checkbox">
-                          <input
-                            type="checkbox"
-                            checked={selectedVersions.includes(version.id)}
-                            onChange={() => handleVersionSelection(version.id)}
-                          />
-                        </TableCell>
-                        <TableCell>
-                          <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-                            <Typography variant="body2" fontWeight="medium">
-                              {version.version}
-                            </Typography>
-                            {version.preRelease && (
-                              <Chip label="Pre-release" size="small" variant="outlined" />
-                            )}
-                            {version.version === currentVersion && (
-                              <Chip label="Current" size="small" color="success" />
-                            )}
-                          </Box>
-                        </TableCell>
-                        <TableCell>
-                          <Chip
-                            label={version.status}
-                            size="small"
-                            color={getStatusColor(version.status)}
-                            variant="outlined"
-                          />
-                        </TableCell>
-                        <TableCell>
-                          <Typography variant="body2">
-                            {version.author}
-                          </Typography>
-                        </TableCell>
-                        <TableCell>
-                          <Typography variant="body2">
-                            {new Date(version.createdDate).toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' })}
-                          </Typography>
-                        </TableCell>
-                        <TableCell>
-                          <Typography variant="body2">
-                            {version.downloadCount.toLocaleString()}
-                          </Typography>
-                        </TableCell>
-                        <TableCell>
-                          <Stack direction="row" spacing={1}>
-                            {version.status === 'approved' && (
-                              <Tooltip title="Publish Version">
-                                <IconButton
-                                  size="small"
-                                  onClick={() => {
-                                    setSelectedVersion(version);
-                                    setPublishDialogOpen(true);
-                                  }}
-                                >
-                                  <PublishIcon />
-                                </IconButton>
-                              </Tooltip>
-                            )}
-                            <Tooltip title="Download">
-                              <IconButton size="small">
-                                <DownloadIcon />
-                              </IconButton>
-                            </Tooltip>
-                          </Stack>
-                        </TableCell>
-                      </TableRow>
-                    ))}
-                  </TableBody>
-                </Table>
-              </TableContainer>
-            </CardContent>
+            <Title level={5} style={{ marginBottom: 16 }}>All Versions</Title>
+            
+            <Table
+              columns={columns}
+              dataSource={versions}
+              rowKey="id"
+              pagination={{
+                pageSize: 10,
+                showSizeChanger: true,
+                showTotal: (total) => `Total ${total} versions`,
+              }}
+            />
           </Card>
-        </Grid>
+        </Col>
 
         {/* Recent Releases */}
-        <Grid size={{ xs: 12, lg: 4 }}>
+        <Col xs={24} lg={6}>
           <Card>
-            <CardContent>
-              <Typography variant="h6" gutterBottom>
-                Recent Releases
-              </Typography>
-              
-              <List>
-                {versions
-                  .filter(v => v.status === 'published')
-                  .sort((a, b) => new Date(b.publishedDate || b.createdDate).getTime() - new Date(a.publishedDate || a.createdDate).getTime())
-                  .slice(0, 5)
-                  .map((version) => (
-                    <ListItem key={version.id} sx={{ px: 0 }}>
-                      <ListItemIcon>
-                        <Chip
-                          icon={<TagIcon />}
-                          label={version.version}
-                          size="small"
-                          color="primary"
-                          variant="outlined"
-                        />
-                      </ListItemIcon>
-                      <ListItemText
-                        primary={version.description}
-                        secondary={new Date(version.publishedDate || version.createdDate).toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' })}
-                      />
-                    </ListItem>
-                  ))}
-              </List>
-            </CardContent>
-          </Card>
-        </Grid>
-      </Grid>
-
-      {/* Create Version Dialog */}
-      <Dialog
-        open={createDialogOpen}
-        onClose={() => setCreateDialogOpen(false)}
-        maxWidth="md"
-        fullWidth
-      >
-        <DialogTitle>Create New Version</DialogTitle>
-        <DialogContent>
-          <Stack spacing={3} sx={{ mt: 2 }}>
-            <TextField
-              label="Version Number"
-              placeholder="e.g., 1.2.0"
-              value={newVersion.version}
-              onChange={(e) => setNewVersion({ ...newVersion, version: e.target.value })}
-              fullWidth
-              helperText="Follow semantic versioning (MAJOR.MINOR.PATCH)"
-            />
+            <Title level={5} style={{ marginBottom: 16 }}>Recent Releases</Title>
             
-            <TextField
-              label="Description"
-              multiline
+            <List
+              dataSource={versions
+                .filter(v => v.status === 'published')
+                .sort((a, b) => new Date(b.publishedDate || b.createdDate).getTime() - new Date(a.publishedDate || a.createdDate).getTime())
+                .slice(0, 5)}
+              renderItem={(version) => (
+                <List.Item>
+                  <Space direction="vertical" size={0} style={{ width: '100%' }}>
+                    <Badge status="processing" text={version.version} />
+                    <Text type="secondary" style={{ fontSize: 12 }}>
+                      {new Date(version.publishedDate || version.createdDate).toLocaleDateString()}
+                    </Text>
+                    <Paragraph ellipsis={{ rows: 2 }} style={{ fontSize: 12, marginBottom: 0 }}>
+                      {version.description}
+                    </Paragraph>
+                  </Space>
+                </List.Item>
+              )}
+            />
+          </Card>
+        </Col>
+      </Row>
+
+      {/* Create Version Modal */}
+      <Modal
+        title="Create New Version"
+        open={createModalVisible}
+        onCancel={() => {
+          setCreateModalVisible(false);
+          form.resetFields();
+        }}
+        footer={null}
+        width={600}
+      >
+        <Form
+          form={form}
+          layout="vertical"
+          onFinish={handleCreateVersion}
+        >
+          <Form.Item
+            name="version"
+            label="Version Number"
+            rules={[{ required: true, message: 'Please enter version number' }]}
+            help="Follow semantic versioning (MAJOR.MINOR.PATCH)"
+          >
+            <Input placeholder="e.g., 1.2.0" />
+          </Form.Item>
+          
+          <Form.Item
+            name="description"
+            label="Description"
+            rules={[{ required: true, message: 'Please enter description' }]}
+          >
+            <Input.TextArea
               rows={3}
-              value={newVersion.description}
-              onChange={(e) => setNewVersion({ ...newVersion, description: e.target.value })}
-              fullWidth
               placeholder="Brief description of changes in this version"
             />
-            
-            <FormControl>
-              <label>
-                <input
-                  type="checkbox"
-                  checked={newVersion.preRelease}
-                  onChange={(e) => setNewVersion({ ...newVersion, preRelease: e.target.checked })}
-                />
-                <Typography variant="body2" component="span" sx={{ ml: 1 }}>
-                  Mark as pre-release
-                </Typography>
-              </label>
-            </FormControl>
+          </Form.Item>
+          
+          <Form.Item
+            name="preRelease"
+            valuePropName="checked"
+          >
+            <Checkbox>Mark as pre-release</Checkbox>
+          </Form.Item>
 
-            <Box>
-              <Typography variant="subtitle2" gutterBottom>
-                Changelog (Optional)
-              </Typography>
-              <Alert severity="info">
-                Changelog will be automatically generated from recent commits and issues.
-              </Alert>
-            </Box>
-          </Stack>
-        </DialogContent>
-        <DialogActions>
-          <Button onClick={() => setCreateDialogOpen(false)}>
+          <Alert
+            message="Changelog will be automatically generated from recent commits and issues."
+            type="info"
+            showIcon
+            style={{ marginBottom: 16 }}
+          />
+
+          <Form.Item style={{ marginBottom: 0 }}>
+            <Space>
+              <Button onClick={() => {
+                setCreateModalVisible(false);
+                form.resetFields();
+              }}>
+                Cancel
+              </Button>
+              <Button type="primary" htmlType="submit">
+                Create Version
+              </Button>
+            </Space>
+          </Form.Item>
+        </Form>
+      </Modal>
+
+      {/* Publish Version Modal */}
+      <Modal
+        title={`Publish Version ${selectedVersion?.version}`}
+        open={publishModalVisible}
+        onCancel={() => {
+          setPublishModalVisible(false);
+          setSelectedVersion(null);
+          setCurrentStep(0);
+        }}
+        footer={[
+          <Button 
+            key="cancel"
+            onClick={() => {
+              setPublishModalVisible(false);
+              setSelectedVersion(null);
+              setCurrentStep(0);
+            }}
+          >
             Cancel
-          </Button>
-          <Button variant="contained" onClick={handleCreateVersion}>
-            Create Version
-          </Button>
-        </DialogActions>
-      </Dialog>
-
-      {/* Publish Version Dialog */}
-      <Dialog
-        open={publishDialogOpen}
-        onClose={() => setPublishDialogOpen(false)}
-        maxWidth="md"
-        fullWidth
-      >
-        <DialogTitle>
-          Publish Version {selectedVersion?.version}
-        </DialogTitle>
-        <DialogContent>
-          <Box sx={{ mt: 2 }}>
-            <Typography variant="body2" color="text.secondary" paragraph>
-              Publishing will make this version available to the public and update all documentation.
-            </Typography>
-
-            <Stepper activeStep={activeStep} orientation="vertical">
-              {publishSteps.map((step, index) => (
-                <Step key={step}>
-                  <StepLabel>{step}</StepLabel>
-                  <StepContent>
-                    <Box sx={{ mb: 2 }}>
-                      {index === 0 && (
-                        <Typography variant="body2">
-                          Validating vocabulary files and ensuring all requirements are met...
-                        </Typography>
-                      )}
-                      {index === 1 && (
-                        <Typography variant="body2">
-                          Generating release notes from changelog and recent commits...
-                        </Typography>
-                      )}
-                      {index === 2 && (
-                        <Typography variant="body2">
-                          Creating GitHub release with downloadable assets...
-                        </Typography>
-                      )}
-                      {index === 3 && (
-                        <Typography variant="body2">
-                          Updating documentation and API references...
-                        </Typography>
-                      )}
-                      {index === 4 && (
-                        <Typography variant="body2">
-                          Sending notifications to subscribers and stakeholders...
-                        </Typography>
-                      )}
-                      <LinearProgress sx={{ mt: 1 }} />
-                    </Box>
-                  </StepContent>
-                </Step>
-              ))}
-            </Stepper>
-
-            {selectedVersion && (
-              <Box sx={{ mt: 3 }}>
-                <Typography variant="subtitle2" gutterBottom>
-                  Changelog
-                </Typography>
-                <List dense>
-                  {selectedVersion.changelog.map((entry, index) => (
-                    <ListItem key={index}>
-                      <ListItemIcon>
-                        <Chip
-                          icon={getChangeTypeIcon(entry.type)}
-                          label={entry.type}
-                          size="small"
-                          color={getChangeTypeColor(entry.type)}
-                          variant="outlined"
-                        />
-                      </ListItemIcon>
-                      <ListItemText primary={entry.description} />
-                    </ListItem>
-                  ))}
-                </List>
-              </Box>
-            )}
-          </Box>
-        </DialogContent>
-        <DialogActions>
-          <Button onClick={() => setPublishDialogOpen(false)}>
-            Cancel
-          </Button>
-          <Button variant="contained" onClick={handlePublishVersion}>
+          </Button>,
+          <Button 
+            key="publish"
+            type="primary"
+            onClick={handlePublishVersion}
+          >
             Publish Version
-          </Button>
-        </DialogActions>
-      </Dialog>
-    </Box>
+          </Button>,
+        ]}
+        width={700}
+      >
+        <Paragraph type="secondary">
+          Publishing will make this version available to the public and update all documentation.
+        </Paragraph>
+
+        <Steps current={currentStep} direction="vertical" style={{ marginTop: 24 }}>
+          {publishSteps.map((step, index) => (
+            <Step
+              key={index}
+              title={step.title}
+              description={
+                index === currentStep ? (
+                  <div>
+                    <Text type="secondary">{step.description}</Text>
+                    <Progress percent={30} size="small" status="active" style={{ marginTop: 8 }} />
+                  </div>
+                ) : (
+                  <Text type="secondary">{step.description}</Text>
+                )
+              }
+              icon={index < currentStep ? <CheckCircleOutlined /> : undefined}
+            />
+          ))}
+        </Steps>
+
+        {selectedVersion && (
+          <div style={{ marginTop: 24 }}>
+            <Title level={5}>Changelog</Title>
+            <List
+              size="small"
+              dataSource={selectedVersion.changelog}
+              renderItem={(entry) => (
+                <List.Item>
+                  <Space>
+                    {getChangeTypeIcon(entry.type)}
+                    <Tag color={getChangeTypeColor(entry.type)}>
+                      {entry.type.toUpperCase()}
+                    </Tag>
+                    <Text>{entry.description}</Text>
+                  </Space>
+                </List.Item>
+              )}
+            />
+          </div>
+        )}
+      </Modal>
+    </div>
   );
 }

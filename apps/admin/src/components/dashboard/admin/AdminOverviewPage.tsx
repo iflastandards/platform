@@ -3,22 +3,20 @@
 import React from 'react';
 import Link from 'next/link';
 import {
-  Box,
   Card,
-  CardContent,
   Typography,
-  Chip,
-  Link as MuiLink,
+  Tag,
   Button,
-  Stack,
-  useTheme,
-} from '@mui/material';
-import Grid from '@mui/material/Grid';
+  Space,
+  Row,
+  Col,
+  Statistic,
+} from 'antd';
 import {
-  PersonAdd as PersonAddIcon,
-  AddTask as AddTaskIcon,
-  CloudUpload as CloudUploadIcon,
-} from '@mui/icons-material';
+  UserAddOutlined,
+  PlusCircleOutlined,
+  CloudUploadOutlined,
+} from '@ant-design/icons';
 
 interface StatsCardProps {
   title: string;
@@ -27,53 +25,40 @@ interface StatsCardProps {
   changeType: 'increase' | 'decrease' | 'neutral';
 }
 
+const { Title, Text } = Typography;
+
 function StatsCard({ title, value, change, changeType }: StatsCardProps) {
-  const theme = useTheme();
   const changeColor = 
-    changeType === 'increase' ? theme.palette.success.main : 
-    changeType === 'decrease' ? theme.palette.error.main : 
-    theme.palette.text.secondary;
+    changeType === 'increase' ? '#52c41a' : 
+    changeType === 'decrease' ? '#ff4d4f' : 
+    '#8c8c8c';
   
   const cardId = `stats-${title.toLowerCase().replace(/\s+/g, '-')}`;
   
   return (
     <Card 
-      elevation={0}
-      sx={{ 
-        minHeight: 140,
-        display: 'flex',
-        flexDirection: 'column',
-        justifyContent: 'space-between',
-      }}
+      style={{ minHeight: 140 }}
       role="region"
       aria-labelledby={cardId}
     >
-      <CardContent>
-        <Typography 
-          id={cardId}
-          variant="body2" 
-          color="text.secondary" 
-          gutterBottom
-        >
-          {title}
-        </Typography>
-        <Typography 
-          variant="h4" 
-          component="div" 
-          fontWeight="bold" 
-          color="primary.main"
-          aria-label={`${title}: ${value.toLocaleString()}`}
-        >
-          {value.toLocaleString()}
-        </Typography>
-        <Typography 
-          variant="body2" 
-          sx={{ color: changeColor, mt: 1 }}
-          aria-label={`Change: ${change}`}
-        >
-          {change}
-        </Typography>
-      </CardContent>
+      <Text 
+        id={cardId}
+        type="secondary" 
+        style={{ display: 'block', marginBottom: 8 }}
+      >
+        {title}
+      </Text>
+      <Statistic
+        value={value}
+        valueStyle={{ color: '#1890ff', fontWeight: 'bold' }}
+        aria-label={`${title}: ${value.toLocaleString()}`}
+      />
+      <Text 
+        style={{ color: changeColor, marginTop: 8, display: 'block' }}
+        aria-label={`Change: ${change}`}
+      >
+        {change}
+      </Text>
     </Card>
   );
 }
@@ -95,19 +80,18 @@ function ActivityItem({ action, author, time, type }: ActivityItemProps) {
   };
   
   return (
-    <Box py={2} borderBottom={1} borderColor="divider">
-      <Stack direction="row" spacing={2} alignItems="flex-start">
-        <Typography fontSize={24} aria-hidden="true">{typeIcons[type]}</Typography>
-        <Box flex={1}>
-          <Typography variant="body1" fontWeight="medium">
-            {action}
-          </Typography>
-          <Typography variant="caption" color="text.secondary">
+    <div style={{ paddingTop: 16, paddingBottom: 16, borderBottom: '1px solid #f0f0f0' }}>
+      <Space align="start" size={16}>
+        <Text style={{ fontSize: 24 }} aria-hidden="true">{typeIcons[type]}</Text>
+        <div style={{ flex: 1 }}>
+          <Text strong>{action}</Text>
+          <br />
+          <Text type="secondary" style={{ fontSize: 12 }}>
             By {author} • {time}
-          </Typography>
-        </Box>
-      </Stack>
-    </Box>
+          </Text>
+        </div>
+      </Space>
+    </div>
   );
 }
 
@@ -126,18 +110,16 @@ function SystemStatusItem({ service, status }: SystemStatusItemProps) {
   const config = statusConfig[status];
   
   return (
-    <Box display="flex" justifyContent="space-between" alignItems="center" py={1.5}>
-      <Typography variant="body2" color="text.secondary">
-        {service}:
-      </Typography>
-      <Chip 
-        label={config.label} 
-        color={config.color} 
-        size="small"
-        sx={{ fontWeight: 600 }}
+    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', paddingTop: 12, paddingBottom: 12 }}>
+      <Text type="secondary">{service}:</Text>
+      <Tag 
+        color={config.color}
+        style={{ fontWeight: 600 }}
         aria-label={`${service} status: ${config.label}`}
-      />
-    </Box>
+      >
+        {config.label}
+      </Tag>
+    </div>
   );
 }
 
@@ -165,112 +147,88 @@ export function AdminOverviewPage() {
 
   return (
     <>
-      <Box mb={4}>
-        <Typography variant="h4" fontWeight="bold" gutterBottom component="h1">
-          Admin Dashboard
-        </Typography>
-        <Typography variant="body1" color="text.secondary">
-          System overview and key metrics
-        </Typography>
-      </Box>
+      <div style={{ marginBottom: 32 }}>
+        <Title level={2}>Admin Dashboard</Title>
+        <Text type="secondary">System overview and key metrics</Text>
+      </div>
 
       {/* Stats Grid */}
-      <Grid container spacing={3} sx={{ mb: 4 }}>
+      <Row gutter={[24, 24]} style={{ marginBottom: 32 }}>
         {stats.map((stat) => (
-          <Grid size={{ xs: 12, sm: 6, md: 4 }} key={stat.title}>
+          <Col xs={24} sm={12} md={8} key={stat.title}>
             <StatsCard {...stat} />
-          </Grid>
+          </Col>
         ))}
-      </Grid>
+      </Row>
 
-      <Grid container spacing={3}>
+      <Row gutter={[24, 24]}>
         {/* Recent Activity */}
-        <Grid size={{ xs: 12, lg: 8 }}>
-          <Card elevation={0}>
-            <CardContent>
-              <Typography variant="h6" fontWeight="bold" gutterBottom component="h2">
-                Recent System Activity
-              </Typography>
-              <Box role="feed" aria-label="Recent activity feed">
-                {recentActivity.map((activity, index) => (
-                  <ActivityItem key={index} {...activity} />
-                ))}
-              </Box>
-              <Box mt={3} pt={2} borderTop={1} borderColor="divider">
-                <MuiLink
-                  component={Link}
-                  href="/dashboard/admin/activity"
-                  color="primary"
-                  underline="hover"
-                  fontSize="small"
-                >
-                  View all activity →
-                </MuiLink>
-              </Box>
-            </CardContent>
+        <Col xs={24} lg={16}>
+          <Card title={<Title level={4} style={{ margin: 0 }}>Recent System Activity</Title>}>
+            <div role="feed" aria-label="Recent activity feed">
+              {recentActivity.map((activity, index) => (
+                <ActivityItem key={index} {...activity} />
+              ))}
+            </div>
+            <div style={{ marginTop: 24, paddingTop: 16, borderTop: '1px solid #f0f0f0' }}>
+              <Link
+                href="/dashboard/admin/activity"
+                style={{ color: '#1890ff', fontSize: 14 }}
+              >
+                View all activity →
+              </Link>
+            </div>
           </Card>
-        </Grid>
+        </Col>
 
         {/* System Status & Quick Actions */}
-        <Grid size={{ xs: 12, lg: 4 }}>
-          <Stack spacing={3}>
+        <Col xs={24} lg={8}>
+          <Space direction="vertical" size={24} style={{ width: '100%' }}>
             {/* System Status */}
-            <Card elevation={0}>
-              <CardContent>
-                <Typography variant="h6" fontWeight="bold" gutterBottom component="h2">
-                  System Status
-                </Typography>
-                <Box role="list" aria-label="System service status">
-                  {systemStatus.map((status) => (
-                    <SystemStatusItem key={status.service} {...status} />
-                  ))}
-                </Box>
-              </CardContent>
+            <Card title={<Title level={4} style={{ margin: 0 }}>System Status</Title>}>
+              <div role="list" aria-label="System service status">
+                {systemStatus.map((status) => (
+                  <SystemStatusItem key={status.service} {...status} />
+                ))}
+              </div>
             </Card>
 
             {/* Quick Actions */}
-            <Card elevation={0}>
-              <CardContent>
-                <Typography variant="h6" fontWeight="bold" gutterBottom component="h2">
-                  Quick Actions
-                </Typography>
-              <Stack spacing={2}>
-                <Button
-                  variant="contained"
-                  fullWidth
-                  startIcon={<AddTaskIcon />}
-                  component={Link}
-                  href="/dashboard/admin/projects/new"
-                  aria-label="Charter a new project"
-                >
-                  Charter New Project
-                </Button>
-                <Button
-                  variant="outlined"
-                  fullWidth
-                  startIcon={<CloudUploadIcon />}
-                  component={Link}
-                  href="/dashboard/admin/adopt-spreadsheet"
-                  aria-label="Adopt a spreadsheet"
-                >
-                  Adopt Spreadsheet
-                </Button>
-                <Button
-                  variant="outlined"
-                  fullWidth
-                  startIcon={<PersonAddIcon />}
-                  component={Link}
-                  href="/dashboard/admin/users/invite"
-                  aria-label="Invite a new user"
-                >
-                  Invite User
-                </Button>
-              </Stack>
-            </CardContent>
-          </Card>
-        </Stack>
-      </Grid>
-    </Grid>
+            <Card title={<Title level={4} style={{ margin: 0 }}>Quick Actions</Title>}>
+              <Space direction="vertical" size={12} style={{ width: '100%' }}>
+                <Link href="/dashboard/admin/projects/new">
+                  <Button
+                    type="primary"
+                    block
+                    icon={<PlusCircleOutlined />}
+                    aria-label="Charter a new project"
+                  >
+                    Charter New Project
+                  </Button>
+                </Link>
+                <Link href="/dashboard/admin/adopt-spreadsheet">
+                  <Button
+                    block
+                    icon={<CloudUploadOutlined />}
+                    aria-label="Adopt a spreadsheet"
+                  >
+                    Adopt Spreadsheet
+                  </Button>
+                </Link>
+                <Link href="/dashboard/admin/users/invite">
+                  <Button
+                    block
+                    icon={<UserAddOutlined />}
+                    aria-label="Invite a new user"
+                  >
+                    Invite User
+                  </Button>
+                </Link>
+              </Space>
+            </Card>
+          </Space>
+        </Col>
+      </Row>
   </>
 );
 }

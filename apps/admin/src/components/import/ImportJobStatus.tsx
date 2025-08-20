@@ -3,21 +3,22 @@
 import React, { useState, useEffect } from 'react';
 import {
   Card,
-  CardContent,
   Typography,
-  LinearProgress,
-  Chip,
-  Box,
+  Progress,
+  Tag,
   Button,
   Alert,
-  CircularProgress,
-} from '@mui/material';
+  Space,
+  Spin,
+} from 'antd';
 import {
-  CheckCircle as SuccessIcon,
-  Error as ErrorIcon,
-  HourglassEmpty as PendingIcon,
-  GitHub as GitHubIcon,
-} from '@mui/icons-material';
+  CheckCircleOutlined,
+  CloseCircleOutlined,
+  HourglassOutlined,
+  GithubOutlined,
+} from '@ant-design/icons';
+
+const { Title, Text } = Typography;
 
 interface ImportJobStatusProps {
   jobId: string;
@@ -92,40 +93,43 @@ export default function ImportJobStatus({ jobId, onComplete }: ImportJobStatusPr
   if (loading) {
     return (
       <Card>
-        <CardContent>
-          <Box display="flex" alignItems="center" gap={2}>
-            <CircularProgress size={24} />
-            <Typography>Loading import job status...</Typography>
-          </Box>
-        </CardContent>
+        <Space align="center">
+          <Spin size="small" />
+          <Text>Loading import job status...</Text>
+        </Space>
       </Card>
     );
   }
 
   if (error) {
     return (
-      <Alert severity="error">
-        <Typography>Error: {error}</Typography>
-      </Alert>
+      <Alert
+        message="Error"
+        description={error}
+        type="error"
+        showIcon
+      />
     );
   }
 
   if (!jobStatus) {
     return (
-      <Alert severity="warning">
-        <Typography>No job status available</Typography>
-      </Alert>
+      <Alert
+        message="No job status available"
+        type="warning"
+        showIcon
+      />
     );
   }
 
   const getStatusIcon = () => {
     switch (jobStatus.status) {
       case 'completed':
-        return <SuccessIcon color="success" />;
+        return <CheckCircleOutlined style={{ color: '#52c41a' }} />;
       case 'failed':
-        return <ErrorIcon color="error" />;
+        return <CloseCircleOutlined style={{ color: '#ff4d4f' }} />;
       default:
-        return <PendingIcon color="action" />;
+        return <HourglassOutlined style={{ color: '#8c8c8c' }} />;
     }
   };
 
@@ -136,7 +140,7 @@ export default function ImportJobStatus({ jobId, onComplete }: ImportJobStatusPr
       case 'failed':
         return 'error';
       case 'processing':
-        return 'primary';
+        return 'processing';
       case 'validating':
         return 'warning';
       default:
@@ -146,87 +150,82 @@ export default function ImportJobStatus({ jobId, onComplete }: ImportJobStatusPr
 
   return (
     <Card>
-      <CardContent>
-        <Box display="flex" alignItems="center" justifyContent="space-between" mb={2}>
-          <Typography variant="h6">Import Job Status</Typography>
-          <Chip
-            icon={getStatusIcon()}
-            label={jobStatus.status.toUpperCase()}
-            color={getStatusColor()}
-            size="small"
-          />
-        </Box>
+      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 16 }}>
+        <Title level={4} style={{ margin: 0 }}>Import Job Status</Title>
+        <Tag
+          icon={getStatusIcon()}
+          color={getStatusColor()}
+        >
+          {jobStatus.status.toUpperCase()}
+        </Tag>
+      </div>
 
-        <Box mb={3}>
-          <Typography variant="body2" color="text.secondary" gutterBottom>
-            {jobStatus.message}
-          </Typography>
-          <LinearProgress
-            variant="determinate"
-            value={jobStatus.progress}
-            sx={{ mt: 1 }}
-          />
-          <Typography variant="caption" color="text.secondary" sx={{ mt: 0.5 }}>
-            {jobStatus.progress}% complete
-          </Typography>
-        </Box>
+      <div style={{ marginBottom: 24 }}>
+        <Text type="secondary" style={{ display: 'block', marginBottom: 8 }}>
+          {jobStatus.message}
+        </Text>
+        <Progress
+          percent={jobStatus.progress}
+          status={jobStatus.status === 'failed' ? 'exception' : 
+                 jobStatus.status === 'completed' ? 'success' : 'active'}
+        />
+        <Text type="secondary" style={{ fontSize: 12, marginTop: 4, display: 'block' }}>
+          {jobStatus.progress}% complete
+        </Text>
+      </div>
 
-        <Box sx={{ '& > *': { mb: 1 } }}>
-          <Typography variant="body2">
-            <strong>Namespace:</strong> {jobStatus.namespace}
-          </Typography>
-          {jobStatus.spreadsheetUrl && (
-            <Typography variant="body2">
-              <strong>Source:</strong>{' '}
-              <a href={jobStatus.spreadsheetUrl} target="_blank" rel="noopener noreferrer">
-                Google Sheets
-              </a>
-            </Typography>
-          )}
-          {jobStatus.completedAt && (
-            <Typography variant="body2">
-              <strong>Completed:</strong> {new Date(jobStatus.completedAt).toLocaleString()}
-            </Typography>
-          )}
-        </Box>
-
-        {jobStatus.status === 'completed' && jobStatus.branchName && (
-          <Alert severity="success" sx={{ mt: 2 }}>
-            <Typography variant="body2" gutterBottom>
-              Import completed successfully!
-            </Typography>
-            <Typography variant="body2">
-              Branch created: <code>{jobStatus.branchName}</code>
-            </Typography>
-            <Button
-              size="small"
-              startIcon={<GitHubIcon />}
-              href={`https://github.com/iflastandards/platform/tree/${jobStatus.branchName}`}
-              target="_blank"
-              sx={{ mt: 1 }}
-            >
-              View on GitHub
-            </Button>
-          </Alert>
+      <Space direction="vertical" style={{ width: '100%' }}>
+        <div>
+          <Text strong>Namespace:</Text> <Text>{jobStatus.namespace}</Text>
+        </div>
+        {jobStatus.spreadsheetUrl && (
+          <div>
+            <Text strong>Source:</Text>{' '}
+            <a href={jobStatus.spreadsheetUrl} target="_blank" rel="noopener noreferrer">
+              Google Sheets
+            </a>
+          </div>
         )}
-
-        {jobStatus.status === 'failed' && (
-          <Alert severity="error" sx={{ mt: 2 }}>
-            <Typography variant="body2">
-              Import failed: {jobStatus.errorMessage || 'Unknown error'}
-            </Typography>
-          </Alert>
+        {jobStatus.completedAt && (
+          <div>
+            <Text strong>Completed:</Text> <Text>{new Date(jobStatus.completedAt).toLocaleString()}</Text>
+          </div>
         )}
+      </Space>
 
-        {jobStatus.validationResults && jobStatus.validationResults.length > 0 && (
-          <Box mt={2}>
-            <Typography variant="subtitle2" gutterBottom>
-              Validation Results:
-            </Typography>
-            {/* TODO: Display validation results */}
-          </Box>
-        )}
-      </CardContent>
+      {jobStatus.status === 'completed' && jobStatus.branchName && (
+        <Alert
+          message="Import completed successfully!"
+          description={
+            <Space direction="vertical">
+              <Text>
+                Branch created: <code>{jobStatus.branchName}</code>
+              </Text>
+              <Button
+                size="small"
+                icon={<GithubOutlined />}
+                href={`https://github.com/iflastandards/platform/tree/${jobStatus.branchName}`}
+                target="_blank"
+              >
+                View on GitHub
+              </Button>
+            </Space>
+          }
+          type="success"
+          showIcon
+          style={{ marginTop: 16 }}
+        />
+      )}
+
+      {jobStatus.status === 'failed' && (
+        <Alert
+          message="Import failed"
+          description={jobStatus.errorMessage || 'Unknown error'}
+          type="error"
+          showIcon
+          style={{ marginTop: 16 }}
+        />
+      )}
     </Card>
   );
 }

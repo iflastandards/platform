@@ -3,26 +3,29 @@
 import React from 'react';
 import {
   Card,
-  CardContent,
-  CardActions,
   Typography,
-  Box,
-  Chip,
+  Tag,
   Button,
   Skeleton,
   Avatar,
-} from '@mui/material';
-import Grid from '@mui/material/Grid';
+  Row,
+  Col,
+  Space,
+  Statistic,
+} from 'antd';
 import {
-  MenuBook,
-  AutoStories,
-  AccountTree,
-  Archive,
-  Translate,
-  DataObject,
-} from '@mui/icons-material';
+  BookOutlined,
+  ReadOutlined,
+  ApartmentOutlined,
+  InboxOutlined,
+  TranslationOutlined,
+  CodeOutlined,
+  ArrowRightOutlined,
+} from '@ant-design/icons';
 import { useRouter } from 'next/navigation';
 import { MockNamespace } from '@/lib/mock-data';
+
+const { Text, Title, Paragraph } = Typography;
 
 interface NamespaceSelectorProps {
   namespaces: MockNamespace[];
@@ -32,13 +35,13 @@ interface NamespaceSelectorProps {
 }
 
 // Icon mapping
-const iconMap: Record<string, React.ElementType> = {
-  MenuBook,
-  AutoStories,
-  AccountTree,
-  Archive,
-  Translate,
-  DataObject,
+const iconMap: Record<string, React.ReactNode> = {
+  MenuBook: <BookOutlined />,
+  AutoStories: <ReadOutlined />,
+  AccountTree: <ApartmentOutlined />,
+  Archive: <InboxOutlined />,
+  Translate: <TranslationOutlined />,
+  DataObject: <CodeOutlined />,
 };
 
 export function NamespaceSelector({ 
@@ -60,118 +63,119 @@ export function NamespaceSelector({
 
   if (loading) {
     return (
-      <Grid container spacing={3}>
+      <Row gutter={[16, 16]}>
         {[1, 2, 3].map((n) => (
-          <Grid size={{ xs: 12, sm: 6, md: 4 }} key={n}>
+          <Col xs={24} sm={12} md={8} key={n}>
             <Card>
-              <CardContent>
-                <Skeleton variant="rectangular" height={60} />
-                <Skeleton sx={{ mt: 2 }} />
-                <Skeleton />
-              </CardContent>
+              <Skeleton active paragraph={{ rows: 4 }} />
             </Card>
-          </Grid>
+          </Col>
         ))}
-      </Grid>
+      </Row>
     );
   }
 
   return (
-    <Grid container spacing={3}>
+    <Row gutter={[16, 16]}>
       {namespaces.map((namespace) => {
-        const IconComponent = iconMap[namespace.icon] || MenuBook;
+        const icon = iconMap[namespace.icon] || <BookOutlined />;
         
         return (
-          <Grid size={{ xs: 12, sm: 6, md: 4 }} key={namespace.id}>
+          <Col xs={24} sm={12} md={8} key={namespace.id}>
             <Card 
-              sx={{ 
+              hoverable
+              style={{ 
                 height: '100%',
                 display: 'flex',
                 flexDirection: 'column',
-                transition: 'all 0.2s',
-                cursor: 'pointer',
-                '&:hover': {
-                  transform: 'translateY(-4px)',
-                  boxShadow: 3,
-                },
               }}
               onClick={() => handleNamespaceClick(namespace)}
             >
-              <CardContent sx={{ flexGrow: 1 }}>
-                <Box display="flex" alignItems="center" mb={2}>
-                  <Avatar
-                    sx={{
-                      bgcolor: namespace.color,
-                      width: 56,
-                      height: 56,
-                      mr: 2,
-                    }}
-                  >
-                    <IconComponent sx={{ fontSize: 32 }} />
-                  </Avatar>
-                  <Box>
-                    <Typography variant="h5" component="h2">
-                      {namespace.name}
-                    </Typography>
-                    <Typography variant="body2" color="text.secondary">
-                      {namespace.reviewGroupName}
-                    </Typography>
-                  </Box>
-                </Box>
+              <Space align="start" style={{ marginBottom: 16, width: '100%' }}>
+                <Avatar
+                  size={56}
+                  icon={icon}
+                  style={{
+                    backgroundColor: namespace.color,
+                  }}
+                />
+                <div style={{ flex: 1 }}>
+                  <Title level={4} style={{ marginBottom: 4 }}>
+                    {namespace.name}
+                  </Title>
+                  <Text type="secondary">
+                    {namespace.reviewGroupName}
+                  </Text>
+                </div>
+              </Space>
 
-                <Typography variant="body2" color="text.secondary" mb={2}>
-                  {namespace.description}
-                </Typography>
+              <Paragraph 
+                type="secondary" 
+                style={{ marginBottom: 16 }}
+                ellipsis={{ rows: 2 }}
+              >
+                {namespace.description}
+              </Paragraph>
 
-                <Box display="flex" gap={1} mb={2} flexWrap="wrap">
-                  <Chip 
-                    label={namespace.status} 
-                    size="small"
-                    color={
-                      namespace.status === 'active' ? 'success' :
-                      namespace.status === 'maintenance' ? 'warning' : 'default'
-                    }
-                  />
-                  <Chip 
-                    label={`v${namespace.currentVersion}`} 
-                    size="small" 
-                    variant="outlined"
-                  />
-                  {userRole && (
-                    <Chip 
-                      label={userRole} 
-                      size="small" 
-                      color="primary"
-                    />
-                  )}
-                </Box>
-
-                <Box display="flex" justifyContent="space-between" mt={2}>
-                  <Typography variant="caption" color="text.secondary">
-                    {namespace.statistics.elements} elements
-                  </Typography>
-                  <Typography variant="caption" color="text.secondary">
-                    {namespace.statistics.concepts} concepts
-                  </Typography>
-                  <Typography variant="caption" color="text.secondary">
-                    {namespace.statistics.contributors} contributors
-                  </Typography>
-                </Box>
-              </CardContent>
-
-              <CardActions>
-                <Button 
-                  size="small" 
-                  color="primary"
-                  sx={{ ml: 'auto' }}
+              <Space wrap style={{ marginBottom: 16 }}>
+                <Tag 
+                  color={
+                    namespace.status === 'active' ? 'success' :
+                    namespace.status === 'maintenance' ? 'warning' : 'default'
+                  }
                 >
-                  View Dashboard →
-                </Button>
-              </CardActions>
+                  {namespace.status}
+                </Tag>
+                <Tag>v{namespace.currentVersion}</Tag>
+                {userRole && (
+                  <Tag color="blue">
+                    {userRole}
+                  </Tag>
+                )}
+              </Space>
+
+              <Row gutter={8} style={{ marginTop: 'auto' }}>
+                <Col span={8}>
+                  <Statistic 
+                    value={namespace.statistics.elements} 
+                    suffix="elements"
+                    valueStyle={{ fontSize: 14 }}
+                  />
+                </Col>
+                <Col span={8}>
+                  <Statistic 
+                    value={namespace.statistics.concepts} 
+                    suffix="concepts"
+                    valueStyle={{ fontSize: 14 }}
+                  />
+                </Col>
+                <Col span={8}>
+                  <Statistic 
+                    value={namespace.statistics.contributors} 
+                    suffix="users"
+                    valueStyle={{ fontSize: 14 }}
+                  />
+                </Col>
+              </Row>
+
+              <Button 
+                type="link" 
+                style={{ 
+                  marginTop: 16,
+                  padding: 0,
+                  marginLeft: 'auto',
+                  display: 'block',
+                  textAlign: 'right'
+                }}
+                icon={<ArrowRightOutlined />}
+                iconPosition="end"
+              >
+                View Dashboard
+              </Button>
             </Card>
-          </Grid>
+          </Col>
         );
       })}
-    </Grid>
+    </Row>
   );
 }

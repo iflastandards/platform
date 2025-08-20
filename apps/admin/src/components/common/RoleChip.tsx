@@ -1,109 +1,121 @@
 'use client';
 
 import React from 'react';
-import { Chip, ChipProps } from '@mui/material';
+import { Tag, Tooltip } from 'antd';
 import {
-  AdminPanelSettings,
-  Edit,
-  RateReview,
-  Translate,
-  SupervisedUserCircle,
-  Person,
-  Group,
-  Shield,
-} from '@mui/icons-material';
+  CrownOutlined,
+  UserOutlined,
+  TeamOutlined,
+  EditOutlined,
+  TranslationOutlined,
+  EyeOutlined,
+  GlobalOutlined,
+} from '@ant-design/icons';
 
 export type RoleType = 
-  | 'admin'
-  | 'namespace-admin'
+  | 'admin' 
+  | 'staff' 
+  | 'member' 
   | 'editor'
-  | 'reviewer'
   | 'translator'
-  | 'member'
-  | 'staff'
+  | 'reviewer'
   | 'external'
-  | 'viewer';
+  | 'namespace-admin'
+  | 'review-group-admin';
 
-interface RoleChipProps extends Omit<ChipProps, 'color' | 'icon'> {
+interface RoleChipProps {
   role: RoleType | string;
-  showIcon?: boolean;
   namespace?: string;
+  size?: 'small' | 'default';
 }
 
-const roleConfig: Record<string, { color: ChipProps['color']; icon: React.ReactElement; label: string }> = {
+const roleConfigs = {
   admin: {
-    color: 'error',
-    icon: <AdminPanelSettings fontSize="small" />,
+    color: 'red',
+    icon: <CrownOutlined />,
     label: 'Admin',
-  },
-  'namespace-admin': {
-    color: 'error',
-    icon: <Shield fontSize="small" />,
-    label: 'Namespace Admin',
-  },
-  editor: {
-    color: 'primary',
-    icon: <Edit fontSize="small" />,
-    label: 'Editor',
-  },
-  reviewer: {
-    color: 'secondary',
-    icon: <RateReview fontSize="small" />,
-    label: 'Reviewer',
-  },
-  translator: {
-    color: 'info',
-    icon: <Translate fontSize="small" />,
-    label: 'Translator',
-  },
-  member: {
-    color: 'success',
-    icon: <Person fontSize="small" />,
-    label: 'Member',
+    tooltip: 'System Administrator',
   },
   staff: {
-    color: 'warning',
-    icon: <SupervisedUserCircle fontSize="small" />,
+    color: 'orange',
+    icon: <TeamOutlined />,
     label: 'Staff',
+    tooltip: 'IFLA Staff Member',
+  },
+  member: {
+    color: 'blue',
+    icon: <UserOutlined />,
+    label: 'Member',
+    tooltip: 'Working Group Member',
+  },
+  editor: {
+    color: 'green',
+    icon: <EditOutlined />,
+    label: 'Editor',
+    tooltip: 'Content Editor',
+  },
+  translator: {
+    color: 'purple',
+    icon: <TranslationOutlined />,
+    label: 'Translator',
+    tooltip: 'Language Translator',
+  },
+  reviewer: {
+    color: 'cyan',
+    icon: <EyeOutlined />,
+    label: 'Reviewer',
+    tooltip: 'Content Reviewer',
   },
   external: {
     color: 'default',
-    icon: <Person fontSize="small" />,
+    icon: <GlobalOutlined />,
     label: 'External',
+    tooltip: 'External Contributor',
   },
-  viewer: {
-    color: 'default',
-    icon: <Person fontSize="small" />,
-    label: 'Viewer',
+  'namespace-admin': {
+    color: 'geekblue',
+    icon: <CrownOutlined />,
+    label: 'Namespace Admin',
+    tooltip: 'Namespace Administrator',
+  },
+  'review-group-admin': {
+    color: 'volcano',
+    icon: <TeamOutlined />,
+    label: 'RG Admin',
+    tooltip: 'Review Group Administrator',
   },
 };
 
-export function RoleChip({
-  role,
-  showIcon = true,
-  namespace,
-  ...chipProps
-}: RoleChipProps) {
-  const config = roleConfig[role] || {
-    color: 'default' as ChipProps['color'],
-    icon: <Group fontSize="small" />,
-    label: role.charAt(0).toUpperCase() + role.slice(1),
+export function RoleChip({ role, namespace, size = 'default' }: RoleChipProps) {
+  const config = roleConfigs[role as RoleType] || {
+    color: 'default',
+    icon: <UserOutlined />,
+    label: role,
+    tooltip: role,
   };
   
-  let label = chipProps.label || config.label;
+  const label = namespace 
+    ? `${config.label} (${namespace})`
+    : config.label;
   
-  // Add namespace prefix if provided
-  if (namespace && role !== 'admin') {
-    label = `${namespace.toUpperCase()} ${label}`;
-  }
+  const tooltip = namespace 
+    ? `${config.tooltip} for ${namespace}`
+    : config.tooltip;
   
   return (
-    <Chip
-      {...chipProps}
-      label={label}
-      color={config.color}
-      icon={showIcon ? config.icon : undefined}
-      size={chipProps.size || 'small'}
-    />
+    <Tooltip title={tooltip}>
+      <Tag
+        color={config.color}
+        icon={config.icon}
+        style={{ 
+          fontSize: size === 'small' ? 11 : 12,
+          padding: size === 'small' ? '0 4px' : undefined,
+        }}
+      >
+        {label}
+      </Tag>
+    </Tooltip>
   );
 }
+
+export default RoleChip;

@@ -2,7 +2,9 @@
 
 import { StandardDashboardLayout } from '@/components/layout/StandardDashboardLayout';
 import { getSiteManagementNavigation } from '@/lib/navigation/site-management';
-import { Typography, Box, Chip } from '@mui/material';
+import { Typography, Tag, Space } from 'antd';
+
+const { Text } = Typography;
 
 interface SiteManagementDashboardLayoutProps {
   siteKey: string;
@@ -38,28 +40,27 @@ export function SiteManagementDashboardLayout({
   const siteTitle = getSiteTitle(siteKey);
 
   const footerContent = (
-    <>
-      <Typography variant="caption" color="textSecondary">
+    <Space direction="vertical" size="small">
+      <Text type="secondary" style={{ fontSize: 12 }}>
         {siteTitle}
-      </Typography>
-      <Box sx={{ display: 'flex', alignItems: 'center', mt: 1 }}>
-        <Box 
-          sx={{ width: 8, height: 8, bgcolor: 'success.main', borderRadius: '50%', mr: 1 }}
+      </Text>
+      <Space align="center">
+        <div 
+          style={{ width: 8, height: 8, backgroundColor: '#52c41a', borderRadius: '50%' }}
           role="img"
           aria-label="Status: Connected"
         />
-        <Typography variant="caption">Connected</Typography>
-      </Box>
+        <Text style={{ fontSize: 12 }}>Connected</Text>
+      </Space>
       {isSpecialCase && (
-        <Chip 
-          label="Special Case" 
-          size="small" 
+        <Tag 
           color="warning"
-          sx={{ mt: 1 }}
           aria-label="Special case site requiring superadmin access"
-        />
+        >
+          Special Case
+        </Tag>
       )}
-    </>
+    </Space>
   );
 
   return (

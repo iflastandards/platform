@@ -1,18 +1,18 @@
 'use client';
 
-
 import {
-  Box,
   Typography,
-  Grid,
+  Row,
+  Col,
   Card,
-  CardContent,
-  Chip,
-  Stack,
+  Tag,
   Button,
-} from '@mui/material';
+  Statistic,
+} from 'antd';
 import Link from 'next/link';
 import { getNamespacesByReviewGroup } from '@/lib/mock-data/namespaces-extended';
+
+const { Title, Text } = Typography;
 
 interface NamespaceCardProps {
   slug: string;
@@ -39,63 +39,53 @@ function NamespaceCard({ slug, name, description, status, currentVersion, color,
   const config = statusConfig[status];
   
   return (
-    <Card elevation={0} sx={{ height: '100%' }}>
-      <CardContent>
-        <Box display="flex" justifyContent="space-between" alignItems="flex-start" mb={2}>
-          <Typography variant="h6" fontWeight="bold" sx={{ color }}>
-            {name}
-          </Typography>
-          <Chip 
-            label={config.label} 
-            color={config.color} 
-            size="small"
-            sx={{ fontWeight: 600 }}
+    <Card style={{ height: '100%' }}>
+      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: 16 }}>
+        <Title level={5} style={{ color, margin: 0 }}>
+          {name}
+        </Title>
+        <Tag color={config.color}>
+          {config.label}
+        </Tag>
+      </div>
+      
+      <Text type="secondary" style={{ display: 'block', marginBottom: 8 }}>
+        {description}
+      </Text>
+      
+      <Text type="secondary" style={{ fontSize: 12, display: 'block', marginBottom: 16 }}>
+        Version {currentVersion}
+      </Text>
+      
+      <Row gutter={16} style={{ marginBottom: 16 }}>
+        <Col span={8}>
+          <Statistic
+            title="Items"
+            value={statistics.elements + statistics.concepts}
+            valueStyle={{ fontSize: 16, color: '#1890ff' }}
           />
-        </Box>
-        <Typography variant="body2" color="text.secondary" gutterBottom>
-          {description}
-        </Typography>
-        <Typography variant="caption" color="text.secondary" display="block" mb={2}>
-          Version {currentVersion}
-        </Typography>
-        
-        <Stack direction="row" spacing={2} mb={2}>
-          <Box textAlign="center">
-            <Typography variant="body2" fontWeight="bold" color="primary.main">
-              {statistics.elements + statistics.concepts}
-            </Typography>
-            <Typography variant="caption" color="text.secondary">
-              Items
-            </Typography>
-          </Box>
-          <Box textAlign="center">
-            <Typography variant="body2" fontWeight="bold" color="primary.main">
-              {statistics.translations}
-            </Typography>
-            <Typography variant="caption" color="text.secondary">
-              Languages
-            </Typography>
-          </Box>
-          <Box textAlign="center">
-            <Typography variant="body2" fontWeight="bold" color="primary.main">
-              {statistics.contributors}
-            </Typography>
-            <Typography variant="caption" color="text.secondary">
-              Contributors
-            </Typography>
-          </Box>
-        </Stack>
-        
-        <Button 
-          variant="outlined" 
-          size="small" 
-          fullWidth
-          component={Link}
-          href={`/dashboard/${slug}`}
-        >
+        </Col>
+        <Col span={8}>
+          <Statistic
+            title="Languages"
+            value={statistics.translations}
+            valueStyle={{ fontSize: 16, color: '#1890ff' }}
+          />
+        </Col>
+        <Col span={8}>
+          <Statistic
+            title="Contributors"
+            value={statistics.contributors}
+            valueStyle={{ fontSize: 16, color: '#1890ff' }}
+          />
+        </Col>
+      </Row>
+      
+      <Link href={`/dashboard/${slug}`}>
+        <Button type="default" block>
           Manage Namespace
         </Button>
-      </CardContent>
+      </Link>
     </Card>
   );
 }
@@ -105,23 +95,21 @@ export function RGNamespacesPage() {
   const userNamespaces = getNamespacesByReviewGroup('isbd');
 
   return (
-    <Box>
-      <Box mb={3}>
-        <Typography variant="h4" component="h1" gutterBottom>
-          My Namespaces
-        </Typography>
-        <Typography variant="body1" color="text.secondary">
+    <div>
+      <div style={{ marginBottom: 24 }}>
+        <Title level={2}>My Namespaces</Title>
+        <Text type="secondary">
           Manage vocabularies and namespaces under your review group
-        </Typography>
-      </Box>
+        </Text>
+      </div>
 
-      <Grid container spacing={3}>
+      <Row gutter={[24, 24]}>
         {userNamespaces.map((namespace) => (
-          <Grid size={{ xs: 12, sm: 6, lg: 4 }} key={namespace.id}>
+          <Col xs={24} sm={12} lg={8} key={namespace.id}>
             <NamespaceCard {...namespace} />
-          </Grid>
+          </Col>
         ))}
-      </Grid>
-    </Box>
+      </Row>
+    </div>
   );
 }

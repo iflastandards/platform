@@ -3,35 +3,35 @@
 import React, { useState } from 'react';
 import {
   Alert,
-  Box,
   Button,
   Card,
-  CardContent,
-  Chip,
-  Grid,
+  Tag,
+  Row,
+  Col,
   List,
-  ListItem,
-  ListItemIcon,
-  ListItemText,
-  Stack,
+  Space,
   Typography,
-} from '@mui/material';
+  Statistic,
+} from 'antd';
 import {
-  Dashboard as DashboardIcon,
-  GitHub,
-  Group,
-  Folder,
-  AccountTree,
-  AdminPanelSettings,
-  Edit,
-  RateReview,
-  Translate,
-  Person,
-  Home,
-} from '@mui/icons-material';
+  DashboardOutlined,
+  GithubOutlined,
+  TeamOutlined,
+  FolderOutlined,
+  ApartmentOutlined,
+  SafetyCertificateOutlined,
+  EditOutlined,
+  FileSearchOutlined,
+  TranslationOutlined,
+  UserOutlined,
+  HomeOutlined,
+} from '@ant-design/icons';
 import { AppUser } from '@/lib/clerk-github-auth';
 import Link from 'next/link';
 import { TabBasedDashboardLayout, NavigationItem } from '@/components/layout/TabBasedDashboardLayout';
+
+const { Text, Title } = Typography;
+const { Item: ListItem } = List;
 
 interface PersonalDashboardProps {
   user: AppUser;
@@ -40,17 +40,17 @@ interface PersonalDashboardProps {
 function getRoleIcon(role: string) {
   switch (role) {
     case 'maintainer':
-      return <AdminPanelSettings color="primary" />;
+      return <SafetyCertificateOutlined style={{ color: '#1890ff' }} />;
     case 'lead':
-      return <AccountTree color="primary" />;
+      return <ApartmentOutlined style={{ color: '#1890ff' }} />;
     case 'editor':
-      return <Edit color="secondary" />;
+      return <EditOutlined style={{ color: '#722ed1' }} />;
     case 'reviewer':
-      return <RateReview color="info" />;
+      return <FileSearchOutlined style={{ color: '#13c2c2' }} />;
     case 'translator':
-      return <Translate color="success" />;
+      return <TranslationOutlined style={{ color: '#52c41a' }} />;
     default:
-      return <Person />;
+      return <UserOutlined />;
   }
 }
 
@@ -63,24 +63,24 @@ export default function PersonalDashboard({ user }: PersonalDashboardProps) {
     {
       id: 'overview',
       label: 'Overview',
-      icon: Home,
+      icon: HomeOutlined,
     },
     {
       id: 'review-groups',
       label: 'Review Groups',
-      icon: Group,
+      icon: TeamOutlined,
       badge: user.reviewGroups.length,
     },
     {
       id: 'projects',
       label: 'Projects',
-      icon: AccountTree,
+      icon: ApartmentOutlined,
       badge: projectCount,
     },
     {
       id: 'namespaces',
       label: 'Namespaces',
-      icon: Folder,
+      icon: FolderOutlined,
       badge: user.accessibleNamespaces.length,
     },
   ];
@@ -91,54 +91,53 @@ export default function PersonalDashboard({ user }: PersonalDashboardProps) {
         return (
           <>
             {/* Header */}
-            <Box sx={{ mb: 4 }}>
-              <Typography variant="h4" gutterBottom component="h1">
+            <div style={{ marginBottom: 32 }}>
+              <Title level={2} style={{ marginBottom: 8 }}>
                 Welcome back, {user.name}
-              </Typography>
-              <Stack direction="row" spacing={1} flexWrap="wrap" alignItems="center">
+              </Title>
+              <Space wrap>
                 {user.githubUsername && (
-                  <Chip
-                    icon={<GitHub />}
-                    label={`@${user.githubUsername}`}
-                    variant="outlined"
-                    size="small"
-                  />
+                  <Tag
+                    icon={<GithubOutlined />}
+                    color="default"
+                  >
+                    @{user.githubUsername}
+                  </Tag>
                 )}
                 {user.systemRole === 'admin' && (
-                  <Chip
-                    icon={<AdminPanelSettings />}
-                    label="System Admin"
-                    color="primary"
-                    size="small"
-                  />
+                  <Tag
+                    icon={<SafetyCertificateOutlined />}
+                    color="blue"
+                  >
+                    System Admin
+                  </Tag>
                 )}
                 {user.isReviewGroupAdmin && (
-                  <Chip
-                    icon={<Group />}
-                    label="Review Group Admin"
-                    color="secondary"
-                    size="small"
-                  />
+                  <Tag
+                    icon={<TeamOutlined />}
+                    color="purple"
+                  >
+                    Review Group Admin
+                  </Tag>
                 )}
                 {isDemo && (
-                  <Chip
-                    label="DEMO MODE"
+                  <Tag
                     color="warning"
-                    size="small"
-                    variant="filled"
-                  />
+                  >
+                    DEMO MODE
+                  </Tag>
                 )}
-              </Stack>
-            </Box>
+              </Space>
+            </div>
 
             {/* Quick Stats */}
-            <Typography variant="h5" component="h2" sx={{ mb: 2 }}>
+            <Title level={3} style={{ marginBottom: 16 }}>
               Dashboard Overview
-            </Typography>
-            <Grid container spacing={3}>
-              <Grid size={{ xs: 12, sm: 6, md: 3 }}>
+            </Title>
+            <Row gutter={[24, 24]}>
+              <Col xs={24} sm={12} md={6}>
                 <Card
-                  sx={{ 
+                  style={{ 
                     minHeight: 140,
                     display: 'flex',
                     flexDirection: 'column',
@@ -147,30 +146,26 @@ export default function PersonalDashboard({ user }: PersonalDashboardProps) {
                   role="region"
                   aria-labelledby="review-groups-card"
                 >
-                  <CardContent>
-                    <Box sx={{ display: 'flex', alignItems: 'center', mb: 2 }}>
-                      <Group sx={{ mr: 1, color: 'primary.main' }} aria-hidden="true" />
-                      <Typography id="review-groups-card" variant="h6" component="h3">
-                        Review Groups
-                      </Typography>
-                    </Box>
-                    <Typography 
-                      variant="h4"
-                      sx={{ fontWeight: 'bold', color: 'text.primary' }}
-                      aria-label={`You are a member of ${user.reviewGroups.length} review groups`}
-                    >
-                      {user.reviewGroups.length}
-                    </Typography>
-                    <Typography variant="body2" color="text.secondary" sx={{ mt: 1 }}>
-                      Groups you belong to
-                    </Typography>
-                  </CardContent>
+                  <div style={{ display: 'flex', alignItems: 'center', marginBottom: 16 }}>
+                    <TeamOutlined style={{ marginRight: 8, color: '#1890ff', fontSize: 20 }} aria-hidden="true" />
+                    <Title id="review-groups-card" level={5} style={{ margin: 0 }}>
+                      Review Groups
+                    </Title>
+                  </div>
+                  <Statistic
+                    value={user.reviewGroups.length}
+                    valueStyle={{ fontWeight: 'bold' }}
+                    aria-label={`You are a member of ${user.reviewGroups.length} review groups`}
+                  />
+                  <Text type="secondary" style={{ marginTop: 8 }}>
+                    Groups you belong to
+                  </Text>
                 </Card>
-              </Grid>
+              </Col>
 
-              <Grid size={{ xs: 12, sm: 6, md: 3 }}>
+              <Col xs={24} sm={12} md={6}>
                 <Card
-                  sx={{ 
+                  style={{ 
                     minHeight: 140,
                     display: 'flex',
                     flexDirection: 'column',
@@ -179,30 +174,26 @@ export default function PersonalDashboard({ user }: PersonalDashboardProps) {
                   role="region"
                   aria-labelledby="projects-card"
                 >
-                  <CardContent>
-                    <Box sx={{ display: 'flex', alignItems: 'center', mb: 2 }}>
-                      <AccountTree sx={{ mr: 1, color: 'secondary.main' }} aria-hidden="true" />
-                      <Typography id="projects-card" variant="h6" component="h3">
-                        Active Projects
-                      </Typography>
-                    </Box>
-                    <Typography 
-                      variant="h4"
-                      sx={{ fontWeight: 'bold', color: 'text.primary' }}
-                      aria-label={`You have ${projectCount} active projects`}
-                    >
-                      {projectCount}
-                    </Typography>
-                    <Typography variant="body2" color="text.secondary" sx={{ mt: 1 }}>
-                      Projects assigned to you
-                    </Typography>
-                  </CardContent>
+                  <div style={{ display: 'flex', alignItems: 'center', marginBottom: 16 }}>
+                    <ApartmentOutlined style={{ marginRight: 8, color: '#722ed1', fontSize: 20 }} aria-hidden="true" />
+                    <Title id="projects-card" level={5} style={{ margin: 0 }}>
+                      Active Projects
+                    </Title>
+                  </div>
+                  <Statistic
+                    value={projectCount}
+                    valueStyle={{ fontWeight: 'bold' }}
+                    aria-label={`You have ${projectCount} active projects`}
+                  />
+                  <Text type="secondary" style={{ marginTop: 8 }}>
+                    Projects assigned to you
+                  </Text>
                 </Card>
-              </Grid>
+              </Col>
 
-              <Grid size={{ xs: 12, sm: 6, md: 3 }}>
+              <Col xs={24} sm={12} md={6}>
                 <Card
-                  sx={{ 
+                  style={{ 
                     minHeight: 140,
                     display: 'flex',
                     flexDirection: 'column',
@@ -211,30 +202,26 @@ export default function PersonalDashboard({ user }: PersonalDashboardProps) {
                   role="region"
                   aria-labelledby="namespaces-card"
                 >
-                  <CardContent>
-                    <Box sx={{ display: 'flex', alignItems: 'center', mb: 2 }}>
-                      <Folder sx={{ mr: 1, color: 'success.main' }} aria-hidden="true" />
-                      <Typography id="namespaces-card" variant="h6" component="h3">
-                        Namespaces
-                      </Typography>
-                    </Box>
-                    <Typography 
-                      variant="h4"
-                      sx={{ fontWeight: 'bold', color: 'text.primary' }}
-                      aria-label={`You have access to ${user.accessibleNamespaces.length} namespaces`}
-                    >
-                      {user.accessibleNamespaces.length}
-                    </Typography>
-                    <Typography variant="body2" color="text.secondary" sx={{ mt: 1 }}>
-                      Accessible namespaces
-                    </Typography>
-                  </CardContent>
+                  <div style={{ display: 'flex', alignItems: 'center', marginBottom: 16 }}>
+                    <FolderOutlined style={{ marginRight: 8, color: '#52c41a', fontSize: 20 }} aria-hidden="true" />
+                    <Title id="namespaces-card" level={5} style={{ margin: 0 }}>
+                      Namespaces
+                    </Title>
+                  </div>
+                  <Statistic
+                    value={user.accessibleNamespaces.length}
+                    valueStyle={{ fontWeight: 'bold' }}
+                    aria-label={`You have access to ${user.accessibleNamespaces.length} namespaces`}
+                  />
+                  <Text type="secondary" style={{ marginTop: 8 }}>
+                    Accessible namespaces
+                  </Text>
                 </Card>
-              </Grid>
+              </Col>
 
-              <Grid size={{ xs: 12, sm: 6, md: 3 }}>
+              <Col xs={24} sm={12} md={6}>
                 <Card
-                  sx={{ 
+                  style={{ 
                     minHeight: 140,
                     display: 'flex',
                     flexDirection: 'column',
@@ -243,162 +230,164 @@ export default function PersonalDashboard({ user }: PersonalDashboardProps) {
                   role="region"
                   aria-labelledby="role-card"
                 >
-                  <CardContent>
-                    <Box sx={{ display: 'flex', alignItems: 'center', mb: 2 }}>
-                      <DashboardIcon sx={{ mr: 1, color: 'info.main' }} aria-hidden="true" />
-                      <Typography id="role-card" variant="h6" component="h3">
-                        Your Role
-                      </Typography>
-                    </Box>
-                    <Typography 
-                      variant="h4"
-                      sx={{ fontWeight: 'bold', color: 'text.primary' }}
-                    >
-                      {user.systemRole === 'admin' ? 'System Admin' :
-                       user.isReviewGroupAdmin ? 'RG Admin' : 'Member'}
-                    </Typography>
-                    <Typography variant="body2" color="text.secondary" sx={{ mt: 1 }}>
-                      System access level
-                    </Typography>
-                  </CardContent>
+                  <div style={{ display: 'flex', alignItems: 'center', marginBottom: 16 }}>
+                    <DashboardOutlined style={{ marginRight: 8, color: '#13c2c2', fontSize: 20 }} aria-hidden="true" />
+                    <Title id="role-card" level={5} style={{ margin: 0 }}>
+                      Your Role
+                    </Title>
+                  </div>
+                  <Statistic
+                    value={user.systemRole === 'admin' ? 'System Admin' :
+                           user.isReviewGroupAdmin ? 'RG Admin' : 'Member'}
+                    valueStyle={{ fontWeight: 'bold', fontSize: 24 }}
+                  />
+                  <Text type="secondary" style={{ marginTop: 8 }}>
+                    System access level
+                  </Text>
                 </Card>
-              </Grid>
-            </Grid>
+              </Col>
+            </Row>
           </>
         );
 
       case 'review-groups':
         return (
-          <Box>
-            <Typography variant="h4" component="h1" gutterBottom>
+          <div>
+            <Title level={2} style={{ marginBottom: 16 }}>
               Your Review Group Memberships
-            </Typography>
+            </Title>
             {user.reviewGroups.length > 0 ? (
-              <List>
-                {user.reviewGroups.map((rg, index) => (
-                  <React.Fragment key={rg.slug}>
-                    <ListItem sx={{ borderBottom: index < user.reviewGroups.length - 1 ? 1 : 0, borderColor: 'divider' }}>
-                      <ListItemIcon>
-                        {getRoleIcon(rg.role)}
-                      </ListItemIcon>
-                      <ListItemText
-                        primary={rg.name}
-                        secondary={
-                          <React.Fragment>
-                            <Chip label={rg.role} size="small" sx={{ mr: 1 }} />
-                            {rg.namespaces.map(ns => (
-                              <Chip key={ns} label={ns} size="small" variant="outlined" sx={{ mr: 0.5 }} />
-                            ))}
-                          </React.Fragment>
-                        }
-                        secondaryTypographyProps={{ component: 'div' }}
-                      />
-                      {rg.role === 'maintainer' && (
-                        <Button
-                          component={Link}
-                          href={`/dashboard/rg/${rg.slug}`}
-                          variant="outlined"
-                          size="small"
-                          aria-label={`Manage ${rg.name} review group`}
-                        >
-                          Manage
-                        </Button>
-                      )}
-                    </ListItem>
-                  </React.Fragment>
-                ))}
-              </List>
+              <List
+                dataSource={user.reviewGroups}
+                renderItem={(rg, index) => (
+                  <ListItem
+                    key={rg.slug}
+                    style={{ borderBottom: index < user.reviewGroups.length - 1 ? '1px solid #f0f0f0' : 'none' }}
+                    actions={[
+                      rg.role === 'maintainer' && (
+                        <Link href={`/dashboard/rg/${rg.slug}`} key="manage">
+                          <Button
+                            type="default"
+                            size="small"
+                            aria-label={`Manage ${rg.name} review group`}
+                          >
+                            Manage
+                          </Button>
+                        </Link>
+                      )
+                    ].filter(Boolean)}
+                  >
+                    <ListItem.Meta
+                      avatar={getRoleIcon(rg.role)}
+                      title={rg.name}
+                      description={
+                        <Space wrap>
+                          <Tag>{rg.role}</Tag>
+                          {rg.namespaces.map(ns => (
+                            <Tag key={ns} bordered={false}>{ns}</Tag>
+                          ))}
+                        </Space>
+                      }
+                    />
+                  </ListItem>
+                )}
+              />
             ) : (
-              <Alert severity="info">
-                You are not a member of any review groups. Contact an administrator to be added to a team.
-              </Alert>
+              <Alert
+                message="You are not a member of any review groups. Contact an administrator to be added to a team."
+                type="info"
+                showIcon
+              />
             )}
-          </Box>
+          </div>
         );
 
       case 'projects':
         return (
-          <Box>
-            <Typography variant="h4" component="h1" gutterBottom>
+          <div>
+            <Title level={2} style={{ marginBottom: 16 }}>
               Your Project Assignments
-            </Typography>
+            </Title>
             {projectCount > 0 ? (
-              <List>
-                {Object.entries(user.projects).map(([projectId, project], index) => (
-                  <React.Fragment key={projectId}>
-                    <ListItem sx={{ borderBottom: index < Object.entries(user.projects).length - 1 ? 1 : 0, borderColor: 'divider' }}>
-                      <ListItemIcon>
-                        {getRoleIcon(project.role)}
-                      </ListItemIcon>
-                      <ListItemText
-                        primary={project.title}
-                        secondary={
-                          <React.Fragment>
-                            <Chip label={project.role} size="small" color="primary" sx={{ mr: 1 }} />
-                            <Chip label={`Team: ${project.sourceTeam}`} size="small" sx={{ mr: 1 }} />
-                            {project.namespaces.map(ns => (
-                              <Chip key={ns} label={ns} size="small" variant="outlined" sx={{ mr: 0.5 }} />
-                            ))}
-                          </React.Fragment>
-                        }
-                        secondaryTypographyProps={{ component: 'div' }}
-                      />
-                      <Button
-                        component={Link}
-                        href={`/dashboard/project/${projectId}`}
-                        variant="contained"
-                        size="small"
-                        aria-label={`Open ${project.title} project`}
-                      >
-                        Open
-                      </Button>
-                    </ListItem>
-                  </React.Fragment>
-                ))}
-              </List>
+              <List
+                dataSource={Object.entries(user.projects)}
+                renderItem={([projectId, project], index) => (
+                  <ListItem
+                    key={projectId}
+                    style={{ borderBottom: index < Object.entries(user.projects).length - 1 ? '1px solid #f0f0f0' : 'none' }}
+                    actions={[
+                      <Link href={`/dashboard/project/${projectId}`} key="open">
+                        <Button
+                          type="primary"
+                          size="small"
+                          aria-label={`Open ${project.title} project`}
+                        >
+                          Open
+                        </Button>
+                      </Link>
+                    ]}
+                  >
+                    <ListItem.Meta
+                      avatar={getRoleIcon(project.role)}
+                      title={project.title}
+                      description={
+                        <Space wrap>
+                          <Tag color="blue">{project.role}</Tag>
+                          <Tag>Team: {project.sourceTeam}</Tag>
+                          {project.namespaces.map(ns => (
+                            <Tag key={ns} bordered={false}>{ns}</Tag>
+                          ))}
+                        </Space>
+                      }
+                    />
+                  </ListItem>
+                )}
+              />
             ) : (
-              <Alert severity="info">
-                You are not assigned to any projects yet. Review Group administrators can assign you to projects.
-              </Alert>
+              <Alert
+                message="You are not assigned to any projects yet. Review Group administrators can assign you to projects."
+                type="info"
+                showIcon
+              />
             )}
-          </Box>
+          </div>
         );
 
       case 'namespaces':
         return (
-          <Box>
-            <Typography variant="h4" component="h1" gutterBottom>
+          <div>
+            <Title level={2} style={{ marginBottom: 16 }}>
               Accessible Namespaces
-            </Typography>
+            </Title>
             {user.accessibleNamespaces.length > 0 ? (
-              <Grid container spacing={2}>
+              <Row gutter={[16, 16]}>
                 {user.accessibleNamespaces.map((namespace) => (
-                  <Grid size={{ xs: 12, sm: 6, md: 4 }} key={namespace}>
+                  <Col xs={24} sm={12} md={8} key={namespace}>
                     <Card>
-                      <CardContent>
-                        <Typography variant="h5" component="h2" gutterBottom>
-                          {namespace.toUpperCase()}
-                        </Typography>
+                      <Title level={4} style={{ marginBottom: 16 }}>
+                        {namespace.toUpperCase()}
+                      </Title>
+                      <Link href={`/namespaces/${namespace}`}>
                         <Button
-                          component={Link}
-                          href={`/namespaces/${namespace}`}
-                          variant="contained"
-                          fullWidth
+                          type="primary"
+                          block
                           aria-label={`View ${namespace.toUpperCase()} namespace`}
                         >
                           View Namespace
                         </Button>
-                      </CardContent>
+                      </Link>
                     </Card>
-                  </Grid>
+                  </Col>
                 ))}
-              </Grid>
+              </Row>
             ) : (
-              <Alert severity="warning">
-                You don&apos;t have access to any namespaces. You need to be assigned to a review group or project to gain namespace access.
-              </Alert>
+              <Alert
+                message="You don't have access to any namespaces. You need to be assigned to a review group or project to gain namespace access."
+                type="warning"
+                showIcon
+              />
             )}
-          </Box>
+          </div>
         );
 
       default:

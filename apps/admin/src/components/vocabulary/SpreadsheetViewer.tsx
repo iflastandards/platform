@@ -2,38 +2,32 @@
 
 import React, { useState, useEffect } from 'react';
 import {
-  Box,
   Card,
-  CardContent,
   Typography,
   Table,
-  TableBody,
-  TableCell,
-  TableContainer,
-  TableHead,
-  TableRow,
-  TablePagination,
-  Chip,
-  IconButton,
-  TextField,
-  InputAdornment,
+  Tag,
+  Button,
+  Input,
   Alert,
   Skeleton,
-  Paper,
-  Button,
-  Menu,
-  MenuItem,
-  Stack,
-} from '@mui/material';
+  Dropdown,
+  Space,
+  Pagination,
+  Row,
+  Col,
+  MenuProps,
+} from 'antd';
 import {
-  Search as SearchIcon,
-  FilterList as FilterIcon,
-  Download as DownloadIcon,
-  Visibility as ViewIcon,
-  Edit as EditIcon,
-  MoreVert as MoreIcon,
-  OpenInNew as OpenInNewIcon,
-} from '@mui/icons-material';
+  SearchOutlined,
+  FilterOutlined,
+  DownloadOutlined,
+  EyeOutlined,
+  EditOutlined,
+  MoreOutlined,
+  ExportOutlined,
+} from '@ant-design/icons';
+
+const { Title, Text, Link } = Typography;
 
 interface SpreadsheetData {
   id: string;
@@ -75,11 +69,10 @@ export default function SpreadsheetViewer({
   downloadable = true,
   maxHeight = 600,
 }: SpreadsheetViewerProps) {
-  const [page, setPage] = useState(0);
-  const [rowsPerPage, setRowsPerPage] = useState(25);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [pageSize, setPageSize] = useState(25);
   const [searchTerm, setSearchTerm] = useState('');
   const [filteredData, setFilteredData] = useState<SpreadsheetData[]>(data);
-  const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
   const [selectedRow, setSelectedRow] = useState<SpreadsheetData | null>(null);
 
   useEffect(() => {
@@ -94,304 +87,313 @@ export default function SpreadsheetViewer({
       )
     );
     setFilteredData(filtered);
-    setPage(0);
+    setCurrentPage(1);
   }, [data, searchTerm]);
 
-  const handleChangePage = (event: unknown, newPage: number) => {
-    setPage(newPage);
+  const handlePageChange = (page: number, size?: number) => {
+    setCurrentPage(page);
+    if (size) {
+      setPageSize(size);
+    }
   };
 
-  const handleChangeRowsPerPage = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setRowsPerPage(parseInt(event.target.value, 10));
-    setPage(0);
+  const handleSearch = (value: string) => {
+    setSearchTerm(value);
   };
 
-  const handleMenuClick = (event: React.MouseEvent<HTMLElement>, row: SpreadsheetData) => {
-    event.stopPropagation();
-    setAnchorEl(event.currentTarget);
-    setSelectedRow(row);
+  const handleDownload = (format: 'csv' | 'json') => {
+    if (format === 'csv') {
+      downloadCSV();
+    } else {
+      downloadJSON();
+    }
   };
 
-  const handleMenuClose = () => {
-    setAnchorEl(null);
-    setSelectedRow(null);
+  const downloadCSV = () => {
+    const headers = columns.map(col => col.label).join(',');
+    const rows = filteredData.map(row =>
+      columns.map(col => {
+        const value = row[col.id];
+        // Escape values containing commas or quotes
+        if (value && value.toString().includes(',')) {
+          return `"${value.toString().replace(/"/g, '""')}"`;
+        }
+        return value || '';
+      }).join(',')
+    );
+    
+    const csv = [headers, ...rows].join('\n');
+    const blob = new Blob([csv], { type: 'text/csv' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `${title.replace(/\s+/g, '_')}_${new Date().toISOString().split('T')[0]}.csv`;
+    a.click();
+    URL.revokeObjectURL(url);
   };
 
-  const formatCellValue = (value: any, column: SpreadsheetColumn) => { // TODO: Define proper cell value type
-    if (value === null || value === undefined || value === '') {
-      return (
-        <Typography variant="body2" color="text.disabled">
-          —
-        </Typography>
-      );
+  const downloadJSON = () => {
+    const json = JSON.stringify(filteredData, null, 2);
+    const blob = new Blob([json], { type: 'application/json' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `${title.replace(/\s+/g, '_')}_${new Date().toISOString().split('T')[0]}.json`;
+    a.click();
+    URL.revokeObjectURL(url);
+  };
+
+  const getRowMenu = (record: SpreadsheetData): MenuProps => ({
+    items: [
+      {
+        key: 'view',
+        label: 'View Details',
+        icon: <EyeOutlined />,
+        onClick: () => onRowClick?.(record),
+      },
+      ...(onEdit ? [{
+        key: 'edit',
+        label: 'Edit',
+        icon: <EditOutlined />,
+        onClick: () => onEdit(record),
+      }] : []),
+      {
+        key: 'copy',
+        label: 'Copy ID',
+        onClick: () => {
+          navigator.clipboard.writeText(record.id);
+        },
+      },
+    ],
+  });
+
+  const renderCellContent = (value: any, column: SpreadsheetColumn) => {
+    if (value === null || value === undefined) {
+      return <Text type="secondary">-</Text>;
     }
 
     switch (column.type) {
       case 'url':
         return (
-          <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-            <Typography variant="body2" sx={{ 
-              maxWidth: 200, 
-              overflow: 'hidden', 
-              textOverflow: 'ellipsis',
-              whiteSpace: 'nowrap' 
-            }}>
-              {value}
-            </Typography>
-            <IconButton size="small" href={value} target="_blank">
-              <OpenInNewIcon fontSize="small" />
-            </IconButton>
-          </Box>
+          <Link href={value.toString()} target="_blank">
+            {value.toString()}
+            <ExportOutlined style={{ marginLeft: 4, fontSize: 10 }} />
+          </Link>
         );
-      
       case 'identifier':
         return (
-          <Chip 
-            label={value} 
-            size="small" 
-            variant="outlined" 
-            sx={{ fontFamily: 'monospace' }}
-          />
+          <Text code style={{ fontSize: 12 }}>
+            {value.toString()}
+          </Text>
         );
-      
       case 'language':
-        return (
-          <Chip 
-            label={value} 
-            size="small" 
-            color="primary" 
-            variant="outlined"
-          />
-        );
-      
+        return <Tag>{value.toString()}</Tag>;
+      case 'date':
+        return new Date(value.toString()).toLocaleDateString();
       default:
-        return (
-          <Typography variant="body2" sx={{
-            maxWidth: 250,
-            overflow: 'hidden',
-            textOverflow: 'ellipsis',
-            whiteSpace: 'nowrap'
-          }}>
-            {value}
-          </Typography>
-        );
+        return value.toString();
     }
   };
 
-  const getColumnWidth = (column: SpreadsheetColumn) => {
-    switch (column.type) {
-      case 'identifier':
-        return 120;
-      case 'language':
-        return 80;
-      case 'url':
-        return 200;
-      default:
-        return 'auto';
-    }
-  };
+  const tableColumns = [
+    ...columns.map(col => ({
+      title: (
+        <Space direction="vertical" size={0}>
+          <Text strong>{col.label}</Text>
+          {col.required && <Tag color="red" style={{ fontSize: 10 }}>Required</Tag>}
+          {col.description && (
+            <Text type="secondary" style={{ fontSize: 11 }}>
+              {col.description}
+            </Text>
+          )}
+        </Space>
+      ),
+      dataIndex: col.id,
+      key: col.id,
+      render: (value: any) => renderCellContent(value, col),
+      ellipsis: true,
+    })),
+    {
+      title: 'Actions',
+      key: 'actions',
+      width: 80,
+      fixed: 'right' as const,
+      render: (_: any, record: SpreadsheetData) => (
+        <Dropdown menu={getRowMenu(record)} trigger={['click']}>
+          <Button type="text" icon={<MoreOutlined />} />
+        </Dropdown>
+      ),
+    },
+  ];
+
+  // Calculate pagination
+  const startIndex = (currentPage - 1) * pageSize;
+  const endIndex = startIndex + pageSize;
+  const paginatedData = filteredData.slice(startIndex, endIndex);
 
   if (loading) {
     return (
       <Card>
-        <CardContent>
-          <Box sx={{ mb: 3 }}>
-            <Skeleton variant="text" width="40%" height={32} />
-            <Skeleton variant="text" width="60%" height={20} sx={{ mt: 1 }} />
-          </Box>
-          <Skeleton variant="rectangular" width="100%" height={400} />
-        </CardContent>
+        <Skeleton active paragraph={{ rows: 10 }} />
       </Card>
     );
   }
 
-  const paginatedData = filteredData.slice(
-    page * rowsPerPage,
-    page * rowsPerPage + rowsPerPage
-  );
+  if (data.length === 0) {
+    return (
+      <Card>
+        <Alert
+          message="No Data Available"
+          description="There is no vocabulary data to display."
+          type="info"
+          showIcon
+        />
+      </Card>
+    );
+  }
+
+  const downloadMenu: MenuProps = {
+    items: [
+      {
+        key: 'csv',
+        label: 'Download as CSV',
+        onClick: () => handleDownload('csv'),
+      },
+      {
+        key: 'json',
+        label: 'Download as JSON',
+        onClick: () => handleDownload('json'),
+      },
+    ],
+  };
 
   return (
     <Card>
-      <CardContent>
-        {/* Header */}
-        <Box sx={{ mb: 3 }}>
-          <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', mb: 2 }}>
-            <Box>
-              <Typography variant="h6" gutterBottom>
-                {title}
-              </Typography>
-              {subtitle && (
-                <Typography variant="body2" color="text.secondary">
-                  {subtitle}
-                </Typography>
-              )}
-            </Box>
-            
-            {downloadable && (
-              <Button
-                startIcon={<DownloadIcon />}
-                size="small"
-                variant="outlined"
-              >
-                Export
-              </Button>
-            )}
-          </Box>
-
-          {/* Search and Filters */}
-          {(searchable || filterable) && (
-            <Stack direction="row" spacing={2} sx={{ mb: 2 }}>
+      {/* Header */}
+      <div style={{ marginBottom: 24 }}>
+        <Row justify="space-between" align="middle">
+          <Col>
+            <Title level={4} style={{ margin: 0 }}>{title}</Title>
+            {subtitle && <Text type="secondary">{subtitle}</Text>}
+          </Col>
+          <Col>
+            <Space>
               {searchable && (
-                <TextField
-                  size="small"
-                  placeholder="Search vocabulary..."
-                  value={searchTerm}
-                  onChange={(e) => setSearchTerm(e.target.value)}
-                  InputProps={{
-                    startAdornment: (
-                      <InputAdornment position="start">
-                        <SearchIcon />
-                      </InputAdornment>
-                    ),
-                  }}
-                  sx={{ minWidth: 300 }}
+                <Input.Search
+                  placeholder="Search all columns..."
+                  allowClear
+                  onSearch={handleSearch}
+                  style={{ width: 250 }}
+                  prefix={<SearchOutlined />}
                 />
               )}
-              
               {filterable && (
-                <Button
-                  startIcon={<FilterIcon />}
-                  size="small"
-                  variant="outlined"
-                >
+                <Button icon={<FilterOutlined />}>
                   Filters
                 </Button>
               )}
-            </Stack>
-          )}
-
-          {/* Results Summary */}
-          <Alert severity="info" sx={{ mb: 2 }}>
-            Showing {paginatedData.length} of {filteredData.length} entries
-            {searchTerm && ` matching "${searchTerm}"`}
-          </Alert>
-        </Box>
-
-        {/* Table */}
-        <TableContainer 
-          component={Paper} 
-          variant="outlined" 
-          sx={{ maxHeight }}
-        >
-          <Table stickyHeader size="small">
-            <TableHead>
-              <TableRow>
-                {columns.map((column) => (
-                  <TableCell 
-                    key={column.id}
-                    sx={{ 
-                      width: getColumnWidth(column),
-                      fontWeight: 'bold',
-                      bgcolor: 'grey.50'
-                    }}
-                  >
-                    <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-                      {column.label}
-                      {column.required && (
-                        <Chip label="Required" size="small" color="error" variant="outlined" />
-                      )}
-                    </Box>
-                    {column.description && (
-                      <Typography variant="caption" color="text.secondary" display="block">
-                        {column.description}
-                      </Typography>
-                    )}
-                  </TableCell>
-                ))}
-                <TableCell width={60} sx={{ fontWeight: 'bold', bgcolor: 'grey.50' }}>
-                  Actions
-                </TableCell>
-              </TableRow>
-            </TableHead>
-            <TableBody>
-              {paginatedData.map((row, index) => (
-                <TableRow
-                  key={row.id || index}
-                  hover
-                  onClick={() => onRowClick?.(row)}
-                  sx={{ 
-                    cursor: onRowClick ? 'pointer' : 'default',
-                    '&:hover': {
-                      bgcolor: onRowClick ? 'action.hover' : 'inherit',
-                    }
-                  }}
-                >
-                  {columns.map((column) => (
-                    <TableCell key={column.id}>
-                      {formatCellValue(row[column.id], column)}
-                    </TableCell>
-                  ))}
-                  <TableCell>
-                    <IconButton
-                      size="small"
-                      onClick={(e) => handleMenuClick(e, row)}
-                    >
-                      <MoreIcon />
-                    </IconButton>
-                  </TableCell>
-                </TableRow>
-              ))}
-              
-              {paginatedData.length === 0 && (
-                <TableRow>
-                  <TableCell colSpan={columns.length + 1} align="center" sx={{ py: 4 }}>
-                    <Typography color="text.secondary">
-                      {searchTerm ? 'No results found for your search.' : 'No data available.'}
-                    </Typography>
-                  </TableCell>
-                </TableRow>
+              {downloadable && (
+                <Dropdown menu={downloadMenu}>
+                  <Button icon={<DownloadOutlined />}>
+                    Download
+                  </Button>
+                </Dropdown>
               )}
-            </TableBody>
-          </Table>
-        </TableContainer>
+            </Space>
+          </Col>
+        </Row>
+      </div>
 
-        {/* Pagination */}
-        {filteredData.length > 0 && (
-          <TablePagination
-            rowsPerPageOptions={[10, 25, 50, 100]}
-            component="div"
-            count={filteredData.length}
-            rowsPerPage={rowsPerPage}
-            page={page}
-            onPageChange={handleChangePage}
-            onRowsPerPageChange={handleChangeRowsPerPage}
-          />
-        )}
+      {/* Summary Stats */}
+      <Row gutter={16} style={{ marginBottom: 16 }}>
+        <Col span={6}>
+          <Card size="small">
+            <Text type="secondary">Total Records</Text>
+            <Title level={4} style={{ margin: '8px 0 0 0' }}>
+              {data.length.toLocaleString()}
+            </Title>
+          </Card>
+        </Col>
+        <Col span={6}>
+          <Card size="small">
+            <Text type="secondary">Filtered</Text>
+            <Title level={4} style={{ margin: '8px 0 0 0' }}>
+              {filteredData.length.toLocaleString()}
+            </Title>
+          </Card>
+        </Col>
+        <Col span={6}>
+          <Card size="small">
+            <Text type="secondary">Required Fields</Text>
+            <Title level={4} style={{ margin: '8px 0 0 0' }}>
+              {columns.filter(c => c.required).length}
+            </Title>
+          </Card>
+        </Col>
+        <Col span={6}>
+          <Card size="small">
+            <Text type="secondary">Completeness</Text>
+            <Title level={4} style={{ margin: '8px 0 0 0' }}>
+              {Math.round(
+                (filteredData.reduce((acc, row) => {
+                  const filledRequired = columns
+                    .filter(c => c.required)
+                    .filter(c => row[c.id] !== null && row[c.id] !== undefined)
+                    .length;
+                  return acc + (filledRequired / columns.filter(c => c.required).length);
+                }, 0) / filteredData.length) * 100
+              )}%
+            </Title>
+          </Card>
+        </Col>
+      </Row>
 
-        {/* Row Actions Menu */}
-        <Menu
-          anchorEl={anchorEl}
-          open={Boolean(anchorEl)}
-          onClose={handleMenuClose}
-        >
-          <MenuItem onClick={() => {
-            if (selectedRow) onRowClick?.(selectedRow);
-            handleMenuClose();
-          }}>
-            <ViewIcon fontSize="small" sx={{ mr: 1 }} />
-            View Details
-          </MenuItem>
-          {onEdit && (
-            <MenuItem onClick={() => {
-              if (selectedRow) onEdit(selectedRow);
-              handleMenuClose();
-            }}>
-              <EditIcon fontSize="small" sx={{ mr: 1 }} />
-              Edit
-            </MenuItem>
-          )}
-        </Menu>
-      </CardContent>
+      {/* Search Results Info */}
+      {searchTerm && (
+        <Alert
+          message={`Showing ${filteredData.length} results for "${searchTerm}"`}
+          type="info"
+          showIcon
+          closable
+          onClose={() => setSearchTerm('')}
+          style={{ marginBottom: 16 }}
+        />
+      )}
+
+      {/* Data Table */}
+      <Table
+        columns={tableColumns}
+        dataSource={paginatedData}
+        rowKey="id"
+        pagination={false}
+        scroll={{ x: 'max-content', y: maxHeight }}
+        onRow={(record) => ({
+          onClick: () => {
+            setSelectedRow(record);
+            onRowClick?.(record);
+          },
+          style: {
+            cursor: onRowClick ? 'pointer' : 'default',
+          },
+        })}
+        rowClassName={(record) => 
+          selectedRow?.id === record.id ? 'ant-table-row-selected' : ''
+        }
+      />
+
+      {/* Pagination */}
+      <div style={{ marginTop: 16, textAlign: 'right' }}>
+        <Pagination
+          current={currentPage}
+          pageSize={pageSize}
+          total={filteredData.length}
+          onChange={handlePageChange}
+          showSizeChanger
+          showQuickJumper
+          showTotal={(total, range) => `${range[0]}-${range[1]} of ${total} items`}
+          pageSizeOptions={['10', '25', '50', '100']}
+        />
+      </div>
     </Card>
   );
 }

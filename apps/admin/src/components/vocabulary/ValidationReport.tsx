@@ -2,42 +2,38 @@
 
 import React, { useState } from 'react';
 import {
-  Box,
   Card,
-  CardContent,
   Typography,
   List,
-  ListItem,
-  ListItemIcon,
-  ListItemText,
-  Chip,
+  Tag,
   Collapse,
-  IconButton,
   Button,
   Alert,
   Tabs,
-  Tab,
-  LinearProgress,
-  Paper,
-  Stack,
-  Accordion,
-  AccordionSummary,
-  AccordionDetails,
-} from '@mui/material';
+  Progress,
+  Space,
+  Row,
+  Col,
+  Badge,
+  Statistic,
+} from 'antd';
 import {
-  Error as ErrorIcon,
-  Warning as WarningIcon,
-  Info as InfoIcon,
-  CheckCircle as SuccessIcon,
-  ExpandMore as ExpandMoreIcon,
-  ExpandLess as ExpandLessIcon,
-  Download as DownloadIcon,
-  Refresh as RefreshIcon,
-  BugReport as BugIcon,
-  Security as SecurityIcon,
-  Speed as PerformanceIcon,
-  Code as SyntaxIcon,
-} from '@mui/icons-material';
+  CloseCircleOutlined,
+  WarningOutlined,
+  InfoCircleOutlined,
+  CheckCircleOutlined,
+  DownOutlined,
+  UpOutlined,
+  DownloadOutlined,
+  ReloadOutlined,
+  BugOutlined,
+  SafetyCertificateOutlined,
+  DashboardOutlined,
+  CodeOutlined,
+} from '@ant-design/icons';
+
+const { Title, Text, Paragraph } = Typography;
+const { Panel } = Collapse;
 
 export interface ValidationIssue {
   id: string;
@@ -83,18 +79,6 @@ interface ValidationReportProps {
   title?: string;
 }
 
-function TabPanel({ children, value, index }: { children: React.ReactNode; value: number; index: number }) {
-  return (
-    <div role="tabpanel" hidden={value !== index}>
-      {value === index && (
-        <Box sx={{ py: 3 }}>
-          {children}
-        </Box>
-      )}
-    </div>
-  );
-}
-
 export default function ValidationReport({
   issues,
   summary,
@@ -104,387 +88,382 @@ export default function ValidationReport({
   onDownloadReport,
   title = 'Validation Report',
 }: ValidationReportProps) {
-  const [tabValue, setTabValue] = useState(0);
-  const [expandedIssues, setExpandedIssues] = useState<Set<string>>(new Set());
-
-  const toggleIssueExpansion = (issueId: string) => {
-    const newExpanded = new Set(expandedIssues);
-    if (newExpanded.has(issueId)) {
-      newExpanded.delete(issueId);
-    } else {
-      newExpanded.add(issueId);
-    }
-    setExpandedIssues(newExpanded);
-  };
+  const [activeTab, setActiveTab] = useState('1');
+  const [expandedCategories, setExpandedCategories] = useState<string[]>([]);
 
   const getIssueIcon = (type: string) => {
     switch (type) {
       case 'error':
-        return <ErrorIcon color="error" />;
+        return <CloseCircleOutlined style={{ color: '#ff4d4f' }} />;
       case 'warning':
-        return <WarningIcon color="warning" />;
+        return <WarningOutlined style={{ color: '#faad14' }} />;
       case 'info':
-        return <InfoIcon color="info" />;
+        return <InfoCircleOutlined style={{ color: '#1890ff' }} />;
       case 'success':
-        return <SuccessIcon color="success" />;
+        return <CheckCircleOutlined style={{ color: '#52c41a' }} />;
       default:
-        return <InfoIcon />;
+        return null;
     }
   };
 
   const getCategoryIcon = (category: string) => {
     switch (category) {
       case 'syntax':
-        return <SyntaxIcon />;
+        return <CodeOutlined />;
       case 'security':
-        return <SecurityIcon />;
+        return <SafetyCertificateOutlined />;
       case 'performance':
-        return <PerformanceIcon />;
+        return <DashboardOutlined />;
       default:
-        return <BugIcon />;
+        return <BugOutlined />;
     }
   };
 
-  const getSeverityColor = (severity: string): 'error' | 'warning' | 'info' | 'success' => {
+  const getSeverityColor = (severity: string) => {
     switch (severity) {
       case 'critical':
-      case 'high':
         return 'error';
-      case 'medium':
+      case 'high':
         return 'warning';
+      case 'medium':
+        return 'orange';
       case 'low':
-        return 'info';
+        return 'default';
       default:
-        return 'info';
+        return 'default';
     }
   };
 
   const getScoreColor = (score: number) => {
-    if (score >= 90) return 'success';
-    if (score >= 70) return 'warning';
-    return 'error';
+    if (score >= 80) return '#52c41a';
+    if (score >= 60) return '#faad14';
+    return '#ff4d4f';
   };
 
-  const filteredIssues = (type?: string) => {
-    if (!type) return issues;
-    return issues.filter(issue => issue.type === type);
-  };
-
-  const groupedIssues = issues.reduce((groups, issue) => {
-    const key = issue.category;
-    if (!groups[key]) {
-      groups[key] = [];
+  const groupedIssues = issues.reduce((acc, issue) => {
+    if (!acc[issue.category]) {
+      acc[issue.category] = [];
     }
-    groups[key].push(issue);
-    return groups;
+    acc[issue.category].push(issue);
+    return acc;
   }, {} as Record<string, ValidationIssue[]>);
 
-  if (loading) {
-    return (
-      <Card>
-        <CardContent>
-          <Box sx={{ mb: 2 }}>
-            <Typography variant="h6" gutterBottom>
-              {title}
-            </Typography>
-            <Typography variant="body2" color="text.secondary">
-              Running validation...
-            </Typography>
-          </Box>
-          <LinearProgress />
-        </CardContent>
-      </Card>
-    );
-  }
+  const filterIssues = (type?: string) => {
+    if (!type) return issues;
+    return issues.filter((issue) => issue.type === type);
+  };
+
+  const renderIssuItem = (issue: ValidationIssue) => (
+    <List.Item
+      key={issue.id}
+      actions={[
+        issue.fixAction && (
+          <Button
+            size="small"
+            type={issue.fixAction.automated ? 'primary' : 'default'}
+            onClick={() => onFixIssue?.(issue)}
+          >
+            {issue.fixAction.label}
+          </Button>
+        ),
+      ].filter(Boolean)}
+    >
+      <List.Item.Meta
+        avatar={getIssueIcon(issue.type)}
+        title={
+          <Space>
+            <Text strong>{issue.message}</Text>
+            <Tag color={getSeverityColor(issue.severity)}>
+              {issue.severity.toUpperCase()}
+            </Tag>
+            {issue.ruleCode && <Text type="secondary">({issue.ruleCode})</Text>}
+          </Space>
+        }
+        description={
+          <Space direction="vertical" style={{ width: '100%' }}>
+            {issue.description && <Paragraph>{issue.description}</Paragraph>}
+            {issue.location && (
+              <Text type="secondary" style={{ fontSize: 12 }}>
+                Location: {issue.location.sheet && `Sheet: ${issue.location.sheet}, `}
+                {issue.location.row && `Row: ${issue.location.row}, `}
+                {issue.location.column && `Column: ${issue.location.column}`}
+                {issue.location.range && ` (Range: ${issue.location.range})`}
+              </Text>
+            )}
+            {issue.suggestion && (
+              <Alert
+                message="Suggestion"
+                description={issue.suggestion}
+                type="info"
+                showIcon
+                style={{ marginTop: 8 }}
+              />
+            )}
+            {issue.documentation && (
+              <a href={issue.documentation} target="_blank" rel="noopener noreferrer">
+                View documentation →
+              </a>
+            )}
+          </Space>
+        }
+      />
+    </List.Item>
+  );
+
+  const tabItems = [
+    {
+      key: '1',
+      label: (
+        <Badge count={issues.length} offset={[10, 0]}>
+          All Issues
+        </Badge>
+      ),
+      children: (
+        <Collapse
+          expandIcon={({ isActive }) => isActive ? <UpOutlined /> : <DownOutlined />}
+          activeKey={expandedCategories}
+          onChange={setExpandedCategories}
+        >
+          {Object.entries(groupedIssues).map(([category, categoryIssues]) => (
+            <Panel
+              key={category}
+              header={
+                <Space>
+                  {getCategoryIcon(category)}
+                  <Text strong>{category.charAt(0).toUpperCase() + category.slice(1)}</Text>
+                  <Badge count={categoryIssues.length} />
+                </Space>
+              }
+            >
+              <List
+                dataSource={categoryIssues}
+                renderItem={renderIssuItem}
+              />
+            </Panel>
+          ))}
+        </Collapse>
+      ),
+    },
+    {
+      key: '2',
+      label: (
+        <Badge count={summary.errors} offset={[10, 0]} color="red">
+          Errors
+        </Badge>
+      ),
+      children: (
+        <List
+          dataSource={filterIssues('error')}
+          renderItem={renderIssuItem}
+          locale={{ emptyText: 'No errors found' }}
+        />
+      ),
+    },
+    {
+      key: '3',
+      label: (
+        <Badge count={summary.warnings} offset={[10, 0]} color="orange">
+          Warnings
+        </Badge>
+      ),
+      children: (
+        <List
+          dataSource={filterIssues('warning')}
+          renderItem={renderIssuItem}
+          locale={{ emptyText: 'No warnings found' }}
+        />
+      ),
+    },
+    {
+      key: '4',
+      label: (
+        <Badge count={summary.info} offset={[10, 0]} color="blue">
+          Info
+        </Badge>
+      ),
+      children: (
+        <List
+          dataSource={filterIssues('info')}
+          renderItem={renderIssuItem}
+          locale={{ emptyText: 'No information messages' }}
+        />
+      ),
+    },
+  ];
 
   return (
     <Card>
-      <CardContent>
-        {/* Header */}
-        <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', mb: 3 }}>
-          <Box>
-            <Typography variant="h6" gutterBottom>
-              {title}
-            </Typography>
-            <Typography variant="body2" color="text.secondary">
-              Last run: {new Date(summary.lastRun).toLocaleString()} 
-              • Duration: {summary.duration}ms
-            </Typography>
-          </Box>
-          
-          <Stack direction="row" spacing={1}>
-            {onRefresh && (
-              <Button
-                startIcon={<RefreshIcon />}
-                size="small"
-                variant="outlined"
-                onClick={onRefresh}
-              >
-                Revalidate
-              </Button>
-            )}
-            {onDownloadReport && (
-              <Button
-                startIcon={<DownloadIcon />}
-                size="small"
-                variant="outlined"
-                onClick={onDownloadReport}
-              >
-                Export
-              </Button>
-            )}
-          </Stack>
-        </Box>
+      {/* Header */}
+      <div style={{ marginBottom: 24 }}>
+        <Row justify="space-between" align="middle">
+          <Col>
+            <Title level={4} style={{ margin: 0 }}>{title}</Title>
+            <Text type="secondary">
+              Last run: {new Date(summary.lastRun).toLocaleString()} ({summary.duration}ms)
+            </Text>
+          </Col>
+          <Col>
+            <Space>
+              {onRefresh && (
+                <Button
+                  icon={<ReloadOutlined />}
+                  onClick={onRefresh}
+                  loading={loading}
+                >
+                  Refresh
+                </Button>
+              )}
+              {onDownloadReport && (
+                <Button
+                  icon={<DownloadOutlined />}
+                  onClick={onDownloadReport}
+                >
+                  Download Report
+                </Button>
+              )}
+            </Space>
+          </Col>
+        </Row>
+      </div>
 
-        {/* Summary Cards */}
-        <Box sx={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: 2, mb: 3 }}>
-          <Paper variant="outlined" sx={{ p: 2, textAlign: 'center' }}>
-            <Typography variant="h4" color={getScoreColor(summary.score)} gutterBottom>
-              {summary.score}%
-            </Typography>
-            <Typography variant="body2" color="text.secondary">
-              Overall Score
-            </Typography>
-          </Paper>
-          
-          <Paper variant="outlined" sx={{ p: 2, textAlign: 'center' }}>
-            <Typography variant="h4" color="error.main" gutterBottom>
-              {summary.errors}
-            </Typography>
-            <Typography variant="body2" color="text.secondary">
-              Errors
-            </Typography>
-          </Paper>
-          
-          <Paper variant="outlined" sx={{ p: 2, textAlign: 'center' }}>
-            <Typography variant="h4" color="warning.main" gutterBottom>
-              {summary.warnings}
-            </Typography>
-            <Typography variant="body2" color="text.secondary">
-              Warnings
-            </Typography>
-          </Paper>
-          
-          <Paper variant="outlined" sx={{ p: 2, textAlign: 'center' }}>
-            <Typography variant="h4" color="info.main" gutterBottom>
-              {summary.info}
-            </Typography>
-            <Typography variant="body2" color="text.secondary">
-              Info
-            </Typography>
-          </Paper>
-        </Box>
-
-        {/* Quick Status Alert */}
-        {summary.errors > 0 ? (
-          <Alert severity="error" sx={{ mb: 3 }}>
-            <Typography variant="body2">
-              <strong>Validation Failed:</strong> {summary.errors} error{summary.errors > 1 ? 's' : ''} must be fixed before proceeding.
-            </Typography>
-          </Alert>
-        ) : summary.warnings > 0 ? (
-          <Alert severity="warning" sx={{ mb: 3 }}>
-            <Typography variant="body2">
-              <strong>Validation Passed with Warnings:</strong> {summary.warnings} warning{summary.warnings > 1 ? 's' : ''} should be reviewed.
-            </Typography>
-          </Alert>
-        ) : (
-          <Alert severity="success" sx={{ mb: 3 }}>
-            <Typography variant="body2">
-              <strong>Validation Passed:</strong> No issues found. Ready to proceed.
-            </Typography>
-          </Alert>
-        )}
-
-        {/* Tabs */}
-        <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
-          <Tabs value={tabValue} onChange={(e, newValue) => setTabValue(newValue)}>
-            <Tab 
-              label={`All Issues (${issues.length})`} 
-              icon={issues.length > 0 ? <Chip size="small" label={issues.length} /> : undefined}
+      {/* Summary Cards */}
+      <Row gutter={16} style={{ marginBottom: 24 }}>
+        <Col span={4}>
+          <Card size="small">
+            <Statistic
+              title="Validation Score"
+              value={summary.score}
+              suffix="/100"
+              valueStyle={{ color: getScoreColor(summary.score) }}
             />
-            <Tab 
-              label={`Errors (${summary.errors})`}
-              icon={summary.errors > 0 ? <Chip size="small" label={summary.errors} color="error" /> : undefined}
+            <Progress
+              percent={summary.score}
+              strokeColor={getScoreColor(summary.score)}
+              showInfo={false}
+              size="small"
             />
-            <Tab 
-              label={`Warnings (${summary.warnings})`}
-              icon={summary.warnings > 0 ? <Chip size="small" label={summary.warnings} color="warning" /> : undefined}
+          </Card>
+        </Col>
+        <Col span={4}>
+          <Card size="small">
+            <Statistic
+              title="Total Issues"
+              value={summary.total}
+              valueStyle={{ color: summary.total > 0 ? '#8c8c8c' : '#52c41a' }}
             />
-            <Tab label="By Category" />
-          </Tabs>
-        </Box>
+          </Card>
+        </Col>
+        <Col span={4}>
+          <Card size="small">
+            <Statistic
+              title="Errors"
+              value={summary.errors}
+              valueStyle={{ color: '#ff4d4f' }}
+              prefix={<CloseCircleOutlined />}
+            />
+          </Card>
+        </Col>
+        <Col span={4}>
+          <Card size="small">
+            <Statistic
+              title="Warnings"
+              value={summary.warnings}
+              valueStyle={{ color: '#faad14' }}
+              prefix={<WarningOutlined />}
+            />
+          </Card>
+        </Col>
+        <Col span={4}>
+          <Card size="small">
+            <Statistic
+              title="Info"
+              value={summary.info}
+              valueStyle={{ color: '#1890ff' }}
+              prefix={<InfoCircleOutlined />}
+            />
+          </Card>
+        </Col>
+        <Col span={4}>
+          <Card size="small">
+            <Statistic
+              title="Passed"
+              value={summary.success}
+              valueStyle={{ color: '#52c41a' }}
+              prefix={<CheckCircleOutlined />}
+            />
+          </Card>
+        </Col>
+      </Row>
 
-        {/* All Issues Tab */}
-        <TabPanel value={tabValue} index={0}>
-          {issues.length === 0 ? (
-            <Typography color="text.secondary" textAlign="center" sx={{ py: 4 }}>
-              No validation issues found.
-            </Typography>
-          ) : (
-            <List>
-              {issues.map((issue) => (
-                <Box key={issue.id}>
-                  <ListItem
-                    onClick={() => toggleIssueExpansion(issue.id)}
-                    sx={{ 
-                      cursor: 'pointer',
-                      borderRadius: 1,
-                      mb: 1,
-                      '&:hover': { bgcolor: 'action.hover' }
-                    }}
-                  >
-                    <ListItemIcon>
-                      {getIssueIcon(issue.type)}
-                    </ListItemIcon>
-                    <ListItemText
-                      primary={
-                        <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-                          <Typography variant="body1">{issue.message}</Typography>
-                          <Chip 
-                            label={issue.severity} 
-                            size="small" 
-                            color={getSeverityColor(issue.severity)}
-                            variant="outlined"
-                          />
-                          {issue.ruleCode && (
-                            <Chip 
-                              label={issue.ruleCode} 
-                              size="small" 
-                              variant="outlined"
-                              sx={{ fontFamily: 'monospace' }}
-                            />
-                          )}
-                        </Box>
-                      }
-                      secondary={
-                        issue.location && (
-                          <Typography variant="caption">
-                            {issue.location.sheet && `Sheet: ${issue.location.sheet} • `}
-                            {issue.location.row && `Row: ${issue.location.row} • `}
-                            {issue.location.column && `Column: ${issue.location.column}`}
-                          </Typography>
-                        )
-                      }
-                    />
-                    <IconButton size="small">
-                      {expandedIssues.has(issue.id) ? <ExpandLessIcon /> : <ExpandMoreIcon />}
-                    </IconButton>
-                  </ListItem>
-                  
-                  <Collapse in={expandedIssues.has(issue.id)}>
-                    <Box sx={{ pl: 4, pr: 2, pb: 2 }}>
-                      {issue.description && (
-                        <Typography variant="body2" paragraph>
-                          {issue.description}
-                        </Typography>
-                      )}
-                      
-                      {issue.suggestion && (
-                        <Alert severity="info" sx={{ mb: 2 }}>
-                          <Typography variant="body2">
-                            <strong>Suggestion:</strong> {issue.suggestion}
-                          </Typography>
-                        </Alert>
-                      )}
-                      
-                      {issue.fixAction && (
-                        <Box sx={{ display: 'flex', gap: 1 }}>
-                          <Button
-                            size="small"
-                            variant="outlined"
-                            onClick={() => onFixIssue?.(issue)}
-                            disabled={!issue.fixAction.automated}
-                          >
-                            {issue.fixAction.automated ? 'Auto-Fix' : 'Manual Fix Required'}
-                          </Button>
-                          
-                          {issue.documentation && (
-                            <Button
-                              size="small"
-                              variant="text"
-                              href={issue.documentation}
-                              target="_blank"
-                            >
-                              Learn More
-                            </Button>
-                          )}
-                        </Box>
-                      )}
-                    </Box>
-                  </Collapse>
-                </Box>
-              ))}
-            </List>
-          )}
-        </TabPanel>
+      {/* Overall Status Alert */}
+      {summary.total === 0 ? (
+        <Alert
+          message="Validation Passed"
+          description="No issues found. Your vocabulary data meets all validation requirements."
+          type="success"
+          showIcon
+          style={{ marginBottom: 24 }}
+        />
+      ) : summary.errors > 0 ? (
+        <Alert
+          message="Validation Failed"
+          description={`Found ${summary.errors} error(s) that must be fixed before proceeding.`}
+          type="error"
+          showIcon
+          style={{ marginBottom: 24 }}
+        />
+      ) : summary.warnings > 0 ? (
+        <Alert
+          message="Validation Passed with Warnings"
+          description={`Found ${summary.warnings} warning(s) that should be reviewed.`}
+          type="warning"
+          showIcon
+          style={{ marginBottom: 24 }}
+        />
+      ) : (
+        <Alert
+          message="Validation Complete"
+          description={`Found ${summary.info} informational message(s).`}
+          type="info"
+          showIcon
+          style={{ marginBottom: 24 }}
+        />
+      )}
 
-        {/* Errors Tab */}
-        <TabPanel value={tabValue} index={1}>
-          <List>
-            {filteredIssues('error').map((issue) => (
-              <ListItem key={issue.id}>
-                <ListItemIcon>
-                  <ErrorIcon color="error" />
-                </ListItemIcon>
-                <ListItemText
-                  primary={issue.message}
-                  secondary={issue.suggestion}
-                />
-              </ListItem>
-            ))}
-          </List>
-        </TabPanel>
+      {/* Issues Tabs */}
+      <Tabs
+        activeKey={activeTab}
+        onChange={setActiveTab}
+        items={tabItems}
+      />
 
-        {/* Warnings Tab */}
-        <TabPanel value={tabValue} index={2}>
-          <List>
-            {filteredIssues('warning').map((issue) => (
-              <ListItem key={issue.id}>
-                <ListItemIcon>
-                  <WarningIcon color="warning" />
-                </ListItemIcon>
-                <ListItemText
-                  primary={issue.message}
-                  secondary={issue.suggestion}
-                />
-              </ListItem>
-            ))}
-          </List>
-        </TabPanel>
-
-        {/* By Category Tab */}
-        <TabPanel value={tabValue} index={3}>
+      {/* Category Breakdown */}
+      <Card title="Issue Categories" style={{ marginTop: 24 }}>
+        <Row gutter={16}>
           {Object.entries(groupedIssues).map(([category, categoryIssues]) => (
-            <Accordion key={category}>
-              <AccordionSummary expandIcon={<ExpandMoreIcon />}>
-                <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
+            <Col span={8} key={category}>
+              <Card size="small">
+                <Space align="center">
                   {getCategoryIcon(category)}
-                  <Typography variant="h6" sx={{ textTransform: 'capitalize' }}>
-                    {category}
-                  </Typography>
-                  <Chip label={categoryIssues.length} size="small" />
-                </Box>
-              </AccordionSummary>
-              <AccordionDetails>
-                <List>
-                  {categoryIssues.map((issue) => (
-                    <ListItem key={issue.id}>
-                      <ListItemIcon>
-                        {getIssueIcon(issue.type)}
-                      </ListItemIcon>
-                      <ListItemText
-                        primary={issue.message}
-                        secondary={issue.location && `Row ${issue.location.row}, Column ${issue.location.column}`}
-                      />
-                    </ListItem>
-                  ))}
-                </List>
-              </AccordionDetails>
-            </Accordion>
+                  <div>
+                    <Text strong>
+                      {category.charAt(0).toUpperCase() + category.slice(1)}
+                    </Text>
+                    <br />
+                    <Text type="secondary">{categoryIssues.length} issues</Text>
+                  </div>
+                </Space>
+                <Progress
+                  percent={Math.round((categoryIssues.length / summary.total) * 100)}
+                  size="small"
+                  showInfo={false}
+                  style={{ marginTop: 8 }}
+                />
+              </Card>
+            </Col>
           ))}
-        </TabPanel>
-      </CardContent>
+        </Row>
+      </Card>
     </Card>
   );
 }

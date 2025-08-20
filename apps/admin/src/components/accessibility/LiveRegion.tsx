@@ -1,7 +1,5 @@
 'use client';
 
-import { Box } from '@mui/material';
-
 interface LiveRegionProps {
   message: string;
   priority?: 'polite' | 'assertive';
@@ -16,11 +14,11 @@ export default function LiveRegion({
   if (!message) return null;
 
   return (
-    <Box
+    <div
       role="status"
       aria-live={priority}
       aria-atomic={atomic}
-      sx={{
+      style={{
         position: 'absolute',
         left: '-10000px',
         width: '1px',
@@ -29,6 +27,6 @@ export default function LiveRegion({
       }}
     >
       {message}
-    </Box>
+    </div>
   );
 }

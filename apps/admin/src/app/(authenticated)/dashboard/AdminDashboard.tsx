@@ -3,30 +3,30 @@
 import React, { useState } from 'react';
 import Link from 'next/link';
 import {
-  Box,
   Card,
-  CardContent,
   Typography,
-  Chip,
-  Link as MuiLink,
+  Tag,
   Button,
-  Stack,
-  useTheme,
-} from '@mui/material';
-import Grid from '@mui/material/Grid';
+  Space,
+  Row,
+  Col,
+  Statistic,
+} from 'antd';
 import {
-  People as PeopleIcon,
-  Language as LanguageIcon,
-  Folder as FolderIcon,
-  Book as BookIcon,
-  Assignment as AssignmentIcon,
-  History as HistoryIcon,
-  PersonAdd as PersonAddIcon,
-  AddTask as AddTaskIcon,
-  CloudUpload as CloudUploadIcon,
-  Home,
-} from '@mui/icons-material';
+  TeamOutlined,
+  GlobalOutlined,
+  FolderOutlined,
+  BookOutlined,
+  ProjectOutlined,
+  HistoryOutlined,
+  UserAddOutlined,
+  PlusCircleOutlined,
+  CloudUploadOutlined,
+  HomeOutlined,
+} from '@ant-design/icons';
 import { TabBasedDashboardLayout, NavigationItem } from '@/components/layout/TabBasedDashboardLayout';
+
+const { Text, Title } = Typography;
 
 interface AdminDashboardProps {
   userRoles: string[];
@@ -42,18 +42,16 @@ interface StatsCardProps {
 }
 
 function StatsCard({ title, value, change, changeType }: StatsCardProps) {
-  const theme = useTheme();
   const changeColor = 
-    changeType === 'increase' ? theme.palette.success.main : 
-    changeType === 'decrease' ? theme.palette.error.main : 
-    theme.palette.text.secondary;
+    changeType === 'increase' ? '#52c41a' : 
+    changeType === 'decrease' ? '#ff4d4f' : 
+    '#8c8c8c';
   
   const cardId = `stats-${title.toLowerCase().replace(/\s+/g, '-')}`;
   
   return (
     <Card 
-      elevation={0}
-      sx={{ 
+      style={{ 
         minHeight: 140,
         display: 'flex',
         flexDirection: 'column',
@@ -62,32 +60,30 @@ function StatsCard({ title, value, change, changeType }: StatsCardProps) {
       role="region"
       aria-labelledby={cardId}
     >
-      <CardContent>
-        <Typography 
+      <div style={{ padding: '24px' }}>
+        <Typography.Text 
           id={cardId}
-          variant="body2" 
-          color="text.secondary" 
-          gutterBottom
+          type="secondary" 
+          style={{ display: 'block', marginBottom: 8 }}
         >
           {title}
-        </Typography>
-        <Typography 
-          variant="h4" 
-          component="div" 
-          fontWeight="bold" 
-          color="primary.main"
+        </Typography.Text>
+        <Statistic
+          value={value}
+          valueStyle={{ 
+            fontSize: 32,
+            fontWeight: 'bold',
+            color: '#1890ff'
+          }}
           aria-label={`${title}: ${value.toLocaleString()}`}
-        >
-          {value.toLocaleString()}
-        </Typography>
-        <Typography 
-          variant="body2" 
-          sx={{ color: changeColor, mt: 1 }}
+        />
+        <Typography.Text 
+          style={{ color: changeColor, marginTop: 8, display: 'block' }}
           aria-label={`Change: ${change}`}
         >
           {change}
-        </Typography>
-      </CardContent>
+        </Typography.Text>
+      </div>
     </Card>
   );
 }
@@ -109,19 +105,23 @@ function ActivityItem({ action, author, time, type }: ActivityItemProps) {
   };
   
   return (
-    <Box py={2} borderBottom={1} borderColor="divider">
-      <Stack direction="row" spacing={2} alignItems="flex-start">
-        <Typography fontSize={24} aria-hidden="true">{typeIcons[type]}</Typography>
-        <Box flex={1}>
-          <Typography variant="body1" fontWeight="medium">
+    <div style={{ paddingTop: 16, paddingBottom: 16, borderBottom: '1px solid #f0f0f0' }}>
+      <Space align="start" size="middle">
+        <Typography.Text style={{ fontSize: 24 }} aria-hidden="true">
+          {typeIcons[type]}
+        </Typography.Text>
+        <div style={{ flex: 1 }}>
+          <Typography.Text strong>
             {action}
-          </Typography>
-          <Typography variant="caption" color="text.secondary">
-            By {author} • {time}
-          </Typography>
-        </Box>
-      </Stack>
-    </Box>
+          </Typography.Text>
+          <div>
+            <Typography.Text type="secondary" style={{ fontSize: 12 }}>
+              By {author} • {time}
+            </Typography.Text>
+          </div>
+        </div>
+      </Space>
+    </div>
   );
 }
 
@@ -140,18 +140,18 @@ function SystemStatusItem({ service, status }: SystemStatusItemProps) {
   const config = statusConfig[status];
   
   return (
-    <Box display="flex" justifyContent="space-between" alignItems="center" py={1.5}>
-      <Typography variant="body2" color="text.secondary">
+    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', paddingTop: 12, paddingBottom: 12 }}>
+      <Typography.Text type="secondary">
         {service}:
-      </Typography>
-      <Chip 
-        label={config.label} 
-        color={config.color} 
-        size="small"
-        sx={{ fontWeight: 600 }}
+      </Typography.Text>
+      <Tag 
+        color={config.color}
+        style={{ fontWeight: 600 }}
         aria-label={`${service} status: ${config.label}`}
-      />
-    </Box>
+      >
+        {config.label}
+      </Tag>
+    </div>
   );
 }
 
@@ -159,15 +159,15 @@ export default function AdminDashboard({ userRoles: _userRoles, userName: _userN
   const [selectedTab, setSelectedTab] = useState('overview');
   
   const navigationItems: NavigationItem[] = [
-    { id: 'overview', label: 'Dashboard Overview', icon: Home },
-    { id: 'users', label: 'Users', icon: PeopleIcon, badge: 352 },
-    { id: 'review-groups', label: 'Review Groups', icon: LanguageIcon },
-    { id: 'projects', label: 'Projects', icon: AssignmentIcon, badge: 12 },
-    { id: 'namespaces', label: 'Namespaces', icon: FolderIcon },
-    { id: 'vocabularies', label: 'Vocabularies', icon: BookIcon, badge: 824 },
-    { id: 'profiles', label: 'DCTAP Profiles', icon: BookIcon },
-    { id: 'adopt', label: 'Adopt Spreadsheet', icon: CloudUploadIcon, specialAccess: true },
-    { id: 'activity', label: 'Activity Log', icon: HistoryIcon },
+    { id: 'overview', label: 'Dashboard Overview', icon: HomeOutlined },
+    { id: 'users', label: 'Users', icon: TeamOutlined, badge: 352 },
+    { id: 'review-groups', label: 'Review Groups', icon: GlobalOutlined },
+    { id: 'projects', label: 'Projects', icon: ProjectOutlined, badge: 12 },
+    { id: 'namespaces', label: 'Namespaces', icon: FolderOutlined },
+    { id: 'vocabularies', label: 'Vocabularies', icon: BookOutlined, badge: 824 },
+    { id: 'profiles', label: 'DCTAP Profiles', icon: BookOutlined },
+    { id: 'adopt', label: 'Adopt Spreadsheet', icon: CloudUploadOutlined, specialAccess: true },
+    { id: 'activity', label: 'Activity Log', icon: HistoryOutlined },
   ];
 
   const stats = [
@@ -196,173 +196,169 @@ export default function AdminDashboard({ userRoles: _userRoles, userName: _userN
       case 'overview':
         return (
           <>
-            <Box mb={4}>
-              <Typography variant="h4" fontWeight="bold" gutterBottom component="h1">
+            <div style={{ marginBottom: 32 }}>
+              <Title level={2} style={{ marginBottom: 8 }}>
                 Admin Dashboard
-              </Typography>
-              <Typography variant="body1" color="text.secondary">
+              </Title>
+              <Text type="secondary">
                 System overview and key metrics
-              </Typography>
-            </Box>
+              </Text>
+            </div>
 
             {/* Stats Grid */}
-            <Grid container spacing={3} sx={{ mb: 4 }}>
+            <Row gutter={[24, 24]} style={{ marginBottom: 32 }}>
               {stats.map((stat) => (
-                <Grid size={{ xs: 12, sm: 6, md: 4 }} key={stat.title}>
+                <Col xs={24} sm={12} md={8} key={stat.title}>
                   <StatsCard {...stat} />
-                </Grid>
+                </Col>
               ))}
-            </Grid>
+            </Row>
 
-            <Grid container spacing={3}>
+            <Row gutter={[24, 24]}>
               {/* Recent Activity */}
-              <Grid size={{ xs: 12, lg: 8 }}>
-                <Card elevation={0}>
-                  <CardContent>
-                    <Typography variant="h6" fontWeight="bold" gutterBottom component="h2">
-                      Recent System Activity
-                    </Typography>
-                    <Box role="feed" aria-label="Recent activity feed">
-                      {recentActivity.map((activity, index) => (
-                        <ActivityItem key={index} {...activity} />
-                      ))}
-                    </Box>
-                    <Box mt={3} pt={2} borderTop={1} borderColor="divider">
-                      <MuiLink
-                        component={Link}
-                        href="/dashboard/activity?demo=true"
-                        color="primary"
-                        underline="hover"
-                        fontSize="small"
-                      >
+              <Col xs={24} lg={16}>
+                <Card>
+                  <Title level={4} style={{ marginBottom: 16 }}>
+                    Recent System Activity
+                  </Title>
+                  <div role="feed" aria-label="Recent activity feed">
+                    {recentActivity.map((activity, index) => (
+                      <ActivityItem key={index} {...activity} />
+                    ))}
+                  </div>
+                  <div style={{ marginTop: 24, paddingTop: 16, borderTop: '1px solid #f0f0f0' }}>
+                    <Link href="/dashboard/activity?demo=true">
+                      <Button type="link" style={{ padding: 0 }}>
                         View all activity →
-                      </MuiLink>
-                    </Box>
-                  </CardContent>
+                      </Button>
+                    </Link>
+                  </div>
                 </Card>
-              </Grid>
+              </Col>
 
               {/* System Status & Quick Actions */}
-              <Grid size={{ xs: 12, lg: 4 }}>
-                <Stack spacing={3}>
+              <Col xs={24} lg={8}>
+                <Space direction="vertical" size="large" style={{ width: '100%' }}>
                   {/* System Status */}
-                  <Card elevation={0}>
-                    <CardContent>
-                      <Typography variant="h6" fontWeight="bold" gutterBottom component="h2">
-                        System Status
-                      </Typography>
-                      <Box role="list" aria-label="System service status">
-                        {systemStatus.map((status) => (
-                          <SystemStatusItem key={status.service} {...status} />
-                        ))}
-                      </Box>
-                    </CardContent>
+                  <Card>
+                    <Title level={4} style={{ marginBottom: 16 }}>
+                      System Status
+                    </Title>
+                    <div role="list" aria-label="System service status">
+                      {systemStatus.map((status) => (
+                        <SystemStatusItem key={status.service} {...status} />
+                      ))}
+                    </div>
                   </Card>
 
                   {/* Quick Actions */}
-                  <Card elevation={0}>
-                    <CardContent>
-                      <Typography variant="h6" fontWeight="bold" gutterBottom component="h2">
-                        Quick Actions
-                      </Typography>
-                      <Stack spacing={2}>
+                  <Card>
+                    <Title level={4} style={{ marginBottom: 16 }}>
+                      Quick Actions
+                    </Title>
+                    <Space direction="vertical" size="middle" style={{ width: '100%' }}>
+                      <Link href="/dashboard/projects/new?demo=true" style={{ width: '100%' }}>
                         <Button
-                          variant="contained"
-                          fullWidth
-                          startIcon={<AddTaskIcon />}
-                          component={Link}
-                          href="/dashboard/projects/new?demo=true"
+                          type="primary"
+                          block
+                          icon={<PlusCircleOutlined />}
                           aria-label="Charter a new project"
                         >
                           Charter New Project
                         </Button>
+                      </Link>
+                      <Link href="/dashboard/admin/adopt-spreadsheet" style={{ width: '100%' }}>
                         <Button
-                          variant="outlined"
-                          fullWidth
-                          startIcon={<CloudUploadIcon />}
-                          component={Link}
-                          href="/dashboard/admin/adopt-spreadsheet"
+                          block
+                          icon={<CloudUploadOutlined />}
                           aria-label="Adopt a spreadsheet"
                         >
                           Adopt Spreadsheet
                         </Button>
+                      </Link>
+                      <Link href="/dashboard/users/invite?demo=true" style={{ width: '100%' }}>
                         <Button
-                          variant="outlined"
-                          fullWidth
-                          startIcon={<PersonAddIcon />}
-                          component={Link}
-                          href="/dashboard/users/invite?demo=true"
+                          block
+                          icon={<UserAddOutlined />}
                           aria-label="Invite a new user"
                         >
                           Invite User
                         </Button>
-                      </Stack>
-                    </CardContent>
+                      </Link>
+                    </Space>
                   </Card>
-                </Stack>
-              </Grid>
-            </Grid>
+                </Space>
+              </Col>
+            </Row>
           </>
         );
 
       case 'users':
         return (
-          <Box>
-            <Typography variant="h4" component="h1" gutterBottom>
+          <div>
+            <Title level={2} style={{ marginBottom: 16 }}>
               User Management
-            </Typography>
-            <Button component={Link} href="/dashboard/users" variant="contained">
-              View All Users
-            </Button>
-          </Box>
+            </Title>
+            <Link href="/dashboard/users">
+              <Button type="primary">
+                View All Users
+              </Button>
+            </Link>
+          </div>
         );
 
       case 'projects':
         return (
-          <Box>
-            <Typography variant="h4" component="h1" gutterBottom>
+          <div>
+            <Title level={2} style={{ marginBottom: 16 }}>
               Project Management
-            </Typography>
-            <Button component={Link} href="/dashboard/projects" variant="contained">
-              View All Projects
-            </Button>
-          </Box>
+            </Title>
+            <Link href="/dashboard/projects">
+              <Button type="primary">
+                View All Projects
+              </Button>
+            </Link>
+          </div>
         );
 
       case 'adopt':
         return (
-          <Box>
-            <Typography variant="h4" component="h1" gutterBottom>
+          <div>
+            <Title level={2} style={{ marginBottom: 16 }}>
               Adopt Spreadsheet
-            </Typography>
-            <Button component={Link} href="/dashboard/admin/adopt-spreadsheet" variant="contained">
-              Go to Spreadsheet Adoption
-            </Button>
-          </Box>
+            </Title>
+            <Link href="/dashboard/admin/adopt-spreadsheet">
+              <Button type="primary">
+                Go to Spreadsheet Adoption
+              </Button>
+            </Link>
+          </div>
         );
 
       case 'activity':
         return (
-          <Box>
-            <Typography variant="h4" component="h1" gutterBottom>
+          <div>
+            <Title level={2} style={{ marginBottom: 16 }}>
               Activity Log
-            </Typography>
-            <Button component={Link} href="/dashboard/activity" variant="contained">
-              View Full Activity Log
-            </Button>
-          </Box>
+            </Title>
+            <Link href="/dashboard/activity">
+              <Button type="primary">
+                View Full Activity Log
+              </Button>
+            </Link>
+          </div>
         );
 
       default:
         return (
-          <Box>
-            <Typography variant="h4" component="h1" gutterBottom>
+          <div>
+            <Title level={2} style={{ marginBottom: 16 }}>
               {navigationItems.find(item => item.id === selectedTab)?.label}
-            </Typography>
-            <Typography variant="body1" color="text.secondary">
+            </Title>
+            <Text type="secondary">
               This section is under development.
-            </Typography>
-          </Box>
+            </Text>
+          </div>
         );
     }
   };

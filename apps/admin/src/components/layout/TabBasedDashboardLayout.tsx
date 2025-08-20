@@ -2,27 +2,27 @@
 
 import React, { useState } from 'react';
 import {
-  Box,
+  Layout,
   Drawer,
-  List,
-  ListItem,
-  ListItemButton,
-  ListItemIcon,
-  ListItemText,
+  Menu,
   Typography,
-  AppBar,
-  Toolbar,
-  IconButton,
-  useTheme,
-  useMediaQuery,
-  Chip,
-} from '@mui/material';
-import { Menu as MenuIcon } from '@mui/icons-material';
+  Badge,
+  Tag,
+  Grid,
+  Button,
+  Space,
+} from 'antd';
+import { MenuOutlined } from '@ant-design/icons';
+import type { MenuProps } from 'antd';
+
+const { Header, Sider, Content } = Layout;
+const { Title, Text } = Typography;
+const { useBreakpoint } = Grid;
 
 export interface NavigationItem {
   id: string;
   label: string;
-  icon: React.ComponentType<{}>;
+  icon: React.ComponentType<any>;
   badge?: number | string;
   specialAccess?: boolean;
 }
@@ -45,161 +45,131 @@ export function TabBasedDashboardLayout({
   children,
 }: TabBasedDashboardLayoutProps) {
   const [mobileOpen, setMobileOpen] = useState(false);
-  const theme = useTheme();
-  const isMobile = useMediaQuery(theme.breakpoints.down('md'));
+  const screens = useBreakpoint();
+  const isMobile = !screens.md;
   const drawerWidth = 240;
 
   const handleDrawerToggle = () => {
     setMobileOpen(!mobileOpen);
   };
 
-  const drawer = (
-    <Box role="navigation" aria-label="Dashboard navigation">
-      <Box sx={{ p: 2, borderBottom: 1, borderColor: 'divider' }}>
-        <Typography variant="h6" noWrap component="h2">
+  const menuItems: MenuProps['items'] = navigationItems.map((item) => {
+    const IconComponent = item.icon;
+
+    return {
+      key: item.id,
+      icon: <IconComponent />,
+      label: (
+        <Space>
+          {item.label}
+          {item.specialAccess && <Tag color="warning">Restricted</Tag>}
+          {item.badge && <Badge count={item.badge} />}
+        </Space>
+      ),
+    };
+  });
+
+  const drawerContent = (
+    <div role="navigation" aria-label="Dashboard navigation">
+      <div style={{ padding: '16px', borderBottom: '1px solid #f0f0f0' }}>
+        <Title level={4} style={{ margin: 0 }}>
           {title}
-        </Typography>
+        </Title>
         {subtitle && (
-          <Typography variant="caption" color="textSecondary">
+          <Text type="secondary" style={{ fontSize: '12px' }}>
             {subtitle}
-          </Typography>
+          </Text>
         )}
-      </Box>
-      <List>
-        {navigationItems.map((item) => {
-          const IconComponent = item.icon;
-          const isActive = selectedTab === item.id;
-          
-          return (
-            <ListItem key={item.id} disablePadding>
-              <ListItemButton
-                selected={isActive}
-                onClick={() => {
-                  onTabSelect(item.id);
-                  if (isMobile) {
-                    setMobileOpen(false);
-                  }
-                }}
-                aria-current={isActive ? 'page' : undefined}
-                aria-label={`${item.label}${item.specialAccess ? ' (Restricted)' : ''}`}
-              >
-                <ListItemIcon aria-hidden="true">
-                  <IconComponent />
-                </ListItemIcon>
-                <ListItemText 
-                  primary={item.label}
-                  secondary={item.specialAccess && (
-                    <Chip 
-                      label="Restricted" 
-                      size="small" 
-                      color="warning"
-                      aria-label="Restricted access"
-                    />
-                  )}
-                />
-                {item.badge && (
-                  <Chip 
-                    label={item.badge} 
-                    size="small" 
-                    color="primary"
-                  />
-                )}
-              </ListItemButton>
-            </ListItem>
-          );
-        })}
-      </List>
-    </Box>
+      </div>
+      <Menu
+        mode="inline"
+        selectedKeys={[selectedTab]}
+        items={menuItems}
+        onClick={({ key }) => {
+          onTabSelect(key);
+          if (isMobile) {
+            setMobileOpen(false);
+          }
+        }}
+        style={{ border: 'none' }}
+      />
+    </div>
   );
 
   return (
-    <Box sx={{ display: 'flex', minHeight: '100vh' }}>
-      {/* Mobile App Bar */}
+    <Layout style={{ minHeight: '100vh' }}>
+      {/* Mobile Header */}
       {isMobile && (
-        <AppBar
-          position="fixed"
-          sx={{
+        <Header
+          style={{
+            position: 'fixed',
             width: '100%',
-            ml: 0,
-            zIndex: theme.zIndex.drawer + 1,
+            zIndex: 1000,
+            background: '#001529',
+            display: 'flex',
+            alignItems: 'center',
+            padding: '0 16px',
           }}
         >
-          <Toolbar>
-            <IconButton
-              color="inherit"
-              aria-label="open navigation menu"
-              edge="start"
-              onClick={handleDrawerToggle}
-              sx={{ mr: 2 }}
-            >
-              <MenuIcon />
-            </IconButton>
-            <Typography variant="h6" noWrap component="h1">
-              {title}
-            </Typography>
-          </Toolbar>
-        </AppBar>
+          <Button
+            type="text"
+            icon={<MenuOutlined />}
+            onClick={handleDrawerToggle}
+            style={{ color: 'white', marginRight: '16px' }}
+            aria-label="open navigation menu"
+          />
+          <Title level={4} style={{ margin: 0, color: 'white' }}>
+            {title}
+          </Title>
+        </Header>
       )}
 
-      {/* Sidebar Drawer */}
-      <Box
-        component="nav"
-        sx={{ width: { md: drawerWidth }, flexShrink: { md: 0 } }}
-      >
-        {/* Mobile Drawer */}
+      {/* Mobile Drawer */}
+      {isMobile && (
         <Drawer
-          variant="temporary"
           open={mobileOpen}
           onClose={handleDrawerToggle}
-          ModalProps={{
-            keepMounted: true,
-          }}
-          sx={{
-            display: { xs: 'block', md: 'none' },
-            '& .MuiDrawer-paper': { 
-              boxSizing: 'border-box', 
-              width: drawerWidth,
-              pt: { xs: '64px', md: 0 },
-            },
-          }}
+          placement="left"
+          width={drawerWidth}
+          styles={{ body: { padding: 0 } }}
         >
-          {drawer}
+          {drawerContent}
         </Drawer>
+      )}
 
-        {/* Desktop Drawer */}
-        <Drawer
-          variant="permanent"
-          sx={{
-            display: { xs: 'none', md: 'block' },
-            '& .MuiDrawer-paper': { 
-              boxSizing: 'border-box', 
-              width: drawerWidth,
-              position: 'relative',
-              height: '100%',
-              borderRight: 1,
-              borderColor: 'divider',
-            },
-          }}
-          open
-        >
-          {drawer}
-        </Drawer>
-      </Box>
+      <Layout hasSider={!isMobile}>
+        {/* Desktop Sider */}
+        {!isMobile && (
+          <Sider
+            width={drawerWidth}
+            style={{
+              background: '#fff',
+              borderRight: '1px solid #f0f0f0',
+              overflow: 'auto',
+              height: '100vh',
+              position: 'sticky',
+              top: 0,
+              left: 0,
+            }}
+          >
+            {drawerContent}
+          </Sider>
+        )}
 
-      {/* Main Content */}
-      <Box
-        component="main"
-        sx={{
-          flexGrow: 1,
-          p: 3,
-          width: { md: `calc(100% - ${drawerWidth}px)` },
-          mt: { xs: 8, md: 0 },
-          minHeight: '100vh',
-          bgcolor: 'background.default',
-        }}
-      >
-        {children}
-      </Box>
-    </Box>
+        {/* Main Content */}
+        <Layout style={{ marginLeft: isMobile ? 0 : 0 }}>
+          <Content
+            style={{
+              padding: '24px',
+              minHeight: '100vh',
+              marginTop: isMobile ? '64px' : 0,
+              background: '#f5f5f5',
+            }}
+          >
+            {children}
+          </Content>
+        </Layout>
+      </Layout>
+    </Layout>
   );
 }

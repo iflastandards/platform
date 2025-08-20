@@ -3,52 +3,39 @@
 import React, { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import {
-  Box,
   Card,
-  CardContent,
   Typography,
   Button,
-  IconButton,
   Table,
-  TableBody,
-  TableCell,
-  TableContainer,
-  TableHead,
-  TableRow,
-  Chip,
-  Menu,
-  MenuItem,
-  Dialog,
-  DialogTitle,
-  DialogContent,
-  DialogActions,
-  TextField,
-  FormControl,
-  InputLabel,
+  Tag,
+  Dropdown,
+  Modal,
+  Input,
   Select,
-  Stack,
+  Space,
   Alert,
   Tabs,
-  Tab,
   Divider,
-  Container,
-  Paper,
   List,
-  ListItem,
-  ListItemText,
-  ListItemSecondaryAction,
-} from '@mui/material';
-import Grid from '@mui/material/Grid';
+  Row,
+  Col,
+  Form,
+  MenuProps,
+} from 'antd';
 import {
-  Add as AddIcon,
-  MoreVert as MoreIcon,
-  Edit as EditIcon,
-  Delete as DeleteIcon,
-  FileCopy as CopyIcon,
-  Download as DownloadIcon,
-  Upload as UploadIcon,
-  Visibility as ViewIcon,
-} from '@mui/icons-material';
+  PlusOutlined,
+  MoreOutlined,
+  EditOutlined,
+  DeleteOutlined,
+  CopyOutlined,
+  DownloadOutlined,
+  UploadOutlined,
+  EyeOutlined,
+} from '@ant-design/icons';
+
+const { Title, Text, Paragraph } = Typography;
+const { Option } = Select;
+const { TextArea } = Input;
 
 interface DCTAPProfile {
   id: string;
@@ -82,29 +69,13 @@ interface ProfilesManagerProps {
   userEmail?: string;
 }
 
-function TabPanel({
-  children,
-  value,
-  index,
-}: {
-  children: React.ReactNode;
-  value: number;
-  index: number;
-}) {
-  return (
-    <div role="tabpanel" hidden={value !== index}>
-      {value === index && <Box sx={{ py: 3 }}>{children}</Box>}
-    </div>
-  );
-}
-
 export default function ProfilesManager({
   userRoles: _userRoles,
   userName: _userName,
   userEmail: _userEmail,
 }: ProfilesManagerProps) {
   const _router = useRouter();
-  const [tabValue, setTabValue] = useState(0);
+  const [activeTab, setActiveTab] = useState('1');
   const [profiles, setProfiles] = useState<DCTAPProfile[]>([
     {
       id: 'profile-1',
@@ -198,54 +169,55 @@ export default function ProfilesManager({
   const [selectedProfile, setSelectedProfile] = useState<DCTAPProfile | null>(
     null,
   );
-  const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
-  const [dialogOpen, setDialogOpen] = useState(false);
-  const [dialogMode, setDialogMode] = useState<'create' | 'edit' | 'view'>(
+  const [modalOpen, setModalOpen] = useState(false);
+  const [modalMode, setModalMode] = useState<'create' | 'edit' | 'view'>(
     'create',
   );
-
-  const handleMenuClick = (
-    event: React.MouseEvent<HTMLElement>,
-    profile: DCTAPProfile,
-  ) => {
-    event.stopPropagation();
-    setAnchorEl(event.currentTarget);
-    setSelectedProfile(profile);
-  };
-
-  const handleMenuClose = () => {
-    setAnchorEl(null);
-    setSelectedProfile(null);
-  };
+  const [form] = Form.useForm();
 
   const handleCreateProfile = () => {
-    setDialogMode('create');
+    setModalMode('create');
     setSelectedProfile(null);
-    setDialogOpen(true);
+    form.resetFields();
+    setModalOpen(true);
   };
 
   const handleEditProfile = (profile: DCTAPProfile) => {
-    setDialogMode('edit');
+    setModalMode('edit');
     setSelectedProfile(profile);
-    setDialogOpen(true);
-    handleMenuClose();
+    form.setFieldsValue(profile);
+    setModalOpen(true);
   };
 
   const handleViewProfile = (profile: DCTAPProfile) => {
-    setDialogMode('view');
+    setModalMode('view');
     setSelectedProfile(profile);
-    setDialogOpen(true);
-    handleMenuClose();
+    setModalOpen(true);
   };
 
   const handleDeleteProfile = (profile: DCTAPProfile) => {
-    setProfiles(profiles.filter((p) => p.id !== profile.id));
-    handleMenuClose();
+    Modal.confirm({
+      title: 'Delete Profile',
+      content: `Are you sure you want to delete "${profile.name}"?`,
+      onOk: () => {
+        setProfiles(profiles.filter((p) => p.id !== profile.id));
+      },
+    });
   };
 
-  const getStatusColor = (
-    status: string,
-  ): 'success' | 'warning' | 'error' | 'default' => {
+  const handleCopyProfile = (profile: DCTAPProfile) => {
+    const newProfile = {
+      ...profile,
+      id: `profile-${Date.now()}`,
+      name: `${profile.name} (Copy)`,
+      status: 'draft' as const,
+      lastModified: new Date().toISOString(),
+      usageCount: 0,
+    };
+    setProfiles([...profiles, newProfile]);
+  };
+
+  const getStatusColor = (status: string) => {
     switch (status) {
       case 'active':
         return 'success';
@@ -258,435 +230,481 @@ export default function ProfilesManager({
     }
   };
 
-  const activeProfiles = profiles.filter((p) => p.status === 'active');
-  const draftProfiles = profiles.filter((p) => p.status === 'draft');
-  const _deprecatedProfiles = profiles.filter((p) => p.status === 'deprecated');
+  const getActionMenu = (profile: DCTAPProfile): MenuProps => ({
+    items: [
+      {
+        key: 'view',
+        label: 'View',
+        icon: <EyeOutlined />,
+        onClick: () => handleViewProfile(profile),
+      },
+      {
+        key: 'edit',
+        label: 'Edit',
+        icon: <EditOutlined />,
+        onClick: () => handleEditProfile(profile),
+      },
+      {
+        key: 'copy',
+        label: 'Duplicate',
+        icon: <CopyOutlined />,
+        onClick: () => handleCopyProfile(profile),
+      },
+      {
+        type: 'divider',
+      },
+      {
+        key: 'delete',
+        label: 'Delete',
+        icon: <DeleteOutlined />,
+        danger: true,
+        onClick: () => handleDeleteProfile(profile),
+      },
+    ],
+  });
+
+  const profileColumns = [
+    {
+      title: 'Name',
+      dataIndex: 'name',
+      key: 'name',
+      render: (text: string, record: DCTAPProfile) => (
+        <Space direction="vertical" size={0}>
+          <Text strong>{text}</Text>
+          <Text type="secondary" style={{ fontSize: 12 }}>
+            {record.description}
+          </Text>
+        </Space>
+      ),
+    },
+    {
+      title: 'Namespace',
+      dataIndex: 'namespace',
+      key: 'namespace',
+      render: (text: string) => (
+        <Text copyable style={{ fontSize: 12 }}>
+          {text}
+        </Text>
+      ),
+    },
+    {
+      title: 'Version',
+      dataIndex: 'version',
+      key: 'version',
+    },
+    {
+      title: 'Status',
+      dataIndex: 'status',
+      key: 'status',
+      render: (status: string) => (
+        <Tag color={getStatusColor(status)}>{status.toUpperCase()}</Tag>
+      ),
+    },
+    {
+      title: 'Usage',
+      dataIndex: 'usageCount',
+      key: 'usageCount',
+      render: (count: number) => `${count} times`,
+    },
+    {
+      title: 'Last Modified',
+      dataIndex: 'lastModified',
+      key: 'lastModified',
+      render: (date: string) => new Date(date).toLocaleDateString(),
+    },
+    {
+      title: 'Actions',
+      key: 'actions',
+      render: (_: any, record: DCTAPProfile) => (
+        <Dropdown menu={getActionMenu(record)} trigger={['click']}>
+          <Button type="text" icon={<MoreOutlined />} />
+        </Dropdown>
+      ),
+    },
+  ];
+
+  const renderProfileModal = () => {
+    const isViewMode = modalMode === 'view';
+    const modalTitle = 
+      modalMode === 'create' ? 'Create New Profile' :
+      modalMode === 'edit' ? 'Edit Profile' :
+      'View Profile';
+
+    return (
+      <Modal
+        title={modalTitle}
+        open={modalOpen}
+        onCancel={() => setModalOpen(false)}
+        width={800}
+        footer={
+          isViewMode ? [
+            <Button key="close" onClick={() => setModalOpen(false)}>
+              Close
+            </Button>
+          ] : [
+            <Button key="cancel" onClick={() => setModalOpen(false)}>
+              Cancel
+            </Button>,
+            <Button key="submit" type="primary" onClick={() => form.submit()}>
+              {modalMode === 'create' ? 'Create' : 'Save'}
+            </Button>
+          ]
+        }
+      >
+        {isViewMode && selectedProfile ? (
+          <Space direction="vertical" size="large" style={{ width: '100%' }}>
+            <div>
+              <Title level={4}>{selectedProfile.name}</Title>
+              <Paragraph>{selectedProfile.description}</Paragraph>
+            </div>
+            <Divider />
+            <Row gutter={[16, 16]}>
+              <Col span={12}>
+                <Text type="secondary">Namespace:</Text>
+                <br />
+                <Text copyable>{selectedProfile.namespace}</Text>
+              </Col>
+              <Col span={12}>
+                <Text type="secondary">Version:</Text>
+                <br />
+                <Text>{selectedProfile.version}</Text>
+              </Col>
+              <Col span={12}>
+                <Text type="secondary">Status:</Text>
+                <br />
+                <Tag color={getStatusColor(selectedProfile.status)}>
+                  {selectedProfile.status.toUpperCase()}
+                </Tag>
+              </Col>
+              <Col span={12}>
+                <Text type="secondary">Author:</Text>
+                <br />
+                <Text>{selectedProfile.author}</Text>
+              </Col>
+            </Row>
+            {selectedProfile.properties.length > 0 && (
+              <>
+                <Divider />
+                <Title level={5}>Properties</Title>
+                <Table
+                  dataSource={selectedProfile.properties}
+                  rowKey="id"
+                  pagination={false}
+                  size="small"
+                  columns={[
+                    {
+                      title: 'Label',
+                      dataIndex: 'propertyLabel',
+                      key: 'propertyLabel',
+                    },
+                    {
+                      title: 'Property ID',
+                      dataIndex: 'propertyID',
+                      key: 'propertyID',
+                    },
+                    {
+                      title: 'Mandatory',
+                      dataIndex: 'mandatory',
+                      key: 'mandatory',
+                      render: (value: string) => value === 'true' ? 'Yes' : 'No',
+                    },
+                    {
+                      title: 'Type',
+                      dataIndex: 'valueNodeType',
+                      key: 'valueNodeType',
+                    },
+                  ]}
+                />
+              </>
+            )}
+          </Space>
+        ) : (
+          <Form
+            form={form}
+            layout="vertical"
+            initialValues={selectedProfile || {}}
+            onFinish={(values) => {
+              if (modalMode === 'create') {
+                const newProfile = {
+                  ...values,
+                  id: `profile-${Date.now()}`,
+                  lastModified: new Date().toISOString(),
+                  usageCount: 0,
+                  properties: [],
+                };
+                setProfiles([...profiles, newProfile]);
+              } else {
+                setProfiles(profiles.map((p) => 
+                  p.id === selectedProfile?.id ? { ...p, ...values } : p
+                ));
+              }
+              setModalOpen(false);
+            }}
+          >
+            <Form.Item
+              name="name"
+              label="Profile Name"
+              rules={[{ required: true, message: 'Please enter a profile name' }]}
+            >
+              <Input placeholder="Enter profile name" />
+            </Form.Item>
+            <Form.Item
+              name="description"
+              label="Description"
+              rules={[{ required: true, message: 'Please enter a description' }]}
+            >
+              <TextArea rows={3} placeholder="Enter profile description" />
+            </Form.Item>
+            <Row gutter={16}>
+              <Col span={12}>
+                <Form.Item
+                  name="namespace"
+                  label="Namespace"
+                  rules={[{ required: true, message: 'Please enter a namespace' }]}
+                >
+                  <Input placeholder="https://example.org/ns/profile" />
+                </Form.Item>
+              </Col>
+              <Col span={12}>
+                <Form.Item
+                  name="version"
+                  label="Version"
+                  rules={[{ required: true, message: 'Please enter a version' }]}
+                >
+                  <Input placeholder="1.0.0" />
+                </Form.Item>
+              </Col>
+            </Row>
+            <Row gutter={16}>
+              <Col span={12}>
+                <Form.Item
+                  name="status"
+                  label="Status"
+                  rules={[{ required: true, message: 'Please select a status' }]}
+                >
+                  <Select placeholder="Select status">
+                    <Option value="draft">Draft</Option>
+                    <Option value="active">Active</Option>
+                    <Option value="deprecated">Deprecated</Option>
+                  </Select>
+                </Form.Item>
+              </Col>
+              <Col span={12}>
+                <Form.Item
+                  name="author"
+                  label="Author"
+                  rules={[{ required: true, message: 'Please enter author' }]}
+                >
+                  <Input placeholder="Enter author name" />
+                </Form.Item>
+              </Col>
+            </Row>
+          </Form>
+        )}
+      </Modal>
+    );
+  };
+
+  const tabItems = [
+    {
+      key: '1',
+      label: 'All Profiles',
+      children: (
+        <>
+          <div style={{ marginBottom: 16, display: 'flex', justifyContent: 'space-between' }}>
+            <Space>
+              <Input.Search
+                placeholder="Search profiles..."
+                style={{ width: 300 }}
+                onSearch={(value) => console.log('Search:', value)}
+              />
+              <Select defaultValue="all" style={{ width: 120 }}>
+                <Option value="all">All Status</Option>
+                <Option value="active">Active</Option>
+                <Option value="draft">Draft</Option>
+                <Option value="deprecated">Deprecated</Option>
+              </Select>
+            </Space>
+            <Space>
+              <Button icon={<UploadOutlined />}>Import</Button>
+              <Button icon={<DownloadOutlined />}>Export</Button>
+              <Button
+                type="primary"
+                icon={<PlusOutlined />}
+                onClick={handleCreateProfile}
+              >
+                Create Profile
+              </Button>
+            </Space>
+          </div>
+          <Table
+            dataSource={profiles}
+            columns={profileColumns}
+            rowKey="id"
+            pagination={{
+              pageSize: 10,
+              showSizeChanger: true,
+              showTotal: (total) => `Total ${total} profiles`,
+            }}
+          />
+        </>
+      ),
+    },
+    {
+      key: '2',
+      label: 'Property Library',
+      children: (
+        <Card>
+          <Title level={4}>Property Library</Title>
+          <Paragraph>
+            Manage reusable property definitions that can be used across multiple profiles.
+          </Paragraph>
+          <Alert
+            message="Coming Soon"
+            description="The property library feature is under development and will be available in the next release."
+            type="info"
+            showIcon
+          />
+        </Card>
+      ),
+    },
+    {
+      key: '3',
+      label: 'Validation History',
+      children: (
+        <Card>
+          <Title level={4}>Validation History</Title>
+          <Paragraph>
+            View the history of validations performed using these profiles.
+          </Paragraph>
+          <List
+            dataSource={[
+              {
+                id: '1',
+                profile: 'Standard Vocabulary Profile',
+                namespace: 'isbd',
+                timestamp: '2024-01-15 10:30:00',
+                status: 'success',
+                records: 234,
+              },
+              {
+                id: '2',
+                profile: 'ISBD Elements Profile',
+                namespace: 'isbd',
+                timestamp: '2024-01-14 15:45:00',
+                status: 'warning',
+                records: 189,
+              },
+              {
+                id: '3',
+                profile: 'Standard Vocabulary Profile',
+                namespace: 'lrm',
+                timestamp: '2024-01-13 09:20:00',
+                status: 'error',
+                records: 156,
+              },
+            ]}
+            renderItem={(item) => (
+              <List.Item
+                actions={[
+                  <Button key="view" type="link" size="small">View Details</Button>
+                ]}
+              >
+                <List.Item.Meta
+                  title={item.profile}
+                  description={
+                    <Space>
+                      <Text type="secondary">{item.namespace}</Text>
+                      <Text type="secondary">{item.timestamp}</Text>
+                      <Tag color={
+                        item.status === 'success' ? 'success' :
+                        item.status === 'warning' ? 'warning' : 'error'
+                      }>
+                        {item.status.toUpperCase()}
+                      </Tag>
+                      <Text type="secondary">{item.records} records</Text>
+                    </Space>
+                  }
+                />
+              </List.Item>
+            )}
+          />
+        </Card>
+      ),
+    },
+    {
+      key: '4',
+      label: 'Settings',
+      children: (
+        <Card>
+          <Title level={4}>Profile Settings</Title>
+          <Space direction="vertical" size="large" style={{ width: '100%' }}>
+            <div>
+              <Title level={5}>Default Profiles</Title>
+              <Paragraph type="secondary">
+                Configure default profiles for different namespaces.
+              </Paragraph>
+              <Form layout="vertical">
+                <Form.Item label="Default ISBD Profile">
+                  <Select defaultValue="profile-2">
+                    {profiles.map((profile) => (
+                      <Option key={profile.id} value={profile.id}>
+                        {profile.name}
+                      </Option>
+                    ))}
+                  </Select>
+                </Form.Item>
+                <Form.Item label="Default LRM Profile">
+                  <Select defaultValue="profile-3">
+                    {profiles.map((profile) => (
+                      <Option key={profile.id} value={profile.id}>
+                        {profile.name}
+                      </Option>
+                    ))}
+                  </Select>
+                </Form.Item>
+              </Form>
+            </div>
+            <Divider />
+            <div>
+              <Title level={5}>Validation Options</Title>
+              <Form layout="vertical">
+                <Form.Item label="Strict Mode">
+                  <Select defaultValue="true">
+                    <Option value="true">Enabled</Option>
+                    <Option value="false">Disabled</Option>
+                  </Select>
+                </Form.Item>
+                <Form.Item label="Auto-save Validation Results">
+                  <Select defaultValue="true">
+                    <Option value="true">Enabled</Option>
+                    <Option value="false">Disabled</Option>
+                  </Select>
+                </Form.Item>
+              </Form>
+            </div>
+          </Space>
+        </Card>
+      ),
+    },
+  ];
 
   return (
-    <Container maxWidth="xl" sx={{ py: 4 }}>
-      <Box sx={{ mb: 4 }}>
-        <Box
-          sx={{
-            display: 'flex',
-            justifyContent: 'space-between',
-            alignItems: 'flex-start',
-            mb: 2,
-          }}
-        >
-          <Box>
-            <Typography variant="h4" fontWeight="bold" gutterBottom>
-              DCTAP Profiles
-            </Typography>
-            <Typography variant="body1" color="text.secondary">
-              Manage Dublin Core Tabular Application Profiles for vocabulary
-              validation
-            </Typography>
-          </Box>
+    <div style={{ padding: '24px', maxWidth: '1440px', margin: '0 auto' }}>
+      <div style={{ marginBottom: 24 }}>
+        <Title level={2}>DCTAP Profiles Manager</Title>
+        <Paragraph type="secondary">
+          Manage Dublin Core Tabular Application Profiles for vocabulary validation
+        </Paragraph>
+      </div>
 
-          <Stack direction="row" spacing={1}>
-            <Button startIcon={<UploadIcon />} variant="outlined" size="small">
-              Import
-            </Button>
-            <Button
-              startIcon={<AddIcon />}
-              variant="contained"
-              onClick={handleCreateProfile}
-            >
-              Create Profile
-            </Button>
-          </Stack>
-        </Box>
+      <Tabs
+        activeKey={activeTab}
+        onChange={setActiveTab}
+        items={tabItems}
+      />
 
-        <Alert severity="info" sx={{ mb: 3 }}>
-          DCTAP profiles define the structure and validation rules for
-          vocabulary data import and validation.
-        </Alert>
-      </Box>
-
-      {/* Summary Cards */}
-      <Grid container spacing={3} sx={{ mb: 4 }}>
-        <Grid size={{ xs: 12, sm: 6, md: 3 }}>
-          <Card>
-            <CardContent sx={{ textAlign: 'center' }}>
-              <Typography variant="h4" color="primary.main" fontWeight="bold">
-                {profiles.length}
-              </Typography>
-              <Typography variant="body2" color="text.secondary">
-                Total Profiles
-              </Typography>
-            </CardContent>
-          </Card>
-        </Grid>
-
-        <Grid size={{ xs: 12, sm: 6, md: 3 }}>
-          <Card>
-            <CardContent sx={{ textAlign: 'center' }}>
-              <Typography variant="h4" color="success.main" fontWeight="bold">
-                {activeProfiles.length}
-              </Typography>
-              <Typography variant="body2" color="text.secondary">
-                Active
-              </Typography>
-            </CardContent>
-          </Card>
-        </Grid>
-
-        <Grid size={{ xs: 12, sm: 6, md: 3 }}>
-          <Card>
-            <CardContent sx={{ textAlign: 'center' }}>
-              <Typography variant="h4" color="warning.main" fontWeight="bold">
-                {draftProfiles.length}
-              </Typography>
-              <Typography variant="body2" color="text.secondary">
-                Drafts
-              </Typography>
-            </CardContent>
-          </Card>
-        </Grid>
-
-        <Grid size={{ xs: 12, sm: 6, md: 3 }}>
-          <Card>
-            <CardContent sx={{ textAlign: 'center' }}>
-              <Typography variant="h4" color="info.main" fontWeight="bold">
-                {profiles.reduce((sum, p) => sum + p.usageCount, 0)}
-              </Typography>
-              <Typography variant="body2" color="text.secondary">
-                Total Usage
-              </Typography>
-            </CardContent>
-          </Card>
-        </Grid>
-      </Grid>
-
-      {/* Tabs */}
-      <Card>
-        <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
-          <Tabs
-            value={tabValue}
-            onChange={(e, newValue) => setTabValue(newValue)}
-          >
-            <Tab label={`All Profiles (${profiles.length})`} />
-            <Tab label={`Active (${activeProfiles.length})`} />
-            <Tab label={`Drafts (${draftProfiles.length})`} />
-          </Tabs>
-        </Box>
-
-        {/* All Profiles Tab */}
-        <TabPanel value={tabValue} index={0}>
-          <TableContainer>
-            <Table>
-              <TableHead>
-                <TableRow>
-                  <TableCell>Name</TableCell>
-                  <TableCell>Namespace</TableCell>
-                  <TableCell>Version</TableCell>
-                  <TableCell>Status</TableCell>
-                  <TableCell>Usage</TableCell>
-                  <TableCell>Last Modified</TableCell>
-                  <TableCell width={60}>Actions</TableCell>
-                </TableRow>
-              </TableHead>
-              <TableBody>
-                {profiles.map((profile) => (
-                  <TableRow key={profile.id} hover>
-                    <TableCell>
-                      <Box>
-                        <Typography variant="body1" fontWeight="medium">
-                          {profile.name}
-                        </Typography>
-                        <Typography variant="caption" color="text.secondary">
-                          {profile.description}
-                        </Typography>
-                      </Box>
-                    </TableCell>
-                    <TableCell>
-                      <Typography
-                        variant="body2"
-                        sx={{ fontFamily: 'monospace' }}
-                      >
-                        {profile.namespace}
-                      </Typography>
-                    </TableCell>
-                    <TableCell>
-                      <Chip
-                        label={profile.version}
-                        size="small"
-                        variant="outlined"
-                        sx={{ fontFamily: 'monospace' }}
-                      />
-                    </TableCell>
-                    <TableCell>
-                      <Chip
-                        label={profile.status}
-                        size="small"
-                        color={getStatusColor(profile.status)}
-                        variant="outlined"
-                      />
-                    </TableCell>
-                    <TableCell>
-                      <Typography variant="body2">
-                        {profile.usageCount} imports
-                      </Typography>
-                    </TableCell>
-                    <TableCell>
-                      <Typography variant="body2">
-                        {new Date(profile.lastModified).toLocaleDateString(
-                          'en-US',
-                          { year: 'numeric', month: 'short', day: 'numeric' },
-                        )}
-                      </Typography>
-                    </TableCell>
-                    <TableCell>
-                      <IconButton
-                        size="small"
-                        onClick={(e) => handleMenuClick(e, profile)}
-                      >
-                        <MoreIcon />
-                      </IconButton>
-                    </TableCell>
-                  </TableRow>
-                ))}
-              </TableBody>
-            </Table>
-          </TableContainer>
-        </TabPanel>
-
-        {/* Active Profiles Tab */}
-        <TabPanel value={tabValue} index={1}>
-          <List>
-            {activeProfiles.map((profile) => (
-              <ListItem key={profile.id}>
-                <ListItemText
-                  primary={profile.name}
-                  secondary={`${profile.description} • ${profile.properties.length} properties`}
-                />
-                <ListItemSecondaryAction>
-                  <IconButton onClick={(e) => handleMenuClick(e, profile)}>
-                    <MoreIcon />
-                  </IconButton>
-                </ListItemSecondaryAction>
-              </ListItem>
-            ))}
-          </List>
-        </TabPanel>
-
-        {/* Draft Profiles Tab */}
-        <TabPanel value={tabValue} index={2}>
-          <List>
-            {draftProfiles.map((profile) => (
-              <ListItem key={profile.id}>
-                <ListItemText
-                  primary={profile.name}
-                  secondary={`${profile.description} • ${profile.properties.length} properties`}
-                />
-                <ListItemSecondaryAction>
-                  <IconButton onClick={(e) => handleMenuClick(e, profile)}>
-                    <MoreIcon />
-                  </IconButton>
-                </ListItemSecondaryAction>
-              </ListItem>
-            ))}
-          </List>
-        </TabPanel>
-      </Card>
-
-      {/* Actions Menu */}
-      <Menu
-        anchorEl={anchorEl}
-        open={Boolean(anchorEl)}
-        onClose={handleMenuClose}
-      >
-        <MenuItem
-          onClick={() => selectedProfile && handleViewProfile(selectedProfile)}
-        >
-          <ViewIcon fontSize="small" sx={{ mr: 1 }} />
-          View Details
-        </MenuItem>
-        <MenuItem
-          onClick={() => selectedProfile && handleEditProfile(selectedProfile)}
-        >
-          <EditIcon fontSize="small" sx={{ mr: 1 }} />
-          Edit
-        </MenuItem>
-        <MenuItem>
-          <CopyIcon fontSize="small" sx={{ mr: 1 }} />
-          Duplicate
-        </MenuItem>
-        <MenuItem>
-          <DownloadIcon fontSize="small" sx={{ mr: 1 }} />
-          Export
-        </MenuItem>
-        <Divider />
-        <MenuItem
-          onClick={() =>
-            selectedProfile && handleDeleteProfile(selectedProfile)
-          }
-          sx={{ color: 'error.main' }}
-        >
-          <DeleteIcon fontSize="small" sx={{ mr: 1 }} />
-          Delete
-        </MenuItem>
-      </Menu>
-
-      {/* Profile Dialog */}
-      <Dialog
-        open={dialogOpen}
-        onClose={() => setDialogOpen(false)}
-        maxWidth="md"
-        fullWidth
-      >
-        <DialogTitle>
-          {dialogMode === 'create' && 'Create New DCTAP Profile'}
-          {dialogMode === 'edit' && 'Edit DCTAP Profile'}
-          {dialogMode === 'view' && 'Profile Details'}
-        </DialogTitle>
-        <DialogContent>
-          {(dialogMode === 'create' || dialogMode === 'edit') && (
-            <Stack spacing={3} sx={{ mt: 2 }}>
-              <TextField
-                label="Profile Name"
-                fullWidth
-                defaultValue={selectedProfile?.name || ''}
-              />
-              <TextField
-                label="Description"
-                fullWidth
-                multiline
-                rows={3}
-                defaultValue={selectedProfile?.description || ''}
-              />
-              <TextField
-                label="Namespace"
-                fullWidth
-                defaultValue={
-                  selectedProfile?.namespace || 'https://iflastandards.info/ns/'
-                }
-              />
-              <Grid container spacing={2}>
-                <Grid size={{ xs: 6 }}>
-                  <TextField
-                    label="Version"
-                    fullWidth
-                    defaultValue={selectedProfile?.version || '1.0.0'}
-                  />
-                </Grid>
-                <Grid size={{ xs: 6 }}>
-                  <FormControl fullWidth>
-                    <InputLabel>Status</InputLabel>
-                    <Select
-                      defaultValue={selectedProfile?.status || 'draft'}
-                      label="Status"
-                    >
-                      <MenuItem value="draft">Draft</MenuItem>
-                      <MenuItem value="active">Active</MenuItem>
-                      <MenuItem value="deprecated">Deprecated</MenuItem>
-                    </Select>
-                  </FormControl>
-                </Grid>
-              </Grid>
-            </Stack>
-          )}
-
-          {dialogMode === 'view' && selectedProfile && (
-            <Box sx={{ mt: 2 }}>
-              <Typography variant="h6" gutterBottom>
-                {selectedProfile.name}
-              </Typography>
-              <Typography variant="body2" paragraph>
-                {selectedProfile.description}
-              </Typography>
-
-              <Box
-                component="dl"
-                sx={{
-                  '& dt': { fontWeight: 'medium' },
-                  '& dd': { ml: 0, mb: 1 },
-                }}
-              >
-                <Box component="dt">Namespace:</Box>
-                <Box component="dd" sx={{ fontFamily: 'monospace' }}>
-                  {selectedProfile.namespace}
-                </Box>
-
-                <Box component="dt">Version:</Box>
-                <Box component="dd">{selectedProfile.version}</Box>
-
-                <Box component="dt">Status:</Box>
-                <Box component="dd">
-                  <Chip
-                    label={selectedProfile.status}
-                    size="small"
-                    color={getStatusColor(selectedProfile.status)}
-                  />
-                </Box>
-
-                <Box component="dt">Properties:</Box>
-                <Box component="dd">
-                  {selectedProfile.properties.length} defined
-                </Box>
-
-                <Box component="dt">Usage:</Box>
-                <Box component="dd">{selectedProfile.usageCount} imports</Box>
-              </Box>
-
-              {selectedProfile.properties.length > 0 && (
-                <Box sx={{ mt: 3 }}>
-                  <Typography variant="subtitle1" gutterBottom>
-                    Properties
-                  </Typography>
-                  <TableContainer component={Paper} variant="outlined">
-                    <Table size="small">
-                      <TableHead>
-                        <TableRow>
-                          <TableCell>Property Label</TableCell>
-                          <TableCell>Property ID</TableCell>
-                          <TableCell>Mandatory</TableCell>
-                          <TableCell>Type</TableCell>
-                        </TableRow>
-                      </TableHead>
-                      <TableBody>
-                        {selectedProfile.properties.map((prop) => (
-                          <TableRow key={prop.id}>
-                            <TableCell>{prop.propertyLabel}</TableCell>
-                            <TableCell sx={{ fontFamily: 'monospace' }}>
-                              {prop.propertyID}
-                            </TableCell>
-                            <TableCell>
-                              <Chip
-                                label={
-                                  prop.mandatory === 'true'
-                                    ? 'Required'
-                                    : 'Optional'
-                                }
-                                size="small"
-                                color={
-                                  prop.mandatory === 'true'
-                                    ? 'error'
-                                    : 'default'
-                                }
-                                variant="outlined"
-                              />
-                            </TableCell>
-                            <TableCell>{prop.valueNodeType}</TableCell>
-                          </TableRow>
-                        ))}
-                      </TableBody>
-                    </Table>
-                  </TableContainer>
-                </Box>
-              )}
-            </Box>
-          )}
-        </DialogContent>
-        <DialogActions>
-          <Button onClick={() => setDialogOpen(false)}>Cancel</Button>
-          {(dialogMode === 'create' || dialogMode === 'edit') && (
-            <Button variant="contained">
-              {dialogMode === 'create' ? 'Create' : 'Save'}
-            </Button>
-          )}
-        </DialogActions>
-      </Dialog>
-    </Container>
+      {renderProfileModal()}
+    </div>
   );
 }

@@ -1,31 +1,33 @@
 'use client';
+
 import {
-  Box,
   Card,
-  CardContent,
   Typography,
-  Chip,
+  Tag,
   Button,
-  Container,
   Alert,
-  useTheme,
-} from '@mui/material';
-import Grid from '@mui/material/Grid';
+  Row,
+  Col,
+  Space,
+  Statistic,
+} from 'antd';
 import {
-  GitHub as GitHubIcon,
-  Language as LanguageIcon,
-  Security as SecurityIcon,
-  People as PeopleIcon,
-  CheckCircle as CheckCircleIcon,
-  Warning as WarningIcon,
-  Error as ErrorIcon,
-} from '@mui/icons-material';
+  GithubOutlined,
+  GlobalOutlined,
+  SafetyOutlined,
+  TeamOutlined,
+  CheckCircleOutlined,
+  WarningOutlined,
+  ExclamationCircleOutlined,
+} from '@ant-design/icons';
 import {
   mockNamespaces,
   getNamespaceStats,
 } from '@/lib/mock-data/namespaces-extended';
 import RequestInviteButton from '@/components/welcome/RequestInviteButton';
 import SafeSignInButton from '@/components/auth/SafeSignInButton';
+
+const { Title, Text, Paragraph } = Typography;
 
 interface NamespaceStatusCardProps {
   name: string;
@@ -53,19 +55,19 @@ function NamespaceStatusCard({
 }: NamespaceStatusCardProps) {
   const statusConfig = {
     active: {
-      color: 'success' as const,
+      color: 'success',
       label: 'Active',
-      icon: <CheckCircleIcon fontSize="small" />,
+      icon: <CheckCircleOutlined />,
     },
     maintenance: {
-      color: 'warning' as const,
+      color: 'warning',
       label: 'Maintenance',
-      icon: <WarningIcon fontSize="small" />,
+      icon: <WarningOutlined />,
     },
     archived: {
-      color: 'error' as const,
+      color: 'error',
       label: 'Archived',
-      icon: <ErrorIcon fontSize="small" />,
+      icon: <ExclamationCircleOutlined />,
     },
   };
 
@@ -78,85 +80,72 @@ function NamespaceStatusCard({
 
   return (
     <Card
-      elevation={0}
-      sx={{
+      hoverable
+      style={{
         height: '100%',
-        border: 1,
-        borderColor: 'divider',
-        '&:hover': {
-          borderColor: color,
-          boxShadow: `0 4px 12px ${color}20`,
-        },
+        borderColor: '#f0f0f0',
         transition: 'all 0.2s ease-in-out',
       }}
+      onMouseEnter={(e) => {
+        const card = e.currentTarget as HTMLElement;
+        card.style.borderColor = color;
+        card.style.boxShadow = `0 4px 12px ${color}20`;
+      }}
+      onMouseLeave={(e) => {
+        const card = e.currentTarget as HTMLElement;
+        card.style.borderColor = '#f0f0f0';
+        card.style.boxShadow = 'none';
+      }}
     >
-      <CardContent
-        sx={{ height: '100%', display: 'flex', flexDirection: 'column' }}
-      >
-        <Box
-          display="flex"
-          justifyContent="space-between"
-          alignItems="flex-start"
-          mb={2}
+      <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: 16 }}>
+        <div>
+          <Title level={4} style={{ color, marginBottom: 8 }}>
+            {name}
+          </Title>
+          <Paragraph type="secondary" style={{ marginBottom: 8 }}>
+            {description}
+          </Paragraph>
+        </div>
+        <Tag 
+          color={config.color} 
+          icon={config.icon}
+          style={{ height: 'fit-content' }}
         >
-          <Box>
-            <Typography
-              variant="h4"
-              fontWeight="bold"
-              gutterBottom
-              sx={{ color }}
-            >
-              {name}
-            </Typography>
-            <Typography variant="body2" color="text.secondary" sx={{ mb: 1 }}>
-              {description}
-            </Typography>
-          </Box>
-          <Chip
-            label={config.label}
-            color={config.color}
-            size="small"
-            icon={config.icon}
-            sx={{ fontWeight: 600 }}
-          />
-        </Box>
+          {config.label}
+        </Tag>
+      </div>
 
-        <Box flex={1}>
-          <Typography variant="body2" color="text.secondary" gutterBottom>
-            Version {currentVersion} • Published {publishedDate}
-          </Typography>
-
-        </Box>
-      </CardContent>
+      <Text type="secondary">
+        Version {currentVersion} • Published {publishedDate}
+      </Text>
     </Card>
   );
 }
 
 export default function WelcomePage() {
-  const theme = useTheme();
   const stats = getNamespaceStats();
 
   const features = [
     {
-      icon: <LanguageIcon />,
+      icon: <GlobalOutlined style={{ fontSize: 24 }} />,
       title: 'Multilingual Standards',
       description:
         'Manage and maintain IFLA standards across multiple languages with collaborative translation workflows.',
     },
     {
-      icon: <GitHubIcon />,
+      icon: <GithubOutlined style={{ fontSize: 24 }} />,
       title: 'GitHub Integration',
       description:
         'Seamless integration with GitHub for version control, issue tracking, and collaborative development.',
     },
     {
-      icon: <SecurityIcon />,
+      icon: <SafetyOutlined style={{ fontSize: 24 }} />,
       title: 'Role-Based Access',
       description:
         'Secure, invitation-only access with granular permissions based on your role and project assignments.',
     },
     {
-      icon: <PeopleIcon />,
+      icon: <TeamOutlined style={{ fontSize: 24 }} />,
       title: 'Team Collaboration',
       description:
         'Work together with review groups, editors, translators, and contributors in structured workflows.',
@@ -164,19 +153,19 @@ export default function WelcomePage() {
   ];
 
   return (
-    <Box component="main" sx={{ bgcolor: 'background.default', minHeight: '100vh' }}>
+    <div style={{ backgroundColor: '#f5f5f5', minHeight: '100vh' }}>
       {/* Hero Section */}
-      <Box
-        component="header"
-        sx={{
+      <header
+        style={{
           position: 'relative',
-          bgcolor: 'primary.main',
+          background: 'linear-gradient(135deg, #1890ff 0%, #096dd9 100%)',
           color: 'white',
-          py: { xs: 6, md: 10 },
-          background: `linear-gradient(135deg, ${theme.palette.primary.main} 0%, ${theme.palette.primary.dark} 100%)`,
+          padding: '80px 0',
           overflow: 'hidden',
-          '&::before': {
-            content: '""',
+        }}
+      >
+        <div
+          style={{
             position: 'absolute',
             top: 0,
             left: 0,
@@ -184,313 +173,256 @@ export default function WelcomePage() {
             bottom: 0,
             background: 'radial-gradient(circle at 30% 20%, rgba(255,255,255,0.1) 0%, transparent 50%), radial-gradient(circle at 70% 80%, rgba(255,255,255,0.08) 0%, transparent 50%)',
             pointerEvents: 'none',
-          },
-        }}
-      >
-        <Container maxWidth="lg" sx={{ position: 'relative', zIndex: 1 }}>
-          <Box textAlign="center">
-            <Typography 
-              variant="h1" 
-              sx={{
+          }}
+        />
+        
+        <div style={{ maxWidth: 1200, margin: '0 auto', padding: '0 24px', position: 'relative', zIndex: 1 }}>
+          <div style={{ textAlign: 'center' }}>
+            <Title 
+              level={1}
+              style={{
+                fontSize: '3.5rem',
                 fontWeight: 800,
-                fontSize: { xs: '2.5rem', sm: '3.5rem', md: '4rem' },
-                lineHeight: 1.1,
-                mb: 3,
-                background: 'linear-gradient(45deg, #ffffff 30%, rgba(255,255,255,0.8) 100%)',
-                backgroundClip: 'text',
-                WebkitBackgroundClip: 'text',
-                WebkitTextFillColor: 'transparent',
+                color: 'white',
+                marginBottom: 24,
                 textShadow: '0 2px 4px rgba(0,0,0,0.1)',
               }}
             >
               IFLA Standards Management Toolkit
-            </Typography>
+            </Title>
             
-            <Typography 
-              variant="h2" 
-              sx={{ 
-                mb: 5, 
-                opacity: 0.95,
+            <Title 
+              level={2}
+              style={{ 
+                fontSize: '1.5rem',
                 fontWeight: 400,
-                fontSize: { xs: '1.25rem', sm: '1.5rem', md: '1.75rem' },
-                lineHeight: 1.4,
+                color: 'white',
+                opacity: 0.95,
+                marginBottom: 40,
                 maxWidth: 800,
-                mx: 'auto',
+                margin: '0 auto 40px',
                 textShadow: '0 1px 2px rgba(0,0,0,0.1)',
               }}
             >
               Collaborative platform for developing, maintaining, and publishing
               international library standards
-            </Typography>
+            </Title>
 
             <Alert
-              severity="info"
-              sx={{
-                mb: 5,
-                bgcolor: 'rgba(255, 255, 255, 0.98)',
-                color: 'grey.800',
-                border: 2,
-                borderColor: 'rgba(255, 255, 255, 0.9)',
-                borderRadius: 3,
-                '& .MuiAlert-icon': {
-                  color: 'info.main',
-                  fontSize: '1.5rem',
-                },
+              message={
+                <Space wrap>
+                  <Text strong style={{ fontSize: '1.1rem' }}>
+                    🔒 Access by invitation only
+                  </Text>
+                  <RequestInviteButton />
+                </Space>
+              }
+              description={
+                <Text style={{ fontSize: '1rem' }}>
+                  This platform is exclusively for IFLA review group members,
+                  editors, translators, and authorized contributors.
+                </Text>
+              }
+              type="info"
+              showIcon
+              style={{
                 maxWidth: 650,
-                mx: 'auto',
+                margin: '0 auto 40px',
+                backgroundColor: 'rgba(255, 255, 255, 0.98)',
+                border: '2px solid rgba(255, 255, 255, 0.9)',
+                borderRadius: 12,
                 boxShadow: '0 8px 32px rgba(0, 0, 0, 0.15)',
-                backdropFilter: 'blur(10px)',
-                p: 3,
               }}
-            >
-              <Typography 
-                fontWeight="bold" 
-                sx={{ 
-                  fontSize: '1.1rem',
-                  display: 'flex',
-                  alignItems: 'center',
-                  gap: 1,
-                  flexWrap: 'wrap',
-                }}
-              >
-                🔒 Access by invitation only
-                <RequestInviteButton />
-              </Typography>
-              <Typography 
-                variant="body1" 
-                sx={{ 
-                  mt: 1.5,
-                  fontSize: '1rem',
-                  lineHeight: 1.5,
-                }}
-              >
-                This platform is exclusively for IFLA review group members,
-                editors, translators, and authorized contributors.
-              </Typography>
-            </Alert>
+            />
 
-            {/* Enhanced CTA Section */}
-            <Box sx={{ display: 'flex', justifyContent: 'center' }}>
-              <SafeSignInButton>
-                <Button
-                  variant="contained"
-                  size="large"
-                  sx={{
-                    bgcolor: 'white',
-                    color: 'primary.main',
-                    fontWeight: 'bold',
-                    px: 5,
-                    py: 2,
-                    fontSize: '1.2rem',
-                    borderRadius: 3,
-                    textTransform: 'none',
-                    boxShadow: '0 4px 20px rgba(0, 0, 0, 0.15)',
-                    border: 2,
-                    borderColor: 'transparent',
-                    transition: 'all 0.3s ease',
-                    '&:hover': {
-                      bgcolor: 'rgba(255, 255, 255, 0.95)',
-                      transform: 'translateY(-2px)',
-                      boxShadow: '0 8px 30px rgba(0, 0, 0, 0.2)',
-                      borderColor: 'rgba(255, 255, 255, 0.3)',
-                    },
-                    '&:active': {
-                      transform: 'translateY(0)',
-                    },
-                  }}
-                >
-                  Sign In
-                </Button>
-              </SafeSignInButton>
-            </Box>
+            {/* CTA Section */}
+            <SafeSignInButton>
+              <Button
+                type="primary"
+                size="large"
+                style={{
+                  backgroundColor: 'white',
+                  color: '#1890ff',
+                  fontWeight: 'bold',
+                  padding: '8px 40px',
+                  height: 'auto',
+                  fontSize: '1.2rem',
+                  borderRadius: 12,
+                  boxShadow: '0 4px 20px rgba(0, 0, 0, 0.15)',
+                  border: '2px solid transparent',
+                }}
+                onMouseEnter={(e) => {
+                  const btn = e.currentTarget;
+                  btn.style.backgroundColor = 'rgba(255, 255, 255, 0.95)';
+                  btn.style.transform = 'translateY(-2px)';
+                  btn.style.boxShadow = '0 8px 30px rgba(0, 0, 0, 0.2)';
+                }}
+                onMouseLeave={(e) => {
+                  const btn = e.currentTarget;
+                  btn.style.backgroundColor = 'white';
+                  btn.style.transform = 'translateY(0)';
+                  btn.style.boxShadow = '0 4px 20px rgba(0, 0, 0, 0.15)';
+                }}
+              >
+                Sign In
+              </Button>
+            </SafeSignInButton>
 
             {/* Decorative Elements */}
-            <Box
-              sx={{
-                mt: 6,
-                display: 'flex',
-                justifyContent: 'center',
-                gap: 4,
-                opacity: 0.7,
-              }}
-            >
+            <div style={{ marginTop: 48, display: 'flex', justifyContent: 'center', gap: 32 }}>
               {[
-                { Icon: SecurityIcon, label: 'Security' },
-                { Icon: PeopleIcon, label: 'Collaboration' },
-                { Icon: LanguageIcon, label: 'Multilingual' }
+                { Icon: SafetyOutlined, label: 'Security' },
+                { Icon: TeamOutlined, label: 'Collaboration' },
+                { Icon: GlobalOutlined, label: 'Multilingual' }
               ].map(({ Icon, label }, index) => (
-                <Box
+                <div
                   key={index}
-                  sx={{
-                    p: 2,
+                  style={{
+                    padding: 16,
                     borderRadius: '50%',
-                    bgcolor: 'rgba(255, 255, 255, 0.1)',
+                    backgroundColor: 'rgba(255, 255, 255, 0.1)',
                     backdropFilter: 'blur(10px)',
-                    border: 1,
-                    borderColor: 'rgba(255, 255, 255, 0.2)',
+                    border: '1px solid rgba(255, 255, 255, 0.2)',
                   }}
                 >
                   <Icon 
-                    sx={{ fontSize: '2rem', color: 'white' }} 
+                    style={{ fontSize: 32, color: 'white' }} 
                     aria-label={label}
                     role="img"
                   />
-                </Box>
+                </div>
               ))}
-            </Box>
-          </Box>
-        </Container>
-      </Box>
+            </div>
+          </div>
+        </div>
+      </header>
 
       {/* Stats Section */}
-      <Container component="section" maxWidth="lg" sx={{ py: 6 }}>
-        <Box component="header" textAlign="center" mb={4}>
-          <Typography variant="h3" fontWeight="bold" gutterBottom>
-            Live Platform Statistics
-          </Typography>
-          <Typography variant="body1" color="text.secondary">
+      <section style={{ padding: '48px 24px', maxWidth: 1200, margin: '0 auto' }}>
+        <div style={{ textAlign: 'center', marginBottom: 32 }}>
+          <Title level={2}>Live Platform Statistics</Title>
+          <Text type="secondary">
             Real-time overview of our collaborative standards development
-          </Typography>
-        </Box>
+          </Text>
+        </div>
 
-        <Grid container spacing={3} sx={{ mb: 6 }}>
-          <Grid size={{ xs: 6, md: 3 }}>
-            <Card elevation={0} sx={{ textAlign: 'center', py: 3 }}>
-              <CardContent>
-                <Typography variant="h3" fontWeight="bold" color="primary.main">
-                  {stats.total}
-                </Typography>
-                <Typography variant="body2" color="text.secondary">
-                  Active Standards
-                </Typography>
-              </CardContent>
+        <Row gutter={[16, 16]} style={{ marginBottom: 48 }}>
+          <Col xs={12} md={6}>
+            <Card>
+              <Statistic
+                title="Active Standards"
+                value={stats.total}
+                valueStyle={{ color: '#1890ff' }}
+              />
             </Card>
-          </Grid>
-          <Grid size={{ xs: 6, md: 3 }}>
-            <Card elevation={0} sx={{ textAlign: 'center', py: 3 }}>
-              <CardContent>
-                <Typography variant="h3" fontWeight="bold" color="primary.main">
-                  {(stats.totalElements + stats.totalConcepts).toLocaleString()}
-                </Typography>
-                <Typography variant="body2" color="text.secondary">
-                  Total Elements
-                </Typography>
-              </CardContent>
+          </Col>
+          <Col xs={12} md={6}>
+            <Card>
+              <Statistic
+                title="Total Elements"
+                value={stats.totalElements + stats.totalConcepts}
+                valueStyle={{ color: '#1890ff' }}
+              />
             </Card>
-          </Grid>
-          <Grid size={{ xs: 6, md: 3 }}>
-            <Card elevation={0} sx={{ textAlign: 'center', py: 3 }}>
-              <CardContent>
-                <Typography variant="h3" fontWeight="bold" color="primary.main">
-                  {stats.totalTranslations}
-                </Typography>
-                <Typography variant="body2" color="text.secondary">
-                  Languages
-                </Typography>
-              </CardContent>
+          </Col>
+          <Col xs={12} md={6}>
+            <Card>
+              <Statistic
+                title="Languages"
+                value={stats.totalTranslations}
+                valueStyle={{ color: '#1890ff' }}
+              />
             </Card>
-          </Grid>
-          <Grid size={{ xs: 6, md: 3 }}>
-            <Card elevation={0} sx={{ textAlign: 'center', py: 3 }}>
-              <CardContent>
-                <Typography variant="h3" fontWeight="bold" color="primary.main">
-                  {stats.active}
-                </Typography>
-                <Typography variant="body2" color="text.secondary">
-                  Active Projects
-                </Typography>
-              </CardContent>
+          </Col>
+          <Col xs={12} md={6}>
+            <Card>
+              <Statistic
+                title="Active Projects"
+                value={stats.active}
+                valueStyle={{ color: '#1890ff' }}
+              />
             </Card>
-          </Grid>
-        </Grid>
+          </Col>
+        </Row>
 
         {/* Features Section */}
-        <Box component="header" textAlign="center" mb={4}>
-          <Typography variant="h3" fontWeight="bold" gutterBottom>
-            Platform Features
-          </Typography>
-          <Typography variant="body1" color="text.secondary">
+        <div style={{ textAlign: 'center', marginBottom: 32 }}>
+          <Title level={2}>Platform Features</Title>
+          <Text type="secondary">
             Everything you need for collaborative standards development
-          </Typography>
-        </Box>
+          </Text>
+        </div>
 
-        <Grid container spacing={4} sx={{ mb: 6 }}>
+        <Row gutter={[24, 24]} style={{ marginBottom: 48 }}>
           {features.map((feature, index) => (
-            <Grid size={{ xs: 12, md: 6 }} key={index}>
-              <Card
-                elevation={0}
-                sx={{ height: '100%', border: 1, borderColor: 'divider' }}
-              >
-                <CardContent sx={{ p: 3 }}>
-                  <Box display="flex" alignItems="flex-start" gap={2}>
-                    <Box
-                      sx={{
-                        p: 1.5,
-                        borderRadius: 2,
-                        bgcolor: 'primary.main',
-                        color: 'white',
-                        minWidth: 48,
-                      }}
-                    >
-                      {feature.icon}
-                    </Box>
-                    <Box>
-                      <Typography variant="h4" fontWeight="bold" gutterBottom>
-                        {feature.title}
-                      </Typography>
-                      <Typography variant="body2" color="text.secondary">
-                        {feature.description}
-                      </Typography>
-                    </Box>
-                  </Box>
-                </CardContent>
+            <Col xs={24} md={12} key={index}>
+              <Card style={{ height: '100%' }}>
+                <Space align="start" size={16}>
+                  <div
+                    style={{
+                      padding: 12,
+                      borderRadius: 8,
+                      backgroundColor: '#1890ff',
+                      color: 'white',
+                      minWidth: 48,
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                    }}
+                  >
+                    {feature.icon}
+                  </div>
+                  <div>
+                    <Title level={4} style={{ marginBottom: 8 }}>
+                      {feature.title}
+                    </Title>
+                    <Text type="secondary">
+                      {feature.description}
+                    </Text>
+                  </div>
+                </Space>
               </Card>
-            </Grid>
+            </Col>
           ))}
-        </Grid>
+        </Row>
 
         {/* Namespace Status */}
-        <Box textAlign="center" mb={4}>
-          <Typography variant="h3" fontWeight="bold" gutterBottom>
-            Standards Overview
-          </Typography>
-          <Typography variant="body1" color="text.secondary">
+        <div style={{ textAlign: 'center', marginBottom: 32 }}>
+          <Title level={2}>Standards Overview</Title>
+          <Text type="secondary">
             Current status of all IFLA standards and their development
-          </Typography>
-        </Box>
+          </Text>
+        </div>
 
-        <Grid container spacing={3}>
+        <Row gutter={[16, 16]}>
           {Object.values(mockNamespaces).map((namespace) => (
-            <Grid size={{ xs: 12, md: 6, lg: 4 }} key={namespace.id}>
+            <Col xs={24} md={12} lg={8} key={namespace.id}>
               <NamespaceStatusCard {...namespace} />
-            </Grid>
+            </Col>
           ))}
-        </Grid>
-      </Container>
+        </Row>
+      </section>
 
       {/* Footer */}
-      <Box
-        component="footer"
-        sx={{
-          bgcolor: 'grey.50',
-          borderTop: 1,
-          borderColor: 'divider',
-          py: 4,
-          mt: 6,
+      <footer
+        style={{
+          backgroundColor: '#fafafa',
+          borderTop: '1px solid #f0f0f0',
+          padding: '32px 24px',
+          marginTop: 48,
         }}
       >
-        <Container maxWidth="lg">
-          <Box textAlign="center">
-            <Typography variant="body2" color="text.secondary">
-              © 2024 International Federation of Library Associations and
-              Institutions (IFLA)
-            </Typography>
-            <Typography variant="body2" color="text.secondary" sx={{ mt: 1 }}>
-              Standards Management Toolkit • Powered by modern web technologies
-            </Typography>
-          </Box>
-        </Container>
-      </Box>
-    </Box>
+        <div style={{ maxWidth: 1200, margin: '0 auto', textAlign: 'center' }}>
+          <Text type="secondary">
+            © 2024 International Federation of Library Associations and
+            Institutions (IFLA)
+          </Text>
+          <br />
+          <Text type="secondary">
+            Standards Management Toolkit • Powered by modern web technologies
+          </Text>
+        </div>
+      </footer>
+    </div>
   );
 }

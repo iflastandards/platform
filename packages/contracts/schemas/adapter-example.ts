@@ -47,7 +47,7 @@ export class SupabaseJobAdapter {
     }
 
     // Validate each job in the array
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+     
     return data.map(
       (job: unknown) =>
         validateData(JobSchema, job, `job ${(job as any).id}`) as Job,

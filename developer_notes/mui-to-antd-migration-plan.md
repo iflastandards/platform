@@ -11,11 +11,10 @@
 
 ### ⚠️ MANDATORY RULES
 1. **NEVER hardcode `/admin` basePath** - Use root-relative paths (`/dashboard` not `/admin/dashboard`)
-2. **Always use `addBasePath()` utility** for API calls and static assets
-3. **Use `siteConfig.ts`** as single source of truth for environment-aware URLs
-4. **Follow established conversion maps** (see Section 10)
-5. **Maintain type safety** - No `any` without documentation
-6. **Test before committing** - Run `pnpm test` and `pnpm typecheck`
+2. **Use `siteConfig.ts`** as single source of truth for environment-aware URLs
+3. **Follow established conversion maps** (see Section 10)
+4. **Maintain type safety** - No `any` without documentation
+5. **Test before committing** - Run `pnpm test` and `pnpm typecheck`
 
 ---
 

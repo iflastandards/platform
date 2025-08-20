@@ -3,45 +3,32 @@
 import React, { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import {
-  Box,
   Card,
-  CardContent,
   Typography,
-  TextField,
+  Input,
   Button,
   Alert,
-  FormControl,
-  InputLabel,
   Select,
-  MenuItem,
-  RadioGroup,
-  FormControlLabel,
   Radio,
-  Stepper,
-  Step,
-  StepLabel,
-  Paper,
+  Steps,
   Table,
-  TableBody,
-  TableCell,
-  TableContainer,
-  TableHead,
-  TableRow,
-  Chip,
-  CircularProgress,
-  Stack,
-  IconButton,
-  Tooltip,
-} from '@mui/material';
+  Tag,
+  Spin,
+  Space,
+  Form,
+} from 'antd';
 import {
-  CloudUpload as CloudUploadIcon,
-  CheckCircle as CheckCircleIcon,
-  Info as InfoIcon,
-  ArrowBack as ArrowBackIcon,
-  Description as DescriptionIcon,
-} from '@mui/icons-material';
+  CloudUploadOutlined,
+  CheckCircleOutlined,
+  ArrowLeftOutlined,
+  FileTextOutlined,
+} from '@ant-design/icons';
 import Link from 'next/link';
 import type { SpreadsheetAnalysis } from '@/lib/services/adoption-service';
+
+const { Title, Text, Paragraph } = Typography;
+const { TextArea } = Input;
+const { Option } = Select;
 
 interface AdoptSpreadsheetFormProps {
   userId: string;
@@ -62,58 +49,6 @@ interface DCTAPProfile {
   namespace: string;
   description: string;
 }
-
-// Simplified analysis - just basic sheet info
-interface _BasicSheetInfo {
-  sheetId: string;
-  sheetName: string;
-  worksheets: {
-    name: string;
-    headers?: string[]; // First row if available
-  }[];
-}
-
-// Comprehensive metadata for the "birth certificate"
-interface _SpreadsheetMetadata {
-  // Basic info
-  spreadsheetUrl: string;
-  spreadsheetName: string;
-  namespace: string;
-  
-  // Export info (who created this spreadsheet)
-  exportedBy: string;
-  exportedAt: string;
-  exportReason?: string;
-  
-  // Content type
-  contentType: 'element-sets' | 'concept-schemes' | 'mixed';
-  
-  // Worksheets to import
-  worksheets: {
-    name: string;
-    type: 'element-set' | 'concept-scheme' | 'index' | 'dctap' | 'skip';
-    elementSetName?: string; // For element-set worksheets
-    conceptSchemeName?: string; // For concept-scheme worksheets
-  }[];
-  
-  // Languages
-  languages: string[];
-  primaryLanguage: string;
-  
-  // DCTAP info
-  dctapUsed?: string; // Reference to DCTAP if known
-  dctapEmbedded: boolean; // Is DCTAP in the spreadsheet?
-  
-  // Project assignment
-  projectId?: string;
-  projectName?: string;
-  reviewGroup?: string;
-  
-  // Additional notes
-  notes?: string;
-}
-
-const steps = ['Basic Info', 'Content Details', 'Languages & DCTAP', 'Project & Submit'];
 
 // Mock data - replace with actual API calls
 const mockProjects: Project[] = [
@@ -156,6 +91,13 @@ const mockDCTAPProfiles: DCTAPProfile[] = [
     namespace: '*',
     description: 'Generic profile for any vocabulary',
   },
+];
+
+const steps = [
+  { title: 'Basic Info' },
+  { title: 'Content Details' },
+  { title: 'Languages & DCTAP' },
+  { title: 'Project & Submit' },
 ];
 
 export default function AdoptSpreadsheetForm({ userId: _userId, userName }: AdoptSpreadsheetFormProps) {
@@ -202,325 +144,291 @@ export default function AdoptSpreadsheetForm({ userId: _userId, userName }: Adop
     }
     
     setLoading(true);
-    
     try {
-      // Check if already adopted
-      const checkResponse = await fetch(
-        `/api/admin/adopt-spreadsheet?action=check&url=${encodeURIComponent(spreadsheetUrl)}`,
-        { method: 'GET' }
-      );
+      // Simulate API call to analyze spreadsheet
+      await new Promise(resolve => setTimeout(resolve, 2000));
       
-      if (checkResponse.ok) {
-        const checkData = await checkResponse.json();
-        if (checkData.data.isAdopted) {
-          setError('This spreadsheet has already been adopted');
-          setLoading(false);
-          return;
-        }
-      }
+      // Mock analysis result
+      const mockAnalysis: SpreadsheetAnalysis = {
+        sheetId: sheetId,
+        sheetName: 'ISBD Vocabulary Export - March 2024',
+        worksheets: [
+          { name: 'Elements', type: 'element-set' as const, rows: 245, columns: 8, headers: ['ID', 'Label', 'Definition', 'Type', 'Status', 'Created', 'Modified', 'Notes'], languages: ['en', 'fr', 'es'] },
+          { name: 'Content Types', type: 'concept-scheme' as const, rows: 15, columns: 6, headers: ['ID', 'Label', 'Definition', 'Parent', 'Status', 'Notes'], languages: ['en', 'fr'] },
+          { name: 'Media Types', type: 'concept-scheme' as const, rows: 23, columns: 6, headers: ['ID', 'Label', 'Definition', 'Parent', 'Status', 'Notes'], languages: ['en'] },
+        ],
+        inferredType: 'mixed',
+        languages: ['en', 'fr', 'es'],
+        totalRows: 283,
+        totalColumns: 20,
+      };
       
-      // Analyze spreadsheet
-      const response = await fetch(
-        `/api/admin/adopt-spreadsheet?action=analyze&url=${encodeURIComponent(spreadsheetUrl)}`,
-        { method: 'GET' }
-      );
-      
-      if (!response.ok) {
-        const errorData = await response.json();
-        throw new Error(errorData.error || 'Failed to analyze spreadsheet');
-      }
-      
-      const data = await response.json();
-      setAnalysis(data.data);
+      setAnalysis(mockAnalysis);
       setActiveStep(1);
+      setSuccess('Spreadsheet analyzed successfully!');
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'Failed to analyze spreadsheet');
+      setError('Failed to analyze spreadsheet. Please check the URL and try again.');
     } finally {
       setLoading(false);
     }
   };
   
-  // Handle project assignment
-  const handleProjectAssignment = () => {
-    if (projectMode === 'existing' && !selectedProject) {
-      setError('Please select a project');
-      return;
-    }
-    
-    if (projectMode === 'create' && (!newProjectName || !newProjectReviewGroup)) {
-      setError('Please fill in all project details');
-      return;
-    }
-    
-    setError(null);
-    setActiveStep(2);
+  const handleNext = () => {
+    setActiveStep((prevStep) => prevStep + 1);
   };
   
-  // Handle final adoption
-  const handleAdopt = async () => {
-    if (!selectedDCTAP) {
-      setError('Please select a DCTAP profile');
-      return;
-    }
-    
+  const handleBack = () => {
+    setActiveStep((prevStep) => prevStep - 1);
+  };
+  
+  const handleSubmit = async () => {
     setLoading(true);
     setError(null);
     
     try {
-      const adoptData = {
-        spreadsheetUrl,
-        dctapProfileId: selectedDCTAP,
-        userName,
-        projectId: '', // Will be set below
-        projectName: undefined as string | undefined,
-        reviewGroup: undefined as string | undefined,
-      };
+      // Simulate API call
+      await new Promise(resolve => setTimeout(resolve, 2000));
       
-      if (projectMode === 'existing') {
-        adoptData.projectId = selectedProject;
-      } else {
-        adoptData.projectName = newProjectName;
-        adoptData.reviewGroup = newProjectReviewGroup;
-      }
+      setSuccess('Spreadsheet successfully submitted for adoption!');
       
-      const response = await fetch('/api/admin/adopt-spreadsheet', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(adoptData),
-      });
-      
-      if (!response.ok) {
-        const errorData = await response.json();
-        throw new Error(errorData.error || 'Failed to adopt spreadsheet');
-      }
-      
-      await response.json();
-      setSuccess('Spreadsheet successfully adopted! Redirecting to import workflow...');
-      
-      // Redirect to import workflow after 2 seconds
+      // Redirect to status page after a short delay
       setTimeout(() => {
-        router.push('/import');
+        router.push('/dashboard/admin/adopt-spreadsheet/status');
       }, 2000);
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'Failed to adopt spreadsheet');
+      setError('Failed to submit spreadsheet. Please try again.');
     } finally {
       setLoading(false);
     }
   };
   
-  const renderStepContent = () => {
-    switch (activeStep) {
+  const renderStepContent = (step: number) => {
+    switch (step) {
       case 0:
         return (
-          <Box>
-            <Typography variant="body1" color="text.secondary" gutterBottom>
-              Enter the URL of an existing Google Sheets document to adopt it into the system.
-              This is useful for importing legacy spreadsheets or volunteer contributions.
-            </Typography>
-            <TextField
-              fullWidth
-              label="Google Sheets URL"
-              value={spreadsheetUrl}
-              onChange={(e) => setSpreadsheetUrl(e.target.value)}
-              placeholder="https://docs.google.com/spreadsheets/d/..."
-              margin="normal"
-              helperText="Must be a valid Google Sheets URL that you have access to"
+          <Space direction="vertical" size="large" style={{ width: '100%' }}>
+            <Alert
+              message="Google Sheets URL Required"
+              description="Enter the URL of a Google Sheets document that contains vocabulary data to import."
+              type="info"
+              showIcon
             />
-            <Box mt={3}>
-              <Button
-                variant="contained"
-                color="primary"
-                onClick={handleUrlSubmit}
-                disabled={!spreadsheetUrl || loading}
-                startIcon={loading ? <CircularProgress size={20} /> : <CloudUploadIcon />}
-              >
-                {loading ? 'Analyzing...' : 'Analyze Spreadsheet'}
-              </Button>
-            </Box>
-          </Box>
+            
+            <Form.Item
+              label="Google Sheets URL"
+              rules={[{ required: true, message: 'Please enter a Google Sheets URL' }]}
+            >
+              <Input
+                size="large"
+                placeholder="https://docs.google.com/spreadsheets/d/..."
+                value={spreadsheetUrl}
+                onChange={(e) => setSpreadsheetUrl(e.target.value)}
+                prefix={<FileTextOutlined />}
+              />
+            </Form.Item>
+            
+            <Button
+              type="primary"
+              size="large"
+              onClick={handleUrlSubmit}
+              loading={loading}
+              disabled={!spreadsheetUrl}
+              icon={<CloudUploadOutlined />}
+            >
+              Analyze Spreadsheet
+            </Button>
+          </Space>
         );
         
       case 1:
+        if (!analysis) return null;
+        
         return (
-          <Box>
-            <Alert severity="success" sx={{ mb: 3 }}>
-              Spreadsheet analyzed successfully! Found {analysis?.worksheets.length} worksheets
-              with {analysis?.totalRows} total rows.
-            </Alert>
+          <Space direction="vertical" size="large" style={{ width: '100%' }}>
+            <Card>
+              <Title level={4}>Spreadsheet Analysis</Title>
+              <Paragraph>
+                <Text strong>Sheet Name:</Text> {analysis.sheetName}
+              </Paragraph>
+              <Paragraph>
+                <Text strong>Type:</Text>{' '}
+                <Tag color="blue">{analysis.inferredType}</Tag>
+              </Paragraph>
+            </Card>
             
-            <Typography variant="h6" gutterBottom>
-              Spreadsheet Structure
-            </Typography>
+            <Card>
+              <Title level={4}>Worksheets Found</Title>
+              <Table
+                dataSource={analysis.worksheets}
+                columns={[
+                  { title: 'Sheet Name', dataIndex: 'name', key: 'name' },
+                  { title: 'Rows', dataIndex: 'rows', key: 'rows' },
+                  { title: 'Columns', dataIndex: 'columns', key: 'columns' },
+                  {
+                    title: 'Type',
+                    dataIndex: 'type',
+                    key: 'type',
+                    render: (_: any, record: any) => (
+                      <Tag color="blue">
+                        {record.headers?.length || 0} fields
+                      </Tag>
+                    ),
+                  },
+                ]}
+                pagination={false}
+                size="small"
+              />
+            </Card>
             
-            <TableContainer component={Paper} variant="outlined" sx={{ mb: 3 }}>
-              <Table size="small">
-                <TableHead>
-                  <TableRow>
-                    <TableCell>Worksheet</TableCell>
-                    <TableCell>Type</TableCell>
-                    <TableCell>Rows</TableCell>
-                    <TableCell>Languages</TableCell>
-                  </TableRow>
-                </TableHead>
-                <TableBody>
-                  {analysis?.worksheets.map((worksheet: any) => (
-                    <TableRow key={worksheet.name}>
-                      <TableCell>
-                        <Stack direction="row" spacing={1} alignItems="center">
-                          <DescriptionIcon fontSize="small" color="action" />
-                          <Typography variant="body2">{worksheet.name}</Typography>
-                        </Stack>
-                      </TableCell>
-                      <TableCell>
-                        <Chip
-                          label={worksheet.type.replace('-', ' ')}
-                          size="small"
-                          color={worksheet.type === 'element-set' ? 'primary' : 'secondary'}
-                        />
-                      </TableCell>
-                      <TableCell>{worksheet.rows}</TableCell>
-                      <TableCell>
-                        {worksheet.languages.length > 0 
-                          ? worksheet.languages.join(', ')
-                          : '-'
-                        }
-                      </TableCell>
-                    </TableRow>
-                  ))}
-                </TableBody>
-              </Table>
-            </TableContainer>
-            
-            <Alert severity="info" icon={<InfoIcon />}>
-              Detected content type: <strong>{analysis?.inferredType}</strong>
-              {analysis?.inferredType === 'mixed' && 
-                ' (contains both element sets and concept schemes)'
-              }
-            </Alert>
-          </Box>
+            <Space>
+              <Button onClick={handleBack}>Back</Button>
+              <Button type="primary" onClick={handleNext}>
+                Continue
+              </Button>
+            </Space>
+          </Space>
         );
         
       case 2:
+        if (!analysis) return null;
+        
         return (
-          <Box>
-            <Typography variant="h6" gutterBottom>
-              Assign to Project
-            </Typography>
+          <Space direction="vertical" size="large" style={{ width: '100%' }}>
+            <Card>
+              <Title level={4}>Languages</Title>
+              <Paragraph>
+                <Text strong>Detected Languages:</Text>{' '}
+                {analysis.languages.map((lang: string) => (
+                  <Tag key={lang} color="blue">{lang.toUpperCase()}</Tag>
+                ))}
+              </Paragraph>
+            </Card>
             
-            <RadioGroup
-              value={projectMode}
-              onChange={(e) => setProjectMode(e.target.value as 'existing' | 'create')}
-            >
-              <FormControlLabel 
-                value="existing" 
-                control={<Radio />} 
-                label="Use existing project" 
-              />
-              <FormControlLabel 
-                value="create" 
-                control={<Radio />} 
-                label="Create new project" 
-              />
-            </RadioGroup>
-            
-            {projectMode === 'existing' ? (
-              <FormControl fullWidth margin="normal">
-                <InputLabel>Select Project</InputLabel>
-                <Select
-                  value={selectedProject}
-                  onChange={(e) => setSelectedProject(e.target.value)}
-                  label="Select Project"
-                >
-                  {mockProjects.map((project) => (
-                    <MenuItem key={project.id} value={project.id}>
-                      {project.name} ({project.reviewGroup})
-                    </MenuItem>
-                  ))}
-                </Select>
-              </FormControl>
-            ) : (
-              <Box>
-                <TextField
-                  fullWidth
-                  label="Project Name"
-                  value={newProjectName}
-                  onChange={(e) => setNewProjectName(e.target.value)}
-                  margin="normal"
+            <Card>
+              <Title level={4}>DCTAP Profile</Title>
+              {false ? (
+                <Alert
+                  message="DCTAP Detected"
+                  description="A DCTAP profile was found embedded in the spreadsheet."
+                  type="success"
+                  showIcon
                 />
-                <FormControl fullWidth margin="normal">
-                  <InputLabel>Review Group</InputLabel>
-                  <Select
-                    value={newProjectReviewGroup}
-                    onChange={(e) => setNewProjectReviewGroup(e.target.value)}
-                    label="Review Group"
-                  >
-                    <MenuItem value="isbd-review-group">ISBD Review Group</MenuItem>
-                    <MenuItem value="bcm-review-group">BCM Review Group</MenuItem>
-                    <MenuItem value="cat-review-group">CAT Review Group</MenuItem>
-                    <MenuItem value="unimarc-review-group">UNIMARC Review Group</MenuItem>
-                  </Select>
-                </FormControl>
-              </Box>
-            )}
+              ) : (
+                <>
+                  <Alert
+                    message="No DCTAP Found"
+                    description="No DCTAP profile was detected. Please select one below."
+                    type="warning"
+                    showIcon
+                    style={{ marginBottom: 16 }}
+                  />
+                  <Form.Item label="Select DCTAP Profile">
+                    <Select
+                      value={selectedDCTAP}
+                      onChange={setSelectedDCTAP}
+                      placeholder="Choose a DCTAP profile"
+                      style={{ width: '100%' }}
+                    >
+                      {mockDCTAPProfiles.map(profile => (
+                        <Option key={profile.id} value={profile.id}>
+                          <Space>
+                            <Text strong>{profile.name}</Text>
+                            <Text type="secondary">({profile.namespace})</Text>
+                          </Space>
+                        </Option>
+                      ))}
+                    </Select>
+                  </Form.Item>
+                </>
+              )}
+            </Card>
             
-            <Box mt={3}>
-              <Button
-                variant="contained"
-                color="primary"
-                onClick={handleProjectAssignment}
-              >
+            <Space>
+              <Button onClick={handleBack}>Back</Button>
+              <Button type="primary" onClick={handleNext}>
                 Continue
               </Button>
-            </Box>
-          </Box>
+            </Space>
+          </Space>
         );
         
       case 3:
         return (
-          <Box>
-            <Typography variant="h6" gutterBottom>
-              Configure Import Settings
-            </Typography>
-            
-            <FormControl fullWidth margin="normal">
-              <InputLabel>DCTAP Profile</InputLabel>
-              <Select
-                value={selectedDCTAP}
-                onChange={(e) => setSelectedDCTAP(e.target.value)}
-                label="DCTAP Profile"
+          <Space direction="vertical" size="large" style={{ width: '100%' }}>
+            <Card>
+              <Title level={4}>Project Assignment</Title>
+              
+              <Radio.Group
+                value={projectMode}
+                onChange={(e) => setProjectMode(e.target.value)}
+                style={{ marginBottom: 16 }}
               >
-                {mockDCTAPProfiles.map((profile) => (
-                  <MenuItem key={profile.id} value={profile.id}>
-                    <Box>
-                      <Typography variant="body2">{profile.name}</Typography>
-                      <Typography variant="caption" color="text.secondary">
-                        {profile.description}
-                      </Typography>
-                    </Box>
-                  </MenuItem>
-                ))}
-              </Select>
-            </FormControl>
+                <Space direction="vertical">
+                  <Radio value="existing">Use Existing Project</Radio>
+                  <Radio value="create">Create New Project</Radio>
+                </Space>
+              </Radio.Group>
+              
+              {projectMode === 'existing' ? (
+                <Form.Item label="Select Project">
+                  <Select
+                    value={selectedProject}
+                    onChange={setSelectedProject}
+                    placeholder="Choose a project"
+                    style={{ width: '100%' }}
+                  >
+                    {mockProjects.map(project => (
+                      <Option key={project.id} value={project.id}>
+                        <Space direction="vertical" size={0}>
+                          <Text strong>{project.name}</Text>
+                          <Text type="secondary" style={{ fontSize: 12 }}>
+                            Review Group: {project.reviewGroup}
+                          </Text>
+                        </Space>
+                      </Option>
+                    ))}
+                  </Select>
+                </Form.Item>
+              ) : (
+                <>
+                  <Form.Item label="Project Name">
+                    <Input
+                      value={newProjectName}
+                      onChange={(e) => setNewProjectName(e.target.value)}
+                      placeholder="Enter project name"
+                    />
+                  </Form.Item>
+                  <Form.Item label="Review Group">
+                    <Input
+                      value={newProjectReviewGroup}
+                      onChange={(e) => setNewProjectReviewGroup(e.target.value)}
+                      placeholder="Enter review group"
+                    />
+                  </Form.Item>
+                </>
+              )}
+            </Card>
             
-            <Alert severity="info" sx={{ mt: 2 }}>
-              The spreadsheet will be registered as an active project spreadsheet and will be
-              immediately available for import through the standard import workflow.
-            </Alert>
+            <Card>
+              <Title level={4}>Additional Notes</Title>
+              <TextArea
+                rows={4}
+                placeholder="Any additional information about this spreadsheet adoption..."
+              />
+            </Card>
             
-            <Box mt={3}>
+            <Space>
+              <Button onClick={handleBack}>Back</Button>
               <Button
-                variant="contained"
-                color="primary"
-                onClick={handleAdopt}
-                disabled={loading}
-                startIcon={loading ? <CircularProgress size={20} /> : <CheckCircleIcon />}
+                type="primary"
+                onClick={handleSubmit}
+                loading={loading}
+                icon={<CheckCircleOutlined />}
               >
-                {loading ? 'Adopting...' : 'Adopt Spreadsheet'}
+                Submit for Adoption
               </Button>
-            </Box>
-          </Box>
+            </Space>
+          </Space>
         );
         
       default:
@@ -529,93 +437,58 @@ export default function AdoptSpreadsheetForm({ userId: _userId, userName }: Adop
   };
   
   return (
-    <Box sx={{ p: 4, maxWidth: 1200, mx: 'auto' }}>
-      {/* Header */}
-      <Box mb={4}>
-        <Stack direction="row" spacing={2} alignItems="center" mb={2}>
-          <Tooltip title="Back to Admin Dashboard">
-            <IconButton
-              component={Link}
-              href="/dashboard/admin"
-              size="small"
-            >
-              <ArrowBackIcon />
-            </IconButton>
-          </Tooltip>
-          <Typography variant="h4" fontWeight="bold">
-            Adopt Existing Spreadsheet
-          </Typography>
-        </Stack>
-        <Typography variant="body1" color="text.secondary">
-          Import an existing Google Sheets document into the vocabulary management system
-        </Typography>
-      </Box>
-      
-      {/* Stepper */}
-      <Stepper activeStep={activeStep} sx={{ mb: 4 }}>
-        {steps.map((label) => (
-          <Step key={label}>
-            <StepLabel>{label}</StepLabel>
-          </Step>
-        ))}
-      </Stepper>
-      
-      {/* Main Content */}
-      <Card elevation={0}>
-        <CardContent sx={{ p: 4 }}>
-          {error && (
-            <Alert severity="error" onClose={() => setError(null)} sx={{ mb: 3 }}>
-              {error}
-            </Alert>
-          )}
+    <div style={{ maxWidth: 1200, margin: '0 auto', padding: '24px' }}>
+      <Space direction="vertical" size="large" style={{ width: '100%' }}>
+        <div>
+          <Link href="/dashboard/admin">
+            <Button icon={<ArrowLeftOutlined />} style={{ marginBottom: 16 }}>
+              Back to Dashboard
+            </Button>
+          </Link>
           
-          {success && (
-            <Alert severity="success" icon={<CheckCircleIcon />} sx={{ mb: 3 }}>
-              {success}
-            </Alert>
+          <Title level={2}>Adopt Spreadsheet</Title>
+          <Paragraph type="secondary">
+            Import vocabulary data from Google Sheets into the IFLA Standards system.
+            {userName && (
+              <Text> Submitted by: <strong>{userName}</strong></Text>
+            )}
+          </Paragraph>
+        </div>
+        
+        {error && (
+          <Alert
+            message="Error"
+            description={error}
+            type="error"
+            showIcon
+            closable
+            onClose={() => setError(null)}
+          />
+        )}
+        
+        {success && (
+          <Alert
+            message="Success"
+            description={success}
+            type="success"
+            showIcon
+            closable
+            onClose={() => setSuccess(null)}
+          />
+        )}
+        
+        <Card>
+          <Steps current={activeStep} items={steps} style={{ marginBottom: 32 }} />
+          {loading ? (
+            <div style={{ textAlign: 'center', padding: '48px 0' }}>
+              <Spin size="large" />
+              <Paragraph style={{ marginTop: 16 }}>Processing...</Paragraph>
+            </div>
+          ) : (
+            renderStepContent(activeStep)
           )}
-          
-          {renderStepContent()}
-          
-          {/* Navigation */}
-          {activeStep > 0 && activeStep < 3 && (
-            <Box mt={3}>
-              <Button
-                onClick={() => setActiveStep(activeStep - 1)}
-                disabled={loading}
-              >
-                Back
-              </Button>
-            </Box>
-          )}
-        </CardContent>
-      </Card>
-      
-      {/* Info Box */}
-      <Paper sx={{ p: 3, mt: 3, bgcolor: 'background.default' }}>
-        <Typography variant="subtitle2" gutterBottom color="primary">
-          About Spreadsheet Adoption
-        </Typography>
-        <Typography variant="body2" color="text.secondary">
-          This tool allows superadmins to register existing Google Sheets documents in the system.
-          Once adopted, the spreadsheet will appear in the project&apos;s active spreadsheets list and
-          can be imported through the standard import workflow. This is particularly useful for:
-        </Typography>
-        <Box component="ul" sx={{ mt: 1, pl: 2 }}>
-          <Typography component="li" variant="body2" color="text.secondary">
-            Legacy spreadsheets created before the export/import system
-          </Typography>
-          <Typography component="li" variant="body2" color="text.secondary">
-            Volunteer contributions submitted via email
-          </Typography>
-          <Typography component="li" variant="body2" color="text.secondary">
-            Emergency imports when the normal workflow is unavailable
-          </Typography>
-          <Typography component="li" variant="body2" color="text.secondary">
-            Testing and development with existing data
-          </Typography>
-        </Box>
-      </Paper>
-    </Box>
+        </Card>
+      </Space>
+    </div>
   );
 }

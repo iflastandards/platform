@@ -1,12 +1,12 @@
 import {
-  Home,
-  Assignment as ProjectIcon,
-  Folder as FolderIcon,
-  Task as TaskIcon,
-  RateReview as ReviewIcon,
-  Translate as TranslateIcon,
-  Build as ToolsIcon,
-} from '@mui/icons-material';
+  HomeOutlined,
+  ProjectOutlined,
+  FolderOutlined,
+  CheckSquareOutlined,
+  FileTextOutlined,
+  TranslationOutlined,
+  ToolOutlined,
+} from '@ant-design/icons';
 
 export interface DashboardNavigation {
   id: string;
@@ -22,48 +22,48 @@ export function getAuthorNavigation(): DashboardNavigation[] {
       id: 'overview',
       label: 'Overview',
       href: '/dashboard/author',
-      icon: Home,
+      icon: HomeOutlined,
     },
     {
       id: 'projects',
       label: 'My Projects',
       href: '/dashboard/author/projects',
-      icon: ProjectIcon,
+      icon: ProjectOutlined,
       badge: () => 0, // TODO: Dynamic count from user projects
     },
     {
       id: 'namespaces',
       label: 'Namespaces',
       href: '/dashboard/author/namespaces',
-      icon: FolderIcon,
+      icon: FolderOutlined,
       badge: () => 0, // TODO: Dynamic count from accessible namespaces
     },
     {
       id: 'tasks',
       label: 'Active Tasks',
       href: '/dashboard/author/tasks',
-      icon: TaskIcon,
+      icon: CheckSquareOutlined,
       badge: () => 6, // TODO: Dynamic count
     },
     {
       id: 'review',
       label: 'Review Queue',
       href: '/dashboard/author/review',
-      icon: ReviewIcon,
+      icon: FileTextOutlined,
       badge: () => 3, // TODO: Dynamic count
     },
     {
       id: 'translation',
       label: 'Translation Tasks',
       href: '/dashboard/author/translation',
-      icon: TranslateIcon,
+      icon: TranslationOutlined,
       badge: () => 2, // TODO: Dynamic count
     },
     {
       id: 'tools',
       label: 'Tools & Resources',
       href: '/dashboard/author/tools',
-      icon: ToolsIcon,
+      icon: ToolOutlined,
     },
   ];
 }

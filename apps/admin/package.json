@@ -18,7 +18,7 @@
     "generate:openapi": "tsx scripts/generate-openapi.ts"
   },
   "dependencies": {
-    "@mui/icons-material": "*",
+    "@ant-design/icons": "*",
     "@octokit/auth-app": "*",
     "@octokit/rest": "*",
     "svix": "*"

@@ -1,8 +1,10 @@
 'use client';
 
 import React from 'react';
-import { Typography, Box } from '@mui/material';
+import { Typography } from 'antd';
 import { ActionGrid, ManagementAction } from './ActionGrid';
+
+const { Title, Text } = Typography;
 
 interface SiteSettingsPageProps {
   siteKey: string;
@@ -43,17 +45,15 @@ const settingsActions: ManagementAction[] = [
 
 export function SiteSettingsPage({ siteKey }: SiteSettingsPageProps) {
   return (
-    <Box>
-      <Box sx={{ mb: 3 }}>
-        <Typography variant="h4" gutterBottom component="h1">
-          Site Settings
-        </Typography>
-        <Typography variant="body1" color="textSecondary">
+    <div>
+      <div style={{ marginBottom: 24 }}>
+        <Title level={2}>Site Settings</Title>
+        <Text type="secondary">
           Configure settings, appearance, and deployment for {siteKey.toUpperCase()}
-        </Typography>
-      </Box>
+        </Text>
+      </div>
 
       <ActionGrid actions={settingsActions} />
-    </Box>
+    </div>
   );
 }

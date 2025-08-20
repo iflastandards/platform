@@ -2,19 +2,16 @@
 
 import React from 'react';
 import {
-  Box,
   Typography,
   List,
-  ListItem,
-  ListItemText,
-  ListItemIcon,
-  IconButton,
-  Chip,
-} from '@mui/material';
+  Button,
+  Tag,
+  Space,
+} from 'antd';
 import {
-  Edit as EditIcon,
-  Assignment as ProjectIcon,
-} from '@mui/icons-material';
+  EditOutlined,
+  ProjectOutlined,
+} from '@ant-design/icons';
 import Link from 'next/link';
 import { AppUser } from '@/lib/clerk-github-auth';
 
@@ -22,6 +19,8 @@ interface SharedProjectsPageProps {
   user: AppUser;
   role: 'author' | 'editor';
 }
+
+const { Title, Text } = Typography;
 
 export function SharedProjectsPage({ user, role }: SharedProjectsPageProps) {
   const userProjects = Object.values(user.projects);
@@ -44,11 +43,11 @@ export function SharedProjectsPage({ user, role }: SharedProjectsPageProps) {
 
   // Get role color for authors only (editors use primary)
   const getRoleColor = (projectRole: string) => {
-    if (role === 'editor') return 'primary';
+    if (role === 'editor') return 'blue';
     
     switch (projectRole) {
-      case 'reviewer': return 'secondary';
-      case 'translator': return 'info';
+      case 'reviewer': return 'purple';
+      case 'translator': return 'cyan';
       default: return 'default';
     }
   };
@@ -68,50 +67,48 @@ export function SharedProjectsPage({ user, role }: SharedProjectsPageProps) {
   };
 
   return (
-    <Box>
-      <Typography variant="h4" component="h1" gutterBottom>
-        My Projects
-      </Typography>
-      <List>
-        {filteredProjects.map((project) => (
-          <ListItem key={project.number} divider>
-            <ListItemIcon>
-              <ProjectIcon />
-            </ListItemIcon>
-            <ListItemText
-              primary={project.title}
-              secondary={
-                <span style={{ display: 'flex', gap: 8, alignItems: 'center', marginTop: 4 }}>
-                  <Chip
-                    label={getRoleDisplay(project.role)}
-                    size="small"
-                    color={getRoleColor(project.role) as any}
-                  />
-                  <Typography variant="caption" color="text.secondary" component="span">
+    <div>
+      <Title level={2} style={{ marginBottom: 24 }}>My Projects</Title>
+      <List
+        dataSource={filteredProjects}
+        renderItem={(project) => (
+          <List.Item
+            actions={[
+              <Link key="edit" href={`/projects/${project.number}`}>
+                <Button
+                  icon={<EditOutlined />}
+                  size="small"
+                  aria-label={role === 'author' ? `View ${project.title} project` : `Edit ${project.title}`}
+                />
+              </Link>,
+            ]}
+          >
+            <List.Item.Meta
+              avatar={<ProjectOutlined style={{ fontSize: 20 }} />}
+              title={project.title}
+              description={
+                <Space>
+                  <Tag color={getRoleColor(project.role)}>
+                    {getRoleDisplay(project.role)}
+                  </Tag>
+                  <Text type="secondary" style={{ fontSize: 12 }}>
                     {project.namespaces.length} namespaces
-                  </Typography>
-                </span>
+                  </Text>
+                </Space>
               }
             />
-            <IconButton
-              component={Link}
-              href={`/projects/${project.number}`}
-              size="small"
-              aria-label={role === 'author' ? `View ${project.title} project` : `Edit ${project.title}`}
-            >
-              <EditIcon />
-            </IconButton>
-          </ListItem>
-        ))}
-        {filteredProjects.length === 0 && (
-          <ListItem>
-            <ListItemText
-              primary={getEmptyMessage().primary}
-              secondary={getEmptyMessage().secondary}
-            />
-          </ListItem>
+          </List.Item>
         )}
-      </List>
-    </Box>
+        locale={{
+          emptyText: (
+            <div>
+              <Text strong>{getEmptyMessage().primary}</Text>
+              <br />
+              <Text type="secondary">{getEmptyMessage().secondary}</Text>
+            </div>
+          ),
+        }}
+      />
+    </div>
   );
 }

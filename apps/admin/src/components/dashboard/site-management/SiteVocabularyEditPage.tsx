@@ -2,18 +2,20 @@
 
 import React from 'react';
 import {
-  Box,
   Card,
-  CardContent,
   Typography,
-  TextField,
+  Input,
   Button,
-  Stack,
+  Space,
   Alert,
-  CircularProgress,
-} from '@mui/material';
+  Spin,
+  Form,
+} from 'antd';
 import { useRouter } from 'next/navigation';
 import { useQuery } from '@tanstack/react-query';
+
+const { Title, Text } = Typography;
+const { TextArea } = Input;
 
 interface SiteVocabularyEditPageProps {
   siteKey: string;
@@ -30,6 +32,7 @@ interface Vocabulary {
 
 export function SiteVocabularyEditPage({ siteKey, vocabularyId }: SiteVocabularyEditPageProps) {
   const router = useRouter();
+  const [form] = Form.useForm();
 
   // Mock data fetching - replace with actual API call
   const { data: vocabulary, isLoading, error } = useQuery({
@@ -53,93 +56,106 @@ export function SiteVocabularyEditPage({ siteKey, vocabularyId }: SiteVocabulary
     router.push(`/dashboard/${siteKey}/content/vocabularies`);
   };
 
-  const handleSubmit = (event: React.FormEvent) => {
-    event.preventDefault();
+  const handleSubmit = (values: any) => {
     // TODO: Implement vocabulary update logic
-    console.log('Updating vocabulary:', vocabularyId, 'for site:', siteKey);
+    console.log('Updating vocabulary:', vocabularyId, 'for site:', siteKey, values);
     // After successful update, redirect back to vocabularies list
     router.push(`/dashboard/${siteKey}/content/vocabularies`);
   };
 
   if (isLoading) {
     return (
-      <Box display="flex" justifyContent="center" alignItems="center" minHeight="200px">
-        <CircularProgress />
-      </Box>
+      <div style={{ 
+        display: 'flex', 
+        justifyContent: 'center', 
+        alignItems: 'center', 
+        minHeight: '200px' 
+      }}>
+        <Spin size="large" />
+      </div>
     );
   }
 
   if (error || !vocabulary) {
     return (
-      <Alert severity="error">
-        <Typography variant="h6">Error Loading Vocabulary</Typography>
-        <Typography variant="body2">
-          Unable to load vocabulary {vocabularyId} for site {siteKey}
-        </Typography>
-      </Alert>
+      <Alert
+        message="Error Loading Vocabulary"
+        description={`Unable to load vocabulary ${vocabularyId} for site ${siteKey}`}
+        type="error"
+        showIcon
+      />
     );
   }
 
   return (
-    <Box>
-      <Box sx={{ mb: 3 }}>
-        <Typography variant="h4" gutterBottom component="h1">
-          Edit Vocabulary: {vocabulary.name}
-        </Typography>
-        <Typography variant="body1" color="textSecondary">
+    <div>
+      <div style={{ marginBottom: 24 }}>
+        <Title level={2}>Edit Vocabulary: {vocabulary.name}</Title>
+        <Text type="secondary">
           Modify vocabulary settings for {siteKey.toUpperCase()}
-        </Typography>
-      </Box>
+        </Text>
+      </div>
 
-      <Alert severity="info" sx={{ mb: 3 }}>
-        <Typography variant="body2">
-          This is a placeholder form. In the full implementation, this would connect to the vocabulary management system.
-        </Typography>
-      </Alert>
+      <Alert
+        message="This is a placeholder form. In the full implementation, this would connect to the vocabulary management system."
+        type="info"
+        style={{ marginBottom: 24 }}
+      />
 
       <Card>
-        <CardContent>
-          <form onSubmit={handleSubmit}>
-            <Stack spacing={3}>
-              <TextField
-                label="Vocabulary Name"
-                required
-                fullWidth
-                defaultValue={vocabulary.name}
-              />
-              
-              <TextField
-                label="Description"
-                multiline
-                rows={3}
-                fullWidth
-                defaultValue={vocabulary.description}
-              />
-              
-              <TextField
-                label="Namespace URI"
-                fullWidth
-                defaultValue={vocabulary.namespaceUri}
-              />
-              
-              <TextField
-                label="Prefix"
-                fullWidth
-                defaultValue={vocabulary.prefix}
-              />
+        <Form
+          form={form}
+          layout="vertical"
+          onFinish={handleSubmit}
+          autoComplete="off"
+          initialValues={{
+            name: vocabulary.name,
+            description: vocabulary.description,
+            namespaceUri: vocabulary.namespaceUri,
+            prefix: vocabulary.prefix,
+          }}
+        >
+          <Form.Item
+            label="Vocabulary Name"
+            name="name"
+            rules={[{ required: true, message: 'Please enter a vocabulary name' }]}
+          >
+            <Input />
+          </Form.Item>
 
-              <Stack direction="row" spacing={2} justifyContent="flex-end">
-                <Button variant="outlined" onClick={handleCancel}>
-                  Cancel
-                </Button>
-                <Button variant="contained" type="submit">
-                  Save Changes
-                </Button>
-              </Stack>
-            </Stack>
-          </form>
-        </CardContent>
+          <Form.Item
+            label="Description"
+            name="description"
+          >
+            <TextArea rows={3} />
+          </Form.Item>
+
+          <Form.Item
+            label="Namespace URI"
+            name="namespaceUri"
+          >
+            <Input />
+          </Form.Item>
+
+          <Form.Item
+            label="Prefix"
+            name="prefix"
+          >
+            <Input />
+          </Form.Item>
+
+          <Form.Item>
+            <Space style={{ display: 'flex', justifyContent: 'flex-end' }}>
+              <Button onClick={handleCancel}>
+                Cancel
+              </Button>
+              <Button type="primary" htmlType="submit">
+                Save Changes
+              </Button>
+            </Space>
+          </Form.Item>
+        </Form>
       </Card>
-    </Box>
+    </div>
   );
 }

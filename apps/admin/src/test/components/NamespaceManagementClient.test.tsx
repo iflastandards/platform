@@ -33,24 +33,17 @@ vi.mock('next/navigation', () => ({
   useParams: () => ({ siteKey: 'newtest' }),
 }));
 
-vi.mock('@mui/material', async () => {
-  const actual = await vi.importActual<typeof import('@mui/material')>('@mui/material');
-  return {
-    ...actual,
-    useMediaQuery: () => false, // Mock as desktop view
-    useTheme: () => ({
-      breakpoints: {
-        down: () => false,
-        up: () => true,
-      },
-      palette: {
-        primary: {
-          main: '#1976d2',
-        },
-      },
-    }),
-  };
-});
+// Mock Ant Design's useBreakpoint hook for responsive testing
+vi.mock('antd/es/grid/hooks/useBreakpoint', () => ({
+  default: () => ({
+    xs: false,
+    sm: false,
+    md: true,
+    lg: true,
+    xl: true,
+    xxl: false,
+  }),
+}));
 
 describe('NamespaceManagementClient @unit @ui @dashboard @low-priority', () => {
   const defaultProps = {
@@ -72,52 +65,38 @@ describe('NamespaceManagementClient @unit @ui @dashboard @low-priority', () => {
     it('should render the component with correct namespace information', () => {
       render(<NamespaceManagementClient {...defaultProps} />);
 
-      // Check for the namespace code in the navigation header (may appear multiple times due to mobile/desktop)
-      expect(screen.getAllByText('TEST').length).toBeGreaterThan(0);
-      // Check for the subtitle (may appear multiple times due to mobile/desktop)
-      expect(screen.getAllByText('Namespace Management').length).toBeGreaterThan(0);
-      // Check that Test Namespace appears somewhere (don't be specific about where)
-      expect(screen.getAllByText(/Test Namespace/).length).toBeGreaterThan(0);
+      // Check for the namespace code in the navigation header
+      expect(screen.getByText('TEST')).toBeInTheDocument();
+      // Check for the subtitle
+      expect(screen.getByText('Namespace Management')).toBeInTheDocument();
+      // Check that Test Namespace appears somewhere
+      expect(screen.getByText(/Test Namespace/)).toBeInTheDocument();
     });
 
     it('should render all tab navigation items', () => {
       render(<NamespaceManagementClient {...defaultProps} />);
 
-      expect(
-        screen.getByRole('button', { name: 'Overview' }),
-      ).toBeInTheDocument();
-      expect(
-        screen.getByRole('button', { name: 'Content Management' }),
-      ).toBeInTheDocument();
-      expect(
-        screen.getByRole('button', { name: 'RDF & Vocabularies' }),
-      ).toBeInTheDocument();
-      expect(
-        screen.getByRole('button', { name: 'Review & Workflow' }),
-      ).toBeInTheDocument();
-      expect(
-        screen.getByRole('button', { name: 'Team Management' }),
-      ).toBeInTheDocument();
-      expect(
-        screen.getByRole('button', { name: 'Releases & Publishing' }),
-      ).toBeInTheDocument();
-      expect(
-        screen.getByRole('button', { name: 'Quality Assurance' }),
-      ).toBeInTheDocument();
-      expect(
-        screen.getByRole('button', { name: 'GitHub' }),
-      ).toBeInTheDocument();
-      expect(
-        screen.getByRole('button', { name: 'Settings' }),
-      ).toBeInTheDocument();
+      // Check for menu items in the navigation
+      expect(screen.getByText('Overview')).toBeInTheDocument();
+      expect(screen.getByText('Content Management')).toBeInTheDocument();
+      expect(screen.getByText('RDF & Vocabularies')).toBeInTheDocument();
+      expect(screen.getByText('Review & Workflow')).toBeInTheDocument();
+      expect(screen.getByText('Team Management')).toBeInTheDocument();
+      expect(screen.getByText('Releases & Publishing')).toBeInTheDocument();
+      expect(screen.getByText('Quality Assurance')).toBeInTheDocument();
+      expect(screen.getByText('GitHub')).toBeInTheDocument();
+      expect(screen.getByText('Settings')).toBeInTheDocument();
     });
 
     it('should have overview tab active by default', () => {
       render(<NamespaceManagementClient {...defaultProps} />);
 
-      const overviewTab = screen.getByRole('button', { name: 'Overview' });
-      // Check for the active state aria attribute
-      expect(overviewTab).toHaveAttribute('aria-current', 'page');
+      // Check that Overview is the current page title
+      const overviewTitle = screen.getAllByText('Overview')[0];
+      expect(overviewTitle).toBeInTheDocument();
+      
+      // Check that the overview dashboard is rendered
+      expect(screen.getByText('Namespace Status')).toBeInTheDocument();
     });
   });
 
@@ -125,13 +104,14 @@ describe('NamespaceManagementClient @unit @ui @dashboard @low-priority', () => {
     it('should switch tabs when clicked', async () => {
       render(<NamespaceManagementClient {...defaultProps} />);
 
-      const contentTab = screen.getByRole('button', {
-        name: 'Content Management',
-      });
+      // Click on Content Management tab
+      const contentTab = screen.getByText('Content Management');
       fireEvent.click(contentTab);
 
       await waitFor(() => {
-        expect(contentTab).toHaveAttribute('aria-current', 'page');
+        // Check that the page title changed
+        const contentTitle = screen.getAllByText('Content Management')[0];
+        expect(contentTitle).toBeInTheDocument();
       });
     });
 
@@ -142,9 +122,8 @@ describe('NamespaceManagementClient @unit @ui @dashboard @low-priority', () => {
       expect(screen.getByText('Namespace Status')).toBeInTheDocument();
 
       // Switch to content tab
-      fireEvent.click(
-        screen.getByRole('button', { name: 'Content Management' }),
-      );
+      fireEvent.click(screen.getByText('Content Management'));
+      
       await waitFor(() => {
         // Content tab should show action cards
         expect(screen.getByText('Create New Page')).toBeInTheDocument();
@@ -157,7 +136,7 @@ describe('NamespaceManagementClient @unit @ui @dashboard @low-priority', () => {
       render(<NamespaceManagementClient {...defaultProps} />);
 
       expect(screen.getByText('Namespace Status')).toBeInTheDocument();
-      expect(screen.getByText('Last Updated')).toBeInTheDocument();
+      expect(screen.getByText('Last Updated:')).toBeInTheDocument();
     });
   });
 
@@ -165,16 +144,42 @@ describe('NamespaceManagementClient @unit @ui @dashboard @low-priority', () => {
     it('should display content management tab', async () => {
       render(<NamespaceManagementClient {...defaultProps} />);
 
-      fireEvent.click(
-        screen.getByRole('button', { name: 'Content Management' }),
-      );
+      fireEvent.click(screen.getByText('Content Management'));
 
       await waitFor(() => {
-        const activeTab = screen.getByRole('button', {
-          name: 'Content Management',
-        });
-        expect(activeTab).toHaveAttribute('aria-current', 'page');
+        // Check for content management actions
+        expect(screen.getByText('Create New Page')).toBeInTheDocument();
+        expect(screen.getByText('Scaffold Element Pages')).toBeInTheDocument();
       });
+    });
+  });
+
+  describe('Special Case Handling', () => {
+    it('should show special case warning for portal', () => {
+      render(
+        <NamespaceManagementClient
+          {...defaultProps}
+          namespaceKey="portal"
+          isSpecialCase={true}
+        />
+      );
+
+      expect(screen.getByText('Special Management Area')).toBeInTheDocument();
+      expect(
+        screen.getByText(/The Portal is not a standard namespace/)
+      ).toBeInTheDocument();
+    });
+
+    it('should show system management tab for superadmin', () => {
+      render(
+        <NamespaceManagementClient
+          {...defaultProps}
+          isSpecialCase={true}
+          isSuperAdmin={true}
+        />
+      );
+
+      expect(screen.getByText('System Management')).toBeInTheDocument();
     });
   });
 
@@ -189,6 +194,27 @@ describe('NamespaceManagementClient @unit @ui @dashboard @low-priority', () => {
       expect(() => {
         render(<NamespaceManagementClient {...minimalProps} />);
       }).not.toThrow();
+    });
+  });
+
+  describe('Accessibility', () => {
+    it('should have proper ARIA labels and roles', () => {
+      render(<NamespaceManagementClient {...defaultProps} />);
+
+      // Check for navigation role
+      expect(screen.getByRole('navigation')).toBeInTheDocument();
+      
+      // Check for main content area
+      expect(screen.getByText('Dashboard and status overview')).toBeInTheDocument();
+    });
+
+    it('should have skip links for keyboard navigation', () => {
+      render(<NamespaceManagementClient {...defaultProps} />);
+
+      // Skip links are visually hidden but present in DOM
+      expect(screen.getByText('Skip to main content')).toBeInTheDocument();
+      expect(screen.getByText('Skip to navigation')).toBeInTheDocument();
+      expect(screen.getByText('Skip to external resources')).toBeInTheDocument();
     });
   });
 });

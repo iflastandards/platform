@@ -2,58 +2,66 @@
 
 import React from 'react';
 import {
-  Box,
   Typography,
   List,
-  ListItem,
-  ListItemText,
-  ListItemIcon,
-  Chip,
-} from '@mui/material';
+  Badge,
+  Tag,
+} from 'antd';
 import {
-  RateReview as ReviewIcon,
-  Translate as TranslateIcon,
-  Comment as CommentIcon,
-} from '@mui/icons-material';
+  FileSearchOutlined,
+  TranslationOutlined,
+  CommentOutlined,
+} from '@ant-design/icons';
+
+const { Title } = Typography;
 
 export function AuthorTasksPage() {
+  const tasks = [
+    {
+      icon: <FileSearchOutlined style={{ fontSize: 20 }} />,
+      title: 'Pending Reviews',
+      description: '3 items waiting for review',
+      count: 3,
+      color: 'warning',
+    },
+    {
+      icon: <TranslationOutlined style={{ fontSize: 20 }} />,
+      title: 'Translation Tasks',
+      description: '2 items need translation',
+      count: 2,
+      color: 'processing',
+    },
+    {
+      icon: <CommentOutlined style={{ fontSize: 20 }} />,
+      title: 'Comments to Address',
+      description: '1 comment needs response',
+      count: 1,
+      color: 'error',
+    },
+  ];
+
   return (
-    <Box>
-      <Typography variant="h4" component="h1" gutterBottom>
-        Active Tasks
-      </Typography>
-      <List>
-        <ListItem divider>
-          <ListItemIcon>
-            <ReviewIcon />
-          </ListItemIcon>
-          <ListItemText
-            primary="Pending Reviews"
-            secondary="3 items waiting for review"
-          />
-          <Chip label="3" color="warning" size="small" />
-        </ListItem>
-        <ListItem divider>
-          <ListItemIcon>
-            <TranslateIcon />
-          </ListItemIcon>
-          <ListItemText
-            primary="Translation Tasks"
-            secondary="2 items need translation"
-          />
-          <Chip label="2" color="info" size="small" />
-        </ListItem>
-        <ListItem>
-          <ListItemIcon>
-            <CommentIcon />
-          </ListItemIcon>
-          <ListItemText
-            primary="Comments to Address"
-            secondary="1 comment needs response"
-          />
-          <Chip label="1" color="error" size="small" />
-        </ListItem>
-      </List>
-    </Box>
+    <div>
+      <Title level={4} style={{ marginBottom: 24 }}>Active Tasks</Title>
+      <List
+        itemLayout="horizontal"
+        dataSource={tasks}
+        renderItem={(item) => (
+          <List.Item
+            extra={
+              <Badge count={item.count}>
+                <Tag color={item.color}>{item.count}</Tag>
+              </Badge>
+            }
+          >
+            <List.Item.Meta
+              avatar={item.icon}
+              title={item.title}
+              description={item.description}
+            />
+          </List.Item>
+        )}
+      />
+    </div>
   );
 }

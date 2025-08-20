@@ -1,9 +1,12 @@
 'use client';
 
 import { useParams, useRouter } from 'next/navigation';
-import { Container, Box, Typography, Button, Breadcrumbs, Link } from '@mui/material';
-import { ArrowBack as BackIcon } from '@mui/icons-material';
+import { Typography, Button, Breadcrumb } from 'antd';
+import { ArrowLeftOutlined } from '@ant-design/icons';
 import ImportJobStatus from '@/components/import/ImportJobStatus';
+import Link from 'next/link';
+
+const { Title, Text } = Typography;
 
 export default function ImportStatusPage() {
   const params = useParams();
@@ -16,37 +19,41 @@ export default function ImportStatusPage() {
   };
 
   return (
-    <Container maxWidth="md" sx={{ py: 4 }}>
-      <Box mb={3}>
-        <Breadcrumbs aria-label="breadcrumb">
-          <Link href="/dashboard" color="inherit">
-            Dashboard
-          </Link>
-          <Link href="/import" color="inherit">
-            Import
-          </Link>
-          <Typography color="text.primary">Status</Typography>
-        </Breadcrumbs>
-      </Box>
+    <div style={{ maxWidth: 896, margin: '0 auto', padding: '32px 24px' }}>
+      <div style={{ marginBottom: 24 }}>
+        <Breadcrumb
+          items={[
+            {
+              title: <Link href="/dashboard">Dashboard</Link>,
+            },
+            {
+              title: <Link href="/import">Import</Link>,
+            },
+            {
+              title: 'Status',
+            },
+          ]}
+        />
+      </div>
 
-      <Box mb={4}>
+      <div style={{ marginBottom: 32 }}>
         <Button
-          startIcon={<BackIcon />}
+          icon={<ArrowLeftOutlined />}
           onClick={() => router.back()}
-          sx={{ mb: 2 }}
+          style={{ marginBottom: 16 }}
         >
           Back
         </Button>
         
-        <Typography variant="h4" fontWeight="bold" gutterBottom>
+        <Title level={3} style={{ marginBottom: 8 }}>
           Import Status
-        </Typography>
-        <Typography variant="body1" color="text.secondary">
+        </Title>
+        <Text type="secondary">
           Monitor the progress of your vocabulary import
-        </Typography>
-      </Box>
+        </Text>
+      </div>
 
       <ImportJobStatus jobId={jobId} onComplete={handleComplete} />
-    </Container>
+    </div>
   );
 }

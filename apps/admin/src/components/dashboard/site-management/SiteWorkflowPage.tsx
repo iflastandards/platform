@@ -1,8 +1,10 @@
 'use client';
 
 import React from 'react';
-import { Typography, Box } from '@mui/material';
+import { Typography } from 'antd';
 import { ActionGrid, ManagementAction } from './ActionGrid';
+
+const { Title, Text } = Typography;
 
 interface SiteWorkflowPageProps {
   siteKey: string;
@@ -43,17 +45,15 @@ const workflowActions: ManagementAction[] = [
 
 export function SiteWorkflowPage({ siteKey }: SiteWorkflowPageProps) {
   return (
-    <Box>
-      <Box sx={{ mb: 3 }}>
-        <Typography variant="h4" gutterBottom component="h1">
-          Review & Workflow
-        </Typography>
-        <Typography variant="body1" color="textSecondary">
+    <div>
+      <div style={{ marginBottom: 24 }}>
+        <Title level={2}>Review & Workflow</Title>
+        <Text type="secondary">
           Manage content review processes and workflow for {siteKey.toUpperCase()}
-        </Typography>
-      </Box>
+        </Text>
+      </div>
 
       <ActionGrid actions={workflowActions} />
-    </Box>
+    </div>
   );
 }

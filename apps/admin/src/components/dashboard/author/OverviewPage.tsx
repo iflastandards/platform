@@ -2,22 +2,19 @@
 
 import React from 'react';
 import {
-  Box,
   Typography,
   Card,
-  CardContent,
-  CardHeader,
   Button,
   Alert,
-  AlertTitle,
-} from '@mui/material';
-import Grid from '@mui/material/Grid';
+  Row,
+  Col,
+} from 'antd';
 import {
-  RateReview as ReviewIcon,
-  Translate as TranslateIcon,
-  Folder as FolderIcon,
-  Timeline as TimelineIcon,
-} from '@mui/icons-material';
+  FileSearchOutlined,
+  TranslationOutlined,
+  FolderOutlined,
+  ClockCircleOutlined,
+} from '@ant-design/icons';
 import Link from 'next/link';
 import { AppUser } from '@/lib/clerk-github-auth';
 
@@ -25,85 +22,85 @@ interface AuthorOverviewPageProps {
   user: AppUser;
 }
 
+const { Title, Text } = Typography;
+
 export function AuthorOverviewPage({ user }: AuthorOverviewPageProps) {
   return (
     <>
       {/* Header */}
-      <Box sx={{ mb: 4 }}>
-        <Typography variant="h4" gutterBottom component="h1">
-          Author Dashboard
-        </Typography>
-        <Typography variant="body1" color="text.secondary">
+      <div style={{ marginBottom: 32 }}>
+        <Title level={2}>Author Dashboard</Title>
+        <Text type="secondary">
           Welcome, {user.name}. You have authoring responsibilities for content review and translation.
-        </Typography>
-      </Box>
+        </Text>
+      </div>
 
       {/* Alert for Author Responsibilities */}
-      <Alert severity="info" sx={{ mb: 3 }}>
-        <AlertTitle>Author Responsibilities</AlertTitle>
-        As an author, you contribute to content quality through reviews and translations. 
-        Your expertise helps maintain the accuracy and accessibility of IFLA standards.
-      </Alert>
+      <Alert
+        message="Author Responsibilities"
+        description="As an author, you contribute to content quality through reviews and translations. Your expertise helps maintain the accuracy and accessibility of IFLA standards."
+        type="info"
+        showIcon
+        style={{ marginBottom: 24 }}
+      />
 
       {/* Quick Actions */}
-      <Card sx={{ mb: 3 }}>
-        <CardHeader title="Quick Actions" />
-        <CardContent>
-          <Grid container spacing={2}>
-            <Grid size={{ xs: 12, sm: 6, md: 3 }}>
+      <Card title="Quick Actions" style={{ marginBottom: 24 }}>
+        <Row gutter={[16, 16]}>
+          <Col xs={24} sm={12} md={6}>
+            <Link href="/dashboard/author/review">
               <Button
-                component={Link}
-                href="/dashboard/author/review"
-                variant="contained"
-                startIcon={<ReviewIcon />}
-                fullWidth
-                sx={{ height: 56 }}
+                type="primary"
+                icon={<FileSearchOutlined />}
+                block
+                size="large"
+                style={{ height: 56 }}
                 aria-label="Go to review queue"
               >
                 Review Queue
               </Button>
-            </Grid>
-            <Grid size={{ xs: 12, sm: 6, md: 3 }}>
+            </Link>
+          </Col>
+          <Col xs={24} sm={12} md={6}>
+            <Link href="/dashboard/author/translation">
               <Button
-                component={Link}
-                href="/dashboard/author/translation"
-                variant="outlined"
-                startIcon={<TranslateIcon />}
-                fullWidth
-                sx={{ height: 56 }}
+                icon={<TranslationOutlined />}
+                block
+                size="large"
+                style={{ height: 56 }}
                 aria-label="Go to translation tasks"
               >
                 Translation Tasks
               </Button>
-            </Grid>
-            <Grid size={{ xs: 12, sm: 6, md: 3 }}>
+            </Link>
+          </Col>
+          <Col xs={24} sm={12} md={6}>
+            <Link href="/dashboard/author/namespaces">
               <Button
-                component={Link}
-                href="/dashboard/author/namespaces"
-                variant="outlined"
-                startIcon={<FolderIcon />}
-                fullWidth
-                sx={{ height: 56 }}
+                icon={<FolderOutlined />}
+                block
+                size="large"
+                style={{ height: 56 }}
                 aria-label="Browse namespaces"
               >
                 Browse Namespaces
               </Button>
-            </Grid>
-            <Grid size={{ xs: 12, sm: 6, md: 3 }}>
+            </Link>
+          </Col>
+          <Col xs={24} sm={12} md={6}>
+            <Link href="/cycles">
               <Button
-                component={Link}
-                href="/cycles"
-                variant="outlined"
-                startIcon={<TimelineIcon />}
-                fullWidth
-                sx={{ height: 56 }}
+                icon={<ClockCircleOutlined />}
+                block
+                size="large"
+                style={{ height: 56 }}
                 aria-label="View editorial cycles"
               >
                 Editorial Cycles
               </Button>
-            </Grid>
-          </Grid>
-        </CardContent>
+            </Link>
+          </Col>
+        </Row>
       </Card>
     </>
   );

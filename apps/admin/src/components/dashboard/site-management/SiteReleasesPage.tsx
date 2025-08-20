@@ -1,8 +1,10 @@
 'use client';
 
 import React from 'react';
-import { Typography, Box } from '@mui/material';
+import { Typography } from 'antd';
 import { ActionGrid, ManagementAction } from './ActionGrid';
+
+const { Title, Text } = Typography;
 
 interface SiteReleasesPageProps {
   siteKey: string;
@@ -43,17 +45,15 @@ const releaseActions: ManagementAction[] = [
 
 export function SiteReleasesPage({ siteKey }: SiteReleasesPageProps) {
   return (
-    <Box>
-      <Box sx={{ mb: 3 }}>
-        <Typography variant="h4" gutterBottom component="h1">
-          Releases & Publishing
-        </Typography>
-        <Typography variant="body1" color="textSecondary">
+    <div>
+      <div style={{ marginBottom: 24 }}>
+        <Title level={2}>Releases & Publishing</Title>
+        <Text type="secondary">
           Manage releases, publishing, and deployment for {siteKey.toUpperCase()}
-        </Typography>
-      </Box>
+        </Text>
+      </div>
 
       <ActionGrid actions={releaseActions} />
-    </Box>
+    </div>
   );
 }

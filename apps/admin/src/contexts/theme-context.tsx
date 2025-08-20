@@ -1,9 +1,7 @@
 'use client';
 
 import React, { createContext, useContext, useState, useEffect } from 'react';
-import { ThemeProvider as MuiThemeProvider } from '@mui/material/styles';
-import CssBaseline from '@mui/material/CssBaseline';
-import { theme as lightTheme, darkTheme } from '@/theme/mui-theme';
+import { ConfigProvider, theme as antdTheme } from 'antd';
 
 type ThemeMode = 'light' | 'dark';
 
@@ -31,14 +29,55 @@ export function ThemeProvider({ children }: { children: React.ReactNode }) {
     localStorage.setItem('theme-mode', newMode);
   };
 
-  const muiTheme = mode === 'light' ? lightTheme : darkTheme;
+  const themeConfig = {
+    algorithm:
+      mode === 'dark'
+        ? [antdTheme.darkAlgorithm, antdTheme.compactAlgorithm]
+        : [antdTheme.defaultAlgorithm, antdTheme.compactAlgorithm],
+    token: {
+      colorPrimary: '#1890ff',
+      borderRadius: 6,
+      fontFamily:
+        'Inter, -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, sans-serif',
+      // Reduce spacing globally
+      padding: 8,
+      paddingXS: 4,
+      paddingSM: 8,
+      paddingLG: 16,
+      paddingXL: 20,
+      margin: 12,
+      marginXS: 4,
+      marginSM: 8,
+      marginLG: 16,
+      marginXL: 20,
+      // Reduce control heights
+      controlHeight: 28,
+      controlHeightSM: 24,
+      controlHeightLG: 36,
+    },
+    components: {
+      Table: {
+        cellPaddingBlock: 8,
+        cellPaddingInline: 12,
+        headerBg: mode === 'dark' ? '#1f1f1f' : '#fafafa',
+      },
+      Button: {
+        paddingBlock: 4,
+        paddingInline: 12,
+      },
+      Input: {
+        paddingBlock: 4,
+        paddingInline: 8,
+      },
+      Select: {
+        controlHeight: 28,
+      },
+    },
+  };
 
   return (
     <ThemeContext.Provider value={{ mode, toggleTheme }}>
-      <MuiThemeProvider theme={muiTheme}>
-        <CssBaseline />
-        {children}
-      </MuiThemeProvider>
+      <ConfigProvider theme={themeConfig}>{children}</ConfigProvider>
     </ThemeContext.Provider>
   );
 }

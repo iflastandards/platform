@@ -5,49 +5,40 @@ import Link from 'next/link';
 import { useUser, UserButton } from '@clerk/nextjs';
 import { useTheme as useAppTheme } from '@/contexts/theme-context';
 import {
-  AppBar,
-  Toolbar,
-  Typography,
-  IconButton,
+  Layout,
+  Menu,
   Button,
-  Box,
-  Drawer,
-  List,
-  ListItem,
-  ListItemButton,
-  Collapse,
   Badge,
-  Chip,
-  useTheme,
-  useMediaQuery,
-  Divider,
-  ListItemIcon,
-  ListItemText,
-} from '@mui/material';
+  Tag,
+  Drawer,
+  Space,
+  Grid,
+} from 'antd';
 import {
-  Menu as MenuIcon,
-  Dashboard as DashboardIcon,
-  Folder as FolderIcon,
-  ExpandLess,
-  ExpandMore,
-  Notifications as NotificationsIcon,
-  Code as CodeIcon,
-  Translate as TranslateIcon,
-  RateReview as ReviewIcon,
-  GitHub as GitHubIcon,
-  Build as BuildIcon,
-  Timeline as TimelineIcon,
-  DarkMode as DarkModeIcon,
-  LightMode as LightModeIcon,
-} from '@mui/icons-material';
+  MenuOutlined,
+  DashboardOutlined,
+  FolderOutlined,
+  BellOutlined,
+  CodeOutlined,
+  TranslationOutlined,
+  CommentOutlined,
+  GithubOutlined,
+  BuildOutlined,
+  LineChartOutlined,
+  BulbOutlined,
+  BulbFilled,
+} from '@ant-design/icons';
 import { getMockGitHubData } from '@/lib/github-mock-service';
+import type { MenuProps } from 'antd';
 
-export default function Navbar() {
-  const theme = useTheme();
+const { Header } = Layout;
+const { useBreakpoint } = Grid;
+
+function Navbar() {
   const { mode, toggleTheme } = useAppTheme();
-  const isMobile = useMediaQuery(theme.breakpoints.down('md'));
+  const screens = useBreakpoint();
+  const isMobile = !screens.md;
   const [mobileOpen, setMobileOpen] = useState(false);
-  const [namespacesOpen, setNamespacesOpen] = useState(true);
 
   // Get current user from Clerk
   const { user: clerkUser, isLoaded } = useUser();
@@ -87,248 +78,172 @@ export default function Navbar() {
   const handleDrawerToggle = () => {
     setMobileOpen(!mobileOpen);
   };
-  const navigationItems = [
+
+  const menuItems: MenuProps['items'] = [
     {
-      label: 'Dashboard',
-      icon: <DashboardIcon />,
-      href: '/dashboard',
-      show: true,
+      key: 'dashboard',
+      icon: <DashboardOutlined />,
+      label: <Link href="/dashboard">Dashboard</Link>,
     },
     {
+      key: 'namespaces',
+      icon: <FolderOutlined />,
       label: 'Namespaces',
-      icon: <FolderIcon />,
-      expandable: true,
-      show: true,
       children: [
-        { label: 'ISBD', href: '/namespaces/isbd' },
-        { label: 'ISBD-M', href: '/namespaces/isbdm' },
-        { label: 'MulDiCat', href: '/namespaces/muldicat' },
-        { label: 'All Namespaces', href: '/namespaces' },
+        {
+          key: 'isbd',
+          label: <Link href="/namespaces/isbd">ISBD</Link>,
+        },
+        {
+          key: 'isbdm',
+          label: <Link href="/namespaces/isbdm">ISBD-M</Link>,
+        },
+        {
+          key: 'muldicat',
+          label: <Link href="/namespaces/muldicat">MulDiCat</Link>,
+        },
+        {
+          key: 'all-namespaces',
+          label: <Link href="/namespaces">All Namespaces</Link>,
+        },
       ],
     },
     {
-      label: 'Import Workflow',
-      icon: <CodeIcon />,
-      href: '/import',
-      show: true,
+      key: 'import',
+      icon: <CodeOutlined />,
+      label: <Link href="/import">Import Workflow</Link>,
     },
     {
-      label: 'Translation',
-      icon: <TranslateIcon />,
-      href: '/translation',
-      show: true,
+      key: 'translation',
+      icon: <TranslationOutlined />,
+      label: <Link href="/translation">Translation</Link>,
     },
     {
-      label: 'Review Queue',
-      icon: <ReviewIcon />,
-      href: '/review',
-      show: true,
-      badge: '3',
-    },
-    {
-      label: 'GitHub Integration',
-      icon: <GitHubIcon />,
-      href: '/github',
-      show: isStaff,
-    },
-    {
-      label: 'Build Pipeline',
-      icon: <BuildIcon />,
-      href: '/builds',
-      show: isStaff,
-    },
-    {
-      label: 'Editorial Cycles',
-      icon: <TimelineIcon />,
-      href: '/cycles',
-      show: isStaff,
+      key: 'review',
+      icon: <Badge count={3} size="small"><CommentOutlined /></Badge>,
+      label: <Link href="/review">Review Queue</Link>,
     },
   ];
 
+  if (isStaff) {
+    menuItems.push(
+      {
+        key: 'github',
+        icon: <GithubOutlined />,
+        label: <Link href="/github">GitHub Integration</Link>,
+      },
+      {
+        key: 'builds',
+        icon: <BuildOutlined />,
+        label: <Link href="/builds">Build Pipeline</Link>,
+      },
+      {
+        key: 'cycles',
+        icon: <LineChartOutlined />,
+        label: <Link href="/cycles">Editorial Cycles</Link>,
+      },
+    );
+  }
+
   const drawer = (
-    <Box>
-      <Toolbar />
-      <Divider />
-      <List>
-        {navigationItems
-          .filter((item) => item.show)
-          .map((item) => (
-            <React.Fragment key={item.label}>
-              {item.expandable ? (
-                <>
-                  <ListItemButton
-                    onClick={() => setNamespacesOpen(!namespacesOpen)}
-                  >
-                    <ListItemIcon>{item.icon}</ListItemIcon>
-                    <ListItemText primary={item.label} />
-                    {namespacesOpen ? <ExpandLess /> : <ExpandMore />}
-                  </ListItemButton>
-                  <Collapse in={namespacesOpen} timeout="auto" unmountOnExit>
-                    <List component="div" disablePadding>
-                      {item.children?.map((child) => (
-                        <ListItemButton
-                          key={child.label}
-                          component={Link}
-                          href={child.href}
-                          sx={{
-                            pl: 4,
-                            textDecoration: 'none',
-                            color: 'inherit',
-                          }}
-                          onClick={() => setMobileOpen(false)}
-                        >
-                          <ListItemText primary={child.label} />
-                        </ListItemButton>
-                      ))}
-                    </List>
-                  </Collapse>
-                </>
-              ) : (
-                <ListItem disablePadding>
-                  <ListItemButton
-                    component={Link}
-                    href={item.href || '#'}
-                    sx={{ textDecoration: 'none', color: 'inherit' }}
-                    onClick={() => setMobileOpen(false)}
-                  >
-                    <ListItemIcon>
-                      {item.badge ? (
-                        <Badge badgeContent={item.badge} color="primary">
-                          {item.icon}
-                        </Badge>
-                      ) : (
-                        item.icon
-                      )}
-                    </ListItemIcon>
-                    <ListItemText primary={item.label} />
-                  </ListItemButton>
-                </ListItem>
-              )}
-            </React.Fragment>
-          ))}
-      </List>
-    </Box>
+    <Menu
+      mode="inline"
+      items={menuItems}
+      style={{ height: '100%', borderRight: 0 }}
+      onClick={() => setMobileOpen(false)}
+    />
   );
 
   return (
     <>
-      <AppBar
-        position="fixed"
-        sx={{
-          zIndex: (theme) => theme.zIndex.drawer + 1,
-          backgroundColor:
-            theme.palette.mode === 'dark' ? 'background.paper' : 'primary.main',
+      <Header
+        style={{
+          position: 'fixed',
+          top: 0,
+          zIndex: 1000,
+          width: '100%',
+          display: 'flex',
+          alignItems: 'center',
+          backgroundColor: mode === 'dark' ? '#001529' : '#0066CC',
+          padding: '0 24px',
         }}
-        role="banner"
-        aria-label="Main navigation"
       >
-        <Toolbar>
-          <IconButton
-            color="inherit"
-            aria-label="Open navigation menu"
-            aria-expanded={mobileOpen}
-            aria-controls="navigation-drawer"
-            edge="start"
+        {isMobile && (
+          <Button
+            type="text"
+            icon={<MenuOutlined />}
             onClick={handleDrawerToggle}
-            sx={{ mr: 2, display: { md: 'none' } }}
-          >
-            <MenuIcon />
-          </IconButton>
+            style={{ color: 'white', marginRight: 16 }}
+            aria-label="Open navigation menu"
+          />
+        )}
 
-          <Typography
-            variant="h6"
-            noWrap
-            component="div"
-            sx={{ flexGrow: 0, mr: 4 }}
-          >
-            IFLA Admin
-          </Typography>
+        <div style={{ color: 'white', fontSize: 18, fontWeight: 500, marginRight: 32 }}>
+          IFLA Admin
+        </div>
 
+        {!isMobile && (
+          <Menu
+            theme="dark"
+            mode="horizontal"
+            items={menuItems.slice(0, 5)}
+            style={{
+              flex: 1,
+              backgroundColor: 'transparent',
+              borderBottom: 'none',
+            }}
+          />
+        )}
+
+        <Space size="middle" style={{ marginLeft: 'auto' }}>
           {!isMobile && (
-            <Box sx={{ display: 'flex', gap: 2, flexGrow: 1 }}>
-              {navigationItems
-                .filter((item) => item.show && !item.expandable)
-                .slice(0, 5)
-                .map((item) => (
-                  <Button
-                    key={item.label}
-                    component={Link}
-                    href={item.href || '#'}
-                    color="inherit"
-                    startIcon={
-                      item.badge ? (
-                        <Badge badgeContent={item.badge} color="error">
-                          {item.icon}
-                        </Badge>
-                      ) : (
-                        item.icon
-                      )
-                    }
-                    sx={{ textDecoration: 'none' }}
-                  >
-                    {item.label}
-                  </Button>
-                ))}
-            </Box>
+            <Tag
+              color={isAdmin ? 'red' : isStaff ? 'blue' : 'default'}
+            >
+              {userRole}
+            </Tag>
           )}
 
-          <Box
-            sx={{ display: 'flex', alignItems: 'center', gap: 2, ml: 'auto' }}
-          >
-            <Chip
-              label={userRole}
-              size="small"
-              color={isAdmin ? 'error' : isStaff ? 'primary' : 'default'}
-              sx={{ display: { xs: 'none', sm: 'flex' } }}
-            />
-
-            <IconButton 
-              color="inherit"
+          <Badge count={5}>
+            <Button
+              type="text"
+              icon={<BellOutlined />}
+              style={{ color: 'white' }}
               aria-label="View notifications (5 unread)"
-            >
-              <Badge badgeContent={5} color="error">
-                <NotificationsIcon />
-              </Badge>
-            </IconButton>
-
-            <IconButton 
-              onClick={toggleTheme} 
-              color="inherit"
-              aria-label={`Switch to ${mode === 'dark' ? 'light' : 'dark'} mode`}
-            >
-              {mode === 'dark' ? <LightModeIcon /> : <DarkModeIcon />}
-            </IconButton>
-
-            <UserButton 
-              afterSignOutUrl="/"
-              appearance={{
-                elements: {
-                  userButtonAvatarBox: "w-8 h-8",
-                }
-              }}
             />
-          </Box>
-        </Toolbar>
-      </AppBar>
+          </Badge>
+
+          <Button
+            type="text"
+            icon={mode === 'dark' ? <BulbFilled /> : <BulbOutlined />}
+            onClick={toggleTheme}
+            style={{ color: 'white' }}
+            aria-label={`Switch to ${mode === 'dark' ? 'light' : 'dark'} mode`}
+          />
+
+          <UserButton 
+            afterSignOutUrl="/"
+            appearance={{
+              elements: {
+                userButtonAvatarBox: "w-8 h-8",
+              }
+            }}
+          />
+        </Space>
+      </Header>
 
       <Drawer
-        variant="temporary"
+        placement="left"
         open={mobileOpen}
         onClose={handleDrawerToggle}
-        ModalProps={{
-          keepMounted: true,
-        }}
-        sx={{
-          display: { xs: 'block', md: 'none' },
-          '& .MuiDrawer-paper': { boxSizing: 'border-box', width: 240 },
-        }}
-        id="navigation-drawer"
-        aria-label="Main navigation"
+        width={240}
+        styles={{ body: { padding: 0 } }}
+        title="Navigation"
       >
-        <nav role="navigation" aria-label="Main navigation">
-          {drawer}
-        </nav>
+        {drawer}
       </Drawer>
     </>
   );
 }
+
+export default Navbar;

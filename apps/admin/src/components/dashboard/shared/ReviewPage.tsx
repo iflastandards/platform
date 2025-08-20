@@ -2,20 +2,20 @@
 
 import React from 'react';
 import {
-  Box,
   Typography,
   Alert,
-  AlertTitle,
   Button,
-} from '@mui/material';
+} from 'antd';
 import {
-  RateReview as ReviewIcon,
-} from '@mui/icons-material';
+  FileSearchOutlined,
+} from '@ant-design/icons';
 import Link from 'next/link';
 
 interface SharedReviewPageProps {
   role: 'author' | 'editor';
 }
+
+const { Title } = Typography;
 
 export function SharedReviewPage({ role }: SharedReviewPageProps) {
   const getContent = () => {
@@ -37,22 +37,23 @@ export function SharedReviewPage({ role }: SharedReviewPageProps) {
   const content = getContent();
 
   return (
-    <Box>
-      <Typography variant="h4" component="h1" gutterBottom>
-        {content.title}
-      </Typography>
-      <Alert severity="info" sx={{ mb: 2 }}>
-        <AlertTitle>{content.alertTitle}</AlertTitle>
-        {content.alertMessage}
-      </Alert>
-      <Button
-        component={Link}
-        href="/review"
-        variant="contained"
-        startIcon={<ReviewIcon />}
-      >
-        Go to Review Interface
-      </Button>
-    </Box>
+    <div>
+      <Title level={2} style={{ marginBottom: 24 }}>{content.title}</Title>
+      <Alert
+        message={content.alertTitle}
+        description={content.alertMessage}
+        type="info"
+        showIcon
+        style={{ marginBottom: 16 }}
+      />
+      <Link href="/review">
+        <Button
+          type="primary"
+          icon={<FileSearchOutlined />}
+        >
+          Go to Review Interface
+        </Button>
+      </Link>
+    </div>
   );
 }

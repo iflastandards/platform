@@ -1,4 +1,6 @@
-import { Box, Container } from '@mui/material';
+'use client';
+
+import { Layout } from 'antd';
 import Navbar from '@/components/layout/Navbar';
 
 export default function AuthenticatedLayout({
@@ -7,21 +9,19 @@ export default function AuthenticatedLayout({
   children: React.ReactNode;
 }) {
   return (
-    <>
+    <Layout style={{ minHeight: '100vh' }}>
       <Navbar />
-      <Box
-        component="main"
-        sx={{
-          flexGrow: 1,
-          bgcolor: 'background.default',
-          minHeight: '100vh',
-          pt: 8, // Toolbar height
+      <Layout.Content
+        style={{
+          padding: '24px',
+          marginTop: '64px', // Navbar height
+          backgroundColor: '#f5f5f5',
         }}
       >
-        <Container maxWidth="xl" sx={{ py: 3 }}>
+        <div style={{ maxWidth: '1440px', margin: '0 auto' }}>
           {children}
-        </Container>
-      </Box>
-    </>
+        </div>
+      </Layout.Content>
+    </Layout>
   );
 }

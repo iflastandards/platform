@@ -22,10 +22,10 @@ export default async function ReviewGroupAdminPage() {
     }
   }
 
-  // Get list of review groups where user is maintainer
-  const adminReviewGroups = user.reviewGroups
+  // Get the first review group where user is maintainer
+  const primaryReviewGroup = user.reviewGroups
     .filter(rg => rg.role === 'maintainer')
-    .map(rg => rg.slug);
+    .map(rg => rg.slug)[0] || 'ISBD';
 
-  return <RGOverviewPage reviewGroups={adminReviewGroups} />;
+  return <RGOverviewPage reviewGroupName={primaryReviewGroup} />;
 }

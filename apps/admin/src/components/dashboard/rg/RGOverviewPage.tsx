@@ -1,25 +1,24 @@
 'use client';
 
-
 import Link from 'next/link';
 import {
-  Box,
   Card,
-  CardContent,
   Typography,
-  Chip,
-  Link as MuiLink,
+  Tag,
   Button,
-  Stack,
-  useTheme,
-} from '@mui/material';
-import Grid from '@mui/material/Grid';
+  Space,
+  Row,
+  Col,
+  Statistic,
+} from 'antd';
 import {
-  PersonAdd as PersonAddIcon,
-  AddTask as AddTaskIcon,
-} from '@mui/icons-material';
-import { mockReviewGroups, getNamespacesByReviewGroup, mockNamespaces } from '@/lib/mock-data/namespaces-extended';
+  UserAddOutlined,
+  PlusCircleOutlined,
+} from '@ant-design/icons';
+import { getNamespacesByReviewGroup } from '@/lib/mock-data/namespaces-extended';
 import { reviewGroups as allReviewGroups } from '@/lib/mock-data/review-groups';
+
+const { Title, Text } = Typography;
 
 interface StatsCardProps {
   title: string;
@@ -29,25 +28,23 @@ interface StatsCardProps {
 }
 
 function StatsCard({ title, value, change, changeType }: StatsCardProps) {
-  const theme = useTheme();
   const changeColor = 
-    changeType === 'increase' ? theme.palette.success.main : 
-    changeType === 'decrease' ? theme.palette.error.main : 
-    theme.palette.text.secondary;
+    changeType === 'increase' ? '#52c41a' : 
+    changeType === 'decrease' ? '#ff4d4f' : 
+    '#8c8c8c';
   
   return (
-    <Card elevation={0}>
-      <CardContent>
-        <Typography variant="body2" color="text.secondary" gutterBottom>
-          {title}
-        </Typography>
-        <Typography variant="h4" component="div" fontWeight="bold" color="primary.main">
-          {value.toLocaleString()}
-        </Typography>
-        <Typography variant="body2" sx={{ color: changeColor, mt: 1 }}>
-          {change}
-        </Typography>
-      </CardContent>
+    <Card>
+      <Text type="secondary" style={{ display: 'block', marginBottom: 8 }}>
+        {title}
+      </Text>
+      <Statistic
+        value={value}
+        valueStyle={{ color: '#1890ff', fontWeight: 'bold' }}
+      />
+      <Text style={{ color: changeColor, marginTop: 8, display: 'block' }}>
+        {change}
+      </Text>
     </Card>
   );
 }
@@ -69,19 +66,18 @@ function ActivityItem({ action, author, time, type }: ActivityItemProps) {
   };
   
   return (
-    <Box py={2} borderBottom={1} borderColor="divider">
-      <Stack direction="row" spacing={2} alignItems="flex-start">
-        <Typography fontSize={24}>{typeIcons[type]}</Typography>
-        <Box flex={1}>
-          <Typography variant="body1" fontWeight="medium">
-            {action}
-          </Typography>
-          <Typography variant="caption" color="text.secondary">
+    <div style={{ paddingTop: 16, paddingBottom: 16, borderBottom: '1px solid #f0f0f0' }}>
+      <Space align="start" size={16}>
+        <Text style={{ fontSize: 24 }}>{typeIcons[type]}</Text>
+        <div style={{ flex: 1 }}>
+          <Text strong>{action}</Text>
+          <br />
+          <Text type="secondary" style={{ fontSize: 12 }}>
             By {author} • {time}
-          </Typography>
-        </Box>
-      </Stack>
-    </Box>
+          </Text>
+        </div>
+      </Space>
+    </div>
   );
 }
 
@@ -110,253 +106,141 @@ function NamespaceCard({ slug, name, description, status, currentVersion, color,
   const config = statusConfig[status];
   
   return (
-    <Card 
-      elevation={0} 
-      sx={{ 
-        border: 1, 
-        borderColor: 'divider', 
-        height: '100%',
-        cursor: 'pointer',
-        '&:hover': {
-          borderColor: 'primary.main',
-          boxShadow: 1,
-        }
-      }}
-      component={Link}
-      href={`/dashboard/${slug}`}
-    >
-      <CardContent>
-        <Box display="flex" justifyContent="space-between" alignItems="flex-start" mb={2}>
-          <Typography variant="h6" fontWeight="bold" sx={{ color }}>
-            {name}
-          </Typography>
-          <Chip 
-            label={config.label} 
-            color={config.color} 
-            size="small"
-            sx={{ fontWeight: 600 }}
-          />
-        </Box>
-        <Typography variant="body2" color="text.secondary" gutterBottom>
+    <Link href={`/dashboard/${slug}`}>
+      <Card 
+        hoverable
+        style={{ height: '100%' }}
+      >
+        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: 16 }}>
+          <Title level={5} style={{ color, margin: 0 }}>{name}</Title>
+          <Tag color={config.color} style={{ fontWeight: 600 }}>
+            {config.label}
+          </Tag>
+        </div>
+        <Text type="secondary" style={{ display: 'block', marginBottom: 8 }}>
           {description}
-        </Typography>
-        <Typography variant="caption" color="text.secondary" display="block" mb={2}>
+        </Text>
+        <Text type="secondary" style={{ fontSize: 12, display: 'block', marginBottom: 16 }}>
           Version {currentVersion}
-        </Typography>
+        </Text>
         
-        <Stack direction="row" spacing={2}>
-          <Box textAlign="center">
-            <Typography variant="body2" fontWeight="bold" color="primary.main">
-              {statistics.elements + statistics.concepts}
-            </Typography>
-            <Typography variant="caption" color="text.secondary">
-              Items
-            </Typography>
-          </Box>
-          <Box textAlign="center">
-            <Typography variant="body2" fontWeight="bold" color="primary.main">
-              {statistics.translations}
-            </Typography>
-            <Typography variant="caption" color="text.secondary">
-              Languages
-            </Typography>
-          </Box>
-          <Box textAlign="center">
-            <Typography variant="body2" fontWeight="bold" color="primary.main">
-              {statistics.contributors}
-            </Typography>
-            <Typography variant="caption" color="text.secondary">
-              Contributors
-            </Typography>
-          </Box>
-        </Stack>
-      </CardContent>
-    </Card>
+        <Row gutter={16}>
+          <Col span={8} style={{ textAlign: 'center' }}>
+            <Statistic
+              value={statistics.elements + statistics.concepts}
+              valueStyle={{ fontSize: 14, color: '#1890ff' }}
+            />
+            <Text type="secondary" style={{ fontSize: 10 }}>Items</Text>
+          </Col>
+          <Col span={8} style={{ textAlign: 'center' }}>
+            <Statistic
+              value={statistics.translations}
+              valueStyle={{ fontSize: 14, color: '#52c41a' }}
+            />
+            <Text type="secondary" style={{ fontSize: 10 }}>Languages</Text>
+          </Col>
+          <Col span={8} style={{ textAlign: 'center' }}>
+            <Statistic
+              value={statistics.contributors}
+              valueStyle={{ fontSize: 14, color: '#722ed1' }}
+            />
+            <Text type="secondary" style={{ fontSize: 10 }}>Contributors</Text>
+          </Col>
+        </Row>
+      </Card>
+    </Link>
   );
 }
 
 interface RGOverviewPageProps {
-  reviewGroups?: string[];
+  reviewGroupName: string;
 }
 
-export function RGOverviewPage({ reviewGroups = ['isbd'] }: RGOverviewPageProps) {
-  // Get user's review group info from both sources
-  const userReviewGroups = reviewGroups.map(rgId => {
-    // Try to find in new review groups data first
-    const newRG = allReviewGroups.find(rg => rg.id === rgId || rg.acronym === rgId.toUpperCase());
-    if (newRG) {
-      return {
-        id: newRG.id,
-        name: newRG.fullName,
-        description: newRG.description,
-        namespaces: newRG.namespaces,
-        chair: newRG.chair,
-        secretary: newRG.secretary,
-        meetingSchedule: newRG.meetingSchedule,
-        color: newRG.color,
-        memberCount: newRG.memberCount,
-      };
-    }
-    // Fallback to old mock data
-    return mockReviewGroups[rgId];
-  }).filter(Boolean);
-  
-  const userNamespaceIds = userReviewGroups.flatMap(rg => rg.namespaces || getNamespacesByReviewGroup(rg.id));
-  const userNamespaces = userNamespaceIds.map(nsId => mockNamespaces[nsId]).filter(Boolean);
+export function RGOverviewPage({ reviewGroupName = 'ISBD' }: RGOverviewPageProps) {
+  const reviewGroup = allReviewGroups.find(rg => rg.acronym === reviewGroupName) || allReviewGroups[0];
+  const namespaces = getNamespacesByReviewGroup(reviewGroupName);
   
   const stats = [
-    { title: 'My Namespaces', value: userNamespaces.length, change: 'Under your management', changeType: 'neutral' as const },
     { title: 'Active Projects', value: 4, change: '+1 this month', changeType: 'increase' as const },
-    { title: 'Team Members', value: 12, change: '+2 this quarter', changeType: 'increase' as const },
+    { title: 'Team Members', value: reviewGroup.memberCount, change: 'No change', changeType: 'neutral' as const },
+    { title: 'Namespaces', value: namespaces.length, change: '+2 this quarter', changeType: 'increase' as const },
   ];
 
   const recentActivity = [
-    { action: 'ISBD translation milestone completed by your team', author: 'Maria Editor', time: '2 hours ago', type: 'project' as const },
-    { action: 'New team member joined ISBD Review Group', author: 'John Smith', time: '1 day ago', type: 'user' as const },
-    { action: 'ISBD/M vocabulary updated', author: 'Sarah Wilson', time: '2 days ago', type: 'vocabulary' as const },
+    { action: `${reviewGroupName} translation milestone completed`, author: 'Maria Editor', time: '2 hours ago', type: 'project' as const },
+    { action: `New team member joined ${reviewGroupName} Review Group`, author: 'John Smith', time: '1 day ago', type: 'user' as const },
+    { action: `${reviewGroupName}/M vocabulary updated`, author: 'Sarah Wilson', time: '2 days ago', type: 'vocabulary' as const },
     { action: 'Review group meeting notes published', author: 'You', time: '3 days ago', type: 'project' as const },
+    { action: `${reviewGroupName} namespace export completed`, author: 'System', time: '4 days ago', type: 'namespace' as const },
   ];
-
-  const currentRG = userReviewGroups[0]; // Get the first (and usually only) review group
 
   return (
     <>
-      {/* Review Group Header */}
-      {currentRG && (
-        <Box sx={{ mb: 4 }}>
-          <Box sx={{ display: 'flex', alignItems: 'center', mb: 2 }}>
-            <Box
-              sx={{
-                width: 8,
-                height: 40,
-                backgroundColor: currentRG.color,
-                borderRadius: 1,
-                mr: 2,
-              }}
-            />
-            <Box>
-              <Typography variant="h4" fontWeight="bold">
-                {currentRG.name}
-              </Typography>
-              <Typography variant="body1" color="text.secondary">
-                {currentRG.description}
-              </Typography>
-            </Box>
-          </Box>
-          <Stack direction="row" spacing={3} sx={{ mt: 2 }}>
-            {currentRG.chair && (
-              <Typography variant="body2" color="text.secondary">
-                <strong>Chair:</strong> {currentRG.chair}
-              </Typography>
-            )}
-            {currentRG.secretary && (
-              <Typography variant="body2" color="text.secondary">
-                <strong>Secretary:</strong> {currentRG.secretary}
-              </Typography>
-            )}
-            {'memberCount' in currentRG && currentRG.memberCount && (
-              <Typography variant="body2" color="text.secondary">
-                <strong>Members:</strong> {currentRG.memberCount}
-              </Typography>
-            )}
-            {currentRG.meetingSchedule && (
-              <Typography variant="body2" color="text.secondary">
-                <strong>Meetings:</strong> {currentRG.meetingSchedule}
-              </Typography>
-            )}
-          </Stack>
-        </Box>
-      )}
+      <div style={{ marginBottom: 32 }}>
+        <Title level={2}>{reviewGroup.fullName} Dashboard</Title>
+        <Text type="secondary">Manage review group activities and namespaces</Text>
+      </div>
 
       {/* Stats Grid */}
-      <Grid container spacing={3} sx={{ mb: 4 }}>
+      <Row gutter={[24, 24]} style={{ marginBottom: 32 }}>
         {stats.map((stat) => (
-          <Grid size={{ xs: 12, sm: 6, md: 4 }} key={stat.title}>
+          <Col xs={24} sm={8} key={stat.title}>
             <StatsCard {...stat} />
-          </Grid>
+          </Col>
         ))}
-      </Grid>
+      </Row>
 
-      <Grid container spacing={3}>
-        <Grid size={{ xs: 12, lg: 8 }} key="namespaces-section">
-          <Card elevation={0}>
-            {/* My Namespaces */}
-            <CardContent>
-              <Typography variant="h6" fontWeight="bold" gutterBottom component="h2">
-                My Namespaces
-              </Typography>
-              <Grid container spacing={2}>
-                {userNamespaces.map((namespace) => (
-                  <Grid size={{ xs: 12, md: 6 }} key={namespace.id}>
-                    <NamespaceCard {...namespace} />
-                  </Grid>
-                ))}
-              </Grid>
-              <Box mt={3} pt={2} borderTop={1} borderColor="divider">
-                <MuiLink
-                  component={Link}
-                  href="/dashboard/rg/namespaces"
-                  color="primary"
-                  underline="hover"
-                  fontSize="small"
-                >
-                  Manage all namespaces →
-                </MuiLink>
-              </Box>
-            </CardContent>
+      {/* Managed Namespaces */}
+      <Card title="Managed Namespaces" style={{ marginBottom: 24 }}>
+        <Row gutter={[16, 16]}>
+          {namespaces.map((ns) => (
+            <Col xs={24} sm={12} lg={8} key={ns.slug}>
+              <NamespaceCard {...ns} />
+            </Col>
+          ))}
+        </Row>
+      </Card>
+
+      <Row gutter={[24, 24]}>
+        {/* Recent Activity */}
+        <Col xs={24} lg={16}>
+          <Card title="Recent Activity">
+            {recentActivity.map((activity, index) => (
+              <ActivityItem key={index} {...activity} />
+            ))}
+            <div style={{ marginTop: 24, paddingTop: 16, borderTop: '1px solid #f0f0f0' }}>
+              <Link href="/dashboard/rg/activity" style={{ color: '#1890ff', fontSize: 14 }}>
+                View all activity →
+              </Link>
+            </div>
           </Card>
-        </Grid>
+        </Col>
 
-        <Grid size={{ xs: 12, lg: 4 }} key="activity-section">
-          <Stack spacing={3}>
-            {/* Recent Activity & Quick Actions */}
-            {/* Recent Activity */}
-            <Card elevation={0}>
-              <CardContent>
-                <Typography variant="h6" fontWeight="bold" gutterBottom component="h2">
-                  Recent Activity
-                </Typography>
-                <Box role="feed" aria-label="Recent review group activity">
-                  {recentActivity.map((activity, index) => (
-                    <ActivityItem key={`activity-${index}-${activity.author}-${activity.time}`} {...activity} />
-                  ))}
-                </Box>
-              </CardContent>
-            </Card>
-
-            {/* Quick Actions */}
-            <Card elevation={0}>
-              <CardContent>
-                <Typography variant="h6" fontWeight="bold" gutterBottom component="h2">
-                  Quick Actions
-                </Typography>
-                <Stack spacing={2}>
-                  <Button
-                    variant="contained"
-                    fullWidth
-                    startIcon={<AddTaskIcon />}
-                    component={Link}
-                    href="/dashboard/rg/projects/new"
-                    aria-label="Start a new project"
-                  >
-                    Start New Project
-                  </Button>
-                  <Button
-                    variant="outlined"
-                    fullWidth
-                    startIcon={<PersonAddIcon />}
-                    component={Link}
-                    href="/dashboard/rg/team/invite"
-                    aria-label="Invite a team member"
-                  >
-                    Invite Team Member
-                  </Button>
-                </Stack>
-              </CardContent>
-            </Card>
-          </Stack>
-        </Grid>
-      </Grid>
+        {/* Quick Actions */}
+        <Col xs={24} lg={8}>
+          <Card title="Quick Actions">
+            <Space direction="vertical" size={12} style={{ width: '100%' }}>
+              <Link href="/dashboard/rg/projects/new">
+                <Button
+                  type="primary"
+                  block
+                  icon={<PlusCircleOutlined />}
+                >
+                  Create Project
+                </Button>
+              </Link>
+              <Link href="/dashboard/rg/members/invite">
+                <Button
+                  block
+                  icon={<UserAddOutlined />}
+                >
+                  Invite Member
+                </Button>
+              </Link>
+            </Space>
+          </Card>
+        </Col>
+      </Row>
     </>
   );
 }

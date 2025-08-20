@@ -1,14 +1,14 @@
 import {
-  Dashboard as LayoutDashboard,
-  Description as FileText,
-  Storage as Database,
-  AccountTree as GitBranch,
-  People as Users,
-  Inventory as Package,
-  Security as Shield,
-  GitHub,
-  Settings,
-} from '@mui/icons-material';
+  LayoutOutlined,
+  FileTextOutlined,
+  DatabaseOutlined,
+  BranchesOutlined,
+  TeamOutlined,
+  AppstoreOutlined,
+  SafetyCertificateOutlined,
+  GithubOutlined,
+  SettingOutlined,
+} from '@ant-design/icons';
 
 export interface DashboardNavigation {
   id: string;
@@ -24,59 +24,59 @@ export function getSiteManagementNavigation(siteKey: string): DashboardNavigatio
       id: 'overview',
       label: 'Overview',
       href: `/dashboard/${siteKey}`,
-      icon: LayoutDashboard,
+      icon: LayoutOutlined,
     },
     {
       id: 'content',
       label: 'Content Management',
       href: `/dashboard/${siteKey}/content`,
-      icon: FileText,
+      icon: FileTextOutlined,
       badge: () => 12, // TODO: Dynamic count
     },
     {
       id: 'rdf',
       label: 'RDF & Vocabularies',
       href: `/dashboard/${siteKey}/rdf`,
-      icon: Database,
+      icon: DatabaseOutlined,
     },
     {
       id: 'workflow',
       label: 'Review & Workflow',
       href: `/dashboard/${siteKey}/workflow`,
-      icon: GitBranch,
+      icon: BranchesOutlined,
       badge: () => 5, // TODO: Dynamic count
     },
     {
       id: 'team',
       label: 'Team Management',
       href: `/dashboard/${siteKey}/team`,
-      icon: Users,
+      icon: TeamOutlined,
       badge: () => 8, // TODO: Dynamic count
     },
     {
       id: 'releases',
       label: 'Releases & Publishing',
       href: `/dashboard/${siteKey}/releases`,
-      icon: Package,
+      icon: AppstoreOutlined,
     },
     {
       id: 'quality',
       label: 'Quality Assurance',
       href: `/dashboard/${siteKey}/quality`,
-      icon: Shield,
+      icon: SafetyCertificateOutlined,
     },
     {
       id: 'github',
       label: 'GitHub',
       href: `/dashboard/${siteKey}/github`,
-      icon: GitHub,
+      icon: GithubOutlined,
       badge: () => 3, // TODO: Dynamic count
     },
     {
       id: 'settings',
       label: 'Settings',
       href: `/dashboard/${siteKey}/settings`,
-      icon: Settings,
+      icon: SettingOutlined,
     },
   ];
 }

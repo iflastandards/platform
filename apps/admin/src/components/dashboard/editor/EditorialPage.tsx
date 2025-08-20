@@ -2,82 +2,74 @@
 
 import React from 'react';
 import {
-  Box,
   Typography,
   List,
-  ListItem,
-  ListItemText,
-  ListItemIcon,
-  Divider,
-} from '@mui/material';
+} from 'antd';
 import {
-  Timeline as TimelineIcon,
-  RateReview as ReviewIcon,
-  Translate as TranslateIcon,
-} from '@mui/icons-material';
+  ClockCircleOutlined,
+  FileSearchOutlined,
+  TranslationOutlined,
+} from '@ant-design/icons';
 import Link from 'next/link';
 
+const { Title, Text } = Typography;
+
 export function EditorialPage() {
+  const editorialTools = [
+    {
+      icon: <ClockCircleOutlined style={{ fontSize: 20 }} />,
+      title: 'Editorial Cycles',
+      description: 'Manage vocabulary publication cycles',
+      href: '/cycles',
+    },
+    {
+      icon: <FileSearchOutlined style={{ fontSize: 20 }} />,
+      title: 'Review Queue',
+      description: 'Pending reviews and approvals',
+      href: '/review',
+    },
+    {
+      icon: <TranslationOutlined style={{ fontSize: 20 }} />,
+      title: 'Translation Management',
+      description: 'Coordinate multilingual content',
+      href: '/translation',
+    },
+  ];
+
   return (
-    <Box>
-      <Typography variant="h4" component="h1" gutterBottom>
-        Editorial Tools
-      </Typography>
-      <List>
-        <ListItem
-          component={Link}
-          href="/cycles"
-          sx={{ 
-            textDecoration: 'none',
-            color: 'inherit',
-            '&:hover': { backgroundColor: 'action.hover' }
-          }}
-        >
-          <ListItemIcon>
-            <TimelineIcon />
-          </ListItemIcon>
-          <ListItemText
-            primary="Editorial Cycles"
-            secondary="Manage vocabulary publication cycles"
-          />
-        </ListItem>
-        <Divider />
-        <ListItem
-          component={Link}
-          href="/review"
-          sx={{ 
-            textDecoration: 'none',
-            color: 'inherit',
-            '&:hover': { backgroundColor: 'action.hover' }
-          }}
-        >
-          <ListItemIcon>
-            <ReviewIcon />
-          </ListItemIcon>
-          <ListItemText
-            primary="Review Queue"
-            secondary="Pending reviews and approvals"
-          />
-        </ListItem>
-        <Divider />
-        <ListItem
-          component={Link}
-          href="/translation"
-          sx={{ 
-            textDecoration: 'none',
-            color: 'inherit',
-            '&:hover': { backgroundColor: 'action.hover' }
-          }}
-        >
-          <ListItemIcon>
-            <TranslateIcon />
-          </ListItemIcon>
-          <ListItemText
-            primary="Translation Management"
-            secondary="Coordinate multilingual content"
-          />
-        </ListItem>
-      </List>
-    </Box>
+    <div>
+      <Title level={2} style={{ marginBottom: 24 }}>Editorial Tools</Title>
+      <List
+        itemLayout="horizontal"
+        dataSource={editorialTools}
+        renderItem={(item) => (
+          <Link
+            href={item.href}
+            style={{ textDecoration: 'none', color: 'inherit' }}
+          >
+            <List.Item
+              style={{
+                padding: '16px',
+                cursor: 'pointer',
+                borderBottom: '1px solid #f0f0f0',
+                transition: 'background-color 0.3s',
+              }}
+              onMouseEnter={(e) => {
+                e.currentTarget.style.backgroundColor = '#fafafa';
+              }}
+              onMouseLeave={(e) => {
+                e.currentTarget.style.backgroundColor = 'transparent';
+              }}
+            >
+              <List.Item.Meta
+                avatar={item.icon}
+                title={item.title}
+                description={item.description}
+              />
+            </List.Item>
+          </Link>
+        )}
+      />
+    </div>
   );
 }
