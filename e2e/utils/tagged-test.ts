@@ -3,15 +3,17 @@ import { TestTags, shouldRunInEnvironment, getTimeoutFromTags, getRetryCountFrom
 
 /**
  * Extended Playwright test with tagging support
+ * We create a custom test runner that processes tags before each test
  */
 export const test = base.extend({
-  // Auto-skip tests based on environment tags
-  auto: [async ({}, use, testInfo) => {
+  // Add a custom fixture that runs automatically
+  _autoTagProcessor: [async ({}, use, testInfo) => {
     const tags = testInfo.title.match(/@[\w-]+/g) || [];
     
     // Check if test should run in current environment
     if (!shouldRunInEnvironment(tags)) {
       testInfo.skip();
+      await use();
       return;
     }
     

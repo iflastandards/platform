@@ -205,3 +205,7 @@ pnpm nx:graph
    - Always run `pnpm test` before committing
    - Use `pnpm test:comprehensive` before creating PRs
    - For quick iteration, use `pnpm nx test [project] --watch`
+- CRITICAL RULE: always ask permission to use --no-verify on commit and push
+NEVER, EVER USE --no-verify without explicit approval or pre-instructions
+FIXING TEST FAILURES IS MORE IMPORTANT THAN A SUCCESSFUL COMMIT OR PUSH
+see @developer_notes/AI_TESTING_INSTRUCTIONS.md and @developer_notes/TESTING_QUICK_REFERENCE.md
