@@ -28,13 +28,13 @@
   },
   "dependencies": {
     "@ifla/theme": "workspace:*",
-    "node-fetch": "^3.3.2",
-    "tree-kill": "^1.2.2"
+    "node-fetch": "*",
+    "tree-kill": "*"
   },
   "devDependencies": {
-    "@types/node": "^22.16.5",
-    "tsup": "^8.5.0",
-    "typescript": "~5.8.3"
+    "@types/node": "*",
+    "tsup": "*",
+    "typescript": "*"
   },
   "keywords": [
     "ifla",

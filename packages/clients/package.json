@@ -29,15 +29,15 @@
   },
   "dependencies": {
     "@ifla/contracts": "workspace:*",
-    "@supabase/supabase-js": "^2.38.0",
-    "@octokit/rest": "^20.0.0",
-    "zod": "^3.22.4"
+    "@supabase/supabase-js": "*",
+    "@octokit/rest": "*",
+    "zod": "*"
   },
   "devDependencies": {
-    "@types/node": "^20.10.0",
-    "rimraf": "^5.0.5",
-    "tsup": "^8.0.0",
-    "typescript": "^5.3.0"
+    "@types/node": "*",
+    "rimraf": "*",
+    "tsup": "*",
+    "typescript": "*"
   },
   "publishConfig": {
     "access": "restricted"

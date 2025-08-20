@@ -17,28 +17,28 @@
     "typecheck": "tsc"
   },
   "dependencies": {
-    "@clerk/nextjs": "^6.31.3",
-    "@docusaurus/core": "3.8.1",
-    "@docusaurus/preset-classic": "3.8.1",
-    "@mdx-js/react": "^3.0.0",
+    "@clerk/nextjs": "*",
+    "@docusaurus/core": "*",
+    "@docusaurus/preset-classic": "*",
+    "@mdx-js/react": "*",
     "@redocly/openapi-core": "^2.0.6",
-    "@supabase/supabase-js": "^2.55.0",
-    "clsx": "^2.0.0",
-    "docusaurus-plugin-redoc": "^2.5.0",
-    "docusaurus-plugin-typedoc": "^1.4.2",
+    "@supabase/supabase-js": "*",
+    "clsx": "*",
+    "docusaurus-plugin-redoc": "*",
+    "docusaurus-plugin-typedoc": "*",
     "docusaurus-theme-redoc": "^2.5.0",
-    "prism-react-renderer": "^2.3.0",
-    "react": "^19.0.0",
-    "react-dom": "^19.0.0",
-    "typedoc": "^0.28.10",
+    "prism-react-renderer": "*",
+    "react": "*",
+    "react-dom": "*",
+    "typedoc": "*",
     "typedoc-plugin-markdown": "^4.8.1",
-    "typedoc-plugin-zod": "^1.4.2"
+    "typedoc-plugin-zod": "*"
   },
   "devDependencies": {
-    "@docusaurus/module-type-aliases": "3.8.1",
-    "@docusaurus/tsconfig": "3.8.1",
-    "@docusaurus/types": "3.8.1",
-    "typescript": "~5.6.2"
+    "@docusaurus/module-type-aliases": "*",
+    "@docusaurus/tsconfig": "*",
+    "@docusaurus/types": "*",
+    "typescript": "*"
   },
   "browserslist": {
     "production": [
