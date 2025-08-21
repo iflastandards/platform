@@ -3,9 +3,9 @@
  * Functions to generate dynamic mock data for testing
  */
 
-import type { Job } from '@/../../packages/contracts/schemas/Job.zod';
-import type { RdfBuild } from '@/../../packages/contracts/schemas/RdfBuild.zod';
-import rdfBuildsFixture from '@/../../packages/fixtures/rdf-builds.json';
+import type { Job } from '../../../../packages/contracts/schemas/Job.zod';
+import type { RdfBuild } from '../../../../packages/contracts/schemas/RdfBuild.zod';
+import rdfBuildsFixture from '../../../../packages/fixtures/rdf-builds.json';
 
 // In-memory storage for jobs
 export const jobStore = new Map<string, Job>();

@@ -1,5 +1,8 @@
+/**
+ * @integration @api @high-priority
+ */
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
-import { AdoptionService } from '../adoption-service';
+import { AdoptionService } from '../../../../lib/services/adoption-service';
 
 // Mock the supabase client
 vi.mock('@/lib/supabase/client', () => ({
@@ -53,7 +56,7 @@ vi.mock('csv-stringify/sync', () => ({
   ),
 }));
 
-describe('AdoptionService @unit', () => {
+describe('AdoptionService @integration', () => {
   let service: AdoptionService;
   const mockEnv = process.env;
 

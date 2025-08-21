@@ -85,7 +85,7 @@ describe('Vocabularies API Authorization @integration @api @auth @critical', () 
         expect(user).toBeDefined();
         mockClerkCurrentUser(user!);
 
-        vi.doMock('../../lib/authorization', async () = {
+        vi.doMock('../../lib/authorization', async () => {
           const actual = await vi.importActual('../../lib/authorization');
           return {
             ...actual,
@@ -121,7 +121,7 @@ describe('Vocabularies API Authorization @integration @api @auth @critical', () 
         expect(user).toBeDefined();
         mockClerkCurrentUser(user!);
 
-        vi.doMock('../../lib/authorization', async () = {
+        vi.doMock('../../lib/authorization', async () => {
           const actual = await vi.importActual('../../lib/authorization');
           return {
             ...actual,
@@ -152,7 +152,7 @@ describe('Vocabularies API Authorization @integration @api @auth @critical', () 
       });
 
       it('should deny access without authentication', async () => {
-        vi.doMock('../../lib/authorization', async () = {
+        vi.doMock('../../lib/authorization', async () => {
           const actual = await vi.importActual('../../lib/authorization');
           return {
             ...actual,

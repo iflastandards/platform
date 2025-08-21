@@ -11,19 +11,17 @@ export default defineConfig({
   test: {
     globals: true,
     environment: 'jsdom',
-    watch: false, // Ensure tests don't run in watch mode and exit properly
-    setupFiles: ['./src/test/setup.ts', './src/test/setup-msw.ts'],
+    watch: false,
+    setupFiles: ['./src/test/setup-unit.ts'], // Use unit-specific setup
     include: [
-      'src/**/*.{test,spec}.{js,mjs,cjs,ts,mts,cts,jsx,tsx}',
-      'src/**/__tests__/**/*.{js,mjs,cjs,ts,mts,cts,jsx,tsx}',
+      'src/**/*.unit.test.{js,mjs,cjs,ts,mts,cts,jsx,tsx}',
+      'src/**/__tests__/**/*.unit.test.{js,mjs,cjs,ts,mts,cts,jsx,tsx}',
     ],
     exclude: [
       'node_modules',
       'dist',
       '.next',
       'coverage',
-      '**/*.e2e.{test,spec}.{js,ts,jsx,tsx}',
-      'src/test/integration/server-dependent/**/*.{test,spec}.{js,ts,jsx,tsx}',
     ],
     coverage: {
       provider: 'v8',

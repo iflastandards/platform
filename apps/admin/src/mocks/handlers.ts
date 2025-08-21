@@ -12,12 +12,18 @@ import {
   getRandomDelay,
   updateJobStatus,
 } from './fixtures';
-import { CreateRdfBuildSchema } from '@/../../packages/contracts/schemas/RdfBuild.zod';
+import { CreateRdfBuildSchema } from '../../../../packages/contracts/schemas/RdfBuild.zod';
 import { config } from '@/config/environment';
+import { clerkHandlers } from './clerk-handlers';
 
 const API_BASE = config.env.apiBase || 'http://localhost:3000';
 
+// Combine all handlers
 export const handlers = [
+  // Clerk authentication handlers
+  ...clerkHandlers,
+
+  // Application API handlers
   // POST /api/jobs/enqueue - Create a new job
   http.post(`${API_BASE}/api/jobs/enqueue`, async ({ request }) => {
     await delay(getRandomDelay());

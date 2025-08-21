@@ -1,11 +1,10 @@
 /**
- * Unit Tests for ImportService
- * Part of the 5-level testing strategy - Level 1: Unit Tests
- * These run in pre-commit hooks and should be FAST
+ * Integration Tests for ImportService
+ * @integration @api @validation @high-priority
  */
 
 import { describe, it, expect, beforeEach, vi } from 'vitest';
-import { ImportService, type ValidationResult } from '../import-service';
+import { ImportService, type ValidationResult } from '../../../../lib/services/import-service';
 
 // Mock the database - we're testing logic, not DB integration
 const mockInsert = vi.fn();
@@ -63,7 +62,7 @@ beforeEach(() => {
   });
 });
 
-describe('ImportService - Fast Unit Tests @unit @api @validation', () => {
+describe('ImportService - Integration Tests @integration @api @validation', () => {
   beforeEach(() => {
     vi.clearAllMocks();
   });

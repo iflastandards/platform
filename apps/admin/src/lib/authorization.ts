@@ -85,9 +85,9 @@ export async function getAuthContext(): Promise<AuthContext | null> {
   const roles: UserRoles = {
     system: metadata?.role || metadata?.systemRole, // Maps to system for backward compatibility
     systemRole: metadata?.role || metadata?.systemRole,
-    reviewGroups: metadata?.reviewGroups || [],
-    teams: metadata?.teams || [],
-    translations: metadata?.translations || [],
+    reviewGroups: Array.isArray(metadata?.reviewGroups) ? metadata.reviewGroups : [],
+    teams: Array.isArray(metadata?.teams) ? metadata.teams : [],
+    translations: Array.isArray(metadata?.translations) ? metadata.translations : [],
   };
 
   // Extract email from various possible locations in Clerk session
@@ -134,7 +134,13 @@ export async function getAuthContext(): Promise<AuthContext | null> {
     return {
       userId,
       email: `${userId}@placeholder.local`,
-      roles,
+      roles: {
+        system: undefined,
+        systemRole: undefined,
+        reviewGroups: [],
+        teams: [],
+        translations: [],
+      },
     };
   }
 }

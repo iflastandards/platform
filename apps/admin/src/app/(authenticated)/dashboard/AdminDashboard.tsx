@@ -105,7 +105,7 @@ function ActivityItem({ action, author, time, type }: ActivityItemProps) {
   };
   
   return (
-    <div style={{ paddingTop: 16, paddingBottom: 16, borderBottom: '1px solid #f0f0f0' }}>
+    <article style={{ paddingTop: 16, paddingBottom: 16, borderBottom: '1px solid #f0f0f0' }}>
       <Space align="start" size="middle">
         <Typography.Text style={{ fontSize: 24 }} aria-hidden="true">
           {typeIcons[type]}
@@ -121,7 +121,7 @@ function ActivityItem({ action, author, time, type }: ActivityItemProps) {
           </div>
         </div>
       </Space>
-    </div>
+    </article>
   );
 }
 
@@ -140,7 +140,7 @@ function SystemStatusItem({ service, status }: SystemStatusItemProps) {
   const config = statusConfig[status];
   
   return (
-    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', paddingTop: 12, paddingBottom: 12 }}>
+    <div role="listitem" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', paddingTop: 12, paddingBottom: 12 }}>
       <Typography.Text type="secondary">
         {service}:
       </Typography.Text>
@@ -197,7 +197,7 @@ export default function AdminDashboard({ userRoles: _userRoles, userName: _userN
         return (
           <>
             <div style={{ marginBottom: 32 }}>
-              <Title level={2} style={{ marginBottom: 8 }}>
+              <Title level={1} style={{ marginBottom: 8 }}>
                 Admin Dashboard
               </Title>
               <Text type="secondary">
@@ -218,7 +218,7 @@ export default function AdminDashboard({ userRoles: _userRoles, userName: _userN
               {/* Recent Activity */}
               <Col xs={24} lg={16}>
                 <Card>
-                  <Title level={4} style={{ marginBottom: 16 }}>
+                  <Title level={2} style={{ marginBottom: 16 }}>
                     Recent System Activity
                   </Title>
                   <div role="feed" aria-label="Recent activity feed">
@@ -241,7 +241,7 @@ export default function AdminDashboard({ userRoles: _userRoles, userName: _userN
                 <Space direction="vertical" size="large" style={{ width: '100%' }}>
                   {/* System Status */}
                   <Card>
-                    <Title level={4} style={{ marginBottom: 16 }}>
+                    <Title level={2} style={{ marginBottom: 16 }}>
                       System Status
                     </Title>
                     <div role="list" aria-label="System service status">
@@ -253,7 +253,7 @@ export default function AdminDashboard({ userRoles: _userRoles, userName: _userN
 
                   {/* Quick Actions */}
                   <Card>
-                    <Title level={4} style={{ marginBottom: 16 }}>
+                    <Title level={2} style={{ marginBottom: 16 }}>
                       Quick Actions
                     </Title>
                     <Space direction="vertical" size="middle" style={{ width: '100%' }}>

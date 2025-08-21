@@ -1,12 +1,27 @@
 import React from 'react';
 import { render, screen, fireEvent, waitFor } from '@testing-library/react';
 import { axe, toHaveNoViolations } from 'jest-axe';
-import { describe, it, expect, beforeEach, afterEach } from 'vitest';
+import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest';
 import AuthorDashboard from '../../app/(authenticated)/dashboard/author/AuthorDashboard';
 import { AppUser } from '@/lib/clerk-github-auth';
 
 // Extend expect matchers
 expect.extend(toHaveNoViolations);
+
+// Mock window.matchMedia for Ant Design components
+Object.defineProperty(window, 'matchMedia', {
+  writable: true,
+  value: vi.fn().mockImplementation((query) => ({
+    matches: false,
+    media: query,
+    onchange: null,
+    addListener: vi.fn(), // deprecated
+    removeListener: vi.fn(), // deprecated
+    addEventListener: vi.fn(),
+    removeEventListener: vi.fn(),
+    dispatchEvent: vi.fn(),
+  })),
+});
 
 /**
  * @integration @ui @dashboard @critical
@@ -67,7 +82,7 @@ console.log = vi.fn();
       expect(screen.getByText('Content Review & Translation')).toBeInTheDocument();
 
       // Verify overview content is displayed by default
-      expect(screen.getByRole('heading', { level: 1, name: 'Author Dashboard' })).toBeInTheDocument();
+      expect(screen.getByRole('heading', { level: 2, name: 'Author Dashboard' })).toBeInTheDocument();
       expect(screen.getByText(`Welcome, ${testUser.name}. You have authoring responsibilities for content review and translation.`)).toBeInTheDocument();
 
       // Verify author responsibilities alert
@@ -92,7 +107,7 @@ console.log = vi.fn();
       render(<AuthorDashboard user={testUser} />);
 
       // Initial state - Overview tab active
-      expect(screen.getByRole('heading', { level: 1, name: 'Author Dashboard' })).toBeInTheDocument();
+      expect(screen.getByRole('heading', { level: 2, name: 'Author Dashboard' })).toBeInTheDocument();
       expect(screen.getByText('Quick Actions')).toBeInTheDocument();
 
       // Click on My Projects via menu label
@@ -100,44 +115,45 @@ console.log = vi.fn();
 
       await waitFor(() => {
         // Verify content changed to Projects tab
-        expect(screen.getByRole('heading', { level: 1, name: 'My Projects' })).toBeInTheDocument();
+        expect(screen.getByRole('heading', { level: 2, name: 'My Projects' })).toBeInTheDocument();
       });
 
       // Click on Namespaces tab
       fireEvent.click(screen.getByText(/Namespaces/));
 
       await waitFor(() => {
-        expect(screen.getByRole('heading', { level: 1, name: 'Accessible Namespaces' })).toBeInTheDocument();
+        expect(screen.getByRole('heading', { level: 2, name: 'Accessible Namespaces' })).toBeInTheDocument();
       });
 
       // Click on Active Tasks tab
       fireEvent.click(screen.getByText(/Active Tasks/));
 
       await waitFor(() => {
-        expect(screen.getByRole('heading', { level: 1, name: 'Active Tasks' })).toBeInTheDocument();
+        expect(screen.getByRole('heading', { level: 2, name: 'Active Tasks' })).toBeInTheDocument();
       });
 
       // Click on Review Queue tab
       fireEvent.click(screen.getByText(/Review Queue/));
 
       await waitFor(() => {
-        expect(screen.getByRole('heading', { level: 1, name: 'Review Queue' })).toBeInTheDocument();
+        expect(screen.getByRole('heading', { level: 2, name: 'Review Queue' })).toBeInTheDocument();
       });
 
       // Click on Translation Tasks tab
       fireEvent.click(screen.getByText(/Translation Tasks/));
 
       await waitFor(() => {
-        expect(screen.getByRole('heading', { level: 1, name: 'Translation Tasks' })).toBeInTheDocument();
+        expect(screen.getByRole('heading', { level: 2, name: 'Translation Tasks' })).toBeInTheDocument();
       });
 
       // Click on Tools 6 Resources tab
       fireEvent.click(screen.getByText('Tools 6 Resources'));
 
       await waitFor(() => {
-        expect(screen.getByRole('heading', { level: 1, name: 'Tools & Resources' })).toBeInTheDocument();
+        expect(screen.getByRole('heading', { level: 2, name: 'Tools & Resources' })).toBeInTheDocument();
       });
     });
+  });
   });
 
   describe('Real User Data Integration @integration', () => {
@@ -177,7 +193,7 @@ console.log = vi.fn();
       fireEvent.click(screen.getByText(/Namespaces/));
 
       await waitFor(() => {
-        expect(screen.getByRole('heading', { level: 1, name: 'Accessible Namespaces' })).toBeInTheDocument();
+        expect(screen.getByRole('heading', { level: 2, name: 'Accessible Namespaces' })).toBeInTheDocument();
 
         // Verify accessible namespaces are displayed as cards
         expect(screen.getByRole('heading', { level: 2, name: 'ISBD' })).toBeInTheDocument();
@@ -245,7 +261,7 @@ console.log = vi.fn();
       fireEvent.click(screen.getByText(/Active Tasks/));
 
       await waitFor(() => {
-        expect(screen.getByRole('heading', { level: 1, name: 'Active Tasks' })).toBeInTheDocument();
+        expect(screen.getByRole('heading', { level: 2, name: 'Active Tasks' })).toBeInTheDocument();
 
         // Verify task items are displayed
         expect(screen.getByText('Pending Reviews')).toBeInTheDocument();
@@ -276,7 +292,7 @@ console.log = vi.fn();
       fireEvent.click(screen.getByText(/Review Queue/));
 
       await waitFor(() => {
-        expect(screen.getByRole('heading', { level: 1, name: 'Review Queue' })).toBeInTheDocument();
+        expect(screen.getByRole('heading', { level: 2, name: 'Review Queue' })).toBeInTheDocument();
 
         // Verify review queue alert
         expect(screen.getByText('Review Queue')).toBeInTheDocument();
@@ -297,7 +313,7 @@ console.log = vi.fn();
       fireEvent.click(screen.getByText(/Translation Tasks/));
 
       await waitFor(() => {
-        expect(screen.getByRole('heading', { level: 1, name: 'Translation Tasks' })).toBeInTheDocument();
+        expect(screen.getByRole('heading', { level: 2, name: 'Translation Tasks' })).toBeInTheDocument();
 
         // Verify translation tasks alert
         expect(screen.getByText('Translation Tasks')).toBeInTheDocument();
@@ -318,7 +334,7 @@ console.log = vi.fn();
       fireEvent.click(screen.getByText('Tools 6 Resources'));
 
       await waitFor(() => {
-        expect(screen.getByRole('heading', { level: 1, name: 'Tools & Resources' })).toBeInTheDocument();
+        expect(screen.getByRole('heading', { level: 2, name: 'Tools & Resources' })).toBeInTheDocument();
 
         // Verify tool links
         const reviewInterfaceLink = screen.getByRole('link', { name: /Review Interface.*Approve, reject, and comment on content/ });
@@ -362,7 +378,7 @@ console.log = vi.fn();
       fireEvent.click(projectsTab);
 
       await waitFor(() => {
-        expect(screen.getByRole('heading', { level: 1, name: 'My Projects' })).toBeInTheDocument();
+        expect(screen.getByRole('heading', { level: 2, name: 'My Projects' })).toBeInTheDocument();
       });
     });
 
@@ -413,14 +429,14 @@ console.log = vi.fn();
       render(<AuthorDashboard user={testUser} />);
 
       // Verify heading levels are properly structured
-      const h1Heading = screen.getByRole('heading', { level: 1, name: 'Author Dashboard' });
+      const h1Heading = screen.getByRole('heading', { level: 2, name: 'Author Dashboard' });
       expect(h1Heading).toBeInTheDocument();
 
       // Navigate to namespaces to check h2 headings
       fireEvent.click(screen.getByRole('button', { name: /Namespaces/ }));
 
       await waitFor(() => {
-        const namespaceH1 = screen.getByRole('heading', { level: 1, name: 'Accessible Namespaces' });
+        const namespaceH1 = screen.getByRole('heading', { level: 2, name: 'Accessible Namespaces' });
         expect(namespaceH1).toBeInTheDocument();
         
         const namespaceH2s = screen.getAllByRole('heading', { level: 2 });
@@ -489,7 +505,7 @@ console.log = vi.fn();
       render(<AuthorDashboard user={testUser} />);
 
       // All tabs should have specific handlers, but test fallback just in case
-      expect(screen.getByRole('heading', { level: 1, name: 'Author Dashboard' })).toBeInTheDocument();
+      expect(screen.getByRole('heading', { level: 2, name: 'Author Dashboard' })).toBeInTheDocument();
     });
   });
 });

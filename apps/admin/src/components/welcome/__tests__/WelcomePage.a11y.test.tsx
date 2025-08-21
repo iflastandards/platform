@@ -39,7 +39,7 @@ describe('WelcomePage Accessibility @integration @accessibility @ui @high-priori
     expect(mainHeading?.textContent).toContain('IFLA Standards Management Toolkit');
     
     // Check for section headings
-    const sectionHeadings = container.querySelectorAll('h4');
+    const sectionHeadings = container.querySelectorAll('h2');
     expect(sectionHeadings.length).toBeGreaterThan(0);
   });
 
@@ -55,7 +55,7 @@ describe('WelcomePage Accessibility @integration @accessibility @ui @high-priori
     const { container } = render(<WelcomePage />);
     
     // Check for main element
-    const main = container.querySelector('main');
+    const main = container.querySelector('main, [role="main"]');
     expect(main).toBeTruthy();
     
     // Check for header element

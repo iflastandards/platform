@@ -9,7 +9,6 @@ import {
   createTestRequest,
   extractResponseData,
   TestAssertions,
-  testAuthorizationMatrix,
 } from '../../test-config/clerk-test-helpers';
 import { TestUsers } from '../../test-config/clerk-test-users';
 

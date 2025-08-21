@@ -8,7 +8,7 @@
     "dev": "next dev --port 3007",
     "start": "next start --port 3007",
     "test": "vitest run",
-    "test:unit": "vitest run --exclude='**/*integration*'",
+    "test:unit": "vitest run --config=vitest.config.unit.ts",
     "test:integration": "vitest run --config=vitest.config.integration.ts",
     "test:server-dependent": "vitest run --config=vitest.config.server-dependent.ts",
     "test:watch": "vitest",

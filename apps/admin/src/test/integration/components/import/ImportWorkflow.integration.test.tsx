@@ -1,13 +1,12 @@
 /**
- * Unit Tests for ImportWorkflow Component
- * Part of the 5-level testing strategy - Level 1: Unit Tests
- * These are fast tests that run in pre-commit
+ * Integration Tests for ImportWorkflow Component
+ * @integration @ui @high-priority
  */
 
 import React from 'react';
 import { describe, it, expect, vi } from 'vitest';
 import { render, screen } from '@testing-library/react';
-import ImportWorkflow from '../ImportWorkflow';
+import ImportWorkflow from '../../../../app/(authenticated)/import/ImportWorkflow';
 
 // Mock next/navigation
 vi.mock('next/navigation', () => ({

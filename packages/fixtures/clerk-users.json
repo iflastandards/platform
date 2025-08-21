@@ -1,0 +1,140 @@
+{
+  "superadmin": {
+    "id": "user_2zsI76wuc6kilY2CVPB0vOOLXWk",
+    "email": "superadmin+clerk_test@example.com",
+    "firstName": null,
+    "lastName": null,
+    "fullName": null,
+    "publicMetadata": {
+      "roles": [
+        "superadmin"
+      ],
+      "systemRole": "admin"
+    },
+    "privateMetadata": {},
+    "createdAt": 1752513183624,
+    "updatedAt": 1755297962839
+  },
+  "rgadmin": {
+    "id": "user_2zsI22BmfFg4ZHGmGXJkDqDb8cO",
+    "email": "rg_admin+clerk_test@example.com",
+    "firstName": null,
+    "lastName": null,
+    "fullName": null,
+    "publicMetadata": {
+      "role": "admin",
+      "teams": [],
+      "reviewGroups": [
+        {
+          "role": "admin",
+          "reviewGroupId": "isbd"
+        }
+      ],
+      "translations": []
+    },
+    "privateMetadata": {},
+    "createdAt": 1752513142000,
+    "updatedAt": 1754790176539
+  },
+  "nsadmin": {
+    "id": "user_313tItcDXXPSSyBLjCSRJq8ZqoZ",
+    "email": "ns_admin+clerk_test@example.com",
+    "firstName": null,
+    "lastName": null,
+    "fullName": null,
+    "publicMetadata": {
+      "role": "admin",
+      "teams": [
+        {
+          "role": "admin",
+          "teamId": "isbd-namespace-admin",
+          "namespaces": [
+            "isbd",
+            "isbdm"
+          ],
+          "reviewGroup": "isbd"
+        }
+      ],
+      "reviewGroups": [],
+      "translations": []
+    },
+    "privateMetadata": {},
+    "createdAt": 1754764507439,
+    "updatedAt": 1754831401739
+  },
+  "editor": {
+    "id": "user_2zsIAhLtHKrYZ3A4DSw3SsfjeId",
+    "email": "editor+clerk_test@example.com",
+    "firstName": null,
+    "lastName": null,
+    "fullName": null,
+    "publicMetadata": {
+      "role": "editor",
+      "teams": [
+        {
+          "role": "editor",
+          "teamId": "isbd-team-1",
+          "namespaces": [
+            "isbd",
+            "isbdm"
+          ],
+          "reviewGroup": "isbd"
+        }
+      ],
+      "reviewGroups": [],
+      "translations": []
+    },
+    "privateMetadata": {},
+    "createdAt": 1752513211051,
+    "updatedAt": 1754519247926
+  },
+  "author": {
+    "id": "user_2zsIENGRT0Rw0ZZh9XR7DD1cxX3",
+    "email": "author+clerk_test@example.com",
+    "firstName": null,
+    "lastName": null,
+    "fullName": null,
+    "publicMetadata": {
+      "role": "editor",
+      "teams": [
+        {
+          "role": "author",
+          "teamId": "lrm-team-1",
+          "namespaces": [
+            "lrm"
+          ],
+          "reviewGroup": "bcm"
+        }
+      ],
+      "reviewGroups": [],
+      "translations": []
+    },
+    "privateMetadata": {},
+    "createdAt": 1752513241272,
+    "updatedAt": 1754790177485
+  },
+  "translator": {
+    "id": "user_2zsIHLeAdgRI9hexJd6MJMBKXD8",
+    "email": "translator+clerk_test@example.com",
+    "firstName": null,
+    "lastName": null,
+    "fullName": null,
+    "publicMetadata": {
+      "role": "translator",
+      "teams": [],
+      "reviewGroups": [],
+      "translations": [
+        {
+          "language": "fr",
+          "namespaces": [
+            "isbd",
+            "lrm"
+          ]
+        }
+      ]
+    },
+    "privateMetadata": {},
+    "createdAt": 1752513264019,
+    "updatedAt": 1754519352581
+  }
+}

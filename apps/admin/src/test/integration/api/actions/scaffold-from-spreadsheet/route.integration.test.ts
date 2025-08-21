@@ -6,7 +6,7 @@
 
 import { describe, it, expect, beforeEach, vi } from 'vitest';
 import { NextRequest } from 'next/server';
-import { POST, GET } from '../route';
+import { POST, GET } from '../../../../../app/api/actions/scaffold-from-spreadsheet/route';
 import { currentUser } from '@clerk/nextjs/server';
 
 // Mock dependencies at the boundary

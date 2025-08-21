@@ -99,7 +99,7 @@ function NamespaceStatusCard({
     >
       <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: 16 }}>
         <div>
-          <Title level={4} style={{ color, marginBottom: 8 }}>
+          <Title level={3} style={{ color, marginBottom: 8 }}>
             {name}
           </Title>
           <Paragraph type="secondary" style={{ marginBottom: 8 }}>
@@ -298,6 +298,7 @@ export default function WelcomePage() {
       </header>
 
       {/* Stats Section */}
+      <main>
       <section style={{ padding: '48px 24px', maxWidth: 1200, margin: '0 auto' }}>
         <div style={{ textAlign: 'center', marginBottom: 32 }}>
           <Title level={2}>Live Platform Statistics</Title>
@@ -373,7 +374,7 @@ export default function WelcomePage() {
                     {feature.icon}
                   </div>
                   <div>
-                    <Title level={4} style={{ marginBottom: 8 }}>
+                    <Title level={3} style={{ marginBottom: 8 }}>
                       {feature.title}
                     </Title>
                     <Text type="secondary">
@@ -402,6 +403,7 @@ export default function WelcomePage() {
           ))}
         </Row>
       </section>
+      </main>
 
       {/* Footer */}
       <footer

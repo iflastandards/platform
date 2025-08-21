@@ -7,7 +7,6 @@ import { clerkClient } from '@clerk/nextjs/server';
 import { canPerformAction } from '../../lib/authorization';
 import {
   TestUsers,
-  TestUserUtils,
   clearTestUsersCache,
   getAllTestUsers,
 } from '../../test-config/clerk-test-users';

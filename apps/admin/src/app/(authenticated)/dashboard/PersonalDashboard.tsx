@@ -98,7 +98,7 @@ export default function PersonalDashboard({ user }: PersonalDashboardProps) {
               <Space wrap>
                 {user.githubUsername && (
                   <Tag
-                    icon={<GithubOutlined />}
+                    icon={<GithubOutlined aria-hidden="true" />}
                     color="default"
                   >
                     @{user.githubUsername}
@@ -106,7 +106,7 @@ export default function PersonalDashboard({ user }: PersonalDashboardProps) {
                 )}
                 {user.systemRole === 'admin' && (
                   <Tag
-                    icon={<SafetyCertificateOutlined />}
+                    icon={<SafetyCertificateOutlined aria-hidden="true" />}
                     color="blue"
                   >
                     System Admin
@@ -114,7 +114,7 @@ export default function PersonalDashboard({ user }: PersonalDashboardProps) {
                 )}
                 {user.isReviewGroupAdmin && (
                   <Tag
-                    icon={<TeamOutlined />}
+                    icon={<TeamOutlined aria-hidden="true" />}
                     color="purple"
                   >
                     Review Group Admin
@@ -148,7 +148,7 @@ export default function PersonalDashboard({ user }: PersonalDashboardProps) {
                 >
                   <div style={{ display: 'flex', alignItems: 'center', marginBottom: 16 }}>
                     <TeamOutlined style={{ marginRight: 8, color: '#1890ff', fontSize: 20 }} aria-hidden="true" />
-                    <Title id="review-groups-card" level={5} style={{ margin: 0 }}>
+                    <Title id="review-groups-card" level={3} style={{ margin: 0 }}>
                       Review Groups
                     </Title>
                   </div>
@@ -176,7 +176,7 @@ export default function PersonalDashboard({ user }: PersonalDashboardProps) {
                 >
                   <div style={{ display: 'flex', alignItems: 'center', marginBottom: 16 }}>
                     <ApartmentOutlined style={{ marginRight: 8, color: '#722ed1', fontSize: 20 }} aria-hidden="true" />
-                    <Title id="projects-card" level={5} style={{ margin: 0 }}>
+                    <Title id="projects-card" level={3} style={{ margin: 0 }}>
                       Active Projects
                     </Title>
                   </div>
@@ -204,7 +204,7 @@ export default function PersonalDashboard({ user }: PersonalDashboardProps) {
                 >
                   <div style={{ display: 'flex', alignItems: 'center', marginBottom: 16 }}>
                     <FolderOutlined style={{ marginRight: 8, color: '#52c41a', fontSize: 20 }} aria-hidden="true" />
-                    <Title id="namespaces-card" level={5} style={{ margin: 0 }}>
+                    <Title id="namespaces-card" level={3} style={{ margin: 0 }}>
                       Namespaces
                     </Title>
                   </div>
@@ -232,7 +232,7 @@ export default function PersonalDashboard({ user }: PersonalDashboardProps) {
                 >
                   <div style={{ display: 'flex', alignItems: 'center', marginBottom: 16 }}>
                     <DashboardOutlined style={{ marginRight: 8, color: '#13c2c2', fontSize: 20 }} aria-hidden="true" />
-                    <Title id="role-card" level={5} style={{ margin: 0 }}>
+                    <Title id="role-card" level={3} style={{ margin: 0 }}>
                       Your Role
                     </Title>
                   </div>
