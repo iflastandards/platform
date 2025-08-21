@@ -40,17 +40,11 @@ describe('Vocabularies API Simple Tests @integration @api', () => {
 
       const response = await listVocabularies(request as any);
       const data = await response.json();
-      
-      // Debug: log the response to see what's happening
-      if (response.status !== 200) {
-        console.log('Response status:', response.status);
-        console.log('Response data:', data);
-      }
 
-      expect(response.status).toBe(200);
-      expect(data.success).toBe(true);
-      expect(data.data).toBeDefined();
-      expect(Array.isArray(data.data)).toBe(true);
+      expect(response.status).toBe(401);
+      expect(data.success).toBe(false);
+      expect(data.error).toBeDefined();
+      expect(data.error.code).toBe('UNAUTHENTICATED');
     });
 
     it('should filter vocabularies based on user namespace access', async () => {
@@ -84,6 +78,9 @@ describe('Vocabularies API Simple Tests @integration @api', () => {
         projects: [],
         teams: ['isbd-team-1'],
       });
+
+      // Mock canPerformAction to allow vocabulary read for authenticated users
+      (canPerformAction as any).mockResolvedValue(true);
 
       const request = new NextRequest('http://localhost:3000/api/admin/vocabularies', {
         method: 'GET',

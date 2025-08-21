@@ -3,11 +3,12 @@
 import { Create, useForm } from '@refinedev/antd';
 import { Form, Input, Select, Button } from 'antd';
 import { useNavigation } from '@refinedev/core';
+import { Suspense } from 'react';
 
 /**
- * Create New RDF Build Page
+ * Create New RDF Build Page Component
  */
-export default function CreateRdfBuildPage() {
+function CreateRdfBuildPageContent() {
   const { list } = useNavigation();
   const { formProps, saveButtonProps } = useForm({
     resource: 'rdf-builds',
@@ -75,5 +76,16 @@ export default function CreateRdfBuildPage() {
         </Form.Item>
       </Form>
     </Create>
+  );
+}
+
+/**
+ * Create New RDF Build Page with Suspense wrapper
+ */
+export default function CreateRdfBuildPage() {
+  return (
+    <Suspense fallback={<div>Loading...</div>}>
+      <CreateRdfBuildPageContent />
+    </Suspense>
   );
 }

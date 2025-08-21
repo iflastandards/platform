@@ -32,15 +32,8 @@ export const test = base.extend({
   }, { auto: true }],
 });
 
-// Ensure test has all the expected methods from base
-test.describe = base.describe;
-test.beforeEach = base.beforeEach;
-test.afterEach = base.afterEach;
-test.beforeAll = base.beforeAll;
-test.afterAll = base.afterAll;
-test.skip = base.skip;
-test.only = base.only;
-test.fixme = base.fixme;
+// The test object already has all these methods from base.extend()
+// We don't need to reassign them
 
 /**
  * Helper to create a describe block with tags
@@ -53,83 +46,74 @@ export function describe(title: string, tags: string | string[], callback: () =>
 /**
  * Helper to create a smoke test
  */
-export const smokeTest = Object.assign(
-  function(title: string, callback: any) {
-    test(`${title} ${TestTags.SMOKE}`, callback);
-  },
-  {
-    describe: (title: string, callback: () => void) => {
-      test.describe(`${title} ${TestTags.SMOKE}`, callback);
-    },
-    beforeEach: test.beforeEach,
-    afterEach: test.afterEach,
-    beforeAll: test.beforeAll,
-    afterAll: test.afterAll,
-    skip: (title: string, callback: any) => {
-      test.skip(`${title} ${TestTags.SMOKE}`, callback);
-    },
-    only: (title: string, callback: any) => {
-      test.only(`${title} ${TestTags.SMOKE}`, callback);
-    },
-    fixme: (title: string, callback: any) => {
-      test.fixme(`${title} ${TestTags.SMOKE}`, callback);
-    },
-  }
-);
+export const smokeTest = function(title: string, callback: any) {
+  test(`${title} ${TestTags.SMOKE}`, callback);
+};
+
+smokeTest.describe = (title: string, callback: () => void) => {
+  test.describe(`${title} ${TestTags.SMOKE}`, callback);
+};
+smokeTest.beforeEach = test.beforeEach;
+smokeTest.afterEach = test.afterEach;
+smokeTest.beforeAll = test.beforeAll;
+smokeTest.afterAll = test.afterAll;
+smokeTest.skip = (title: string, callback: any) => {
+  test.skip(`${title} ${TestTags.SMOKE}`, callback);
+};
+smokeTest.only = (title: string, callback: any) => {
+  test.only(`${title} ${TestTags.SMOKE}`, callback);
+};
+smokeTest.fixme = (title: string, callback: any) => {
+  test.fixme(`${title} ${TestTags.SMOKE}`, callback);
+};
 
 /**
  * Helper to create an integration test
  */
-export const integrationTest = Object.assign(
-  function(title: string, callback: any) {
-    test(`${title} ${TestTags.INTEGRATION}`, callback);
-  },
-  {
-    describe: (title: string, callback: () => void) => {
-      test.describe(`${title} ${TestTags.INTEGRATION}`, callback);
-    },
-    beforeEach: test.beforeEach,
-    afterEach: test.afterEach,
-    beforeAll: test.beforeAll,
-    afterAll: test.afterAll,
-    skip: (title: string, callback: any) => {
-      test.skip(`${title} ${TestTags.INTEGRATION}`, callback);
-    },
-    only: (title: string, callback: any) => {
-      test.only(`${title} ${TestTags.INTEGRATION}`, callback);
-    },
-    fixme: (title: string, callback: any) => {
-      test.fixme(`${title} ${TestTags.INTEGRATION}`, callback);
-    },
-  }
-);
+export const integrationTest = function(title: string, callback: any) {
+  test(`${title} ${TestTags.INTEGRATION}`, callback);
+};
+
+integrationTest.describe = (title: string, callback: () => void) => {
+  test.describe(`${title} ${TestTags.INTEGRATION}`, callback);
+};
+integrationTest.beforeEach = test.beforeEach;
+integrationTest.afterEach = test.afterEach;
+integrationTest.beforeAll = test.beforeAll;
+integrationTest.afterAll = test.afterAll;
+integrationTest.skip = (title: string, callback: any) => {
+  test.skip(`${title} ${TestTags.INTEGRATION}`, callback);
+};
+integrationTest.only = (title: string, callback: any) => {
+  test.only(`${title} ${TestTags.INTEGRATION}`, callback);
+};
+integrationTest.fixme = (title: string, callback: any) => {
+  test.fixme(`${title} ${TestTags.INTEGRATION}`, callback);
+};
 
 /**
  * Helper to create an e2e test
  */
-export const e2eTest = Object.assign(
-  function(title: string, callback: any) {
-    test(`${title} ${TestTags.E2E}`, callback);
-  },
-  {
-    describe: (title: string, callback: () => void) => {
-      test.describe(`${title} ${TestTags.E2E}`, callback);
-    },
-    beforeEach: test.beforeEach,
-    afterEach: test.afterEach,
-    beforeAll: test.beforeAll,
-    afterAll: test.afterAll,
-    skip: (title: string, callback: any) => {
-      test.skip(`${title} ${TestTags.E2E}`, callback);
-    },
-    only: (title: string, callback: any) => {
-      test.only(`${title} ${TestTags.E2E}`, callback);
-    },
-    fixme: (title: string, callback: any) => {
-      test.fixme(`${title} ${TestTags.E2E}`, callback);
-    },
-  }
-);
+export const e2eTest = function(title: string, callback: any) {
+  test(`${title} ${TestTags.E2E}`, callback);
+};
+
+e2eTest.describe = (title: string, callback: () => void) => {
+  test.describe(`${title} ${TestTags.E2E}`, callback);
+};
+e2eTest.beforeEach = test.beforeEach;
+e2eTest.afterEach = test.afterEach;
+e2eTest.beforeAll = test.beforeAll;
+e2eTest.afterAll = test.afterAll;
+e2eTest.skip = (title: string, callback: any) => {
+  test.skip(`${title} ${TestTags.E2E}`, callback);
+};
+e2eTest.only = (title: string, callback: any) => {
+  test.only(`${title} ${TestTags.E2E}`, callback);
+};
+e2eTest.fixme = (title: string, callback: any) => {
+  test.fixme(`${title} ${TestTags.E2E}`, callback);
+};
 
 /**
  * Helper to create a critical test

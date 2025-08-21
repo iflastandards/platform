@@ -1,0 +1,9 @@
+dist/
+.next/
+build/
+coverage/
+output/
+.docusaurus/
+.tmp/
+.nx/
+

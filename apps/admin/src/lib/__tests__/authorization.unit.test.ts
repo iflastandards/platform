@@ -11,14 +11,16 @@ import {
   invalidateUserCache,
   requireAuth,
   auth,
-  type ResourceType
+  type ResourceType,
 } from '../authorization';
 import { type AuthContext } from '../schemas/auth.schema';
 import { getAuthCache } from '../cache/AuthCache';
 
 // Mock Clerk's currentUser
 vi.mock('@clerk/nextjs/server', () => ({
-  currentUser: vi.fn()
+  currentUser: vi.fn(),
+  // Add auth export to satisfy modules that import { auth }
+  auth: vi.fn(),
 }));
 
 // Mock the auth cache
@@ -33,9 +35,9 @@ vi.mock('../cache/AuthCache', () => ({
       hits: 0,
       misses: 0,
       hitRate: 0,
-      totalCached: 0
-    }))
-  }))
+      totalCached: 0,
+    })),
+  })),
 }));
 
 describe('Authorization Functions @unit @auth @critical', () => {
@@ -49,15 +51,22 @@ describe('Authorization Functions @unit @auth @critical', () => {
       hits: 0,
       misses: 0,
       hitRate: 0,
-      totalCached: 0
-    }))
+      totalCached: 0,
+    })),
   };
 
-  beforeEach(() => {
+  beforeEach(async () => {
     vi.clearAllMocks();
     (getAuthCache as any).mockReturnValue(mockCache);
     mockCache.getCachedAuthContext.mockReturnValue(null);
     mockCache.getCachedPermission.mockReturnValue(null);
+    // Ensure auth() returns an object, not undefined, to avoid destructuring errors
+    const { auth: clerkAuth } = await import('@clerk/nextjs/server');
+    (clerkAuth as any).mockResolvedValue({
+      userId: undefined,
+      sessionId: undefined,
+      sessionClaims: undefined,
+    });
   });
 
   afterEach(() => {
@@ -81,8 +90,8 @@ describe('Authorization Functions @unit @auth @critical', () => {
           systemRole: 'superadmin',
           reviewGroups: [],
           teams: [],
-          translations: []
-        }
+          translations: [],
+        },
       };
 
       mockCache.getCachedAuthContext.mockReturnValue(cachedContext);
@@ -100,12 +109,12 @@ describe('Authorization Functions @unit @auth @critical', () => {
         id: 'super-123',
         emailAddresses: [{ emailAddress: 'super@example.com' }],
         publicMetadata: {
-          systemRole: 'superadmin'
-        }
+          systemRole: 'superadmin',
+        },
       });
 
       const result = await getAuthContext();
-      
+
       expect(result).toEqual({
         userId: 'super-123',
         email: 'super@example.com',
@@ -114,11 +123,14 @@ describe('Authorization Functions @unit @auth @critical', () => {
           systemRole: 'superadmin',
           reviewGroups: [],
           teams: [],
-          translations: []
-        }
+          translations: [],
+        },
       });
-      
-      expect(mockCache.cacheAuthContext).toHaveBeenCalledWith('super-123', expect.any(Object));
+
+      expect(mockCache.cacheAuthContext).toHaveBeenCalledWith(
+        'super-123',
+        expect.any(Object),
+      );
     });
 
     it('should parse review group admin metadata', async () => {
@@ -129,17 +141,17 @@ describe('Authorization Functions @unit @auth @critical', () => {
         publicMetadata: {
           reviewGroups: [
             { reviewGroupId: 'isbd', role: 'admin' },
-            { reviewGroupId: 'unimarc', role: 'admin' }
-          ]
-        }
+            { reviewGroupId: 'unimarc', role: 'admin' },
+          ],
+        },
       });
 
       const result = await getAuthContext();
-      
+
       expect(result?.roles.reviewGroups).toHaveLength(2);
       expect(result?.roles.reviewGroups[0]).toEqual({
         reviewGroupId: 'isbd',
-        role: 'admin'
+        role: 'admin',
       });
     });
 
@@ -154,20 +166,20 @@ describe('Authorization Functions @unit @auth @critical', () => {
               teamId: 'team-1',
               role: 'editor',
               reviewGroup: 'isbd',
-              namespaces: ['isbd', 'isbdm']
-            }
-          ]
-        }
+              namespaces: ['isbd', 'isbdm'],
+            },
+          ],
+        },
       });
 
       const result = await getAuthContext();
-      
+
       expect(result?.roles.teams).toHaveLength(1);
       expect(result?.roles.teams[0]).toEqual({
         teamId: 'team-1',
         role: 'editor',
         reviewGroup: 'isbd',
-        namespaces: ['isbd', 'isbdm']
+        namespaces: ['isbd', 'isbdm'],
       });
     });
 
@@ -180,18 +192,18 @@ describe('Authorization Functions @unit @auth @critical', () => {
           translations: [
             {
               language: 'fr',
-              namespaces: ['isbd', 'unimarc']
-            }
-          ]
-        }
+              namespaces: ['isbd', 'unimarc'],
+            },
+          ],
+        },
       });
 
       const result = await getAuthContext();
-      
+
       expect(result?.roles.translations).toHaveLength(1);
       expect(result?.roles.translations[0]).toEqual({
         language: 'fr',
-        namespaces: ['isbd', 'unimarc']
+        namespaces: ['isbd', 'unimarc'],
       });
     });
 
@@ -203,12 +215,12 @@ describe('Authorization Functions @unit @auth @critical', () => {
         publicMetadata: {
           // Invalid structure
           teams: 'not-an-array',
-          reviewGroups: null
-        }
+          reviewGroups: null,
+        },
       });
 
       const result = await getAuthContext();
-      
+
       // Should still return a context (unvalidated for backward compatibility)
       expect(result).toBeDefined();
       // The invalid data is preserved in the unvalidated context
@@ -231,19 +243,21 @@ describe('Authorization Functions @unit @auth @critical', () => {
       (currentUser as any).mockResolvedValue({
         id: 'user-123',
         emailAddresses: [{ emailAddress: 'test@example.com' }],
-        publicMetadata: {}
+        publicMetadata: {},
       });
 
       mockCache.getCachedPermission.mockReturnValue(true);
 
-      const result = await canPerformAction('namespace', 'read', { namespaceId: 'isbd' });
-      
+      const result = await canPerformAction('namespace', 'read', {
+        namespaceId: 'isbd',
+      });
+
       expect(result).toBe(true);
       expect(mockCache.getCachedPermission).toHaveBeenCalledWith(
         'user-123',
         'namespace',
         'read',
-        { namespaceId: 'isbd' }
+        { namespaceId: 'isbd' },
       );
     });
 
@@ -253,8 +267,8 @@ describe('Authorization Functions @unit @auth @critical', () => {
         id: 'super-123',
         emailAddresses: [{ emailAddress: 'super@example.com' }],
         publicMetadata: {
-          systemRole: 'superadmin'
-        }
+          systemRole: 'superadmin',
+        },
       });
 
       // Test various resource types and actions
@@ -262,7 +276,7 @@ describe('Authorization Functions @unit @auth @critical', () => {
       expect(await canPerformAction('reviewGroup', 'create')).toBe(true);
       expect(await canPerformAction('namespace', 'delete')).toBe(true);
       expect(await canPerformAction('vocabulary', 'delete')).toBe(true);
-      
+
       // Verify caching was called
       expect(mockCache.cachePermission).toHaveBeenCalled();
     });
@@ -274,13 +288,25 @@ describe('Authorization Functions @unit @auth @critical', () => {
           id: 'rg-admin-123',
           emailAddresses: [{ emailAddress: 'rgadmin@example.com' }],
           publicMetadata: {
-            reviewGroups: [{ reviewGroupId: 'isbd', role: 'admin' }]
-          }
+            reviewGroups: [{ reviewGroupId: 'isbd', role: 'admin' }],
+          },
         });
 
-        expect(await canPerformAction('reviewGroup', 'update', { reviewGroupId: 'isbd' })).toBe(true);
-        expect(await canPerformAction('reviewGroup', 'delete', { reviewGroupId: 'isbd' })).toBe(true);
-        expect(await canPerformAction('reviewGroup', 'manage', { reviewGroupId: 'isbd' })).toBe(true);
+        expect(
+          await canPerformAction('reviewGroup', 'update', {
+            reviewGroupId: 'isbd',
+          }),
+        ).toBe(true);
+        expect(
+          await canPerformAction('reviewGroup', 'delete', {
+            reviewGroupId: 'isbd',
+          }),
+        ).toBe(true);
+        expect(
+          await canPerformAction('reviewGroup', 'manage', {
+            reviewGroupId: 'isbd',
+          }),
+        ).toBe(true);
       });
 
       it('should deny review group admin from managing other review groups', async () => {
@@ -289,11 +315,15 @@ describe('Authorization Functions @unit @auth @critical', () => {
           id: 'rg-admin-123',
           emailAddresses: [{ emailAddress: 'rgadmin@example.com' }],
           publicMetadata: {
-            reviewGroups: [{ reviewGroupId: 'isbd', role: 'admin' }]
-          }
+            reviewGroups: [{ reviewGroupId: 'isbd', role: 'admin' }],
+          },
         });
 
-        expect(await canPerformAction('reviewGroup', 'update', { reviewGroupId: 'unimarc' })).toBe(false);
+        expect(
+          await canPerformAction('reviewGroup', 'update', {
+            reviewGroupId: 'unimarc',
+          }),
+        ).toBe(false);
       });
 
       it('should deny non-superadmin from creating review groups', async () => {
@@ -302,8 +332,8 @@ describe('Authorization Functions @unit @auth @critical', () => {
           id: 'rg-admin-123',
           emailAddresses: [{ emailAddress: 'rgadmin@example.com' }],
           publicMetadata: {
-            reviewGroups: [{ reviewGroupId: 'isbd', role: 'admin' }]
-          }
+            reviewGroups: [{ reviewGroupId: 'isbd', role: 'admin' }],
+          },
         });
 
         expect(await canPerformAction('reviewGroup', 'create')).toBe(false);
@@ -314,7 +344,7 @@ describe('Authorization Functions @unit @auth @critical', () => {
         (currentUser as any).mockResolvedValue({
           id: 'user-123',
           emailAddresses: [{ emailAddress: 'user@example.com' }],
-          publicMetadata: {}
+          publicMetadata: {},
         });
 
         expect(await canPerformAction('reviewGroup', 'read')).toBe(true);
@@ -329,13 +359,25 @@ describe('Authorization Functions @unit @auth @critical', () => {
           id: 'rg-admin-123',
           emailAddresses: [{ emailAddress: 'rgadmin@example.com' }],
           publicMetadata: {
-            reviewGroups: [{ reviewGroupId: 'isbd', role: 'admin' }]
-          }
+            reviewGroups: [{ reviewGroupId: 'isbd', role: 'admin' }],
+          },
         });
 
-        expect(await canPerformAction('namespace', 'create', { reviewGroupId: 'isbd' })).toBe(true);
-        expect(await canPerformAction('namespace', 'update', { reviewGroupId: 'isbd' })).toBe(true);
-        expect(await canPerformAction('namespace', 'delete', { reviewGroupId: 'isbd' })).toBe(true);
+        expect(
+          await canPerformAction('namespace', 'create', {
+            reviewGroupId: 'isbd',
+          }),
+        ).toBe(true);
+        expect(
+          await canPerformAction('namespace', 'update', {
+            reviewGroupId: 'isbd',
+          }),
+        ).toBe(true);
+        expect(
+          await canPerformAction('namespace', 'delete', {
+            reviewGroupId: 'isbd',
+          }),
+        ).toBe(true);
       });
 
       it('should allow editor to update namespaces they have access to', async () => {
@@ -344,17 +386,25 @@ describe('Authorization Functions @unit @auth @critical', () => {
           id: 'editor-123',
           emailAddresses: [{ emailAddress: 'editor@example.com' }],
           publicMetadata: {
-            teams: [{
-              teamId: 'team-1',
-              role: 'editor',
-              reviewGroup: 'isbd',
-              namespaces: ['isbd', 'isbdm']
-            }]
-          }
+            teams: [
+              {
+                teamId: 'team-1',
+                role: 'editor',
+                reviewGroup: 'isbd',
+                namespaces: ['isbd', 'isbdm'],
+              },
+            ],
+          },
         });
 
-        expect(await canPerformAction('namespace', 'update', { namespaceId: 'isbd' })).toBe(true);
-        expect(await canPerformAction('namespace', 'read', { namespaceId: 'isbd' })).toBe(true);
+        expect(
+          await canPerformAction('namespace', 'update', {
+            namespaceId: 'isbd',
+          }),
+        ).toBe(true);
+        expect(
+          await canPerformAction('namespace', 'read', { namespaceId: 'isbd' }),
+        ).toBe(true);
       });
 
       it('should deny editor from creating or deleting namespaces', async () => {
@@ -363,17 +413,27 @@ describe('Authorization Functions @unit @auth @critical', () => {
           id: 'editor-123',
           emailAddresses: [{ emailAddress: 'editor@example.com' }],
           publicMetadata: {
-            teams: [{
-              teamId: 'team-1',
-              role: 'editor',
-              reviewGroup: 'isbd',
-              namespaces: ['isbd']
-            }]
-          }
+            teams: [
+              {
+                teamId: 'team-1',
+                role: 'editor',
+                reviewGroup: 'isbd',
+                namespaces: ['isbd'],
+              },
+            ],
+          },
         });
 
-        expect(await canPerformAction('namespace', 'create', { namespaceId: 'isbd' })).toBe(false);
-        expect(await canPerformAction('namespace', 'delete', { namespaceId: 'isbd' })).toBe(false);
+        expect(
+          await canPerformAction('namespace', 'create', {
+            namespaceId: 'isbd',
+          }),
+        ).toBe(false);
+        expect(
+          await canPerformAction('namespace', 'delete', {
+            namespaceId: 'isbd',
+          }),
+        ).toBe(false);
       });
 
       it('should allow author only read access to namespaces', async () => {
@@ -382,19 +442,33 @@ describe('Authorization Functions @unit @auth @critical', () => {
           id: 'author-123',
           emailAddresses: [{ emailAddress: 'author@example.com' }],
           publicMetadata: {
-            teams: [{
-              teamId: 'team-1',
-              role: 'author',
-              reviewGroup: 'isbd',
-              namespaces: ['isbd']
-            }]
-          }
+            teams: [
+              {
+                teamId: 'team-1',
+                role: 'author',
+                reviewGroup: 'isbd',
+                namespaces: ['isbd'],
+              },
+            ],
+          },
         });
 
-        expect(await canPerformAction('namespace', 'read', { namespaceId: 'isbd' })).toBe(true);
-        expect(await canPerformAction('namespace', 'list', { namespaceId: 'isbd' })).toBe(true);
-        expect(await canPerformAction('namespace', 'update', { namespaceId: 'isbd' })).toBe(false);
-        expect(await canPerformAction('namespace', 'delete', { namespaceId: 'isbd' })).toBe(false);
+        expect(
+          await canPerformAction('namespace', 'read', { namespaceId: 'isbd' }),
+        ).toBe(true);
+        expect(
+          await canPerformAction('namespace', 'list', { namespaceId: 'isbd' }),
+        ).toBe(true);
+        expect(
+          await canPerformAction('namespace', 'update', {
+            namespaceId: 'isbd',
+          }),
+        ).toBe(false);
+        expect(
+          await canPerformAction('namespace', 'delete', {
+            namespaceId: 'isbd',
+          }),
+        ).toBe(false);
       });
     });
 
@@ -405,20 +479,22 @@ describe('Authorization Functions @unit @auth @critical', () => {
           id: 'editor-123',
           emailAddresses: [{ emailAddress: 'editor@example.com' }],
           publicMetadata: {
-            teams: [{
-              teamId: 'team-1',
-              role: 'editor',
-              reviewGroup: 'isbd',
-              namespaces: ['isbd']
-            }]
-          }
+            teams: [
+              {
+                teamId: 'team-1',
+                role: 'editor',
+                reviewGroup: 'isbd',
+                namespaces: ['isbd'],
+              },
+            ],
+          },
         });
 
         // Without namespace context
         expect(await canPerformAction('vocabulary', 'create')).toBe(false);
         expect(await canPerformAction('vocabulary', 'update')).toBe(false);
         expect(await canPerformAction('vocabulary', 'delete')).toBe(false);
-        
+
         // Read operations allowed without namespace
         expect(await canPerformAction('vocabulary', 'read')).toBe(true);
       });
@@ -429,19 +505,35 @@ describe('Authorization Functions @unit @auth @critical', () => {
           id: 'editor-123',
           emailAddresses: [{ emailAddress: 'editor@example.com' }],
           publicMetadata: {
-            teams: [{
-              teamId: 'team-1',
-              role: 'editor',
-              reviewGroup: 'isbd',
-              namespaces: ['isbd']
-            }]
-          }
+            teams: [
+              {
+                teamId: 'team-1',
+                role: 'editor',
+                reviewGroup: 'isbd',
+                namespaces: ['isbd'],
+              },
+            ],
+          },
         });
 
-        expect(await canPerformAction('vocabulary', 'create', { namespaceId: 'isbd' })).toBe(true);
-        expect(await canPerformAction('vocabulary', 'read', { namespaceId: 'isbd' })).toBe(true);
-        expect(await canPerformAction('vocabulary', 'update', { namespaceId: 'isbd' })).toBe(true);
-        expect(await canPerformAction('vocabulary', 'delete', { namespaceId: 'isbd' })).toBe(true);
+        expect(
+          await canPerformAction('vocabulary', 'create', {
+            namespaceId: 'isbd',
+          }),
+        ).toBe(true);
+        expect(
+          await canPerformAction('vocabulary', 'read', { namespaceId: 'isbd' }),
+        ).toBe(true);
+        expect(
+          await canPerformAction('vocabulary', 'update', {
+            namespaceId: 'isbd',
+          }),
+        ).toBe(true);
+        expect(
+          await canPerformAction('vocabulary', 'delete', {
+            namespaceId: 'isbd',
+          }),
+        ).toBe(true);
       });
 
       it('should allow author to create and update but not delete vocabularies', async () => {
@@ -450,19 +542,35 @@ describe('Authorization Functions @unit @auth @critical', () => {
           id: 'author-123',
           emailAddresses: [{ emailAddress: 'author@example.com' }],
           publicMetadata: {
-            teams: [{
-              teamId: 'team-1',
-              role: 'author',
-              reviewGroup: 'isbd',
-              namespaces: ['isbd']
-            }]
-          }
+            teams: [
+              {
+                teamId: 'team-1',
+                role: 'author',
+                reviewGroup: 'isbd',
+                namespaces: ['isbd'],
+              },
+            ],
+          },
         });
 
-        expect(await canPerformAction('vocabulary', 'create', { namespaceId: 'isbd' })).toBe(true);
-        expect(await canPerformAction('vocabulary', 'read', { namespaceId: 'isbd' })).toBe(true);
-        expect(await canPerformAction('vocabulary', 'update', { namespaceId: 'isbd' })).toBe(true);
-        expect(await canPerformAction('vocabulary', 'delete', { namespaceId: 'isbd' })).toBe(false);
+        expect(
+          await canPerformAction('vocabulary', 'create', {
+            namespaceId: 'isbd',
+          }),
+        ).toBe(true);
+        expect(
+          await canPerformAction('vocabulary', 'read', { namespaceId: 'isbd' }),
+        ).toBe(true);
+        expect(
+          await canPerformAction('vocabulary', 'update', {
+            namespaceId: 'isbd',
+          }),
+        ).toBe(true);
+        expect(
+          await canPerformAction('vocabulary', 'delete', {
+            namespaceId: 'isbd',
+          }),
+        ).toBe(false);
       });
 
       it('should allow translator read-only access to vocabularies', async () => {
@@ -471,17 +579,33 @@ describe('Authorization Functions @unit @auth @critical', () => {
           id: 'translator-123',
           emailAddresses: [{ emailAddress: 'translator@example.com' }],
           publicMetadata: {
-            translations: [{
-              language: 'fr',
-              namespaces: ['isbd']
-            }]
-          }
+            translations: [
+              {
+                language: 'fr',
+                namespaces: ['isbd'],
+              },
+            ],
+          },
         });
 
-        expect(await canPerformAction('vocabulary', 'read', { namespaceId: 'isbd' })).toBe(true);
-        expect(await canPerformAction('vocabulary', 'create', { namespaceId: 'isbd' })).toBe(false);
-        expect(await canPerformAction('vocabulary', 'update', { namespaceId: 'isbd' })).toBe(false);
-        expect(await canPerformAction('vocabulary', 'delete', { namespaceId: 'isbd' })).toBe(false);
+        expect(
+          await canPerformAction('vocabulary', 'read', { namespaceId: 'isbd' }),
+        ).toBe(true);
+        expect(
+          await canPerformAction('vocabulary', 'create', {
+            namespaceId: 'isbd',
+          }),
+        ).toBe(false);
+        expect(
+          await canPerformAction('vocabulary', 'update', {
+            namespaceId: 'isbd',
+          }),
+        ).toBe(false);
+        expect(
+          await canPerformAction('vocabulary', 'delete', {
+            namespaceId: 'isbd',
+          }),
+        ).toBe(false);
       });
 
       it('should inherit permissions from namespace for element sets', async () => {
@@ -490,19 +614,33 @@ describe('Authorization Functions @unit @auth @critical', () => {
           id: 'editor-123',
           emailAddresses: [{ emailAddress: 'editor@example.com' }],
           publicMetadata: {
-            teams: [{
-              teamId: 'team-1',
-              role: 'editor',
-              reviewGroup: 'isbd',
-              namespaces: ['isbd']
-            }]
-          }
+            teams: [
+              {
+                teamId: 'team-1',
+                role: 'editor',
+                reviewGroup: 'isbd',
+                namespaces: ['isbd'],
+              },
+            ],
+          },
         });
 
         // ElementSets should have same permissions as vocabularies
-        expect(await canPerformAction('elementSet', 'create', { namespaceId: 'isbd' })).toBe(true);
-        expect(await canPerformAction('elementSet', 'update', { namespaceId: 'isbd' })).toBe(true);
-        expect(await canPerformAction('elementSet', 'delete', { namespaceId: 'isbd' })).toBe(true);
+        expect(
+          await canPerformAction('elementSet', 'create', {
+            namespaceId: 'isbd',
+          }),
+        ).toBe(true);
+        expect(
+          await canPerformAction('elementSet', 'update', {
+            namespaceId: 'isbd',
+          }),
+        ).toBe(true);
+        expect(
+          await canPerformAction('elementSet', 'delete', {
+            namespaceId: 'isbd',
+          }),
+        ).toBe(true);
       });
     });
 
@@ -513,22 +651,28 @@ describe('Authorization Functions @unit @auth @critical', () => {
           id: 'translator-123',
           emailAddresses: [{ emailAddress: 'translator@example.com' }],
           publicMetadata: {
-            translations: [{
-              language: 'fr',
-              namespaces: ['isbd', 'unimarc']
-            }]
-          }
+            translations: [
+              {
+                language: 'fr',
+                namespaces: ['isbd', 'unimarc'],
+              },
+            ],
+          },
         });
 
-        expect(await canPerformAction('translation', 'read', { 
-          language: 'fr', 
-          namespaceId: 'isbd' 
-        })).toBe(true);
-        
-        expect(await canPerformAction('translation', 'update', { 
-          language: 'fr', 
-          namespaceId: 'isbd' 
-        })).toBe(true);
+        expect(
+          await canPerformAction('translation', 'read', {
+            language: 'fr',
+            namespaceId: 'isbd',
+          }),
+        ).toBe(true);
+
+        expect(
+          await canPerformAction('translation', 'update', {
+            language: 'fr',
+            namespaceId: 'isbd',
+          }),
+        ).toBe(true);
       });
 
       it('should deny translator from updating other languages', async () => {
@@ -537,17 +681,21 @@ describe('Authorization Functions @unit @auth @critical', () => {
           id: 'translator-123',
           emailAddresses: [{ emailAddress: 'translator@example.com' }],
           publicMetadata: {
-            translations: [{
-              language: 'fr',
-              namespaces: ['isbd']
-            }]
-          }
+            translations: [
+              {
+                language: 'fr',
+                namespaces: ['isbd'],
+              },
+            ],
+          },
         });
 
-        expect(await canPerformAction('translation', 'update', { 
-          language: 'de', 
-          namespaceId: 'isbd' 
-        })).toBe(false);
+        expect(
+          await canPerformAction('translation', 'update', {
+            language: 'de',
+            namespaceId: 'isbd',
+          }),
+        ).toBe(false);
       });
 
       it('should allow review group admin to approve translations', async () => {
@@ -556,13 +704,15 @@ describe('Authorization Functions @unit @auth @critical', () => {
           id: 'rg-admin-123',
           emailAddresses: [{ emailAddress: 'rgadmin@example.com' }],
           publicMetadata: {
-            reviewGroups: [{ reviewGroupId: 'isbd', role: 'admin' }]
-          }
+            reviewGroups: [{ reviewGroupId: 'isbd', role: 'admin' }],
+          },
         });
 
-        expect(await canPerformAction('translation', 'approve', { 
-          reviewGroupId: 'isbd' 
-        })).toBe(true);
+        expect(
+          await canPerformAction('translation', 'approve', {
+            reviewGroupId: 'isbd',
+          }),
+        ).toBe(true);
       });
     });
 
@@ -573,12 +723,18 @@ describe('Authorization Functions @unit @auth @critical', () => {
           id: 'rg-admin-123',
           emailAddresses: [{ emailAddress: 'rgadmin@example.com' }],
           publicMetadata: {
-            reviewGroups: [{ reviewGroupId: 'isbd', role: 'admin' }]
-          }
+            reviewGroups: [{ reviewGroupId: 'isbd', role: 'admin' }],
+          },
         });
 
-        expect(await canPerformAction('user', 'invite', { reviewGroupId: 'isbd' })).toBe(true);
-        expect(await canPerformAction('user', 'invite', { reviewGroupId: 'unimarc' })).toBe(false);
+        expect(
+          await canPerformAction('user', 'invite', { reviewGroupId: 'isbd' }),
+        ).toBe(true);
+        expect(
+          await canPerformAction('user', 'invite', {
+            reviewGroupId: 'unimarc',
+          }),
+        ).toBe(false);
       });
 
       it('should allow users to read and update their own profile', async () => {
@@ -586,11 +742,15 @@ describe('Authorization Functions @unit @auth @critical', () => {
         (currentUser as any).mockResolvedValue({
           id: 'user-123',
           emailAddresses: [{ emailAddress: 'user@example.com' }],
-          publicMetadata: {}
+          publicMetadata: {},
         });
 
-        expect(await canPerformAction('user', 'read', { userId: 'user-123' })).toBe(true);
-        expect(await canPerformAction('user', 'update', { userId: 'user-123' })).toBe(true);
+        expect(
+          await canPerformAction('user', 'read', { userId: 'user-123' }),
+        ).toBe(true);
+        expect(
+          await canPerformAction('user', 'update', { userId: 'user-123' }),
+        ).toBe(true);
       });
 
       it('should deny users from reading or updating other profiles', async () => {
@@ -598,11 +758,15 @@ describe('Authorization Functions @unit @auth @critical', () => {
         (currentUser as any).mockResolvedValue({
           id: 'user-123',
           emailAddresses: [{ emailAddress: 'user@example.com' }],
-          publicMetadata: {}
+          publicMetadata: {},
         });
 
-        expect(await canPerformAction('user', 'read', { userId: 'other-user' })).toBe(false);
-        expect(await canPerformAction('user', 'update', { userId: 'other-user' })).toBe(false);
+        expect(
+          await canPerformAction('user', 'read', { userId: 'other-user' }),
+        ).toBe(false);
+        expect(
+          await canPerformAction('user', 'update', { userId: 'other-user' }),
+        ).toBe(false);
       });
 
       it('should deny non-superadmin from deleting or impersonating users', async () => {
@@ -611,12 +775,16 @@ describe('Authorization Functions @unit @auth @critical', () => {
           id: 'rg-admin-123',
           emailAddresses: [{ emailAddress: 'rgadmin@example.com' }],
           publicMetadata: {
-            reviewGroups: [{ reviewGroupId: 'isbd', role: 'admin' }]
-          }
+            reviewGroups: [{ reviewGroupId: 'isbd', role: 'admin' }],
+          },
         });
 
-        expect(await canPerformAction('user', 'delete', { userId: 'any-user' })).toBe(false);
-        expect(await canPerformAction('user', 'impersonate', { userId: 'any-user' })).toBe(false);
+        expect(
+          await canPerformAction('user', 'delete', { userId: 'any-user' }),
+        ).toBe(false);
+        expect(
+          await canPerformAction('user', 'impersonate', { userId: 'any-user' }),
+        ).toBe(false);
       });
     });
 
@@ -626,11 +794,14 @@ describe('Authorization Functions @unit @auth @critical', () => {
         (currentUser as any).mockResolvedValue({
           id: 'user-123',
           emailAddresses: [{ emailAddress: 'user@example.com' }],
-          publicMetadata: {}
+          publicMetadata: {},
         });
 
         // Test with a resource type that doesn't have specific handlers
-        const result = await canPerformAction('documentation' as ResourceType, 'read' as any);
+        const result = await canPerformAction(
+          'documentation' as ResourceType,
+          'read' as any,
+        );
         expect(result).toBe(true);
       });
     });
@@ -651,8 +822,8 @@ describe('Authorization Functions @unit @auth @critical', () => {
         id: 'super-123',
         emailAddresses: [{ emailAddress: 'super@example.com' }],
         publicMetadata: {
-          systemRole: 'superadmin'
-        }
+          systemRole: 'superadmin',
+        },
       });
 
       const result = await getUserAccessibleResources();
@@ -660,7 +831,7 @@ describe('Authorization Functions @unit @auth @critical', () => {
         reviewGroups: 'all',
         namespaces: 'all',
         projects: 'all',
-        teams: 'all'
+        teams: 'all',
       });
     });
 
@@ -670,41 +841,45 @@ describe('Authorization Functions @unit @auth @critical', () => {
         id: 'user-123',
         emailAddresses: [{ emailAddress: 'user@example.com' }],
         publicMetadata: {
-          reviewGroups: [
-            { reviewGroupId: 'isbd', role: 'admin' }
-          ],
+          reviewGroups: [{ reviewGroupId: 'isbd', role: 'admin' }],
           teams: [
             {
               teamId: 'team-1',
               role: 'editor',
               reviewGroup: 'isbd',
-              namespaces: ['isbd', 'isbdm']
+              namespaces: ['isbd', 'isbdm'],
             },
             {
               teamId: 'team-2',
               role: 'author',
               reviewGroup: 'unimarc',
-              namespaces: ['unimarc']
-            }
+              namespaces: ['unimarc'],
+            },
           ],
           translations: [
             {
               language: 'fr',
-              namespaces: ['frbr', 'lrm']
-            }
-          ]
-        }
+              namespaces: ['frbr', 'lrm'],
+            },
+          ],
+        },
       });
 
       const result = await getUserAccessibleResources();
-      
+
       expect(result).toEqual({
         reviewGroups: ['isbd'],
-        namespaces: expect.arrayContaining(['isbd', 'isbdm', 'unimarc', 'frbr', 'lrm']),
+        namespaces: expect.arrayContaining([
+          'isbd',
+          'isbdm',
+          'unimarc',
+          'frbr',
+          'lrm',
+        ]),
         projects: [],
-        teams: ['team-1', 'team-2']
+        teams: ['team-1', 'team-2'],
       });
-      
+
       // Check that namespaces are unique
       const namespaces = result?.namespaces as string[];
       expect(new Set(namespaces).size).toBe(namespaces.length);
@@ -715,16 +890,16 @@ describe('Authorization Functions @unit @auth @critical', () => {
       (currentUser as any).mockResolvedValue({
         id: 'user-123',
         emailAddresses: [{ emailAddress: 'user@example.com' }],
-        publicMetadata: {}
+        publicMetadata: {},
       });
 
       const result = await getUserAccessibleResources();
-      
+
       expect(result).toEqual({
         reviewGroups: [],
         namespaces: [],
         projects: [],
-        teams: []
+        teams: [],
       });
     });
   });
@@ -742,7 +917,7 @@ describe('Authorization Functions @unit @auth @critical', () => {
       (currentUser as any).mockResolvedValue({
         id: 'user-123',
         emailAddresses: [{ emailAddress: 'user@example.com' }],
-        publicMetadata: {}
+        publicMetadata: {},
       });
 
       const middleware = requireAuth('reviewGroup', 'create');
@@ -751,14 +926,14 @@ describe('Authorization Functions @unit @auth @critical', () => {
 
       expect(response).toBeInstanceOf(Response);
       expect(response?.status).toBe(403);
-      
+
       const body = await response?.json();
       expect(body).toEqual({
         success: false,
         error: {
           code: 'PERMISSION_DENIED',
-          message: "You don't have permission to create reviewGroup"
-        }
+          message: "You don't have permission to create reviewGroup",
+        },
       });
     });
 
@@ -768,8 +943,8 @@ describe('Authorization Functions @unit @auth @critical', () => {
         id: 'super-123',
         emailAddresses: [{ emailAddress: 'super@example.com' }],
         publicMetadata: {
-          systemRole: 'superadmin'
-        }
+          systemRole: 'superadmin',
+        },
       });
 
       const middleware = requireAuth('reviewGroup', 'create');
@@ -785,8 +960,8 @@ describe('Authorization Functions @unit @auth @critical', () => {
         id: 'rg-admin-123',
         emailAddresses: [{ emailAddress: 'rgadmin@example.com' }],
         publicMetadata: {
-          reviewGroups: [{ reviewGroupId: 'isbd', role: 'admin' }]
-        }
+          reviewGroups: [{ reviewGroupId: 'isbd', role: 'admin' }],
+        },
       });
 
       const getResourceAttributes = (req: Request) => {
@@ -794,7 +969,11 @@ describe('Authorization Functions @unit @auth @critical', () => {
         return { reviewGroupId: url.searchParams.get('reviewGroupId') };
       };
 
-      const middleware = requireAuth('reviewGroup', 'update', getResourceAttributes);
+      const middleware = requireAuth(
+        'reviewGroup',
+        'update',
+        getResourceAttributes,
+      );
       const req = new Request('http://localhost/api/test?reviewGroupId=isbd');
       const response = await middleware(req);
 
@@ -810,13 +989,15 @@ describe('Authorization Functions @unit @auth @critical', () => {
         emailAddresses: [{ emailAddress: 'test@example.com' }],
         publicMetadata: {
           reviewGroups: [{ reviewGroupId: 'isbd', role: 'admin' }],
-          teams: [{
-            teamId: 'team-1',
-            role: 'editor',
-            reviewGroup: 'isbd',
-            namespaces: ['isbd']
-          }]
-        }
+          teams: [
+            {
+              teamId: 'team-1',
+              role: 'editor',
+              reviewGroup: 'isbd',
+              namespaces: ['isbd'],
+            },
+          ],
+        },
       });
     });
 
@@ -859,7 +1040,7 @@ describe('Authorization Functions @unit @auth @critical', () => {
       (currentUser as any).mockResolvedValue({
         id: 'user-123',
         emailAddresses: [],
-        publicMetadata: {}
+        publicMetadata: {},
       });
 
       const result = await getAuthContext();
@@ -871,7 +1052,7 @@ describe('Authorization Functions @unit @auth @critical', () => {
       (currentUser as any).mockResolvedValue({
         id: 'user-123',
         emailAddresses: [{ emailAddress: 'user@example.com' }],
-        publicMetadata: undefined
+        publicMetadata: undefined,
       });
 
       const result = await getAuthContext();
@@ -880,7 +1061,7 @@ describe('Authorization Functions @unit @auth @critical', () => {
         systemRole: undefined,
         reviewGroups: [],
         teams: [],
-        translations: []
+        translations: [],
       });
     });
 
@@ -896,7 +1077,7 @@ describe('Authorization Functions @unit @auth @critical', () => {
       (currentUser as any).mockResolvedValue({
         id: 'user-123',
         emailAddresses: [{ emailAddress: 'user@example.com' }],
-        publicMetadata: {}
+        publicMetadata: {},
       });
 
       // The current implementation doesn't handle cache errors gracefully
@@ -912,23 +1093,25 @@ describe('Authorization Functions @unit @auth @critical', () => {
         id: 'user-123',
         emailAddresses: [{ emailAddress: 'user@example.com' }],
         publicMetadata: {
-          teams: [{
-            teamId: 'team-1',
-            role: 'editor',
-            reviewGroup: 'isbd',
-            namespaces: ['isbd']
-          }]
-        }
+          teams: [
+            {
+              teamId: 'team-1',
+              role: 'editor',
+              reviewGroup: 'isbd',
+              namespaces: ['isbd'],
+            },
+          ],
+        },
       });
 
       await getAuthContext();
-      
+
       expect(mockCache.cacheAuthContext).toHaveBeenCalledWith(
         'user-123',
         expect.objectContaining({
           userId: 'user-123',
-          email: 'user@example.com'
-        })
+          email: 'user@example.com',
+        }),
       );
     });
 
@@ -938,23 +1121,25 @@ describe('Authorization Functions @unit @auth @critical', () => {
         id: 'user-123',
         emailAddresses: [{ emailAddress: 'user@example.com' }],
         publicMetadata: {
-          teams: [{
-            teamId: 'team-1',
-            role: 'editor',
-            reviewGroup: 'isbd',
-            namespaces: ['isbd']
-          }]
-        }
+          teams: [
+            {
+              teamId: 'team-1',
+              role: 'editor',
+              reviewGroup: 'isbd',
+              namespaces: ['isbd'],
+            },
+          ],
+        },
       });
 
       await canPerformAction('namespace', 'update', { namespaceId: 'isbd' });
-      
+
       expect(mockCache.cachePermission).toHaveBeenCalledWith(
         'user-123',
         'namespace',
         'update',
         true,
-        { namespaceId: 'isbd' }
+        { namespaceId: 'isbd' },
       );
     });
 
@@ -963,17 +1148,17 @@ describe('Authorization Functions @unit @auth @critical', () => {
       (currentUser as any).mockResolvedValue({
         id: 'user-123',
         emailAddresses: [{ emailAddress: 'user@example.com' }],
-        publicMetadata: {}
+        publicMetadata: {},
       });
 
       // First call - cache miss
       mockCache.getCachedPermission.mockReturnValueOnce(null);
       await canPerformAction('namespace', 'read');
-      
+
       // Second call - cache hit
       mockCache.getCachedPermission.mockReturnValueOnce(true);
       const result = await canPerformAction('namespace', 'read');
-      
+
       expect(result).toBe(true);
       expect(mockCache.getCachedPermission).toHaveBeenCalledTimes(2);
     });

@@ -11,6 +11,7 @@ process.env.CLERK_SECRET_KEY =
 // Cleanup after each test
 afterEach(() => {
   cleanup();
+  resetMockAuthState(); // Reset auth state to default
 });
 
 // Mock Next.js router
@@ -65,97 +66,144 @@ vi.mock('@clerk/nextjs', () => ({
   })),
 }));
 
-// Mock Clerk server
+// Import dynamic mocks
+import { dynamicAuthMock, resetMockAuthState } from './mocks/dynamic-auth';
+
+// Mock Clerk server with dynamic behavior
 vi.mock('@clerk/nextjs/server', () => ({
-  auth: vi.fn(() =>
-    Promise.resolve({
-      userId: null,
-      sessionId: null,
-      sessionClaims: null,
-    }),
-  ),
+  auth: dynamicAuthMock,
   currentUser: vi.fn(() => Promise.resolve(null)),
   clerkMiddleware: vi.fn(() => vi.fn()),
   clerkClient: vi.fn(() => ({
     users: {
-      getUser: vi.fn(() => Promise.resolve({
-        id: 'test-user-id',
-        emailAddresses: [{ emailAddress: 'test@example.com' }],
-        firstName: 'Test',
-        lastName: 'User',
-        publicMetadata: {},
-        privateMetadata: {},
-      })),
-      getUserList: vi.fn(() => Promise.resolve({
-        data: [
-          {
-            id: 'user_superadmin123',
-            emailAddresses: [{ emailAddress: 'superadmin+clerk_test@example.com' }],
-            firstName: 'Super',
-            lastName: 'Admin',
-            publicMetadata: {
-              systemRole: 'superadmin',
-              reviewGroups: [],
-              teams: [],
-              translations: [],
+      getUser: vi.fn(() =>
+        Promise.resolve({
+          id: 'test-user-id',
+          emailAddresses: [{ emailAddress: 'test@example.com' }],
+          firstName: 'Test',
+          lastName: 'User',
+          publicMetadata: {},
+          privateMetadata: {},
+        }),
+      ),
+      getUserList: vi.fn(() =>
+        Promise.resolve({
+          data: [
+            {
+              id: 'user_superadmin123',
+              emailAddresses: [
+                { emailAddress: 'superadmin+clerk_test@example.com' },
+              ],
+              firstName: 'Super',
+              lastName: 'Admin',
+              publicMetadata: {
+                systemRole: 'superadmin',
+                reviewGroups: [],
+                teams: [],
+                translations: [],
+              },
+              privateMetadata: {},
             },
-            privateMetadata: {},
-          },
-          {
-            id: 'user_rgadmin123',
-            emailAddresses: [{ emailAddress: 'rg_admin+clerk_test@example.com' }],
-            firstName: 'Review Group',
-            lastName: 'Admin',
-            publicMetadata: {
-              systemRole: undefined,
-              reviewGroups: [{ reviewGroupId: 'isbd', role: 'admin' }],
-              teams: [],
-              translations: [],
+            {
+              id: 'user_rgadmin123',
+              emailAddresses: [
+                { emailAddress: 'rg_admin+clerk_test@example.com' },
+              ],
+              firstName: 'Review Group',
+              lastName: 'Admin',
+              publicMetadata: {
+                systemRole: undefined,
+                reviewGroups: [{ role: 'admin', reviewGroupId: 'isbd' }],
+                teams: [],
+                translations: [],
+              },
+              privateMetadata: {},
             },
-            privateMetadata: {},
-          },
-          {
-            id: 'user_editor123',
-            emailAddresses: [{ emailAddress: 'editor+clerk_test@example.com' }],
-            firstName: 'Test',
-            lastName: 'Editor',
-            publicMetadata: {
-              systemRole: undefined,
-              reviewGroups: [],
-              teams: [{ teamId: 'isbd-team-1', role: 'editor', reviewGroup: 'isbd', namespaces: ['isbd', 'isbdm'] }],
-              translations: [],
+            {
+              id: 'user_nsadmin123',
+              emailAddresses: [
+                { emailAddress: 'ns_admin+clerk_test@example.com' },
+              ],
+              firstName: 'Namespace',
+              lastName: 'Admin',
+              publicMetadata: {
+                systemRole: undefined,
+                reviewGroups: [],
+                teams: [
+                  {
+                    teamId: 'isbd-namespace-admin',
+                    role: 'admin',
+                    reviewGroup: 'isbd',
+                    namespaces: ['isbd', 'isbdm'],
+                  },
+                ],
+                translations: [],
+              },
+              privateMetadata: {},
             },
-            privateMetadata: {},
-          },
-          {
-            id: 'user_author123',
-            emailAddresses: [{ emailAddress: 'author+clerk_test@example.com' }],
-            firstName: 'Test',
-            lastName: 'Author',
-            publicMetadata: {
-              systemRole: undefined,
-              reviewGroups: [],
-              teams: [{ teamId: 'lrm-team-1', role: 'author', reviewGroup: 'bcm', namespaces: ['lrm'] }],
-              translations: [],
+            {
+              id: 'user_editor123',
+              emailAddresses: [
+                { emailAddress: 'editor+clerk_test@example.com' },
+              ],
+              firstName: 'Test',
+              lastName: 'Editor',
+              publicMetadata: {
+                systemRole: undefined,
+                reviewGroups: [],
+                teams: [
+                  {
+                    teamId: 'isbd-team-1',
+                    role: 'editor',
+                    reviewGroup: 'isbd',
+                    namespaces: ['isbd', 'isbdm'],
+                  },
+                ],
+                translations: [],
+              },
+              privateMetadata: {},
             },
-            privateMetadata: {},
-          },
-          {
-            id: 'user_translator123',
-            emailAddresses: [{ emailAddress: 'translator+clerk_test@example.com' }],
-            firstName: 'Test',
-            lastName: 'Translator',
-            publicMetadata: {
-              systemRole: undefined,
-              reviewGroups: [],
-              teams: [],
-              translations: [{ language: 'fr', namespaces: ['isbd', 'lrm'] }],
+            {
+              id: 'user_author123',
+              emailAddresses: [
+                { emailAddress: 'author+clerk_test@example.com' },
+              ],
+              firstName: 'Test',
+              lastName: 'Author',
+              publicMetadata: {
+                systemRole: undefined,
+                reviewGroups: [],
+                teams: [
+                  {
+                    teamId: 'lrm-team-1',
+                    role: 'author',
+                    reviewGroup: 'bcm',
+                    namespaces: ['lrm'],
+                  },
+                ],
+                translations: [],
+              },
+              privateMetadata: {},
             },
-            privateMetadata: {},
-          },
-        ],
-        totalCount: 5,
-      })),
+            {
+              id: 'user_translator123',
+              emailAddresses: [
+                { emailAddress: 'translator+clerk_test@example.com' },
+              ],
+              firstName: 'Test',
+              lastName: 'Translator',
+              publicMetadata: {
+                systemRole: undefined,
+                reviewGroups: [],
+                teams: [],
+                translations: [{ language: 'fr', namespaces: ['isbd', 'lrm'] }],
+              },
+              privateMetadata: {},
+            },
+          ],
+          totalCount: 5,
+        }),
+      ),
     },
   })),
 }));
@@ -165,8 +213,32 @@ vi.mock('@/lib/auth', () => ({
   getAuthUser: vi.fn(() => Promise.resolve(null)),
 }));
 
+// Mock authorization module with dynamic behavior
+vi.mock('@/lib/authorization', async () => {
+  const actual = await vi.importActual('@/lib/authorization');
+  const {
+    dynamicGetAuthContextMock: getAuthContext,
+    dynamicCanPerformActionMock: canPerformAction,
+    dynamicGetUserAccessibleResourcesMock: getUserAccessibleResources,
+  } = await import('./mocks/dynamic-auth');
+
+  return {
+    ...actual,
+    getAuthContext,
+    canPerformAction,
+    getUserAccessibleResources,
+  };
+});
+
 // Global fetch mock
 global.fetch = vi.fn();
+
+// Polyfill getComputedStyle for components that rely on it in jsdom
+if (!(window as any).getComputedStyle) {
+  (window as any).getComputedStyle = () => ({
+    getPropertyValue: () => '',
+  });
+}
 
 // Mock window.matchMedia
 Object.defineProperty(window, 'matchMedia', {

@@ -17,45 +17,58 @@ ensureDaemon();
 
 let hasErrors = false;
 
-// Run all checks in a single Nx command for better performance
-console.log('📋 Running typecheck, lint, and tests in parallel...');
+// 1) Typecheck (affected only), skip dependency builds by bypassing Nx task graph
+console.log('📋 Running affected typecheck (fast, no upstream builds)...');
 try {
-  // Use a single nx run-many command with all targets
-  // This avoids the overhead of starting Nx multiple times
-  execSync(
-    'nx run-many --targets=typecheck,lint,test --affected --parallel=8 --skip-nx-cache=false --nx-bail',
-    {
-      stdio: 'inherit',
-      encoding: 'utf8',
-      env: {
-        ...process.env,
-        // Skip builds during typecheck
-        NX_SKIP_NX_DEPENDENCIES: 'true',
-        // Use more aggressive caching
-        NX_CACHE_DIRECTORY: '.nx/cache',
-        // Increase Node memory for faster execution
-        NODE_OPTIONS: '--max-old-space-size=4096'
-      }
-    }
-  );
-  console.log('✅ All checks passed\n');
+  execSync('node scripts/tsc-affected-fast.js', {
+    stdio: 'inherit',
+    encoding: 'utf8',
+    env: { ...process.env, NODE_OPTIONS: '--max-old-space-size=4096' },
+  });
+  console.log('✅ Typecheck passed\n');
 } catch (error) {
-  // Check if it's just ESLint warnings
-  const errorOutput = error.stdout || error.message || '';
-  if (errorOutput.includes('ESLint') && errorOutput.includes('warning')) {
-    console.log('⚠️  ESLint completed with warnings (this is OK)\n');
-  } else {
-    console.log('❌ Checks failed\n');
-    hasErrors = true;
-  }
+  console.log('❌ Typecheck failed\n');
+  hasErrors = true;
+}
+
+// 2) Lint (affected only)
+console.log('📋 Running affected lint...');
+try {
+  execSync('pnpm nx affected --target=lint --parallel=6', {
+    stdio: 'inherit',
+    encoding: 'utf8',
+  });
+  console.log('✅ Lint passed\n');
+} catch (error) {
+  // ESLint v9 flat config can exit non-zero on errors; warnings are fine.
+  console.log('❌ Lint failed\n');
+  hasErrors = true;
+}
+
+// 3) Unit tests (affected only)
+console.log('📋 Running affected unit tests...');
+try {
+  execSync('pnpm nx affected --target=test --parallel=6', {
+    stdio: 'inherit',
+    encoding: 'utf8',
+    env: {
+      ...process.env,
+      NODE_OPTIONS: '--max-old-space-size=4096',
+    },
+  });
+  console.log('✅ Tests passed\n');
+} catch (error) {
+  console.log('❌ Tests failed\n');
+  hasErrors = true;
 }
 
 // Summary
 if (hasErrors) {
-  console.log('❌ Pre-commit checks failed. Please fix errors before committing.\n');
+  console.log(
+    '❌ Pre-commit checks failed. Please fix errors before committing.\n',
+  );
   process.exit(1);
 } else {
   console.log('✅ Pre-commit checks passed! (Warnings are allowed)\n');
-  console.log('💡 Tip: If this is still slow, use --no-verify for urgent commits\n');
   process.exit(0);
 }

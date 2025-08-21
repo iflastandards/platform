@@ -3,6 +3,7 @@ import { ClerkProvider } from '@clerk/nextjs';
 import { ThemeProvider } from '@/contexts/theme-context';
 import { QueryClientContextProvider } from '@/contexts/query-client-context';
 import { RefineProvider } from '@/providers/RefineProvider';
+import { Suspense } from 'react';
 import type { Metadata } from 'next';
 
 export const metadata: Metadata = {
@@ -36,7 +37,9 @@ export default function RootLayout({
         >
           <QueryClientContextProvider>
             <ThemeProvider>
-              <RefineProvider>{children}</RefineProvider>
+              <Suspense fallback={<div>Loading...</div>}>
+                <RefineProvider>{children}</RefineProvider>
+              </Suspense>
             </ThemeProvider>
           </QueryClientContextProvider>
         </ClerkProvider>

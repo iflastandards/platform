@@ -12,10 +12,7 @@ import {
   Grid,
   theme,
 } from 'antd';
-import {
-  MenuOutlined,
-  RightOutlined,
-} from '@ant-design/icons';
+import { MenuOutlined, RightOutlined } from '@ant-design/icons';
 import { usePathname } from 'next/navigation';
 import Link from 'next/link';
 import { generateBreadcrumbs } from '@/lib/navigation/breadcrumbs';
@@ -65,7 +62,7 @@ const LiveRegion = ({ message }: { message: string }) => (
     role="status"
     aria-live="polite"
     aria-atomic="true"
-    style={{ 
+    style={{
       position: 'absolute',
       left: '-9999px',
       width: '1px',
@@ -125,14 +122,16 @@ export function StandardDashboardLayout({
 
   const drawerContent = (
     <div role="navigation" aria-label="Dashboard navigation">
-      <div style={{ 
-        padding: 16, 
-        borderBottom: '1px solid #f0f0f0',
-        minHeight: 64,
-        display: 'flex',
-        flexDirection: 'column',
-        justifyContent: 'center'
-      }}>
+      <div
+        style={{
+          padding: 16,
+          borderBottom: '1px solid #f0f0f0',
+          minHeight: 64,
+          display: 'flex',
+          flexDirection: 'column',
+          justifyContent: 'center',
+        }}
+      >
         <Title level={5} style={{ margin: 0 }}>
           {title}
         </Title>
@@ -142,26 +141,27 @@ export function StandardDashboardLayout({
           </Text>
         )}
       </div>
-      
+
       <List
         id="navigation"
         dataSource={navigation}
         renderItem={(item) => {
           const IconComponent = item.icon;
-          const isActive = pathname === item.href || 
+          const isActive =
+            pathname === item.href ||
             (item.href !== '/dashboard' && pathname.startsWith(item.href));
-          
+
           return (
             <List.Item
               key={item.id}
-              style={{ 
+              style={{
                 padding: 0,
-                borderBottom: 'none'
+                borderBottom: 'none',
               }}
             >
               <Link
                 href={item.href}
-                style={{ 
+                style={{
                   display: 'flex',
                   alignItems: 'center',
                   width: '100%',
@@ -185,11 +185,13 @@ export function StandardDashboardLayout({
                   }
                 }}
               >
-                <IconComponent style={{ 
-                  fontSize: 20,
-                  marginRight: collapsed ? 0 : 12,
-                  color: isActive ? '#1890ff' : '#8c8c8c'
-                }} />
+                <IconComponent
+                  style={{
+                    fontSize: 20,
+                    marginRight: collapsed ? 0 : 12,
+                    color: isActive ? '#1890ff' : '#8c8c8c',
+                  }}
+                />
                 {!collapsed && (
                   <>
                     <span style={{ flex: 1 }}>
@@ -200,11 +202,7 @@ export function StandardDashboardLayout({
                         </Tag>
                       )}
                     </span>
-                    {item.badge && (
-                      <Tag color="blue">
-                        {item.badge()}
-                      </Tag>
-                    )}
+                    {item.badge && <Tag color="blue">{item.badge()}</Tag>}
                   </>
                 )}
               </Link>
@@ -212,13 +210,11 @@ export function StandardDashboardLayout({
           );
         }}
       />
-      
+
       {footerContent && !collapsed && (
         <>
           <div style={{ borderTop: '1px solid #f0f0f0', margin: '16px 0' }} />
-          <div style={{ padding: 16 }}>
-            {footerContent}
-          </div>
+          <div style={{ padding: 16 }}>{footerContent}</div>
         </>
       )}
     </div>
@@ -230,7 +226,7 @@ export function StandardDashboardLayout({
     <>
       <SkipLinks />
       <LiveRegion message={liveMessage} />
-      
+
       <Layout style={{ minHeight: '100vh' }}>
         {/* Mobile Header */}
         {isMobile && (
@@ -298,24 +294,26 @@ export function StandardDashboardLayout({
             id="main-content"
             style={{
               padding: 24,
-              marginTop: isMobile ? 64 : 0,
+              marginTop: isMobile ? 48 : 0,
               background: token.colorBgLayout,
-              minHeight: 'calc(100vh - 64px)',
+              minHeight: 'calc(100vh - 48px)',
             }}
           >
             {/* Breadcrumbs */}
             {breadcrumbs.length > 1 && (
-              <nav aria-label="Breadcrumb navigation" style={{ marginBottom: 16 }}>
+              <nav
+                aria-label="Breadcrumb navigation"
+                style={{ marginBottom: 16 }}
+              >
                 <Breadcrumb
                   separator={<RightOutlined style={{ fontSize: 10 }} />}
                   items={breadcrumbs.map((crumb, index) => ({
-                    title: index < breadcrumbs.length - 1 ? (
-                      <Link href={crumb.href}>
-                        {crumb.label}
-                      </Link>
-                    ) : (
-                      crumb.label
-                    ),
+                    title:
+                      index < breadcrumbs.length - 1 ? (
+                        <Link href={crumb.href}>{crumb.label}</Link>
+                      ) : (
+                        crumb.label
+                      ),
                   }))}
                 />
               </nav>

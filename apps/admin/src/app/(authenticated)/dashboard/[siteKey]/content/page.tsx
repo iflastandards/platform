@@ -1,9 +1,10 @@
 import { SiteContentManagementPage } from '@/components/dashboard/site-management/SiteContentManagementPage';
 
 interface Props {
-  params: { siteKey: string };
+  params: Promise<{ siteKey: string }>;
 }
 
-export default function SiteContentPage({ params }: Props) {
-  return <SiteContentManagementPage siteKey={params.siteKey} />;
+export default async function SiteContentPage({ params }: Props) {
+  const { siteKey } = await params;
+  return <SiteContentManagementPage siteKey={siteKey} />;
 }

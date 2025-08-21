@@ -56,6 +56,10 @@ export function ThemeProvider({ children }: { children: React.ReactNode }) {
       controlHeightLG: 36,
     },
     components: {
+      Layout: {
+        headerHeight: 48,
+        headerPadding: '0 16px',
+      },
       Table: {
         cellPaddingBlock: 8,
         cellPaddingInline: 12,
@@ -71,6 +75,10 @@ export function ThemeProvider({ children }: { children: React.ReactNode }) {
       },
       Select: {
         controlHeight: 28,
+      },
+      Menu: {
+        itemHeight: 36,
+        horizontalItemSelectedBg: 'transparent',
       },
     },
   };

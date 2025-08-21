@@ -215,7 +215,8 @@ export function withAuth<T extends ResourceType = ResourceType>(
       
       // Step 1: Check authentication using Clerk's auth() function
       const authResult = await auth();
-      const { userId, sessionClaims } = authResult;
+      const userId = authResult?.userId;
+      const sessionClaims = authResult?.sessionClaims;
       
       if (!userId && requireAuthentication) {
         return createErrorResponse(

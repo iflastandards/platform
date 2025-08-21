@@ -14,13 +14,11 @@ export default function AuthenticatedLayout({
       <Layout.Content
         style={{
           padding: '24px',
-          marginTop: '64px', // Navbar height
+          marginTop: '48px', // Navbar height
           backgroundColor: '#f5f5f5',
         }}
       >
-        <div style={{ maxWidth: '1440px', margin: '0 auto' }}>
-          {children}
-        </div>
+        <div style={{ maxWidth: '1440px', margin: '0 auto' }}>{children}</div>
       </Layout.Content>
     </Layout>
   );

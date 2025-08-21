@@ -33,7 +33,7 @@ const DEFAULT_BROWSERS = ['chromium', 'firefox'];
 // Get affected projects using NX
 function getAffectedProjects() {
   try {
-    const output = execSync('npx nx print-affected --select=projects', { 
+const output = execSync('npx nx show projects --affected', { 
       encoding: 'utf8',
       stdio: ['pipe', 'pipe', 'pipe']
     });

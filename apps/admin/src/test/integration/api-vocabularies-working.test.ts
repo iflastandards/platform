@@ -9,7 +9,7 @@ import { NextRequest } from 'next/server';
 describe('Vocabularies API Working Tests @integration @api', () => {
   let listVocabularies: any;
   let createVocabulary: any;
-  
+
   beforeAll(async () => {
     // Set up mocks before importing modules
     vi.mock('@clerk/nextjs/server', () => ({
@@ -23,7 +23,9 @@ describe('Vocabularies API Working Tests @integration @api', () => {
     }));
 
     // Now import the modules after mocking
-    const vocabulariesRoute = await import('../../app/api/admin/vocabularies/route');
+    const vocabulariesRoute = await import(
+      '../../app/api/admin/vocabularies/route'
+    );
     listVocabularies = vocabulariesRoute.GET;
     createVocabulary = vocabulariesRoute.POST;
   });
@@ -36,37 +38,39 @@ describe('Vocabularies API Working Tests @integration @api', () => {
     it('should return 401 when not authenticated', async () => {
       const { auth } = await import('@clerk/nextjs/server');
       const { getAuthContext } = await import('../../lib/authorization');
-      
+
       // Mock no authentication
       (auth as any).mockResolvedValue(null);
       (getAuthContext as any).mockResolvedValue(null);
 
-      const request = new NextRequest('http://localhost:3000/api/admin/vocabularies', {
-        method: 'GET',
-      });
+      const request = new NextRequest(
+        'http://localhost:3000/api/admin/vocabularies',
+        {
+          method: 'GET',
+        },
+      );
 
       const response = await listVocabularies(request as any);
       const data = await response.json();
-      
+
       // Debug output
-      if (response.status !== 200) {
+      if (response.status !== 401) {
         console.log('GET /api/admin/vocabularies failed:');
         console.log('Status:', response.status);
         console.log('Data:', JSON.stringify(data, null, 2));
       }
 
-      expect(response.status).toBe(200);
-      expect(data.success).toBe(true);
-      expect(data.data).toBeDefined();
-      expect(Array.isArray(data.data)).toBe(true);
-      // Should return mock vocabularies
-      expect(data.data.length).toBeGreaterThan(0);
+      expect(response.status).toBe(401);
+      expect(data.success).toBe(false);
+      expect(data.error).toBeDefined();
+      expect(data.error.code).toBe('UNAUTHENTICATED');
     });
 
     it('should filter vocabularies based on user namespace access', async () => {
       const { auth } = await import('@clerk/nextjs/server');
-      const { getAuthContext, getUserAccessibleResources } = await import('../../lib/authorization');
-      
+      const { getAuthContext, getUserAccessibleResources, canPerformAction } =
+        await import('../../lib/authorization');
+
       // Mock authentication for editor
       (auth as any).mockResolvedValue({
         userId: 'user_editor',
@@ -80,12 +84,14 @@ describe('Vocabularies API Working Tests @integration @api', () => {
         roles: {
           systemRole: undefined,
           reviewGroups: [],
-          teams: [{
-            role: 'editor',
-            teamId: 'isbd-team-1',
-            namespaces: ['isbd'],
-            reviewGroup: 'isbd',
-          }],
+          teams: [
+            {
+              role: 'editor',
+              teamId: 'isbd-team-1',
+              namespaces: ['isbd'],
+              reviewGroup: 'isbd',
+            },
+          ],
           translations: [],
         },
       });
@@ -98,9 +104,42 @@ describe('Vocabularies API Working Tests @integration @api', () => {
         teams: ['isbd-team-1'],
       });
 
-      const request = new NextRequest('http://localhost:3000/api/admin/vocabularies', {
-        method: 'GET',
+      // Mock authorization check
+      (canPerformAction as any).mockResolvedValue(true);
+
+      // Mock auth context for editor
+      (getAuthContext as any).mockResolvedValue({
+        userId: 'user_editor',
+        email: 'editor@example.com',
+        roles: {
+          systemRole: undefined,
+          reviewGroups: [],
+          teams: [
+            {
+              role: 'editor',
+              teamId: 'isbd-team-1',
+              namespaces: ['isbd'],
+              reviewGroup: 'isbd',
+            },
+          ],
+          translations: [],
+        },
       });
+
+      // Mock accessible resources for editor (limited access)
+      (getUserAccessibleResources as any).mockResolvedValue({
+        reviewGroups: [],
+        namespaces: ['isbd'],
+        projects: [],
+        teams: ['isbd-team-1'],
+      });
+
+      const request = new NextRequest(
+        'http://localhost:3000/api/admin/vocabularies',
+        {
+          method: 'GET',
+        },
+      );
 
       const response = await listVocabularies(request as any);
       const data = await response.json();
@@ -119,24 +158,27 @@ describe('Vocabularies API Working Tests @integration @api', () => {
     it('should deny creation without authentication', async () => {
       const { auth } = await import('@clerk/nextjs/server');
       const { getAuthContext } = await import('../../lib/authorization');
-      
+
       // Mock no authentication
       (auth as any).mockResolvedValue(null);
       (getAuthContext as any).mockResolvedValue(null);
 
-      const request = new NextRequest('http://localhost:3000/api/admin/vocabularies', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          name: 'Test Vocabulary',
-          description: 'Test description',
-          namespaceId: 'isbd',
-          prefix: 'test',
-          uri: 'http://example.org/test',
-          status: 'draft',
-          visibility: 'public',
-        }),
-      });
+      const request = new NextRequest(
+        'http://localhost:3000/api/admin/vocabularies',
+        {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            name: 'Test Vocabulary',
+            description: 'Test description',
+            namespaceId: 'isbd',
+            prefix: 'test',
+            uri: 'http://example.org/test',
+            status: 'draft',
+            visibility: 'public',
+          }),
+        },
+      );
 
       const response = await createVocabulary(request as any);
       const data = await response.json();
@@ -148,8 +190,10 @@ describe('Vocabularies API Working Tests @integration @api', () => {
 
     it('should allow superadmin to create vocabulary', async () => {
       const { auth } = await import('@clerk/nextjs/server');
-      const { getAuthContext, canPerformAction } = await import('../../lib/authorization');
-      
+      const { getAuthContext, canPerformAction } = await import(
+        '../../lib/authorization'
+      );
+
       // Mock authentication
       (auth as any).mockResolvedValue({
         userId: 'user_superadmin',
@@ -181,11 +225,14 @@ describe('Vocabularies API Working Tests @integration @api', () => {
         visibility: 'public',
       };
 
-      const request = new NextRequest('http://localhost:3000/api/admin/vocabularies', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(vocabularyData),
-      });
+      const request = new NextRequest(
+        'http://localhost:3000/api/admin/vocabularies',
+        {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(vocabularyData),
+        },
+      );
 
       const response = await createVocabulary(request as any);
       const data = await response.json();
@@ -199,8 +246,10 @@ describe('Vocabularies API Working Tests @integration @api', () => {
 
     it('should deny editor from creating vocabulary without permission', async () => {
       const { auth } = await import('@clerk/nextjs/server');
-      const { getAuthContext, canPerformAction } = await import('../../lib/authorization');
-      
+      const { getAuthContext, canPerformAction } = await import(
+        '../../lib/authorization'
+      );
+
       // Mock authentication for editor
       (auth as any).mockResolvedValue({
         userId: 'user_editor',
@@ -214,12 +263,14 @@ describe('Vocabularies API Working Tests @integration @api', () => {
         roles: {
           systemRole: undefined,
           reviewGroups: [],
-          teams: [{
-            role: 'editor',
-            teamId: 'lrm-team-1',
-            namespaces: ['lrm'],
-            reviewGroup: 'bcm',
-          }],
+          teams: [
+            {
+              role: 'editor',
+              teamId: 'lrm-team-1',
+              namespaces: ['lrm'],
+              reviewGroup: 'bcm',
+            },
+          ],
           translations: [],
         },
       });
@@ -237,11 +288,14 @@ describe('Vocabularies API Working Tests @integration @api', () => {
         visibility: 'public',
       };
 
-      const request = new NextRequest('http://localhost:3000/api/admin/vocabularies', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(vocabularyData),
-      });
+      const request = new NextRequest(
+        'http://localhost:3000/api/admin/vocabularies',
+        {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(vocabularyData),
+        },
+      );
 
       const response = await createVocabulary(request as any);
       const data = await response.json();
@@ -253,8 +307,10 @@ describe('Vocabularies API Working Tests @integration @api', () => {
 
     it('should validate required fields', async () => {
       const { auth } = await import('@clerk/nextjs/server');
-      const { getAuthContext, canPerformAction } = await import('../../lib/authorization');
-      
+      const { getAuthContext, canPerformAction } = await import(
+        '../../lib/authorization'
+      );
+
       // Mock authentication
       (auth as any).mockResolvedValue({
         userId: 'user_superadmin',
@@ -282,11 +338,14 @@ describe('Vocabularies API Working Tests @integration @api', () => {
         // Missing: name, namespaceId, prefix, uri
       };
 
-      const request = new NextRequest('http://localhost:3000/api/admin/vocabularies', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(invalidData),
-      });
+      const request = new NextRequest(
+        'http://localhost:3000/api/admin/vocabularies',
+        {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(invalidData),
+        },
+      );
 
       const response = await createVocabulary(request as any);
       const data = await response.json();
@@ -300,8 +359,10 @@ describe('Vocabularies API Working Tests @integration @api', () => {
   describe('Authorization Matrix', () => {
     it('should correctly enforce namespace-level permissions', async () => {
       const { auth } = await import('@clerk/nextjs/server');
-      const { getAuthContext, canPerformAction } = await import('../../lib/authorization');
-      
+      const { getAuthContext, canPerformAction } = await import(
+        '../../lib/authorization'
+      );
+
       // Test case: Editor with ISBD access trying to create vocabulary in ISBD
       (auth as any).mockResolvedValue({
         userId: 'user_editor',
@@ -314,12 +375,14 @@ describe('Vocabularies API Working Tests @integration @api', () => {
         roles: {
           systemRole: undefined,
           reviewGroups: [],
-          teams: [{
-            role: 'editor',
-            teamId: 'isbd-team-1',
-            namespaces: ['isbd'],
-            reviewGroup: 'isbd',
-          }],
+          teams: [
+            {
+              role: 'editor',
+              teamId: 'isbd-team-1',
+              namespaces: ['isbd'],
+              reviewGroup: 'isbd',
+            },
+          ],
           translations: [],
         },
       });
@@ -337,11 +400,14 @@ describe('Vocabularies API Working Tests @integration @api', () => {
         visibility: 'public',
       };
 
-      const request = new NextRequest('http://localhost:3000/api/admin/vocabularies', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(vocabularyData),
-      });
+      const request = new NextRequest(
+        'http://localhost:3000/api/admin/vocabularies',
+        {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(vocabularyData),
+        },
+      );
 
       const response = await createVocabulary(request as any);
       const data = await response.json();
@@ -392,13 +458,13 @@ describe('Vocabularies API Working Tests @integration @api', () => {
       expect(permissionMatrix).toHaveProperty('editor');
       expect(permissionMatrix).toHaveProperty('author');
       expect(permissionMatrix).toHaveProperty('translator');
-      
+
       // Verify superadmin has all permissions
       expect(permissionMatrix.superadmin.canDelete).toBe(true);
-      
+
       // Verify editor cannot delete
       expect(permissionMatrix.editor.canDelete).toBe(false);
-      
+
       // Verify author cannot create
       expect(permissionMatrix.author.canCreate).toBe(false);
     });

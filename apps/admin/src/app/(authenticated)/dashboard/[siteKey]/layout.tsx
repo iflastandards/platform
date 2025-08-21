@@ -2,12 +2,16 @@ import { SiteManagementDashboardLayout } from '@/components/dashboard/site-manag
 
 interface Props {
   children: React.ReactNode;
-  params: { siteKey: string };
+  params: Promise<{ siteKey: string }>;
 }
 
-export default function SiteManagementLayout({ children, params }: Props) {
+export default async function SiteManagementLayout({
+  children,
+  params,
+}: Props) {
+  const { siteKey } = await params;
   return (
-    <SiteManagementDashboardLayout siteKey={params.siteKey}>
+    <SiteManagementDashboardLayout siteKey={siteKey}>
       {children}
     </SiteManagementDashboardLayout>
   );

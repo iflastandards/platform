@@ -85,6 +85,13 @@ global.fetch = vi.fn().mockImplementation((input: RequestInfo | URL, init?: Requ
   } as Response);
 });
 
+// Polyfill getComputedStyle for components that rely on it in jsdom
+if (!(window as any).getComputedStyle) {
+  (window as any).getComputedStyle = () => ({
+    getPropertyValue: () => '',
+  });
+}
+
 // Mock window.matchMedia
 Object.defineProperty(window, 'matchMedia', {
   writable: true,

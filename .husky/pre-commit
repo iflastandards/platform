@@ -2,6 +2,10 @@
 # always execute from repository root
 cd "$(git rev-parse --show-toplevel)" || exit
 
+# Force non-interactive behavior and fail fast
+export CI=1
+set -e
+
 # Group 3: Pre-commit tests (Fast feedback for commits)
 # Uses the new organized test structure
 echo "🔍 Running Group 3: Pre-commit tests..."
@@ -10,20 +14,10 @@ echo "🔍 Running Group 3: Pre-commit tests..."
 echo "📋 Validating test file tagging..."
 node scripts/validate-test-tagging.js
 
-if [ $? -ne 0 ]; then
-  echo "❌ Test tagging validation failed. Please fix and try again."
-  echo "ℹ️  Refer to developer_notes/IFLA-Standards-Testing-Guide.md for guidance."
-  exit 1
-fi
-
 echo "✅ Test tagging validation passed!"
 
-# Use the robust pre-commit command with better timeout handling
-pnpm test:pre-commit:robust
-
-if [ $? -ne 0 ]; then
-  echo "❌ Pre-commit tests failed. Please fix and try again."
-  exit 1
-fi
+# Use the smart pre-commit path for intelligent validation based on changes
+echo "🧠 Running smart pre-commit checks (intelligently optimized based on changes)"
+pnpm test:pre-commit:smart
 
 echo "✅ Group 3 pre-commit tests passed!"

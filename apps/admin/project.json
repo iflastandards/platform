@@ -7,6 +7,8 @@
   "targets": {
     "typecheck": {
       "executor": "nx:run-commands",
+      "dependsOn": [],
+      "cache": false,
       "options": {
         "command": "tsc --noEmit",
         "cwd": "apps/admin"

@@ -11,6 +11,7 @@ import {
   DELETE as deleteVocabulary 
 } from '../../app/api/admin/vocabularies/[id]/route';
 import { TestUsers, clearTestUsersCache } from '../../test-config/clerk-test-users';
+import { mockClerkCurrentUser } from '../../test-config/clerk-test-helpers';
 import * as fs from 'node:fs/promises';
 import * as path from 'node:path';
 
@@ -44,6 +45,8 @@ describe('Vocabularies API Authorization @integration @api @auth @critical', () 
       it('should allow superadmin to list all vocabularies', async () => {
         const user = await TestUsers.getSuperAdmin();
         expect(user).toBeDefined();
+        // Ensure withAuth() sees an authenticated user
+        mockClerkCurrentUser(user!);
 
         // Mock Clerk's getAuthContext to return our test user
         vi.doMock('../../lib/authorization', async () => {
@@ -80,8 +83,9 @@ describe('Vocabularies API Authorization @integration @api @auth @critical', () 
       it('should allow RG admin to list vocabularies in their namespaces', async () => {
         const user = await TestUsers.getReviewGroupAdmin();
         expect(user).toBeDefined();
+        mockClerkCurrentUser(user!);
 
-        vi.doMock('../../lib/authorization', async () => {
+        vi.doMock('../../lib/authorization', async () = {
           const actual = await vi.importActual('../../lib/authorization');
           return {
             ...actual,
@@ -115,8 +119,9 @@ describe('Vocabularies API Authorization @integration @api @auth @critical', () 
       it('should allow editor to list vocabularies in their namespaces', async () => {
         const user = await TestUsers.getEditor();
         expect(user).toBeDefined();
+        mockClerkCurrentUser(user!);
 
-        vi.doMock('../../lib/authorization', async () => {
+        vi.doMock('../../lib/authorization', async () = {
           const actual = await vi.importActual('../../lib/authorization');
           return {
             ...actual,
@@ -147,13 +152,14 @@ describe('Vocabularies API Authorization @integration @api @auth @critical', () 
       });
 
       it('should deny access without authentication', async () => {
-        vi.doMock('../../lib/authorization', async () => {
+        vi.doMock('../../lib/authorization', async () = {
           const actual = await vi.importActual('../../lib/authorization');
           return {
             ...actual,
             getAuthContext: vi.fn().mockResolvedValue(null),
           };
         });
+        mockClerkCurrentUser(null as any);
 
         const request = new Request('http://localhost:3000/api/admin/vocabularies', {
           method: 'GET',
@@ -164,13 +170,14 @@ describe('Vocabularies API Authorization @integration @api @auth @critical', () 
 
         expect(response.status).toBe(401);
         expect(data.success).toBe(false);
-        expect(data.error.code).toBe('AUTH_REQUIRED');
+        expect(data.error.code).toBe('UNAUTHENTICATED');
       });
     });
 
     describe('Query Parameters @api', () => {
       it('should filter vocabularies by namespace', async () => {
         const user = await TestUsers.getReviewGroupAdmin();
+        mockClerkCurrentUser(user!);
         
         vi.doMock('../../lib/authorization', async () => {
           const actual = await vi.importActual('../../lib/authorization');

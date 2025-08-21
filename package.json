@@ -315,6 +315,7 @@
     "test:pre-commit:smart": "node scripts/pre-commit-check-smart.js",
     "test:pre-commit:robust": "node scripts/pre-commit-check-robust.js",
     "test:pre-commit:fast": "node scripts/pre-commit-check-fast.js",
+    "test:pre-commit:ultra-fast": "node scripts/pre-commit-check-ultra-fast.js",
     "test:pre-commit:strict": "nx affected --targets=typecheck,lint,test:unit --parallel=3 && node scripts/test-site-builds-affected.js --env local --skip-build",
     "test:pre-commit:smoke": "nx affected --targets=typecheck,lint --parallel=3 && pnpm test:e2e:smoke:affected",
     "test:pre-push": "pnpm test:builds:critical",
@@ -351,6 +352,8 @@
     "test:validate-tagging": "node scripts/validate-test-tagging.js",
     "audit:testing": "node scripts/testing-audit-quarterly.js",
     "typecheck": "node -r ./scripts/fix-listener-leak.js scripts/typecheck-safe.js nx affected --target=typecheck --parallel=3",
+    "typecheck:affected": "NX_SKIP_NX_DEPENDENCIES=true nx affected --target=typecheck --parallel=3",
+    "typecheck:fast": "NX_SKIP_NX_DEPENDENCIES=true nx affected --target=typecheck --parallel=3",
     "typecheck:admin:docs": "nx typecheck docs",
     "typecheck:all": "node -r ./scripts/fix-listener-leak.js scripts/typecheck-safe.js nx run-many --target=typecheck --all --parallel=4",
     "typecheck:clean": "node scripts/typecheck-clean.js",
@@ -645,7 +648,7 @@
   "engines": {
     "node": ">=18.0"
   },
-  "packageManager": "pnpm@10.14.0+sha512.ad27a79641b49c3e481a16a805baa71817a04bbe06a38d17e60e2eaee83f6a146c6a688125f5792e48dd5ba30e7da52a5cda4c3992b9ccf333f9ce223af84748",
+  "packageManager": "pnpm@10.15.0+sha512.486ebc259d3e999a4e8691ce03b5cac4a71cbeca39372a9b762cb500cfdf0873e2cb16abe3d951b1ee2cf012503f027b98b6584e4df22524e0c7450d9ec7aa7b",
   "lint-staged": {
     "**/*.{js,jsx,ts,tsx}": [
       "eslint --quiet --fix"

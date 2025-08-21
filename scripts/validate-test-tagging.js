@@ -2,10 +2,10 @@
 
 /**
  * Test Tagging Validation Script
- * 
+ *
  * This script validates that test files follow proper tagging and naming conventions
  * as defined in the IFLA Standards Testing Guide.
- * 
+ *
  * It runs as part of the pre-commit hook to ensure all new/modified test files
  * comply with the established patterns.
  */
@@ -22,7 +22,7 @@ const colors = {
   blue: '\x1b[34m',
   cyan: '\x1b[36m',
   reset: '\x1b[0m',
-  bold: '\x1b[1m'
+  bold: '\x1b[1m',
 };
 
 // Required tag categories
@@ -30,18 +30,44 @@ const REQUIRED_TAGS = {
   testType: ['@unit', '@integration', '@e2e', '@smoke', '@env'],
   priority: ['@critical', '@high-priority', '@low-priority'],
   featureArea: [
-    '@auth', '@rbac', '@api', '@ui', '@dashboard', '@admin', '@docs',
-    '@navigation', '@search', '@vocabulary', '@sites', '@validation', 
-    '@accessibility'
-  ]
+    '@auth',
+    '@rbac',
+    '@api',
+    '@ui',
+    '@dashboard',
+    '@admin',
+    '@docs',
+    '@navigation',
+    '@search',
+    '@vocabulary',
+    '@sites',
+    '@validation',
+    '@accessibility',
+  ],
 };
 
 // Optional tags
 const OPTIONAL_TAGS = [
-  '@local-only', '@ci-only', '@preview-only', '@production-only',
-  '@slow', '@fast', '@flaky', '@performance', '@visual',
-  '@chromium-only', '@firefox-only', '@webkit-only', '@mobile-only',
-  '@skip', '@portal', '@server-dependent', '@authentication', '@clerk', '@example', '@madcreek'
+  '@local-only',
+  '@ci-only',
+  '@preview-only',
+  '@production-only',
+  '@slow',
+  '@fast',
+  '@flaky',
+  '@performance',
+  '@visual',
+  '@chromium-only',
+  '@firefox-only',
+  '@webkit-only',
+  '@mobile-only',
+  '@skip',
+  '@portal',
+  '@server-dependent',
+  '@authentication',
+  '@clerk',
+  '@example',
+  '@madcreek',
 ];
 
 // All known tags (for validation)
@@ -49,7 +75,7 @@ const ALL_KNOWN_TAGS = [
   ...REQUIRED_TAGS.testType,
   ...REQUIRED_TAGS.priority,
   ...REQUIRED_TAGS.featureArea,
-  ...OPTIONAL_TAGS
+  ...OPTIONAL_TAGS,
 ];
 
 // Valid file naming patterns
@@ -62,7 +88,7 @@ const VALID_FILE_PATTERNS = [
   /\.smoke\.spec\.(ts|js|tsx|jsx)$/,
   /\.env\.spec\.(ts|js|tsx|jsx)$/,
   /\.visual\.spec\.(ts|js|tsx|jsx)$/,
-  /\.performance\.spec\.(ts|js|tsx|jsx)$/
+  /\.performance\.spec\.(ts|js|tsx|jsx)$/,
 ];
 
 function log(message, color = 'reset') {
@@ -90,14 +116,18 @@ function logInfo(message) {
  */
 function getStagedTestFiles() {
   try {
-    const stagedFiles = execSync('git diff --cached --name-only', { encoding: 'utf8' })
+    const stagedFiles = execSync('git diff --cached --name-only', {
+      encoding: 'utf8',
+    })
       .split('\n')
-      .filter(file => file.trim())
-      .filter(file => isTestFile(file));
-    
+      .filter((file) => file.trim())
+      .filter((file) => isTestFile(file));
+
     return stagedFiles;
   } catch (error) {
-    logWarning('Could not get staged files, checking all test files in current directory');
+    logWarning(
+      'Could not get staged files, checking all test files in current directory',
+    );
     return [];
   }
 }
@@ -112,15 +142,23 @@ function isTestFile(filePath) {
   }
 
   const fileName = path.basename(filePath);
-  
-  // Exclude setup files and other non-test files
-  const isSetupFile = fileName.startsWith('setup') || 
-                      fileName.includes('setup') ||
-                      fileName === 'vitest.config.ts' ||
-                      fileName === 'jest.config.ts' ||
-                      fileName.endsWith('.config.ts');
-  
-  if (isSetupFile) {
+
+  // Exclude setup files, mock files, and other non-test files
+  const isSetupFile =
+    fileName.startsWith('setup') ||
+    fileName.includes('setup') ||
+    fileName === 'vitest.config.ts' ||
+    fileName === 'jest.config.ts' ||
+    fileName.endsWith('.config.ts');
+
+  const isMockFile =
+    fileName.endsWith('.mock.ts') ||
+    fileName.endsWith('.mock.js') ||
+    fileName.endsWith('.mocks.ts') ||
+    fileName.endsWith('.mocks.js') ||
+    filePath.includes('/mocks/');
+
+  if (isSetupFile || isMockFile) {
     return false;
   }
 
@@ -131,13 +169,16 @@ function isTestFile(filePath) {
   }
 
   // Check file naming patterns
-  const hasValidPattern = VALID_FILE_PATTERNS.some(pattern => pattern.test(fileName));
-  
+  const hasValidPattern = VALID_FILE_PATTERNS.some((pattern) =>
+    pattern.test(fileName),
+  );
+
   // Check if it's in a test directory
-  const isInTestDir = filePath.includes('/test/') || 
-                      filePath.includes('/tests/') ||
-                      filePath.includes('/e2e/') ||
-                      filePath.includes('/__tests__/');
+  const isInTestDir =
+    filePath.includes('/test/') ||
+    filePath.includes('/tests/') ||
+    filePath.includes('/e2e/') ||
+    filePath.includes('/__tests__/');
 
   return hasValidPattern || isInTestDir;
 }
@@ -156,16 +197,19 @@ function extractTags(content) {
  */
 function validateFileNaming(filePath) {
   const fileName = path.basename(filePath);
-  const hasValidPattern = VALID_FILE_PATTERNS.some(pattern => pattern.test(fileName));
-  
+  const hasValidPattern = VALID_FILE_PATTERNS.some((pattern) =>
+    pattern.test(fileName),
+  );
+
   if (!hasValidPattern) {
     return {
       valid: false,
-      error: `File name "${fileName}" doesn't follow valid test file naming patterns. ` +
-             `Expected patterns: *.test.ts, *.spec.ts, *.unit.test.ts, *.integration.test.ts, *.e2e.spec.ts, etc.`
+      error:
+        `File name "${fileName}" doesn't follow valid test file naming patterns. ` +
+        `Expected patterns: *.test.ts, *.spec.ts, *.unit.test.ts, *.integration.test.ts, *.e2e.spec.ts, etc.`,
     };
   }
-  
+
   return { valid: true };
 }
 
@@ -178,25 +222,35 @@ function validateTestTags(filePath, content) {
   const warnings = [];
 
   // Check for unknown tags
-  const unknownTags = tags.filter(tag => !ALL_KNOWN_TAGS.includes(tag));
+  const unknownTags = tags.filter((tag) => !ALL_KNOWN_TAGS.includes(tag));
   if (unknownTags.length > 0) {
-    warnings.push(`Unknown tags found: ${unknownTags.join(', ')}. Consider adding them to the official tag list if they're valid.`);
+    warnings.push(
+      `Unknown tags found: ${unknownTags.join(', ')}. Consider adding them to the official tag list if they're valid.`,
+    );
   }
 
   // Check required tag categories
-  const hasTestType = REQUIRED_TAGS.testType.some(tag => tags.includes(tag));
+  const hasTestType = REQUIRED_TAGS.testType.some((tag) => tags.includes(tag));
   if (!hasTestType) {
-    errors.push(`Missing required test type tag. Must include one of: ${REQUIRED_TAGS.testType.join(', ')}`);
+    errors.push(
+      `Missing required test type tag. Must include one of: ${REQUIRED_TAGS.testType.join(', ')}`,
+    );
   }
 
-  const hasPriority = REQUIRED_TAGS.priority.some(tag => tags.includes(tag));
+  const hasPriority = REQUIRED_TAGS.priority.some((tag) => tags.includes(tag));
   if (!hasPriority) {
-    errors.push(`Missing required priority tag. Must include one of: ${REQUIRED_TAGS.priority.join(', ')}`);
+    errors.push(
+      `Missing required priority tag. Must include one of: ${REQUIRED_TAGS.priority.join(', ')}`,
+    );
   }
 
-  const hasFeatureArea = REQUIRED_TAGS.featureArea.some(tag => tags.includes(tag));
+  const hasFeatureArea = REQUIRED_TAGS.featureArea.some((tag) =>
+    tags.includes(tag),
+  );
   if (!hasFeatureArea) {
-    errors.push(`Missing required feature area tag. Must include at least one of: ${REQUIRED_TAGS.featureArea.join(', ')}`);
+    errors.push(
+      `Missing required feature area tag. Must include at least one of: ${REQUIRED_TAGS.featureArea.join(', ')}`,
+    );
   }
 
   // Check for tag consistency with file name
@@ -205,7 +259,9 @@ function validateTestTags(filePath, content) {
     warnings.push('File name suggests unit test but missing @unit tag');
   }
   if (fileName.includes('.integration.') && !tags.includes('@integration')) {
-    warnings.push('File name suggests integration test but missing @integration tag');
+    warnings.push(
+      'File name suggests integration test but missing @integration tag',
+    );
   }
   if (fileName.includes('.e2e.') && !tags.includes('@e2e')) {
     warnings.push('File name suggests e2e test but missing @e2e tag');
@@ -218,7 +274,7 @@ function validateTestTags(filePath, content) {
     valid: errors.length === 0,
     errors,
     warnings,
-    tags
+    tags,
   };
 }
 
@@ -230,7 +286,7 @@ function validateTestFile(filePath) {
     filePath,
     valid: true,
     errors: [],
-    warnings: []
+    warnings: [],
   };
 
   try {
@@ -244,12 +300,19 @@ function validateTestFile(filePath) {
 
     // Read file content
     const content = fs.readFileSync(filePath, 'utf8');
-    
+
     // Skip validation for files that don't contain test code
-    if (!content.includes('describe(') && !content.includes('test(') && 
-        !content.includes('it(') && !content.includes('smokeTest(') &&
-        !content.includes('integrationTest(') && !content.includes('e2eTest(')) {
-      results.warnings.push('File appears to be a test file but contains no test functions');
+    if (
+      !content.includes('describe(') &&
+      !content.includes('test(') &&
+      !content.includes('it(') &&
+      !content.includes('smokeTest(') &&
+      !content.includes('integrationTest(') &&
+      !content.includes('e2eTest(')
+    ) {
+      results.warnings.push(
+        'File appears to be a test file but contains no test functions',
+      );
       return results;
     }
 
@@ -258,10 +321,9 @@ function validateTestFile(filePath) {
     results.valid = results.valid && tagResult.valid;
     results.errors.push(...tagResult.errors);
     results.warnings.push(...tagResult.warnings);
-    
+
     // Add discovered tags for reference
     results.tags = tagResult.tags;
-
   } catch (error) {
     results.valid = false;
     results.errors.push(`Failed to read file: ${error.message}`);
@@ -274,11 +336,13 @@ function validateTestFile(filePath) {
  * Main validation function
  */
 function validateTestFiles() {
-  log(`${colors.bold}🧪 IFLA Standards Platform - Test Tagging Validation${colors.reset}`);
+  log(
+    `${colors.bold}🧪 IFLA Standards Platform - Test Tagging Validation${colors.reset}`,
+  );
   log('Checking test files for proper tagging and naming conventions...\n');
 
   const stagedFiles = getStagedTestFiles();
-  
+
   if (stagedFiles.length === 0) {
     logInfo('No test files found in staged changes.');
     return true; // No test files to validate
@@ -299,20 +363,24 @@ function validateTestFiles() {
 
     // Display results for this file
     log(`📄 ${result.filePath}`, 'cyan');
-    
+
     if (result.tags && result.tags.length > 0) {
       log(`   Tags: ${result.tags.join(' ')}`, 'blue');
     }
 
-    result.errors.forEach(error => {
+    result.errors.forEach((error) => {
       logError(`   ${error}`);
     });
 
-    result.warnings.forEach(warning => {
+    result.warnings.forEach((warning) => {
       logWarning(`   ${warning}`);
     });
 
-    if (result.valid && result.errors.length === 0 && result.warnings.length === 0) {
+    if (
+      result.valid &&
+      result.errors.length === 0 &&
+      result.warnings.length === 0
+    ) {
       logSuccess('   All validations passed!');
     }
 
@@ -321,9 +389,9 @@ function validateTestFiles() {
 
   // Summary
   log(`${colors.bold}📊 Validation Summary:${colors.reset}`);
-  const validFiles = results.filter(r => r.valid).length;
-  const invalidFiles = results.filter(r => !r.valid).length;
-  const filesWithWarnings = results.filter(r => r.warnings.length > 0).length;
+  const validFiles = results.filter((r) => r.valid).length;
+  const invalidFiles = results.filter((r) => !r.valid).length;
+  const filesWithWarnings = results.filter((r) => r.warnings.length > 0).length;
 
   log(`✅ Valid files: ${validFiles}`, validFiles > 0 ? 'green' : 'reset');
   if (invalidFiles > 0) {
@@ -334,11 +402,25 @@ function validateTestFiles() {
   }
 
   if (!overallValid) {
-    log('\n' + colors.red + colors.bold + '🚫 Test validation failed!' + colors.reset);
+    log(
+      '\n' +
+        colors.red +
+        colors.bold +
+        '🚫 Test validation failed!' +
+        colors.reset,
+    );
     log('Please fix the errors above before committing.');
-    log('Refer to developer_notes/IFLA-Standards-Testing-Guide.md for guidance.');
+    log(
+      'Refer to developer_notes/IFLA-Standards-Testing-Guide.md for guidance.',
+    );
   } else {
-    log('\n' + colors.green + colors.bold + '🎉 All test files passed validation!' + colors.reset);
+    log(
+      '\n' +
+        colors.green +
+        colors.bold +
+        '🎉 All test files passed validation!' +
+        colors.reset,
+    );
     if (filesWithWarnings > 0) {
       log('Consider addressing the warnings for better test organization.');
     }
@@ -361,5 +443,5 @@ module.exports = {
   extractTags,
   isTestFile,
   REQUIRED_TAGS,
-  ALL_KNOWN_TAGS
+  ALL_KNOWN_TAGS,
 };

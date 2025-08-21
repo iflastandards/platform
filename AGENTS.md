@@ -27,9 +27,9 @@ Essential guidance for coding agents working in this IFLA Standards monorepo.
 - **API Layer**: Next.js App Router API routes (/app/api/*) with standard fetch (NOT tRPC)
 - **Authorization**: Custom role-based system using Clerk publicMetadata
 - **State Management**: TanStack Query 5.83.0
-- **UI Components**: Material-UI 7.2.0 + Lucide React 0.536.0
+- **UI Components**: Ant Design 5.23.8 (replacing Material-UI)
 - **Forms**: React Hook Form 7.61.1 + Zod 4.0.14 validation
-- **Styling**: Emotion 11.14.0 + Material-UI theming
+- **Styling**: Ant Design theme system with ConfigProvider
 
 ## Commands
 - **Build**: `pnpm nx build {site}` (e.g., `pnpm nx build portal`, `pnpm nx build admin`)
@@ -204,3 +204,53 @@ Is this a straightforward code task?
 - **Features**: Automatic server lifecycle, health checks, port cleanup
 - **Documentation**: See `apps/admin/docs/server-dependent-testing.md`
 - **Status**: ✅ 14/14 tests passing (CORS, cross-site auth, server management)
+
+## Ant Design Spacing Guide
+
+### Global Spacing with ConfigProvider
+- **Compact Theme**: Use `theme.compactAlgorithm` for quickest global spacing reduction
+- **Multiple Algorithms**: Combine algorithms: `[theme.darkAlgorithm, theme.compactAlgorithm]`
+- **Custom Tokens**: Override padding, margin, controlHeight tokens globally
+- **Component-Specific**: Use `components` in theme config for targeted adjustments
+
+### Key Spacing Tokens
+```javascript
+theme: {
+  token: {
+    // Padding tokens
+    padding: 8,
+    paddingXS: 4,
+    paddingSM: 8,
+    paddingLG: 16,
+    // Margin tokens
+    margin: 12,
+    marginXS: 4,
+    marginSM: 8,
+    marginLG: 16,
+    // Control heights
+    controlHeight: 28,
+    controlHeightSM: 24,
+    controlHeightLG: 36,
+  },
+  components: {
+    Table: { cellPaddingBlock: 8, cellPaddingInline: 12 },
+    Form: { itemMarginBottom: 12 },
+    Button: { paddingBlock: 4, paddingInline: 12 },
+    Layout: { headerHeight: 48 },
+    Menu: { itemHeight: 36 },
+  }
+}
+```
+
+### Component-Level Spacing
+- **Space Component**: Control spacing between elements with `size` prop
+- **Row/Col Gutter**: Use `gutter={[horizontal, vertical]}` for grid spacing
+- **Inline Styles**: Override individual components with `style={{ marginBottom: 8 }}`
+- **Badge Positioning**: Use `offset={[x, y]}` to adjust badge position
+
+### Best Practices
+- **Prefer theme config** over CSS overrides for maintainability
+- **Use compact algorithm** as base for tight layouts
+- **Combine with custom tokens** for fine-tuning
+- **Avoid !important** in CSS overrides
+- **Test responsive behavior** when adjusting spacing

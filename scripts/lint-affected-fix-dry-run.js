@@ -12,23 +12,28 @@ console.log('🔍 Finding affected files for linting...');
 
 try {
   // Get affected files from Nx
-  const affectedOutput = execSync('pnpm nx print-affected --select=files', { 
+const affectedOutput = execSync('pnpm nx show projects --affected --json', { 
     encoding: 'utf8',
     stdio: ['inherit', 'pipe', 'inherit']
   });
   
-  // Parse the JSON output (Nx returns a JSON array)
-  let affectedFiles;
+  // Parse the JSON output of projects, then compute files via git diff
+  let affectedProjects = [];
   try {
-    affectedFiles = JSON.parse(affectedOutput);
+    affectedProjects = JSON.parse(affectedOutput);
   } catch {
-    // Fallback: treat as newline-separated list
-    affectedFiles = affectedOutput.trim().split('\n').filter(Boolean);
+    affectedProjects = affectedOutput.trim().split('\n').filter(Boolean);
   }
-  
-  // Filter for TypeScript/JavaScript/MDX files
-  const lintableFiles = affectedFiles.filter(file => 
-    /\.(ts|tsx|js|jsx|mjs|cjs|mdx)$/.test(file) && 
+
+  // Get changed files since base
+  const base = process.env.NX_BASE || 'origin/main';
+  const head = process.env.NX_HEAD || 'HEAD';
+  const diffOutput = execSync(`git diff --name-only ${base}...${head}`, { encoding: 'utf8' });
+  const changedFiles = diffOutput.trim().split('\n').filter(Boolean);
+
+  // Filter changed files that belong to affected projects
+  const lintableFiles = changedFiles.filter(file =>
+    /\.(ts|tsx|js|jsx|mjs|cjs|mdx)$/.test(file) &&
     !file.includes('node_modules') &&
     !file.includes('.next') &&
     !file.includes('dist') &&

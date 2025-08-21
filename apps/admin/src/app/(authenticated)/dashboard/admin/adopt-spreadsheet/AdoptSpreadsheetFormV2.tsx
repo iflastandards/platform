@@ -268,7 +268,7 @@ export default function AdoptSpreadsheetForm({ userId: _userId, userName }: Adop
                     title: 'Type',
                     dataIndex: 'type',
                     key: 'type',
-                    render: (_: any, record: any) => (
+                    render: (_: unknown, record: { headers?: string[] }) => (
                       <Tag color="blue">
                         {record.headers?.length || 0} fields
                       </Tag>

@@ -40,7 +40,7 @@ function runCommand(command, options = {}) {
 function getAffectedProjects() {
   console.log(colors.cyan('🎯 Detecting affected projects...'));
   
-  const affected = runCommand('npx nx print-affected --select=projects --type=app', { silent: true });
+const affected = runCommand('npx nx show projects --affected --type=app', { silent: true });
   
   if (affected && affected.trim()) {
     const projects = affected.split(',').map(p => p.trim()).filter(Boolean);

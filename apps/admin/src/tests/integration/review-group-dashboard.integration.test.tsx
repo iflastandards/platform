@@ -22,7 +22,7 @@ describe('ReviewGroupDashboard @integration @ui @dashboard @critical', () => {
 
   beforeEach(async () => {
     // Mock console.log for clean test output
-    console.log = jest.fn();
+console.log = vi.fn();
   });
 
   afterEach(async () => {

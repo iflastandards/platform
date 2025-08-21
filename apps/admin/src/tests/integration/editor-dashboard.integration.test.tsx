@@ -44,7 +44,7 @@ describe('EditorDashboard @integration @ui @dashboard @critical', () => {
     };
 
     // Mock console.log for clean test output
-    console.log = jest.fn();
+console.log = vi.fn();
   });
 
   afterEach(async () => {

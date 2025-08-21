@@ -1,19 +1,10 @@
 'use client';
 
-import React, { useState } from 'react';
+import { useState } from 'react';
 import Link from 'next/link';
 import { useUser, UserButton } from '@clerk/nextjs';
 import { useTheme as useAppTheme } from '@/contexts/theme-context';
-import {
-  Layout,
-  Menu,
-  Button,
-  Badge,
-  Tag,
-  Drawer,
-  Space,
-  Grid,
-} from 'antd';
+import { Layout, Menu, Button, Badge, Tag, Drawer, Space, Grid } from 'antd';
 import {
   MenuOutlined,
   DashboardOutlined,
@@ -43,33 +34,37 @@ function Navbar() {
   // Get current user from Clerk
   const { user: clerkUser, isLoaded } = useUser();
   const isDemo = process.env.NEXT_PUBLIC_IFLA_DEMO === 'true';
-  
+
   // Determine user role based on demo mode
   let userRole = 'member';
   let isAdmin = false;
   let isStaff = false;
-  
+
   if (isLoaded && clerkUser) {
     const email = clerkUser.emailAddresses?.[0]?.emailAddress || '';
-    
+
     if (isDemo) {
       // In demo mode, get role from mock GitHub data
       const mockData = getMockGitHubData(email);
       isAdmin = mockData.systemRole === 'admin';
-      isStaff = isAdmin || mockData.reviewGroups.some(rg => rg.role === 'maintainer');
-      
+      isStaff =
+        isAdmin || mockData.reviewGroups.some((rg) => rg.role === 'maintainer');
+
       if (isAdmin) {
         userRole = 'admin';
       } else if (isStaff) {
         userRole = 'maintainer';
-      } else if (mockData.reviewGroups.length > 0 || Object.keys(mockData.projects).length > 0) {
+      } else if (
+        mockData.reviewGroups.length > 0 ||
+        Object.keys(mockData.projects).length > 0
+      ) {
         userRole = 'member';
       } else {
         userRole = 'guest';
       }
     } else {
       // In production mode, use Clerk metadata
-      userRole = clerkUser.publicMetadata?.iflaRole as string || 'member';
+      userRole = (clerkUser.publicMetadata?.iflaRole as string) || 'member';
       isAdmin = userRole === 'admin';
       isStaff = userRole === 'staff' || isAdmin;
     }
@@ -120,7 +115,11 @@ function Navbar() {
     },
     {
       key: 'review',
-      icon: <Badge count={3} size="small"><CommentOutlined /></Badge>,
+      icon: (
+        <Badge count={3} size="small">
+          <CommentOutlined />
+        </Badge>
+      ),
       label: <Link href="/review">Review Queue</Link>,
     },
   ];
@@ -162,10 +161,12 @@ function Navbar() {
           top: 0,
           zIndex: 1000,
           width: '100%',
+          height: 48,
+          lineHeight: '48px',
           display: 'flex',
           alignItems: 'center',
           backgroundColor: mode === 'dark' ? '#001529' : '#0066CC',
-          padding: '0 24px',
+          padding: '0 16px',
         }}
       >
         {isMobile && (
@@ -178,7 +179,14 @@ function Navbar() {
           />
         )}
 
-        <div style={{ color: 'white', fontSize: 18, fontWeight: 500, marginRight: 32 }}>
+        <div
+          style={{
+            color: 'white',
+            fontSize: 18,
+            fontWeight: 500,
+            marginRight: 32,
+          }}
+        >
           IFLA Admin
         </div>
 
@@ -195,20 +203,24 @@ function Navbar() {
           />
         )}
 
-        <Space size="middle" style={{ marginLeft: 'auto' }}>
+        <Space
+          size="middle"
+          style={{ marginLeft: 'auto', alignItems: 'center' }}
+        >
           {!isMobile && (
             <Tag
               color={isAdmin ? 'red' : isStaff ? 'blue' : 'default'}
+              style={{ margin: 0 }}
             >
               {userRole}
             </Tag>
           )}
 
-          <Badge count={5}>
+          <Badge count={5} size="small" offset={[-2, 6]}>
             <Button
               type="text"
               icon={<BellOutlined />}
-              style={{ color: 'white' }}
+              style={{ color: 'white', display: 'flex', alignItems: 'center' }}
               aria-label="View notifications (5 unread)"
             />
           </Badge>
@@ -217,18 +229,22 @@ function Navbar() {
             type="text"
             icon={mode === 'dark' ? <BulbFilled /> : <BulbOutlined />}
             onClick={toggleTheme}
-            style={{ color: 'white' }}
+            style={{ color: 'white', display: 'flex', alignItems: 'center' }}
             aria-label={`Switch to ${mode === 'dark' ? 'light' : 'dark'} mode`}
           />
 
-          <UserButton 
-            afterSignOutUrl="/"
-            appearance={{
-              elements: {
-                userButtonAvatarBox: "w-8 h-8",
-              }
-            }}
-          />
+          <div
+            style={{ display: 'flex', alignItems: 'center', height: '32px' }}
+          >
+            <UserButton
+              afterSignOutUrl="/"
+              appearance={{
+                elements: {
+                  userButtonAvatarBox: 'w-8 h-8',
+                },
+              }}
+            />
+          </div>
         </Space>
       </Header>
 

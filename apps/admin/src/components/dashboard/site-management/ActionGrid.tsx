@@ -1,15 +1,6 @@
 'use client';
 
-import React from 'react';
-import {
-  Card,
-  Typography,
-  Row,
-  Col,
-  Button,
-  Tag,
-  Space,
-} from 'antd';
+import { Card, Typography, Row, Col, Button, Tag, Space } from 'antd';
 import {
   ThunderboltOutlined,
   DesktopOutlined,
@@ -76,24 +67,30 @@ export function ActionGrid({ actions, isSuperAdmin }: ActionGridProps) {
         const hasAccess = canAccessAction(action);
         return (
           <Col xs={24} md={12} lg={8} key={action.id}>
-            <Card 
+            <Card
               style={{ height: '100%', opacity: hasAccess ? 1 : 0.6 }}
               role="article"
               aria-labelledby={`action-${action.id}-title`}
             >
               <div style={{ display: 'flex', alignItems: 'flex-start' }}>
-                <div aria-hidden="true" style={{ fontSize: 20, marginRight: 16 }}>
+                <div
+                  aria-hidden="true"
+                  style={{ fontSize: 20, marginRight: 16, marginTop: 2 }}
+                >
                   {getActionTypeIcon(action.type)}
                 </div>
                 <div style={{ flex: 1 }}>
-                  <Title 
+                  <Title
                     level={5}
                     id={`action-${action.id}-title`}
-                    style={{ marginBottom: 8 }}
+                    style={{ marginBottom: 8, marginTop: 0 }}
                   >
                     {action.title}
                   </Title>
-                  <Text type="secondary" style={{ display: 'block', marginBottom: 16 }}>
+                  <Text
+                    type="secondary"
+                    style={{ display: 'block', marginBottom: 16 }}
+                  >
                     {action.description}
                   </Text>
                   <Space>
@@ -103,9 +100,13 @@ export function ActionGrid({ actions, isSuperAdmin }: ActionGridProps) {
                       disabled={!hasAccess || action.disabled !== false}
                       aria-label={`${action.title}: ${!hasAccess ? 'Superadmin Only' : action.disabled !== false ? 'Coming Soon' : 'Run Action'}`}
                     >
-                      {!hasAccess ? 'Superadmin Only' : action.disabled !== false ? 'Coming Soon' : 'Run Action'}
+                      {!hasAccess
+                        ? 'Superadmin Only'
+                        : action.disabled !== false
+                          ? 'Coming Soon'
+                          : 'Run Action'}
                     </Button>
-                    <Tag 
+                    <Tag
                       aria-label={`Action type: ${getActionTypeLabel(action.type)}`}
                     >
                       {getActionTypeLabel(action.type)}

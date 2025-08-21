@@ -18,7 +18,8 @@ export default defineConfig({
       'test/**/*.{test,spec}.{js,mjs,cjs,ts,mts,cts,jsx,tsx}',
       'tests/**/*.{test,spec}.{js,mjs,cjs,ts,mts,cts,jsx,tsx}',
       // E2E tests are platform-level
-      'e2e/**/*.{test,spec}.{js,mjs,cjs,ts,mts,cts,jsx,tsx}',
+// Exclude Playwright E2E tests from Vitest collection; they run via Playwright
+// 'e2e/**/*.{test,spec}.{js,mjs,cjs,ts,mts,cts,jsx,tsx}',
     ],
     exclude: [
       '**/node_modules/**',

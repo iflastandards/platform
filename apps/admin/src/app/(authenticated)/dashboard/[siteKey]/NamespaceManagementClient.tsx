@@ -100,7 +100,6 @@ export interface NamespaceManagementClientProps {
   githubRepo?: string;
   isSpecialCase?: boolean;
   isSuperAdmin?: boolean;
-  namespaceDescription?: string;
 }
 
 // Tab configurations remain the same
@@ -667,10 +666,10 @@ function ActionGrid({
                   <Button
                     type="primary"
                     size="small"
-                    disabled={!hasAccess || action.disabled !== false}
+                    disabled={!hasAccess || action.disabled === true}
                     style={{ minHeight: 36 }}
                   >
-                    {!hasAccess ? 'Superadmin Only' : action.disabled !== false ? 'Coming Soon' : 'Run Action'}
+                    {!hasAccess ? 'Superadmin Only' : action.disabled === true ? 'Coming Soon' : 'Run Action'}
                   </Button>
                   <Tag>{getActionTypeLabel(action.type)}</Tag>
                 </Space>

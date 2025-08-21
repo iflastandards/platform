@@ -460,6 +460,244 @@ Some tests require the admin server to be running. These are isolated in `src/te
 
 ---
 
+## 🎨 Ant Design Vertical Spacing Guide
+
+The admin app uses Ant Design components. Managing vertical spacing effectively is crucial for clean UI.
+
+### Global Spacing Control
+
+#### 1. ConfigProvider with Compact Theme
+```tsx
+import { ConfigProvider, theme } from 'antd';
+
+const App = () => (
+  <ConfigProvider theme={{ algorithm: theme.compactAlgorithm }}>
+    {/* Reduces spacing globally */}
+  </ConfigProvider>
+);
+```
+
+#### 2. Custom Theme Tokens
+```tsx
+<ConfigProvider
+  theme={{
+    components: {
+      Form: {
+        itemMarginBottom: 12, // Default is 24
+      },
+      Card: {
+        paddingLG: 16, // Default is 24
+      },
+    },
+  }}
+>
+```
+
+### Component-Level Spacing
+
+#### Space Component
+```tsx
+import { Space, Button } from 'antd';
+
+<Space direction="vertical" size={8}>
+  <Button>Button 1</Button>
+  <Button>Button 2</Button>
+</Space>
+```
+
+#### Grid System Gutter
+```tsx
+import { Row, Col } from 'antd';
+
+<Row gutter={[16, 8]}> {/* [horizontal, vertical] */}
+  <Col span={24}>Content</Col>
+</Row>
+```
+
+### Individual Component Tweaks
+
+#### Form Item Margin
+```tsx
+<Form.Item label="Field" style={{ marginBottom: 8 }}>
+  <Input />
+</Form.Item>
+```
+
+#### Card Padding
+```tsx
+<Card bodyStyle={{ padding: '16px' }}>
+  Content
+</Card>
+```
+
+### CSS Override File
+
+The admin app includes `src/styles/antd-overrides.css` with tighter spacing defaults:
+- Card padding: 24px → 16px
+- Table cells: 16px → 12px
+- Form margins: 24px → 16px
+- Button heights: 40px → 36px
+
+**Best Practices:**
+1. Use ConfigProvider for global changes
+2. Use Space/Row components for local spacing
+3. Use inline styles for one-off adjustments
+4. Avoid direct CSS overrides when possible
+5. CSS overrides should be specific and documented
+
+---
+
+## 🤖 Ant Design AI Agent Guidelines
+
+### Core Concepts for AI Development
+
+**What Ant Design Is:**
+- Enterprise-level UI design system and React component library
+- Designed for internal dashboards, admin panels, data-heavy applications
+- Maintained by Ant Group (Alibaba)
+
+**Design Philosophy:**
+- **Natural**: Intuitive interactions reflecting real-world processes
+- **Certain**: Predictable UI with clear feedback
+- **Meaningful**: Purposeful design with clear information hierarchy
+- **Growing**: Scalable and adaptable to complex requirements
+
+### Key Technical Patterns
+
+#### 1. Component-Based Development
+```tsx
+// Compose pre-styled components
+import { Button, Table, Form, Modal } from 'antd';
+
+// Build pages by composing components
+<Form>
+  <Form.Item name="email">
+    <Input />
+  </Form.Item>
+  <Button type="primary">Submit</Button>
+</Form>
+```
+
+#### 2. Theming (Most Important)
+```tsx
+// ✅ PREFERRED - Use ConfigProvider and design tokens
+<ConfigProvider
+  theme={{
+    token: {
+      colorPrimary: '#1890ff',
+      borderRadius: 6,
+      marginXS: 8,
+    },
+    algorithm: theme.compactAlgorithm, // For tighter spacing
+  }}
+>
+```
+
+#### 3. Layout Patterns
+```tsx
+// Grid system (24-column)
+<Row gutter={[16, 16]}>
+  <Col span={8}>Content</Col>
+</Row>
+
+// Spacing between components
+<Space direction="vertical" size="middle">
+  <Button>Button 1</Button>
+  <Button>Button 2</Button>
+</Space>
+
+// Flexible layouts
+<Flex justify="space-between" align="center">
+  <div>Left</div>
+  <div>Right</div>
+</Flex>
+```
+
+#### 4. Form Handling
+```tsx
+// Built-in validation and state management
+<Form onFinish={handleSubmit}>
+  <Form.Item 
+    name="username" 
+    rules={[{ required: true, message: 'Required!' }]}
+  >
+    <Input />
+  </Form.Item>
+</Form>
+```
+
+#### 5. Icons
+```tsx
+// Use official icon library
+import { DeleteOutlined, EditOutlined } from '@ant-design/icons';
+
+<Button icon={<DeleteOutlined />}>Delete</Button>
+```
+
+### What to Avoid
+
+❌ **Heavy CSS Overrides**
+```css
+/* DON'T: Brittle, breaks with updates */
+.ant-btn.my-custom-class > span {
+  color: red !important;
+}
+```
+
+✅ **Use Design Tokens**
+```tsx
+/* DO: Update-proof customization */
+<ConfigProvider theme={{ token: { colorPrimary: 'red' } }}>
+```
+
+❌ **Component-by-Component Styling**
+```tsx
+/* DON'T: Repetitive */
+<Button style={{ height: 32 }}>Button 1</Button>
+<Button style={{ height: 32 }}>Button 2</Button>
+```
+
+✅ **Global Theme Changes**
+```tsx
+/* DO: Consistent */
+<ConfigProvider theme={{ components: { Button: { controlHeight: 32 } } }}>
+```
+
+### Primary Documentation Sources
+
+1. **Official Docs** (Highest Priority): https://ant.design
+   - Components section with live examples
+   - API tables for all props and types
+   - Design token documentation
+   - Customize theme guide
+
+2. **GitHub Repository**: https://github.com/ant-design/ant-design
+   - Source code and issues
+   - Community discussions
+
+3. **Ant Design Pro**: https://pro.ant.design
+   - Best practices examples
+   - Complex pattern implementations
+
+4. **npm Registry**: https://www.npmjs.com/package/antd
+   - Version information and dependencies
+
+### Quick Decision Framework
+
+**For Spacing Issues:**
+1. ConfigProvider theme tokens (global)
+2. Space/Row/Col components (local)
+3. Inline styles (individual)
+4. CSS overrides (last resort)
+
+**For Customization:**
+1. Check design tokens first
+2. Use ConfigProvider for global changes
+3. Component-specific theme tokens
+4. CSS classes only when necessary
+
+---
+
 ## 💡 Admin Development Tips
 
 1. **Use standard Next.js patterns** - No special path handling needed

@@ -20,7 +20,7 @@ const originalScript = require('./test-site-builds.js');
 // Function to get affected projects using NX
 function getAffectedProjects() {
   try {
-    const output = execSync('npx nx print-affected --select=projects --type=app', { 
+const output = execSync('npx nx show projects --affected --type=app', { 
       encoding: 'utf8',
       stdio: ['pipe', 'pipe', 'pipe'] // Suppress stderr
     });

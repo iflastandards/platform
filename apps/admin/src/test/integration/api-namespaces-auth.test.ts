@@ -4,9 +4,23 @@
 
 import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest';
 import { GET, POST } from '../../app/api/admin/namespaces/route';
-import { TestUsers, clearTestUsersCache } from '../../test-config/clerk-test-users';
+import {
+  TestUsers,
+  clearTestUsersCache,
+  type ClerkTestUser,
+} from '../../test-config/clerk-test-users';
+import { mockClerkCurrentUser } from '../../test-config/clerk-test-helpers';
 import * as fs from 'node:fs/promises';
 import * as path from 'node:path';
+
+// Helper to generate mock auth context from test user
+function generateMockAuthContext(user: ClerkTestUser) {
+  return {
+    userId: user.id,
+    email: user.email,
+    roles: user.roles,
+  };
+}
 
 describe('Namespaces API Authorization @integration @api @auth @critical', () => {
   const testDir = path.join(__dirname, '.test-output');
@@ -27,6 +41,9 @@ describe('Namespaces API Authorization @integration @api @auth @critical', () =>
       const user = await TestUsers.getSuperAdmin();
       expect(user).toBeDefined();
 
+      // Ensure withAuth() sees an authenticated user
+      mockClerkCurrentUser(user!);
+
       // Mock Clerk's getAuthContext to return our test user
       vi.doMock('../../lib/authorization', async () => {
         const actual = await vi.importActual('../../lib/authorization');
@@ -46,9 +63,12 @@ describe('Namespaces API Authorization @integration @api @auth @critical', () =>
         };
       });
 
-      const request = new Request('http://localhost:3000/api/admin/namespaces', {
-        method: 'GET',
-      });
+      const request = new Request(
+        'http://localhost:3000/api/admin/namespaces',
+        {
+          method: 'GET',
+        },
+      );
 
       const response = await GET(request as any);
       const data = await response.json();
@@ -63,6 +83,7 @@ describe('Namespaces API Authorization @integration @api @auth @critical', () =>
       const user = await TestUsers.getReviewGroupAdmin();
       expect(user).toBeDefined();
 
+      mockClerkCurrentUser(user!);
       // Mock authorization for RG admin
       vi.doMock('../../lib/authorization', async () => {
         const actual = await vi.importActual('../../lib/authorization');
@@ -82,9 +103,12 @@ describe('Namespaces API Authorization @integration @api @auth @critical', () =>
         };
       });
 
-      const request = new Request('http://localhost:3000/api/admin/namespaces', {
-        method: 'GET',
-      });
+      const request = new Request(
+        'http://localhost:3000/api/admin/namespaces',
+        {
+          method: 'GET',
+        },
+      );
 
       const response = await GET(request as any);
       const data = await response.json();
@@ -98,6 +122,7 @@ describe('Namespaces API Authorization @integration @api @auth @critical', () =>
       const user = await TestUsers.getEditor();
       expect(user).toBeDefined();
 
+      mockClerkCurrentUser(user!);
       // Mock authorization for editor
       vi.doMock('../../lib/authorization', async () => {
         const actual = await vi.importActual('../../lib/authorization');
@@ -117,9 +142,12 @@ describe('Namespaces API Authorization @integration @api @auth @critical', () =>
         };
       });
 
-      const request = new Request('http://localhost:3000/api/admin/namespaces', {
-        method: 'GET',
-      });
+      const request = new Request(
+        'http://localhost:3000/api/admin/namespaces',
+        {
+          method: 'GET',
+        },
+      );
 
       const response = await GET(request as any);
       const data = await response.json();
@@ -130,25 +158,23 @@ describe('Namespaces API Authorization @integration @api @auth @critical', () =>
     });
 
     it('should deny access without authentication', async () => {
-      // Mock no authentication
-      vi.doMock('../../lib/authorization', async () => {
-        const actual = await vi.importActual('../../lib/authorization');
-        return {
-          ...actual,
-          getAuthContext: vi.fn().mockResolvedValue(null),
-        };
-      });
+      // Use dynamic mock to set unauthenticated state
+      const { setTestUser } = await import('../../test/mocks/dynamic-auth');
+      setTestUser('unauthenticated');
 
-      const request = new Request('http://localhost:3000/api/admin/namespaces', {
-        method: 'GET',
-      });
+      const request = new Request(
+        'http://localhost:3000/api/admin/namespaces',
+        {
+          method: 'GET',
+        },
+      );
 
       const response = await GET(request as any);
       const data = await response.json();
 
       expect(response.status).toBe(401);
       expect(data.success).toBe(false);
-      expect(data.error.code).toBe('AUTH_REQUIRED');
+      expect(data.error.code).toBe('UNAUTHENTICATED');
     });
   });
 
@@ -157,6 +183,7 @@ describe('Namespaces API Authorization @integration @api @auth @critical', () =>
       const user = await TestUsers.getSuperAdmin();
       expect(user).toBeDefined();
 
+      mockClerkCurrentUser(user!);
       // Mock authorization for superadmin
       vi.doMock('../../lib/authorization', async () => {
         const actual = await vi.importActual('../../lib/authorization');
@@ -175,11 +202,14 @@ describe('Namespaces API Authorization @integration @api @auth @critical', () =>
         visibility: 'public',
       };
 
-      const request = new Request('http://localhost:3000/api/admin/namespaces', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(requestBody),
-      });
+      const request = new Request(
+        'http://localhost:3000/api/admin/namespaces',
+        {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(requestBody),
+        },
+      );
 
       const response = await POST(request as any);
       const data = await response.json();
@@ -212,11 +242,14 @@ describe('Namespaces API Authorization @integration @api @auth @critical', () =>
         visibility: 'public',
       };
 
-      const request = new Request('http://localhost:3000/api/admin/namespaces', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(requestBody),
-      });
+      const request = new Request(
+        'http://localhost:3000/api/admin/namespaces',
+        {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(requestBody),
+        },
+      );
 
       const response = await POST(request as any);
       const data = await response.json();
@@ -227,19 +260,9 @@ describe('Namespaces API Authorization @integration @api @auth @critical', () =>
     });
 
     it('should deny namespace creation for editors', async () => {
-      const user = await TestUsers.getEditor();
-      expect(user).toBeDefined();
-
-      // Mock authorization denial for editor
-      vi.doMock('../../lib/authorization', async () => {
-        const actual = await vi.importActual('../../lib/authorization');
-        return {
-          ...actual,
-          auth: {
-            canCreateNamespace: vi.fn().mockResolvedValue(false),
-          },
-        };
-      });
+      // Use dynamic mock to set editor state
+      const { setTestUser } = await import('../../test/mocks/dynamic-auth');
+      setTestUser('editor');
 
       const requestBody = {
         name: 'Unauthorized Namespace',
@@ -248,11 +271,14 @@ describe('Namespaces API Authorization @integration @api @auth @critical', () =>
         visibility: 'public',
       };
 
-      const request = new Request('http://localhost:3000/api/admin/namespaces', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(requestBody),
-      });
+      const request = new Request(
+        'http://localhost:3000/api/admin/namespaces',
+        {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(requestBody),
+        },
+      );
 
       const response = await POST(request as any);
       const data = await response.json();
@@ -271,11 +297,14 @@ describe('Namespaces API Authorization @integration @api @auth @critical', () =>
         description: 'Missing name and reviewGroupId',
       };
 
-      const request = new Request('http://localhost:3000/api/admin/namespaces', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(requestBody),
-      });
+      const request = new Request(
+        'http://localhost:3000/api/admin/namespaces',
+        {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(requestBody),
+        },
+      );
 
       const response = await POST(request as any);
       const data = await response.json();
@@ -339,25 +368,31 @@ describe('Namespaces API Authorization @integration @api @auth @critical', () =>
 
   describe('Error Handling with Real Conditions', () => {
     it('should handle malformed request bodies', async () => {
-      const request = new Request('http://localhost:3000/api/admin/namespaces', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: 'invalid json',
-      });
+      const request = new Request(
+        'http://localhost:3000/api/admin/namespaces',
+        {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: 'invalid json',
+        },
+      );
 
       const response = await POST(request as any);
-      
+
       expect(response.status).toBeGreaterThanOrEqual(400);
     });
 
     it('should handle missing content-type header', async () => {
-      const request = new Request('http://localhost:3000/api/admin/namespaces', {
-        method: 'POST',
-        body: JSON.stringify({ name: 'test' }),
-      });
+      const request = new Request(
+        'http://localhost:3000/api/admin/namespaces',
+        {
+          method: 'POST',
+          body: JSON.stringify({ name: 'test' }),
+        },
+      );
 
       const response = await POST(request as any);
-      
+
       // Should handle gracefully
       expect(response.status).toBeGreaterThanOrEqual(400);
     });
@@ -389,9 +424,12 @@ describe('Namespaces API Authorization @integration @api @auth @critical', () =>
         };
       });
 
-      const request = new Request('http://localhost:3000/api/admin/namespaces', {
-        method: 'GET',
-      });
+      const request = new Request(
+        'http://localhost:3000/api/admin/namespaces',
+        {
+          method: 'GET',
+        },
+      );
 
       const response = await GET(request as any);
       const duration = Date.now() - startTime;

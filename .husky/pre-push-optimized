@@ -10,7 +10,7 @@ echo "📋 Testing branch: $BRANCH"
 
 # Get affected projects using Nx
 echo "🎯 Detecting affected projects..."
-AFFECTED_PROJECTS=$(pnpm nx print-affected --select=projects --type=app 2>/dev/null || echo "")
+AFFECTED_PROJECTS=$(pnpm nx show projects --affected --type=app 2>/dev/null || echo "")
 
 if [ -z "$AFFECTED_PROJECTS" ] || [ "$AFFECTED_PROJECTS" = "" ]; then
   echo "📝 No affected projects detected - running minimal validation"
