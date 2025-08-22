@@ -2,6 +2,8 @@ import { defineConfig } from 'vitest/config';
 import path from 'path';
 
 export default defineConfig({
+  // Restrict Vitest to the scripts/ directory only
+  root: __dirname,
   test: {
     globals: true,
     environment: 'node',
@@ -12,11 +14,14 @@ export default defineConfig({
       '**/*.spec.ts',
       '**/*.spec.js'
     ],
+    // Be extra-safe: exclude anything outside scripts and any e2e folders if referenced
     exclude: [
       '**/node_modules/**',
       '**/dist/**',
       '**/build/**',
       '**/.nx/**',
+      '**/e2e/**',
+      '**/tests/e2e/**',
       '**/server-dependent/**',
       '**/test/integration/**',
       '**/tests/integration/**',

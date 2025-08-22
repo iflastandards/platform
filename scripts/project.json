@@ -19,21 +19,11 @@
   },
   "targets": {
     "test": {
-      "executor": "@nx/vite:test",
+      "executor": "nx:run-commands",
       "outputs": ["{workspaceRoot}/coverage/{projectRoot}"],
       "options": {
-        "passWithNoTests": true,
-        "config": "scripts/vitest.config.ts",
-        "coverage": false,
-        "watch": false
-      },
-      "configurations": {
-        "watch": {
-          "watch": true
-        },
-        "coverage": {
-          "coverage": true
-        }
+        "command": "vitest run --config scripts/vitest.config.ts --reporter=verbose",
+        "cwd": "{workspaceRoot}"
       },
       "inputs": [
         "scriptFiles",
