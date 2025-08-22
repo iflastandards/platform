@@ -69,10 +69,10 @@ class TagBasedTestRunner {
     // Add parallel execution
     baseCommand += ` --parallel=${this.options.parallel}`;
 
-    // Add tag filtering via grep
+    // Add tag filtering via Vitest test name pattern (-t)
     if (this.options.tags.length > 0) {
       const tagPattern = this.options.tags.join('.*');
-      baseCommand += ` -- --grep "${tagPattern}"`;
+      baseCommand += ` -- -t "${tagPattern}"`;
     }
 
     // Add coverage if requested
