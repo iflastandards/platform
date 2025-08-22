@@ -86,7 +86,10 @@
       "options": {
         "lintFilePatterns": [
           "standards/isbd/src/**/*.{ts,tsx,js,jsx}",
-          "standards/isbd/*.{ts,tsx,js,jsx}"
+          "standards/isbd/*.{ts,tsx,js,jsx}",
+          "standards/isbd/docs/**/*.{md,mdx}",
+          "standards/isbd/blog/**/*.{md,mdx}",
+          "standards/isbd/src/**/*.{md,mdx}"
         ]
       },
       "inputs": [

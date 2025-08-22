@@ -86,7 +86,10 @@
       "options": {
         "lintFilePatterns": [
           "standards/LRM/src/**/*.{ts,tsx,js,jsx}",
-          "standards/LRM/*.{ts,tsx,js,jsx}"
+          "standards/LRM/*.{ts,tsx,js,jsx}",
+          "standards/lrm/docs/**/*.{md,mdx}",
+          "standards/lrm/blog/**/*.{md,mdx}",
+          "standards/lrm/src/**/*.{md,mdx}"
         ]
       },
       "inputs": [

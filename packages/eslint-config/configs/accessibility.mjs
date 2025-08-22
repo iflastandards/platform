@@ -127,8 +127,6 @@ export default [
       'jsx-a11y/tabindex-no-positive': 'error',
       
       // Additional WCAG 2.1 AA Rules (Warnings - should be addressed)
-      'jsx-a11y/accessible-emoji': 'warn',
-      'jsx-a11y/aria-describedby-has-tabindex': 'warn',
       'jsx-a11y/no-aria-hidden-on-focusable': 'warn',
       'jsx-a11y/prefer-tag-over-role': 'warn',
       
@@ -137,7 +135,6 @@ export default [
       
       // Custom rules for better UX
       'jsx-a11y/anchor-ambiguous-text': 'warn', // Avoid "click here", "read more"
-      'jsx-a11y/no-generic-link-text': 'warn', // Custom rule if available
     },
     settings: {
       'jsx-a11y': {
@@ -190,8 +187,6 @@ export default [
     ],
     rules: {
       // Upgrade warnings to errors for critical components
-      'jsx-a11y/accessible-emoji': 'error',
-      'jsx-a11y/aria-describedby-has-tabindex': 'error',
       'jsx-a11y/no-aria-hidden-on-focusable': 'error',
       'jsx-a11y/prefer-tag-over-role': 'error',
       'jsx-a11y/anchor-ambiguous-text': 'error',

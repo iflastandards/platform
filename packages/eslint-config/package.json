@@ -2,13 +2,15 @@
   "name": "@ifla/eslint-config",
   "version": "1.0.0",
   "description": "Shared ESLint configuration for IFLA Standards monorepo",
-  "main": "src/index.js",
+  "main": "index.mjs",
   "type": "module",
   "exports": {
-    ".": "./src/index.js"
+    ".": "./index.mjs"
   },
   "files": [
-    "src/"
+    "index.mjs",
+    "configs/",
+    "utils/"
   ],
   "dependencies": {
     "globals": "*",

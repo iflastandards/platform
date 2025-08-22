@@ -3,14 +3,22 @@
   "root": "portal",
   "sourceRoot": "portal",
   "projectType": "application",
-  "tags": ["docusaurus", "site", "portal"],
+  "tags": [
+    "docusaurus",
+    "site",
+    "portal"
+  ],
   "targets": {
     "build": {
       "executor": "nx:run-commands",
       "options": {
         "command": "docusaurus build portal"
       },
-      "inputs": ["production", "^production", "docusaurus"]
+      "inputs": [
+        "production",
+        "^production",
+        "docusaurus"
+      ]
     },
     "start": {
       "executor": "nx:run-commands",
@@ -47,10 +55,15 @@
       "options": {
         "lintFilePatterns": [
           "portal/src/**/*.{ts,tsx,js,jsx}",
-          "portal/*.{ts,tsx,js,jsx}"
+          "portal/*.{ts,tsx,js,jsx}",
+          "portal/docs/**/*.{md,mdx}",
+          "portal/blog/**/*.{md,mdx}",
+          "portal/src/**/*.{md,mdx}"
         ]
       },
-      "inputs": ["default"],
+      "inputs": [
+        "default"
+      ],
       "cache": true
     },
     "typecheck": {

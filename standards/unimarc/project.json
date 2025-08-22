@@ -86,7 +86,10 @@
       "options": {
         "lintFilePatterns": [
           "standards/unimarc/src/**/*.{ts,tsx,js,jsx}",
-          "standards/unimarc/*.{ts,tsx,js,jsx}"
+          "standards/unimarc/*.{ts,tsx,js,jsx}",
+          "standards/unimarc/docs/**/*.{md,mdx}",
+          "standards/unimarc/blog/**/*.{md,mdx}",
+          "standards/unimarc/src/**/*.{md,mdx}"
         ]
       },
       "inputs": [

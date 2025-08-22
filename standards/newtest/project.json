@@ -86,7 +86,10 @@
       "options": {
         "lintFilePatterns": [
           "standards/newtest/src/**/*.{ts,tsx,js,jsx}",
-          "standards/newtest/*.{ts,tsx,js,jsx}"
+          "standards/newtest/*.{ts,tsx,js,jsx}",
+          "standards/newtest/docs/**/*.{md,mdx}",
+          "standards/newtest/blog/**/*.{md,mdx}",
+          "standards/newtest/src/**/*.{md,mdx}"
         ]
       },
       "inputs": [

@@ -94,7 +94,10 @@
       "options": {
         "lintFilePatterns": [
           "standards/ISBDM/src/**/*.{ts,tsx,js,jsx}",
-          "standards/ISBDM/*.{ts,tsx,js,jsx}"
+          "standards/ISBDM/*.{ts,tsx,js,jsx}",
+          "standards/isbdm/docs/**/*.{md,mdx}",
+          "standards/isbdm/blog/**/*.{md,mdx}",
+          "standards/isbdm/src/**/*.{md,mdx}"
         ]
       },
       "inputs": [

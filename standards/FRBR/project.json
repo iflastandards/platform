@@ -86,7 +86,10 @@
       "options": {
         "lintFilePatterns": [
           "standards/FRBR/src/**/*.{ts,tsx,js,jsx}",
-          "standards/FRBR/*.{ts,tsx,js,jsx}"
+          "standards/FRBR/*.{ts,tsx,js,jsx}",
+          "standards/frbr/docs/**/*.{md,mdx}",
+          "standards/frbr/blog/**/*.{md,mdx}",
+          "standards/frbr/src/**/*.{md,mdx}"
         ]
       },
       "inputs": [

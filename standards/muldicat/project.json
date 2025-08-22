@@ -98,7 +98,10 @@
       "options": {
         "lintFilePatterns": [
           "standards/muldicat/src/**/*.{ts,tsx,js,jsx}",
-          "standards/muldicat/*.{ts,tsx,js,jsx}"
+          "standards/muldicat/*.{ts,tsx,js,jsx}",
+          "standards/muldicat/docs/**/*.{md,mdx}",
+          "standards/muldicat/blog/**/*.{md,mdx}",
+          "standards/muldicat/src/**/*.{md,mdx}"
         ]
       },
       "inputs": [
