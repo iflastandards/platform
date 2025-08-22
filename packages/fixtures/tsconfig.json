@@ -10,6 +10,6 @@
     "sourceMap": true,
     "emitDeclarationOnly": true
   },
-  "include": ["*.ts", "*.json"],
+  "include": ["src/**/*", "*.json", "jobs.json", "rdf-builds.json"],
   "exclude": ["dist", "node_modules"]
 }

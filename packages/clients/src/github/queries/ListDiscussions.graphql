@@ -1,0 +1,16 @@
+query ListDiscussions($owner: String!, $repo: String!, $first: Int = 20) {
+  repository(owner: $owner, name: $repo) {
+    discussions(first: $first, orderBy: { field: CREATED_AT, direction: DESC }) {
+      nodes {
+        id
+        title
+        url
+        author {
+          login
+        }
+        createdAt
+      }
+      totalCount
+    }
+  }
+}

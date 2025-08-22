@@ -1,5 +1,7 @@
 import { createClient, SupabaseClient } from '@supabase/supabase-js';
-import { 
+import { fromZodError } from 'zod-validation-error';
+import { ClientApiError, ClientNotFoundError, ClientValidationError, ClientError } from '../errors';
+import {
   JobSchema, 
   JobCreateSchema, 
   JobUpdateSchema,
@@ -8,7 +10,7 @@ import {
   JobCreate, 
   JobUpdate,
   JobQuery 
-} from '../../../contracts/schemas/Job.zod';
+} from '@site/packages/contracts/schemas';
 
 /**
  * Supabase Jobs Client - Type-safe wrapper around Supabase operations for jobs
@@ -28,19 +30,21 @@ export class SupabaseJobsClient {
       .single();
 
     if (error) {
-      throw new Error(`Failed to fetch job ${id}: ${error.message}`);
+      throw new ClientApiError(`Failed to fetch job ${id}: ${error.message}`);
     }
 
     if (!data) {
-      throw new Error(`Job ${id} not found`);
+      throw new ClientNotFoundError(`Job ${id} not found`);
     }
 
     // ✅ CRITICAL: Always validate with Zod before returning
-    try {
-      return JobSchema.parse(data);
-    } catch (validationError) {
-      throw new Error(`Invalid job data from database: ${validationError}`);
+    const validationResult = JobSchema.safeParse(data);
+    if (!validationResult.success) {
+      throw new ClientValidationError('Invalid job data from database.', {
+        cause: fromZodError(validationResult.error),
+      });
     }
+    return validationResult.data;
   }
 
   /**
@@ -56,24 +60,24 @@ export class SupabaseJobsClient {
       .order(validatedQuery.sortBy, { ascending: validatedQuery.sortOrder === 'asc' })
       .range(validatedQuery.offset, validatedQuery.offset + validatedQuery.limit - 1);
 
-    // Apply filters
-    if (validatedQuery.status) {
-      supabaseQuery = supabaseQuery.eq('status', validatedQuery.status);
-    }
-    if (validatedQuery.type) {
-      supabaseQuery = supabaseQuery.eq('type', validatedQuery.type);
-    }
-    if (validatedQuery.vocabularyId) {
-      supabaseQuery = supabaseQuery.eq('vocabularyId', validatedQuery.vocabularyId);
-    }
-    if (validatedQuery.standardId) {
-      supabaseQuery = supabaseQuery.eq('standardId', validatedQuery.standardId);
+    // Dynamically apply filters from the validated query
+    const filters = {
+      status: validatedQuery.status,
+      type: validatedQuery.type,
+      vocabularyId: validatedQuery.vocabularyId,
+      standardId: validatedQuery.standardId,
+    };
+
+    for (const [key, value] of Object.entries(filters)) {
+      if (value) { // Zod's `optional()` makes non-present fields `undefined`
+        supabaseQuery = supabaseQuery.eq(key, value);
+      }
     }
 
     const { data, error, count } = await supabaseQuery;
 
     if (error) {
-      throw new Error(`Failed to fetch jobs: ${error.message}`);
+      throw new ClientApiError(`Failed to fetch jobs: ${error.message}`);
     }
 
     if (!data) {
@@ -81,12 +85,13 @@ export class SupabaseJobsClient {
     }
 
     // Validate all returned jobs
-    try {
-      const jobs = JobSchema.array().parse(data);
-      return { jobs, total: count ?? 0 };
-    } catch (validationError) {
-      throw new Error(`Invalid job data from database: ${validationError}`);
+    const validationResult = JobSchema.array().safeParse(data);
+    if (!validationResult.success) {
+      throw new ClientValidationError('Invalid job list data from database.', {
+        cause: fromZodError(validationResult.error),
+      });
     }
+    return { jobs: validationResult.data, total: count ?? 0 };
   }
 
   /**
@@ -94,7 +99,12 @@ export class SupabaseJobsClient {
    */
   async createJob(jobData: JobCreate): Promise<Job> {
     // Validate input data
-    const validatedData = JobCreateSchema.parse(jobData);
+    const validationResult = JobCreateSchema.safeParse(jobData);
+    if (!validationResult.success) {
+      throw new ClientValidationError('Invalid job creation data provided.', {
+        cause: fromZodError(validationResult.error),
+      });
+    }
 
     // Prepare job record for insertion
     const jobRecord = {
@@ -112,20 +122,18 @@ export class SupabaseJobsClient {
       .select()
       .single();
 
-    if (error) {
-      throw new Error(`Failed to create job: ${error.message}`);
-    }
-
-    if (!data) {
-      throw new Error('Job creation failed: no data returned');
+    if (error || !data) {
+      throw new ClientApiError(`Failed to create job: ${error?.message ?? 'No data returned'}`);
     }
 
     // Validate returned job data
-    try {
-      return JobSchema.parse(data);
-    } catch (validationError) {
-      throw new Error(`Invalid job data returned after creation: ${validationError}`);
+    const returnValidationResult = JobSchema.safeParse(data);
+    if (!returnValidationResult.success) {
+      throw new ClientValidationError('Invalid job data returned after creation.', {
+        cause: fromZodError(returnValidationResult.error),
+      });
     }
+    return returnValidationResult.data;
   }
 
   /**
@@ -133,7 +141,12 @@ export class SupabaseJobsClient {
    */
   async updateJob(id: string, updates: JobUpdate): Promise<Job> {
     // Validate update data
-    const validatedUpdates = JobUpdateSchema.parse(updates);
+    const validationResult = JobUpdateSchema.safeParse(updates);
+    if (!validationResult.success) {
+      throw new ClientValidationError('Invalid job update data provided.', {
+        cause: fromZodError(validationResult.error),
+      });
+    }
 
     const updateRecord = {
       ...validatedUpdates,
@@ -147,20 +160,18 @@ export class SupabaseJobsClient {
       .select()
       .single();
 
-    if (error) {
-      throw new Error(`Failed to update job ${id}: ${error.message}`);
-    }
-
-    if (!data) {
-      throw new Error(`Job ${id} not found for update`);
+    if (error || !data) {
+      throw new ClientApiError(`Failed to update job ${id}: ${error?.message ?? 'No data returned'}`);
     }
 
     // Validate updated job data
-    try {
-      return JobSchema.parse(data);
-    } catch (validationError) {
-      throw new Error(`Invalid job data after update: ${validationError}`);
+    const returnValidationResult = JobSchema.safeParse(data);
+    if (!returnValidationResult.success) {
+      throw new ClientValidationError('Invalid job data after update.', {
+        cause: fromZodError(returnValidationResult.error),
+      });
     }
+    return returnValidationResult.data;
   }
 
   /**
@@ -173,7 +184,7 @@ export class SupabaseJobsClient {
       .eq('id', id);
 
     if (error) {
-      throw new Error(`Failed to delete job ${id}: ${error.message}`);
+      throw new ClientApiError(`Failed to delete job ${id}: ${error.message}`);
     }
   }
 
@@ -217,7 +228,7 @@ export const jobsClient = (() => {
   const key = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
   
   if (!url || !key) {
-    throw new Error('Missing Supabase environment variables');
+    throw new ClientError('Missing Supabase environment variables for default client');
   }
   
   return createJobsClient(url, key);

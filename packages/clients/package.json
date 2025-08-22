@@ -22,18 +22,25 @@
     }
   },
   "scripts": {
+    "codegen": "graphql-codegen --config codegen.ts",
     "build": "tsup",
+    "prebuild": "pnpm codegen",
     "dev": "tsup --watch",
     "clean": "rimraf dist",
     "typecheck": "tsc --noEmit"
   },
   "dependencies": {
     "@ifla/contracts": "workspace:*",
+    "@octokit/graphql": "*",
     "@supabase/supabase-js": "*",
     "@octokit/rest": "*",
-    "zod": "*"
+    "zod": "*",
+    "zod-validation-error": "*"
   },
   "devDependencies": {
+    "@graphql-codegen/cli": "*",
+    "@graphql-codegen/client-preset": "*",
+    "@octokit/graphql-schema": "*",
     "@types/node": "*",
     "rimraf": "*",
     "tsup": "*",
