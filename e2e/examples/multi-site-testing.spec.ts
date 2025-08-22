@@ -1,5 +1,5 @@
 import { test, expect } from '@playwright/test';
-import { getAdminPortalConfig } from '../../packages/theme/src/config/siteConfig';
+import { getAdminPortalConfig } from '@ifla/theme';
 
 // Get admin portal configuration for local environment
 const adminConfig = getAdminPortalConfig('local');
@@ -67,10 +67,6 @@ test.describe('Session-based Integration Tests', () => {
     await context.close();
   });
 });
-
-// DEPRECATED: The following test suites have been moved to _deprecated/multi-site-testing-partial.spec.ts.deprecated
-// - API Integration Tests: /dashboard returns 404, expects elements that don't exist
-// - Performance Testing with CDP: Uses wrong port (3000 instead of 3007)
 
 // Example: Visual regression testing
 test.describe('Visual Regression Tests', () => {
