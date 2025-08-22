@@ -1,6 +1,10 @@
 # AGENTS.md
 
+> **Note:** This document has been updated to include the core architectural principles from the "Prime Directive." Please review the new **"Prime Directive: Core Principles for `apps/admin`"** section for the fundamental rules governing all development work on the admin application.
+
 Essential guidance for coding agents working in this IFLA Standards monorepo.
+
+---
 
 ## Tech Stack Overview
 
@@ -27,9 +31,65 @@ Essential guidance for coding agents working in this IFLA Standards monorepo.
 - **API Layer**: Next.js App Router API routes (/app/api/*) with standard fetch (NOT tRPC)
 - **Authorization**: Custom role-based system using Clerk publicMetadata
 - **State Management**: TanStack Query 5.83.0
-- **UI Components**: Ant Design 5.23.8 (replacing Material-UI)
+- **UI Components**: Ant Design 5.23.8
 - **Forms**: React Hook Form 7.61.1 + Zod 4.0.14 validation
 - **Styling**: Ant Design theme system with ConfigProvider
+
+---
+
+## Prime Directive: Core Principles for `apps/admin`
+
+These are the non-negotiable architectural laws for the `apps/admin` project. Adherence is mandatory.
+
+### 1. Core Philosophy: The "Why"
+
+- **Contracts are the Single Source of Truth:** All data shapes are defined once in `/packages/contracts` using Zod. The entire application (UI, adapters, tests) consumes these contracts.
+- **Type-Safety is Non-Negotiable:** Data is validated with Zod at every boundary, especially from external APIs. The `any` type is forbidden for data structures.
+- **Develop Mock-First, Live-Second:** Every feature must be fully functional and testable using a mock service layer (MSW) before it is connected to a live backend service.
+- **The `dataProvider` is the Sole Gateway:** UI components are "dumb" and do not fetch data directly. All data operations (CRUD, etc.) **must** be routed through the single, centralized `refine.dev` `dataProvider`.
+- **Standardize on the Unified Job Model:** All long-running, asynchronous operations must be modeled as a `Job` using the master `Job.zod.ts` schema for consistent tracking and UI.
+- **Build for Everyone (Accessibility):** All features **must** conform to WCAG 2.1 Level AA. This includes full keyboard navigability, screen reader compatibility (semantic HTML/ARIA), and sufficient color contrast.
+
+### 2. Architectural Blueprint: The "Where"
+
+File placement within `/apps/admin/` is strict and predictable.
+
+- `/src/app/`: **Pages.** All Next.js App Router pages, organized by `refine` resource (e.g., `/jobs/[id]/page.tsx`).
+- `/src/providers/`: **Data Layer.**
+  - `dataProvider.ts`: The central data provider with mock/live switching logic.
+  - `/adapters/`: Modules that interact with live services (e.g., `supabaseJobs.adapter.ts`). They fetch, transform, and **validate** data.
+- `/src/mocks/`: **Mock Service Layer.**
+  - `handlers.ts`: MSW request handlers that intercept API calls and return mock data.
+  - `fixtures.ts`: Functions to generate dynamic mock data.
+- `/src/components/`: **Shared UI.** Reusable React components.
+
+### 3. Implementation Guardrails: The "How"
+
+- **Data Flow:** The data lifecycle is always: `UI Component` -> `refine Hook (e.g., useList)` -> `dataProvider` -> `Service Adapter` -> `Live API / MSW`.
+- **Validation:** Every function within a service adapter that receives external data **must** parse it with its corresponding Zod schema before returning it. Throw a structured error on failure.
+- **State Management:** Server state, caching, and re-fetching are managed by `refine` and `@tanstack/react-query`. Do not use `useState` for server data.
+- **UI Components:** Use Ant Design (`antd`) components wherever possible. Custom styling should be minimal and handled via the theme.
+- **Authentication & Authorization:** Auth is handled by Clerk. RBAC is implemented by checking `user.publicMetadata` on both the frontend (to hide/disable UI) and backend (to secure API endpoints).
+- **Decision-Making Precedent:** When in doubt, use the existing "RDF Builds" feature as your primary reference and template. It exemplifies the correct implementation of all principles.
+
+---
+
+## Specialized Task Guidance (Domain-Specific Prompts)
+
+While this document contains the core principles, the following documents provide detailed, mandatory instructions for specific development tasks. Always consult the relevant guide *after* reviewing the Prime Directive.
+
+- **System Architecture & Guiding Principles:** The source of truth for the Prime Directive.
+  - `developer_notes/prompts/system-architecture-prime-directive.md`
+- **Test Development Specification:** Detailed addendum for test creation.
+  - `developer_notes/prompts/test-development-specification.md`
+- **QA & Release Plan:** For Phase 5 QA and release verification procedures.
+  - `developer_notes/prompts/qa-release-verification-plan.md`
+- **Backend & Integration Planning:** For generating backend and integration strategies.
+  - `developer_notes/prompts/backend-integration-plan-generation.md`
+- **Feature Brief Generation:** For using the AI feature factory prompt.
+  - `developer_notes/prompts/ai-brief-feature-factory.md`
+
+---
 
 ## Commands
 - **Build**: `pnpm nx build {site}` (e.g., `pnpm nx build portal`, `pnpm nx build admin`)
@@ -77,9 +137,8 @@ Essential guidance for coding agents working in this IFLA Standards monorepo.
 ## MCP Server Usage Strategy
 - **CRITICAL**: Default to using MCP servers for current API information rather than relying on potentially outdated training data
 - **Always use Context7 MCP** for library documentation, API references, and implementation patterns
-- **Always use MUI MCP** for Material-UI component APIs, props, and usage examples
 - **Knowledge drift problem**: Libraries evolve rapidly with breaking changes - my training data may be outdated
-- **High-risk scenarios requiring MCP**: React 19, Next.js 15, Material-UI 7.x, TypeScript 5.8+, build tool configurations
+- **High-risk scenarios requiring MCP**: React 19, Next.js 15, Ant Design 5.x, TypeScript 5.8+, build tool configurations
 - **Proactive MCP usage**: Check current docs even when I "think" I know the answer
 - **Better to over-use MCP than provide outdated information** that causes bugs or frustration
 
