@@ -6,8 +6,8 @@ description: Functional Requirements for Bibliographic Records namespace
 hide_table_of_contents: true
 ---
 
-import { NamespaceHub, ElementSetCard, VocabularyCard } from '@ifla/theme';
-import { Button } from '@mui/material';
+import { ElementSetCard, VocabularyCard } from '@ifla/theme';
+import { Button } from 'antd';
 
 # FRBR - Functional Requirements for Bibliographic Records
 
@@ -95,7 +95,7 @@ This namespace contains 6 element sets with a total of 573 elements.
   />
 </div>
 <div style={{ textAlign: 'center', marginBottom: '40px' }}>
-  <Button href="/FRBR/elements" variant="contained" size="small">Browse All Element Sets</Button>
+  <Button href="/FRBR/elements" type="primary" size="small">Browse All Element Sets</Button>
 </div>
 ## Vocabularies
 
@@ -126,5 +126,5 @@ This namespace contains 2 vocabularies with a total of 8 concepts.
   />
 </div>
 <div style={{ textAlign: 'center', marginBottom: '40px' }}>
-  <Button href="/FRBR/vocabularies" variant="contained" size="small">Browse All Vocabularies</Button>
+  <Button href="/FRBR/vocabularies" type="primary" size="small">Browse All Vocabularies</Button>
 </div>
