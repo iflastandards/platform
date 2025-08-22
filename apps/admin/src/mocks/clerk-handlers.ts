@@ -11,7 +11,6 @@ import {
   getUserFixtureByEmail,
   getAllUserFixtures,
   fixtureToClerkUser,
-  createMockSession,
 } from './user-fixtures';
 import {
   ClerkUserSchema,

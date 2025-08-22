@@ -67,7 +67,11 @@ vi.mock('@clerk/nextjs', () => ({
 }));
 
 // Import dynamic mocks
-import { dynamicAuthMock, resetMockAuthState } from './mocks/dynamic-auth';
+// NOTE: These are deprecated - new tests should use MSW
+import {
+  dynamicAuthMock,
+  resetMockAuthState,
+} from './_deprecated/dynamic-auth';
 
 // Mock Clerk server with dynamic behavior
 vi.mock('@clerk/nextjs/server', () => ({
@@ -220,7 +224,7 @@ vi.mock('@/lib/authorization', async () => {
     dynamicGetAuthContextMock: getAuthContext,
     dynamicCanPerformActionMock: canPerformAction,
     dynamicGetUserAccessibleResourcesMock: getUserAccessibleResources,
-  } = await import('./mocks/dynamic-auth');
+  } = await import('./_deprecated/dynamic-auth');
 
   return {
     ...actual,

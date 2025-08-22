@@ -1,4 +1,7 @@
 
+/**
+ * @integration @accessibility @dashboard @high-priority
+ */
 import React from 'react';
 import { render } from '@testing-library/react';
 import { axe, toHaveNoViolations } from 'jest-axe';

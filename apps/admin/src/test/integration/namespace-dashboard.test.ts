@@ -2,7 +2,7 @@
  * Namespace Dashboard Tests
  * Tests namespace-specific dashboard access and functionality
  * Focuses on /dashboard/[siteKey] routes
- * @integration @namespace @dashboard
+ * @integration @dashboard @high-priority
  */
 
 import { describe, it, expect, beforeEach } from 'vitest';

@@ -31,7 +31,6 @@ import {
 import { mockNamespaces } from '@/lib/mock-data/namespaces-extended';
 
 const { Title, Text, Paragraph } = Typography;
-const { Step } = Steps;
 const { Option } = Select;
 const { Panel } = Collapse;
 const { TextArea } = Input;
@@ -57,18 +56,20 @@ interface ImportStep {
   status?: 'wait' | 'process' | 'finish' | 'error';
 }
 
-export default function ImportWorkflow({ 
+export default function ImportWorkflow({
   userRoles: _userRoles,
   userName: _userName,
   userEmail: _userEmail,
-  accessibleNamespaces: _accessibleNamespaces 
+  accessibleNamespaces: _accessibleNamespaces,
 }: ImportWorkflowProps) {
   const router = useRouter();
   const [current, setCurrent] = useState(0);
   const [selectedNamespace, setSelectedNamespace] = useState('');
   const [spreadsheetUrl, setSpreadsheetUrl] = useState('');
   const [dctapProfile, setDctapProfile] = useState('');
-  const [validationResults, setValidationResults] = useState<ValidationIssue[]>([]);
+  const [validationResults, setValidationResults] = useState<ValidationIssue[]>(
+    [],
+  );
   const [isValidating, setIsValidating] = useState(false);
   const [validationComplete, setValidationComplete] = useState(false);
   const [showValidationDetails, setShowValidationDetails] = useState(false);
@@ -100,15 +101,19 @@ export default function ImportWorkflow({
   // Mock CSV data for testing validation service
   const generateMockCsvData = (profile: string): string => {
     if (profile.includes('elements')) {
-      return `identifier,label@en,definition@en,status\n` +
-             `isbd:P1001,"Title proper","The main title of a resource","published"\n` +
-             `isbd:P1002,"Statement of responsibility","Names of persons or corporate bodies responsible","published"\n` +
-             `,"Missing identifier","This should cause an error","published"`;
+      return (
+        `identifier,label@en,definition@en,status\n` +
+        `isbd:P1001,"Title proper","The main title of a resource","published"\n` +
+        `isbd:P1002,"Statement of responsibility","Names of persons or corporate bodies responsible","published"\n` +
+        `,"Missing identifier","This should cause an error","published"`
+      );
     } else if (profile.includes('concepts')) {
-      return `identifier,prefLabel@en,definition@en,broader\n` +
-             `isbd:C1001,"Monograph","A bibliographic resource that is complete",""\n` +
-             `isbd:C1002,"Serial","A continuing resource","isbd:C1000"\n` +
-             `,"Missing identifier","This should cause an error",""`;
+      return (
+        `identifier,prefLabel@en,definition@en,broader\n` +
+        `isbd:C1001,"Monograph","A bibliographic resource that is complete",""\n` +
+        `isbd:C1002,"Serial","A continuing resource","isbd:C1000"\n` +
+        `,"Missing identifier","This should cause an error",""`
+      );
     }
     return `identifier,label\n,"Missing identifier"`;
   };
@@ -118,7 +123,7 @@ export default function ImportWorkflow({
       handleValidation();
       return;
     }
-    
+
     if (current < steps.length - 1) {
       setCurrent(current + 1);
     }
@@ -132,21 +137,21 @@ export default function ImportWorkflow({
 
   const handleValidation = async () => {
     setIsValidating(true);
-    
+
     try {
       // Generate mock CSV data based on selected profile for testing
       const csvData = generateMockCsvData(dctapProfile);
-      
+
       // Map profile selection to actual profile IDs
       const profileMapping: Record<string, string> = {
-        'standard': 'isbd-elements',
-        'isbd': 'isbd-elements', 
-        'lrm': 'isbd-concepts',
-        'custom': 'isbd-elements'
+        standard: 'isbd-elements',
+        isbd: 'isbd-elements',
+        lrm: 'isbd-concepts',
+        custom: 'isbd-elements',
       };
-      
+
       const profileId = profileMapping[dctapProfile] || 'isbd-elements';
-      
+
       // Call the validation service
       const response = await fetch('/api/validate-csv', {
         method: 'POST',
@@ -156,26 +161,27 @@ export default function ImportWorkflow({
         body: JSON.stringify({
           csvData,
           profileId,
-          worksheetName: 'Main'
+          worksheetName: 'Main',
         }),
       });
-      
+
       if (!response.ok) {
         const errorData = await response.json();
         throw new Error(errorData.error || 'Validation service error');
       }
-      
+
       const { issues } = await response.json();
       setValidationResults(issues);
       setValidationComplete(true);
-      
     } catch (error) {
       console.error('Validation error:', error);
-      setValidationResults([{
-        type: 'error',
-        message: `Validation failed: ${error instanceof Error ? error.message : 'Unknown error'}`,
-        suggestion: 'Please check your data and try again'
-      }]);
+      setValidationResults([
+        {
+          type: 'error',
+          message: `Validation failed: ${error instanceof Error ? error.message : 'Unknown error'}`,
+          suggestion: 'Please check your data and try again',
+        },
+      ]);
       setValidationComplete(true);
     } finally {
       setIsValidating(false);
@@ -184,7 +190,7 @@ export default function ImportWorkflow({
 
   const handleSubmitImport = async () => {
     setIsSubmitting(true);
-    
+
     try {
       // Call the API to create import job
       const response = await fetch('/api/actions/scaffold-from-spreadsheet', {
@@ -207,10 +213,9 @@ export default function ImportWorkflow({
 
       // Store job ID for tracking
       const jobId = data.jobId;
-      
+
       // Redirect to status page to monitor progress
       router.push(`/import/status/${jobId}`);
-      
     } catch (error) {
       console.error('Import error:', error);
       setIsSubmitting(false);
@@ -228,21 +233,28 @@ export default function ImportWorkflow({
       case 2:
         return dctapProfile !== '';
       case 3:
-        return validationComplete && validationResults.filter(r => r.type === 'error').length === 0;
+        return (
+          validationComplete &&
+          validationResults.filter((r) => r.type === 'error').length === 0
+        );
       default:
         return true;
     }
   };
 
   const getValidationSummary = () => {
-    const errors = validationResults.filter(r => r.type === 'error').length;
-    const warnings = validationResults.filter(r => r.type === 'warning').length;
-    const info = validationResults.filter(r => r.type === 'info').length;
-    
+    const errors = validationResults.filter((r) => r.type === 'error').length;
+    const warnings = validationResults.filter(
+      (r) => r.type === 'warning',
+    ).length;
+    const info = validationResults.filter((r) => r.type === 'info').length;
+
     return { errors, warnings, info };
   };
 
-  const getStepStatus = (index: number): 'wait' | 'process' | 'finish' | 'error' => {
+  const getStepStatus = (
+    index: number,
+  ): 'wait' | 'process' | 'finish' | 'error' => {
     if (index < current) return 'finish';
     if (index === current) return 'process';
     return 'wait';
@@ -257,7 +269,7 @@ export default function ImportWorkflow({
             <Paragraph type="secondary">
               Choose the namespace where your vocabulary will be imported.
             </Paragraph>
-            
+
             <Form.Item label="Namespace" required style={{ marginTop: 16 }}>
               <Select
                 value={selectedNamespace}
@@ -295,10 +307,15 @@ export default function ImportWorkflow({
           <div>
             <Title level={4}>Provide Source Data</Title>
             <Paragraph type="secondary">
-              Provide a link to your Google Sheets or upload a CSV file containing vocabulary data.
+              Provide a link to your Google Sheets or upload a CSV file
+              containing vocabulary data.
             </Paragraph>
-            
-            <Form.Item label="Spreadsheet URL" required style={{ marginTop: 16 }}>
+
+            <Form.Item
+              label="Spreadsheet URL"
+              required
+              style={{ marginTop: 16 }}
+            >
               <Input
                 value={spreadsheetUrl}
                 onChange={(e) => setSpreadsheetUrl(e.target.value)}
@@ -336,9 +353,10 @@ export default function ImportWorkflow({
           <div>
             <Title level={4}>Configure DCTAP Profile</Title>
             <Paragraph type="secondary">
-              Select a validation profile to ensure your data meets the required standards.
+              Select a validation profile to ensure your data meets the required
+              standards.
             </Paragraph>
-            
+
             <Form.Item label="DCTAP Profile" required style={{ marginTop: 16 }}>
               <Select
                 value={dctapProfile}
@@ -403,7 +421,7 @@ export default function ImportWorkflow({
             <Paragraph type="secondary">
               Review validation results before importing your vocabulary.
             </Paragraph>
-            
+
             {isValidating && (
               <div style={{ textAlign: 'center', padding: '32px' }}>
                 <Progress type="circle" percent={75} status="active" />
@@ -419,13 +437,19 @@ export default function ImportWorkflow({
                   const summary = getValidationSummary();
                   return (
                     <Alert
-                      type={summary.errors > 0 ? 'error' : summary.warnings > 0 ? 'warning' : 'success'}
+                      type={
+                        summary.errors > 0
+                          ? 'error'
+                          : summary.warnings > 0
+                            ? 'warning'
+                            : 'success'
+                      }
                       message={
                         summary.errors > 0
                           ? 'Validation Failed'
                           : summary.warnings > 0
-                          ? 'Validation Passed with Warnings'
-                          : 'Validation Successful'
+                            ? 'Validation Passed with Warnings'
+                            : 'Validation Successful'
                       }
                       description={
                         <Space>
@@ -433,7 +457,9 @@ export default function ImportWorkflow({
                             <Tag color="error">{summary.errors} Errors</Tag>
                           )}
                           {summary.warnings > 0 && (
-                            <Tag color="warning">{summary.warnings} Warnings</Tag>
+                            <Tag color="warning">
+                              {summary.warnings} Warnings
+                            </Tag>
                           )}
                           {summary.info > 0 && (
                             <Tag color="blue">{summary.info} Info</Tag>
@@ -446,7 +472,11 @@ export default function ImportWorkflow({
                 })()}
 
                 <Collapse
-                  defaultActiveKey={validationResults.some(r => r.type === 'error') ? ['1'] : []}
+                  defaultActiveKey={
+                    validationResults.some((r) => r.type === 'error')
+                      ? ['1']
+                      : []
+                  }
                   style={{ marginTop: 16 }}
                 >
                   <Panel header="Validation Details" key="1">
@@ -455,19 +485,31 @@ export default function ImportWorkflow({
                       renderItem={(issue) => (
                         <List.Item>
                           <Space align="start" style={{ width: '100%' }}>
-                            {issue.type === 'error' && <CloseOutlined style={{ color: '#ff4d4f' }} />}
-                            {issue.type === 'warning' && <WarningOutlined style={{ color: '#faad14' }} />}
-                            {issue.type === 'info' && <CheckOutlined style={{ color: '#1890ff' }} />}
+                            {issue.type === 'error' && (
+                              <CloseOutlined style={{ color: '#ff4d4f' }} />
+                            )}
+                            {issue.type === 'warning' && (
+                              <WarningOutlined style={{ color: '#faad14' }} />
+                            )}
+                            {issue.type === 'info' && (
+                              <CheckOutlined style={{ color: '#1890ff' }} />
+                            )}
                             <div style={{ flex: 1 }}>
                               <Text strong>{issue.message}</Text>
                               {issue.row && (
-                                <Text type="secondary" style={{ display: 'block', fontSize: 12 }}>
+                                <Text
+                                  type="secondary"
+                                  style={{ display: 'block', fontSize: 12 }}
+                                >
                                   Row {issue.row}
                                   {issue.column && `, Column: ${issue.column}`}
                                 </Text>
                               )}
                               {issue.suggestion && (
-                                <Text type="secondary" style={{ display: 'block', fontSize: 12 }}>
+                                <Text
+                                  type="secondary"
+                                  style={{ display: 'block', fontSize: 12 }}
+                                >
                                   Suggestion: {issue.suggestion}
                                 </Text>
                               )}
@@ -482,7 +524,9 @@ export default function ImportWorkflow({
                 <div style={{ marginTop: 24 }}>
                   <Button
                     icon={<EyeOutlined />}
-                    onClick={() => setShowValidationDetails(!showValidationDetails)}
+                    onClick={() =>
+                      setShowValidationDetails(!showValidationDetails)
+                    }
                   >
                     Preview Import Data
                   </Button>
@@ -507,7 +551,7 @@ export default function ImportWorkflow({
             <Paragraph type="secondary">
               Ready to import your vocabulary into the selected namespace.
             </Paragraph>
-            
+
             <Card style={{ marginTop: 24, marginBottom: 24 }}>
               <Title level={5}>Import Summary</Title>
               <Space direction="vertical" style={{ width: '100%' }}>
@@ -563,7 +607,8 @@ export default function ImportWorkflow({
       <div style={{ marginBottom: 32 }}>
         <Title level={2}>Import Vocabulary</Title>
         <Text type="secondary">
-          Import vocabulary data from spreadsheets with validation and GitHub integration
+          Import vocabulary data from spreadsheets with validation and GitHub
+          integration
         </Text>
       </div>
 
@@ -574,16 +619,15 @@ export default function ImportWorkflow({
             <Title level={5} style={{ marginBottom: 16 }}>
               Import Progress
             </Title>
-            <Steps current={current} direction="vertical">
-              {steps.map((step, index) => (
-                <Step
-                  key={step.title}
-                  title={step.title}
-                  description={step.description}
-                  status={getStepStatus(index)}
-                />
-              ))}
-            </Steps>
+            <Steps
+              current={current}
+              direction="vertical"
+              items={steps.map((step, index) => ({
+                title: step.title,
+                description: step.description,
+                status: getStepStatus(index),
+              }))}
+            />
           </Card>
         </Col>
 
@@ -591,17 +635,14 @@ export default function ImportWorkflow({
         <Col xs={24} md={16}>
           <Card>
             {renderStepContent()}
-            
+
             <Divider />
-            
+
             <div style={{ display: 'flex', justifyContent: 'space-between' }}>
-              <Button
-                onClick={handleBack}
-                disabled={current === 0}
-              >
+              <Button onClick={handleBack} disabled={current === 0}>
                 Previous
               </Button>
-              
+
               {current < steps.length - 1 && (
                 <Button
                   type="primary"

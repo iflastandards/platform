@@ -11,23 +11,26 @@
     "resolveJsonModule": true,
     "isolatedModules": true,
     "incremental": true,
+    "composite": false,
     "plugins": [
       {
         "name": "next"
       }
     ],
-    "types": [
-      "jest",
-      "node",
-      "vitest/globals"
-    ],
+    "types": ["jest", "node", "vitest/globals"],
     "baseUrl": ".",
     "paths": {
-      "@/*": [
-        "./src/*"
-      ]
+      "@/*": ["./src/*"],
+      "@ifla/contracts": ["../../packages/contracts/schemas/index.ts"],
+      "@ifla/contracts/*": ["../../packages/contracts/*"],
+      "@ifla/fixtures": ["../../packages/fixtures/src/index.ts"],
+      "@ifla/fixtures/*": ["../../packages/fixtures/*"]
     }
   },
+  "references": [
+    { "path": "../../packages/contracts" },
+    { "path": "../../packages/fixtures" }
+  ],
   "include": [
     "**/*.js",
     "**/*.jsx",

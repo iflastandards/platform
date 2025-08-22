@@ -1,18 +1,15 @@
 {
   "extends": "../../tsconfig.json",
   "compilerOptions": {
+    "composite": true,
+    "noEmit": false,
     "outDir": "./dist",
     "rootDir": "./",
     "declaration": true,
     "declarationMap": true,
-    "sourceMap": true
+    "sourceMap": true,
+    "emitDeclarationOnly": true
   },
-  "include": [
-    "schemas/**/*",
-    "types/**/*"
-  ],
-  "exclude": [
-    "dist",
-    "node_modules"
-  ]
+  "include": ["schemas/**/*", "types/**/*"],
+  "exclude": ["dist", "node_modules"]
 }

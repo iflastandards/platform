@@ -24,6 +24,8 @@ export default defineConfig({
       'coverage',
       '**/*.e2e.{test,spec}.{js,ts,jsx,tsx}',
       'src/test/integration/server-dependent/**/*.{test,spec}.{js,ts,jsx,tsx}',
+      'src/test/_deprecated/**/*.{test,spec}.{js,ts,jsx,tsx}',
+      '**/*.deprecated',
     ],
     coverage: {
       provider: 'v8',
