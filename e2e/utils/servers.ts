@@ -40,7 +40,7 @@ export function detectHeadlessServers(): {
   // Filter out stale processes (servers that no longer exist)
   const activeServers = state.servers.filter(server => {
     try {
-      if (server.pid === 0) return false;
+      if (server.pid === 0) {return false;}
       // Check if process still exists (doesn't throw if process exists)
       process.kill(server.pid, 0);
       return true;

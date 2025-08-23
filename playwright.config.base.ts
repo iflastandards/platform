@@ -1,4 +1,4 @@
-import { defineConfig, devices, PlaywrightTestConfig } from '@playwright/test';
+import { defineConfig, devices, type PlaywrightTestConfig } from '@playwright/test';
 import * as dotenv from 'dotenv';
 import * as path from 'path';
 

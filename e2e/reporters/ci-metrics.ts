@@ -3,7 +3,7 @@
  * Collects and reports metrics for CI/CD pipeline optimization
  */
 
-import { Reporter, TestCase, TestResult, FullResult } from '@playwright/test/reporter';
+import { type Reporter, type TestCase, type TestResult, type FullResult } from '@playwright/test/reporter';
 import * as fs from 'fs';
 import * as path from 'path';
 
@@ -124,8 +124,8 @@ export default class CIMetricsReporter implements Reporter {
       };
       
       stats.total++;
-      if (result.status === 'passed') stats.passed++;
-      if (result.status === 'failed') stats.failed++;
+      if (result.status === 'passed') {stats.passed++;}
+      if (result.status === 'failed') {stats.failed++;}
       stats.durations.push(result.duration);
       
       this.tagStats.set(tag, stats);
@@ -158,7 +158,7 @@ export default class CIMetricsReporter implements Reporter {
   }
   
   private calculatePerformanceMetrics(): void {
-    if (this.testDurations.length === 0) return;
+    if (this.testDurations.length === 0) {return;}
     
     // Sort by duration
     this.testDurations.sort((a, b) => b.duration - a.duration);
@@ -245,7 +245,7 @@ export default class CIMetricsReporter implements Reporter {
   private async sendToMonitoring(): Promise<void> {
     // Send metrics to monitoring service if configured
     const monitoringUrl = process.env.CI_METRICS_URL;
-    if (!monitoringUrl) return;
+    if (!monitoringUrl) {return;}
     
     try {
       // TODO: Implement actual metrics sending

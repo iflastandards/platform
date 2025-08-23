@@ -3,7 +3,7 @@
  * Starts only the servers required for integration tests
  */
 
-import { chromium, FullConfig } from '@playwright/test';
+import { chromium, type FullConfig } from '@playwright/test';
 import { startServers } from '@ifla/dev-servers';
 import { getRequiredSites } from '../scripts/test-server-manager';
 

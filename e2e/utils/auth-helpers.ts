@@ -1,33 +1,33 @@
-import { BrowserContext } from '@playwright/test';
+import { type BrowserContext } from '@playwright/test';
 import { seedClerkAuth, clearClerkAuth, isValidTestUser } from './clerk-auth';
-import { TEST_USER_EMAILS } from '../../apps/admin/src/test-config/clerk-test-users';
+import { TEST_USER_EMAILS } from '@ifla/fixtures';
 
 // Map the test user emails to a more convenient format for E2E tests
 export const TEST_USERS = {
   systemAdmin: {
     email: TEST_USER_EMAILS.SUPERADMIN,
     name: 'Super Admin',
-    role: 'system-admin'
+    role: 'system-admin',
   },
   rgAdmin: {
     email: TEST_USER_EMAILS.RG_ADMIN,
     name: 'Review Group Admin',
-    role: 'rg-admin'
+    role: 'rg-admin',
   },
   siteEditor: {
     email: TEST_USER_EMAILS.EDITOR,
     name: 'Editor',
-    role: 'editor'
+    role: 'editor',
   },
   reviewer: {
     email: TEST_USER_EMAILS.AUTHOR,
     name: 'Author/Reviewer',
-    role: 'reviewer'
+    role: 'reviewer',
   },
   translator: {
     email: TEST_USER_EMAILS.TRANSLATOR,
     name: 'Translator',
-    role: 'translator'
+    role: 'translator',
   },
 };
 
@@ -43,8 +43,10 @@ export function createTestUser(userData: {
   sites?: Record<string, string>;
   languages?: string[];
 }) {
-  console.warn('createTestUser is deprecated. Use TEST_USERS with real Clerk test user emails instead.');
-  
+  console.warn(
+    'createTestUser is deprecated. Use TEST_USERS with real Clerk test user emails instead.',
+  );
+
   return {
     id: `test-${userData.name.toLowerCase().replace(/\s/g, '-')}-${Date.now()}`,
     name: userData.name,
@@ -62,28 +64,32 @@ export function createTestUser(userData: {
 /**
  * Setup Clerk authentication for testing.
  * This authenticates with real Clerk test users instead of mocking.
- * 
+ *
  * @param context - The browser context to authenticate
  * @param userTypeOrEmail - Either a user type key from TEST_USERS or a Clerk test user email
  */
 export async function setupMockAuth(
-  context: BrowserContext, 
-  userTypeOrEmail: keyof typeof TEST_USERS | string
+  context: BrowserContext,
+  userTypeOrEmail: keyof typeof TEST_USERS | string,
 ) {
   let email: string;
-  
+
   // Check if it's a user type key or direct email
   if (userTypeOrEmail in TEST_USERS) {
-    email = TEST_USERS[userTypeOrEmail as keyof typeof TEST_USERS].email;
+    const { email: userEmail } =
+      TEST_USERS[userTypeOrEmail as keyof typeof TEST_USERS];
+    email = userEmail;
   } else {
     email = userTypeOrEmail as string;
   }
-  
+
   // Validate the email is a known test user
   if (!isValidTestUser(email)) {
-    throw new Error(`Invalid test user: ${email}. Available test users: ${Object.keys(TEST_USERS).join(', ')}`);
+    throw new Error(
+      `Invalid test user: ${email}. Available test users: ${Object.keys(TEST_USERS).join(', ')}`,
+    );
   }
-  
+
   await seedClerkAuth(context, email);
 }
 
@@ -101,20 +107,20 @@ export async function clearAuth(context: BrowserContext) {
 export async function setupUnauthenticatedState(context: BrowserContext) {
   // Clear any existing Clerk authentication
   await clearClerkAuth(context);
-  
+
   // Clear any cookies that might indicate authentication
   await context.clearCookies();
-  
+
   // Ensure Clerk shows the user as unauthenticated
   await context.addInitScript(() => {
     // Clear any Clerk session data
-    Object.keys(localStorage).forEach(key => {
+    Object.keys(localStorage).forEach((key) => {
       if (key.startsWith('__clerk') || key.includes('clerk')) {
         localStorage.removeItem(key);
       }
     });
-    
-    Object.keys(sessionStorage).forEach(key => {
+
+    Object.keys(sessionStorage).forEach((key) => {
       if (key.startsWith('__clerk') || key.includes('clerk')) {
         sessionStorage.removeItem(key);
       }

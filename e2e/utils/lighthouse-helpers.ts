@@ -1,4 +1,4 @@
-import { Page } from '@playwright/test';
+import { type Page } from '@playwright/test';
 import lighthouse from 'lighthouse';
 import { launch } from 'chrome-launcher';
 

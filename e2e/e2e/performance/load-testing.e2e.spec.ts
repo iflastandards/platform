@@ -15,8 +15,7 @@ e2eTest.describe('Performance Testing @performance @slow @e2e', () => {
     expect(loadTime).toBeLessThan(3000);
     
     // Check Core Web Vitals using page.evaluate
-    const vitals = await page.evaluate(() => {
-      return new Promise((resolve) => {
+    const vitals = await page.evaluate(() => new Promise((resolve) => {
         const observer = new PerformanceObserver((list) => {
           const entries = list.getEntries();
           const vitals: any = {};
@@ -34,8 +33,7 @@ e2eTest.describe('Performance Testing @performance @slow @e2e', () => {
         
         // Fallback timeout
         setTimeout(() => resolve({}), 2000);
-      });
-    });
+      }));
     
     console.log('Performance metrics:', { loadTime, vitals });
   });

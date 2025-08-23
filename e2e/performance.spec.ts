@@ -30,8 +30,7 @@ test.describe('Performance Tests @e2e @performance @ui @high-priority', () => {
     await page.goto('/ISBDM/', { waitUntil: 'networkidle' });
     
     // Measure Core Web Vitals
-    const metrics = await page.evaluate(() => {
-      return new Promise((resolve) => {
+    const metrics = await page.evaluate(() => new Promise((resolve) => {
         let lcpValue = 0;
         let clsValue = 0;
         
@@ -55,8 +54,7 @@ test.describe('Performance Tests @e2e @performance @ui @high-priority', () => {
             cls: clsValue,
           });
         }, 2000);
-      });
-    });
+      }));
     
     console.log(`LCP: ${metrics.lcp}ms`);
     console.log(`CLS: ${metrics.cls}`);

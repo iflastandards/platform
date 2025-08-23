@@ -1,4 +1,4 @@
-import { chromium, FullConfig } from '@playwright/test';
+import { chromium, type FullConfig } from '@playwright/test';
 import { addBasePath } from '@ifla/theme/utils';
 import * as fs from 'fs';
 import * as path from 'path';

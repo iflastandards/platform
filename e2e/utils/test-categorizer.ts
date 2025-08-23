@@ -69,9 +69,9 @@ function extractTagsFromTitle(title: string): string[] {
  * Categorize test based on tags
  */
 function categorizeTest(tags: string[]): 'smoke' | 'integration' | 'e2e' | 'uncategorized' {
-  if (tags.includes(TestTags.SMOKE)) return 'smoke';
-  if (tags.includes(TestTags.INTEGRATION)) return 'integration';
-  if (tags.includes(TestTags.E2E)) return 'e2e';
+  if (tags.includes(TestTags.SMOKE)) {return 'smoke';}
+  if (tags.includes(TestTags.INTEGRATION)) {return 'integration';}
+  if (tags.includes(TestTags.E2E)) {return 'e2e';}
   return 'uncategorized';
 }
 
@@ -79,9 +79,9 @@ function categorizeTest(tags: string[]): 'smoke' | 'integration' | 'e2e' | 'unca
  * Get priority from tags
  */
 function getPriority(tags: string[]): 'critical' | 'high' | 'normal' | 'low' | undefined {
-  if (tags.includes(TestTags.CRITICAL)) return 'critical';
-  if (tags.includes(TestTags.HIGH_PRIORITY)) return 'high';
-  if (tags.includes(TestTags.LOW_PRIORITY)) return 'low';
+  if (tags.includes(TestTags.CRITICAL)) {return 'critical';}
+  if (tags.includes(TestTags.HIGH_PRIORITY)) {return 'high';}
+  if (tags.includes(TestTags.LOW_PRIORITY)) {return 'low';}
   return 'normal';
 }
 
@@ -109,10 +109,10 @@ function getFeatures(tags: string[]): string[] {
  * Get environment restrictions from tags
  */
 function getEnvironment(tags: string[]): string | undefined {
-  if (tags.includes(TestTags.LOCAL_ONLY)) return 'local';
-  if (tags.includes(TestTags.CI_ONLY)) return 'ci';
-  if (tags.includes(TestTags.PREVIEW_ONLY)) return 'preview';
-  if (tags.includes(TestTags.PRODUCTION_ONLY)) return 'production';
+  if (tags.includes(TestTags.LOCAL_ONLY)) {return 'local';}
+  if (tags.includes(TestTags.CI_ONLY)) {return 'ci';}
+  if (tags.includes(TestTags.PREVIEW_ONLY)) {return 'preview';}
+  if (tags.includes(TestTags.PRODUCTION_ONLY)) {return 'production';}
   return undefined;
 }
 

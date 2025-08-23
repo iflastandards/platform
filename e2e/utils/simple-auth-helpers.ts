@@ -1,4 +1,4 @@
-import { BrowserContext, Page } from '@playwright/test';
+import { type BrowserContext, type Page } from '@playwright/test';
 
 /**
  * Simple authentication helper that works by intercepting all authentication-related

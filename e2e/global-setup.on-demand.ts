@@ -8,7 +8,7 @@
  * 4. Leaves servers running for subsequent tests
  */
 
-import { FullConfig } from '@playwright/test';
+import { type FullConfig } from '@playwright/test';
 import { getServerStatus } from './utils/server-manager';
 
 async function globalSetup(config: FullConfig) {

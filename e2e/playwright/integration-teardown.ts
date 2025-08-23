@@ -3,7 +3,7 @@
  * Cleans up after integration tests
  */
 
-import { FullConfig } from '@playwright/test';
+import { type FullConfig } from '@playwright/test';
 import { databaseFixture } from '../fixtures/database.fixture';
 
 export default async function globalTeardown(config: FullConfig) {

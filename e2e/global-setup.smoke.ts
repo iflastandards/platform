@@ -4,7 +4,7 @@
  * Only runs against preview/production environments
  */
 
-import { chromium, FullConfig } from '@playwright/test';
+import { chromium, type FullConfig } from '@playwright/test';
 
 async function globalSetup(_config: FullConfig) {
   console.log('🚀 Setting up smoke test environment...');

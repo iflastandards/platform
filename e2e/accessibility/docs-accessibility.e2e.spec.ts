@@ -251,17 +251,17 @@ test.describe('Cross-Site Accessibility Consistency @e2e @accessibility @docs @c
         await page.goto(site.url, { waitUntil: 'networkidle', timeout: 30000 });
         
         // Generate accessibility report
-        const report = await page.evaluate(() => {
+        const report = await page.evaluate(() => 
           // Basic accessibility checks that can be done in browser
-          return {
+           ({
             hasH1: document.querySelectorAll('h1').length > 0,
             hasMain: document.querySelectorAll('main, [role="main"]').length > 0,
             hasNav: document.querySelectorAll('nav, [role="navigation"]').length > 0,
             hasSkipLink: document.querySelectorAll('a[href*="#main"], .skip-link').length > 0,
             imageCount: document.querySelectorAll('img').length,
             imagesWithAlt: document.querySelectorAll('img[alt]').length,
-          };
-        });
+          })
+        );
 
         accessibilityReports.push({
           site: site.name,

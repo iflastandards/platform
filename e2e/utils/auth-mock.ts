@@ -1,4 +1,4 @@
-import { Page, BrowserContext } from '@playwright/test';
+import { type Page, type BrowserContext } from '@playwright/test';
 import jwt from 'jsonwebtoken';
 
 interface MockUser {
@@ -154,7 +154,7 @@ export async function clearAuthSession(context: BrowserContext): Promise<void> {
 export async function isAuthenticated(page: Page): Promise<boolean> {
   return await page.evaluate(() => {
     const session = localStorage.getItem('adminSession');
-    if (!session) return false;
+    if (!session) {return false;}
     
     try {
       const parsed = JSON.parse(session);
@@ -171,7 +171,7 @@ export async function isAuthenticated(page: Page): Promise<boolean> {
 export async function getCurrentUser(page: Page): Promise<any> {
   return await page.evaluate(() => {
     const session = localStorage.getItem('adminSession');
-    if (!session) return null;
+    if (!session) {return null;}
     
     try {
       return JSON.parse(session);

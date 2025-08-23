@@ -3,7 +3,7 @@
  * Tracks test failures and successes to identify flaky tests
  */
 
-import { Reporter, TestCase, TestResult, FullResult } from '@playwright/test/reporter';
+import { type Reporter, type TestCase, type TestResult, type FullResult } from '@playwright/test/reporter';
 import * as fs from 'fs';
 import * as path from 'path';
 

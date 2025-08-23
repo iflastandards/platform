@@ -44,6 +44,9 @@ export default defineConfig({
     alias: {
       '@': resolve(__dirname, './src'),
       '@/test': resolve(__dirname, './src/test'),
+      // Map workspace packages for Vitest resolution
+      '@ifla/contracts': resolve(__dirname, '../../packages/contracts/dist/index.js'),
+      '@ifla/fixtures': resolve(__dirname, '../../packages/fixtures/dist/index.js'),
     },
   },
 });

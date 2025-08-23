@@ -3,7 +3,7 @@
  * Prepares the environment for integration tests
  */
 
-import { FullConfig } from '@playwright/test';
+import { type FullConfig } from '@playwright/test';
 import { databaseFixture } from '../fixtures/database.fixture';
 
 export default async function globalSetup(config: FullConfig) {

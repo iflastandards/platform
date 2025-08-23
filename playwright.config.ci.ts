@@ -1,5 +1,5 @@
 import { defineConfig } from '@playwright/test';
-import { baseConfig, createEnvironmentConfig } from './playwright.config.base';
+import { baseConfig } from './playwright.config.base';
 
 /**
  * CI-Specific Test Configuration

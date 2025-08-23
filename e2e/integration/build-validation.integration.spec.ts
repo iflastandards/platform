@@ -55,10 +55,10 @@ const getSiteUrl = (siteName: string, sitePath: string) => {
   if (env === 'local') {
     const port = getPortForSite(siteName);
     return `http://localhost:${port}${sitePath === '' ? '/' : sitePath + '/'}`;
-  } else {
+  } 
     const baseUrl = getBaseUrl();
     return `${baseUrl}${sitePath === '' ? '/' : sitePath + '/'}`;
-  }
+  
 };
 
 integrationTest.describe('Post-Build Site Validation @build @validation @integration', () => {

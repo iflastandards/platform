@@ -1,4 +1,4 @@
-import { Page, BrowserContext, expect } from '@playwright/test';
+import { type Page, type BrowserContext, expect } from '@playwright/test';
 
 /**
  * Helper utilities for Playwright tests
@@ -89,9 +89,7 @@ export async function waitForHydration(page: Page) {
   });
   
   // Additional wait for Next.js
-  await page.waitForFunction(() => {
-    return window['__NEXT_DATA__'] !== undefined || window['React'] !== undefined;
-  });
+  await page.waitForFunction(() => window['__NEXT_DATA__'] !== undefined || window['React'] !== undefined);
 }
 
 /**
@@ -175,9 +173,7 @@ export async function getPerformanceMetrics(page: Page) {
       
       // Resource timings
       totalRequests: performance.getEntriesByType('resource').length,
-      totalSize: performance.getEntriesByType('resource').reduce((sum, r: any) => {
-        return sum + (r.transferSize || 0);
-      }, 0),
+      totalSize: performance.getEntriesByType('resource').reduce((sum, r: any) => sum + (r.transferSize || 0), 0),
     };
   });
 }

@@ -1,4 +1,4 @@
-import { BrowserContext, Browser } from '@playwright/test';
+import { type BrowserContext, type Browser } from '@playwright/test';
 import { seedClerkAuth, clearClerkAuth, isValidTestUser } from './clerk-auth';
 
 interface MockSessionArgs {
