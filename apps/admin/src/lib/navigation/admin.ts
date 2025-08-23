@@ -8,7 +8,7 @@ import {
   CloudUploadOutlined,
   TeamOutlined,
 } from '@ant-design/icons';
-import { NavigationItem } from '@/components/layout/StandardDashboardLayout';
+import { type NavigationItem } from '@/components/layout/StandardDashboardLayout';
 
 export const adminNavigation: NavigationItem[] = [
   {

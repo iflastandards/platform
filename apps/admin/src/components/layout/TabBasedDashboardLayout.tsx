@@ -11,9 +11,9 @@ import {
   Grid,
   Button,
   Space,
+  type MenuProps,
 } from 'antd';
 import { MenuOutlined } from '@ant-design/icons';
-import type { MenuProps } from 'antd';
 
 const { Header, Sider, Content } = Layout;
 const { Title, Text } = Typography;

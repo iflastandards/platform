@@ -6,8 +6,8 @@ import {
   Tooltip, 
   Typography,
   Space,
+  type ProgressProps,
 } from 'antd';
-import type { ProgressProps } from 'antd';
 
 const { Text } = Typography;
 
@@ -39,7 +39,7 @@ export function ProgressBar({
 }: ProgressBarProps) {
   // Calculate label based on format
   const getLabel = () => {
-    if (customLabel) return customLabel;
+    if (customLabel) {return customLabel;}
     
     switch (labelFormat) {
       case 'percentage':
@@ -59,8 +59,8 @@ export function ProgressBar({
 
   // Map height to Ant Design size
   const getSize = () => {
-    if (height && height <= 5) return 'small';
-    if (height && height >= 20) return undefined; // Use default for large
+    if (height && height <= 5) {return 'small';}
+    if (height && height >= 20) {return undefined;} // Use default for large
     return 'default';
   };
 

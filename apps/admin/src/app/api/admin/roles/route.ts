@@ -21,14 +21,14 @@ interface UpdatedMetadata {
   [key: string]: unknown;
 }
 
-export const GET = withAuth(async (req: AuthenticatedRequest) => {
+export const GET = withAuth(async (req: AuthenticatedRequest) => 
   // Return the user's structured roles
-  return NextResponse.json({ 
+   NextResponse.json({ 
     roles: req.auth.roles,
     userId: req.auth.userId,
     email: req.auth.email
-  });
-});
+  })
+);
 
 export const POST = withAuth(async (req: AuthenticatedRequest) => {
   const { userId, role, reviewGroupId, namespaceId, teamId } = await req.json();
@@ -64,7 +64,7 @@ export const POST = withAuth(async (req: AuthenticatedRequest) => {
     const currentMetadata = (targetUser.publicMetadata || {}) as Record<string, unknown>;
     
     // Build updated metadata based on role assignment
-    let updatedMetadata: UpdatedMetadata = { ...currentMetadata };
+    const updatedMetadata: UpdatedMetadata = { ...currentMetadata };
     
     switch (role) {
       case 'rg_admin':

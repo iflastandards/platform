@@ -241,6 +241,6 @@ export function getNamespaceStats() {
 
 export function getReviewGroupByNamespace(namespaceSlug: string): MockReviewGroup | undefined {
   const namespace = mockNamespaces[namespaceSlug];
-  if (!namespace) return undefined;
+  if (!namespace) {return undefined;}
   return mockReviewGroups[namespace.reviewGroup];
 }

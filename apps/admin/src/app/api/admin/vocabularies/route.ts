@@ -121,7 +121,7 @@ export const GET = withAuth(
       const userAccessibleNamespaces = await getUserAccessibleNamespaces(req.auth);
       
       // Filter vocabularies based on user access
-      let filteredVocabularies = mockVocabularies.filter(vocab => {
+      const filteredVocabularies = mockVocabularies.filter(vocab => {
         // Check namespace access
         if (!userAccessibleNamespaces.includes(vocab.namespaceId)) {
           return false;
@@ -269,11 +269,11 @@ export const POST = withAuth(
   {
     resourceType: 'vocabulary',
     action: 'create',
-    getResourceAttributes: (req) => {
+    getResourceAttributes: (req) => 
       // For POST requests, we'll check authorization inside the handler
       // since we need to parse the body first
-      return {};
-    },
+       ({})
+    ,
     debug: true,
     errorMessage: 'You do not have permission to create vocabularies in this namespace',
   }

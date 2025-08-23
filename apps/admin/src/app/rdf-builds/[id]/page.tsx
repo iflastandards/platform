@@ -4,16 +4,22 @@ import { Show } from '@refinedev/antd';
 import { useShow, useNavigation } from '@refinedev/core';
 import { Typography, Tag, Card, Descriptions, Button, Skeleton, Alert } from 'antd';
 import { ArrowLeftOutlined } from '@ant-design/icons';
-import type { RdfBuild } from '@/../../packages/contracts/schemas/RdfBuild.zod';
+import type { RdfBuild } from '@ifla/contracts';
 
-const { Title, Text } = Typography;
+const { Text } = Typography;
+
+type RdfBuildWithDetails = RdfBuild & {
+  completedAt?: string;
+  downloadUrl?: string;
+  logs?: string[];
+};
 
 /**
  * RDF Build Detail Page
  */
 export default function RdfBuildDetailPage({ params }: { params: { id: string } }) {
   const { list } = useNavigation();
-  const { queryResult } = useShow<RdfBuild>({
+  const { queryResult } = useShow<RdfBuildWithDetails>({
     resource: 'rdf-builds',
     id: params.id,
   });
@@ -95,14 +101,14 @@ export default function RdfBuildDetailPage({ params }: { params: { id: string } 
           <Descriptions.Item label="Created At">
             {new Date(record.createdAt).toLocaleString()}
           </Descriptions.Item>
-          {(record as any).completedAt && (
+          {record.completedAt && (
             <Descriptions.Item label="Completed At">
-              {new Date((record as any).completedAt).toLocaleString()}
+              {new Date(record.completedAt).toLocaleString()}
             </Descriptions.Item>
           )}
-          {(record as any).downloadUrl && (
+          {record.downloadUrl && (
             <Descriptions.Item label="Download">
-              <Button type="link" href={(record as any).downloadUrl} target="_blank">
+              <Button type="link" href={record.downloadUrl} target="_blank">
                 Download RDF File
               </Button>
             </Descriptions.Item>
@@ -112,7 +118,7 @@ export default function RdfBuildDetailPage({ params }: { params: { id: string } 
               <Text type="danger">{record.error}</Text>
             </Descriptions.Item>
           )}
-          {(record as any).logs && (record as any).logs.length > 0 && (
+          {record.logs && record.logs.length > 0 && (
             <Descriptions.Item label="Build Logs">
               <pre style={{ 
                 backgroundColor: '#f5f5f5', 
@@ -121,7 +127,7 @@ export default function RdfBuildDetailPage({ params }: { params: { id: string } 
                 maxHeight: 300,
                 overflow: 'auto'
               }}>
-                {(record as any).logs.join('\n')}
+                {record.logs.join('\n')}
               </pre>
             </Descriptions.Item>
           )}

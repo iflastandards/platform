@@ -26,9 +26,9 @@ import {
   UnorderedListOutlined,
   ToolOutlined,
 } from '@ant-design/icons';
-import { AppUser } from '@/lib/clerk-github-auth';
+import { type AppUser } from '@/lib/clerk-github-auth';
 import Link from 'next/link';
-import { TabBasedDashboardLayout, NavigationItem } from '@/components/layout/TabBasedDashboardLayout';
+import { TabBasedDashboardLayout, type NavigationItem } from '@/components/layout/TabBasedDashboardLayout';
 
 const { Text, Title } = Typography;
 const { Item: ListItem } = List;
@@ -41,7 +41,7 @@ export default function AuthorDashboard({ user }: AuthorDashboardProps) {
   const [selectedTab, setSelectedTab] = useState('overview');
   const userProjects = Object.values(user.projects);
   const authorProjects = userProjects.filter(p => p.role === 'reviewer' || p.role === 'translator');
-  const accessibleNamespaces = user.accessibleNamespaces;
+  const {accessibleNamespaces} = user;
 
   // Get role display
   const getRoleDisplay = (role: string) => {

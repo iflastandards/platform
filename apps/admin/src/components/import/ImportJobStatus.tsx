@@ -44,8 +44,6 @@ export default function ImportJobStatus({ jobId, onComplete }: ImportJobStatusPr
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
-    let intervalId: NodeJS.Timeout;
-
     const checkJobStatus = async () => {
       try {
         const response = await fetch(`/api/actions/scaffold-from-spreadsheet?jobId=${jobId}`);
@@ -60,10 +58,7 @@ export default function ImportJobStatus({ jobId, onComplete }: ImportJobStatusPr
 
         // Stop polling if job is complete or failed
         if (data.status === 'completed' || data.status === 'failed') {
-          if (intervalId) {
-            clearInterval(intervalId);
-          }
-          if (data.status === 'completed' && onComplete) {
+          if (onComplete && data.status === 'completed') {
             onComplete();
           }
         }
@@ -71,9 +66,6 @@ export default function ImportJobStatus({ jobId, onComplete }: ImportJobStatusPr
         console.error('Error fetching job status:', err);
         setError(err instanceof Error ? err.message : 'Failed to fetch job status');
         setLoading(false);
-        if (intervalId) {
-          clearInterval(intervalId);
-        }
       }
     };
 
@@ -81,12 +73,10 @@ export default function ImportJobStatus({ jobId, onComplete }: ImportJobStatusPr
     checkJobStatus();
 
     // Poll every 2 seconds
-    intervalId = setInterval(checkJobStatus, 2000);
+    const intervalId = setInterval(checkJobStatus, 2000);
 
     return () => {
-      if (intervalId) {
-        clearInterval(intervalId);
-      }
+      clearInterval(intervalId);
     };
   }, [jobId, onComplete]);
 

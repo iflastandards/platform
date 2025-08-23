@@ -25,7 +25,7 @@ describe('Demo Mode on Preview Server', () => {
 
   describe('Environment Configuration', () => {
     it('should have demo status endpoint available', async () => {
-      if (process.env.TEST_PREVIEW !== 'true') return;
+      if (process.env.TEST_PREVIEW !== 'true') {return;}
 
       const response = await fetch(`${PREVIEW_URL}/api/demo-status`);
 
@@ -51,7 +51,7 @@ describe('Demo Mode on Preview Server', () => {
     });
 
     it('should return demo mode configuration in health check', async () => {
-      if (process.env.TEST_PREVIEW !== 'true') return;
+      if (process.env.TEST_PREVIEW !== 'true') {return;}
 
       const response = await fetch(`${PREVIEW_URL}/api/health`);
 
@@ -65,7 +65,7 @@ describe('Demo Mode on Preview Server', () => {
 
   describe('Public Page Indicators', () => {
     it('should load the home page', async () => {
-      if (process.env.TEST_PREVIEW !== 'true') return;
+      if (process.env.TEST_PREVIEW !== 'true') {return;}
 
       const response = await fetch(PREVIEW_URL);
       expect(response.ok).toBe(true);
@@ -83,7 +83,7 @@ describe('Demo Mode on Preview Server', () => {
     });
 
     it('should have sign-in page accessible', async () => {
-      if (process.env.TEST_PREVIEW !== 'true') return;
+      if (process.env.TEST_PREVIEW !== 'true') {return;}
 
       const response = await fetch(`${PREVIEW_URL}/sign-in`, {
         redirect: 'manual',
@@ -96,7 +96,7 @@ describe('Demo Mode on Preview Server', () => {
 
   describe('Protected Routes Behavior', () => {
     it('should redirect unauthenticated users from dashboard', async () => {
-      if (process.env.TEST_PREVIEW !== 'true') return;
+      if (process.env.TEST_PREVIEW !== 'true') {return;}
 
       const response = await fetch(`${PREVIEW_URL}/dashboard`, {
         redirect: 'manual',
@@ -113,7 +113,7 @@ describe('Demo Mode on Preview Server', () => {
     });
 
     it('should protect admin routes', async () => {
-      if (process.env.TEST_PREVIEW !== 'true') return;
+      if (process.env.TEST_PREVIEW !== 'true') {return;}
 
       const adminRoutes = [
         '/namespaces',
@@ -137,7 +137,7 @@ describe('Demo Mode on Preview Server', () => {
 
   describe('Demo Mode Specific Features', () => {
     it('should have mock data endpoints if demo mode is enabled', async () => {
-      if (process.env.TEST_PREVIEW !== 'true') return;
+      if (process.env.TEST_PREVIEW !== 'true') {return;}
       if (!isDemoEnabled) {
         console.log('Demo mode not enabled on preview server');
         return;
@@ -151,7 +151,7 @@ describe('Demo Mode on Preview Server', () => {
 
   describe('CORS and Security Headers', () => {
     it('should have proper CORS headers for API routes', async () => {
-      if (process.env.TEST_PREVIEW !== 'true') return;
+      if (process.env.TEST_PREVIEW !== 'true') {return;}
 
       const response = await fetch(`${PREVIEW_URL}/api/health`, {
         method: 'OPTIONS',
@@ -164,7 +164,7 @@ describe('Demo Mode on Preview Server', () => {
     });
 
     it('should have security headers', async () => {
-      if (process.env.TEST_PREVIEW !== 'true') return;
+      if (process.env.TEST_PREVIEW !== 'true') {return;}
 
       const response = await fetch(PREVIEW_URL);
 
@@ -184,7 +184,7 @@ describe('Demo Mode on Preview Server', () => {
 
 describe('Demo Mode Comparison: Local vs Preview', () => {
   it('should document differences between local and preview demo mode', async () => {
-    if (process.env.TEST_PREVIEW !== 'true') return;
+    if (process.env.TEST_PREVIEW !== 'true') {return;}
 
     const localDemoStatus = process.env.NEXT_PUBLIC_IFLA_DEMO;
 

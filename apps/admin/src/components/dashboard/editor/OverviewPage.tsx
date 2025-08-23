@@ -22,7 +22,7 @@ import {
   TranslationOutlined,
 } from '@ant-design/icons';
 import Link from 'next/link';
-import { AppUser } from '@/lib/clerk-github-auth';
+import { type AppUser } from '@/lib/clerk-github-auth';
 
 interface EditorOverviewPageProps {
   user: AppUser;
@@ -33,7 +33,7 @@ const { Title, Text } = Typography;
 export function EditorOverviewPage({ user }: EditorOverviewPageProps) {
   const userProjects = Object.values(user.projects);
   const editorProjects = userProjects.filter(p => p.role === 'lead' || p.role === 'editor');
-  const accessibleNamespaces = user.accessibleNamespaces;
+  const {accessibleNamespaces} = user;
 
   return (
     <>

@@ -1,4 +1,4 @@
-import { NextRequest, NextResponse } from 'next/server';
+import { type NextRequest, NextResponse } from 'next/server';
 import { dctapValidator } from '@/lib/services/dctap-validation';
 import fs from 'fs/promises';
 
@@ -49,7 +49,7 @@ export async function POST(request: NextRequest) {
     
     for (let i = 1; i < lines.length; i++) {
       const line = lines[i].trim();
-      if (!line) continue;
+      if (!line) {continue;}
       
       const values = line.split(',').map((v: string) => v.trim().replace(/"/g, ''));
       spreadsheetData.push(values);

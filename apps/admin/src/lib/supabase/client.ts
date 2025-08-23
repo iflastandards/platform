@@ -155,8 +155,8 @@ export const mockSupabase = {
           const ascending = options?.ascending !== false;
           const aVal = a[column];
           const bVal = b[column];
-          if (aVal < bVal) return ascending ? -1 : 1;
-          if (aVal > bVal) return ascending ? 1 : -1;
+          if (aVal < bVal) {return ascending ? -1 : 1;}
+          if (aVal > bVal) {return ascending ? 1 : -1;}
           return 0;
         }) || [],
         error: null,
@@ -174,7 +174,7 @@ export const mockSupabase = {
             created_at: new Date().toISOString(),
             ...data,
           };
-          if (!mockStorage[table]) mockStorage[table] = [];
+          if (!mockStorage[table]) {mockStorage[table] = [];}
           mockStorage[table].push(newItem);
           return { data: newItem, error: null };
         },

@@ -42,7 +42,7 @@ export default async function ImportPage({
   return (
     <ImportWorkflow 
       userRoles={[publicMetadata?.iflaRole || 'member']}
-      userName={(user.firstName || '') + ' ' + (user.lastName || '')}
+      userName={`${user.firstName || ''  } ${  user.lastName || ''}`}
       userEmail={user.emailAddresses?.[0]?.emailAddress}
       accessibleNamespaces={[]}
     />

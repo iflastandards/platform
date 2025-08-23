@@ -12,7 +12,7 @@ import {
   getRandomDelay,
   updateJobStatus,
 } from './fixtures';
-import { CreateRdfBuildSchema } from '../../../../packages/contracts/schemas/RdfBuild.zod';
+import { CreateRdfBuildSchema } from '@ifla/contracts';
 import { config } from '@/config/environment';
 import { clerkHandlers } from './clerk-handlers';
 

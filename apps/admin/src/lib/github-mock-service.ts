@@ -3,7 +3,7 @@
  * Provides fake GitHub team and project data for real Clerk users
  */
 
-import { ReviewGroup, Project } from './clerk-github-auth';
+import { type ReviewGroup, type Project } from './clerk-github-auth';
 
 // Map of email patterns to mock GitHub data
 const mockDataByEmail: Record<string, {

@@ -3,7 +3,7 @@
  * This provides a way to create and manage mock users for testing purposes
  */
 
-import { UserRoles } from '@/lib/auth';
+import { type UserRoles } from '@/lib/auth';
 
 export interface MockUser {
   id: string;
@@ -47,12 +47,12 @@ export function createUser(userData: {
   const id = `mock-${Date.now()}-${Math.random().toString(36).substring(2, 9)}`;
   
   // Generate email from name
-  const email = userData.name
+  const email = `${userData.name
     .toLowerCase()
     .replace(/[^a-z0-9\s-]/g, '') // Remove special characters except spaces and hyphens
     .replace(/\s+/g, '.') // Replace spaces with dots
     .replace(/-+/g, '-') // Keep hyphens
-    + '@example.com';
+     }@example.com`;
   
   const roles: UserRoles = userData.roles || {
     systemRole: userData.systemRole,
@@ -86,7 +86,7 @@ export function createUser(userData: {
  * Get a mock user by ID
  */
 export function getUser(id: string): MockUser | null {
-  if (!id) return null;
+  if (!id) {return null;}
   return mockUsers.get(id) || null;
 }
 

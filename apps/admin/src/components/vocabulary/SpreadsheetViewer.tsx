@@ -15,7 +15,7 @@ import {
   Pagination,
   Row,
   Col,
-  MenuProps,
+  type MenuProps,
 } from 'antd';
 import {
   SearchOutlined,

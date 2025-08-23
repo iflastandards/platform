@@ -165,7 +165,7 @@ export function getTranslationsByTranslator(email: string): TranslationProgress[
 }
 
 export function calculateTranslationPercentage(progress: TranslationProgress['progress']): number {
-  if (progress.total === 0) return 0;
+  if (progress.total === 0) {return 0;}
   return Math.round((progress.translated / progress.total) * 100);
 }
 

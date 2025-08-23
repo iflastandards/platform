@@ -74,7 +74,7 @@ class AuthDebugLogger {
    * Log an authorization check
    */
   log(info: AuthDebugInfo): void {
-    if (!this.config.enabled) return;
+    if (!this.config.enabled) {return;}
 
     // Add to in-memory storage
     this.logs.push(info);
@@ -230,7 +230,7 @@ function generateReason(
       return `Access granted via ${matchedRole.type} role: ${matchedRole.role}${matchedRole.details ? ` (${matchedRole.details})` : ''}`;
     }
     return 'Access granted based on user permissions';
-  } else {
+  } 
     // Explain why access was denied
     if (!roleChecks || roleChecks.length === 0) {
       return 'No applicable roles found for this resource and action';
@@ -242,7 +242,7 @@ function generateReason(
     }
     
     return `Access denied. Checked roles: ${checkedRoles.map(r => r.role).join(', ')}. None granted permission for ${action} on ${resource}.`;
-  }
+  
 }
 
 /**
@@ -317,10 +317,10 @@ function checkPermissionSimplified(
   action: string
 ): boolean {
   // Superadmin can do everything
-  if (authContext.roles.system === 'superadmin') return true;
+  if (authContext.roles.system === 'superadmin') {return true;}
   
   // Basic read permissions for authenticated users
-  if (action === 'read') return true;
+  if (action === 'read') {return true;}
   
   // Review group admins can manage their groups
   if (authContext.roles.reviewGroups.length > 0 && 

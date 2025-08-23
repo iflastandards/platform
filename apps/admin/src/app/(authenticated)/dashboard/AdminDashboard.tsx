@@ -24,7 +24,7 @@ import {
   CloudUploadOutlined,
   HomeOutlined,
 } from '@ant-design/icons';
-import { TabBasedDashboardLayout, NavigationItem } from '@/components/layout/TabBasedDashboardLayout';
+import { TabBasedDashboardLayout, type NavigationItem } from '@/components/layout/TabBasedDashboardLayout';
 
 const { Text, Title } = Typography;
 

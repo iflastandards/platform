@@ -10,10 +10,10 @@ import {
   UserOutlined,
   ReloadOutlined,
 } from '@ant-design/icons';
-import { AppUser } from '@/lib/clerk-github-auth';
+import { type AppUser } from '@/lib/clerk-github-auth';
 import {
   TabBasedDashboardLayout,
-  NavigationItem,
+  type NavigationItem,
 } from '@/components/layout/TabBasedDashboardLayout';
 
 const { Title, Text, Paragraph } = Typography;

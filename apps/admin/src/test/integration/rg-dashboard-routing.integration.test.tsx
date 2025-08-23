@@ -19,13 +19,11 @@ describe('Review Group Dashboard Routing @integration @dashboard @admin @high-pr
     });
   });
 
-  const renderWithProviders = (component: React.ReactElement) => {
-    return render(
+  const renderWithProviders = (component: React.ReactElement) => render(
       <QueryClientProvider client={queryClient}>
         {component}
       </QueryClientProvider>,
     );
-  };
 
   describe('RG Overview Page', () => {
     it.skip('should render the RG overview page with stats and namespaces', () => {

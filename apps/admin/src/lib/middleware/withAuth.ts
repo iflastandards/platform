@@ -11,10 +11,10 @@
  * @module middleware/withAuth
  */
 
-import { NextRequest, NextResponse } from 'next/server';
+import { type NextRequest, NextResponse } from 'next/server';
 import { auth } from '@clerk/nextjs/server';
 import { getAuthContext, canPerformAction, type ResourceType, type Action } from '../authorization';
-import { AuthContext } from '../schemas/auth.schema';
+import { type AuthContext } from '../schemas/auth.schema';
 import { createRequestContext, completeRequestTiming, createContextLogger } from './requestContext';
 
 /**
@@ -422,12 +422,10 @@ export async function checkBatchPermissions<T extends ResourceType>(
 export function withAuthChain(
   ...middlewares: Array<(handler: AuthenticatedRouteHandler) => AuthenticatedRouteHandler>
 ): (handler: AuthenticatedRouteHandler) => AuthenticatedRouteHandler {
-  return (handler: AuthenticatedRouteHandler) => {
-    return middlewares.reduceRight(
+  return (handler: AuthenticatedRouteHandler) => middlewares.reduceRight(
       (next, middleware) => middleware(next),
       handler
     );
-  };
 }
 
 /**

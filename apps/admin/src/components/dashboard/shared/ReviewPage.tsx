@@ -25,13 +25,13 @@ export function SharedReviewPage({ role }: SharedReviewPageProps) {
         alertTitle: 'Review Queue',
         alertMessage: 'You have 3 items waiting for your review. Please review and provide feedback.',
       };
-    } else {
+    } 
       return {
         title: 'Review Queue',
         alertTitle: 'Editorial Review',
         alertMessage: 'As an editor, you can approve, reject, or request changes to vocabulary submissions.',
       };
-    }
+    
   };
 
   const content = getContent();

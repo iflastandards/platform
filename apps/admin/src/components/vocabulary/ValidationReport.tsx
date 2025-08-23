@@ -135,8 +135,8 @@ export default function ValidationReport({
   };
 
   const getScoreColor = (score: number) => {
-    if (score >= 80) return '#52c41a';
-    if (score >= 60) return '#faad14';
+    if (score >= 80) {return '#52c41a';}
+    if (score >= 60) {return '#faad14';}
     return '#ff4d4f';
   };
 
@@ -149,7 +149,7 @@ export default function ValidationReport({
   }, {} as Record<string, ValidationIssue[]>);
 
   const filterIssues = (type?: string) => {
-    if (!type) return issues;
+    if (!type) {return issues;}
     return issues.filter((issue) => issue.type === type);
   };
 

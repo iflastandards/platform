@@ -20,17 +20,13 @@ vi.mock('next/navigation', () => ({
 }));
 
 // Mock the navigation components
-vi.mock('next/link', () => {
-  return {
-    default: ({ children, href, ...props }: any) => {
-      return (
+vi.mock('next/link', () => ({
+    default: ({ children, href, ...props }: any) => (
         <a href={href} {...props}>
           {children}
         </a>
-      );
-    },
-  };
-});
+      ),
+  }));
 
 describe.skip('Dashboard Routing @integration @dashboard @navigation @high-priority', () => {
   let queryClient: QueryClient;
@@ -49,13 +45,11 @@ describe.skip('Dashboard Routing @integration @dashboard @navigation @high-prior
     queryClient.clear();
   });
 
-  const renderWithProviders = (component: React.ReactElement) => {
-    return render(
+  const renderWithProviders = (component: React.ReactElement) => render(
       <QueryClientProvider client={queryClient}>
         {component}
       </QueryClientProvider>,
     );
-  };
 
   it('should render site management dashboard layout with navigation', async () => {
     renderWithProviders(

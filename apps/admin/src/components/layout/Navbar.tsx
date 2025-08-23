@@ -4,7 +4,7 @@ import { useState } from 'react';
 import Link from 'next/link';
 import { useUser, UserButton } from '@clerk/nextjs';
 import { useTheme as useAppTheme } from '@/contexts/theme-context';
-import { Layout, Menu, Button, Badge, Tag, Drawer, Space, Grid } from 'antd';
+import { Layout, Menu, Button, Badge, Tag, Drawer, Space, Grid, type MenuProps } from 'antd';
 import {
   MenuOutlined,
   DashboardOutlined,
@@ -20,7 +20,6 @@ import {
   BulbFilled,
 } from '@ant-design/icons';
 import { getMockGitHubData } from '@/lib/github-mock-service';
-import type { MenuProps } from 'antd';
 
 const { Header } = Layout;
 const { useBreakpoint } = Grid;

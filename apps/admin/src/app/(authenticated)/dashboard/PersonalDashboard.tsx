@@ -26,9 +26,9 @@ import {
   UserOutlined,
   HomeOutlined,
 } from '@ant-design/icons';
-import { AppUser } from '@/lib/clerk-github-auth';
+import { type AppUser } from '@/lib/clerk-github-auth';
 import Link from 'next/link';
-import { TabBasedDashboardLayout, NavigationItem } from '@/components/layout/TabBasedDashboardLayout';
+import { TabBasedDashboardLayout, type NavigationItem } from '@/components/layout/TabBasedDashboardLayout';
 
 const { Text, Title } = Typography;
 const { Item: ListItem } = List;

@@ -13,6 +13,7 @@ import {
   Space,
   Dropdown,
   Empty,
+  type MenuProps,
 } from 'antd';
 import {
   SearchOutlined,
@@ -35,7 +36,6 @@ import {
 } from '@/lib/mock-data';
 import { mockEditorialCycles } from '@/lib/mock-data/supabase/editorial-cycles';
 import { mockNightlyBuilds } from '@/lib/mock-data/supabase/nightly-builds';
-import type { MenuProps } from 'antd';
 
 const { Title, Text, Link } = Typography;
 

@@ -84,9 +84,6 @@ export interface WorksheetInfo {
 }
 
 export class AdoptionService {
-  constructor() {
-    // Services will be instantiated as needed
-  }
 
   /**
    * Extract Google Sheets ID from URL
@@ -543,7 +540,7 @@ export class AdoptionService {
             });
 
             const rows = response.data.values || [];
-            if (rows.length === 0) continue;
+            if (rows.length === 0) {continue;}
 
             // Convert to CSV
             const { stringify } = require('csv-stringify/sync');
@@ -564,14 +561,14 @@ export class AdoptionService {
         }
 
         return { csvFiles, totalRows };
-      } else {
+      } 
         // No API access, just return the analysis info
         console.warn('No Google Sheets API access, cannot download actual data');
         return { 
           csvFiles: analysis.worksheets.map(w => `${w.name}.csv`),
           totalRows: analysis.totalRows 
         };
-      }
+      
     } catch (error) {
       console.error('Failed to download adopted sheet:', error);
       throw new Error(`Failed to download spreadsheet: ${error}`);
@@ -629,7 +626,7 @@ class _GoogleSheetsAnalyzer {
       // Analyze each sheet
       for (const sheet of spreadsheet.data.sheets || []) {
         const title = sheet.properties?.title;
-        if (!title) continue;
+        if (!title) {continue;}
 
         // Get first few rows to analyze structure
         const range = `${title}!A1:Z10`;
@@ -640,7 +637,7 @@ class _GoogleSheetsAnalyzer {
           });
 
           const rows = response.data.values || [];
-          if (rows.length === 0) continue;
+          if (rows.length === 0) {continue;}
 
           const headers = rows[0] || [];
           const rowCount = sheet.properties?.gridProperties?.rowCount || rows.length;

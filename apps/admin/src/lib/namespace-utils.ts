@@ -91,7 +91,7 @@ async function countRdfFiles(namespacePath: string): Promise<{ elementSets: numb
       // Divide by number of formats to avoid counting duplicates
       const formatCount = formats.filter(async format => {
         const formatPath = path.join(rdfPath, format);
-        return await fs.stat(formatPath).then(() => true).catch(() => false);
+        return fs.stat(formatPath).then(() => true).catch(() => false);
       }).length || 1;
       
       // Keep the highest count (assuming same content in different formats)
@@ -118,7 +118,7 @@ export async function getAllNamespacesData(): Promise<NamespaceData[]> {
     
     for (const dir of dirs) {
       // Skip hidden files and non-directories
-      if (dir.startsWith('.')) continue;
+      if (dir.startsWith('.')) {continue;}
       
       const namespacePath = path.join(standardsDir, dir);
       const stat = await fs.stat(namespacePath);

@@ -13,7 +13,7 @@ import {
   ProjectOutlined,
 } from '@ant-design/icons';
 import Link from 'next/link';
-import { AppUser } from '@/lib/clerk-github-auth';
+import { type AppUser } from '@/lib/clerk-github-auth';
 
 interface SharedProjectsPageProps {
   user: AppUser;
@@ -43,7 +43,7 @@ export function SharedProjectsPage({ user, role }: SharedProjectsPageProps) {
 
   // Get role color for authors only (editors use primary)
   const getRoleColor = (projectRole: string) => {
-    if (role === 'editor') return 'blue';
+    if (role === 'editor') {return 'blue';}
     
     switch (projectRole) {
       case 'reviewer': return 'purple';
@@ -58,12 +58,12 @@ export function SharedProjectsPage({ user, role }: SharedProjectsPageProps) {
         primary: 'No projects assigned',
         secondary: "You don't have any projects with reviewer or translator roles"
       };
-    } else {
+    } 
       return {
         primary: 'No projects assigned',
         secondary: "You don't have any projects with editor or lead roles"
       };
-    }
+    
   };
 
   return (

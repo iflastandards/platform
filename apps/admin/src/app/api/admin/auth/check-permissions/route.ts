@@ -7,7 +7,7 @@
 
 import { NextResponse } from 'next/server';
 import { withAuth } from '@/lib/middleware/withAuth';
-import { canPerformAction, ResourceType, Action } from '@/lib/authorization';
+import { canPerformAction, type ResourceType, type Action } from '@/lib/authorization';
 
 /**
  * POST /api/admin/auth/check-permissions

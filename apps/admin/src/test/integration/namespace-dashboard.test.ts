@@ -211,7 +211,7 @@ describe('Namespace Dashboard ([siteKey]) @namespace', () => {
       const translatorApp = fixtureToAppUser(translator);
 
       // Translator has access to multiple namespaces for translation
-      const accessibleNamespaces = translatorApp.accessibleNamespaces;
+      const {accessibleNamespaces} = translatorApp;
       expect(accessibleNamespaces.length).toBeGreaterThan(1);
       expect(accessibleNamespaces).toContain('isbd');
       expect(accessibleNamespaces).toContain('lrm');

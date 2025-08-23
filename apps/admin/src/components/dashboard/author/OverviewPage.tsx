@@ -16,7 +16,7 @@ import {
   ClockCircleOutlined,
 } from '@ant-design/icons';
 import Link from 'next/link';
-import { AppUser } from '@/lib/clerk-github-auth';
+import { type AppUser } from '@/lib/clerk-github-auth';
 
 interface AuthorOverviewPageProps {
   user: AppUser;

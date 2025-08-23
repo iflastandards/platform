@@ -277,13 +277,13 @@ export function getRecentNightlyBuilds(limit: number = 5): MockVocabulary[] {
 
 // Calculate overall progress for a vocabulary
 export function calculateVocabularyProgress(vocab: MockVocabulary): number {
-  if (!vocab.editorialCycle) return 0;
+  if (!vocab.editorialCycle) {return 0;}
   
   const { progress } = vocab.editorialCycle;
   const totalItems = progress.elementsTotal + progress.conceptsTotal;
   const completedItems = progress.elementsCompleted + progress.conceptsCompleted;
   
-  if (totalItems === 0) return 0;
+  if (totalItems === 0) {return 0;}
   return Math.round((completedItems / totalItems) * 100);
 }
 

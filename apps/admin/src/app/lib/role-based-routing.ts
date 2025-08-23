@@ -3,7 +3,7 @@
  * Determines the correct landing page based on user roles and permissions
  */
 
-import { UserRoles } from '@/lib/auth';
+import { type UserRoles } from '@/lib/auth';
 
 type Environment = 'local' | 'preview' | 'development' | 'production';
 

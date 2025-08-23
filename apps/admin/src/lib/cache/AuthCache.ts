@@ -8,8 +8,8 @@
  * @module cache/AuthCache
  */
 
-import { AuthContext } from '../schemas/auth.schema';
-import { ResourceType } from '../authorization';
+import { type AuthContext } from '../schemas/auth.schema';
+import { type ResourceType } from '../authorization';
 
 /**
  * Cache entry structure
@@ -184,7 +184,7 @@ export class AuthCache {
    * Get value from cache
    */
   public get<T = any>(key: string): T | null {
-    if (!this.config.enabled) return null;
+    if (!this.config.enabled) {return null;}
 
     const entry = this.cache.get(key);
     
@@ -216,7 +216,7 @@ export class AuthCache {
     ttl?: number,
     resourceType?: ResourceType
   ): void {
-    if (!this.config.enabled) return;
+    if (!this.config.enabled) {return;}
 
     // Determine TTL
     let effectiveTTL = ttl;

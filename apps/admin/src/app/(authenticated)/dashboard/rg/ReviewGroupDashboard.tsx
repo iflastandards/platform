@@ -22,7 +22,7 @@ import {
   PlusCircleOutlined,
 } from '@ant-design/icons';
 import { mockReviewGroups, getNamespacesByReviewGroup } from '@/lib/mock-data/namespaces-extended';
-import { TabBasedDashboardLayout, NavigationItem } from '@/components/layout/TabBasedDashboardLayout';
+import { TabBasedDashboardLayout, type NavigationItem } from '@/components/layout/TabBasedDashboardLayout';
 
 const { Text, Title } = Typography;
 

@@ -17,11 +17,11 @@ export function EditorDashboardLayout({ children }: EditorDashboardLayoutProps) 
   useEffect(() => {
     if (user) {
       // This will be replaced with actual user data fetching
-      const updatedNav = getEditorNavigation().map(item => {
+      const updatedNav = getEditorNavigation().map(item => 
         // Update badge counts based on user data
         // For now, using placeholder values
-        return item;
-      });
+         item
+      );
       setNavigation(updatedNav);
     }
   }, [user]);

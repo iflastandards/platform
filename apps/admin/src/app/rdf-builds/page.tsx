@@ -4,7 +4,7 @@ import { useTable, List } from '@refinedev/antd';
 import { Table, Tag, Space, Button, Skeleton, Alert } from 'antd';
 import { useNavigation } from '@refinedev/core';
 import { PlusOutlined } from '@ant-design/icons';
-import type { RdfBuild } from '@/../../packages/contracts/schemas/RdfBuild.zod';
+import type { RdfBuild } from '@ifla/contracts';
 
 /**
  * RDF Builds List Page

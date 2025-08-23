@@ -1,4 +1,4 @@
-import { spawn, ChildProcess } from 'child_process';
+import { spawn, type ChildProcess } from 'child_process';
 
 const sleep = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
 

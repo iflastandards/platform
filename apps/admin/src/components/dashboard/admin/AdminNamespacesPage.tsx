@@ -207,9 +207,7 @@ export function AdminNamespacesPage() {
     }
   };
 
-  const getVisibilityColor = (visibility: string) => {
-    return visibility === 'public' ? 'blue' : 'default';
-  };
+  const getVisibilityColor = (visibility: string) => visibility === 'public' ? 'blue' : 'default';
 
   const handleDelete = async (id: string) => {
     // Implement delete logic

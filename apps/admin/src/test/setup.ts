@@ -11,7 +11,6 @@ process.env.CLERK_SECRET_KEY =
 // Cleanup after each test
 afterEach(() => {
   cleanup();
-  resetMockAuthState(); // Reset auth state to default
 });
 
 // Mock Next.js router
@@ -66,16 +65,9 @@ vi.mock('@clerk/nextjs', () => ({
   })),
 }));
 
-// Import dynamic mocks
-// NOTE: These are deprecated - new tests should use MSW
-import {
-  dynamicAuthMock,
-  resetMockAuthState,
-} from './_deprecated/dynamic-auth';
-
-// Mock Clerk server with dynamic behavior
+// Mock Clerk server (static defaults; tests can override as needed)
 vi.mock('@clerk/nextjs/server', () => ({
-  auth: dynamicAuthMock,
+  auth: vi.fn(async () => ({ userId: null, sessionId: null, sessionClaims: null })),
   currentUser: vi.fn(() => Promise.resolve(null)),
   clerkMiddleware: vi.fn(() => vi.fn()),
   clerkClient: vi.fn(() => ({
@@ -217,20 +209,14 @@ vi.mock('@/lib/auth', () => ({
   getAuthUser: vi.fn(() => Promise.resolve(null)),
 }));
 
-// Mock authorization module with dynamic behavior
+// Mock authorization module with static, permissive defaults
 vi.mock('@/lib/authorization', async () => {
   const actual = await vi.importActual('@/lib/authorization');
-  const {
-    dynamicGetAuthContextMock: getAuthContext,
-    dynamicCanPerformActionMock: canPerformAction,
-    dynamicGetUserAccessibleResourcesMock: getUserAccessibleResources,
-  } = await import('./_deprecated/dynamic-auth');
-
   return {
     ...actual,
-    getAuthContext,
-    canPerformAction,
-    getUserAccessibleResources,
+    getAuthContext: vi.fn(async () => ({ userId: null, roles: [], permissions: [] })),
+    canPerformAction: vi.fn(() => true),
+    getUserAccessibleResources: vi.fn(() => []),
   };
 });
 

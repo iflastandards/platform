@@ -3,7 +3,7 @@
  * Uses MSW handlers to provide data in development/test environments
  */
 
-import { DataProvider } from '@refinedev/core';
+import { type DataProvider } from '@refinedev/core';
 import { config } from '@/config/environment';
 
 const API_BASE = config.env.apiBase || 'http://localhost:3000';

@@ -7,7 +7,7 @@
  * @module middleware/requestContext
  */
 
-import { NextRequest } from 'next/server';
+import { type NextRequest } from 'next/server';
 import type { AuthContext } from '../schemas/auth.schema';
 
 /**
@@ -81,7 +81,7 @@ export interface RequestWithContext extends NextRequest {
  * Create a new request context
  */
 export function createRequestContext(req: NextRequest): RequestContext {
-  const headers = req.headers;
+  const {headers} = req;
   
   return {
     requestId: generateRequestId(),
@@ -112,7 +112,7 @@ function generateRequestId(): string {
  * Extract client IP from request
  */
 function getClientIp(req: NextRequest): string | undefined {
-  const headers = req.headers;
+  const {headers} = req;
   
   // Check various headers that might contain the client IP
   const possibleHeaders = [

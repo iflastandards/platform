@@ -241,7 +241,7 @@ export default function AdoptSpreadsheetForm({ userId: _userId, userName }: Adop
         );
         
       case 1:
-        if (!analysis) return null;
+        if (!analysis) {return null;}
         
         return (
           <Space direction="vertical" size="large" style={{ width: '100%' }}>
@@ -290,7 +290,7 @@ export default function AdoptSpreadsheetForm({ userId: _userId, userName }: Adop
         );
         
       case 2:
-        if (!analysis) return null;
+        if (!analysis) {return null;}
         
         return (
           <Space direction="vertical" size="large" style={{ width: '100%' }}>

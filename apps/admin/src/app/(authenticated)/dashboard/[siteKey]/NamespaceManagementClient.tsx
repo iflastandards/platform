@@ -15,6 +15,7 @@ import {
   Col,
   Menu,
   Badge,
+  type MenuProps,
 } from 'antd';
 import {
   DashboardOutlined,
@@ -33,7 +34,6 @@ import {
   BuildOutlined,
   LinkOutlined,
 } from '@ant-design/icons';
-import type { MenuProps } from 'antd';
 
 const { Title, Text, Paragraph } = Typography;
 
@@ -641,7 +641,7 @@ function ActionGrid({
   };
 
   const canAccessAction = (action: ManagementAction) => {
-    if (!action.requiredRole) return true;
+    if (!action.requiredRole) {return true;}
     return action.requiredRole === 'superadmin' ? isSuperAdmin : true;
   };
 

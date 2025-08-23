@@ -20,7 +20,7 @@ import {
   Row,
   Col,
   Form,
-  MenuProps,
+  type MenuProps,
 } from 'antd';
 import {
   PlusOutlined,

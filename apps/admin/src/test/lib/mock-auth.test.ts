@@ -13,7 +13,7 @@ import {
   createTranslator,
   clearUsers 
 } from '../../app/lib/mock-auth';
-import { UserRoles } from '../../lib/auth';
+import { type UserRoles } from '../../lib/auth';
 
 describe('Mock Authentication @unit @critical @auth', () => {
   beforeEach(() => {

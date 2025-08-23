@@ -11,7 +11,7 @@ export default function LiveRegion({
   priority = 'polite',
   atomic = true 
 }: LiveRegionProps) {
-  if (!message) return null;
+  if (!message) {return null;}
 
   return (
     <div

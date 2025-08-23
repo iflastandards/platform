@@ -41,7 +41,7 @@ export default async function ProfilesPage({
   return (
     <ProfilesManager 
       userRoles={[publicMetadata?.iflaRole || 'member']}
-      userName={(user.firstName || '') + ' ' + (user.lastName || '')}
+      userName={`${user.firstName || ''  } ${  user.lastName || ''}`}
       userEmail={user.emailAddresses?.[0]?.emailAddress}
     />
   );

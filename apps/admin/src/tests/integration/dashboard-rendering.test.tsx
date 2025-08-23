@@ -1,12 +1,12 @@
 /**
  * Simplified Dashboard Rendering Tests
  * Basic smoke tests for dashboard components after MUI to Ant Design migration
- * @integration @dashboard
+ * @integration @dashboard @ui @high-priority
  */
 
 import { render, screen } from '@testing-library/react';
 import { describe, it, expect, beforeEach, vi } from 'vitest';
-import { AppUser } from '@/lib/clerk-github-auth';
+import { type AppUser } from '@/lib/clerk-github-auth';
 
 // Mock window.matchMedia for Ant Design components
 Object.defineProperty(window, 'matchMedia', {

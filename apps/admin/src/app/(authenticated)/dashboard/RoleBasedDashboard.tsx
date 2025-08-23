@@ -27,7 +27,7 @@ import {
 } from '@ant-design/icons';
 import { 
   ActivityFeed,
-  ActivityItem,
+  type ActivityItem,
 } from '@/components/common';
 import { 
   getMockSession, 
@@ -37,9 +37,9 @@ import {
   getRecentActivity,
   getNamespaceStats,
   getTranslationStats,
-  MockUser,
+  type MockUser,
 } from '@/lib/mock-data';
-import { AppUser } from '@/lib/clerk-github-auth';
+import { type AppUser } from '@/lib/clerk-github-auth';
 
 const { Title, Text } = Typography;
 

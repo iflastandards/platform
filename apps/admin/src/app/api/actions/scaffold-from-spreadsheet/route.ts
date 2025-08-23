@@ -1,4 +1,4 @@
-import { NextRequest, NextResponse } from 'next/server';
+import { type NextRequest, NextResponse } from 'next/server';
 import { ImportService } from '@/lib/services/import-service';
 import { currentUser } from '@clerk/nextjs/server';
 

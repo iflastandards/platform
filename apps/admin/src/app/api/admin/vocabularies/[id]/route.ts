@@ -427,7 +427,7 @@ async function checkNamespaceAccess(
     const hasTranslationAccess = authContext.roles.translations?.some((trans: any) =>
       trans.namespaces?.includes(namespaceId)
     );
-    if (hasTranslationAccess) return true;
+    if (hasTranslationAccess) {return true;}
   }
 
   // Review group admins have full access to their namespaces

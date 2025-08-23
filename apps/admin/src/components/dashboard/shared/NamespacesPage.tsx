@@ -14,7 +14,7 @@ import {
   FolderOutlined,
 } from '@ant-design/icons';
 import Link from 'next/link';
-import { AppUser } from '@/lib/clerk-github-auth';
+import { type AppUser } from '@/lib/clerk-github-auth';
 
 interface SharedNamespacesPageProps {
   user: AppUser;
@@ -24,7 +24,7 @@ interface SharedNamespacesPageProps {
 const { Title, Text } = Typography;
 
 export function SharedNamespacesPage({ user, role }: SharedNamespacesPageProps) {
-  const accessibleNamespaces = user.accessibleNamespaces;
+  const {accessibleNamespaces} = user;
 
   // Author view: Card layout
   if (role === 'author') {

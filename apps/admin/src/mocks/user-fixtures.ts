@@ -9,19 +9,25 @@ import {
   type UserFixture,
   type ClerkUser,
   type AppUser,
-} from '../../../../packages/contracts/schemas/User.zod';
-import clerkUsersFixture from '../../../../packages/fixtures/clerk-users.json';
+  type TeamRole,
+  type TranslationAssignment,
+  type LegacyReviewGroup,
+  type ReviewGroup,
+} from '@ifla/contracts';
+import { clerkUsersFixture } from '@ifla/fixtures';
 
 // Type-safe fixture data
 const CLERK_USER_FIXTURES: Record<string, UserFixture> =
   UserFixtureSchema.array()
     .parse(Object.values(clerkUsersFixture))
     .reduce(
-      (acc, user) => {
+      (acc: Record<string, UserFixture>, user: UserFixture) => {
         const role = Object.entries(clerkUsersFixture).find(
-          ([_, u]) => u.id === user.id,
+          ([, u]) => (u as UserFixture).id === user.id,
         )?.[0];
-        if (role) acc[role] = user;
+        if (role) {
+          acc[role] = user;
+        }
         return acc;
       },
       {} as Record<string, UserFixture>,
@@ -95,7 +101,7 @@ export function fixtureToClerkUser(fixture: UserFixture): ClerkUser {
  */
 export function fixtureToAppUser(fixture: UserFixture): AppUser {
   const metadata = fixture.publicMetadata;
-  const privateMetadata = fixture.privateMetadata;
+  const { privateMetadata } = fixture;
 
   // Determine system role
   const systemRole =
@@ -109,20 +115,21 @@ export function fixtureToAppUser(fixture: UserFixture): AppUser {
   const namespaces = new Set<string>();
 
   // From teams
-  metadata.teams?.forEach((team) => {
-    team.namespaces.forEach((ns) => namespaces.add(ns));
+  metadata.teams?.forEach((team: TeamRole) => {
+    team.namespaces.forEach((ns: string) => namespaces.add(ns));
   });
 
   // From translations
-  metadata.translations?.forEach((trans) => {
-    trans.namespaces.forEach((ns) => namespaces.add(ns));
+  metadata.translations?.forEach((trans: TranslationAssignment) => {
+    trans.namespaces.forEach((ns: string) => namespaces.add(ns));
   });
 
   // From review groups (legacy format)
   if (Array.isArray(metadata.reviewGroups)) {
-    metadata.reviewGroups.forEach((rg: any) => {
-      if (rg.namespaces) {
-        rg.namespaces.forEach((ns: string) => namespaces.add(ns));
+    metadata.reviewGroups.forEach((rg: LegacyReviewGroup | ReviewGroup) => {
+      const ns = (rg as ReviewGroup).namespaces;
+      if (Array.isArray(ns)) {
+        ns.forEach((n: string) => namespaces.add(n));
       }
     });
   }
@@ -168,7 +175,11 @@ export function getExpectedDashboardRoute(user: UserFixture | AppUser): string {
   // Review group admin check (legacy format)
   if (
     'publicMetadata' in user &&
-    user.publicMetadata.reviewGroups?.some((rg: any) => rg.role === 'admin')
+    user.publicMetadata.reviewGroups?.some(
+      (rg: LegacyReviewGroup | ReviewGroup) =>
+        (rg as LegacyReviewGroup).role === 'admin' ||
+        (rg as ReviewGroup).role === 'maintainer',
+    )
   ) {
     return DASHBOARD_ROUTES.rgadmin;
   }
@@ -177,11 +188,11 @@ export function getExpectedDashboardRoute(user: UserFixture | AppUser): string {
   if (
     'publicMetadata' in user &&
     user.publicMetadata.teams?.some(
-      (t: any) => t.role === 'admin' && t.namespaces?.length > 0,
+      (t: TeamRole) => t.role === 'admin' && t.namespaces?.length > 0,
     )
   ) {
     const team = user.publicMetadata.teams?.find(
-      (t: any) => t.role === 'admin',
+      (t: TeamRole) => t.role === 'admin',
     );
     if (team && team.namespaces?.length > 0) {
       return `/dashboard/${team.namespaces[0]}`;
@@ -191,7 +202,7 @@ export function getExpectedDashboardRoute(user: UserFixture | AppUser): string {
   // Editor check
   if (
     'publicMetadata' in user &&
-    user.publicMetadata.teams?.some((t: any) => t.role === 'editor')
+    user.publicMetadata.teams?.some((t: TeamRole) => t.role === 'editor')
   ) {
     return DASHBOARD_ROUTES.editor;
   }
@@ -199,7 +210,7 @@ export function getExpectedDashboardRoute(user: UserFixture | AppUser): string {
   // Author check
   if (
     'publicMetadata' in user &&
-    user.publicMetadata.teams?.some((t: any) => t.role === 'author')
+    user.publicMetadata.teams?.some((t: TeamRole) => t.role === 'author')
   ) {
     return DASHBOARD_ROUTES.author;
   }

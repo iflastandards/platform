@@ -23,7 +23,7 @@ import {
   ArrowRightOutlined,
 } from '@ant-design/icons';
 import { useRouter } from 'next/navigation';
-import { MockNamespace } from '@/lib/mock-data';
+import { type MockNamespace } from '@/lib/mock-data';
 
 const { Text, Title, Paragraph } = Typography;
 

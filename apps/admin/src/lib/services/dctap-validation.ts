@@ -60,6 +60,7 @@ export class DCTAPValidator {
 for (const record of records as Record<string, unknown>[]) {
   // Get shape info from first row
   if (!shapeID && typeof record['shapeID'] === 'string') {
+    // eslint-disable-next-line prefer-destructuring
     shapeID = record['shapeID'];
     shapeLabel = typeof record['shapeLabel'] === 'string' ? record['shapeLabel'] : shapeID;
   }
@@ -151,8 +152,8 @@ for (const record of records as Record<string, unknown>[]) {
         const propertyID = constraint.propertyID.toLowerCase();
         const found = normalizedHeaders.some(h => 
           h === propertyID || 
-          h.startsWith(propertyID + '@') || // Language-tagged
-          h === '*' + propertyID // Mandatory marker
+          h.startsWith(`${propertyID  }@`) || // Language-tagged
+          h === `*${  propertyID}` // Mandatory marker
         );
         
         if (!found) {

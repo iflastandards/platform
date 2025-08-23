@@ -12,7 +12,7 @@
  */
 
 import { clerkClient } from '@clerk/nextjs/server';
-import { UserRoles } from '../lib/auth';
+import { type UserRoles } from '../lib/auth';
 
 export interface ClerkTestUser {
   id: string;

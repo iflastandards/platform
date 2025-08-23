@@ -6,7 +6,7 @@ import { AdminUsersPage } from '@/components/dashboard/admin/AdminUsersPage';
 import { AdminProjectsPage } from '@/components/dashboard/admin/AdminProjectsPage';
 import { AdminActivityPage } from '@/components/dashboard/admin/AdminActivityPage';
 
-describe('Admin Dashboard Routing @integration @dashboard @admin @high-priority', () => {
+describe('Admin Dashboard Routing @integration @dashboard @admin @navigation @high-priority', () => {
   let queryClient: QueryClient;
 
   beforeEach(() => {
@@ -18,20 +18,21 @@ describe('Admin Dashboard Routing @integration @dashboard @admin @high-priority'
     });
   });
 
-  const renderWithProviders = (component: React.ReactElement) => {
-    return render(
+  const renderWithProviders = (component: React.ReactElement) =>
+    render(
       <QueryClientProvider client={queryClient}>
         {component}
-      </QueryClientProvider>
+      </QueryClientProvider>,
     );
-  };
 
   describe('Admin Overview Page', () => {
     it('should render the admin overview page with stats and activity', () => {
       renderWithProviders(<AdminOverviewPage />);
-      
+
       expect(screen.getByText('Admin Dashboard')).toBeInTheDocument();
-      expect(screen.getByText('System overview and key metrics')).toBeInTheDocument();
+      expect(
+        screen.getByText('System overview and key metrics'),
+      ).toBeInTheDocument();
       expect(screen.getByText('Total Users')).toBeInTheDocument();
       expect(screen.getByText('Active Projects')).toBeInTheDocument();
       expect(screen.getByText('Total Vocabularies')).toBeInTheDocument();
@@ -42,25 +43,39 @@ describe('Admin Dashboard Routing @integration @dashboard @admin @high-priority'
 
     it('should display quick action buttons', () => {
       renderWithProviders(<AdminOverviewPage />);
-      
+
       // Buttons are rendered as primary actions
-      expect(screen.getByRole('button', { name: /Charter a new project/i })).toBeInTheDocument();
-      expect(screen.getByRole('button', { name: /Adopt a spreadsheet/i })).toBeInTheDocument();
-      expect(screen.getByRole('button', { name: /Invite a new user/i })).toBeInTheDocument();
+      expect(
+        screen.getByRole('button', { name: /Charter a new project/i }),
+      ).toBeInTheDocument();
+      expect(
+        screen.getByRole('button', { name: /Adopt a spreadsheet/i }),
+      ).toBeInTheDocument();
+      expect(
+        screen.getByRole('button', { name: /Invite a new user/i }),
+      ).toBeInTheDocument();
 
       // And corresponding links exist in card grid
-      expect(screen.getByRole('link', { name: /Charter New Project/i })).toBeInTheDocument();
-      expect(screen.getByRole('link', { name: /Adopt Spreadsheet/i })).toBeInTheDocument();
-      expect(screen.getByRole('link', { name: /Invite User/i })).toBeInTheDocument();
+      expect(
+        screen.getByRole('link', { name: /Charter New Project/i }),
+      ).toBeInTheDocument();
+      expect(
+        screen.getByRole('link', { name: /Adopt Spreadsheet/i }),
+      ).toBeInTheDocument();
+      expect(
+        screen.getByRole('link', { name: /Invite User/i }),
+      ).toBeInTheDocument();
     });
   });
 
   describe('Admin Users Page', () => {
     it('should render the users management page', () => {
       renderWithProviders(<AdminUsersPage />);
-      
+
       expect(screen.getByText('User Management')).toBeInTheDocument();
-      expect(screen.getByRole('link', { name: /Invite User/i })).toBeInTheDocument();
+      expect(
+        screen.getByRole('link', { name: /Invite User/i }),
+      ).toBeInTheDocument();
       expect(screen.getByText('All Users')).toBeInTheDocument();
     });
   });
@@ -68,24 +83,28 @@ describe('Admin Dashboard Routing @integration @dashboard @admin @high-priority'
   describe('Admin Projects Page', () => {
     it('should render the projects management page', () => {
       renderWithProviders(<AdminProjectsPage />);
-      
+
       expect(screen.getByText('Project Management')).toBeInTheDocument();
-      expect(screen.getByRole('link', { name: /Charter New Project/i })).toBeInTheDocument();
+      expect(
+        screen.getByRole('link', { name: /Charter New Project/i }),
+      ).toBeInTheDocument();
     });
   });
 
   describe('Admin Activity Page', () => {
     it('should render the activity log page', () => {
       renderWithProviders(<AdminActivityPage />);
-      
+
       expect(screen.getByText('System Activity Log')).toBeInTheDocument();
-      expect(screen.getByText('Monitor all system activities and events')).toBeInTheDocument();
+      expect(
+        screen.getByText('Monitor all system activities and events'),
+      ).toBeInTheDocument();
       expect(screen.getByText('Recent Activities')).toBeInTheDocument();
     });
 
     it('should have a filter dropdown', () => {
       renderWithProviders(<AdminActivityPage />);
-      
+
       // The combobox may not have an accessible name; assert presence by role
       expect(screen.getByRole('combobox')).toBeInTheDocument();
     });

@@ -126,7 +126,7 @@ export function getActiveSpreadsheets(namespace?: string): MockSpreadsheet[] {
 export function getSpreadsheetFromUrl(url: string): MockSpreadsheet | undefined {
   // Extract ID from Google Sheets URL
   const match = url.match(/\/d\/([a-zA-Z0-9-_]+)/);
-  if (!match) return undefined;
+  if (!match) {return undefined;}
   return getSpreadsheetById(match[1]);
 }
 

@@ -142,7 +142,7 @@ export function getMockSession(userId?: string) {
     ? mockUsers.find(u => u.id === userId) 
     : mockUsers[0]; // Default to admin
   
-  if (!user) return null;
+  if (!user) {return null;}
 
   return {
     user,

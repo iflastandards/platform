@@ -57,7 +57,7 @@ export function ActionGrid({ actions, isSuperAdmin }: ActionGridProps) {
   };
 
   const canAccessAction = (action: ManagementAction) => {
-    if (!action.requiredRole) return true;
+    if (!action.requiredRole) {return true;}
     return action.requiredRole === 'superadmin' ? isSuperAdmin : true;
   };
 

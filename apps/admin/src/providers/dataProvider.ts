@@ -3,13 +3,13 @@
  * Switches between mock and live providers based on environment configuration
  */
 
-import { DataProvider } from '@refinedev/core';
+import { type DataProvider } from '@refinedev/core';
 import { config } from '@/config/environment';
 import { mockDataProvider } from './mockDataProvider';
 import { liveDataProvider } from './liveDataProvider';
 
 // Determine which provider to use based on environment
-const useMock = config.env.useMock;
+const {useMock} = config.env;
 
 // Export the appropriate data provider
 export const dataProvider: DataProvider = useMock

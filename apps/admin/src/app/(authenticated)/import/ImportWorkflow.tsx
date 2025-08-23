@@ -107,7 +107,7 @@ export default function ImportWorkflow({
         `isbd:P1002,"Statement of responsibility","Names of persons or corporate bodies responsible","published"\n` +
         `,"Missing identifier","This should cause an error","published"`
       );
-    } else if (profile.includes('concepts')) {
+    } if (profile.includes('concepts')) {
       return (
         `identifier,prefLabel@en,definition@en,broader\n` +
         `isbd:C1001,"Monograph","A bibliographic resource that is complete",""\n` +
@@ -212,7 +212,7 @@ export default function ImportWorkflow({
       }
 
       // Store job ID for tracking
-      const jobId = data.jobId;
+      const {jobId} = data;
 
       // Redirect to status page to monitor progress
       router.push(`/import/status/${jobId}`);
@@ -255,8 +255,8 @@ export default function ImportWorkflow({
   const getStepStatus = (
     index: number,
   ): 'wait' | 'process' | 'finish' | 'error' => {
-    if (index < current) return 'finish';
-    if (index === current) return 'process';
+    if (index < current) {return 'finish';}
+    if (index === current) {return 'process';}
     return 'wait';
   };
 

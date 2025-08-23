@@ -53,6 +53,7 @@ vi.mock('next/navigation', () => ({
 // DO NOT mock Clerk for integration tests - use real API calls
 // Only mock UI components that aren't relevant for API testing
 vi.mock('@clerk/nextjs', async (importOriginal) => {
+  // eslint-disable-next-line @typescript-eslint/consistent-type-imports
   const actual = await importOriginal<typeof import('@clerk/nextjs')>();
   return {
     ...actual,

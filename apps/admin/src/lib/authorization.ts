@@ -15,7 +15,7 @@
  */
 
 import { auth as clerkAuth } from '@clerk/nextjs/server';
-import { UserRoles } from './auth';
+import { type UserRoles } from './auth';
 import { AuthContextSchema, type AuthContext } from './schemas/auth.schema';
 import { getAuthCache } from './cache/AuthCache';
 import { 
@@ -70,7 +70,7 @@ export type Action<T extends ResourceType> = typeof ACTIONS[T][number];
 export async function getAuthContext(): Promise<AuthContext | null> {
   const authResult = await clerkAuth();
   const { userId, sessionClaims } = authResult;
-  if (!userId || !sessionClaims) return null;
+  if (!userId || !sessionClaims) {return null;}
 
   // Check cache first
   const cache = getAuthCache();
@@ -93,7 +93,8 @@ export async function getAuthContext(): Promise<AuthContext | null> {
   // Extract email from various possible locations in Clerk session
   let email = '';
   if (sessionClaims.email && typeof sessionClaims.email === 'string') {
-    email = sessionClaims.email;
+    const { email: sessionEmail } = sessionClaims;
+    email = sessionEmail;
   } else if ((sessionClaims as any)?.emailAddresses?.[0]?.emailAddress) {
     email = (sessionClaims as any).emailAddresses[0].emailAddress;
   } else if ((sessionClaims as any)?.primaryEmailAddress) {
@@ -172,7 +173,7 @@ export async function canPerformAction<T extends ResourceType>(
   resourceAttributes?: Record<string, any>
 ): Promise<boolean> {
   const authContext = await getAuthContext();
-  if (!authContext) return false;
+  if (!authContext) {return false;}
 
   // Create debug context
   const debugContext = process.env.AUTH_DEBUG === 'true' || process.env.NODE_ENV === 'development'
@@ -285,11 +286,11 @@ function checkReviewGroupPermission(
     const isRGAdmin = context.roles.reviewGroups.some(
       rg => rg.reviewGroupId === attributes.reviewGroupId && rg.role === 'admin'
     );
-    if (isRGAdmin) return true;
+    if (isRGAdmin) {return true;}
   }
   
   // Only superadmins can create new review groups
-  if (action === 'create') return false;
+  if (action === 'create') {return false;}
   
   // All authenticated users can read/list review groups
   return ['read', 'list'].includes(action);
@@ -305,7 +306,7 @@ function checkNamespacePermission(
     const isRGAdmin = context.roles.reviewGroups.some(
       rg => rg.reviewGroupId === attributes.reviewGroupId
     );
-    if (isRGAdmin) return true;
+    if (isRGAdmin) {return true;}
   }
   
   // Check team-based namespace access
@@ -343,7 +344,7 @@ function checkProjectPermission(
     const isRGAdmin = context.roles.reviewGroups.some(
       rg => rg.reviewGroupId === attributes.reviewGroupId
     );
-    if (isRGAdmin) return true;
+    if (isRGAdmin) {return true;}
   }
   
   // Team members can access their projects
@@ -370,7 +371,7 @@ function checkTeamPermission(
     const isRGAdmin = context.roles.reviewGroups.some(
       rg => rg.reviewGroupId === attributes.reviewGroupId
     );
-    if (isRGAdmin) return true;
+    if (isRGAdmin) {return true;}
   }
   
   // Team members can view their own teams
@@ -409,7 +410,7 @@ function checkContentPermission(
       const isRGAdmin = context.roles.reviewGroups.some(
         rg => rg.reviewGroupId === attributes.reviewGroupId && rg.role === 'admin'
       );
-      if (isRGAdmin) return true;
+      if (isRGAdmin) {return true;}
     }
     
     // Check team-based access
@@ -419,7 +420,7 @@ function checkContentPermission(
     
     if (teamAccess) {
       // Editors have full content permissions within their namespaces
-      if (teamAccess.role === 'editor') return true;
+      if (teamAccess.role === 'editor') {return true;}
       
       // Authors can create and update content within their namespaces
       if (teamAccess.role === 'author') {
@@ -647,7 +648,7 @@ export function invalidateUserCache(userId: string): void {
  */
 export async function getUserAccessibleResources() {
   const authContext = await getAuthContext();
-  if (!authContext) return null;
+  if (!authContext) {return null;}
 
   // For superadmins, return everything
   if (authContext.roles.system === 'superadmin') {

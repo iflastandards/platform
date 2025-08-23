@@ -174,7 +174,7 @@ export function getDashboardRoute(user: AppUser): string {
  */
 export function hasReviewGroupRole(user: AppUser, teamSlug: string, role?: 'maintainer' | 'member'): boolean {
   const rg = user.reviewGroups.find(rg => rg.slug === teamSlug);
-  if (!rg) return false;
+  if (!rg) {return false;}
   
   return role ? rg.role === role : true;
 }

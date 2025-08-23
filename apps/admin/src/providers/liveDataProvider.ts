@@ -3,7 +3,7 @@
  * Connects to real backend services using adapters
  */
 
-import { DataProvider } from '@refinedev/core';
+import { type DataProvider } from '@refinedev/core';
 import { SupabaseJobsAdapter } from './adapters/supabaseJobs.adapter';
 import { RdfServiceAdapter } from './adapters/rdfService.adapter';
 import { config } from '@/config/environment';

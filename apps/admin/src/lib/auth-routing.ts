@@ -1,4 +1,4 @@
-import { MockUser } from './mock-data/auth';
+import { type MockUser } from './mock-data/auth';
 
 export interface User {
   publicMetadata: {
@@ -35,7 +35,7 @@ export function validateRouteAccess(
   route: string,
 ): { hasAccess: boolean; redirectTo?: string } {
   const userRole = user.publicMetadata.iflaRole;
-  const systemRole = (user.publicMetadata as any).systemRole;
+  const {systemRole} = (user.publicMetadata as any);
   const isReviewGroupAdmin = user.publicMetadata.reviewGroupAdmin?.length;
 
   // Route is already normalized since we run at root

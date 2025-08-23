@@ -227,11 +227,11 @@ export function getValidationSummaryText(report: MockValidationReport): string {
 
   if (errors === 0 && warnings === 0) {
     return `✅ All ${report.totalRecords} records passed validation`;
-  } else if (errors > 0) {
+  } if (errors > 0) {
     return `❌ Validation failed: ${errors} error${errors > 1 ? 's' : ''}, ${warnings} warning${warnings > 1 ? 's' : ''}`;
-  } else {
+  } 
     return `⚠️ Validation passed with ${warnings} warning${warnings > 1 ? 's' : ''}`;
-  }
+  
 }
 
 // Get severity color for MUI
@@ -247,7 +247,7 @@ export function groupResultsByField(
 ): Record<string, ValidationResult[]> {
   return results.reduce(
     (acc, result) => {
-      const field = result.field;
+      const {field} = result;
       if (!acc[field]) {
         acc[field] = [];
       }

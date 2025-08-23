@@ -3,9 +3,8 @@
  * Functions to generate dynamic mock data for testing
  */
 
-import type { Job } from '../../../../packages/contracts/schemas/Job.zod';
-import type { RdfBuild } from '../../../../packages/contracts/schemas/RdfBuild.zod';
-import rdfBuildsFixture from '../../../../packages/fixtures/rdf-builds.json';
+import type { Job, RdfBuild } from '@ifla/contracts';
+import { rdfBuildsFixture } from '@ifla/fixtures';
 
 // In-memory storage for jobs
 export const jobStore = new Map<string, Job>();
@@ -40,7 +39,9 @@ export function createMockJob(partial: Partial<Job> = {}): Job {
  */
 export function updateJobStatus(id: string, updates: Partial<Job>): Job | null {
   const job = jobStore.get(id);
-  if (!job) return null;
+  if (!job) {
+    return null;
+  }
 
   const updatedJob = {
     ...job,

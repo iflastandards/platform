@@ -7,10 +7,9 @@
  * @module hooks/usePermission
  */
 
-import { useEffect, useState, useMemo } from 'react';
+import React, { useEffect, useState, useMemo } from 'react';
 import { useUser } from '@clerk/nextjs';
-import { ResourceType, Action } from '@/lib/authorization';
-import React from 'react';
+import { type ResourceType, type Action } from '@/lib/authorization';
 
 /**
  * Permission check result
@@ -55,7 +54,7 @@ class ClientPermissionCache {
 
   get(key: string, ttl?: number): boolean | null {
     const entry = this.cache.get(key);
-    if (!entry) return null;
+    if (!entry) {return null;}
     
     const effectiveTTL = ttl ?? this.defaultTTL;
     if (Date.now() - entry.timestamp > effectiveTTL) {
@@ -117,7 +116,7 @@ export function usePermission<T extends ResourceType>(
   });
 
   const cacheKey = useMemo(() => {
-    if (!user?.id) return null;
+    if (!user?.id) {return null;}
     return JSON.stringify({
       userId: user.id,
       resourceType,
@@ -388,8 +387,8 @@ export function PermissionGate<T extends ResourceType>({
 }) {
   const { allowed, loading } = usePermission(resourceType, action, attributes);
   
-  if (loading) return <>{loadingComponent}</>;
-  if (!allowed) return <>{fallback}</>;
+  if (loading) {return <>{loadingComponent}</>;}
+  if (!allowed) {return <>{fallback}</>;}
   
   return <>{children}</>;
 }

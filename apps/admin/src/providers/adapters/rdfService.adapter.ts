@@ -8,9 +8,9 @@ import {
   CreateRdfBuildSchema,
   type RdfBuild,
   type CreateRdfBuild,
-} from '@/../../packages/contracts/schemas/RdfBuild.zod';
-import type { Job } from '@/../../packages/contracts/schemas/Job.zod';
-import { validateData } from '@/../../packages/contracts/schemas/validation';
+  type Job,
+  validateData,
+} from '@ifla/contracts';
 import { SupabaseJobsAdapter } from './supabaseJobs.adapter';
 import { config } from '@/config/environment';
 

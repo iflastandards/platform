@@ -384,7 +384,7 @@ export function validateAgainstProfile(
 // Generate empty template based on profile
 export function generateTemplateFromProfile(profileId: string): Record<string, any> {
   const profile = getProfileById(profileId);
-  if (!profile) return {};
+  if (!profile) {return {};}
 
   const template: Record<string, any> = {};
   

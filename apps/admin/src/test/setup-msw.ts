@@ -62,12 +62,8 @@ export function clearAuthentication() {
 export function mockApiResponse(path: string, response: any, status = 200) {
   server.use(
     ...[
-      require('msw').http.get(path, () => {
-        return require('msw').HttpResponse.json(response, { status });
-      }),
-      require('msw').http.post(path, () => {
-        return require('msw').HttpResponse.json(response, { status });
-      }),
+      require('msw').http.get(path, () => require('msw').HttpResponse.json(response, { status })),
+      require('msw').http.post(path, () => require('msw').HttpResponse.json(response, { status })),
     ],
   );
 }

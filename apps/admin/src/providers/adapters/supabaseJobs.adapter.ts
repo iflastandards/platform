@@ -7,8 +7,8 @@ import { createClient } from '@supabase/supabase-js';
 import {
   JobSchema,
   type Job,
-} from '@/../../packages/contracts/schemas/Job.zod';
-import { validateData } from '@/../../packages/contracts/schemas/validation';
+  validateData,
+} from '@ifla/contracts';
 import { config } from '@/config/environment';
 
 // Initialize Supabase client

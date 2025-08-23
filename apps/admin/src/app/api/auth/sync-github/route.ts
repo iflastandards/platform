@@ -1,6 +1,5 @@
-import { NextRequest, NextResponse } from 'next/server';
-import { currentUser } from '@clerk/nextjs/server';
-import { clerkClient } from '@clerk/nextjs/server';
+import { type NextRequest, NextResponse } from 'next/server';
+import { currentUser, clerkClient } from '@clerk/nextjs/server';
 
 /**
  * Manual GitHub sync endpoint for updating user roles based on organization membership

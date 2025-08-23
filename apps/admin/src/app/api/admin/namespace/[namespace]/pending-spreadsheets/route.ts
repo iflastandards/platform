@@ -1,4 +1,4 @@
-import { NextRequest, NextResponse } from 'next/server';
+import { type NextRequest, NextResponse } from 'next/server';
 import { canPerformAction } from '@/lib/authorization';
 
 export async function GET(

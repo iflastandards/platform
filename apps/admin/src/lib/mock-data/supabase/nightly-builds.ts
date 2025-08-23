@@ -205,7 +205,7 @@ export function getBuildSuccessRate(namespaceId?: string): number {
     ? mockNightlyBuilds.filter(b => b.namespace_id === namespaceId)
     : mockNightlyBuilds;
   
-  if (builds.length === 0) return 0;
+  if (builds.length === 0) {return 0;}
   
   const successCount = builds.filter(b => b.status === 'success').length;
   return Math.round((successCount / builds.length) * 100);

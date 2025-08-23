@@ -7,7 +7,7 @@
  */
 
 import { vi } from 'vitest';
-import { ClerkTestUser, TestUsers } from './clerk-test-users';
+import { type ClerkTestUser, TestUsers } from './clerk-test-users';
 
 /**
  * Mock Clerk's currentUser function to return a specific test user
@@ -92,7 +92,7 @@ export const TestScenarios = {
    */
   async withSuperAdmin<T>(testFn: (user: ClerkTestUser) => Promise<T>): Promise<T> {
     const user = await TestUsers.getSuperAdmin();
-    if (!user) throw new Error('Superadmin test user not found');
+    if (!user) {throw new Error('Superadmin test user not found');}
     
     mockClerkCurrentUser(user);
     return testFn(user);
@@ -103,7 +103,7 @@ export const TestScenarios = {
    */
   async withReviewGroupAdmin<T>(testFn: (user: ClerkTestUser) => Promise<T>): Promise<T> {
     const user = await TestUsers.getReviewGroupAdmin();
-    if (!user) throw new Error('Review group admin test user not found');
+    if (!user) {throw new Error('Review group admin test user not found');}
     
     mockClerkCurrentUser(user);
     return testFn(user);
@@ -114,7 +114,7 @@ export const TestScenarios = {
    */
   async withNamespaceAdmin<T>(testFn: (user: ClerkTestUser) => Promise<T>): Promise<T> {
     const user = await TestUsers.getNamespaceAdmin();
-    if (!user) throw new Error('Namespace admin test user not found');
+    if (!user) {throw new Error('Namespace admin test user not found');}
     
     mockClerkCurrentUser(user);
     return testFn(user);
@@ -125,7 +125,7 @@ export const TestScenarios = {
    */
   async withEditor<T>(testFn: (user: ClerkTestUser) => Promise<T>): Promise<T> {
     const user = await TestUsers.getEditor();
-    if (!user) throw new Error('Editor test user not found');
+    if (!user) {throw new Error('Editor test user not found');}
     
     mockClerkCurrentUser(user);
     return testFn(user);
@@ -136,7 +136,7 @@ export const TestScenarios = {
    */
   async withAuthor<T>(testFn: (user: ClerkTestUser) => Promise<T>): Promise<T> {
     const user = await TestUsers.getAuthor();
-    if (!user) throw new Error('Author test user not found');
+    if (!user) {throw new Error('Author test user not found');}
     
     mockClerkCurrentUser(user);
     return testFn(user);
@@ -147,7 +147,7 @@ export const TestScenarios = {
    */
   async withTranslator<T>(testFn: (user: ClerkTestUser) => Promise<T>): Promise<T> {
     const user = await TestUsers.getTranslator();
-    if (!user) throw new Error('Translator test user not found');
+    if (!user) {throw new Error('Translator test user not found');}
     
     mockClerkCurrentUser(user);
     return testFn(user);

@@ -137,10 +137,10 @@ export const POST = withAuth(
   {
     resourceType: 'namespace',
     action: 'create',
-    getResourceAttributes: (_req) => {
+    getResourceAttributes: (_req) => 
       // Parse the body to get reviewGroupId for authorization
       // Note: This is a simplified approach, in production you might want to handle this differently
-      return {};
-    }
+       ({})
+    
   }
 );

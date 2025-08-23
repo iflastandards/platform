@@ -16,7 +16,7 @@ import {
   DeleteOutlined 
 } from '@ant-design/icons';
 import Link from 'next/link';
-import { ActionGrid, ManagementAction } from './ActionGrid';
+import { ActionGrid, type ManagementAction } from './ActionGrid';
 
 const { Title, Text } = Typography;
 

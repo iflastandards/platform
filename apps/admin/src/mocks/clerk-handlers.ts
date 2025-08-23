@@ -15,7 +15,7 @@ import {
 import {
   ClerkUserSchema,
   AuthSessionSchema,
-} from '../../../../packages/contracts/schemas/User.zod';
+} from '@ifla/contracts';
 
 // Clerk API base URL
 const CLERK_API_BASE = 'https://api.clerk.com/v1';

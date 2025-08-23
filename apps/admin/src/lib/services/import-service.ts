@@ -1,4 +1,4 @@
-import { db, ImportJob, ActivityLog } from '@/lib/supabase/client';
+import { db, type ImportJob, type ActivityLog } from '@/lib/supabase/client';
 
 export interface CreateImportJobParams {
   namespace_id: string;

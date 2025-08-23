@@ -3,7 +3,7 @@ import { render, screen } from '@testing-library/react';
 import { axe, toHaveNoViolations } from 'jest-axe';
 import { vi } from 'vitest';
 import PersonalDashboard from '../../../../app/(authenticated)/dashboard/PersonalDashboard';
-import { AppUser } from '@/lib/clerk-github-auth';
+import { type AppUser } from '@/lib/clerk-github-auth';
 
 // Extend expect matchers
 expect.extend(toHaveNoViolations);

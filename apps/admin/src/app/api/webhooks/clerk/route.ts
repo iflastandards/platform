@@ -1,8 +1,7 @@
 import { headers } from 'next/headers';
 import { NextResponse } from 'next/server';
 import { Webhook } from 'svix';
-import { WebhookEvent } from '@clerk/nextjs/server';
-import { clerkClient } from '@clerk/nextjs/server';
+import { type WebhookEvent, clerkClient } from '@clerk/nextjs/server';
 import { checkIflaOrganizationOwnership } from '@/lib/github-integration';
 
 export async function POST(req: Request) {
@@ -87,7 +86,7 @@ export async function POST(req: Request) {
         console.log(`GitHub account found for user ${userId}: ${githubAccount.username}`);
         
         // Check if we have an access token (only available during initial OAuth)
-        const accessToken = (githubAccount as any).accessToken;
+        const {accessToken} = (githubAccount as any);
         
         let isOrgOwner = false;
         

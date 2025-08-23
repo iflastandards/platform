@@ -15,6 +15,7 @@ import {
   Space,
   Statistic,
   Empty,
+  type MenuProps,
 } from 'antd';
 import {
   GithubOutlined,
@@ -43,9 +44,8 @@ import { mockImportJobs } from '@/lib/mock-data/supabase/import-jobs';
 import { ActivityFeed, StatusChip } from '@/components/common';
 import {
   TabBasedDashboardLayout,
-  NavigationItem,
+  type NavigationItem,
 } from '@/components/layout/TabBasedDashboardLayout';
-import type { MenuProps } from 'antd';
 
 const { Title, Text, Link, Paragraph } = Typography;
 

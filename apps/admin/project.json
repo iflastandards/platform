@@ -7,7 +7,7 @@
   "targets": {
     "typecheck": {
       "executor": "nx:run-commands",
-      "dependsOn": [],
+      "dependsOn": ["@ifla/contracts:build"],
       "cache": false,
       "options": {
         "command": "tsc --noEmit",
@@ -21,7 +21,8 @@
         "lintFilePatterns": [
           "apps/admin/src/**/*.{ts,tsx,js,jsx}",
           "apps/admin/*.{ts,tsx,js,jsx}"
-        ]
+        ],
+        "quiet": true
       }
     },
     "build": {
@@ -36,7 +37,7 @@
           "outputPath": "apps/admin"
         },
         "production": {}
-      },
+      }
 
     },
     "serve": {

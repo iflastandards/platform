@@ -30,11 +30,11 @@ export function getEnvironment(): Environment {
   
   if (url.includes('localhost')) {
     return 'local';
-  } else if (url.includes('github.io') || url.includes('onrender.com')) {
+  } if (url.includes('github.io') || url.includes('onrender.com')) {
     return 'preview';
-  } else {
+  } 
     return 'production';
-  }
+  
 }
 
 /**

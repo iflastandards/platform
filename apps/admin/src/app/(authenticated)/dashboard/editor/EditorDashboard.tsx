@@ -27,9 +27,9 @@ import {
   SettingOutlined,
   HomeOutlined,
 } from '@ant-design/icons';
-import { AppUser } from '@/lib/clerk-github-auth';
+import { type AppUser } from '@/lib/clerk-github-auth';
 import Link from 'next/link';
-import { TabBasedDashboardLayout, NavigationItem } from '@/components/layout/TabBasedDashboardLayout';
+import { TabBasedDashboardLayout, type NavigationItem } from '@/components/layout/TabBasedDashboardLayout';
 
 const { Text, Title } = Typography;
 const { Item: ListItem } = List;
@@ -42,7 +42,7 @@ export default function EditorDashboard({ user }: EditorDashboardProps) {
   const [selectedTab, setSelectedTab] = useState('overview');
   const userProjects = Object.values(user.projects);
   const editorProjects = userProjects.filter(p => p.role === 'lead' || p.role === 'editor');
-  const accessibleNamespaces = user.accessibleNamespaces;
+  const {accessibleNamespaces} = user;
 
   // Get role display
   const getRoleDisplay = (role: string) => {

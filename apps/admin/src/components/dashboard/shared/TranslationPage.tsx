@@ -25,13 +25,13 @@ export function SharedTranslationPage({ role }: SharedTranslationPageProps) {
         alertTitle: 'Translation Tasks',
         alertMessage: 'You have 2 items that need translation. Your language expertise is valuable to the community.',
       };
-    } else {
+    } 
       return {
         title: 'Translation Management',
         alertTitle: 'Multilingual Content',
         alertMessage: 'Coordinate translation efforts across multiple languages and manage translation workflows.',
       };
-    }
+    
   };
 
   const content = getContent();

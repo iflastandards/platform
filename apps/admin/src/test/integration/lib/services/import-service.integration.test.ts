@@ -176,7 +176,7 @@ describe('ImportService - Integration Tests @integration @api @validation', () =
 
         headers.forEach((header) => {
           const match = header.match(langPattern);
-          if (match) languages.add(match[1]);
+          if (match) {languages.add(match[1]);}
         });
 
         return Array.from(languages);
