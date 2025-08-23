@@ -24,6 +24,8 @@ import * as fs from 'fs';
 import * as path from 'path';
 import { execSync } from 'child_process';
 import dotenv from 'dotenv';
+import { BaseLLM, ChatParams, ChatResult } from '@memberjunction/ai';
+import { MJGlobal } from '@memberjunction/global';
 
 // Load environment variables
 dotenv.config();
@@ -152,75 +154,104 @@ Optional Environment Tags:
 `;
 
 class TestTagger {
-  private aiProvider: any;
+  private llm: BaseLLM | null = null;
   private spinner: any; // ora.Ora type
   private options: ProcessingOptions;
 
   constructor(options: ProcessingOptions) {
     this.options = options;
     this.spinner = ora();
-    this.initializeAIProvider();
+  }
+
+  // Initialize must be called before using the tagger
+  async initialize(): Promise<void> {
+    await this.initializeAIProvider();
   }
 
   private async initializeAIProvider() {
-    switch (this.options.provider) {
-      case 'anthropic':
-        if (!process.env.ANTHROPIC_API_KEY) {
-          throw new Error(
-            'ANTHROPIC_API_KEY not found in environment. Please add it to your .env file.',
-          );
-        }
-        // Dynamic import to avoid loading unnecessary providers
-        const { default: Anthropic } = await import('@anthropic-ai/sdk');
-        this.aiProvider = new Anthropic({
-          apiKey: process.env.ANTHROPIC_API_KEY,
+    // Map our provider names to the @memberjunction/ai class names and API key env vars
+    const providerMap: Record<string, { className: string; apiKeyEnv: string; packageName: string }> = {
+      anthropic: {
+        className: 'AnthropicLLM',
+        apiKeyEnv: 'ANTHROPIC_API_KEY',
+        packageName: '@memberjunction/ai-anthropic'
+      },
+      gemini: {
+        className: 'GeminiLLM',
+        apiKeyEnv: 'GEMINI_API_KEY',
+        packageName: '@memberjunction/ai-gemini'
+      },
+      openai: {
+        className: 'OpenAILLM',
+        apiKeyEnv: 'OPENAI_API_KEY',
+        packageName: '@memberjunction/ai-openai'
+      },
+      perplexity: {
+        className: 'OpenAILLM', // Perplexity uses OpenAI-compatible API
+        apiKeyEnv: 'PERPLEXITY_API_KEY',
+        packageName: '@memberjunction/ai-openai'
+      }
+    };
+
+    const providerConfig = providerMap[this.options.provider];
+    if (!providerConfig) {
+      throw new Error(`Unknown provider: ${this.options.provider}`);
+    }
+
+    const apiKey = process.env[providerConfig.apiKeyEnv];
+    if (!apiKey) {
+      throw new Error(
+        `${providerConfig.apiKeyEnv} not found in environment. Please add it to your .env file.`
+      );
+    }
+
+    try {
+      // Dynamically import the provider package and get the class directly
+      const providerModule = await import(providerConfig.packageName);
+      
+      // Get the LLM class from the module
+      let LLMClass: any;
+      switch (this.options.provider) {
+        case 'anthropic':
+          LLMClass = providerModule.AnthropicLLM;
+          break;
+        case 'gemini':
+          LLMClass = providerModule.GeminiLLM;
+          break;
+        case 'openai':
+        case 'perplexity':
+          LLMClass = providerModule.OpenAILLM;
+          break;
+      }
+
+      if (!LLMClass) {
+        throw new Error(`Could not find ${providerConfig.className} in ${providerConfig.packageName}`);
+      }
+
+      // Create instance directly
+      this.llm = new LLMClass(apiKey);
+
+      // For Perplexity, set the base URL
+      if (this.options.provider === 'perplexity') {
+        this.llm.SetAdditionalSettings({
+          baseURL: 'https://api.perplexity.ai'
         });
-        break;
-
-      case 'gemini':
-        if (!process.env.GEMINI_API_KEY) {
-          throw new Error(
-            'GEMINI_API_KEY not found in environment. Please add it to your .env file.',
-          );
-        }
-        try {
-          const GoogleGenerativeAI = (
-            (await import('@google/generative-ai')) as any
-          ).GoogleGenerativeAI;
-          this.aiProvider = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
-        } catch (error) {
-          throw new Error(
-            'Google Generative AI package not installed. Run: pnpm add -D @google/generative-ai',
-          );
-        }
-        break;
-
-      case 'perplexity':
-        if (!process.env.PERPLEXITY_API_KEY) {
-          throw new Error(
-            'PERPLEXITY_API_KEY not found in environment. Please add it to your .env file.',
-          );
-        }
-        // Perplexity uses OpenAI-compatible API, we'll use fetch directly
-        this.aiProvider = { apiKey: process.env.PERPLEXITY_API_KEY };
-        break;
-
-      case 'openai':
-        if (!process.env.OPENAI_API_KEY) {
-          throw new Error(
-            'OPENAI_API_KEY not found in environment. Please add it to your .env file.',
-          );
-        }
-        // OpenAI - we'll use fetch directly with their API
-        this.aiProvider = { apiKey: process.env.OPENAI_API_KEY };
-        break;
-
-      default:
-        throw new Error(`Unsupported provider: ${this.options.provider}`);
+      }
+    } catch (error) {
+      throw new Error(
+        `Failed to initialize ${this.options.provider} provider. ` +
+        `Make sure ${providerConfig.packageName} is installed: ` +
+        `pnpm add -D ${providerConfig.packageName}\n` +
+        `Error: ${error}`
+      );
     }
   }
 
   async analyzeTestFile(filePath: string): Promise<TestAnalysis> {
+    if (!this.llm) {
+      throw new Error('TestTagger not initialized. Call initialize() first.');
+    }
+
     const content = fs.readFileSync(filePath, 'utf8');
     const fileName = path.basename(filePath);
     const relativePath = path.relative(process.cwd(), filePath);
@@ -228,27 +259,60 @@ class TestTagger {
     const prompt = this.buildPrompt(fileName, relativePath, content);
 
     try {
-      let response: string;
+      // Use the @memberjunction/ai abstraction
+      const chatParams: ChatParams = {
+        model: this.getModelName(),
+        messages: [
+          {
+            role: 'system',
+            content: 'You are a test classification expert. Respond only with valid JSON, no additional text.'
+          },
+          {
+            role: 'user',
+            content: prompt
+          }
+        ],
+        temperature: 0,
+        max_tokens: 1000,
+        response_format: { type: 'json_object' } // Request JSON response
+      };
 
-      switch (this.options.provider) {
-        case 'anthropic':
-          response = await this.callAnthropic(prompt);
-          break;
-        case 'gemini':
-          response = await this.callGemini(prompt);
-          break;
-        case 'perplexity':
-          response = await this.callPerplexity(prompt);
-          break;
-        case 'openai':
-          response = await this.callOpenAI(prompt);
-          break;
-        default:
-          throw new Error('Invalid provider');
+      const result: ChatResult = await this.llm.ChatCompletion(chatParams);
+      
+      if (!result.success) {
+        console.error('AI Provider Error:', result);
+        throw new Error(result.message || 'Failed to get response from AI provider');
       }
 
+      // Extract content from the response
+      let content: string | undefined;
+      if (result.data?.content) {
+        content = result.data.content;
+      } else if (result.data?.choices?.[0]?.message?.content) {
+        content = result.data.choices[0].message.content;
+      } else if (result.data?.choices?.[0]?.text) {
+        content = result.data.choices[0].text;
+      }
+
+      if (!content) {
+        console.error('AI Provider Response structure:', JSON.stringify(result, null, 2));
+        throw new Error('Could not extract content from AI provider response');
+      }
+
+      // Clean up markdown code blocks if present
+      let cleanContent = content.trim();
+      if (cleanContent.startsWith('```json')) {
+        cleanContent = cleanContent.slice(7); // Remove ```json
+      } else if (cleanContent.startsWith('```')) {
+        cleanContent = cleanContent.slice(3); // Remove ```
+      }
+      if (cleanContent.endsWith('```')) {
+        cleanContent = cleanContent.slice(0, -3); // Remove trailing ```
+      }
+      cleanContent = cleanContent.trim();
+
       // Parse and validate the response
-      const analysis = JSON.parse(response);
+      const analysis = JSON.parse(cleanContent);
 
       // Ensure all required fields are present
       return {
@@ -265,6 +329,18 @@ class TestTagger {
       console.error(chalk.red(`Error analyzing ${filePath}:`), error);
       throw error;
     }
+  }
+
+  private getModelName(): string {
+    // Map provider to default model names
+    const defaultModels: Record<string, string> = {
+      anthropic: this.options.model || 'claude-3-haiku-20240307', // Haiku for cost efficiency
+      gemini: this.options.model || 'gemini-1.5-flash', // Updated model name
+      openai: this.options.model || 'gpt-4o-mini',
+      perplexity: this.options.model || 'sonar-small-online'
+    };
+
+    return defaultModels[this.options.provider] || 'gpt-4o-mini';
   }
 
   private buildPrompt(
@@ -326,93 +402,6 @@ RESPONSE FORMAT (return ONLY valid JSON):
 }`;
   }
 
-  private async callAnthropic(prompt: string): Promise<string> {
-    const model = this.options.model || 'claude-3-haiku-20240307'; // Use Haiku by default for cost
-    const response = await this.aiProvider.messages.create({
-      model,
-      max_tokens: 1000,
-      temperature: 0,
-      system:
-        'You are a test classification expert. Respond only with valid JSON, no additional text.',
-      messages: [{ role: 'user', content: prompt }],
-    });
-    return response.content[0].text;
-  }
-
-  private async callGemini(prompt: string): Promise<string> {
-    const model = this.aiProvider.getGenerativeModel({
-      model: this.options.model || 'gemini-pro',
-    });
-    const result = await model.generateContent(prompt);
-    const response = result.response;
-    return response.text();
-  }
-
-  private async callPerplexity(prompt: string): Promise<string> {
-    const response = await fetch('https://api.perplexity.ai/chat/completions', {
-      method: 'POST',
-      headers: {
-        Authorization: `Bearer ${this.aiProvider.apiKey}`,
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({
-        model: this.options.model || 'llama-3.1-sonar-small-128k-online',
-        messages: [
-          {
-            role: 'system',
-            content:
-              'You are a test classification expert. Respond only with valid JSON, no additional text.',
-          },
-          {
-            role: 'user',
-            content: prompt,
-          },
-        ],
-        temperature: 0,
-      }),
-    });
-
-    if (!response.ok) {
-      throw new Error(`Perplexity API error: ${response.statusText}`);
-    }
-
-    const data = await response.json();
-    return data.choices[0].message.content;
-  }
-
-  private async callOpenAI(prompt: string): Promise<string> {
-    const response = await fetch('https://api.openai.com/v1/chat/completions', {
-      method: 'POST',
-      headers: {
-        Authorization: `Bearer ${this.aiProvider.apiKey}`,
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({
-        model: this.options.model || 'gpt-4-turbo-preview',
-        messages: [
-          {
-            role: 'system',
-            content:
-              'You are a test classification expert. Respond only with valid JSON, no additional text.',
-          },
-          {
-            role: 'user',
-            content: prompt,
-          },
-        ],
-        temperature: 0,
-        response_format: { type: 'json_object' }, // Ensure JSON response
-      }),
-    });
-
-    if (!response.ok) {
-      const error = await response.text();
-      throw new Error(`OpenAI API error: ${response.statusText} - ${error}`);
-    }
-
-    const data = await response.json();
-    return data.choices[0].message.content;
-  }
 
   private analyzeFileLocation(
     filePath: string,
@@ -548,11 +537,190 @@ RESPONSE FORMAT (return ONLY valid JSON):
       needsReview: [],
     };
 
-    for (const file of files) {
-      await this.processFile(file, results);
+    // Process files in batches for efficiency while maintaining connection
+    const BATCH_SIZE = 5; // Process up to 5 files in parallel
+    const useBatching = files.length > 1 && !this.options.interactive;
+    
+    if (useBatching) {
+      console.log(chalk.gray(`Using batch processing (${BATCH_SIZE} files at a time)...`));
+      
+      for (let i = 0; i < files.length; i += BATCH_SIZE) {
+        const batch = files.slice(i, Math.min(i + BATCH_SIZE, files.length));
+        await this.processBatch(batch, results);
+      }
+    } else {
+      // Process sequentially for interactive mode or single file
+      for (const file of files) {
+        await this.processFile(file, results);
+      }
     }
 
     this.generateReport(results);
+    
+    // Clean up the LLM connection
+    this.cleanup();
+  }
+
+  private async processBatch(
+    files: string[],
+    results: ProcessingResults,
+  ): Promise<void> {
+    if (!this.llm) {
+      throw new Error('TestTagger not initialized. Call initialize() first.');
+    }
+
+    console.log(chalk.gray(`\nProcessing batch of ${files.length} files...`));
+
+    // Prepare all chat params for the batch
+    const batchParams: ChatParams[] = [];
+    const validFiles: string[] = [];
+
+    for (const filePath of files) {
+      try {
+        const content = fs.readFileSync(filePath, 'utf8');
+        const fileName = path.basename(filePath);
+        const relativePath = path.relative(process.cwd(), filePath);
+        const prompt = this.buildPrompt(fileName, relativePath, content);
+
+        batchParams.push({
+          model: this.getModelName(),
+          messages: [
+            {
+              role: 'system',
+              content: 'You are a test classification expert. Respond only with valid JSON, no additional text.'
+            },
+            {
+              role: 'user',
+              content: prompt
+            }
+          ],
+          temperature: 0,
+          max_tokens: 1000,
+          response_format: { type: 'json_object' }
+        });
+        validFiles.push(filePath);
+      } catch (error) {
+        console.error(chalk.red(`Error reading ${filePath}:`), error);
+        results.errors.push(filePath);
+      }
+    }
+
+    if (batchParams.length === 0) return;
+
+    try {
+      // Process all files in parallel using maintained connection
+      const batchResults = await this.llm.ChatCompletions(batchParams);
+
+      // Process results
+      for (let i = 0; i < validFiles.length; i++) {
+        const filePath = validFiles[i];
+        const result = batchResults[i];
+        
+        this.spinner.start(`Processing ${chalk.cyan(filePath)}`);
+        
+        try {
+          if (!result.success) {
+            throw new Error(result.message || 'Failed to get response from AI provider');
+          }
+
+          // Extract and parse content
+          const content = this.extractContentFromResult(result);
+          const analysis = this.parseAnalysis(content);
+          
+          // Handle the analysis result
+          await this.handleAnalysisResult(filePath, analysis, results);
+          
+          this.spinner.succeed(`Analyzed ${chalk.cyan(filePath)}`);
+          results.processed.push(filePath);
+          
+        } catch (error) {
+          this.spinner.fail(`Failed ${chalk.red(filePath)}`);
+          console.error(chalk.red(`Error processing ${filePath}:`), error);
+          results.errors.push(filePath);
+        }
+      }
+    } catch (error) {
+      // Fallback to sequential processing if batch fails
+      console.warn(chalk.yellow('Batch processing failed, falling back to sequential...'));
+      for (const file of validFiles) {
+        await this.processFile(file, results);
+      }
+    }
+  }
+
+  private extractContentFromResult(result: ChatResult): string {
+    // Extract content from the response
+    let content: string | undefined;
+    if (result.data?.content) {
+      content = result.data.content;
+    } else if (result.data?.choices?.[0]?.message?.content) {
+      content = result.data.choices[0].message.content;
+    } else if (result.data?.choices?.[0]?.text) {
+      content = result.data.choices[0].text;
+    }
+
+    if (!content) {
+      throw new Error('Could not extract content from AI provider response');
+    }
+
+    return content;
+  }
+
+  private parseAnalysis(content: string): TestAnalysis {
+    // Clean up markdown code blocks if present
+    let cleanContent = content.trim();
+    if (cleanContent.startsWith('```json')) {
+      cleanContent = cleanContent.slice(7);
+    } else if (cleanContent.startsWith('```')) {
+      cleanContent = cleanContent.slice(3);
+    }
+    if (cleanContent.endsWith('```')) {
+      cleanContent = cleanContent.slice(0, -3);
+    }
+    cleanContent = cleanContent.trim();
+
+    // Parse and validate the response
+    const analysis = JSON.parse(cleanContent);
+
+    // Ensure all required fields are present
+    return {
+      classification: analysis.classification || 'unit',
+      confidence: analysis.confidence || 'low',
+      tags: Array.isArray(analysis.tags) ? analysis.tags : [],
+      reasoning: analysis.reasoning || 'No reasoning provided',
+      concerns: Array.isArray(analysis.concerns) ? analysis.concerns : [],
+      recommendations: Array.isArray(analysis.recommendations)
+        ? analysis.recommendations
+        : [],
+    };
+  }
+
+  private async handleAnalysisResult(
+    filePath: string,
+    analysis: TestAnalysis,
+    results: ProcessingResults,
+  ): Promise<void> {
+    // Check file location
+    const locationAnalysis = this.analyzeFileLocation(filePath, analysis.classification);
+    
+    if (locationAnalysis && this.options.interactive) {
+      results.needsReview.push({
+        file: filePath,
+        analysis,
+        locationIssue: locationAnalysis,
+      });
+    } else if (!this.options.dryRun) {
+      await this.updateTestFile(filePath, analysis.tags);
+    }
+  }
+
+  private cleanup(): void {
+    // Clean up the LLM connection and resources
+    if (this.llm) {
+      // Clear any cached settings or state
+      this.llm.ClearAdditionalSettings();
+      console.log(chalk.gray('\n✓ AI connection closed'));
+    }
   }
 
   private async getFilesToProcess(): Promise<string[]> {
@@ -989,6 +1157,7 @@ Examples:
       );
 
       const tagger = new TestTagger(options as ProcessingOptions);
+      await tagger.initialize(); // Initialize the AI provider
       await tagger.processFiles();
 
       if (options.dryRun) {
