@@ -1,6 +1,9 @@
+/**
+ * @unit @ui @vocabulary @low-priority
+ */
 import React from 'react';
 import { render, screen } from '@testing-library/react';
-import { InLink } from '@ifla/theme/components/InLink';
+import { InLink } from '../../components/InLink';
 import { describe, it, expect, vi } from 'vitest';
 import { axe, toHaveNoViolations } from 'jest-axe';
 

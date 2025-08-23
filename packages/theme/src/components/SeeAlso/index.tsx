@@ -23,8 +23,7 @@ export interface SeeAlsoProps {
 export const SeeAlso: React.FC<SeeAlsoProps> = ({
   children,
   className,
-}) => {
-  return (
+}) => (
     <div
       className={clsx(
         'seeAlso',
@@ -37,6 +36,5 @@ export const SeeAlso: React.FC<SeeAlsoProps> = ({
       </div>
     </div>
   );
-};
 
 export default SeeAlso;

@@ -1,10 +1,10 @@
 import { 
-  MultilingualText, 
-  ConceptProps, 
-  CSVConceptRow, 
-  UriCaseStyle,
-  VocabularyTableProps,
-  TOCItem 
+  type MultilingualText, 
+  type ConceptProps, 
+  type CSVConceptRow, 
+  type UriCaseStyle,
+  type VocabularyTableProps,
+  type TOCItem 
 } from './types';
 
 // Helper function to get text in a specific language with fallback
@@ -13,7 +13,7 @@ export const getLocalizedText = (
   language: string,
   fallbackLanguage: string = 'en'
 ): string => {
-  if (!text) return '';
+  if (!text) {return '';}
   
   if (typeof text === 'string') {
     return text;
@@ -42,7 +42,7 @@ export const getAllLocalizedText = (
   language: string,
   fallbackLanguage: string = 'en'
 ): string[] => {
-  if (!text) return [];
+  if (!text) {return [];}
   
   if (typeof text === 'string') {
     return [text];
@@ -70,8 +70,7 @@ export const getAllLocalizedText = (
 };
 
 // Helper function to parse CSV data into concepts
-export const parseCSVToConcepts = (csvData: CSVConceptRow[]): ConceptProps[] => {
-  return csvData.map(row => {
+export const parseCSVToConcepts = (csvData: CSVConceptRow[]): ConceptProps[] => csvData.map(row => {
     const concept: ConceptProps = {
       value: {},
       definition: {},
@@ -80,7 +79,7 @@ export const parseCSVToConcepts = (csvData: CSVConceptRow[]): ConceptProps[] => 
     
     // Parse all columns with language tags
     Object.entries(row).forEach(([key, value]) => {
-      if (!key.includes('@') || !value) return;
+      if (!key.includes('@') || !value) {return;}
       
       const [property, langPart] = key.split('@');
       const langCode = langPart.split('[')[0]; // Remove array index
@@ -140,7 +139,6 @@ export const parseCSVToConcepts = (csvData: CSVConceptRow[]): ConceptProps[] => 
     
     return concept;
   });
-};
 
 // Helper function to create slugs in different case styles
 export const createSlug = (text: string, style: UriCaseStyle): string => {
@@ -307,7 +305,7 @@ export const exportToCSV = (props: VocabularyTableProps): string => {
       };
       
       const conceptProp = skosToConceptMap[prop];
-      let conceptValue = conceptProp ? concept[conceptProp] : undefined;
+      const conceptValue = conceptProp ? concept[conceptProp] : undefined;
       
       exportLanguages.forEach(lang => {
         let cellValue = '';

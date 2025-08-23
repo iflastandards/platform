@@ -17,7 +17,7 @@ describe('CI Configuration Validation @unit @high-priority @validation', () => {
 
   describe('Build Environment', () => {
     it('should have production NODE_ENV in CI', () => {
-      if (!process.env.CI) return;
+      if (!process.env.CI) {return;}
       
       // CI builds should always use production mode for optimized builds
       // regardless of whether it's preview or production deployment
@@ -25,7 +25,7 @@ describe('CI Configuration Validation @unit @high-priority @validation', () => {
     });
 
     it('should have DOCS_ENV set for deployment', () => {
-      if (!process.env.CI) return;
+      if (!process.env.CI) {return;}
       
       // DOCS_ENV differentiates between preview and production
       expect(process.env.DOCS_ENV).toBeDefined();
@@ -33,7 +33,7 @@ describe('CI Configuration Validation @unit @high-priority @validation', () => {
     });
 
     it('should have correct build paths', async () => {
-      if (!process.env.CI) return;
+      if (!process.env.CI) {return;}
       
       // Skip this test if not in Node environment
       if (typeof window !== 'undefined') {
@@ -72,7 +72,7 @@ describe('CI Configuration Validation @unit @high-priority @validation', () => {
 
   describe('GitHub Actions Specific', () => {
     it('should have GitHub Actions environment variables', () => {
-      if (!process.env.CI || !process.env.GITHUB_ACTIONS) return;
+      if (!process.env.CI || !process.env.GITHUB_ACTIONS) {return;}
       
       expect(process.env.GITHUB_WORKSPACE).toBeDefined();
       expect(process.env.GITHUB_REPOSITORY).toBeDefined();
@@ -81,7 +81,7 @@ describe('CI Configuration Validation @unit @high-priority @validation', () => {
     });
 
     it('should have correct permissions for artifact upload', async () => {
-      if (!process.env.CI || !process.env.GITHUB_ACTIONS) return;
+      if (!process.env.CI || !process.env.GITHUB_ACTIONS) {return;}
       
       // Skip this test if not in Node environment
       if (typeof window !== 'undefined') {
@@ -106,7 +106,7 @@ describe('CI Configuration Validation @unit @high-priority @validation', () => {
 
   describe('Render Specific', () => {
     it('should have Render environment variables', () => {
-      if (!process.env.CI || !process.env.RENDER) return;
+      if (!process.env.CI || !process.env.RENDER) {return;}
       
       expect(process.env.RENDER_EXTERNAL_URL).toBeDefined();
       expect(process.env.RENDER_SERVICE_NAME).toBeDefined();
@@ -116,7 +116,7 @@ describe('CI Configuration Validation @unit @high-priority @validation', () => {
 
   describe('Nx Cloud', () => {
     it('should have Nx Cloud token if enabled', () => {
-      if (!process.env.CI) return;
+      if (!process.env.CI) {return;}
       
       // Nx Cloud is optional but if enabled, should have token
       if (process.env.NX_CLOUD_DISTRIBUTED_EXECUTION === 'true') {

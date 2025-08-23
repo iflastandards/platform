@@ -3,7 +3,7 @@
   "root": "packages/theme",
   "sourceRoot": "packages/theme/src",
   "projectType": "library",
-  "tags": ["library", "theme"],
+  "tags": ["library", "theme", "scope:theme"],
   "targets": {
     "build:tsc": {
       "executor": "nx:run-commands",
@@ -65,7 +65,8 @@
         "lintFilePatterns": [
           "packages/theme/src/**/*.{ts,tsx,js,jsx}",
           "packages/theme/*.{ts,tsx,js,jsx}"
-        ]
+        ],
+        "quiet": true
       },
       "inputs": ["default"],
       "cache": true

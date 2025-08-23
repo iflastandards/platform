@@ -1,6 +1,9 @@
+/**
+ * @unit @ui @vocabulary @low-priority
+ */
 import React from 'react';
 import { render, screen, fireEvent } from '@testing-library/react';
-import { VocabularyTable } from '@ifla/theme/components/VocabularyTable';
+import { VocabularyTable } from '../../components/VocabularyTable';
 import { expect, describe, it, vi } from 'vitest';
 
 // Mock the useColorMode hook
@@ -11,8 +14,7 @@ vi.mock('@docusaurus/theme-common', () => ({
 }));
 
 // Mock the useDocusaurusContext hook
-vi.mock('@docusaurus/useDocusaurusContext', () => {
-  return {
+vi.mock('@docusaurus/useDocusaurusContext', () => ({
     default: () => ({
       siteConfig: {
         customFields: {
@@ -33,8 +35,7 @@ vi.mock('@docusaurus/useDocusaurusContext', () => {
         locales: ['en', 'fr', 'es']
       }
     })
-  };
-});
+  }));
 
 describe('VocabularyTable Details Functionality', () => {
   // Test data with additional SKOS properties

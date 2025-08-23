@@ -29,8 +29,8 @@ vi.mock('@docusaurus/useDocusaurusContext', () => ({
 
 vi.mock('@docusaurus/useBaseUrl', () => ({
   default: (path: string) => {
-    if (typeof path !== 'string') return path;
-    if (path.startsWith('/') || path.startsWith('http')) return path;
+    if (typeof path !== 'string') {return path;}
+    if (path.startsWith('/') || path.startsWith('http')) {return path;}
     return '/' + path;
   },
 }));
@@ -52,9 +52,7 @@ vi.mock('@theme/CodeBlock', () => ({
 }));
 
 vi.mock('@theme/Heading', () => ({
-  default: ({ as: Component = 'h2', children, ...props }: any) => {
-    return React.createElement(Component, props, children);
-  },
+  default: ({ as: Component = 'h2', children, ...props }: any) => React.createElement(Component, props, children),
 }));
 
 vi.mock('@docusaurus/router', () => ({

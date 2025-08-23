@@ -1,6 +1,6 @@
 import React from 'react';
 import { VocabularyTable } from './VocabularyTable';
-import { VocabularyTableProps } from './types';
+import { type VocabularyTableProps } from './types';
 
 // Simplified wrapper component for CSV-only vocabularies
 export interface CSVVocabularyProps extends Omit<VocabularyTableProps, 'csvFile' | 'preferCsvData'> {

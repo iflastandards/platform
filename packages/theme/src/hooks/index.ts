@@ -3,7 +3,7 @@
  */
 
 import { useState, useEffect, useMemo, useCallback, useRef } from 'react';
-import { ConceptProps, CSVConceptRow, MultilingualText } from '../types';
+import { type ConceptProps, type CSVConceptRow, type MultilingualText } from '../types';
 import {
   getLocalizedText,
   extractAvailableLanguages,

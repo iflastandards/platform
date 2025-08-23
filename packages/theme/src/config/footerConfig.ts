@@ -1,4 +1,9 @@
-import { Environment, getPortalUrl, getAdminPortalConfig, SiteKey } from './siteConfig';
+import {
+  type Environment,
+  getPortalUrl,
+  getAdminPortalConfig,
+  type SiteKey,
+} from '@ifla/contracts';
 
 interface FooterOptions {
   rdfPath?: string;
@@ -8,19 +13,26 @@ interface FooterOptions {
 // Site-specific standards document URLs
 const STANDARDS_DOCUMENT_URLS: Record<SiteKey, string> = {
   portal: 'https://www.ifla.org/programmes/ifla-standards/',
-  ISBDM: 'https://www.ifla.org/wp-content/uploads/2019/05/assets/cataloguing/isbd/isbd-cons_20110321.pdf',
+  ISBDM:
+    'https://www.ifla.org/wp-content/uploads/2019/05/assets/cataloguing/isbd/isbd-cons_20110321.pdf',
   LRM: 'https://www.ifla.org/files/assets/cataloguing/frbr-lrm/ifla-lrm-august-2017_rev201712.pdf',
   FRBR: 'https://www.ifla.org/files/assets/cataloguing/frbr/frbr_2008.pdf',
   isbd: 'https://www.ifla.org/wp-content/uploads/2019/05/assets/cataloguing/isbd/isbd-cons_20110321.pdf',
   muldicat: 'https://www.ifla.org/programmes/ifla-standards/',
-  unimarc: 'https://www.ifla.org/publications/unimarc-formats-and-related-documentation/',
+  unimarc:
+    'https://www.ifla.org/publications/unimarc-formats-and-related-documentation/',
   newtest: 'https://www.ifla.org/programmes/ifla-standards/',
 };
 
-export function createStandardFooter(DOCS_ENV: Environment, siteKey: SiteKey, options?: FooterOptions) {
+export function createStandardFooter(
+  DOCS_ENV: Environment,
+  siteKey: SiteKey,
+  options?: FooterOptions,
+) {
   const adminConfig = getAdminPortalConfig(DOCS_ENV);
   const rdfPath = options?.rdfPath || '/rdf/';
-  const standardsUrl = options?.standardsDocumentUrl || STANDARDS_DOCUMENT_URLS[siteKey];
+  const standardsUrl =
+    options?.standardsDocumentUrl || STANDARDS_DOCUMENT_URLS[siteKey];
 
   return {
     style: 'dark' as const,

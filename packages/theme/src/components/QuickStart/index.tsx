@@ -23,8 +23,7 @@ export const QuickStart: React.FC<QuickStartProps> = ({
   elementsPath = '/docs/elements',
   examplesPath = '/docs/examples',
   className = '',
-}) => {
-  return (
+}) => (
     <div className={clsx(styles.quickstartPanel, className)}>
       <h2>Quick Start for Cataloguers</h2>
       <p>Get started with the key sections of this standard:</p>
@@ -47,6 +46,5 @@ export const QuickStart: React.FC<QuickStartProps> = ({
       </div>
     </div>
   );
-};
 
 export default QuickStart;

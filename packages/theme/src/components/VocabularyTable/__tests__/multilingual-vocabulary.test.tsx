@@ -1,8 +1,11 @@
+/**
+ * @unit @vocabulary @ui @high-priority
+ */
 import React from 'react';
 import { render, screen, fireEvent, waitFor } from '@testing-library/react';
 import { VocabularyTable } from '../index';
 import { expect, describe, it, vi, beforeEach } from 'vitest';
-import { VocabularyDefaults } from '../types';
+import { type VocabularyDefaults } from '../types';
 
 // Augment the Window interface for testing purposes
 declare global {
@@ -71,92 +74,106 @@ describe('Multilingual VocabularyTable', () => {
 
   // Sample multilingual data
   const multilingualFrontMatter = {
-    vocabularyId: "sensory-spec",
+    vocabularyId: 'sensory-spec',
     title: {
-      en: "Sensory Specification Vocabulary",
-      fr: "Vocabulaire de spécification sensorielle",
-      es: "Vocabulario de especificación sensorial"
+      en: 'Sensory Specification Vocabulary',
+      fr: 'Vocabulaire de spécification sensorielle',
+      es: 'Vocabulario de especificación sensorial',
     },
     description: {
-      en: "Content intended to be perceived through various senses",
-      fr: "Contenu destiné à être perçu par divers sens",
-      es: "Contenido destinado a ser percibido a través de varios sentidos"
+      en: 'Content intended to be perceived through various senses',
+      fr: 'Contenu destiné à être perçu par divers sens',
+      es: 'Contenido destinado a ser percibido a través de varios sentidos',
     },
     concepts: [
       {
         value: {
-          en: "aural",
-          fr: "auditif",
-          es: "auditiva"
+          en: 'aural',
+          fr: 'auditif',
+          es: 'auditiva',
         },
         definition: {
-          en: "Content that is intended to be perceived through hearing.",
+          en: 'Content that is intended to be perceived through hearing.',
           fr: "Contenu prévu pour être perçu par le sens de l'ouïe.",
-          es: "Contenido para que se perciba a través de la audición."
+          es: 'Contenido para que se perciba a través de la audición.',
         },
         scopeNote: {
-          en: "Includes spoken word, music, and sound effects.",
-          fr: "Comprend la parole, la musique et les effets sonores.",
-          es: "Incluye palabra hablada, música y efectos de sonido."
+          en: 'Includes spoken word, music, and sound effects.',
+          fr: 'Comprend la parole, la musique et les effets sonores.',
+          es: 'Incluye palabra hablada, música y efectos de sonido.',
         },
         altLabel: {
-          fr: "auditive",
-          es: "auditivo"
-        }
+          fr: 'auditive',
+          es: 'auditivo',
+        },
       },
       {
         value: {
-          en: "visual",
-          fr: "visuel",
-          es: "visual"
+          en: 'visual',
+          fr: 'visuel',
+          es: 'visual',
         },
         definition: {
-          en: "Content that is intended to be perceived through sight.",
-          fr: "Contenu prévu pour être perçu par la vue.",
-          es: "Contenido destinado a ser percibido a través de la vista."
-        }
-      }
-    ]
+          en: 'Content that is intended to be perceived through sight.',
+          fr: 'Contenu prévu pour être perçu par la vue.',
+          es: 'Contenido destinado a ser percibido a través de la vista.',
+        },
+      },
+    ],
   };
 
   // CSV test data matching the uploaded format
   const csvTestData = [
     {
-      uri: "sensoryspec:T1001",
-      "rdf:type": "http://www.w3.org/2004/02/skos/core#Concept",
-      "skos:prefLabel@en": "aural",
-      "skos:prefLabel@fr": "auditif",
-      "skos:prefLabel@es": "auditiva",
-      "skos:definition@en[0]": "Content that is intended to be perceived through hearing.",
-      "skos:definition@fr[0]": "Contenu prévu pour être perçu par le sens de l'ouïe.",
-      "skos:definition@es[0]": "Contenido para que se perciba a través de la audición.",
-      "skos:altLabel@fr[0]": "auditive",
-      "skos:altLabel@es[0]": "auditivo"
+      uri: 'sensoryspec:T1001',
+      'rdf:type': 'http://www.w3.org/2004/02/skos/core#Concept',
+      'skos:prefLabel@en': 'aural',
+      'skos:prefLabel@fr': 'auditif',
+      'skos:prefLabel@es': 'auditiva',
+      'skos:definition@en[0]':
+        'Content that is intended to be perceived through hearing.',
+      'skos:definition@fr[0]':
+        "Contenu prévu pour être perçu par le sens de l'ouïe.",
+      'skos:definition@es[0]':
+        'Contenido para que se perciba a través de la audición.',
+      'skos:altLabel@fr[0]': 'auditive',
+      'skos:altLabel@es[0]': 'auditivo',
     },
     {
-      uri: "sensoryspec:T1002",
-      "rdf:type": "http://www.w3.org/2004/02/skos/core#Concept",
-      "skos:prefLabel@en": "visual",
-      "skos:prefLabel@fr": "visuel",
-      "skos:prefLabel@es": "visual",
-      "skos:definition@en[0]": "Content that is intended to be perceived through sight.",
-      "skos:definition@fr[0]": "Contenu prévu pour être perçu par la vue.",
-      "skos:definition@es[0]": "Contenido destinado a ser percibido a través de la vista."
-    }
+      uri: 'sensoryspec:T1002',
+      'rdf:type': 'http://www.w3.org/2004/02/skos/core#Concept',
+      'skos:prefLabel@en': 'visual',
+      'skos:prefLabel@fr': 'visuel',
+      'skos:prefLabel@es': 'visual',
+      'skos:definition@en[0]':
+        'Content that is intended to be perceived through sight.',
+      'skos:definition@fr[0]': 'Contenu prévu pour être perçu par la vue.',
+      'skos:definition@es[0]':
+        'Contenido destinado a ser percibido a través de la vista.',
+    },
   ];
 
   describe('Language Selection', () => {
     it('renders language selector by default', () => {
       render(<VocabularyTable {...multilingualFrontMatter} />);
 
-      expect(screen.getByLabelText('Select display language')).toBeInTheDocument();
+      expect(
+        screen.getByLabelText('Select display language'),
+      ).toBeInTheDocument();
       expect(screen.getByDisplayValue('English (English)')).toBeInTheDocument();
     });
 
     it('hides language selector when showLanguageSelector is false', () => {
-      render(<VocabularyTable {...multilingualFrontMatter} showLanguageSelector={false} />);
+      render(
+        <VocabularyTable
+          {...multilingualFrontMatter}
+          showLanguageSelector={false}
+        />,
+      );
 
-      expect(screen.queryByLabelText('Select display language')).not.toBeInTheDocument();
+      expect(
+        screen.queryByLabelText('Select display language'),
+      ).not.toBeInTheDocument();
     });
 
     it('shows all available languages in selector', () => {
@@ -176,7 +193,11 @@ describe('Multilingual VocabularyTable', () => {
 
       // Initially shows English content
       expect(screen.getByText('aural')).toBeInTheDocument();
-      expect(screen.getByText('Content that is intended to be perceived through hearing.')).toBeInTheDocument();
+      expect(
+        screen.getByText(
+          'Content that is intended to be perceived through hearing.',
+        ),
+      ).toBeInTheDocument();
 
       // Change to French
       const selector = screen.getByLabelText('Select display language');
@@ -184,7 +205,11 @@ describe('Multilingual VocabularyTable', () => {
 
       await waitFor(() => {
         expect(screen.getByText('auditif')).toBeInTheDocument();
-        expect(screen.getByText('Contenu prévu pour être perçu par le sens de l\'ouïe.')).toBeInTheDocument();
+        expect(
+          screen.getByText(
+            "Contenu prévu pour être perçu par le sens de l'ouïe.",
+          ),
+        ).toBeInTheDocument();
       });
     });
 
@@ -206,7 +231,11 @@ describe('Multilingual VocabularyTable', () => {
 
       expect(screen.getByText('aural')).toBeInTheDocument();
       expect(screen.getByText('visual')).toBeInTheDocument();
-      expect(screen.getByText('Content that is intended to be perceived through hearing.')).toBeInTheDocument();
+      expect(
+        screen.getByText(
+          'Content that is intended to be perceived through hearing.',
+        ),
+      ).toBeInTheDocument();
     });
 
     it('falls back to English when requested language is not available', () => {
@@ -215,17 +244,17 @@ describe('Multilingual VocabularyTable', () => {
         concepts: [
           {
             value: {
-              en: "test term",
-              fr: "terme test"
+              en: 'test term',
+              fr: 'terme test',
               // No Spanish translation
             },
             definition: {
-              en: "Test definition",
-              fr: "Définition de test"
+              en: 'Test definition',
+              fr: 'Définition de test',
               // No Spanish translation
-            }
-          }
-        ]
+            },
+          },
+        ],
       };
 
       render(<VocabularyTable {...partialData} defaultLanguage="es" />);
@@ -238,42 +267,56 @@ describe('Multilingual VocabularyTable', () => {
     it('displays multilingual title and description', () => {
       render(<VocabularyTable {...multilingualFrontMatter} showTitle={true} />);
 
-      expect(screen.getByText('Sensory Specification Vocabulary')).toBeInTheDocument();
-      expect(screen.getByText('Content intended to be perceived through various senses')).toBeInTheDocument();
+      expect(
+        screen.getByText('Sensory Specification Vocabulary'),
+      ).toBeInTheDocument();
+      expect(
+        screen.getByText(
+          'Content intended to be perceived through various senses',
+        ),
+      ).toBeInTheDocument();
 
       // Change to French
       const selector = screen.getByLabelText('Select display language');
       fireEvent.change(selector, { target: { value: 'fr' } });
 
-      expect(screen.getByText('Vocabulaire de spécification sensorielle')).toBeInTheDocument();
-      expect(screen.getByText('Contenu destiné à être perçu par divers sens')).toBeInTheDocument();
+      expect(
+        screen.getByText('Vocabulaire de spécification sensorielle'),
+      ).toBeInTheDocument();
+      expect(
+        screen.getByText('Contenu destiné à être perçu par divers sens'),
+      ).toBeInTheDocument();
     });
   });
 
   describe('CSV Data Support', () => {
     it('parses CSV data correctly', () => {
       const csvProps = {
-        vocabularyId: "csv-test",
-        title: "CSV Test Vocabulary",
-        description: "Testing CSV data parsing",
+        vocabularyId: 'csv-test',
+        title: 'CSV Test Vocabulary',
+        description: 'Testing CSV data parsing',
         csvData: csvTestData,
-        preferCsvData: true
+        preferCsvData: true,
       };
 
       render(<VocabularyTable {...csvProps} />);
 
       expect(screen.getByText('aural')).toBeInTheDocument();
       expect(screen.getByText('visual')).toBeInTheDocument();
-      expect(screen.getByText('Content that is intended to be perceived through hearing.')).toBeInTheDocument();
+      expect(
+        screen.getByText(
+          'Content that is intended to be perceived through hearing.',
+        ),
+      ).toBeInTheDocument();
     });
 
     it('switches languages with CSV data', async () => {
       const csvProps = {
-        vocabularyId: "csv-test",
-        title: "CSV Test Vocabulary",
-        description: "Testing CSV data parsing",
+        vocabularyId: 'csv-test',
+        title: 'CSV Test Vocabulary',
+        description: 'Testing CSV data parsing',
         csvData: csvTestData,
-        preferCsvData: true
+        preferCsvData: true,
       };
 
       render(<VocabularyTable {...csvProps} />);
@@ -287,17 +330,19 @@ describe('Multilingual VocabularyTable', () => {
 
       await waitFor(() => {
         expect(screen.getByText('auditif')).toBeInTheDocument();
-        expect(screen.getByText('Contenu prévu pour être perçu par la vue.')).toBeInTheDocument();
+        expect(
+          screen.getByText('Contenu prévu pour être perçu par la vue.'),
+        ).toBeInTheDocument();
       });
     });
 
     it('uses CSV URIs when available', () => {
       const csvProps = {
-        vocabularyId: "csv-test",
-        title: "CSV Test Vocabulary",
-        description: "Testing CSV data parsing",
+        vocabularyId: 'csv-test',
+        title: 'CSV Test Vocabulary',
+        description: 'Testing CSV data parsing',
         csvData: csvTestData,
-        preferCsvData: true
+        preferCsvData: true,
       };
 
       render(<VocabularyTable {...csvProps} />);
@@ -363,7 +408,7 @@ describe('Multilingual VocabularyTable', () => {
     it('generates TOC with specified language', () => {
       const frenchToc = VocabularyTable.generateTOC({
         ...multilingualFrontMatter,
-        defaultLanguage: 'fr'
+        defaultLanguage: 'fr',
       });
 
       expect(frenchToc).toHaveLength(2);
@@ -373,11 +418,11 @@ describe('Multilingual VocabularyTable', () => {
 
     it('generates TOC from CSV data', () => {
       const csvProps = {
-        vocabularyId: "csv-test",
-        title: "CSV Test",
-        description: "Test",
+        vocabularyId: 'csv-test',
+        title: 'CSV Test',
+        description: 'Test',
         csvData: csvTestData,
-        preferCsvData: true
+        preferCsvData: true,
       };
 
       const toc = VocabularyTable.generateTOC(csvProps);
@@ -393,18 +438,24 @@ describe('Multilingual VocabularyTable', () => {
       const csv = VocabularyTable.exportToCSV(multilingualFrontMatter);
 
       expect(csv).toContain('"uri","rdf:type"');
-      expect(csv).toContain('"skos:prefLabel@en","skos:prefLabel@es","skos:prefLabel@fr"');
-      expect(csv).toContain('"skos:definition@en","skos:definition@es","skos:definition@fr"');
+      expect(csv).toContain(
+        '"skos:prefLabel@en","skos:prefLabel@es","skos:prefLabel@fr"',
+      );
+      expect(csv).toContain(
+        '"skos:definition@en","skos:definition@es","skos:definition@fr"',
+      );
       // The values are in the CSV, just in different columns based on language
-      expect(csv).toContain('"Content that is intended to be perceived through hearing."');
+      expect(csv).toContain(
+        '"Content that is intended to be perceived through hearing."',
+      );
     });
 
     it('handles empty concepts array gracefully', () => {
       const emptyProps = {
-        vocabularyId: "empty",
-        title: "Empty Vocabulary",
-        description: "No concepts",
-        concepts: []
+        vocabularyId: 'empty',
+        title: 'Empty Vocabulary',
+        description: 'No concepts',
+        concepts: [],
       };
 
       const csv = VocabularyTable.exportToCSV(emptyProps);
@@ -415,7 +466,9 @@ describe('Multilingual VocabularyTable', () => {
   describe('Locale-Aware Language Selection', () => {
     it('uses current Docusaurus locale as default language', () => {
       // Test that the component respects the defaultLanguage prop instead of complex mocking
-      render(<VocabularyTable {...multilingualFrontMatter} defaultLanguage="fr" />);
+      render(
+        <VocabularyTable {...multilingualFrontMatter} defaultLanguage="fr" />,
+      );
 
       // Should display French content when defaultLanguage is set to French
       expect(screen.getByText('auditif')).toBeInTheDocument();
@@ -424,7 +477,9 @@ describe('Multilingual VocabularyTable', () => {
 
     it('falls back to English when current locale is not available in data', () => {
       // Test fallback behavior by setting defaultLanguage to a language not available in data
-      render(<VocabularyTable {...multilingualFrontMatter} defaultLanguage="de" />);
+      render(
+        <VocabularyTable {...multilingualFrontMatter} defaultLanguage="de" />,
+      );
 
       // Should fall back to English since German is not available in data
       expect(screen.getByText('aural')).toBeInTheDocument();
@@ -455,7 +510,9 @@ sensoryspec:T1002,http://www.w3.org/2004/02/skos/core#Concept,visual,"Content pe
       render(<VocabularyTable csvFile="test.csv" />);
 
       // Should show loading state initially
-      expect(screen.getByText('Loading vocabulary data...')).toBeInTheDocument();
+      expect(
+        screen.getByText('Loading vocabulary data...'),
+      ).toBeInTheDocument();
 
       // Wait for CSV to load
       await waitFor(() => {
@@ -472,7 +529,9 @@ sensoryspec:T1002,http://www.w3.org/2004/02/skos/core#Concept,visual,"Content pe
       render(<VocabularyTable csvFile="nonexistent.csv" />);
 
       await waitFor(() => {
-        expect(screen.getByText(/Error loading vocabulary/)).toBeInTheDocument();
+        expect(
+          screen.getByText(/Error loading vocabulary/),
+        ).toBeInTheDocument();
         expect(screen.getByText(/Network error/)).toBeInTheDocument();
       });
     });
@@ -486,14 +545,18 @@ test:T1001,http://www.w3.org/2004/02/skos/core#Concept,term1,"Definition 1"`;
         text: () => Promise.resolve(csvContent),
       } as Response);
 
-      const { container } = render(<VocabularyTable csvFile="vocabularies/csv/sensoryspecification.csv" />);
+      const { container } = render(
+        <VocabularyTable csvFile="vocabularies/csv/sensoryspecification.csv" />,
+      );
 
       await waitFor(() => {
         expect(screen.getByText('term1')).toBeInTheDocument();
       });
 
       // Check that vocabulary container has the auto-generated ID
-      expect(container.querySelector('#vocabulary-sensoryspecification')).toBeInTheDocument();
+      expect(
+        container.querySelector('#vocabulary-sensoryspecification'),
+      ).toBeInTheDocument();
     });
   });
 
@@ -520,17 +583,17 @@ test:T1001,http://www.w3.org/2004/02/skos/core#Concept,simple,"Simple definition
   describe('Data Source Priority', () => {
     it('prefers CSV data when preferCsvData is true', () => {
       const mixedProps = {
-        vocabularyId: "mixed-test",
-        title: "Mixed Data Test",
-        description: "Testing data source priority",
+        vocabularyId: 'mixed-test',
+        title: 'Mixed Data Test',
+        description: 'Testing data source priority',
         concepts: [
           {
-            value: "concept term",
-            definition: "From concepts array"
-          }
+            value: 'concept term',
+            definition: 'From concepts array',
+          },
         ],
         csvData: csvTestData,
-        preferCsvData: true
+        preferCsvData: true,
       };
 
       render(<VocabularyTable {...mixedProps} />);
@@ -542,17 +605,17 @@ test:T1001,http://www.w3.org/2004/02/skos/core#Concept,simple,"Simple definition
 
     it('uses concepts data when preferCsvData is false', () => {
       const mixedProps = {
-        vocabularyId: "mixed-test",
-        title: "Mixed Data Test",
-        description: "Testing data source priority",
+        vocabularyId: 'mixed-test',
+        title: 'Mixed Data Test',
+        description: 'Testing data source priority',
         concepts: [
           {
-            value: "concept term",
-            definition: "From concepts array"
-          }
+            value: 'concept term',
+            definition: 'From concepts array',
+          },
         ],
         csvData: csvTestData,
-        preferCsvData: false
+        preferCsvData: false,
       };
 
       render(<VocabularyTable {...mixedProps} />);
@@ -566,23 +629,23 @@ test:T1001,http://www.w3.org/2004/02/skos/core#Concept,simple,"Simple definition
   describe('Error Handling and Edge Cases', () => {
     it('handles malformed multilingual data gracefully', () => {
       const malformedData = {
-        vocabularyId: "malformed",
-        title: "Malformed Test",
-        description: "Testing error handling",
+        vocabularyId: 'malformed',
+        title: 'Malformed Test',
+        description: 'Testing error handling',
         concepts: [
           {
             value: {}, // Invalid value
             definition: {
-              en: "Valid definition"
-            }
+              en: 'Valid definition',
+            },
           },
           {
             value: {
-              en: "Valid term"
+              en: 'Valid term',
             },
-            definition: {} // Invalid definition
-          }
-        ]
+            definition: {}, // Invalid definition
+          },
+        ],
       };
 
       render(<VocabularyTable {...malformedData} />);
@@ -593,29 +656,29 @@ test:T1001,http://www.w3.org/2004/02/skos/core#Concept,simple,"Simple definition
 
     it('handles language switching when expanded details are open', async () => {
       const dataWithDetails = {
-        vocabularyId: "details-test",
-        title: "Details Test",
-        description: "Testing expanded details",
+        vocabularyId: 'details-test',
+        title: 'Details Test',
+        description: 'Testing expanded details',
         concepts: [
           {
             value: {
-              en: "detailed term",
-              fr: "terme détaillé"
+              en: 'detailed term',
+              fr: 'terme détaillé',
             },
             definition: {
-              en: "A term with details",
-              fr: "Un terme avec des détails"
+              en: 'A term with details',
+              fr: 'Un terme avec des détails',
             },
             notation: {
-              en: "DT",
-              fr: "TD"
+              en: 'DT',
+              fr: 'TD',
             },
             example: {
-              en: "Example usage",
-              fr: "Exemple d'utilisation"
-            }
-          }
-        ]
+              en: 'Example usage',
+              fr: "Exemple d'utilisation",
+            },
+          },
+        ],
       };
 
       render(<VocabularyTable {...dataWithDetails} />);

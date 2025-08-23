@@ -4,7 +4,7 @@ import { describe, it, expect } from 'vitest';
  * Environment-specific deployment tests
  * Validates that the correct environment is set for preview vs production
  */
-describe('Deployment Environment Configuration @unit @deployment', () => {
+describe('Deployment Environment Configuration @unit @validation @low-priority', () => {
   it('should skip in non-CI environments', () => {
     if (!process.env.CI) {
       expect(true).toBe(true);
@@ -14,30 +14,38 @@ describe('Deployment Environment Configuration @unit @deployment', () => {
 
   describe('Environment-Specific Settings', () => {
     it('should have correct DOCS_ENV for the deployment target', () => {
-      if (!process.env.CI) return;
-      
+      if (!process.env.CI) {
+        return;
+      }
+
       // DOCS_ENV should be set by the CI workflow
       expect(process.env.DOCS_ENV).toBeDefined();
       expect(['preview', 'production']).toContain(process.env.DOCS_ENV);
-      
+
       // Log which environment we're testing
-      console.log(`✅ Testing ${process.env.DOCS_ENV} environment configuration`);
+      console.log(
+        `✅ Testing ${process.env.DOCS_ENV} environment configuration`,
+      );
     });
 
     it('should have environment-appropriate NODE_ENV', () => {
-      if (!process.env.CI) return;
-      
+      if (!process.env.CI) {
+        return;
+      }
+
       // Both preview and production should use production NODE_ENV for optimized builds
       // The difference is in DOCS_ENV, not NODE_ENV
       expect(process.env.NODE_ENV).toBe('production');
     });
 
     it('should have correct GitHub ref for environment', () => {
-      if (!process.env.CI || !process.env.GITHUB_REF) return;
-      
+      if (!process.env.CI || !process.env.GITHUB_REF) {
+        return;
+      }
+
       const ref = process.env.GITHUB_REF;
       const docsEnv = process.env.DOCS_ENV;
-      
+
       // Validate branch matches environment
       if (docsEnv === 'preview') {
         expect(ref).toContain('refs/heads/preview');
@@ -47,10 +55,12 @@ describe('Deployment Environment Configuration @unit @deployment', () => {
     });
 
     it('should have environment-specific URLs configured', () => {
-      if (!process.env.CI) return;
-      
+      if (!process.env.CI) {
+        return;
+      }
+
       const docsEnv = process.env.DOCS_ENV;
-      
+
       // These would be set by your deployment scripts
       if (docsEnv === 'preview') {
         // Preview environment expectations
@@ -68,10 +78,12 @@ describe('Deployment Environment Configuration @unit @deployment', () => {
 
   describe('Environment-Specific Features', () => {
     it('should have appropriate feature flags for environment', () => {
-      if (!process.env.CI) return;
-      
+      if (!process.env.CI) {
+        return;
+      }
+
       const docsEnv = process.env.DOCS_ENV;
-      
+
       // Example: Preview might have experimental features enabled
       if (docsEnv === 'preview') {
         // Preview-specific features
@@ -87,10 +99,12 @@ describe('Deployment Environment Configuration @unit @deployment', () => {
     });
 
     it('should have correct API endpoints for environment', () => {
-      if (!process.env.CI) return;
-      
+      if (!process.env.CI) {
+        return;
+      }
+
       const docsEnv = process.env.DOCS_ENV;
-      
+
       // Different environments might use different API endpoints
       if (process.env.API_ENDPOINT) {
         if (docsEnv === 'preview') {
@@ -105,10 +119,12 @@ describe('Deployment Environment Configuration @unit @deployment', () => {
 
   describe('Security Configuration by Environment', () => {
     it('should have appropriate security headers for environment', () => {
-      if (!process.env.CI) return;
-      
+      if (!process.env.CI) {
+        return;
+      }
+
       const docsEnv = process.env.DOCS_ENV;
-      
+
       // Production should have stricter security settings
       if (docsEnv === 'production') {
         // These would be validated by your deployment process
@@ -118,10 +134,12 @@ describe('Deployment Environment Configuration @unit @deployment', () => {
     });
 
     it('should validate token access based on environment', () => {
-      if (!process.env.CI) return;
-      
+      if (!process.env.CI) {
+        return;
+      }
+
       const docsEnv = process.env.DOCS_ENV;
-      
+
       // Different environments might have different token requirements
       if (docsEnv === 'production') {
         // Production might require certain tokens

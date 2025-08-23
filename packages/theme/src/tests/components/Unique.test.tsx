@@ -1,6 +1,9 @@
+/**
+ * @unit @ui @vocabulary @low-priority
+ */
 import React from 'react';
 import { render, screen } from '@testing-library/react';
-import { Unique } from '@ifla/theme/components/Unique';
+import { Unique } from '../../components/Unique';
 import { describe, it, expect } from 'vitest';
 import { axe, toHaveNoViolations } from 'jest-axe';
 

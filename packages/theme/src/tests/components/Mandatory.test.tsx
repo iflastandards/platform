@@ -1,6 +1,9 @@
+/**
+ * @unit @ui @vocabulary @low-priority
+ */
 import React from 'react';
 import { render, screen } from '@testing-library/react';
-import { Mandatory } from '@ifla/theme/components/Mandatory';
+import { Mandatory } from '../../components/Mandatory';
 import { describe, it, expect, vi } from 'vitest';
 import { axe, toHaveNoViolations } from 'jest-axe';
 

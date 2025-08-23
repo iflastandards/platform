@@ -1,5 +1,5 @@
 import { useMemo } from 'react';
-import { ConceptProps, LanguageConfig, DEFAULT_LANGUAGE_CONFIG } from '../types';
+import { type ConceptProps, type LanguageConfig, DEFAULT_LANGUAGE_CONFIG } from '../types';
 import { getLocalizedText, extractAvailableLanguages } from '../utils';
 
 interface UseMultilingualTextConfig {
@@ -37,15 +37,12 @@ export function useMultilingualText({
 }: UseMultilingualTextConfig): UseMultilingualTextReturn {
   
   // Extract available languages from the data
-  const detectedLanguages = useMemo(() => {
-    return extractAvailableLanguages(concepts);
-  }, [concepts]);
+  const detectedLanguages = useMemo(() => extractAvailableLanguages(concepts), [concepts]);
 
   const resolvedAvailableLanguages = availableLanguages || detectedLanguages || [defaultLanguage];
 
   // Localize all concepts to current language
-  const localizedConcepts = useMemo(() => {
-    return concepts.map(concept => ({
+  const localizedConcepts = useMemo(() => concepts.map(concept => ({
       value: getLocalizedText(concept.value, currentLanguage, defaultLanguage),
       definition: getLocalizedText(concept.definition, currentLanguage, defaultLanguage),
       scopeNote: getLocalizedText(concept.scopeNote, currentLanguage, defaultLanguage),
@@ -56,8 +53,7 @@ export function useMultilingualText({
       editorialNote: getLocalizedText(concept.editorialNote, currentLanguage, defaultLanguage),
       altLabel: getLocalizedText(concept.altLabel, currentLanguage, defaultLanguage),
       originalConcept: concept,
-    }));
-  }, [concepts, currentLanguage, defaultLanguage]);
+    })), [concepts, currentLanguage, defaultLanguage]);
 
   // Get language display name function
   const getLanguageDisplayName = (code: string): string => {

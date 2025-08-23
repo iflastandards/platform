@@ -1,6 +1,9 @@
+/**
+ * @unit @ui @vocabulary @low-priority
+ */
 import React from 'react';
 import { render, screen } from '@testing-library/react';
-import { SeeAlso } from '@ifla/theme/components/SeeAlso';
+import { SeeAlso } from '../../components/SeeAlso';
 import { describe, it, expect } from 'vitest';
 import { axe, toHaveNoViolations } from 'jest-axe';
 
@@ -14,9 +17,7 @@ describe('SeeAlso Component', () => {
       </SeeAlso>
     );
     
-    const seeAlsoText = screen.getAllByText((content, element) => {
-      return element?.textContent?.startsWith('See also:') ?? false;
-    })[0];
+    const seeAlsoText = screen.getAllByText((content, element) => element?.textContent?.startsWith('See also:') ?? false)[0];
     expect(seeAlsoText).toBeInTheDocument();
     
     const content = screen.getByText(/Related content/);
@@ -56,9 +57,7 @@ describe('SeeAlso Component', () => {
       </SeeAlso>
     );
     
-    const container = screen.getAllByText((content, element) => {
-      return element?.textContent?.startsWith('See also:') ?? false;
-    })[0];
+    const container = screen.getAllByText((content, element) => element?.textContent?.startsWith('See also:') ?? false)[0];
     expect(container).not.toBeNull();
     const seeAlsoDiv = document.querySelector('.seeAlso.custom-class');
     expect(seeAlsoDiv).toBeInTheDocument();

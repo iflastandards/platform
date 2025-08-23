@@ -56,7 +56,7 @@ export const Sitemap: React.FC<SitemapProps> = ({
     const categories: Record<string, DocItem[]> = {};
     
     docs.forEach(doc => {
-      if (!doc.title) return; // Skip docs without titles
+      if (!doc.title) {return;} // Skip docs without titles
       
       let category = 'General';
       
@@ -123,7 +123,7 @@ export const Sitemap: React.FC<SitemapProps> = ({
         <div className={styles.sitemapContent}>
           {Object.entries(allDocsData).map(([pluginId, pluginData]) => {
             const latestVersion = pluginData.versions.find(v => v.isLast);
-            if (!latestVersion) return null;
+            if (!latestVersion) {return null;}
 
             const categories = organizeDocsByCategory(latestVersion.docs as unknown as DocItem[]);
 

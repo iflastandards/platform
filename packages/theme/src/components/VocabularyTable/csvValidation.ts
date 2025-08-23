@@ -1,4 +1,4 @@
-import { CSVConceptRow } from './types';
+import { type CSVConceptRow } from './types';
 import { 
   getBasePropertyName, 
   isRepeatableProperty,
@@ -152,7 +152,7 @@ export function validateCSVData(data: CSVConceptRow[], headers: string[]): Valid
   const allLanguages = new Set<string>();
   headers.forEach(header => {
     const lang = getLanguageFromColumn(header);
-    if (lang) allLanguages.add(lang);
+    if (lang) {allLanguages.add(lang);}
   });
   
   // Check for empty rows

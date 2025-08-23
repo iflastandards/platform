@@ -30,16 +30,15 @@ export interface InLinkProps {
 /**
  * Processes text to add zero-width spaces before parentheses for smart wrapping
  */
-const processTextForSmartWrap = (text: string): string => {
+const processTextForSmartWrap = (text: string): string => 
   // Insert zero-width space before the first opening parenthesis
-  return text.replace(/\(/g, '\u200B(');
-};
+   text.replace(/\(/g, '\u200B(')
+;
 
 /**
  * Recursively processes React children to apply smart wrapping to text nodes
  */
-const processChildrenForSmartWrap = (children: React.ReactNode): React.ReactNode => {
-  return React.Children.map(children, (child) => {
+const processChildrenForSmartWrap = (children: React.ReactNode): React.ReactNode => React.Children.map(children, (child) => {
     if (typeof child === 'string') {
       return processTextForSmartWrap(child);
     }
@@ -55,7 +54,6 @@ const processChildrenForSmartWrap = (children: React.ReactNode): React.ReactNode
     }
     return child;
   });
-};
 
 /**
  * InLink component for internal documentation links with consistent styling

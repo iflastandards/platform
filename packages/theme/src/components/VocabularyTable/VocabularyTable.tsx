@@ -1,9 +1,9 @@
-import React, { useState, useMemo, JSX } from 'react';
+import React, { useState, useMemo, type JSX } from 'react';
 import { useColorMode } from '@docusaurus/theme-common';
 import useDocusaurusContext from '@docusaurus/useDocusaurusContext';
 import {
-  VocabularyTableProps,
-  VocabularyDefaults,
+  type VocabularyTableProps,
+  type VocabularyDefaults,
   DEFAULT_LANGUAGE_CONFIG,
 } from './types';
 import {
@@ -16,7 +16,7 @@ import {
 } from './utils';
 import { useCsvLoader } from './hooks/useCsvLoader';
 import { useMultilingualText } from './hooks/useMultilingualText';
-import { validateCSV, ValidationResult } from './csvValidation';
+import { validateCSV, type ValidationResult } from './csvValidation';
 import styles from './styles.module.scss';
 
 export function VocabularyTable({
@@ -149,8 +149,7 @@ export function VocabularyTable({
   );
 
   // Re-localize concepts when language changes
-  const currentLocalizedConcepts = useMemo(() => {
-    return finalConceptsArray.map((concept) => ({
+  const currentLocalizedConcepts = useMemo(() => finalConceptsArray.map((concept) => ({
       value: getLocalizedText(
         concept.value,
         currentLanguage,
@@ -202,12 +201,10 @@ export function VocabularyTable({
         resolvedDefaultLanguage,
       ),
       originalConcept: concept,
-    }));
-  }, [finalConceptsArray, currentLanguage, resolvedDefaultLanguage]);
+    })), [finalConceptsArray, currentLanguage, resolvedDefaultLanguage]);
 
   // Generate URIs for concepts with SKOS relationships and apply filtering
-  const conceptsWithUris = useMemo(() => {
-    return currentLocalizedConcepts
+  const conceptsWithUris = useMemo(() => currentLocalizedConcepts
       .map((concept, index) => {
         const termId = resolvedStartCounter + index;
         let identifier;
@@ -237,7 +234,7 @@ export function VocabularyTable({
         };
       })
       .filter((entry) => {
-        if (!filterText) return true;
+        if (!filterText) {return true;}
 
         const searchText = filterText.toLowerCase();
         return (
@@ -249,8 +246,7 @@ export function VocabularyTable({
               alt.toLowerCase().includes(searchText),
             ))
         );
-      });
-  }, [
+      }), [
     currentLocalizedConcepts,
     resolvedStartCounter,
     resolvedUriStyle,
@@ -279,8 +275,7 @@ export function VocabularyTable({
     historyNote?: string;
     editorialNote?: string;
     allAltLabels?: string[];
-  }): boolean => {
-    return !!(
+  }): boolean => !!(
       concept.notation ||
       concept.example ||
       concept.changeNote ||
@@ -288,12 +283,9 @@ export function VocabularyTable({
       concept.editorialNote ||
       (concept.allAltLabels && concept.allAltLabels.length > 0)
     );
-  };
 
   // Check if any concept has additional details (to show/hide detail column)
-  const hasAnyAdditionalDetails = useMemo(() => {
-    return conceptsWithUris.some(hasAdditionalDetails);
-  }, [conceptsWithUris]);
+  const hasAnyAdditionalDetails = useMemo(() => conceptsWithUris.some(hasAdditionalDetails), [conceptsWithUris]);
 
   // Toggle expanded state for a row
   const toggleRowExpansion = (index: number) => {

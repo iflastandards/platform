@@ -1,6 +1,9 @@
+/**
+ * @unit @ui @vocabulary @low-priority
+ */
 import React from 'react';
 import { render, screen } from '@testing-library/react';
-import { InLink } from '@ifla/theme/components/InLink';
+import { InLink } from '../../components/InLink';
 import { describe, it, expect } from 'vitest';
 import { axe, toHaveNoViolations } from 'jest-axe';
 
@@ -11,9 +14,7 @@ describe('InLink Component - Real Functionality Tests', () => {
   describe('Smart Wrapping Logic', () => {
     it('should implement zero-width space insertion correctly', () => {
       // Test the core logic of smart wrapping
-      const insertZeroWidthSpaces = (text: string) => {
-        return text.replace(/\(/g, '\u200B(');
-      };
+      const insertZeroWidthSpaces = (text: string) => text.replace(/\(/g, '\u200B(');
 
       expect(insertZeroWidthSpaces('Text (with parentheses)')).toBe('Text \u200B(with parentheses)');
       expect(insertZeroWidthSpaces('Multiple (first) and (second)')).toBe('Multiple \u200B(first) and \u200B(second)');

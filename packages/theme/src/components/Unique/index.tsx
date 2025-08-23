@@ -26,8 +26,7 @@ export const Unique: React.FC<UniqueProps> = ({
   symbol = '1',
   tooltipText = 'Unique',
   className,
-}) => {
-  return (
+}) => (
     <span
       className={clsx(
         'unique',
@@ -40,6 +39,5 @@ export const Unique: React.FC<UniqueProps> = ({
       {symbol}
     </span>
   );
-};
 
 export default Unique;

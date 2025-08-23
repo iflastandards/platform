@@ -2,7 +2,7 @@ import {
   getAdminPortalConfig,
   getAdminPortalConfigAuto,
   type Environment,
-} from '../config/siteConfig';
+} from '@ifla/contracts';
 
 /**
  * Add the appropriate base path to a static asset URL or API route based on current environment.
@@ -29,7 +29,7 @@ import {
 export function addBasePath(path: string): string {
   if (!path.startsWith('/')) {
     console.warn('addBasePath: path should start with /, got:', path);
-    path = '/' + path;
+    path = `/${path}`;
   }
 
   let config;

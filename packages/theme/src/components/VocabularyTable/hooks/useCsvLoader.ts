@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import useBaseUrl from '@docusaurus/useBaseUrl';
-import { CSVConceptRow } from '../types';
+import { type CSVConceptRow } from '../types';
 
 interface CsvLoaderState {
   data: CSVConceptRow[];

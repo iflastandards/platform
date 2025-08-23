@@ -26,8 +26,7 @@ export const DownloadPanel: React.FC<DownloadPanelProps> = ({
   jsonLdUrl,
   xmlUrl,
   className = '',
-}) => {
-  return (
+}) => (
     <div className={clsx(styles.downloadPanel, className)}>
       <h2>Download Resources</h2>
       <div className={styles.downloadSections}>
@@ -97,6 +96,5 @@ export const DownloadPanel: React.FC<DownloadPanelProps> = ({
       </div>
     </div>
   );
-};
 
 export default DownloadPanel;

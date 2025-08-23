@@ -1,5 +1,8 @@
+/**
+ * @unit @ui @vocabulary @low-priority
+ */
 import { render, screen, fireEvent } from '@testing-library/react';
-import { ExampleTable, ExampleEntry } from '@ifla/theme/components/ExampleTable';
+import { ExampleTable, type ExampleEntry } from '../../components/ExampleTable';
 import React from 'react';
 
 describe('ExampleTable', () => {

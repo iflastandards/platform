@@ -1,6 +1,9 @@
+/**
+ * @unit @ui @vocabulary @low-priority
+ */
 import React from 'react';
 import { render, screen, fireEvent } from '@testing-library/react';
-import { VocabularyTable } from '@ifla/theme/components/VocabularyTable';
+import { VocabularyTable } from '../../components/VocabularyTable';
 import { expect, describe, it, vi, beforeEach } from 'vitest';
 
 // Create a more flexible mock for color mode that we can control
@@ -15,8 +18,7 @@ vi.mock('@docusaurus/theme-common', () => ({
 }));
 
 // Mock the useDocusaurusContext hook
-vi.mock('@docusaurus/useDocusaurusContext', () => {
-  return {
+vi.mock('@docusaurus/useDocusaurusContext', () => ({
     default: () => ({
       siteConfig: {
         customFields: {
@@ -33,8 +35,7 @@ vi.mock('@docusaurus/useDocusaurusContext', () => {
         }
       }
     })
-  };
-});
+  }));
 
 describe('VocabularyTable - Real Functionality Tests', () => {
   // Test data - using correct VocabularyTable prop structure
@@ -186,13 +187,9 @@ describe('VocabularyTable - Real Functionality Tests', () => {
       
       // Check that URIs are generated correctly with numeric IDs
       // Default startCounter is 1000, so first item should be t1000
-      expect(screen.getByText((content, element) => {
-        return content.includes('t1000');
-      })).toBeInTheDocument();
+      expect(screen.getByText((content, element) => content.includes('t1000'))).toBeInTheDocument();
       
-      expect(screen.getByText((content, element) => {
-        return content.includes('t1001');
-      })).toBeInTheDocument();
+      expect(screen.getByText((content, element) => content.includes('t1001'))).toBeInTheDocument();
     });
 
     it('should handle different URI styles', () => {

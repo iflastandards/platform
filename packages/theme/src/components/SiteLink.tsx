@@ -1,9 +1,9 @@
-/// <reference types="react" />
+// / <reference types="react" />
 
 // packages/theme/src/components/SiteLink.tsx
-import React, { JSX } from 'react';
+import React, { type JSX } from 'react';
 import useDocusaurusContext from '@docusaurus/useDocusaurusContext';
-import { type SiteKey, type SiteConfigEntry } from '../config/siteConfig';
+import { type SiteKey, type SiteConfigEntry } from '@ifla/contracts';
 
 /**
  * A component for creating robust, environment-aware links between different IFLA Docusaurus sites.
@@ -31,24 +31,37 @@ interface SiteLinkProps {
   className?: string;
 }
 
-const SiteLink = ({ siteKey, path, children, className }: SiteLinkProps): JSX.Element => {
+const SiteLink = ({
+  siteKey,
+  path,
+  children,
+  className,
+}: SiteLinkProps): JSX.Element => {
   const { siteConfig } = useDocusaurusContext();
-  const siteConfigs = siteConfig.customFields?.siteConfigs as Record<SiteKey, SiteConfigEntry>;
-  
+  const siteConfigs = siteConfig.customFields?.siteConfigs as Record<
+    SiteKey,
+    SiteConfigEntry
+  >;
+
   const targetConfig = siteConfigs[siteKey];
   if (!targetConfig) {
     throw new Error(`Site configuration not found for ${siteKey}`);
   }
-  
+
   // Ensure proper path concatenation
   const normalizedPath = path.startsWith('/') ? path.slice(1) : path;
   const fullUrl = `${targetConfig.url}${targetConfig.baseUrl}${normalizedPath}`;
-  
+
   return (
-    <a href={fullUrl} target="_blank" rel="noopener noreferrer" className={className}>
+    <a
+      href={fullUrl}
+      target="_blank"
+      rel="noopener noreferrer"
+      className={className}
+    >
       {children}
     </a>
   );
-}
+};
 
 export default SiteLink;

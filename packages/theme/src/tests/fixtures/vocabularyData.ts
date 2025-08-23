@@ -60,8 +60,7 @@ export const vocabularyTableProps = {
 };
 
 // Mock fetch function for vocabulary data
-export const createMockFetch = (csvContent: string = mockCSVContent) => {
-  return vi.fn(() =>
+export const createMockFetch = (csvContent: string = mockCSVContent) => vi.fn(() =>
     Promise.resolve({
       ok: true,
       text: () => Promise.resolve(csvContent),
@@ -80,8 +79,5 @@ export const createMockFetch = (csvContent: string = mockCSVContent) => {
       type: 'basic' as ResponseType
     } as Response)
   ) as typeof fetch;
-};
 
-export const createFailedFetch = (errorMessage: string = 'Network error') => {
-  return vi.fn(() => Promise.reject(new Error(errorMessage))) as any;
-};
+export const createFailedFetch = (errorMessage: string = 'Network error') => vi.fn(() => Promise.reject(new Error(errorMessage))) as any;

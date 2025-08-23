@@ -104,12 +104,10 @@ export const createMockGoogleSheetsApi = () => {
   return fetchMock;
 };
 
-export const createMockFailedApi = (errorCode: number = 403) => {
-  return vi.fn(() => 
+export const createMockFailedApi = (errorCode: number = 403) => vi.fn(() => 
     Promise.resolve({
       ok: false,
       status: errorCode,
       json: () => Promise.resolve(mockNetworkError)
     })
   );
-};

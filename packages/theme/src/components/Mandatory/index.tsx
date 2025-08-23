@@ -31,7 +31,7 @@ export const Mandatory: React.FC<MandatoryProps> = ({
     ? processedViaHook
     : linkPathRaw.startsWith('/')
       ? linkPathRaw
-      : '/' + linkPathRaw;
+      : `/${  linkPathRaw}`;
 
   // Accessibility labels
   const defaultLabel = `${defaultTooltipText} - click for more information`;

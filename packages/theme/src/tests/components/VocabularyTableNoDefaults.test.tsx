@@ -1,6 +1,9 @@
+/**
+ * @unit @ui @vocabulary @low-priority
+ */
 import React from 'react';
 import { render, screen } from '@testing-library/react';
-import { VocabularyTable } from '@ifla/theme/components/VocabularyTable';
+import { VocabularyTable } from '../../components/VocabularyTable';
 import { expect, describe, it, vi } from 'vitest';
 
 // Mock the useColorMode hook

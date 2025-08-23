@@ -1,9 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import {
-  getSiteConfig,
-  type SiteKey,
-  type Environment,
-} from '../../config/siteConfig';
+import { getSiteConfig, type SiteKey, type Environment } from '@ifla/contracts';
 
 describe('getSiteConfig @unit @low-priority @validation', () => {
   describe('basic functionality', () => {

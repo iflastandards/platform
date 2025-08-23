@@ -3,19 +3,19 @@ const path = require('path');
 const cheerio = require('cheerio');
 
 function getTextOrEmpty(element, strip = true) {
-    if (!element || !element.text) return "";
+    if (!element || !element.text) {return "";}
     const text = element.text();
     return strip ? text.trim() : text;
 }
 
 function getDecodeContentsOrEmpty(element) {
-    if (!element || !element.html) return "";
+    if (!element || !element.html) {return "";}
     return (element.html() || "").trim();
 }
 
 function formatRdfSubElements(elementDiv, baseUrlPrefix, $) {
     const subElements = [];
-    if (!elementDiv || !elementDiv.length) return [];
+    if (!elementDiv || !elementDiv.length) {return [];}
 
     let links = elementDiv.find('a.linkMenuElement');
     if (links.length === 0 && elementDiv.find('div.navISBDMRef').length > 0) {
@@ -26,7 +26,7 @@ function formatRdfSubElements(elementDiv, baseUrlPrefix, $) {
         const $aTag = $(aTag);
         const label = getTextOrEmpty($aTag);
         const hrefAttr = $aTag.attr('href');
-        if (!hrefAttr) return;
+        if (!hrefAttr) {return;}
 
         const url = hrefAttr.replace(baseUrlPrefix, "/docs").replace(".html", "");
         const uriBase = "http://iflastandards.info/ns/isbdm/elements/";
@@ -50,7 +50,7 @@ function processNodeForContent(node, $, mdxParts) {
         return;
     }
 
-    if (node.type !== 'tag') return;
+    if (node.type !== 'tag') {return;}
 
     if (node.name === 'h4') {
         mdxParts.push(`## ${getTextOrEmpty($node)}`);
@@ -192,7 +192,7 @@ function processNodeForContent(node, $, mdxParts) {
                                 currentGroupHadTable = true;
                             }
                             if (comments.length > 0) {
-                                if(tableRows.length > 0) exampleContentAccumulator.push("    "); // spacing after table before comments
+                                if(tableRows.length > 0) {exampleContentAccumulator.push("    ");} // spacing after table before comments
                                 exampleContentAccumulator.push(...comments);
                             }
                             if (tableRows.length > 0 || comments.length > 0) {

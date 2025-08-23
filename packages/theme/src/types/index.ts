@@ -1,7 +1,7 @@
 /**
  * Shared types for IFLA theme components
  */
-import React from 'react';
+import type React from 'react';
 
 export interface ElementSubType {
   uri: string;

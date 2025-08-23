@@ -1,7 +1,10 @@
+/**
+ * @unit @ui @vocabulary @low-priority
+ */
 import React from 'react';
 import { render, screen, fireEvent } from '@testing-library/react';
 import { describe, it, expect, vi } from 'vitest';
-import ElementReference from '@ifla/theme/components/ElementReference';
+import ElementReference from '../../components/ElementReference';
 
 // Use existing mocks from __mocks__ folder
 vi.mock('@docusaurus/useDocusaurusContext', () => import('../__mocks__/useDocusaurusContext'));
@@ -36,9 +39,7 @@ describe('ElementReference - URI Generation Logic Tests', () => {
     });
 
     it('should generate correct full URI based on type and ID', () => {
-      const generateUri = (baseUri: string, prefix: string, id: number) => {
-        return `${baseUri}/${prefix}${id}`;
-      };
+      const generateUri = (baseUri: string, prefix: string, id: number) => `${baseUri}/${prefix}${id}`;
 
       const baseUri = "https://www.iflastandards.info/ISBDM/elements";
       
@@ -127,11 +128,11 @@ describe('ElementReference - URI Generation Logic Tests', () => {
         uri?: string;
       }
       const processInverseOf = (inverseOf: (string | InverseOfItem)[]) => {
-        if (!inverseOf || inverseOf.length === 0) return [];
+        if (!inverseOf || inverseOf.length === 0) {return [];}
         
         return inverseOf.map(item => {
-          if (typeof item === 'string') return item;
-          if (item.uri) return item.uri;
+          if (typeof item === 'string') {return item;}
+          if (item.uri) {return item.uri;}
           return null;
         }).filter(Boolean);
       };
@@ -188,9 +189,7 @@ describe('ElementReference - URI Generation Logic Tests', () => {
     });
 
     it('should generate correct Turtle syntax', () => {
-      const generateTurtleType = (types: string[]) => {
-        return `a ${types.join(', ')}`;
-      };
+      const generateTurtleType = (types: string[]) => `a ${types.join(', ')}`;
 
       expect(generateTurtleType(['rdfs:Class', 'owl:Class'])).toBe('a rdfs:Class, owl:Class');
       expect(generateTurtleType(['rdf:Property'])).toBe('a rdf:Property');
@@ -225,10 +224,8 @@ describe('ElementReference - URI Generation Logic Tests', () => {
           deprecated?: boolean;
         }
       }
-      const isDeprecated = (frontMatter: DeprecationFrontMatter) => {
-        return frontMatter.deprecated === true || 
+      const isDeprecated = (frontMatter: DeprecationFrontMatter) => frontMatter.deprecated === true || 
                frontMatter.RDF?.deprecated === true;
-      };
 
       expect(isDeprecated({ deprecated: true })).toBe(true);
       expect(isDeprecated({ RDF: { deprecated: true } })).toBe(true);
@@ -245,12 +242,10 @@ describe('ElementReference - URI Generation Logic Tests', () => {
           willBeRemovedInVersion?: string;
         }
       }
-      const getDeprecationInfo = (frontMatter: DeprecationInfoFrontMatter) => {
-        return {
+      const getDeprecationInfo = (frontMatter: DeprecationInfoFrontMatter) => ({
           deprecatedInVersion: frontMatter.deprecatedInVersion || frontMatter.RDF?.deprecatedInVersion || '',
           willBeRemovedInVersion: frontMatter.willBeRemovedInVersion || frontMatter.RDF?.willBeRemovedInVersion || ''
-        };
-      };
+        });
 
       const info1 = getDeprecationInfo({ deprecatedInVersion: '1.0', willBeRemovedInVersion: '2.0' });
       expect(info1.deprecatedInVersion).toBe('1.0');

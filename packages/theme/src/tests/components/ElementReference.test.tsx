@@ -1,8 +1,11 @@
+/**
+ * @unit @ui @vocabulary @low-priority
+ */
 // src/tests/components/ElementReference.test.tsx
 import React from 'react';
 import { render, screen } from '@testing-library/react';
 import { describe, it, expect, vi, beforeEach } from 'vitest';
-import ElementReference from '@ifla/theme/components/ElementReference';
+import ElementReference from '../../components/ElementReference';
 
 // Mock Docusaurus hooks and components
 vi.mock('@docusaurus/useDocusaurusContext', () => ({

@@ -3,11 +3,11 @@
  */
 
 import {
-  MultilingualText,
-  LanguageConfig,
-  UriCaseStyle,
-  ConceptProps,
-  CSVConceptRow,
+  type MultilingualText,
+  type LanguageConfig,
+  type UriCaseStyle,
+  type ConceptProps,
+  type CSVConceptRow,
 } from '../types';
 
 /**
@@ -18,18 +18,18 @@ export function getLocalizedText(
   language: string = 'en',
   fallbackLanguage: string = 'en',
 ): string {
-  if (!text) return '';
-  if (typeof text === 'string') return text;
+  if (!text) {return '';}
+  if (typeof text === 'string') {return text;}
 
   // Try requested language first
-  if (text[language]) return text[language];
+  if (text[language]) {return text[language];}
 
   // Try fallback language
-  if (text[fallbackLanguage]) return text[fallbackLanguage];
+  if (text[fallbackLanguage]) {return text[fallbackLanguage];}
 
   // Return first available language
   const keys = Object.keys(text);
-  if (keys.length > 0) return text[keys[0]];
+  if (keys.length > 0) {return text[keys[0]];}
 
   return '';
 }
@@ -40,8 +40,8 @@ export function getLocalizedText(
 export function getAllLocalizedText(
   text: MultilingualText | string | undefined,
 ): Record<string, string> {
-  if (!text) return {};
-  if (typeof text === 'string') return { en: text };
+  if (!text) {return {};}
+  if (typeof text === 'string') {return { en: text };}
   return text;
 }
 
@@ -52,7 +52,7 @@ export function createSlug(
   text: string,
   caseStyle: UriCaseStyle = 'kebab-case',
 ): string {
-  let slug = text
+  const slug = text
     .toLowerCase()
     .replace(/[^\w\s-]/g, '') // Remove special characters
     .replace(/\s+/g, '-') // Replace spaces with hyphens
@@ -158,7 +158,7 @@ export function parseCSVToConcepts(
 function parseMultilingualField(
   value: string | undefined,
 ): MultilingualText | string | undefined {
-  if (!value) return undefined;
+  if (!value) {return undefined;}
 
   // Check if it contains language codes
   if (value.includes('|') && value.includes(':')) {
@@ -182,7 +182,7 @@ function parseMultilingualField(
  * Parse array field from CSV (e.g., "value1|value2|value3")
  */
 function parseArrayField(value: string | undefined): string[] {
-  if (!value) return [];
+  if (!value) {return [];}
   return value
     .split('|')
     .map((v) => v.trim())
@@ -251,7 +251,7 @@ function getLanguageDirection(code: string): 'ltr' | 'rtl' {
  * Export concepts to CSV format
  */
 export function exportToCSV(concepts: ConceptProps[]): string {
-  if (concepts.length === 0) return '';
+  if (concepts.length === 0) {return '';}
 
   // Get all unique field names
   const fieldNames = new Set<string>();
@@ -268,11 +268,11 @@ export function exportToCSV(concepts: ConceptProps[]): string {
 
       if (Array.isArray(value)) {
         return `"${value.join('|')}"`;
-      } else if (typeof value === 'object' && value !== null) {
+      } if (typeof value === 'object' && value !== null) {
         // Handle multilingual text
         const entries = Object.entries(value as MultilingualText);
         return `"${entries.map(([lang, text]) => `${lang}:${text}`).join('|')}"`;
-      } else if (typeof value === 'string' && value.includes(',')) {
+      } if (typeof value === 'string' && value.includes(',')) {
         return `"${value}"`;
       }
 
@@ -317,13 +317,13 @@ export function validateConcept(concept: ConceptProps): string[] {
  * Format file size in human readable format
  */
 export function formatFileSize(bytes: number): string {
-  if (bytes === 0) return '0 Bytes';
+  if (bytes === 0) {return '0 Bytes';}
 
   const k = 1024;
   const sizes = ['Bytes', 'KB', 'MB', 'GB'];
   const i = Math.floor(Math.log(bytes) / Math.log(k));
 
-  return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
+  return `${parseFloat((bytes / Math.pow(k, i)).toFixed(2))  } ${  sizes[i]}`;
 }
 
 /**

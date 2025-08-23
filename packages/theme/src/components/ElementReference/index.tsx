@@ -1,4 +1,4 @@
-import React, { JSX } from 'react';
+import React, { type JSX } from 'react';
 import Link from '@docusaurus/Link';
 import { useColorMode } from '@docusaurus/theme-common';
 import useDocusaurusContext from '@docusaurus/useDocusaurusContext';
@@ -85,7 +85,7 @@ function adaptFrontMatter(
 
   // Ensure isDefinedBy is present
   if (!adaptedFrontMatter.RDF.isDefinedBy) {
-    adaptedFrontMatter.RDF.isDefinedBy = elementDefaults.uri + '/';
+    adaptedFrontMatter.RDF.isDefinedBy = `${elementDefaults.uri  }/`;
   }
 
   // Handle elementSuperType conversion to subPropertyOf if needed
@@ -498,7 +498,7 @@ function generateTurtle(rdfData: RDFData): string {
   // Replace final semicolon with a period
   turtleContent = turtleContent.replace(/;$/, '.');
 
-  return prefixes + '\n' + turtleContent;
+  return `${prefixes  }\n${  turtleContent}`;
 }
 
 function generateRdfXml(rdfData: RDFData): string {

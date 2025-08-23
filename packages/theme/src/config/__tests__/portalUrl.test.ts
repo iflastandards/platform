@@ -1,11 +1,10 @@
 /**
  * @tags @unit @critical @navigation @sites
- * @description Tests for getPortalUrl helper function that ensures Portal links 
+ * @description Tests for getPortalUrl helper function that ensures Portal links
  * point to correct URLs across all environments
  */
 import { describe, it, expect } from 'vitest';
-import { getPortalUrl } from '../siteConfig';
-import type { Environment } from '../siteConfig';
+import { getPortalUrl, type Environment } from '@ifla/contracts';
 
 describe('getPortalUrl', () => {
   it('should return the correct URL for local environment', () => {
@@ -25,7 +24,7 @@ describe('getPortalUrl', () => {
 
   it('should handle all valid environment types', () => {
     const environments: Environment[] = ['local', 'preview', 'production'];
-    
+
     environments.forEach((env) => {
       expect(() => getPortalUrl(env)).not.toThrow();
       expect(typeof getPortalUrl(env)).toBe('string');
