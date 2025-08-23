@@ -1,5 +1,10 @@
-import jobsData from '../jobs.json';
-import rdfBuildsData from '../rdf-builds.json';
+// Export user fixtures and utilities
+export * from './users';
 
-export const jobs = jobsData;
-export const rdfBuilds = rdfBuildsData;
+// Export MSW handlers
+export * from './msw';
+
+// Export JSON fixtures
+import rdfBuildsFixture from './rdf-builds.json';
+import clerkUsersFixture from './clerk-users.json';
+export { rdfBuildsFixture, clerkUsersFixture };
