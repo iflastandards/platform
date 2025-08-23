@@ -803,6 +803,9 @@ importers:
 
   packages/clients:
     dependencies:
+      '@graphql-typed-document-node/core':
+        specifier: ^3.2.0
+        version: 3.2.0(graphql@16.11.0)
       '@ifla/contracts':
         specifier: workspace:*
         version: link:../contracts
@@ -815,6 +818,9 @@ importers:
       '@supabase/supabase-js':
         specifier: '*'
         version: 2.55.0
+      graphql:
+        specifier: ^16.11.0
+        version: 16.11.0
       zod:
         specifier: '*'
         version: 3.25.76

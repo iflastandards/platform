@@ -30,10 +30,12 @@
     "typecheck": "tsc --noEmit"
   },
   "dependencies": {
+    "@graphql-typed-document-node/core": "^3.2.0",
     "@ifla/contracts": "workspace:*",
     "@octokit/graphql": "*",
-    "@supabase/supabase-js": "*",
     "@octokit/rest": "*",
+    "@supabase/supabase-js": "*",
+    "graphql": "^16.11.0",
     "zod": "*",
     "zod-validation-error": "*"
   },
