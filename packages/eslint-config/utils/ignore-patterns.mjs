@@ -10,6 +10,7 @@ export const ignorePatterns = [
   '**/.docusaurus/**',
   '**/coverage/**',
   '**/tmp/**',
+  '**/.tmp/**',
   '**/output/**',
   '**/playwright-report/**',
   '**/test-results/**',

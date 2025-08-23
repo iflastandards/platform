@@ -94,6 +94,21 @@ export default [
     rules: {
       'no-console': 'off',
       'prefer-template': 'off',
+      'prefer-const': 'warn',
+      'prefer-destructuring': 'off',
+      'no-return-await': 'off',
+    },
+  },
+
+  // Relaxed rules for e2e tests
+  {
+    files: ['e2e/**/*.{js,jsx,ts,tsx}'],
+    rules: {
+      'no-console': 'off',
+      'prefer-template': 'off',
+      'prefer-const': 'warn',
+      'prefer-destructuring': 'off',
+      'no-return-await': 'off',
     },
   },
 ];

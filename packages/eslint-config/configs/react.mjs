@@ -1,5 +1,6 @@
 import pluginReact from 'eslint-plugin-react';
 import hooksPlugin from 'eslint-plugin-react-hooks';
+import tseslint from 'typescript-eslint';
 
 /**
  * React-specific ESLint configuration
@@ -9,6 +10,16 @@ export default [
   // React configuration
   {
     files: ['**/*.{jsx,tsx}'],
+    languageOptions: {
+      parser: tseslint.parser,
+      parserOptions: {
+        ecmaFeatures: {
+          jsx: true,
+        },
+        sourceType: 'module',
+        ecmaVersion: 2022,
+      },
+    },
     plugins: {
       'react': pluginReact,
       'react-hooks': hooksPlugin,
@@ -65,6 +76,16 @@ export default [
   // Allow JSX in .js files for backwards compatibility
   {
     files: ['**/*.{js,ts}'],
+    languageOptions: {
+      parser: tseslint.parser,
+      parserOptions: {
+        ecmaFeatures: {
+          jsx: true,
+        },
+        sourceType: 'module',
+        ecmaVersion: 2022,
+      },
+    },
     plugins: {
       'react': pluginReact,
     },
