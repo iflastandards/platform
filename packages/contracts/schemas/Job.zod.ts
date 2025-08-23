@@ -99,14 +99,8 @@ export type JobQuery = z.infer<typeof JobQuerySchema>;
 // Status type guards for better type narrowing
 export const isCompletedJob = (
   job: Job,
-): job is Job & { status: 'success' | 'failed' | 'cancelled' } => {
-  return ['success', 'failed', 'cancelled'].includes(job.status);
-};
+): job is Job & { status: 'success' | 'failed' | 'cancelled' } => ['success', 'failed', 'cancelled'].includes(job.status);
 
-export const isRunningJob = (job: Job): job is Job & { status: 'running' } => {
-  return job.status === 'running';
-};
+export const isRunningJob = (job: Job): job is Job & { status: 'running' } => job.status === 'running';
 
-export const isQueuedJob = (job: Job): job is Job & { status: 'queued' } => {
-  return job.status === 'queued';
-};
+export const isQueuedJob = (job: Job): job is Job & { status: 'queued' } => job.status === 'queued';

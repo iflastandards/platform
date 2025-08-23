@@ -133,14 +133,8 @@ export type VocabularyImport = z.infer<typeof VocabularyImportSchema>;
 export type VocabularyQuery = z.infer<typeof VocabularyQuerySchema>;
 
 // Status type guards
-export const isPublishedVocabulary = (vocab: Vocabulary): vocab is Vocabulary & { status: 'published' } => {
-  return vocab.status === 'published';
-};
+export const isPublishedVocabulary = (vocab: Vocabulary): vocab is Vocabulary & { status: 'published' } => vocab.status === 'published';
 
-export const isDraftVocabulary = (vocab: Vocabulary): vocab is Vocabulary & { status: 'draft' } => {
-  return vocab.status === 'draft';
-};
+export const isDraftVocabulary = (vocab: Vocabulary): vocab is Vocabulary & { status: 'draft' } => vocab.status === 'draft';
 
-export const hasSyncEnabled = (vocab: Vocabulary): vocab is Vocabulary & { syncEnabled: true } => {
-  return vocab.syncEnabled === true;
-};
+export const hasSyncEnabled = (vocab: Vocabulary): vocab is Vocabulary & { syncEnabled: true } => vocab.syncEnabled === true;

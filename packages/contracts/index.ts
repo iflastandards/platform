@@ -1,9 +1,14 @@
 export * from './schemas/index';
 export * from './types/ts/external-api';
+export * from './src/config/siteConfig';
 
 // Explicit type re-exports to ensure consumers resolve named types at the package root
 export type { Job, JobCreate, JobUpdate, JobQuery } from './schemas/Job.zod';
-export type { RdfBuild, CreateRdfBuild, RdfBuildList } from './schemas/RdfBuild.zod';
+export type {
+  RdfBuild,
+  CreateRdfBuild,
+  RdfBuildList,
+} from './schemas/RdfBuild.zod';
 export type {
   ClerkUser,
   UserFixture,
@@ -35,4 +40,3 @@ export {
   createTypeGuard,
   ValidationError,
 } from './schemas/validation';
-

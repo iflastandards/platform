@@ -1,4 +1,4 @@
-import { z } from 'zod';
+import { type z } from 'zod';
 
 /**
  * Central validation utility for enforcing runtime type safety
@@ -136,9 +136,7 @@ export function transformAndValidate<TInput, TOutput>(
 export function createTypeGuard<T>(
   schema: z.ZodSchema<T>,
 ): (value: unknown) => value is T {
-  return (value: unknown): value is T => {
-    return schema.safeParse(value).success;
-  };
+  return (value: unknown): value is T => schema.safeParse(value).success;
 }
 
 /**
@@ -146,8 +144,7 @@ export function createTypeGuard<T>(
  * Can be used with Next.js API routes or Express
  */
 export function validationMiddleware<T>(schema: z.ZodSchema<T>) {
-  return (handler: (data: T) => unknown | Promise<unknown>) => {
-    return async (req: {
+  return (handler: (data: T) => unknown | Promise<unknown>) => async (req: {
       body?: unknown;
       query?: unknown;
       params?: unknown;
@@ -156,5 +153,4 @@ export function validationMiddleware<T>(schema: z.ZodSchema<T>) {
       const validated = validateData(schema, data, 'request');
       return handler(validated);
     };
-  };
 }
