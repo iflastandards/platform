@@ -15,6 +15,14 @@ const { ensureDaemon } = require('./ensure-nx-daemon');
 process.env.NODE_OPTIONS =
   '--max-old-space-size=8192 --max-semi-space-size=512';
 
+// Set quiet environment variables
+process.env.NX_VERBOSE_LOGGING = 'false';
+process.env.NX_CLOUD_SILENT = 'true';
+process.env.NODE_NO_WARNINGS = '1';
+process.env.CI = 'true';
+process.env.QUIET_MODE = 'true';
+process.env.VITEST_CONFIG = 'vitest.config.quiet.ts';
+
 console.log('\n🚀 Running smart pre-commit checks...\n');
 
 // Ensure nx daemon is running for better performance
@@ -176,43 +184,23 @@ if (hasErrors) {
   );
   process.exit(1);
 } else {
-  console.log('✅ Pre-commit checks passed!\n');
+  console.log('✅ Smart pre-commit checks passed!\n');
   console.log('📋 Checks performed:');
   if (isDependencyOnly) {
-    console.log('   - Dependency-only changes: Light typecheck only');
+    console.log('   - Dependency-only changes: Light validation (saves ~3 minutes)');
   } else if (isDocumentationOnly) {
     console.log('   - Documentation-only changes: No validation needed');
   } else {
+    console.log('   - Code changes: Full validation with hardware optimization');
     console.log('   - Typecheck: ✓');
     console.log('   - Lint: ✓');
     console.log('   - Unit tests: ✓');
   }
-  console.log('   - For urgent commits: git commit --no-verify\n');
-  process.exit(0);
-}
-if (hasErrors) {
-  console.log(
-    '❌ Smart pre-commit checks failed. Please fix errors before committing.\n',
-  );
-  process.exit(1);
-} else {
-  console.log('✅ Smart pre-commit checks passed!\n');
   console.log('💡 Performance optimizations applied:');
-  if (isDependencyOnly) {
-    console.log(
-      '   - Dependency-only changes: Light validation (saves ~3 minutes)',
-    );
-  } else if (isDocumentationOnly) {
-    console.log('   - Documentation-only changes: No validation needed');
-  } else {
-    console.log(
-      '   - Code changes: Full validation with hardware optimization',
-    );
-    console.log('   - Using 6 parallel processes (optimized for stability)');
-    console.log('   - 6GB Node.js memory limit per process');
-    console.log('   - Nx cache enabled for faster rebuilds');
-  }
-  console.log('   - Nx daemon running with 16GB memory limit');
-  console.log('   - For urgent commits: git commit --no-verify\n');
+  console.log('   - Quiet mode enabled (reduced output verbosity)');
+  console.log('   - Using 6 parallel processes (optimized for stability)');
+  console.log('   - 6GB Node.js memory limit per process');
+  console.log('   - Nx cache enabled for faster rebuilds');
+  console.log('   - Nx daemon running with 16GB memory limit\n');
   process.exit(0);
 }

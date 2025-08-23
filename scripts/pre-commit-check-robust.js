@@ -118,6 +118,11 @@ class PreCommitRunner {
         NODE_OPTIONS:
           `${env.NODE_OPTIONS || ''} --max-old-space-size=4096`.trim(),
         NODE_NO_WARNINGS: '1', // Suppress all Node.js warnings including MaxListenersExceededWarning
+        NX_VERBOSE_LOGGING: 'false', // Reduce Nx output verbosity
+        NX_CLOUD_SILENT: 'true', // Reduce Nx Cloud output
+        CI: 'true', // Many tools respect CI env for quieter output
+        QUIET_MODE: 'true', // Custom flag for quiet mode
+        VITEST_CONFIG: 'vitest.config.quiet.ts', // Use quiet vitest config
       };
 
       const child = spawn(command, args, {
@@ -167,10 +172,7 @@ class PreCommitRunner {
         );
         this.log('You can:', 'info');
         this.log('  1. Wait longer (process is still running)', 'info');
-        this.log(
-          '  2. Press Ctrl+C to cancel and use: git commit --no-verify',
-          'info',
-        );
+        this.log('  2. Press Ctrl+C to cancel and fix issues', 'info');
         this.log('  3. Use: pnpm commit:fast for urgent commits', 'info');
 
         // Don't kill the process, just warn the user
@@ -181,15 +183,45 @@ class PreCommitRunner {
       const stdoutHandler = (data) => {
         const dataStr = data.toString();
         stdout += dataStr;
-        // Show output immediately for better feedback
-        process.stdout.write(dataStr);
+        
+        // Filter out verbose build output
+        const lines = dataStr.split('\n');
+        const filteredLines = lines.filter(line => {
+          // Skip verbose build tool output
+          if (line.includes('tsup') || 
+              line.includes('Building') || 
+              line.includes('Bundling') || 
+              line.includes('Created') || 
+              line.includes('Generating') ||
+              line.includes('⚡') ||
+              line.includes('📦') ||
+              line.includes('🔧') ||
+              line.includes('▶') ||
+              line.includes('✓ Built') ||
+              line.includes('DTS Build start') ||
+              line.includes('CLI Building') ||
+              line.includes('CJS Build') ||
+              line.includes('ESM Build') ||
+              line.trim() === '') {
+            return false;
+          }
+          return true;
+        });
+        
+        const filtered = filteredLines.join('\n');
+        if (filtered.trim()) {
+          process.stdout.write(filtered + '\n');
+        }
       };
 
       const stderrHandler = (data) => {
         const dataStr = data.toString();
         stderr += dataStr;
-        // Show errors immediately
-        process.stderr.write(dataStr);
+        
+        // Only show actual errors, not warnings from build tools
+        if (!dataStr.includes('tsup') && !dataStr.includes('node_modules')) {
+          process.stderr.write(dataStr);
+        }
       };
 
       child.stdout.on('data', stdoutHandler);
@@ -236,7 +268,7 @@ class PreCommitRunner {
             console.log('\n💡 To debug failing tests:');
             console.log('  1. Run tests directly: pnpm test');
             console.log('  2. Run specific project: pnpm nx test [project]');
-            console.log('  3. Skip pre-commit: git commit --no-verify');
+            console.log('  3. Fix the tests before committing');
             /* eslint-enable no-console */
           }
           
@@ -401,7 +433,7 @@ class PreCommitRunner {
       'info',
     );
     this.log(
-      '💡 You can cancel anytime with Ctrl+C and use: git commit --no-verify',
+      '💡 You can cancel anytime with Ctrl+C if needed',
       'info',
     );
     console.log('');
@@ -514,7 +546,6 @@ class PreCommitRunner {
         '🔧 To fix and retry: fix the issues and run git commit again',
         'info',
       );
-      this.log('🚀 For urgent commits: git commit --no-verify', 'info');
       this.log('⚡ For fast commits: pnpm commit:fast', 'info');
       this.saveState({ failed: true, reason: 'validation_failed', totalTime });
       return false;
@@ -565,7 +596,7 @@ process.removeAllListeners('SIGHUP');
 
 process.once('SIGINT', () => {
   console.log('\n\n🛑 Pre-commit checks interrupted by user');
-  console.log('💡 To commit without checks: git commit --no-verify');
+  console.log('💡 Fix any issues and try again');
   console.log('⚡ For fast commits: pnpm commit:fast');
   process.exit(130); // Standard exit code for SIGINT
 });
@@ -590,7 +621,7 @@ async function main() {
 if (require.main === module) {
   main().catch((error) => {
     console.error('💥 Unexpected error:', error.message);
-    console.log('🚀 For urgent commits: git commit --no-verify');
+    console.log('⚡ For fast commits: pnpm commit:fast');
     process.exit(1);
   });
 }
