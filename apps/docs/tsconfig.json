@@ -2,7 +2,14 @@
   // This file is not used in compilation. It is here just for a nice editor experience.
   "extends": "@docusaurus/tsconfig",
   "compilerOptions": {
-    "baseUrl": "."
+    "baseUrl": ".",
+    "paths": {
+      "@site/*": ["./*"],
+      "@ifla/contracts": ["../../packages/contracts/index.ts"],
+      "@ifla/contracts/*": ["../../packages/contracts/*"],
+      "@ifla/theme": ["../../packages/theme/src/index.ts"],
+      "@ifla/theme/*": ["../../packages/theme/src/*"]
+    }
   },
   "exclude": [".docusaurus", "build"]
 }

@@ -11,7 +11,9 @@
       "@ifla/theme/config/*": ["../packages/theme/src/config/*"],
       "@ifla/theme/styles": ["../packages/theme/src/styles/index.css"],
       "@ifla/theme/utils": ["../packages/theme/src/utils/index.ts"],
-      "@ifla/theme/utils/*": ["../packages/theme/src/utils/*"]
+      "@ifla/theme/utils/*": ["../packages/theme/src/utils/*"],
+      "@ifla/contracts": ["../packages/contracts/index.ts"],
+      "@ifla/contracts/*": ["../packages/contracts/*"]
     }
   },
   "include": ["src/**/*", "docusaurus.config.ts", "sidebars.ts", "navbar.ts"]

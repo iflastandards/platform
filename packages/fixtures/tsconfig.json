@@ -8,8 +8,9 @@
     "declaration": true,
     "declarationMap": true,
     "sourceMap": true,
-    "emitDeclarationOnly": true
+    "emitDeclarationOnly": true,
+    "resolveJsonModule": true
   },
-  "include": ["src/**/*", "*.json", "jobs.json", "rdf-builds.json"],
+  "include": ["src/**/*", "src/**/*.json", "*.json", "jobs.json"],
   "exclude": ["dist", "node_modules"]
 }

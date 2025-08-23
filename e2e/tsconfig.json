@@ -1,0 +1,16 @@
+{
+  "extends": "../tsconfig.base.json",
+  "compilerOptions": {
+    "baseUrl": "..",
+    "paths": {
+      "@ifla/fixtures": ["./packages/fixtures/src/index.ts"],
+      "@ifla/fixtures/*": ["./packages/fixtures/src/*"],
+      "@ifla/contracts": ["./packages/contracts/index.ts"],
+      "@ifla/contracts/*": ["./packages/contracts/*"],
+      "@ifla/theme": ["./packages/theme/src/index.ts"],
+      "@ifla/theme/*": ["./packages/theme/src/*"]
+    }
+  },
+  "include": ["**/*.ts", "**/*.tsx"],
+  "exclude": ["node_modules"]
+}

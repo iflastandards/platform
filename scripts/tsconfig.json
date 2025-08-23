@@ -19,15 +19,17 @@
     "paths": {
       "@/*": ["./scripts/*"],
       "@utils/*": ["./scripts/utils/*"],
-      "@ifla/unified-spreadsheet": ["./packages/unified-spreadsheet/src/index.ts"],
-      "@ifla/unified-spreadsheet/*": ["./packages/unified-spreadsheet/src/*"]
+      "@ifla/unified-spreadsheet": [
+        "./packages/unified-spreadsheet/src/index.ts"
+      ],
+      "@ifla/unified-spreadsheet/*": ["./packages/unified-spreadsheet/src/*"],
+      "@ifla/fixtures": ["./packages/fixtures/src/index.ts"],
+      "@ifla/fixtures/*": ["./packages/fixtures/src/*"],
+      "@ifla/contracts": ["./packages/contracts/index.ts"],
+      "@ifla/contracts/*": ["./packages/contracts/*"]
     }
   },
-  "include": [
-    "**/*.ts",
-    "**/*.js",
-    "**/*.json"
-  ],
+  "include": ["**/*.ts", "**/*.js", "**/*.json"],
   "exclude": [
     "node_modules",
     "dist",
