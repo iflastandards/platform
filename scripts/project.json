@@ -22,7 +22,7 @@
       "executor": "nx:run-commands",
       "outputs": ["{workspaceRoot}/coverage/{projectRoot}"],
       "options": {
-        "command": "vitest run --config scripts/vitest.config.ts --reporter=verbose",
+        "command": "vitest run --config scripts/vitest.config.ts",
         "cwd": "{workspaceRoot}"
       },
       "inputs": [

@@ -27,9 +27,15 @@ export default defineConfig({
       'src/test/_deprecated/**/*.{test,spec}.{js,ts,jsx,tsx}',
       '**/*.deprecated',
     ],
+    // Output test results to /tmp to avoid cluttering project
+    outputFile: {
+      json: '/tmp/test-results/admin-vitest-results.json',
+      junit: '/tmp/test-results/admin-vitest-junit.xml',
+    },
     coverage: {
       provider: 'v8',
       reporter: ['text', 'json', 'html'],
+      reportsDirectory: '/tmp/test-results/admin-coverage',
       exclude: [
         'node_modules/',
         'src/test/',

@@ -105,12 +105,17 @@ export default defineConfig({
     bail: 0,
     // Disable force rerun triggers in nx context
     forceRerunTriggers: [],
-    // Simple reporters for nx
-    reporters: ['default'],
+    // Reporters for nx - include json and junit for file output
+    reporters: process.env.CI ? ['default', 'json', 'junit'] : ['default'],
+    // Output test results to /tmp to avoid cluttering project
+    outputFile: {
+      json: '/tmp/test-results/vitest-results.json',
+      junit: '/tmp/test-results/vitest-junit.xml',
+    },
     // Coverage configuration
     coverage: {
       reporter: ['text', 'lcov'],
-      reportsDirectory: './coverage',
+      reportsDirectory: '/tmp/test-results/coverage',
       exclude: [
         '**/node_modules/**',
         '**/dist/**',

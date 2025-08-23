@@ -41,10 +41,20 @@ export default defineConfig({
     // Timeout for script tests that might do file I/O
     testTimeout: 30000,
     
+    // Reporters - include json and junit for file output when needed
+    reporters: process.env.CI || process.env.VITEST_JSON_REPORT ? ['default', 'json', 'junit'] : ['default'],
+    
+    // Output test results to /tmp to avoid cluttering project
+    outputFile: {
+      json: '/tmp/test-results/scripts-vitest-results.json',
+      junit: '/tmp/test-results/scripts-vitest-junit.xml',
+    },
+    
     // Coverage settings (optional, only when requested)
     coverage: {
       provider: 'v8',
       reporter: ['text', 'json', 'html'],
+      reportsDirectory: '/tmp/test-results/scripts-coverage',
       exclude: [
         '**/*.test.ts',
         '**/*.spec.ts',

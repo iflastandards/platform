@@ -24,8 +24,7 @@ import * as fs from 'fs';
 import * as path from 'path';
 import { execSync } from 'child_process';
 import dotenv from 'dotenv';
-import { BaseLLM, ChatParams, ChatResult } from '@memberjunction/ai';
-import { MJGlobal } from '@memberjunction/global';
+import { type BaseLLM, type ChatParams, type ChatResult } from '@memberjunction/ai';
 
 // Load environment variables
 dotenv.config();
@@ -232,7 +231,7 @@ class TestTagger {
       this.llm = new LLMClass(apiKey);
 
       // For Perplexity, set the base URL
-      if (this.options.provider === 'perplexity') {
+      if (this.options.provider === 'perplexity' && this.llm) {
         this.llm.SetAdditionalSettings({
           baseURL: 'https://api.perplexity.ai'
         });
@@ -273,25 +272,23 @@ class TestTagger {
           }
         ],
         temperature: 0,
-        max_tokens: 1000,
-        response_format: { type: 'json_object' } // Request JSON response
+        maxOutputTokens: 1000
+        // Note: response_format is provider-specific, not in base ChatParams
       };
 
       const result: ChatResult = await this.llm.ChatCompletion(chatParams);
       
       if (!result.success) {
         console.error('AI Provider Error:', result);
-        throw new Error(result.message || 'Failed to get response from AI provider');
+        throw new Error((result as any).message || 'Failed to get response from AI provider');
       }
 
       // Extract content from the response
       let content: string | undefined;
-      if (result.data?.content) {
-        content = result.data.content;
-      } else if (result.data?.choices?.[0]?.message?.content) {
+      if (result.data?.choices?.[0]?.message?.content) {
         content = result.data.choices[0].message.content;
-      } else if (result.data?.choices?.[0]?.text) {
-        content = result.data.choices[0].text;
+      } else if ((result as any).data?.choices?.[0]?.text) {
+        content = (result as any).data.choices[0].text;
       }
 
       if (!content) {
@@ -595,8 +592,8 @@ RESPONSE FORMAT (return ONLY valid JSON):
             }
           ],
           temperature: 0,
-          max_tokens: 1000,
-          response_format: { type: 'json_object' }
+          maxOutputTokens: 1000
+          // Note: response_format is provider-specific
         });
         validFiles.push(filePath);
       } catch (error) {
@@ -605,7 +602,7 @@ RESPONSE FORMAT (return ONLY valid JSON):
       }
     }
 
-    if (batchParams.length === 0) return;
+    if (batchParams.length === 0) {return;}
 
     try {
       // Process all files in parallel using maintained connection
@@ -620,7 +617,7 @@ RESPONSE FORMAT (return ONLY valid JSON):
         
         try {
           if (!result.success) {
-            throw new Error(result.message || 'Failed to get response from AI provider');
+            throw new Error((result as any).message || 'Failed to get response from AI provider');
           }
 
           // Extract and parse content
@@ -651,12 +648,10 @@ RESPONSE FORMAT (return ONLY valid JSON):
   private extractContentFromResult(result: ChatResult): string {
     // Extract content from the response
     let content: string | undefined;
-    if (result.data?.content) {
-      content = result.data.content;
-    } else if (result.data?.choices?.[0]?.message?.content) {
+    if (result.data?.choices?.[0]?.message?.content) {
       content = result.data.choices[0].message.content;
-    } else if (result.data?.choices?.[0]?.text) {
-      content = result.data.choices[0].text;
+    } else if ((result as any).data?.choices?.[0]?.text) {
+      content = (result as any).data.choices[0].text;
     }
 
     if (!content) {
@@ -710,7 +705,7 @@ RESPONSE FORMAT (return ONLY valid JSON):
         locationIssue: locationAnalysis,
       });
     } else if (!this.options.dryRun) {
-      await this.updateTestFile(filePath, analysis.tags);
+      await this.applyTags(filePath, analysis.tags);
     }
   }
 
@@ -718,7 +713,7 @@ RESPONSE FORMAT (return ONLY valid JSON):
     // Clean up the LLM connection and resources
     if (this.llm) {
       // Clear any cached settings or state
-      this.llm.ClearAdditionalSettings();
+      this.llm?.ClearAdditionalSettings();
       console.log(chalk.gray('\n✓ AI connection closed'));
     }
   }

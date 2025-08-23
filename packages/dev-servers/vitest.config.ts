@@ -3,6 +3,11 @@ import { resolve } from 'path';
 
 export default defineConfig({
   test: {
+    // Output test results to /tmp to avoid cluttering project
+    outputFile: {
+      json: '/tmp/test-results/dev-servers-vitest-results.json',
+      junit: '/tmp/test-results/dev-servers-vitest-junit.xml',
+    },
     globals: true,
     environment: 'node', // Force node environment for dev-servers tests
     setupFiles: ['src/tests/setup.ts'],
@@ -18,6 +23,7 @@ export default defineConfig({
     coverage: {
       provider: 'v8',
       reporter: ['text', 'json', 'html'],
+      reportsDirectory: '/tmp/test-results/dev-servers-coverage',
       exclude: [
         'node_modules/',
         'dist/',
