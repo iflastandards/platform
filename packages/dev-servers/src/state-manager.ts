@@ -1,7 +1,7 @@
 import { readFileSync, writeFileSync, existsSync } from 'fs';
 import { join } from 'path';
 import { tmpdir } from 'os';
-import { ServerState, ServerStateFile, ServerMode, ServerInfo } from './types';
+import { type ServerState, type ServerStateFile, type ServerMode, type ServerInfo } from './types';
 
 /**
  * Path to the server state file in system temp directory
@@ -107,7 +107,7 @@ export function checkModeCompatibility(requestedMode: ServerMode): {
   // Filter out stale processes (servers that no longer exist)
   const activeServers = state.servers.filter(server => {
     try {
-      if (server.pid === 0) return false;
+      if (server.pid === 0) {return false;}
       // Check if process still exists (doesn't throw if process exists)
       process.kill(server.pid, 0);
       return true;

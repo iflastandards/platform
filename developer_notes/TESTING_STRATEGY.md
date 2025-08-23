@@ -12,6 +12,37 @@ This document outlines the five distinct test phases that organize all testing a
 - 26.0% have priority tags (@critical, @happy-path, @error-handling)
 - Tag-based test execution now available for selective testing
 
+### 🤖 AI-Powered Test Tagging Tool
+
+The monorepo includes an intelligent test tagging tool that uses AI to ensure consistent test categorization:
+
+```bash
+# Analyze and tag test files
+pnpm test:tag                    # Dry run - preview changes
+pnpm test:tag --no-dry-run      # Apply tags
+
+# Integration with development workflow
+pnpm test:tag --staged          # Tag staged files before commit
+pnpm test:tag --affected        # Tag Nx affected files
+pnpm test:tag --move-files      # Suggest file relocations
+
+# Choose AI provider based on needs
+pnpm test:tag --provider anthropic  # Best accuracy (Claude)
+pnpm test:tag --provider openai     # GPT-4 alternative
+pnpm test:tag --provider gemini     # Free tier available
+pnpm test:tag --provider perplexity # Budget option
+```
+
+**What the tool does:**
+- 🎯 Classifies tests as `@unit`, `@integration`, `@e2e`, or `@smoke`
+- 🏷️ Adds appropriate functional tags (`@api`, `@auth`, `@rbac`, etc.)
+- 📊 Adds priority tags (`@critical`, `@happy-path`, `@error-handling`)
+- 📁 Validates file naming conventions
+- 🔄 Suggests file relocations for misplaced tests
+- ✅ Ensures compliance with the 5-phase testing strategy
+
+**See**: [TEST_TAGGING_README.md](../scripts/TEST_TAGGING_README.md) for detailed documentation
+
 ## Phase 1: Selective Tests (On-Demand Development)
 
 **Purpose**: Individual testing for focused development work and TDD
@@ -124,16 +155,19 @@ pnpm nx run standards-dev:regression:affected
 ### What Runs
 ```bash
 # Automatically runs via Husky:
+node scripts/validate-test-tagging.js              # Validates test file tags
 pnpm nx affected --target=typecheck --parallel=3
 pnpm nx affected --target=lint --parallel=3       # Warnings allowed
 pnpm nx affected --target=test --parallel=3       # Unit tests only
 ```
 
 ### Key Points
+- **Test tag validation**: Ensures all test files have proper tags (@unit, @integration, etc.)
 - Unit tests only (no integration/e2e)
 - Lenient on test file linting, strict on production code
 - All subsequent phases assume these passed
 - Nx cache used aggressively
+- **Pro tip**: Run `pnpm test:tag --staged` before committing to auto-tag new test files
 
 ## Phase 3: Pre-Push Tests (Automated Git Hook)
 

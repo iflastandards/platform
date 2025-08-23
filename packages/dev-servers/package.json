@@ -27,7 +27,7 @@
     }
   },
   "dependencies": {
-    "@ifla/theme": "workspace:*",
+    "@ifla/contracts": "workspace:*",
     "node-fetch": "*",
     "tree-kill": "*"
   },

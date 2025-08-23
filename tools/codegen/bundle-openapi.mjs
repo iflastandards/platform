@@ -19,7 +19,7 @@ async function bundleOpenApiSpecs() {
   if (files.length === 0) {
     console.error('Error: No OpenAPI YAML files found. Cannot generate spec.');
     // Create a dummy file to prevent build failures
-    if (!fs.existsSync(outputDir)) fs.mkdirSync(outputDir, { recursive: true });
+    if (!fs.existsSync(outputDir)) {fs.mkdirSync(outputDir, { recursive: true });}
     fs.writeFileSync(outputFile, JSON.stringify({ openapi: '3.0.0', info: { title: 'API Spec Not Found', version: '0.0.0' }, paths: {} }));
     return;
   }
@@ -36,7 +36,7 @@ async function bundleOpenApiSpecs() {
     }
     // eslint-disable-next-line unused-imports/no-unused-vars
     const { stdout, stderr } = await execAsync(command);
-    if (stderr) console.error(`stderr: ${stderr}`);
+    if (stderr) {console.error(`stderr: ${stderr}`);}
     console.log(`Successfully bundled OpenAPI specs to ${outputFile}`);
   } catch (error) {
     console.error('Error bundling OpenAPI specs:', error);

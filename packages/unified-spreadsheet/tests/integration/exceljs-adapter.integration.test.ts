@@ -140,7 +140,7 @@ describe('ExcelJSAdapter @integration @api', () => {
 
       const readWorkbook = await adapter.read(xlsxPath);
 
-      const metadata = readWorkbook.sheets[0].metadata;
+      const {metadata} = readWorkbook.sheets[0];
       expect(metadata?.frozenRows).toBe(1);
       expect(metadata?.frozenColumns).toBe(2);
       expect(metadata?.columnWidths).toEqual([10, 20, 15, 25]);
@@ -194,7 +194,7 @@ describe('ExcelJSAdapter @integration @api', () => {
       await excelWorkbook.xlsx.writeFile(xlsxPath);
 
       const readWorkbook = await adapter.read(xlsxPath);
-      const data = readWorkbook.sheets[0].data;
+      const {data} = readWorkbook.sheets[0];
 
       // ExcelJS stores formula results
       // The Sum column will have the formula

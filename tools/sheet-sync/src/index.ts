@@ -410,7 +410,7 @@ export class SheetSync {
           console.log(`📊 Google Sheets: ${sheets.length} sheets found`);
           sheets.forEach((sheet: any) => {
             const title = sheet.properties?.title;
-            if (title) console.log(`   - ${title}`);
+            if (title) {console.log(`   - ${title}`);}
           });
         } catch (error) {
           console.log(`❌ Error accessing sheet: ${error}`);

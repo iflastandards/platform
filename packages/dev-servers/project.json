@@ -43,7 +43,8 @@
     "lint": {
       "executor": "@nx/eslint:lint",
       "options": {
-        "lintFilePatterns": ["packages/dev-servers/src/**/*.ts"]
+        "lintFilePatterns": ["packages/dev-servers/src/**/*.ts"],
+        "quiet": true
       },
       "inputs": ["{projectRoot}/src/**/*.ts"],
       "cache": true

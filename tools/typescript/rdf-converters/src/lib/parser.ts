@@ -3,16 +3,16 @@
  * Handles parsing of various RDF formats into a common data structure
  */
 
-import { Parser, Store, DataFactory, Quad } from 'n3';
+import { Parser, Store, DataFactory, type Quad } from 'n3';
 import * as fs from 'fs';
 import * as path from 'path';
 import * as jsonld from 'jsonld';
 import { RdfXmlParser } from 'rdfxml-streaming-parser';
 import {
-  RdfFormat,
-  ResourceData,
-  ParserOptions,
-  NamespaceMapping,
+  type RdfFormat,
+  type ResourceData,
+  type ParserOptions,
+  type NamespaceMapping,
 } from './types';
 
 const { namedNode } = DataFactory;
@@ -111,7 +111,7 @@ export class RdfParser {
 
       rdfXmlParser.on('end', () => {
         // Extract prefixes if available
-        const prefixes = (rdfXmlParser as { prefixes?: Record<string, string> }).prefixes;
+        const {prefixes} = (rdfXmlParser as { prefixes?: Record<string, string> });
         if (prefixes) {
           this.mergePrefixesFromObject(prefixes);
         } else {
@@ -181,7 +181,7 @@ export class RdfParser {
 
       for (const quad of quads) {
         const predicate = quad.predicate.value;
-        const object = quad.object;
+        const {object} = quad;
 
         if (!resourceData.properties.has(predicate)) {
           resourceData.properties.set(predicate, []);
@@ -433,7 +433,7 @@ export class RdfParser {
       .slice(0, 10);
 
     for (const [namespace, count] of sortedNamespaces) {
-      if (count < 3) continue;
+      if (count < 3) {continue;}
 
       if (!Object.values(this.prefixes).includes(namespace)) {
         const parts = namespace.split('/').filter((p) => p);

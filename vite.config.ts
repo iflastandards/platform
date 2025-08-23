@@ -1,11 +1,10 @@
 // vite.config.ts
 import react from '@vitejs/plugin-react';
 import path, { resolve } from 'path';
-import { defineConfig, UserConfig } from 'vite';
+import { defineConfig, type UserConfig } from 'vite';
 import tsconfigPaths from 'vite-tsconfig-paths';
 
-export default defineConfig((): UserConfig => {
-  return {
+export default defineConfig((): UserConfig => ({
     plugins: [
       react(),
       tsconfigPaths(), // Add the plugin here
@@ -188,5 +187,4 @@ export default defineConfig((): UserConfig => {
             }),
       },
     },
-  };
-});
+  }));

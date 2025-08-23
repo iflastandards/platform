@@ -41,7 +41,7 @@ function getOutputPath(inputFile: string, sourceDir: string, outputDir: string):
   
   // Change extension to .csv
   const parsedPath = path.parse(relativePath);
-  const csvRelativePath = path.join(parsedPath.dir, parsedPath.name + '.csv');
+  const csvRelativePath = path.join(parsedPath.dir, `${parsedPath.name  }.csv`);
   
   // Combine with output directory
   return path.join(outputDir, csvRelativePath);
@@ -159,7 +159,7 @@ async function processDirectory(
       const successful = results.filter(r => r.success).length;
       const failed = results.filter(r => !r.success).length;
       
-      console.log('\n' + chalk.bold('Summary:'));
+      console.log(`\n${  chalk.bold('Summary:')}`);
       console.log(chalk.green(`✓ ${successful} files converted successfully`));
       
       if (failed > 0) {
@@ -167,7 +167,7 @@ async function processDirectory(
         
         // Show errors
         if (options.verbose) {
-          console.log('\n' + chalk.bold('Errors:'));
+          console.log(`\n${  chalk.bold('Errors:')}`);
           results
             .filter(r => !r.success)
             .forEach(r => {

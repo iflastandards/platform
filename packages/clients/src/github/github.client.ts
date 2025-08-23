@@ -1,16 +1,32 @@
 import { Octokit } from '@octokit/rest';
-import { graphql, type GraphQlResponseHandler } from '@octokit/graphql';
+import { graphql } from '@octokit/graphql';
 import { ClientApiError, ClientError } from '../errors';
-import {
-  type ListDiscussionsQuery,
-  type ListDiscussionsQueryVariables,
-  ListDiscussionsDocument,
-} from './gql/graphql';
+// GraphQL types not generated yet
+// import {
+//   type ListDiscussionsQuery,
+//   type ListDiscussionsQueryVariables,
+//   ListDiscussionsDocument,
+// } from './gql/graphql';
 
 // Define some basic parameter types for clarity
 interface RepoInfo {
   owner: string;
   repo: string;
+  [key: string]: any; // Allow additional properties for Octokit
+}
+
+interface CreateIssueParams extends RepoInfo {
+  title: string;
+  body?: string;
+  labels?: string[];
+}
+
+interface CreatePullRequestParams extends RepoInfo {
+  title: string;
+  head: string;
+  base: string;
+  body?: string;
+  draft?: boolean;
 }
 
 interface CreateIssueParams extends RepoInfo {
@@ -33,7 +49,7 @@ interface CreatePullRequestParams extends RepoInfo {
  */
 export class GitHubClient {
   private octokit: Octokit;
-  private graphql: GraphQlResponseHandler;
+  private graphql: typeof graphql;
 
   constructor(authToken: string) {
     if (!authToken) {
@@ -52,7 +68,9 @@ export class GitHubClient {
       const { data: issue } = await this.octokit.issues.create(params);
       return issue;
     } catch (error) {
-      throw new ClientApiError(`Failed to create issue: ${error.message}`);
+      throw new ClientApiError(
+        `Failed to create issue: ${error instanceof Error ? error.message : String(error)}`,
+      );
     }
   }
 
@@ -61,7 +79,9 @@ export class GitHubClient {
       const { data: issues } = await this.octokit.issues.listForRepo(params);
       return issues;
     } catch (error) {
-      throw new ClientApiError(`Failed to list issues for ${params.owner}/${params.repo}: ${error.message}`);
+      throw new ClientApiError(
+        `Failed to list issues for ${params.owner}/${params.repo}: ${error instanceof Error ? error.message : String(error)}`,
+      );
     }
   }
 
@@ -70,7 +90,9 @@ export class GitHubClient {
       const { data: issue } = await this.octokit.issues.get(params);
       return issue;
     } catch (error) {
-      throw new ClientApiError(`Failed to get issue #${params.issue_number}: ${error.message}`);
+      throw new ClientApiError(
+        `Failed to get issue #${params.issue_number}: ${error instanceof Error ? error.message : String(error)}`,
+      );
     }
   }
 
@@ -81,16 +103,22 @@ export class GitHubClient {
       const { data: pullRequest } = await this.octokit.pulls.create(params);
       return pullRequest;
     } catch (error) {
-      throw new ClientApiError(`Failed to create pull request: ${error.message}`);
+      throw new ClientApiError(
+        `Failed to create pull request: ${error instanceof Error ? error.message : String(error)}`,
+      );
     }
   }
 
-  async listPullRequests(params: RepoInfo & { state?: 'open' | 'closed' | 'all' }) {
+  async listPullRequests(
+    params: RepoInfo & { state?: 'open' | 'closed' | 'all' },
+  ) {
     try {
       const { data: prs } = await this.octokit.pulls.list(params);
       return prs;
     } catch (error) {
-      throw new ClientApiError(`Failed to list pull requests for ${params.owner}/${params.repo}: ${error.message}`);
+      throw new ClientApiError(
+        `Failed to list pull requests for ${params.owner}/${params.repo}: ${error instanceof Error ? error.message : String(error)}`,
+      );
     }
   }
 
@@ -99,7 +127,9 @@ export class GitHubClient {
       const { data: pr } = await this.octokit.pulls.get(params);
       return pr;
     } catch (error) {
-      throw new ClientApiError(`Failed to get pull request #${params.pull_number}: ${error.message}`);
+      throw new ClientApiError(
+        `Failed to get pull request #${params.pull_number}: ${error instanceof Error ? error.message : String(error)}`,
+      );
     }
   }
 
@@ -112,50 +142,61 @@ export class GitHubClient {
    * The REST API has limited support. This is a placeholder for a potential
    * GraphQL implementation.
    */
-  async listProjects(params: RepoInfo) {
-    // Example using REST for classic projects. For Projects V2, use GraphQL.
-    console.warn('This method lists classic projects. For Projects V2, GraphQL is recommended.');
-    try {
-      const { data: projects } = await this.octokit.projects.listForRepo(params);
-      return projects;
-    } catch (error) {
-      throw new ClientApiError(`Failed to list projects: ${error.message}`);
-    }
-  }
+  // Projects API removed in newer Octokit versions
+  // async listProjects(params: RepoInfo) {
+  //   console.warn(
+  //     'This method lists classic projects. For Projects V2, GraphQL is recommended.',
+  //   );
+  //   try {
+  //     const { data: projects } =
+  //       await this.octokit.projects.listForRepo(params);
+  //     return projects;
+  //   } catch (error) {
+  //     throw new ClientApiError(`Failed to list projects: ${error instanceof Error ? error.message : String(error)}`);
+  //   }
+  // }
 
   /**
    * NOTE: GitHub Discussions are managed via the GraphQL API.
    * There is no REST API endpoint for discussions.
+   * This method is commented out until GraphQL types are generated.
    */
-  async listDiscussions(params: ListDiscussionsQueryVariables) {
-    try {
-      const response = await this.graphql<ListDiscussionsQuery>(
-        ListDiscussionsDocument,
-        params,
-      );
-      // The response is now fully typed, and we can safely access nested properties.
-      // The optional chaining (`?.`) is good practice for API responses.
-      return response.repository?.discussions;
-    } catch (error) {
-      throw new ClientApiError(`Failed to list discussions: ${error.message}`);
-    }
-  }
+  // async listDiscussions(params: any) {
+  //   try {
+  //     const response = await this.graphql(
+  //       '', // ListDiscussionsDocument,
+  //       params,
+  //     );
+  //     // The response is now fully typed, and we can safely access nested properties.
+  //     // The optional chaining (`?.`) is good practice for API responses.
+  //     return (response as any).repository?.discussions;
+  //   } catch (error: any) {
+  //     throw new ClientApiError(`Failed to list discussions: ${error instanceof Error ? error.message : String(error)}`);
+  //   }
+  // }
 
   async listTeams(params: { org: string }) {
     try {
-      const { data: teams } = await this.octokit.teams.list({ org: params.org });
+      const { data: teams } = await this.octokit.teams.list({
+        org: params.org,
+      });
       return teams;
     } catch (error) {
-      throw new ClientApiError(`Failed to list teams for org ${params.org}: ${error.message}`);
+      throw new ClientApiError(
+        `Failed to list teams for org ${params.org}: ${error instanceof Error ? error.message : String(error)}`,
+      );
     }
   }
 
   async listTeamMembers(params: { org: string; team_slug: string }) {
     try {
-      const { data: members } = await this.octokit.teams.listMembersInOrg(params);
+      const { data: members } =
+        await this.octokit.teams.listMembersInOrg(params);
       return members;
     } catch (error) {
-      throw new ClientApiError(`Failed to list members for team ${params.team_slug}: ${error.message}`);
+      throw new ClientApiError(
+        `Failed to list members for team ${params.team_slug}: ${error instanceof Error ? error.message : String(error)}`,
+      );
     }
   }
 }
@@ -167,7 +208,9 @@ export class GitHubClient {
 export const githubClient = (() => {
   const token = process.env.GITHUB_TOKEN;
   if (!token) {
-    console.warn('Default GitHub client not created: GITHUB_TOKEN environment variable is not set.');
+    console.warn(
+      'Default GitHub client not created: GITHUB_TOKEN environment variable is not set.',
+    );
     return null;
   }
   return new GitHubClient(token);

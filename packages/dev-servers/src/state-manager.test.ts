@@ -1,4 +1,15 @@
-import { describe, it, expect, beforeEach, afterEach, vi, MockedFunction } from 'vitest';
+/**
+ * @unit @api @low-priority
+ */
+import {
+  describe,
+  it,
+  expect,
+  beforeEach,
+  afterEach,
+  vi,
+  type MockedFunction,
+} from 'vitest';
 import type { ServerStateFile, ServerInfo } from './types';
 
 // Mock fs functions completely to avoid real file system access
@@ -8,7 +19,7 @@ vi.mock('fs', async (importOriginal) => {
     ...actual,
     readFileSync: vi.fn(),
     writeFileSync: vi.fn(),
-    existsSync: vi.fn()
+    existsSync: vi.fn(),
   };
 });
 
@@ -17,7 +28,7 @@ vi.mock('os', async (importOriginal) => {
   const actual = await importOriginal();
   return {
     ...actual,
-    tmpdir: vi.fn(() => '/tmp')
+    tmpdir: vi.fn(() => '/tmp'),
   };
 });
 
@@ -28,7 +39,7 @@ import {
   clearServerState,
   updateServerState,
   checkModeCompatibility,
-  getStateFilePath
+  getStateFilePath,
 } from './state-manager';
 
 import { readFileSync, writeFileSync, existsSync } from 'fs';
@@ -65,28 +76,32 @@ describe('state-manager @unit', () => {
   describe('readServerState', () => {
     it('should return null if file does not exist', () => {
       mockExistsSync.mockReturnValue(false);
-      
+
       const result = readServerState();
-      
+
       expect(result).toBeNull();
-      expect(mockExistsSync).toHaveBeenCalledWith('/tmp/.ifla-server-state.json');
+      expect(mockExistsSync).toHaveBeenCalledWith(
+        '/tmp/.ifla-server-state.json',
+      );
     });
 
     it('should return null if file is invalid JSON', () => {
       mockExistsSync.mockReturnValue(true);
       mockReadFileSync.mockReturnValue('invalid json');
-      
+
       const result = readServerState();
-      
+
       expect(result).toBeNull();
     });
 
     it('should return null if state structure is invalid', () => {
       mockExistsSync.mockReturnValue(true);
-      mockReadFileSync.mockReturnValue(JSON.stringify({ invalid: 'structure' }));
-      
+      mockReadFileSync.mockReturnValue(
+        JSON.stringify({ invalid: 'structure' }),
+      );
+
       const result = readServerState();
-      
+
       expect(result).toBeNull();
     });
 
@@ -98,18 +113,18 @@ describe('state-manager @unit', () => {
             port: 3000,
             site: 'portal',
             mode: 'headless',
-            startedAt: Date.now()
-          }
+            startedAt: Date.now(),
+          },
         ],
         lastUpdated: Date.now(),
-        mode: 'headless'
+        mode: 'headless',
       };
 
       mockExistsSync.mockReturnValue(true);
       mockReadFileSync.mockReturnValue(JSON.stringify(validState));
-      
+
       const result = readServerState();
-      
+
       expect(result).toEqual(validState);
     });
   });
@@ -119,14 +134,14 @@ describe('state-manager @unit', () => {
       const state: ServerStateFile = {
         servers: [],
         lastUpdated: Date.now(),
-        mode: 'headless'
+        mode: 'headless',
       };
 
       writeServerState(state);
 
       expect(mockWriteFileSync).toHaveBeenCalledWith(
         '/tmp/.ifla-server-state.json',
-        JSON.stringify(state, null, 2)
+        JSON.stringify(state, null, 2),
       );
     });
 
@@ -134,7 +149,7 @@ describe('state-manager @unit', () => {
       const state: ServerStateFile = {
         servers: [],
         lastUpdated: Date.now(),
-        mode: 'headless'
+        mode: 'headless',
       };
 
       mockWriteFileSync.mockImplementation(() => {
@@ -154,7 +169,7 @@ describe('state-manager @unit', () => {
 
       expect(mockWriteFileSync).toHaveBeenCalledWith(
         '/tmp/.ifla-server-state.json',
-        expect.stringMatching(/"servers":\s*\[\]/)
+        expect.stringMatching(/"servers":\s*\[\]/),
       );
     });
 
@@ -174,8 +189,8 @@ describe('state-manager @unit', () => {
           site: 'portal',
           port: 3000,
           proc: { pid: 1234 } as any,
-          mode: 'headless'
-        }
+          mode: 'headless',
+        },
       ];
 
       updateServerState(servers, 'headless');
@@ -192,8 +207,8 @@ describe('state-manager @unit', () => {
         {
           site: 'portal',
           port: 3000,
-          proc: {} as any
-        }
+          proc: {} as any,
+        },
       ];
 
       updateServerState(servers, 'interactive');
@@ -214,7 +229,7 @@ describe('state-manager @unit', () => {
 
       expect(result).toEqual({
         compatible: true,
-        existingServers: []
+        existingServers: [],
       });
     });
 
@@ -222,7 +237,7 @@ describe('state-manager @unit', () => {
       const state: ServerStateFile = {
         servers: [],
         lastUpdated: Date.now(),
-        mode: 'headless'
+        mode: 'headless',
       };
 
       mockExistsSync.mockReturnValue(true);
@@ -232,7 +247,7 @@ describe('state-manager @unit', () => {
 
       expect(result).toEqual({
         compatible: true,
-        existingServers: []
+        existingServers: [],
       });
     });
 
@@ -244,16 +259,16 @@ describe('state-manager @unit', () => {
             port: 3000,
             site: 'portal',
             mode: 'headless',
-            startedAt: Date.now()
-          }
+            startedAt: Date.now(),
+          },
         ],
         lastUpdated: Date.now(),
-        mode: 'headless'
+        mode: 'headless',
       };
 
       mockExistsSync.mockReturnValueOnce(true);
       mockReadFileSync.mockReturnValueOnce(JSON.stringify(state));
-      
+
       // Mock process.kill to simulate all processes exist
       mockProcessKill.mockImplementationOnce(() => true);
 
@@ -272,16 +287,16 @@ describe('state-manager @unit', () => {
             port: 3000,
             site: 'portal',
             mode: 'headless',
-            startedAt: Date.now()
-          }
+            startedAt: Date.now(),
+          },
         ],
         lastUpdated: Date.now(),
-        mode: 'headless'
+        mode: 'headless',
       };
 
       mockExistsSync.mockReturnValueOnce(true);
       mockReadFileSync.mockReturnValueOnce(JSON.stringify(state));
-      
+
       // Mock process.kill to simulate all processes exist
       mockProcessKill.mockImplementationOnce(() => true);
 
@@ -300,18 +315,18 @@ describe('state-manager @unit', () => {
             port: 3000,
             site: 'portal',
             mode: 'headless',
-            startedAt: Date.now()
+            startedAt: Date.now(),
           },
           {
             pid: 0,
             port: 3001,
             site: 'isbd',
             mode: 'headless',
-            startedAt: Date.now()
-          }
+            startedAt: Date.now(),
+          },
         ],
         lastUpdated: Date.now(),
-        mode: 'headless'
+        mode: 'headless',
       };
 
       mockExistsSync.mockReturnValue(true);
@@ -320,7 +335,9 @@ describe('state-manager @unit', () => {
       // Mock process.kill to throw for dead processes
       const mockKill = vi.spyOn(process, 'kill');
       mockKill.mockImplementation((pid: number, signal: any) => {
-        if (pid === 1234) return true; // Process exists
+        if (pid === 1234) {
+          return true;
+        } // Process exists
         throw new Error('No such process'); // Process doesn't exist
       });
 

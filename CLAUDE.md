@@ -1,212 +1,190 @@
 # CLAUDE.md
 
-This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
+AI assistant guidance for the IFLA Standards Platform codebase.
 
-## Build, Test, and Development Commands
+## 🚀 Quick Commands
 
-### Essential Commands
+### Core Development
 ```bash
-# Install dependencies and set up the project
-pnpm setup
-
-# Development servers
-pnpm dev:servers                    # Start all dev servers with helper tool
-pnpm dev:interactive                 # Interactive mode with Chrome browser
-pnpm dev:headless                    # Headless mode (no browser windows)
-pnpm nx start [site]                 # Start specific site (portal, isbd, admin, etc.)
-
-# Building
-pnpm build:all                       # Build all sites
-pnpm nx build [site]                 # Build specific site (portal, isbd, admin, etc.)
-pnpm build:affected                  # Build only affected projects
-
-# Testing
-pnpm test                            # Run affected tests with daemon
-pnpm test:comprehensive              # Full validation suite (typecheck, lint, test, build)
-pnpm test:pre-commit:robust          # Pre-commit validation (fast feedback)
-pnpm test:e2e                        # Run E2E tests
-pnpm test:unit                       # Run unit tests only
-pnpm nx test [project]               # Test specific project
-
-# Type checking and linting
-pnpm typecheck                       # Run TypeScript type checking on affected projects
-pnpm lint                            # Run ESLint on affected projects
-pnpm lint:fix                        # Fix ESLint issues
-
-# Utility commands
-pnpm nx:cache:clear                  # Clear Nx build cache
-pnpm ports:kill                      # Kill all development servers
-pnpm health                          # System health check
-pnpm check:secrets:staged            # Check for secrets in staged files
+pnpm setup                   # Initial project setup
+pnpm dev:servers            # All dev servers with helper
+pnpm dev:interactive        # With Chrome browser  
+pnpm dev:headless          # No browser windows
+pnpm nx start [site]       # Specific site (portal/isbd/admin)
 ```
 
-### Running a Single Test
+### Build & Test
 ```bash
-# Using Vitest for unit tests
-pnpm vitest run path/to/test.test.ts
+# Build
+pnpm build:all             # All sites
+pnpm build:affected        # Changed only
+pnpm nx build [site]       # Specific site
 
-# Using Playwright for E2E tests
-pnpm playwright test path/to/test.spec.ts
+# Test (Integration-First)
+pnpm test                  # Affected only
+pnpm test:comprehensive    # Full suite
+pnpm test:pre-commit:robust # Fast validation
+pnpm nx test [project]     # Specific project
 
-# Run tests for a specific project
-pnpm nx test [project] --testFile=path/to/test.test.ts
+# AI Test Tagging (NEW)
+pnpm test:tag              # Auto-tag all tests (dry-run)
+pnpm test:tag --staged     # Tag staged files before commit
+pnpm test:tag --affected --no-dry-run  # Apply to changed files
+
+# Single Test Execution
+pnpm vitest run path/to/test.test.ts      # Unit
+pnpm playwright test path/to/test.spec.ts  # E2E
 ```
 
-## Architecture Overview
+### Quality & Utilities
+```bash
+pnpm typecheck            # TypeScript validation
+pnpm lint                 # ESLint check
+pnpm lint:fix            # Auto-fix issues
+pnpm nx:cache:clear      # Clear build cache
+pnpm ports:kill          # Kill dev servers
+pnpm health              # System check
+```
 
-### Monorepo Structure (Nx-based)
+## 📁 Architecture
+
 ```
 standards-dev/
-├── apps/
-│   └── admin/                      # Next.js admin portal (App Router)
-├── portal/                         # Main documentation portal (Docusaurus)
-├── standards/                      # Individual standard sites (Docusaurus)
-│   ├── ISBDM/                      
-│   ├── LRM/                        
-│   ├── FRBR/                       
-│   ├── isbd/                       
-│   ├── muldicat/                   
-│   └── unimarc/                    
+├── apps/admin/              # Next.js 15.4 admin (App Router)
+├── portal/                  # Main docs (Docusaurus 3.8)
+├── standards/               # Individual sites (Docusaurus)
+│   └── {ISBDM,LRM,FRBR,isbd,muldicat,unimarc}/
 ├── packages/
-│   ├── theme/                      # Shared Docusaurus theme & components
-│   ├── ui/                         # Shared UI components
-│   ├── dev-servers/                # Development server management
-│   └── unified-spreadsheet/        # Spreadsheet processing
-├── system-design-docs/             # Authoritative system architecture (00-38)
-├── e2e/                            # End-to-end tests (Playwright)
-└── scripts/                        # Build and utility scripts
+│   ├── theme/              # Shared Docusaurus components
+│   ├── unified-spreadsheet/# Spreadsheet processing
+│   └── dev-servers/        # Dev server management
+├── system-design-docs/     # Architecture docs (00-38)
+├── e2e/                    # Playwright E2E tests
+└── scripts/                # Build & utility scripts
 ```
 
-### Technology Stack
-- **Build System**: Nx monorepo (v21.3.11) with pnpm workspace
-- **Frontend**: 
-  - Docusaurus 3.8.1 for documentation sites
-  - Next.js 15.4.4 (App Router) for admin portal
-  - React 19.1.1 with TypeScript 5.8.3
-- **Testing**: 
-  - Vitest for unit tests
-  - Playwright for E2E tests
-  - Test files co-located with source code
-- **Authentication**: Clerk with GitHub OAuth
-- **Authorization**: Custom RBAC via Clerk publicMetadata
-- **Data Storage**: Git as primary source of truth, Supabase for temporary data
-- **Deployment**: GitHub Pages (preview/production)
+## 🛠️ Tech Stack
 
-### Key Architectural Decisions
+| Layer | Technology | Version/Notes |
+|-------|------------|---------------|
+| **Build** | Nx monorepo + pnpm | v21.3.11, affected commands |
+| **Frontend** | React + TypeScript | 19.1.1 / 5.8.3 |
+| **Frameworks** | Docusaurus / Next.js | 3.8.1 / 15.4.4 (App Router) |
+| **Testing** | Vitest / Playwright | Unit / E2E, tag-based |
+| **Auth** | Clerk + GitHub OAuth | Custom RBAC via publicMetadata |
+| **Data** | Git (primary) / Supabase | Version control / Temp storage |
+| **Deploy** | GitHub Pages | preview/production branches |
 
-1. **Git-Centric Data Management**: All vocabulary content and DCTAP profiles are version-controlled in Git. Changes require PR review, ensuring quality and traceability.
+## 🔑 Key Decisions
 
-2. **Static Site Generation**: Documentation sites use Docusaurus for optimal performance with static generation, while the admin portal uses Next.js App Router for dynamic features.
+1. **Git-Centric**: All content version-controlled, PR-based workflow
+2. **Static-First**: Docusaurus for docs, Next.js for dynamic admin
+3. **Shared Theme**: `@ifla/theme` package for cross-site consistency
+4. **Env Config**: TypeScript configs, not `.env` files
+5. **Test Strategy**: Integration > Unit, tags for selective execution
 
-3. **Shared Theme Package**: The `@ifla/theme` package contains shared Docusaurus components, configurations, and utilities used across all documentation sites.
+## 🧪 Testing Philosophy
 
-4. **Environment-Aware Configuration**: The platform supports multiple environments (local, preview, production) with environment-specific URLs and configurations managed through TypeScript config files.
+### Integration-First Approach
+- **Default**: Real I/O, actual files, multiple components
+- **Unit tests**: Only for pure functions (rare)
+- **E2E tests**: Complete user journeys via browser
+- **5-Phase Strategy**: Dev → Pre-commit → Pre-push → Comprehensive → CI
 
-5. **Testing Strategy**: 
-   - Unit tests are co-located with source files
-   - Integration tests in `test/integration/` directories
-   - E2E tests in root `e2e/` directory
-   - Tests use tags (@unit, @integration, @critical) for selective execution
+### Test Tags (Required)
+| Category | Functional | Priority |
+|----------|------------|----------|
+| `@integration` (default) | `@api` `@auth` `@rbac` | `@critical` |
+| `@unit` (rare) | `@ui` `@validation` | `@happy-path` |
+| `@e2e` | `@security` `@cache` | `@error-handling` |
+| `@env` (CI only) | `@performance` `@a11y` | `@edge-case` |
 
-### Component Locations
-
-#### Admin Portal (Next.js)
-- **Components**: `apps/admin/src/components/`
-- **API Routes**: `apps/admin/src/app/api/`
-- **Tests**: `apps/admin/src/test/` and `apps/admin/src/tests/`
-- **Lib/Services**: `apps/admin/src/lib/`
-
-#### Docusaurus Sites
-- **Shared Components**: `packages/theme/src/components/`
-- **Site-specific**: `[site]/src/components/`
-- **MDX Content**: `[site]/docs/`
-- **Tests**: `packages/theme/src/tests/`
-
-### Critical Configuration Files
-- **Nx Configuration**: `nx.json` - Project dependencies and build configuration
-- **TypeScript**: `tsconfig.json` - Path aliases and compiler options
-- **Vitest**: `vitest.config.nx.ts` - Test runner configuration
-- **Playwright**: `playwright.config.ts` - E2E test configuration
-- **Site Configs**: `packages/theme/src/config/siteConfig.ts` - Multi-site URL management
-
-### Development Workflow
-
-1. **Feature Development**:
-   - Create feature branch from `preview`
-   - Write tests first (TDD approach)
-   - Implement feature
-   - Run `pnpm test` for affected tests
-   - Run `pnpm lint:fix` to fix linting issues
-   - Create PR to `preview` branch
-
-2. **Pre-commit Hooks**:
-   - Secrets detection
-   - TypeScript checking (affected only)
-   - Unit tests (affected only)
-   - ESLint (affected only)
-
-3. **Pre-push Hooks**:
-   - Comprehensive affected tests
-   - Build validation for critical sites
-
-### Common Development Tasks
-
-#### Adding a New Docusaurus Site
+### AI Test Tagging Setup
 ```bash
+# One-time setup (choose provider)
+echo "ANTHROPIC_API_KEY=key" >> .env  # Most accurate
+echo "OPENAI_API_KEY=key" >> .env     # Alternative
+echo "GEMINI_API_KEY=key" >> .env     # Free tier
+echo "PERPLEXITY_API_KEY=key" >> .env # Budget
+
+# Usage
+pnpm test:tag --provider anthropic --staged  # Before commit
+pnpm test:tag --affected --no-dry-run       # Apply changes
+```
+
+## 📍 Component Map
+
+| Area | Location | Purpose |
+|------|----------|---------|
+| **Admin (Next.js)** |
+| Components | `apps/admin/src/components/` | UI components |
+| API Routes | `apps/admin/src/app/api/` | Backend endpoints |
+| Tests | `apps/admin/src/test{,s}/` | Test suites |
+| Services | `apps/admin/src/lib/` | Business logic |
+| **Docusaurus Sites** |
+| Shared | `packages/theme/src/components/` | Reusable components |
+| Site-specific | `[site]/src/components/` | Custom components |
+| Content | `[site]/docs/` | MDX documentation |
+| Tests | `packages/theme/src/tests/` | Component tests |
+
+## ⚙️ Critical Configs
+
+| File | Purpose |
+|------|---------|
+| `nx.json` | Project deps & build config |
+| `tsconfig.json` | Path aliases & compiler |
+| `vitest.config.nx.ts` | Test runner config |
+| `playwright.config.ts` | E2E test config |
+| `packages/theme/src/config/siteConfig.ts` | Multi-site URLs |
+
+## 🔄 Workflow
+
+### Feature Development
+```
+preview branch → feature branch → tests → implement → lint → PR
+```
+
+### Git Hooks
+- **Pre-commit**: Secrets + TypeScript + Unit tests (affected)
+- **Pre-push**: Integration tests + Builds + Critical E2E
+
+## 🎯 Common Tasks
+
+```bash
+# New Docusaurus Site
 pnpm tsx scripts/scaffold-site.ts --siteKey=newsite --title="New Standard"
 pnpm tsx scripts/page-template-generator.ts --namespace=newsite
+
+# Vocabulary Management
+pnpm vocabulary:create                                    # Create sheet
+pnpm compare:vocabulary --markdown                        # Compare
+npx tsx scripts/generate-vocabulary-sites.ts --sites new  # Generate
+
+# Performance
+pnpm nx:optimize          # Optimize config
+pnpm nx:graph            # View dep graph
 ```
 
-#### Working with Vocabularies
-```bash
-# Create vocabulary sheet
-pnpm vocabulary:create
+## 🚪 Port Allocation
 
-# Compare vocabularies
-pnpm compare:vocabulary --markdown
+| Port | Service | Type |
+|------|---------|------|
+| 3000 | Portal | Docusaurus |
+| 3001-3006 | ISBDM→UNIMARC | Docusaurus |
+| 3007 | Admin | Next.js |
 
-# Generate vocabulary sites
-npx tsx scripts/generate-vocabulary-sites.ts --sites new-namespace
-```
+## ⚠️ Critical Rules
 
-#### Performance Optimization
-```bash
-# Optimize Nx configuration
-pnpm nx:optimize
+1. **NO --no-verify**: Always ask permission before bypassing hooks
+2. **Test failures > commits**: Fix tests before pushing
+3. **Use Grep tool**: Never bash grep, use internal tool
+4. **Nx affected**: Most commands auto-detect changes
+5. **TypeScript config**: No `.env` files, use TS configs (except AI keys)
+6. **Test tagging**: All tests must have category tags (@integration default)
+7. **Integration-first**: Use real I/O, avoid mocks unless necessary
 
-# Clear all caches
-pnpm nx:cache:clear
+## 📚 Essential Docs
 
-# View dependency graph
-pnpm nx:graph
-```
-
-### Important Notes
-
-1. **Nx Affected Commands**: Most commands use `nx affected` to only run on changed projects, significantly speeding up development.
-
-2. **Environment Variables**: The platform uses TypeScript configuration instead of `.env` files. Configuration is centralized in `packages/theme/src/config/siteConfig.ts`.
-
-3. **Test Exclusions**: Integration tests and server-dependent tests are excluded from pre-commit hooks for speed. They run in CI/CD.
-
-4. **Build Artifacts**: Build outputs go to `build/` for Docusaurus sites and `.next/` for the admin portal. These are git-ignored.
-
-5. **Port Allocation**:
-   - Portal: 3000
-   - ISBDM: 3001
-   - LRM: 3002
-   - FRBR: 3003
-   - ISBD: 3004
-   - MulDiCat: 3005
-   - UNIMARC: 3006
-   - Admin: 3007
-
-6. **Testing Best Practices**:
-   - Always run `pnpm test` before committing
-   - Use `pnpm test:comprehensive` before creating PRs
-   - For quick iteration, use `pnpm nx test [project] --watch`
-- CRITICAL RULE: always ask permission to use --no-verify on commit and push
-NEVER, EVER USE --no-verify without explicit approval or pre-instructions
-FIXING TEST FAILURES IS MORE IMPORTANT THAN A SUCCESSFUL COMMIT OR PUSH
-see @developer_notes/AI_TESTING_INSTRUCTIONS.md and @developer_notes/TESTING_QUICK_REFERENCE.md
-- always use internal grep instead of bash grep
+- Testing: `developer_notes/AI_TESTING_INSTRUCTIONS.md`
+- Quick Ref: `developer_notes/TESTING_QUICK_REFERENCE.md`
+- Architecture: `system-design-docs/` (00-38 numbered docs)

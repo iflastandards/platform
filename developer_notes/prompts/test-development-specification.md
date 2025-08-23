@@ -73,7 +73,19 @@
 
     #### **3. Test Tagging Specification**
 
-    All tests must be tagged to enable effective filtering, prioritization, and execution by our CI/CD pipeline and test runner. Tags are added directly to the test title string. The `test-tagging-analyzer.js` script will enforce these rules.
+    All tests must be tagged to enable effective filtering, prioritization, and execution by our CI/CD pipeline and test runner. Tags are added directly to the test title string. The `validate-test-tagging.js` script enforces these rules during pre-commit hooks, and the AI-powered `auto-tag-tests.ts` tool can automatically analyze and apply appropriate tags.
+
+    **AI-Powered Tagging Tool:**
+    
+    We provide an intelligent test tagging tool that uses AI to ensure consistent categorization:
+    
+    ```bash
+    # Analyze and tag test files automatically
+    pnpm test:tag                    # Preview changes (dry run)
+    pnpm test:tag --no-dry-run      # Apply tags
+    pnpm test:tag --staged          # Tag only staged files
+    pnpm test:tag --affected        # Tag Nx affected files
+    ```
 
     To ensure consistency and type-safety, you should use the helpers provided in `test-tags.ts` when constructing your test titles.
 
@@ -93,22 +105,37 @@
     **Tagging Requirements:**
 
     - **Category Tags (1 Required):** Describes the test's scope and is mandatory for every test. Choose exactly one:
-      - `@unit`: For isolated logic tests.
-      - `@integration`: For component-level tests with mocked data.
-      - `@e2e`: For multi-page user journey tests.
-      - `@smoke`: For a small subset of critical, high-level health checks.
-    - **Priority Tags (Conditional):** Indicates the test's importance and impact.
-      - `@critical`: **Required** for tests covering core functionality like authentication, RBAC, API health checks, build validations, and smoke tests.
-      - `@high-priority`: Should be used for important feature flows.
-      - `@low-priority`: For non-essential tests or edge cases.
+      - `@unit`: For isolated logic tests with no external dependencies.
+      - `@integration`: For component-level tests with mocked data or multiple components working together.
+      - `@e2e`: For multi-page user journey tests using browser automation.
+      - `@smoke`: For a small subset of critical, high-level health checks that run in CI.
+      - `@env`: For environment-dependent tests that verify configuration and external services.
+      
+    - **Priority Tags (Recommended):** Indicates the test's importance and impact.
+      - `@critical`: Tests covering core functionality that would block a release if failing.
+      - `@happy-path`: Primary user flows that represent expected usage.
+      - `@error-handling`: Tests that verify error states and recovery.
+      - `@edge-case`: Tests for boundary conditions and unusual scenarios.
+      
     - **Functional Area Tags (Recommended):** Describes the product feature being tested to allow for targeted runs.
-      - Examples: `@auth`, `@rbac`, `@dashboard`, `@navigation`, `@api`, `@ui`.
-      - Tests should be tagged with one or more relevant functional areas. The analyzer script will verify that tests in certain file paths (e.g., `auth`) have the corresponding functional tags (e.g., `@authentication`).
+      - Core features: `@auth`, `@rbac`, `@api`, `@ui`, `@validation`
+      - Application areas: `@dashboard`, `@admin`, `@navigation`, `@search`
+      - Technical aspects: `@security`, `@performance`, `@accessibility`, `@cache`
+      - Domain-specific: `@vocabulary`, `@sites`, `@docs`
+      - Tests should be tagged with one or more relevant functional areas.
+      
     - **Special & Environment Tags (As Needed):** Used to modify or control test runner behavior.
-      - `@flaky`: Marks a test that is known to be unstable. This tag increases the retry count.
-      - `@slow`: Marks a test that requires more time to complete. This tag increases the test's timeout.
-      - `@skip`: A special tag to temporarily disable a test.
-      - Environment Control: Use tags like `@local-only`, `@ci-only`, `@preview-only`, and `@production-only` to restrict a test's execution to a specific environment.
+      - Performance indicators: `@slow`, `@fast`, `@flaky`
+      - Environment control: `@local-only`, `@ci-only`, `@preview-only`, `@production-only`
+      - Browser-specific: `@chromium-only`, `@firefox-only`, `@webkit-only`, `@mobile-only`
+      - Dependencies: `@server-dependent`, `@clerk` (for Clerk auth tests)
+      - Control tags: `@skip` (temporarily disable), `@visual` (visual regression), `@performance` (perf tests)
+
+    **Automated Validation:**
+    
+    - Pre-commit hooks run `validate-test-tagging.js` to ensure all test files have proper tags
+    - The AI tagging tool can suggest missing tags and validate naming conventions
+    - File placement is validated based on test category (unit tests near source, integration in `/tests/integration/`, etc.)
       
       
 

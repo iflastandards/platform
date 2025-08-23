@@ -1,6 +1,6 @@
 import { execSync } from 'child_process';
-import { SitePorts } from './types';
-import { SITE_CONFIG, ADMIN_PORTAL_CONFIG, SiteKey } from '@ifla/theme/config/siteConfig';
+import { type SitePorts } from './types';
+import { SITE_CONFIG, ADMIN_PORTAL_CONFIG, type SiteKey } from '@ifla/contracts';
 
 /**
  * Generate port mappings dynamically from siteConfig (single source of truth)
@@ -159,7 +159,7 @@ export async function killSitePort(siteName: string, verbose: boolean = false): 
     return false;
   }
 
-  return await killPort(port, verbose);
+  return killPort(port, verbose);
 }
 
 /**

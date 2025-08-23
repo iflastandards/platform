@@ -1,12 +1,16 @@
-import { spawn, ChildProcess } from 'child_process';
+import { spawn, type ChildProcess } from 'child_process';
 import treeKill from 'tree-kill';
-import { StartServerOptions, ServerInfo } from './types';
+import { type StartServerOptions, type ServerInfo } from './types';
 import { SITE_PORTS, killSitePort, waitForPortFree } from './port-manager';
-import { getSiteConfig, getAdminPortalConfig, SiteKey } from '@ifla/theme/config/siteConfig';
-import { 
-  checkModeCompatibility, 
-  updateServerState, 
-  clearServerState
+import {
+  getSiteConfig,
+  getAdminPortalConfig,
+  type SiteKey,
+} from '@ifla/contracts';
+import {
+  checkModeCompatibility,
+  updateServerState,
+  clearServerState,
 } from './state-manager';
 
 // Fetch polyfill for Node.js environments
@@ -15,7 +19,7 @@ if (typeof globalThis.fetch === 'undefined') {
   // Dynamic import to avoid issues with bundling
   fetch = require('node-fetch');
 } else {
-  fetch = globalThis.fetch;
+  ({ fetch } = globalThis);
 }
 
 /**
@@ -26,27 +30,34 @@ if (typeof globalThis.fetch === 'undefined') {
  * @param timeout - Max time to wait in milliseconds (default: 30000)
  * @returns Promise<boolean> - True if server is ready
  */
-async function waitForServerReady(siteName: string, port: number, timeout: number = 30000): Promise<boolean> {
+async function waitForServerReady(
+  siteName: string,
+  port: number,
+  timeout: number = 30000,
+): Promise<boolean> {
   const startTime = Date.now();
   let delay = 1000; // Start with 1 second
-  
+
   while (Date.now() - startTime < timeout) {
     try {
       // Get base URL from siteConfig for proper health check paths
       let baseUrl = '/';
       try {
         if (siteName === 'admin') {
-          const adminConfig = getAdminPortalConfig('local');
+          getAdminPortalConfig('local'); // Verify config exists
           baseUrl = '/admin/'; // Admin base URL
         } else {
-          const siteConfig = getSiteConfig(siteName.toUpperCase() as SiteKey, 'local');
-          baseUrl = siteConfig.baseUrl;
+          const { baseUrl: siteBaseUrl } = getSiteConfig(
+            siteName.toUpperCase() as SiteKey,
+            'local',
+          );
+          baseUrl = siteBaseUrl;
         }
       } catch {
         // Fallback to root if site not found in config
         baseUrl = '/';
       }
-      
+
       // Construct health check URLs using proper base paths
       const healthUrls = [
         `http://localhost:${port}${baseUrl}api/health`,
@@ -54,21 +65,21 @@ async function waitForServerReady(siteName: string, port: number, timeout: numbe
         `http://localhost:${port}${baseUrl}`, // Base URL
         `http://localhost:${port}/api/health`, // Fallback to root
         `http://localhost:${port}/health`, // Fallback to root
-        `http://localhost:${port}/` // Final fallback
+        `http://localhost:${port}/`, // Final fallback
       ];
-      
+
       for (const url of healthUrls) {
         try {
           const controller = new AbortController();
           const timeoutId = setTimeout(() => controller.abort(), 5000);
-          
+
           const response = await fetch(url, {
             signal: controller.signal,
-            headers: { 'User-Agent': 'dev-servers-health-check' }
+            headers: { 'User-Agent': 'dev-servers-health-check' },
           });
-          
+
           clearTimeout(timeoutId);
-          
+
           if (response.ok) {
             return true;
           }
@@ -80,12 +91,12 @@ async function waitForServerReady(siteName: string, port: number, timeout: numbe
     } catch {
       // Server not ready yet
     }
-    
+
     // Exponential backoff with jitter
-    await new Promise(resolve => setTimeout(resolve, delay));
+    await new Promise((resolve) => setTimeout(resolve, delay));
     delay = Math.min(delay * 1.5, 5000); // Cap at 5 seconds
   }
-  
+
   return false;
 }
 
@@ -94,44 +105,48 @@ async function waitForServerReady(siteName: string, port: number, timeout: numbe
  * @param existingServers - Array of existing server states
  */
 async function shutdownExistingServers(existingServers: any[]): Promise<void> {
-  console.log(`🔄 Gracefully shutting down ${existingServers.length} existing servers...`);
-  
+  console.log(
+    `🔄 Gracefully shutting down ${existingServers.length} existing servers...`,
+  );
+
   for (const server of existingServers) {
-    console.log(`🛑 Shutting down ${server.site} on port ${server.port} (PID: ${server.pid})`);
-    
+    console.log(
+      `🛑 Shutting down ${server.site} on port ${server.port} (PID: ${server.pid})`,
+    );
+
     // Try shutdown endpoint first
     let shutdownSuccess = false;
     try {
       const shutdownUrl = `http://localhost:${server.port}/__shutdown`;
       const controller = new AbortController();
       const timeoutId = setTimeout(() => controller.abort(), 5000);
-      
+
       const response = await fetch(shutdownUrl, {
         method: 'POST',
         signal: controller.signal,
-        headers: { 'User-Agent': 'dev-servers-shutdown' }
+        headers: { 'User-Agent': 'dev-servers-shutdown' },
       });
-      
+
       clearTimeout(timeoutId);
-      
+
       if (response.ok) {
         console.log(`✅ ${server.site} shutdown via endpoint`);
         shutdownSuccess = true;
         // Wait for graceful shutdown
-        await new Promise(resolve => setTimeout(resolve, 2000));
+        await new Promise((resolve) => setTimeout(resolve, 2000));
       }
     } catch {
       // Shutdown endpoint not available or failed
     }
-    
+
     // If shutdown endpoint failed, use SIGTERM
     if (!shutdownSuccess && server.pid > 0) {
       try {
         process.kill(server.pid, 'SIGTERM');
         console.log(`📡 Sent SIGTERM to ${server.site} (PID: ${server.pid})`);
         // Wait for graceful shutdown
-        await new Promise(resolve => setTimeout(resolve, 3000));
-        
+        await new Promise((resolve) => setTimeout(resolve, 3000));
+
         // Check if process still exists, if so, force kill
         try {
           process.kill(server.pid, 0); // Check if process exists
@@ -145,11 +160,11 @@ async function shutdownExistingServers(existingServers: any[]): Promise<void> {
         console.error(`❌ Failed to shutdown ${server.site}: ${error}`);
       }
     }
-    
+
     // Clean up the port
     await killSitePort(server.site, false);
   }
-  
+
   console.log('🧹 Existing servers shutdown complete.');
 }
 
@@ -158,65 +173,81 @@ async function shutdownExistingServers(existingServers: any[]): Promise<void> {
  * @param opts - Options for starting servers
  * @returns Promise<ServerInfo[]> - Array of started server information
  */
-export async function startServers(opts: StartServerOptions = {}): Promise<ServerInfo[]> {
-  const { 
-    sites = Object.keys(SITE_PORTS), 
-    reuseExisting = false, 
+export async function startServers(
+  opts: StartServerOptions = {},
+): Promise<ServerInfo[]> {
+  const {
+    sites = Object.keys(SITE_PORTS),
+    reuseExisting = false,
     mode = 'headless',
-    browser = 'auto'
+    browser = 'auto',
   } = opts;
   const servers: ServerInfo[] = [];
-  
+
   console.log(`🚀 Starting servers for sites: ${sites.join(', ')}`);
-  console.log(`🎯 Mode: ${mode}${mode === 'headless' ? ' (implies --no-open)' : ''}`);
+  console.log(
+    `🎯 Mode: ${mode}${mode === 'headless' ? ' (implies --no-open)' : ''}`,
+  );
   console.log(`🌐 Browser: ${browser}`);
   console.log(`♻️  Reuse existing: ${reuseExisting}`);
   console.log('');
-  
+
   // Check mode compatibility with existing servers
   const compatibility = checkModeCompatibility(mode);
-  
+
   if (compatibility.existingServers.length > 0) {
     if (compatibility.compatible) {
-      console.log(`✅ Found ${compatibility.existingServers.length} existing servers in compatible mode (${compatibility.existingMode})`);
-      
+      console.log(
+        `✅ Found ${compatibility.existingServers.length} existing servers in compatible mode (${compatibility.existingMode})`,
+      );
+
       if (reuseExisting) {
         // Reuse existing servers
         console.log('🔄 Reusing existing servers and exiting...');
-        
+
         for (const existingServer of compatibility.existingServers) {
-          const isReady = await waitForServerReady(existingServer.site, existingServer.port, 5000);
+          const isReady = await waitForServerReady(
+            existingServer.site,
+            existingServer.port,
+            5000,
+          );
           if (isReady) {
-            console.log(`✅ Reusing ${existingServer.site} on port ${existingServer.port}`);
+            console.log(
+              `✅ Reusing ${existingServer.site} on port ${existingServer.port}`,
+            );
             // Create a mock process entry for consistency
-            const mockProc = { 
-              kill: () => {}, 
-              pid: existingServer.pid 
+            const mockProc = {
+              kill: () => {},
+              pid: existingServer.pid,
             } as ChildProcess;
-            servers.push({ 
-              site: existingServer.site, 
-              port: existingServer.port, 
-              proc: mockProc, 
-              mode: existingServer.mode 
+            servers.push({
+              site: existingServer.site,
+              port: existingServer.port,
+              proc: mockProc,
+              mode: existingServer.mode,
             });
           }
         }
-        
+
         if (servers.length > 0) {
           console.log(`🎉 Reusing ${servers.length} existing servers!`);
           return servers;
         }
       }
     } else {
-      console.log(`⚠️  Found ${compatibility.existingServers.length} existing servers in incompatible mode (${compatibility.existingMode} vs ${mode})`);
-      console.log('🔄 Shutting down existing servers before starting new ones...');
-      
+      console.log(
+        `⚠️  Found ${compatibility.existingServers.length} existing servers in incompatible mode (${compatibility.existingMode} vs ${mode})`,
+      );
+      console.log(
+        '🔄 Shutting down existing servers before starting new ones...',
+      );
+
       // Gracefully shutdown existing servers
       await shutdownExistingServers(compatibility.existingServers);
-      
+
       // Clear the state file
       clearServerState();
-      
+
       console.log('✅ Ready to start servers in new mode');
       console.log('');
     }
@@ -247,17 +278,19 @@ export async function startServers(opts: StartServerOptions = {}): Promise<Serve
     // If port is already in use and reuseExisting is false, attempt to free it
     let portCleared = false;
     const isPortInUse = await waitForServerReady(site, port, 1000); // Quick check
-    
+
     if (isPortInUse && !reuseExisting) {
-      console.log(`🧹 Port ${port} is in use, attempting to free it for ${site}...`);
-      
+      console.log(
+        `🧹 Port ${port} is in use, attempting to free it for ${site}...`,
+      );
+
       // First attempt to clear the port
       const firstAttempt = await killSitePort(site, false);
       if (firstAttempt) {
         await waitForPortFree(port, 5000, false);
         portCleared = true;
       }
-      
+
       // If first attempt failed, retry once
       if (!portCleared) {
         console.log(`🔄 Retrying port cleanup for ${site}...`);
@@ -267,7 +300,7 @@ export async function startServers(opts: StartServerOptions = {}): Promise<Serve
           portCleared = true;
         }
       }
-      
+
       if (!portCleared) {
         console.error(`❌ Failed to free port ${port} for ${site} after retry`);
         continue;
@@ -294,21 +327,22 @@ export async function startServers(opts: StartServerOptions = {}): Promise<Serve
         nxCommand = ['run', `${site}:start:robust`];
       }
     }
-    
+
     const commandStr = `nx ${nxCommand.join(' ')}`;
     console.log(`📡 Starting server: ${commandStr}`);
 
     // Create a prefixed output stream for this server
-    const browserSetting = mode === 'headless' ? 'none' : (browser === 'chrome' ? 'chrome' : 'auto');
-    
+    const browserSetting =
+      mode === 'headless' ? 'none' : browser === 'chrome' ? 'chrome' : 'auto';
+
     const proc = spawn('nx', nxCommand, {
       stdio: ['ignore', 'pipe', 'pipe'],
       detached: true, // Allow process to run independently
-      env: { 
-        ...process.env, 
+      env: {
+        ...process.env,
         DOCS_ENV: process.env.DOCS_ENV || 'local',
-        BROWSER: browserSetting
-      }
+        BROWSER: browserSetting,
+      },
     });
 
     // Pipe stdout/stderr with prefixed output
@@ -343,20 +377,26 @@ export async function startServers(opts: StartServerOptions = {}): Promise<Serve
     // Wait for the server to be ready
     console.log(`⏳ Waiting for ${site} to be ready on port ${port}...`);
     const isReady = await waitForServerReady(site, port, 30000);
-    
+
     if (isReady) {
       console.log(`✅ Server for ${site} is ready on port ${port}`);
     } else {
-      console.error(`❌ Time-out after 30 s if a server doesn't report ready → log site name and exit 1`);
-      console.error(`Server for site '${site}' failed to become ready within 30 seconds`);
-      
+      console.error(
+        `❌ Time-out after 30 s if a server doesn't report ready → log site name and exit 1`,
+      );
+      console.error(
+        `Server for site '${site}' failed to become ready within 30 seconds`,
+      );
+
       // Kill the process that failed to start properly
       try {
         if (proc.pid) {
           await new Promise<void>((resolve) => {
             treeKill(proc.pid!, 'SIGTERM', (error?: Error) => {
               if (error) {
-                console.error(`Failed to kill process tree for ${site}: ${error.message}`);
+                console.error(
+                  `Failed to kill process tree for ${site}: ${error.message}`,
+                );
               }
               resolve();
             });
@@ -365,24 +405,26 @@ export async function startServers(opts: StartServerOptions = {}): Promise<Serve
       } catch (error) {
         console.error(`Error killing failed process for ${site}: ${error}`);
       }
-      
+
       // Exit with code 1 as required
       process.exit(1);
     }
-    
+
     console.log('');
   }
 
   // Persist server state to help Playwright and other tools
   if (servers.length > 0) {
-    const serverInfoWithMode = servers.map(server => ({
+    const serverInfoWithMode = servers.map((server) => ({
       ...server,
-      mode: mode
+      mode: mode,
     }));
     updateServerState(serverInfoWithMode, mode);
-    console.log(`💾 Server state persisted to ${require('os').tmpdir()}/.ifla-server-state.json`);
+    console.log(
+      `💾 Server state persisted to ${require('os').tmpdir()}/.ifla-server-state.json`,
+    );
   }
-  
+
   console.log(`🎉 Started ${servers.length} servers successfully!`);
   return servers;
 }
@@ -393,10 +435,10 @@ export async function startServers(opts: StartServerOptions = {}): Promise<Serve
  */
 export async function stopServers(servers: ServerInfo[]): Promise<void> {
   console.log(`🛑 Stopping ${servers.length} servers...`);
-  
+
   for (const { site, port, proc } of servers) {
     console.log(`🔄 Stopping server for ${site} on port ${port}`);
-    
+
     try {
       // Use tree-kill to properly terminate all child processes
       if (proc.pid) {
@@ -404,20 +446,24 @@ export async function stopServers(servers: ServerInfo[]): Promise<void> {
           // Send SIGTERM first for graceful shutdown
           treeKill(proc.pid!, 'SIGTERM', (error?: Error) => {
             if (error) {
-              console.error(`Error sending SIGTERM to ${site}: ${error.message}`);
+              console.error(
+                `Error sending SIGTERM to ${site}: ${error.message}`,
+              );
             }
             resolve();
           });
         });
-        
+
         // Wait a moment for graceful shutdown
-        await new Promise(resolve => setTimeout(resolve, 2000));
-        
+        await new Promise((resolve) => setTimeout(resolve, 2000));
+
         // Force kill if still running
         await new Promise<void>((resolve) => {
           treeKill(proc.pid!, 'SIGKILL', (error?: Error) => {
             if (error && error.message !== 'No such process') {
-              console.error(`Error sending SIGKILL to ${site}: ${error.message}`);
+              console.error(
+                `Error sending SIGKILL to ${site}: ${error.message}`,
+              );
             }
             resolve();
           });
@@ -425,22 +471,22 @@ export async function stopServers(servers: ServerInfo[]): Promise<void> {
       } else {
         // Fallback for mock processes or processes without PID
         proc.kill('SIGTERM');
-        await new Promise(resolve => setTimeout(resolve, 1000));
+        await new Promise((resolve) => setTimeout(resolve, 1000));
         proc.kill('SIGKILL');
       }
-      
+
       // Clean up the port
       await killSitePort(site, false);
-      
+
       console.log(`✅ Stopped ${site}`);
     } catch (error) {
       console.error(`❌ Error stopping ${site}: ${error}`);
     }
   }
-  
+
   // Clear the server state file after stopping all servers
   clearServerState();
-  
+
   console.log('🧹 All servers stopped and ports cleaned up.');
   console.log('💾 Server state cleared.');
 }

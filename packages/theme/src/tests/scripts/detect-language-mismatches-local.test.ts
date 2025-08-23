@@ -1,3 +1,6 @@
+/**
+ * @unit @api @validation @low-priority
+ */
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
 import path from 'path';
 import fs from 'fs/promises';
@@ -9,12 +12,12 @@ const __dirname = path.dirname(__filename);
 // Create mock detectLanguage function
 const mockDetectLanguage = vi.fn((text: string) => {
   // Mock language detection based on text content
-  if (text.includes('Hello') || text.includes('hello')) return 'ENGLISH';
-  if (text.includes('Hola') || text.includes('español')) return 'SPANISH';
-  if (text.includes('Bonjour') || text.includes('français')) return 'FRENCH';
-  if (text.includes('你好') || /[\u4e00-\u9fa5]/.test(text)) return 'CHINESE_SIMPLIFIED';
-  if (text.includes('Привет') || /[\u0400-\u04FF]/.test(text)) return 'RUSSIAN';
-  if (text.includes('مرحبا') || /[\u0600-\u06FF]/.test(text)) return 'ARABIC';
+  if (text.includes('Hello') || text.includes('hello')) {return 'ENGLISH';}
+  if (text.includes('Hola') || text.includes('español')) {return 'SPANISH';}
+  if (text.includes('Bonjour') || text.includes('français')) {return 'FRENCH';}
+  if (text.includes('你好') || /[\u4e00-\u9fa5]/.test(text)) {return 'CHINESE_SIMPLIFIED';}
+  if (text.includes('Привет') || /[\u0400-\u04FF]/.test(text)) {return 'RUSSIAN';}
+  if (text.includes('مرحبا') || /[\u0600-\u06FF]/.test(text)) {return 'ARABIC';}
   return 'UNKNOWN';
 });
 
@@ -77,7 +80,7 @@ describe('detect-language-mismatches-local.js @unit', () => {
 
   describe('Language Tag Extraction', () => {
     const extractLanguageTag = (text: string) => {
-      if (!text || typeof text !== 'string') return null;
+      if (!text || typeof text !== 'string') {return null;}
       const match = text.match(/@(\w{2,3})$/);
       return match ? match[1] : null;
     };
@@ -144,10 +147,10 @@ http://example.com/002,Hola,Hello,Bonjour`;
 
       records.forEach((record: any, rowIndex: number) => {
         Object.entries(record).forEach(([column, value]) => {
-          if (column === 'uri' || !value) return;
+          if (column === 'uri' || !value) {return;}
           
           const declaredLang = column.match(/@(\w{2,3})$/)?.[1];
-          if (!declaredLang) return;
+          if (!declaredLang) {return;}
 
           const detectedLang = mockDetectLanguage(value as string);
           const isoLang = DETECTED_TO_ISO[detectedLang] || detectedLang.toLowerCase();

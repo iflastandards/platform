@@ -5,10 +5,10 @@
 
 import { stringify } from 'csv-stringify/sync';
 import {
-  ResourceData,
-  GeneratorOptions,
-  DctapProfile,
-  DctapProperty,
+  type ResourceData,
+  type GeneratorOptions,
+  type DctapProfile,
+  type DctapProperty,
 } from './types';
 
 export class CsvGenerator {
@@ -442,7 +442,7 @@ export class CsvGenerator {
   ): DctapProperty | undefined {
     // Parse the header to extract components
     const headerMatch = header.match(/^(.+?)(?:@([^[]+))?(?:\[(\d+|csv)\])?$/);
-    if (!headerMatch) return undefined;
+    if (!headerMatch) {return undefined;}
     
     const [, headerCurie, headerLang, headerFormat] = headerMatch;
     
@@ -452,7 +452,7 @@ export class CsvGenerator {
         const propertyCurie = this.curieMaker(property.propertyID);
         
         // Check if the base property matches
-        if (propertyCurie !== headerCurie) continue;
+        if (propertyCurie !== headerCurie) {continue;}
         
         // For properties in the profile, we match just on the property ID
         // The language and format in the header come from the actual data,

@@ -1,3 +1,6 @@
+/**
+ * @unit @api @validation @low-priority
+ */
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
 import { google } from 'googleapis';
 import {
@@ -29,10 +32,10 @@ describe('Vocabulary Creation Integration Tests @unit @api @validation', () => {
 
   beforeEach(() => {
     setupMockEnvironment();
-    const mocks = createMockGoogleClients();
-    mockAuth = mocks.mockAuth;
-    mockSheets = mocks.mockSheets;
-    mockDrive = mocks.mockDrive;
+    const { mockAuth: ma, mockSheets: ms, mockDrive: md } = createMockGoogleClients();
+    mockAuth = ma;
+    mockSheets = ms;
+    mockDrive = md;
 
     (google.auth.GoogleAuth as any).mockImplementation(() => mockAuth);
     (google.sheets as any).mockReturnValue(mockSheets);
@@ -70,7 +73,7 @@ describe('Vocabulary Creation Integration Tests @unit @api @validation', () => {
       
       // Test header generation logic for multilingual columns
       const baseColumns = ['valueID', 'label', 'definition', 'scopeNote', 'example', 'source', 'status'];
-      const languages = config.languages;
+      const {languages} = config;
       const translatableFields = ['label', 'definition', 'scopeNote'];
       
       const expectedHeaders: string[] = [];

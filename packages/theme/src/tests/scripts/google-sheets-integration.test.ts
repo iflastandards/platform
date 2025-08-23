@@ -52,16 +52,14 @@ describe('Google Sheets Integration - Real Logic Tests @unit', () => {
 
   describe('Spreadsheet Operations Logic', () => {
     it('should construct correct API request for sheet creation', () => {
-      const createSheetRequest = (title: string, index?: number) => {
-        return {
+      const createSheetRequest = (title: string, index?: number) => ({
           addSheet: {
             properties: {
               title,
               ...(index !== undefined && { index })
             }
           }
-        };
-      };
+        });
 
       const request = createSheetRequest('Test Sheet', 0);
       expect(request.addSheet.properties.title).toBe('Test Sheet');
@@ -119,9 +117,7 @@ describe('Google Sheets Integration - Real Logic Tests @unit', () => {
 
   describe('Workbook Management Logic', () => {
     it('should generate correct workbook names', () => {
-      const generateWorkbookName = (repoName: string, profileType: string) => {
-        return `${repoName}-${profileType}`;
-      };
+      const generateWorkbookName = (repoName: string, profileType: string) => `${repoName}-${profileType}`;
 
       expect(generateWorkbookName('ISBDM', 'values')).toBe('ISBDM-values');
       expect(generateWorkbookName('my-repo', 'elements')).toBe('my-repo-elements');
@@ -176,15 +172,13 @@ describe('Google Sheets Integration - Real Logic Tests @unit', () => {
         description: string,
         languages: string[],
         url: string
-      ) => {
-        return [
+      ) => [
           vocabularyName,
           title,
           description,
           languages.join(', '),
           `=HYPERLINK("${url}", "Open ${vocabularyName}")`
         ];
-      };
 
       const entry = createIndexEntry(
         'test-vocab',
@@ -263,15 +257,13 @@ describe('Google Sheets Integration - Real Logic Tests @unit', () => {
     });
 
     it('should handle API rate limiting gracefully', () => {
-      const shouldRetry = (error: any): boolean => {
-        return error.code === 429 || 
+      const shouldRetry = (error: any): boolean => error.code === 429 || 
                (error.message?.toLowerCase().includes('quota') ?? false) ||
                (error.message?.toLowerCase().includes('rate limit') ?? false);
-      };
 
-      const calculateBackoff = (attempt: number): number => {
-        return Math.min(1000 * Math.pow(2, attempt), 60000); // Max 1 minute
-      };
+      const calculateBackoff = (attempt: number): number => 
+         Math.min(1000 * Math.pow(2, attempt), 60000) // Max 1 minute
+      ;
 
       expect(shouldRetry({ code: 429 })).toBe(true);
       expect(shouldRetry({ code: 403 })).toBe(false);
@@ -286,8 +278,7 @@ describe('Google Sheets Integration - Real Logic Tests @unit', () => {
 
   describe('Data Transformation', () => {
     it('should transform vocabulary data for sheet format correctly', () => {
-      const transformVocabularyData = (values: any[], languages: string[]) => {
-        return values.map(value => {
+      const transformVocabularyData = (values: any[], languages: string[]) => values.map(value => {
           const row: any[] = [value.id];
           
           // Add base label
@@ -311,7 +302,6 @@ describe('Google Sheets Integration - Real Logic Tests @unit', () => {
           
           return row;
         });
-      };
 
       const testData = [{
         id: 'test001',
@@ -336,7 +326,7 @@ describe('Google Sheets Integration - Real Logic Tests @unit', () => {
 
     it('should handle missing translations gracefully', () => {
       const fillMissingTranslations = (data: any, languages: string[], field: string) => {
-        if (!data[field]) return {};
+        if (!data[field]) {return {};}
         
         const result: any = {};
         languages.forEach(lang => {
@@ -380,16 +370,14 @@ describe('Google Sheets Integration - Real Logic Tests @unit', () => {
     });
 
     it('should build batch update requests correctly', () => {
-      const buildBatchRequest = (updates: Array<{ range: string; values: any[][] }>) => {
-        return {
+      const buildBatchRequest = (updates: Array<{ range: string; values: any[][] }>) => ({
           requests: updates.map(update => ({
             updateCells: {
               range: update.range,
               values: update.values
             }
           }))
-        };
-      };
+        });
 
       const batchRequest = buildBatchRequest([
         { range: 'Sheet1!A1', values: [['Header 1', 'Header 2']] },

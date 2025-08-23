@@ -1,3 +1,6 @@
+/**
+ * @unit @api @validation @low-priority
+ */
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
 import path from 'path';
 import fs from 'fs/promises';
@@ -11,16 +14,16 @@ vi.mock('langdetect', () => ({
   default: {
     detect: vi.fn((text: string) => {
       // Mock language detection based on text patterns
-      if (!text || text.length < 3) return [];
+      if (!text || text.length < 3) {return [];}
       
-      if (text.includes('Hello') || text.includes('hello')) return [{ lang: 'en', prob: 0.99 }];
-      if (text.includes('Hola') || text.includes('español')) return [{ lang: 'es', prob: 0.98 }];
-      if (text.includes('Bonjour') || text.includes('français')) return [{ lang: 'fr', prob: 0.97 }];
-      if (text.includes('你好') || /[\u4e00-\u9fa5]/.test(text)) return [{ lang: 'zh-cn', prob: 0.96 }];
-      if (text.includes('Привет') || /[\u0400-\u04FF]/.test(text)) return [{ lang: 'ru', prob: 0.95 }];
-      if (text.includes('مرحبا') || /[\u0600-\u06FF]/.test(text)) return [{ lang: 'ar', prob: 0.94 }];
-      if (text.includes('Ciao')) return [{ lang: 'it', prob: 0.93 }];
-      if (text.includes('Hallo')) return [{ lang: 'de', prob: 0.92 }];
+      if (text.includes('Hello') || text.includes('hello')) {return [{ lang: 'en', prob: 0.99 }];}
+      if (text.includes('Hola') || text.includes('español')) {return [{ lang: 'es', prob: 0.98 }];}
+      if (text.includes('Bonjour') || text.includes('français')) {return [{ lang: 'fr', prob: 0.97 }];}
+      if (text.includes('你好') || /[\u4e00-\u9fa5]/.test(text)) {return [{ lang: 'zh-cn', prob: 0.96 }];}
+      if (text.includes('Привет') || /[\u0400-\u04FF]/.test(text)) {return [{ lang: 'ru', prob: 0.95 }];}
+      if (text.includes('مرحبا') || /[\u0600-\u06FF]/.test(text)) {return [{ lang: 'ar', prob: 0.94 }];}
+      if (text.includes('Ciao')) {return [{ lang: 'it', prob: 0.93 }];}
+      if (text.includes('Hallo')) {return [{ lang: 'de', prob: 0.92 }];}
       
       return [{ lang: 'en', prob: 0.5 }]; // Default fallback
     })
@@ -142,10 +145,10 @@ http://example.com/002,Hola,Hello,World,"Spanish greeting in English column"`;
 
       records.forEach((record: any, rowIndex: number) => {
         Object.entries(record).forEach(([column, value]) => {
-          if (!value || column === 'uri') return;
+          if (!value || column === 'uri') {return;}
           
           const lang = extractLanguageFromHeader(column);
-          if (!lang) return;
+          if (!lang) {return;}
 
           const detection = langdetect.detect(value as string);
           if (detection && detection.length > 0 && detection[0].prob > 0.9) {

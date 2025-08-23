@@ -46,10 +46,10 @@ export class CsvAdapter {
         if (!headerCounts[header]) {
           headerCounts[header] = 1;
           return header;
-        } else {
+        } 
           const count = headerCounts[header]++;
           return `${header}_${count}`;
-        }
+        
       });
       startIndex = 1;
     }
@@ -106,7 +106,7 @@ export class CsvAdapter {
     // Write headers if requested
     if (includeHeaders && sheet.headers && sheet.headers.length > 0) {
       const headerLine = this.formatLine(sheet.headers, delimiter, quote);
-      stream.write(headerLine + '\n');
+      stream.write(`${headerLine  }\n`);
     }
 
     // Write data rows
@@ -120,7 +120,7 @@ export class CsvAdapter {
         delimiter, 
         quote
       );
-      stream.write(line + '\n');
+      stream.write(`${line  }\n`);
     }
 
     await new Promise<void>((resolve, reject) => {
@@ -155,12 +155,12 @@ export class CsvAdapter {
         const lines = chunk.toString().split('\n');
         
         for (const line of lines) {
-          if (!line.trim()) continue;
+          if (!line.trim()) {continue;}
 
           if (isFirstLine && options?.headers !== false) {
             headers = this.parseLine(line, delimiter);
             isFirstLine = false;
-            callback(null, line + '\n');
+            callback(null, `${line  }\n`);
             continue;
           }
 
@@ -188,12 +188,12 @@ export class CsvAdapter {
                 delimiter,
                 '"'
               );
-              callback(null, outputLine + '\n');
+              callback(null, `${outputLine  }\n`);
             } else {
               callback();
             }
           } else {
-            callback(null, line + '\n');
+            callback(null, `${line  }\n`);
           }
         }
       }
@@ -277,8 +277,8 @@ export class CsvAdapter {
     }
 
     // Check for boolean
-    if (value.toLowerCase() === 'true') return true;
-    if (value.toLowerCase() === 'false') return false;
+    if (value.toLowerCase() === 'true') {return true;}
+    if (value.toLowerCase() === 'false') {return false;}
 
     // Check for number
     const num = Number(value);

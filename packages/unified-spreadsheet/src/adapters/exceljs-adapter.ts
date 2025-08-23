@@ -108,7 +108,7 @@ export class ExcelJSAdapter {
       // Extract headers from first row if present
       const firstRow = worksheet.getRow(1);
       if (firstRow.hasValues) {
-        const values = firstRow.values;
+        const {values} = firstRow;
         if (Array.isArray(values)) {
           sheet.headers = values.slice(1).map(v => String(v || ''));
         }
@@ -274,7 +274,7 @@ export class ExcelJSAdapter {
 
     for await (const row of worksheetReader) {
       if (isFirstRow && row.values && row.values.length > 0) {
-        const values = row.values;
+        const {values} = row;
         if (Array.isArray(values)) {
           sheet.headers = values.slice(1).map((v: any) => String(v || ''));
         }

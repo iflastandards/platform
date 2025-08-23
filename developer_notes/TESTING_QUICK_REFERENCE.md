@@ -42,6 +42,57 @@ All use verification code: **`424242`**
 ### Add Priority (Optional)
 - `@critical`, `@happy-path`, `@error-handling`, `@edge-case`
 
+## 🤖 AI-Powered Test Tagging Tool
+
+**Purpose**: Automatically analyze and tag test files using AI to ensure consistent categorization across the codebase.
+
+### When to Use It
+
+```bash
+# Check all test files (dry run by default)
+pnpm test:tag
+
+# Tag only staged files before commit
+pnpm test:tag --staged
+
+# Apply tags to affected files after changes
+pnpm test:tag --affected --no-dry-run
+
+# Use specific AI provider for accuracy
+pnpm test:tag --provider anthropic  # Most accurate (Claude)
+pnpm test:tag --provider openai     # GPT-4 Turbo
+pnpm test:tag --provider gemini     # Free tier available
+pnpm test:tag --provider perplexity # Fast and economical
+```
+
+### When It Runs Automatically
+- **Pre-commit hook**: Validates existing tags on modified test files via `validate-test-tagging.js`
+- **Suggested workflow**: Run `pnpm test:tag --staged` before committing new tests
+- **CI validation**: Ensures all test files have proper tags
+
+### Setup (One-Time)
+```bash
+# Choose and set your preferred AI provider API key in .env
+echo "ANTHROPIC_API_KEY=your-key" >> .env  # Recommended for accuracy
+echo "OPENAI_API_KEY=your-key" >> .env     # Alternative
+echo "GEMINI_API_KEY=your-key" >> .env     # Free tier option
+echo "PERPLEXITY_API_KEY=your-key" >> .env # Budget option
+```
+
+### What It Does
+- ✅ Classifies tests as `@unit`, `@integration`, `@e2e`, or `@smoke`
+- ✅ Adds functional tags (`@api`, `@auth`, `@rbac`, `@ui`, etc.)
+- ✅ Adds priority tags (`@critical`, `@happy-path`, etc.)
+- ✅ Validates file naming conventions
+- ✅ Suggests file relocations for misplaced tests
+- ✅ Ensures compliance with 5-phase testing strategy
+
+### Pro Tips
+- Run with `--move-files` to get file relocation suggestions
+- Use `--verbose` for detailed analysis reasoning
+- Run `--interactive` (default) to review ambiguous cases
+- Save reports with `--output report.md` for team review
+
 ## 🚀 Phase-Aware Commands
 
 ### Phase 1: Selective Testing (Development)

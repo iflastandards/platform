@@ -8,7 +8,7 @@ export default defineConfig({
   sourcemap: true,
   minify: false,
   splitting: false,
-  external: ['child_process', 'fs', 'path', 'process'],
+  external: ['child_process', 'fs', 'path', 'process', '@ifla/contracts'],
   target: 'node18',
   outDir: 'dist',
 });

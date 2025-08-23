@@ -1,16 +1,21 @@
-import { createClient, SupabaseClient } from '@supabase/supabase-js';
+import { createClient, type SupabaseClient } from '@supabase/supabase-js';
 import { fromZodError } from 'zod-validation-error';
-import { ClientApiError, ClientNotFoundError, ClientValidationError, ClientError } from '../errors';
 import {
-  JobSchema, 
-  JobCreateSchema, 
+  ClientApiError,
+  ClientNotFoundError,
+  ClientValidationError,
+  ClientError,
+} from '../errors';
+import {
+  JobSchema,
+  JobCreateSchema,
   JobUpdateSchema,
   JobQuerySchema,
-  Job, 
-  JobCreate, 
-  JobUpdate,
-  JobQuery 
-} from '@site/packages/contracts/schemas';
+  type Job,
+  type JobCreate,
+  type JobUpdate,
+  type JobQuery,
+} from '@ifla/contracts/schemas';
 
 /**
  * Supabase Jobs Client - Type-safe wrapper around Supabase operations for jobs
@@ -40,9 +45,9 @@ export class SupabaseJobsClient {
     // ✅ CRITICAL: Always validate with Zod before returning
     const validationResult = JobSchema.safeParse(data);
     if (!validationResult.success) {
-      throw new ClientValidationError('Invalid job data from database.', {
-        cause: fromZodError(validationResult.error),
-      });
+      throw new ClientValidationError(
+        `Invalid job data from database: ${fromZodError(validationResult.error).message}`,
+      );
     }
     return validationResult.data;
   }
@@ -50,15 +55,22 @@ export class SupabaseJobsClient {
   /**
    * List jobs with filtering and pagination
    */
-  async listJobs(query: Partial<JobQuery> = {}): Promise<{ jobs: Job[]; total: number }> {
+  async listJobs(
+    query: Partial<JobQuery> = {},
+  ): Promise<{ jobs: Job[]; total: number }> {
     // Validate query parameters with defaults
     const validatedQuery = JobQuerySchema.parse(query);
 
     let supabaseQuery = this.supabase
       .from('jobs')
       .select('*', { count: 'exact' })
-      .order(validatedQuery.sortBy, { ascending: validatedQuery.sortOrder === 'asc' })
-      .range(validatedQuery.offset, validatedQuery.offset + validatedQuery.limit - 1);
+      .order(validatedQuery.sortBy, {
+        ascending: validatedQuery.sortOrder === 'asc',
+      })
+      .range(
+        validatedQuery.offset,
+        validatedQuery.offset + validatedQuery.limit - 1,
+      );
 
     // Dynamically apply filters from the validated query
     const filters = {
@@ -69,7 +81,8 @@ export class SupabaseJobsClient {
     };
 
     for (const [key, value] of Object.entries(filters)) {
-      if (value) { // Zod's `optional()` makes non-present fields `undefined`
+      if (value) {
+        // Zod's `optional()` makes non-present fields `undefined`
         supabaseQuery = supabaseQuery.eq(key, value);
       }
     }
@@ -87,9 +100,9 @@ export class SupabaseJobsClient {
     // Validate all returned jobs
     const validationResult = JobSchema.array().safeParse(data);
     if (!validationResult.success) {
-      throw new ClientValidationError('Invalid job list data from database.', {
-        cause: fromZodError(validationResult.error),
-      });
+      throw new ClientValidationError(
+        `Invalid job list data from database: ${fromZodError(validationResult.error).message}`,
+      );
     }
     return { jobs: validationResult.data, total: count ?? 0 };
   }
@@ -101,14 +114,14 @@ export class SupabaseJobsClient {
     // Validate input data
     const validationResult = JobCreateSchema.safeParse(jobData);
     if (!validationResult.success) {
-      throw new ClientValidationError('Invalid job creation data provided.', {
-        cause: fromZodError(validationResult.error),
-      });
+      throw new ClientValidationError(
+        `Invalid job creation data provided: ${fromZodError(validationResult.error).message}`,
+      );
     }
 
     // Prepare job record for insertion
     const jobRecord = {
-      ...validatedData,
+      ...validationResult.data,
       id: crypto.randomUUID(),
       status: 'queued' as const,
       progress: 0,
@@ -123,15 +136,17 @@ export class SupabaseJobsClient {
       .single();
 
     if (error || !data) {
-      throw new ClientApiError(`Failed to create job: ${error?.message ?? 'No data returned'}`);
+      throw new ClientApiError(
+        `Failed to create job: ${error?.message ?? 'No data returned'}`,
+      );
     }
 
     // Validate returned job data
     const returnValidationResult = JobSchema.safeParse(data);
     if (!returnValidationResult.success) {
-      throw new ClientValidationError('Invalid job data returned after creation.', {
-        cause: fromZodError(returnValidationResult.error),
-      });
+      throw new ClientValidationError(
+        `Invalid job data returned after creation: ${fromZodError(returnValidationResult.error).message}`,
+      );
     }
     return returnValidationResult.data;
   }
@@ -143,13 +158,13 @@ export class SupabaseJobsClient {
     // Validate update data
     const validationResult = JobUpdateSchema.safeParse(updates);
     if (!validationResult.success) {
-      throw new ClientValidationError('Invalid job update data provided.', {
-        cause: fromZodError(validationResult.error),
-      });
+      throw new ClientValidationError(
+        `Invalid job update data provided: ${fromZodError(validationResult.error).message}`,
+      );
     }
 
     const updateRecord = {
-      ...validatedUpdates,
+      ...validationResult.data,
       updatedAt: new Date().toISOString(),
     };
 
@@ -161,15 +176,17 @@ export class SupabaseJobsClient {
       .single();
 
     if (error || !data) {
-      throw new ClientApiError(`Failed to update job ${id}: ${error?.message ?? 'No data returned'}`);
+      throw new ClientApiError(
+        `Failed to update job ${id}: ${error?.message ?? 'No data returned'}`,
+      );
     }
 
     // Validate updated job data
     const returnValidationResult = JobSchema.safeParse(data);
     if (!returnValidationResult.success) {
-      throw new ClientValidationError('Invalid job data after update.', {
-        cause: fromZodError(returnValidationResult.error),
-      });
+      throw new ClientValidationError(
+        `Invalid job data after update: ${fromZodError(returnValidationResult.error).message}`,
+      );
     }
     return returnValidationResult.data;
   }
@@ -178,10 +195,7 @@ export class SupabaseJobsClient {
    * Delete a job (with proper cleanup)
    */
   async deleteJob(id: string): Promise<void> {
-    const { error } = await this.supabase
-      .from('jobs')
-      .delete()
-      .eq('id', id);
+    const { error } = await this.supabase.from('jobs').delete().eq('id', id);
 
     if (error) {
       throw new ClientApiError(`Failed to delete job ${id}: ${error.message}`);
@@ -215,7 +229,10 @@ export class SupabaseJobsClient {
 /**
  * Factory function to create a configured jobs client
  */
-export function createJobsClient(supabaseUrl: string, supabaseKey: string): SupabaseJobsClient {
+export function createJobsClient(
+  supabaseUrl: string,
+  supabaseKey: string,
+): SupabaseJobsClient {
   const supabase = createClient(supabaseUrl, supabaseKey);
   return new SupabaseJobsClient(supabase);
 }
@@ -226,10 +243,12 @@ export function createJobsClient(supabaseUrl: string, supabaseKey: string): Supa
 export const jobsClient = (() => {
   const url = process.env.NEXT_PUBLIC_SUPABASE_URL;
   const key = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
-  
+
   if (!url || !key) {
-    throw new ClientError('Missing Supabase environment variables for default client');
+    throw new ClientError(
+      'Missing Supabase environment variables for default client',
+    );
   }
-  
+
   return createJobsClient(url, key);
 })();

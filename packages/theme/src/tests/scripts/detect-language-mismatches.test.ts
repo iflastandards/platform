@@ -1,3 +1,6 @@
+/**
+ * @unit @api @validation @low-priority
+ */
 import { describe, it, expect, vi, beforeEach } from 'vitest';
 import path from 'path';
 import { fileURLToPath } from 'url';
@@ -30,11 +33,11 @@ vi.mock('langdetect', () => ({
   default: {
     detect: vi.fn((text) => {
       // Mock language detection based on text content
-      if (text.includes('Hello')) return [{ lang: 'en', prob: 0.99 }];
-      if (text.includes('Hola')) return [{ lang: 'es', prob: 0.98 }];
-      if (text.includes('Bonjour')) return [{ lang: 'fr', prob: 0.97 }];
-      if (text.includes('你好')) return [{ lang: 'zh', prob: 0.96 }];
-      if (text.includes('Привет')) return [{ lang: 'ru', prob: 0.95 }];
+      if (text.includes('Hello')) {return [{ lang: 'en', prob: 0.99 }];}
+      if (text.includes('Hola')) {return [{ lang: 'es', prob: 0.98 }];}
+      if (text.includes('Bonjour')) {return [{ lang: 'fr', prob: 0.97 }];}
+      if (text.includes('你好')) {return [{ lang: 'zh', prob: 0.96 }];}
+      if (text.includes('Привет')) {return [{ lang: 'ru', prob: 0.95 }];}
       return [{ lang: 'en', prob: 0.5 }];
     })
   }
@@ -209,9 +212,9 @@ describe('detect-language-mismatches.js @unit', () => {
           if (declaredLang && text) {
             // Using our mock detection
             let detectedLang = 'en';
-            if (text.includes('Hello')) detectedLang = 'en';
-            if (text.includes('Hola')) detectedLang = 'es';
-            if (text.includes('Bonjour')) detectedLang = 'fr';
+            if (text.includes('Hello')) {detectedLang = 'en';}
+            if (text.includes('Hola')) {detectedLang = 'es';}
+            if (text.includes('Bonjour')) {detectedLang = 'fr';}
 
             if (detectedLang !== declaredLang) {
               mismatches.push({

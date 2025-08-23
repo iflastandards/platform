@@ -6,10 +6,10 @@
 import * as fs from 'fs';
 import { parse } from 'csv-parse/sync';
 import {
-  DctapProfile,
-  DctapShape,
-  DctapProperty,
-  ValidationError,
+  type DctapProfile,
+  type DctapShape,
+  type DctapProperty,
+  type ValidationError,
 } from './types';
 
 export class DctapProfileParser {
@@ -34,7 +34,7 @@ export class DctapProfileParser {
     // Process records
     for (const record of records) {
       // Skip empty records
-      if (!record.propertyID && !record.shapeID) continue;
+      if (!record.propertyID && !record.shapeID) {continue;}
 
       // Handle metadata rows
       if (record.shapeID?.startsWith('@')) {
@@ -66,7 +66,7 @@ export class DctapProfileParser {
    * Parse a property definition with IFLA extensions
    */
   private parseProperty(record: Record<string, string>): DctapProperty {
-    const propertyID = record.propertyID;
+    const {propertyID} = record;
     let processedID = propertyID;
     let isMandatory = false;
     let language: string | undefined;
@@ -134,7 +134,7 @@ export class DctapProfileParser {
     record: Record<string, string>,
     metadata: DctapProfile['metadata']
   ): void {
-    if (!metadata) return;
+    if (!metadata) {return;}
     
     const key = record.shapeID.substring(1); // Remove @ prefix
 
@@ -168,7 +168,7 @@ export class DctapProfileParser {
 
     for (const shape of profile.shapes.values()) {
       for (const property of shape.properties) {
-        const propertyID = property.propertyID;
+        const {propertyID} = property;
 
         // Handle repeatable properties
         if (property.repeatable) {
@@ -250,7 +250,7 @@ export class DctapProfileParser {
    * Parse boolean value
    */
   private parseBoolean(value: string | undefined): boolean {
-    if (!value) return false;
+    if (!value) {return false;}
     const lower = value.toLowerCase();
     return lower === 'true' || lower === 'yes' || value === '1';
   }
@@ -261,11 +261,11 @@ export class DctapProfileParser {
   private parseValueNodeType(
     value: string | undefined
   ): 'IRI' | 'literal' | 'bnode' | undefined {
-    if (!value) return undefined;
+    if (!value) {return undefined;}
     const lower = value.toLowerCase();
-    if (lower === 'iri' || lower === 'uri') return 'IRI';
-    if (lower === 'literal') return 'literal';
-    if (lower === 'bnode' || lower === 'blank') return 'bnode';
+    if (lower === 'iri' || lower === 'uri') {return 'IRI';}
+    if (lower === 'literal') {return 'literal';}
+    if (lower === 'bnode' || lower === 'blank') {return 'bnode';}
     return undefined;
   }
 }

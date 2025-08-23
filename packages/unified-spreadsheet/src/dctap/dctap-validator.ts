@@ -552,7 +552,7 @@ export class DctapValidator {
    * Validate IRI format
    */
   private isValidIRI(value: any): boolean {
-    if (typeof value !== 'string') return false;
+    if (typeof value !== 'string') {return false;}
     
     // Simple IRI validation - could be more sophisticated
     try {
@@ -568,10 +568,10 @@ export class DctapValidator {
    * Validate date format
    */
   private isValidDate(value: any): boolean {
-    if (value instanceof Date) return !isNaN(value.getTime());
+    if (value instanceof Date) {return !isNaN(value.getTime());}
     
     const dateStr = String(value);
-    if (!/^\d{4}-\d{2}-\d{2}$/.test(dateStr)) return false;
+    if (!/^\d{4}-\d{2}-\d{2}$/.test(dateStr)) {return false;}
     
     const date = new Date(dateStr);
     return !isNaN(date.getTime());
@@ -581,10 +581,10 @@ export class DctapValidator {
    * Validate datetime format
    */
   private isValidDateTime(value: any): boolean {
-    if (value instanceof Date) return !isNaN(value.getTime());
+    if (value instanceof Date) {return !isNaN(value.getTime());}
     
     const dateStr = String(value);
-    if (!/^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}/.test(dateStr)) return false;
+    if (!/^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}/.test(dateStr)) {return false;}
     
     const date = new Date(dateStr);
     return !isNaN(date.getTime());

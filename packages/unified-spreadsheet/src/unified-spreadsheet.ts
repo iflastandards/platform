@@ -111,11 +111,11 @@ export class UnifiedSpreadsheetAPI {
             target.path, 
             target.options
           );
-        } else if (ext === 'xlsx' || ext === 'xls') {
+        } if (ext === 'xlsx' || ext === 'xls') {
           return this.excelAdapter.write(workbook, target.path, target.options);
-        } else {
+        } 
           throw new Error(`Unsupported file extension: ${ext}`);
-        }
+        
 
       case 'xlsx':
         if (!target.path) {
@@ -219,7 +219,7 @@ export class UnifiedSpreadsheetAPI {
           const row = JSON.parse(chunk.toString()) as Row;
           const transformed = transform ? transform(row) : row;
           if (transformed) {
-            callback(null, JSON.stringify(transformed) + '\n');
+            callback(null, `${JSON.stringify(transformed)  }\n`);
           } else {
             callback();
           }
@@ -261,15 +261,15 @@ export class UnifiedSpreadsheetAPI {
     if (extension === 'csv' || mimeType === 'text/csv') {
       const sheet = await this.csvAdapter.read(path, options);
       return { sheets: [sheet] };
-    } else if (
+    } if (
       extension === 'xlsx' || 
       extension === 'xls' || 
       mimeType === 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
     ) {
       return this.excelAdapter.read(path);
-    } else {
+    } 
       throw new Error(`Unsupported file extension: ${extension || mimeType}`);
-    }
+    
   }
 
   /**
@@ -283,14 +283,14 @@ export class UnifiedSpreadsheetAPI {
     if (mimeType === 'text/csv') {
       const sheet = await this.csvAdapter.readBuffer(buffer, options);
       return { sheets: [sheet] };
-    } else if (
+    } if (
       mimeType === 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' ||
       !mimeType // Default to Excel if no mime type
     ) {
       return this.excelAdapter.readBuffer(buffer);
-    } else {
+    } 
       throw new Error(`Unsupported buffer type: ${mimeType}`);
-    }
+    
   }
 }
 

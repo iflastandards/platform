@@ -37,6 +37,10 @@ This section outlines the specific tests to be executed.
 **A. Developer Test Review (Shift-Left)**
 
 - [ ] **Code Review:** Confirm that developer-written tests exist and have been passed in the CI/CD pipeline.
+- [ ] **Test Tagging Validation:** Verify all test files have proper tags using `pnpm test:tag --staged`. Tests should include:
+  - Category tags (`@unit`, `@integration`, `@e2e`, `@smoke`, `@env`)
+  - Priority tags (`@critical`, `@happy-path`, `@error-handling`, `@edge-case`)
+  - Functional area tags (`@auth`, `@rbac`, `@api`, `@ui`, etc.)
 - [ ] **MSW-Backed UI Tests:** Review the Vitest/React Testing Library tests. Do they cover all critical UI states (loading, error, success, empty) and user interactions defined in the acceptance criteria?
 - [ ] **MSW-Backed API Tests:** Review the Vitest tests for the service adapters. Do they confirm that the adapters correctly parse and validate both valid and invalid mock API responses?
 
@@ -48,6 +52,11 @@ This section outlines the specific tests to be executed.
 
 **C. Live UI End-to-End Testing (Playwright)**
 
+- [ ] **Test Tag Verification:** Ensure all E2E tests are properly tagged:
+  - Use `pnpm test:tag --pattern "e2e/**/*.test.ts"` to verify E2E test tags
+  - Confirm tests have `@e2e` category tag
+  - Critical user flows should have `@critical` or `@happy-path` tags
+  - Environment-specific tests should have appropriate tags (`@preview-only`, `@production-only`)
 - [ ] **Golden Path:** Run the existing Playwright E2E test suite against the live staging environment (`NEXT_PUBLIC_USE_MOCK=false`). The full user journey described in the PRD must succeed with live data.
 - [ ] **Edge Cases:** Write and execute new test cases for edge cases that may not be covered by mock data, such as handling of special characters, large data inputs, and slow network conditions.
 

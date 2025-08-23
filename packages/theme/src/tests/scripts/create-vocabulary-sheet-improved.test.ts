@@ -1,3 +1,6 @@
+/**
+ * @unit @api @validation @low-priority
+ */
 import { describe, it, expect } from 'vitest';
 
 // Import the actual functions we want to test
@@ -198,8 +201,7 @@ describe('create-vocabulary-sheet - Business Logic Tests @unit @api @validation'
 
   describe('Configuration Validation', () => {
     it('should require all mandatory fields', () => {
-      const isValid = (config: any) => {
-        return !!(
+      const isValid = (config: any) => !!(
           config.profileType &&
           config.vocabularyName &&
           config.title &&
@@ -208,7 +210,6 @@ describe('create-vocabulary-sheet - Business Logic Tests @unit @api @validation'
           Array.isArray(config.languages) &&
           config.languages.length > 0
         );
-      };
 
       expect(isValid(testConfig)).toBe(true);
       expect(isValid({ ...testConfig, profileType: '' })).toBe(false);

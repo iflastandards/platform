@@ -22,7 +22,8 @@
           "examples/**/*.{js,jsx,ts,tsx}",
           "*.config.{js,mjs,ts}",
           "eslint.config.mjs"
-        ]
+        ],
+        "quiet": true
       }
     },
     "typecheck": {

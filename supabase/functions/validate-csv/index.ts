@@ -52,7 +52,7 @@ class DCTAPValidator {
 
       for (let i = 1; i < lines.length; i++) {
         const line = lines[i].trim();
-        if (!line) continue;
+        if (!line) {continue;}
 
         const values = line.split(',').map(v => v.trim().replace(/"/g, ''));
         const record: Record<string, string> = {};
@@ -130,7 +130,7 @@ class DCTAPValidator {
       
       for (let i = 1; i < lines.length; i++) {
         const line = lines[i].trim();
-        if (!line) continue;
+        if (!line) {continue;}
         
         const values = line.split(',').map(v => v.trim().replace(/"/g, ''));
         spreadsheetData.push(values);
@@ -144,8 +144,8 @@ class DCTAPValidator {
         const propertyID = constraint.propertyID.toLowerCase();
         const found = normalizedHeaders.some(h => 
           h === propertyID || 
-          h.startsWith(propertyID + '@') || // Language-tagged
-          h === '*' + propertyID // Mandatory marker
+          h.startsWith(`${propertyID  }@`) || // Language-tagged
+          h === `*${  propertyID}` // Mandatory marker
         );
         
         if (!found) {

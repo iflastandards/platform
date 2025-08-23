@@ -1,5 +1,5 @@
-import { spawn, SpawnOptions } from 'child_process';
-import { BrowserType } from './types';
+import { spawn, type SpawnOptions } from 'child_process';
+import { type BrowserType } from './types';
 
 /**
  * Browser configuration and detection utility
@@ -210,9 +210,9 @@ export async function launchBrowser(
   const { url, args = [], wait = false, env = {} } = options;
   
   if (browserType === 'chrome') {
-    return await launchChrome(url, args, wait, env);
-  } else if (browserType === 'auto') {
-    return await launchSystemDefault(url, args, wait, env);
+    return launchChrome(url, args, wait, env);
+  } if (browserType === 'auto') {
+    return launchSystemDefault(url, args, wait, env);
   }
   
   return {
@@ -310,23 +310,23 @@ async function launchSystemDefault(
   env: Record<string, string> = {}
 ): Promise<BrowserLaunchResult> {
   try {
-    const platform = process.platform;
+    const {platform} = process;
     let command: string;
-    let commandArgs: string[] = [];
+    const commandArgs: string[] = [];
     
     switch (platform) {
       case 'darwin':
         command = 'open';
-        if (url) commandArgs.push(url);
+        if (url) {commandArgs.push(url);}
         break;
       case 'win32':
         command = 'start';
         commandArgs.push('""'); // Empty title for start command
-        if (url) commandArgs.push(url);
+        if (url) {commandArgs.push(url);}
         break;
       default:
         command = 'xdg-open';
-        if (url) commandArgs.push(url);
+        if (url) {commandArgs.push(url);}
         break;
     }
     

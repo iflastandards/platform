@@ -2,6 +2,29 @@
 
 This guide ensures that tests are placed at the correct level in our 5-phase testing strategy.
 
+## 🤖 Automated Test Tagging
+
+Use the AI-powered test tagging tool to automatically classify and tag your test files:
+
+```bash
+# Check placement and tags for all tests
+pnpm test:tag
+
+# Check staged test files before commit
+pnpm test:tag --staged
+
+# Apply tags and get placement suggestions
+pnpm test:tag --no-dry-run --move-files
+```
+
+The tool will:
+- Classify tests as unit, integration, e2e, or smoke
+- Validate file naming conventions
+- Suggest relocations for misplaced tests
+- Ensure compliance with the phase-based strategy
+
+See [TEST_TAGGING_README.md](../scripts/TEST_TAGGING_README.md) for detailed usage.
+
 ## Quick Decision Tree
 
 ```
