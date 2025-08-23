@@ -1,4 +1,5 @@
 #!/usr/bin/env node
+/* eslint-disable no-console */
 
 // Apply the memory leak fix first
 require('./fix-listener-leak');
@@ -203,6 +204,42 @@ class PreCommitRunner {
           resolve({ code, stdout, stderr });
         } else {
           this.log(`Failed: ${description} (exit code: ${code})`, 'error');
+          
+          // For test failures, provide detailed output
+          if (description.includes('Test')) {
+            /* eslint-disable no-console */
+            console.log('\n📋 Test Failure Details:');
+            console.log('━'.repeat(60));
+            
+            // Extract test failure information from stdout
+            const failureLines = stdout.split('\n').filter(line => 
+              line.includes('✗') || 
+              line.includes('FAIL') || 
+              line.includes('Error:') ||
+              line.includes('Expected') ||
+              line.includes('Received') ||
+              line.includes('Test Files') ||
+              line.includes('Tests')
+            );
+            
+            if (failureLines.length > 0) {
+              console.log(failureLines.join('\n'));
+            }
+            
+            // Show stderr if present
+            if (stderr.trim()) {
+              console.log('\n❌ Error Output:');
+              console.log(stderr);
+            }
+            
+            console.log('━'.repeat(60));
+            console.log('\n💡 To debug failing tests:');
+            console.log('  1. Run tests directly: pnpm test');
+            console.log('  2. Run specific project: pnpm nx test [project]');
+            console.log('  3. Skip pre-commit: git commit --no-verify');
+            /* eslint-enable no-console */
+          }
+          
           reject(new Error(`${description} failed with exit code ${code}`));
         }
       });
@@ -431,7 +468,8 @@ class PreCommitRunner {
         this.hasErrors = true;
       }
 
-      // Run unit tests only for pre-commit (fast feedback)
+      // Run tests only for pre-commit (fast feedback)
+      // Note: Using 'test' target as not all projects have 'test:unit'
       if (
         !(await this.runStep(
           'Tests',
@@ -439,7 +477,7 @@ class PreCommitRunner {
           [
             'nx',
             'affected',
-            '--target=test:unit',
+            '--target=test',
             '--parallel=3',
             '--uncommitted',
             '--exclude=platform,@ifla/dev-servers,unified-spreadsheet,standards-cli',

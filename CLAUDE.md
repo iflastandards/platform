@@ -151,6 +151,13 @@ preview branch → feature branch → tests → implement → lint → PR
 ## 🎯 Common Tasks
 
 ```bash
+# Admin Feature Development (NEW!)
+pnpm admin:feature "user-imports"    # Start Feature Factory
+pnpm admin:scaffold                  # Generate refine.dev UI
+pnpm admin:refine                    # Iterate on UI/mocks
+pnpm admin:backend                   # Implement backend
+pnpm admin:test                      # Run tests
+
 # New Docusaurus Site
 pnpm tsx scripts/scaffold-site.ts --siteKey=newsite --title="New Standard"
 pnpm tsx scripts/page-template-generator.ts --namespace=newsite

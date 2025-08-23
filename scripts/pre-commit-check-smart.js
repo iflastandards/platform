@@ -131,10 +131,10 @@ if (isDependencyOnly) {
     hasErrors = true;
   }
 
-  // Run ONLY unit tests (not integration or e2e)
-  console.log('📋 Running affected unit tests...');
+  // Run tests (using 'test' target as not all projects have 'test:unit')
+  console.log('📋 Running affected tests...');
   try {
-    execSync('pnpm nx affected --target=test:unit --parallel=6', {
+    execSync('pnpm nx affected --target=test --parallel=6 --exclude=platform,@ifla/dev-servers,unified-spreadsheet,standards-cli', {
       stdio: 'inherit',
       encoding: 'utf8',
       env: {
@@ -142,9 +142,9 @@ if (isDependencyOnly) {
         NODE_OPTIONS: '--max-old-space-size=6144',
       },
     });
-    console.log('✅ Unit tests passed\n');
+    console.log('✅ Tests passed\n');
   } catch (error) {
-    console.log('❌ Unit tests failed\n');
+    console.log('❌ Tests failed\n');
     hasErrors = true;
   }
 }

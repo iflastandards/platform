@@ -1,0 +1,258 @@
+# Admin Feature Factory - Agent Configuration
+# SuperClaude orchestration for refine.dev-first development
+
+version: "1.0"
+name: "Admin Feature Factory"
+description: "Orchestrated workflow for rapid admin feature development with refine.dev"
+
+agents:
+  # Phase 1: Discovery
+  requirements-analyst:
+    id: "admin-requirements"
+    trigger: "/sc:admin feature"
+    role: "Product Discovery Specialist"
+    flags: 
+      - "--brainstorm"
+      - "--think"
+    mcp: 
+      - "sequential"
+    prompts:
+      - "developer_notes/prompts/system-architecture-prime-directive.md"
+    tasks:
+      - "Gather user stories"
+      - "Define initial Zod schemas"
+      - "Create RBAC matrix"
+      - "Determine resource naming"
+    outputs:
+      - "admin_feature_requirements"
+    memory_prefix: "admin_feature_"
+    
+  # Phase 2: Scaffolding
+  refine-generator:
+    id: "admin-scaffold"
+    trigger: "/sc:admin scaffold"
+    role: "Refine.dev Scaffolding Expert"
+    mcp:
+      - "context7"  # For refine.dev documentation
+    tasks:
+      - "Generate refine CLI command"
+      - "Execute scaffolding"
+      - "Verify generated structure"
+      - "Connect MSW handlers"
+    outputs:
+      - "Working CRUD UI"
+      - "TypeScript interfaces"
+      - "Basic dataProvider"
+    constraints:
+      - "Use Ant Design components"
+      - "Follow refine.dev patterns"
+      
+  # Phase 3: Iterative Refinement
+  ui-refiner:
+    id: "admin-ui-refine"
+    trigger: "/sc:admin refine ui"
+    role: "UI Polish Expert"
+    flags:
+      - "--iterate"
+      - "--token-efficient"
+    mcp:
+      - "magic"     # For UI generation
+      - "context7"  # For Ant Design patterns
+    tasks:
+      - "Customize Ant Design components"
+      - "Enhance form validation"
+      - "Improve table features"
+      - "Polish UX flows"
+    constraints:
+      - "Preserve refine.dev structure"
+      - "Maintain MSW data source"
+      - "Keep TypeScript strict"
+    memory: "admin_feature_iterations"
+    
+  contract-refiner:
+    id: "admin-contracts"
+    trigger: "/sc:admin refine contracts"
+    role: "Schema Evolution Specialist"
+    mcp:
+      - "serena"  # For symbol operations
+    tasks:
+      - "Evolve Zod schemas iteratively"
+      - "Maintain backward compatibility"
+      - "Generate TypeScript types"
+      - "Update fixture data"
+    memory: "contract_evolution"
+    constraints:
+      - "Never break existing types"
+      - "Version schema changes"
+      
+  mock-engineer:
+    id: "admin-mocks"
+    trigger: "/sc:admin refine mocks"
+    role: "MSW Mock Specialist"
+    mcp:
+      - "morphllm"  # For bulk transformations
+    tasks:
+      - "Create realistic data scenarios"
+      - "Simulate all UI states"
+      - "Add delay and error conditions"
+      - "Generate edge cases"
+      - "Mock pagination and filtering"
+    priority: "Make mocks indistinguishable from production"
+    
+  # Phase 4: Backend Implementation
+  backend-engineer:
+    id: "admin-backend"
+    trigger: "/sc:admin backend"
+    role: "Backend Implementation Expert"
+    flags:
+      - "--task-manage"
+      - "--orchestrate"
+    mcp:
+      - "serena"
+      - "morphllm"
+    prompts:
+      - "developer_notes/prompts/backend-integration-plan-generation.md"
+    tasks:
+      - "Create Supabase schema"
+      - "Implement service adapters"
+      - "Build Edge Functions"
+      - "Connect live endpoints"
+      - "Migrate from MSW to live"
+    parallel: true
+    memory: "backend_implementation"
+    
+  # Phase 5: Testing
+  test-engineer:
+    id: "admin-test"
+    trigger: "/sc:admin test"
+    role: "Test Automation Expert"
+    flags:
+      - "--think-hard"
+      - "--validate"
+    mcp:
+      - "playwright"  # For E2E tests
+      - "sequential"  # For test strategy
+    prompts:
+      - "developer_notes/prompts/test-development-specification.md"
+    tasks:
+      - "Write integration tests"
+      - "Create E2E scenarios"
+      - "Test RBAC matrix"
+      - "Validate accessibility"
+    outputs:
+      - "Test coverage report"
+      - "Accessibility audit"
+      
+  qa-auditor:
+    id: "admin-qa"
+    trigger: "/sc:admin qa"
+    role: "Quality Assurance Guardian"
+    flags:
+      - "--ultrathink"
+      - "--safe-mode"
+    prompts:
+      - "developer_notes/prompts/qa-release-verification-plan.md"
+    tasks:
+      - "Run comprehensive test suite"
+      - "Perform accessibility audit"
+      - "Security review"
+      - "Performance validation"
+      - "Create bug reports"
+    gates:
+      - "All tests passing"
+      - "Zero critical bugs"
+      - "WCAG 2.1 AA compliant"
+      
+  # Phase 6: Documentation
+  docs-generator:
+    id: "admin-docs"
+    trigger: "/sc:admin docs"
+    role: "Documentation & Knowledge Transfer Specialist"
+    flags:
+      - "--token-efficient"
+      - "--think"
+    mcp:
+      - "context7"    # Documentation best practices
+      - "morphllm"    # Bulk content generation
+      - "playwright"  # Screenshot capture
+    tasks:
+      - "Generate API docs from Zod schemas"
+      - "Create user guides with screenshots"
+      - "Write developer README files"
+      - "Build in-app help content"
+      - "Generate field tooltips"
+      - "Create guided tours"
+      - "Index help for search"
+    outputs:
+      - "docs/features/{resource}/"
+      - "In-app help components"
+      - "Tutorial sequences"
+    constraints:
+      - "Match brand voice"
+      - "WCAG compliant docs"
+      - "Version with feature"
+
+# Orchestration Workflows
+workflows:
+  full-feature:
+    name: "Complete Feature Factory"
+    trigger: "/sc:admin feature"
+    phases:
+      - agent: "requirements-analyst"
+        gate: "requirements_approved"
+      - agent: "refine-generator"
+        gate: "scaffolding_complete"
+      - agents: ["ui-refiner", "contract-refiner", "mock-engineer"]
+        mode: "iterative"
+        cycles: 3-5
+        gate: "ui_contracts_stable"
+      - agent: "backend-engineer"
+        gate: "backend_complete"
+      - agents: ["test-engineer", "qa-auditor"]
+        mode: "parallel"
+        gate: "tests_passing"
+      - agent: "docs-generator"
+        gate: "documentation_complete"
+        
+  quick-prototype:
+    name: "Rapid Prototype"
+    trigger: "/sc:admin prototype"
+    phases:
+      - agent: "requirements-analyst"
+        simplified: true
+      - agent: "refine-generator"
+      - agent: "mock-engineer"
+        
+  iteration-cycle:
+    name: "Refinement Iteration"
+    trigger: "/sc:admin iterate"
+    phases:
+      - agents: ["ui-refiner", "contract-refiner", "mock-engineer"]
+        mode: "sequential"
+        memory_checkpoint: true
+
+# Memory Management
+memory:
+  persistence: "serena"
+  schemas:
+    - "admin_feature_current"
+    - "admin_feature_requirements"
+    - "admin_feature_iterations"
+    - "admin_feature_checkpoints"
+  checkpoint_triggers:
+    - "phase_complete"
+    - "iteration_complete"
+    - "user_approval"
+
+# Command Aliases
+commands:
+  "/sc:admin feature": "Start new feature with full workflow"
+  "/sc:admin scaffold": "Generate refine.dev scaffolding"
+  "/sc:admin refine": "Start refinement iteration"
+  "/sc:admin backend": "Implement backend services"
+  "/sc:admin test": "Run comprehensive tests"
+  "/sc:admin qa": "Quality assurance audit"
+  "/sc:admin status": "Show current workflow status"
+  "/sc:admin checkpoint": "Save current state"
+  "/sc:admin resume": "Continue from last checkpoint"
+  "/sc:admin rollback": "Revert to previous iteration"

@@ -21,6 +21,7 @@
     "@ant-design/icons": "*",
     "@octokit/auth-app": "*",
     "@octokit/rest": "*",
+    "react-markdown": "^10.1.0",
     "svix": "*"
   },
   "devDependencies": {
