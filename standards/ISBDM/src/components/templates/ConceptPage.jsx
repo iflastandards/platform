@@ -83,9 +83,9 @@ export default function ConceptPage({
       <section className="concept-footer">
         <hr />
         <div className="edit-page-feedback">
-          <a href="#" className="edit-page-link">Edit this page</a>
+          <button type="button" className="edit-page-link" onClick={() => console.log('Edit page clicked')}>Edit this page</button>
           <span className="separator">•</span>
-          <a href="#" className="report-issue-link">Report an issue</a>
+          <button type="button" className="report-issue-link" onClick={() => console.log('Report issue clicked')}>Report an issue</button>
         </div>
       </section>
     </article>

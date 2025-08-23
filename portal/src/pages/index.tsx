@@ -8,7 +8,7 @@ export default function Home(): ReactNode {
   const {siteConfig: _siteConfig} = useDocusaurusContext();
   return (
     <Layout
-      title={`IFLA Standards Portal`}
+      title="IFLA Standards Portal"
       description="Access authoritative bibliographic standards developed by the International Federation of Library Associations and Institutions">
       <Hero />
       <main>

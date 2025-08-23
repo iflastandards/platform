@@ -30,9 +30,9 @@ export default function ValueVocabularyPage({
   const sortedValues = [...filteredValues].sort((a, b) => {
     if (sortBy === 'value') {
       return a.value.localeCompare(b.value);
-    } else {
+    } 
       return a.definition.localeCompare(b.definition);
-    }
+    
   });
 
   return (

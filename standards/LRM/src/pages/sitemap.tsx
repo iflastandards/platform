@@ -1,4 +1,5 @@
-import React, {JSX} from 'react';
+import {type JSX} from 'react';
+import Heading from '@theme/Heading';
 import Layout from '@theme/Layout';
 import {useAllDocsData} from '@docusaurus/plugin-content-docs/lib/client';
 import Link from '@docusaurus/Link';
@@ -32,7 +33,7 @@ export default function Sitemap(): JSX.Element {
     const categories: Record<string, DocItem[]> = {};
     
     docs.forEach(doc => {
-      if (!doc.title) return; // Skip docs without titles
+      if (!doc.title) {return;} // Skip docs without titles
       
       // Extract category from doc ID or path
       let category = 'General';
@@ -79,14 +80,14 @@ export default function Sitemap(): JSX.Element {
     >
       <main className={styles.sitemapContainer}>
         <div className={styles.sitemapHeader}>
-          <h1>Sitemap</h1>
+          <Heading as="h1">Sitemap</Heading>
           <p>Complete overview of all pages in IFLA LRM documentation</p>
         </div>
         
         <div className={styles.sitemapContent}>
           {Object.entries(allDocsData).map(([pluginId, pluginData]) => {
             const latestVersion = pluginData.versions.find(v => v.isLast);
-            if (!latestVersion) return null;
+            if (!latestVersion) {return null;}
 
             const categories = organizeDocsByCategory(latestVersion.docs as unknown as DocItem[]);
 
@@ -95,7 +96,7 @@ export default function Sitemap(): JSX.Element {
                 <div className={styles.categoryGrid}>
                   {Object.entries(categories).map(([categoryName, docs]) => (
                     <div key={categoryName} className={styles.categorySection}>
-                      <h3 className={styles.categoryTitle}>{categoryName}</h3>
+                      <Heading as="h3" className={styles.categoryTitle}>{categoryName}</Heading>
                       <ul className={styles.docsList}>
                         {docs.map(doc => (
                           <DocLink key={doc.id} doc={doc} />
@@ -110,7 +111,7 @@ export default function Sitemap(): JSX.Element {
         </div>
         
         <div className={styles.additionalLinks}>
-          <h2>Additional Resources</h2>
+          <Heading as="h2">Additional Resources</Heading>
           <ul className={styles.docsList}>
             <li><Link to="/rdf/">RDF Downloads</Link></li>
             <li><Link to="/blog/">Blog</Link></li>

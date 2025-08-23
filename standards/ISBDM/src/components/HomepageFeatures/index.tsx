@@ -1,8 +1,7 @@
-import type {ReactNode} from 'react';
+import { type ReactNode } from 'react';
 import clsx from 'clsx';
 import Heading from '@theme/Heading';
 import styles from './styles.module.css';
-import React from 'react';
 
 type FeatureItem = {
   title: string;
@@ -16,9 +15,9 @@ const FeatureList: FeatureItem[] = [
     icon: '🏗️',
     description: (
       <>
-        ISBDM implements the IFLA Library Reference Model (LRM) for manifestations, 
-        providing a modern foundation for describing bibliographic resources in 
-        an interconnected, semantic web-ready format.
+        ISBDM implements the IFLA Library Reference Model (LRM) for
+        manifestations, providing a modern foundation for describing
+        bibliographic resources in an interconnected, semantic web-ready format.
       </>
     ),
   },
@@ -27,8 +26,8 @@ const FeatureList: FeatureItem[] = [
     icon: '🧭',
     description: (
       <>
-        Every element is just two clicks away. Navigate through hierarchical 
-        relationships, cross-references, and semantic connections with an 
+        Every element is just two clicks away. Navigate through hierarchical
+        relationships, cross-references, and semantic connections with an
         intuitive interface designed for cataloging professionals.
       </>
     ),
@@ -38,15 +37,15 @@ const FeatureList: FeatureItem[] = [
     icon: '📚',
     description: (
       <>
-        Unlike static PDFs, ISBDM evolves with your needs. Updates are instant, 
-        examples are interactive, and the entire standard adapts to how you 
-        use it - with collapsible sections and smart search.
+        Unlike static PDFs, ISBDM evolves with your needs. Updates are instant,
+        examples are interactive, and the entire standard adapts to how you use
+        it - with collapsible sections and smart search.
       </>
     ),
   },
 ];
 
-function Feature({title, icon, description}: FeatureItem) {
+function Feature({ title, icon, description }: FeatureItem) {
   return (
     <div className={clsx('col col--4')}>
       <div className="text--center">

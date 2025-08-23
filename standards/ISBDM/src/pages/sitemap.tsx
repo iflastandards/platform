@@ -1,6 +1,7 @@
-import React, {JSX} from 'react';
+import { type JSX } from 'react';
+import Heading from '@theme/Heading';
 import Layout from '@theme/Layout';
-import {useAllDocsData} from '@docusaurus/plugin-content-docs/lib/client';
+import { useAllDocsData } from '@docusaurus/plugin-content-docs/lib/client';
 import Link from '@docusaurus/Link';
 import useBaseUrl from '@docusaurus/useBaseUrl';
 import styles from './sitemap.module.scss';
@@ -20,38 +21,36 @@ function DocLink({ doc }: { doc: DocItem }) {
   const processedPath = useBaseUrl(doc.path);
   return (
     <li key={doc.id}>
-      <Link to={processedPath}>
-        {doc.title || doc.id}
-      </Link>
+      <Link to={processedPath}>{doc.title || doc.id}</Link>
     </li>
   );
 }
 
 export default function Sitemap(): JSX.Element {
   const allDocsData = useAllDocsData();
-  
+
   // Organize docs by category
   const organizeDocsByCategory = (docs: DocItem[]) => {
     const categories: Record<string, DocItem[]> = {
-      'Introduction': [],
-      'Assessment': [],
-      'Glossary': [],
-      'Examples': [],
-      'Statements': [],
-      'Notes': [],
-      'Attributes': [],
-      'Relationships': [],
+      Introduction: [],
+      Assessment: [],
+      Glossary: [],
+      Examples: [],
+      Statements: [],
+      Notes: [],
+      Attributes: [],
+      Relationships: [],
       'Value Vocabularies': [],
       'String Encoding Schemes': [],
-      'About': [],
-      'Other': []
+      About: [],
+      Other: [],
     };
-    
-    docs.forEach(doc => {
+
+    docs.forEach((doc) => {
       const pathParts = doc.id.split('/');
       const category = pathParts[0];
-      
-      switch(category) {
+
+      switch (category) {
         case 'intro':
           categories['Introduction'].push(doc);
           break;
@@ -89,17 +88,17 @@ export default function Sitemap(): JSX.Element {
           categories['Other'].push(doc);
       }
     });
-    
+
     // Remove empty categories
-    Object.keys(categories).forEach(key => {
+    Object.keys(categories).forEach((key) => {
       if (categories[key].length === 0) {
         delete categories[key];
       }
     });
-    
+
     return categories;
   };
-  
+
   return (
     <Layout
       title="Sitemap"
@@ -107,29 +106,38 @@ export default function Sitemap(): JSX.Element {
     >
       <main className={styles.sitemapContainer}>
         <div className={styles.sitemapHeader}>
-          <h1>Sitemap</h1>
-          <p>Complete overview of all pages in ISBD for Manifestation documentation</p>
+          <Heading as="h1">Sitemap</Heading>
+          <p>
+            Complete overview of all pages in ISBD for Manifestation
+            documentation
+          </p>
         </div>
-        
+
         <div className={styles.sitemapContent}>
           {Object.entries(allDocsData).map(([pluginId, pluginData]) => {
-            const latestVersion = pluginData.versions.find(v => v.isLast);
-            if (!latestVersion) return null;
+            const latestVersion = pluginData.versions.find((v) => v.isLast);
+            if (!latestVersion) {
+              return null;
+            }
 
-            const categories = organizeDocsByCategory(latestVersion.docs as unknown as DocItem[]);
-
-
+            const categories = organizeDocsByCategory(
+              latestVersion.docs as unknown as DocItem[],
+            );
 
             return (
               <div key={pluginId} className={styles.versionSection}>
                 <div className={styles.categoryGrid}>
                   {Object.entries(categories).map(([categoryName, docs]) => (
                     <div key={categoryName} className={styles.categorySection}>
-                      <h2 className={styles.categoryTitle}>{categoryName}</h2>
+                      <Heading as="h2" className={styles.categoryTitle}>
+                        {categoryName}
+                      </Heading>
                       <ul className={styles.docsList}>
                         {docs
-                          .sort((a, b) => (a.title || '').localeCompare(b.title || ''))
-                          .map(doc => (
+                          .sort((a, b) =>
+                            (a.title || '').localeCompare(b.title || ''),
+                          )
+                          .map((doc) => (
                             <DocLink key={doc.id} doc={doc} />
                           ))}
                       </ul>
@@ -139,13 +147,31 @@ export default function Sitemap(): JSX.Element {
               </div>
             );
           })}
-          
+
           <div className={styles.additionalLinks}>
-            <h2>Additional Resources</h2>
+            <Heading as="h2">Additional Resources</Heading>
             <ul className={styles.docsList}>
-              <li><Link to={useBaseUrl('/blog')}>Blog</Link></li>
-              <li><Link to="https://github.com/iflastandards/ISBDM" target="_blank" rel="noopener noreferrer">GitHub Repository</Link></li>
-              <li><Link to="https://www.ifla.org" target="_blank" rel="noopener noreferrer">IFLA Website</Link></li>
+              <li>
+                <Link to={useBaseUrl('/blog')}>Blog</Link>
+              </li>
+              <li>
+                <Link
+                  to="https://github.com/iflastandards/ISBDM"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  GitHub Repository
+                </Link>
+              </li>
+              <li>
+                <Link
+                  to="https://www.ifla.org"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  IFLA Website
+                </Link>
+              </li>
             </ul>
           </div>
         </div>

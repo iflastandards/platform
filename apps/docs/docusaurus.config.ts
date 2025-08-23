@@ -4,7 +4,7 @@ import type * as Preset from '@docusaurus/preset-classic';
 import {
   getAdminDocsConfig,
   type Environment,
-} from '@ifla/theme/config/siteConfig';
+} from '@ifla/contracts';
 
 // This runs in Node.js - Don't use client-side code here (browser APIs, JSX...)
 const DOCS_ENV =

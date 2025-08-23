@@ -7,7 +7,7 @@ import {
   getAdminPortalConfig,
   type SiteKey,
   type Environment,
-} from '@ifla/theme/config/siteConfig';
+} from '@ifla/contracts';
 
 /* ----------------------------------------------------------------------------
  * 🗺️ 1. Determine current docs environment
