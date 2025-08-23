@@ -527,6 +527,7 @@
     "@docusaurus/tsconfig": "3.8.1",
     "@docusaurus/types": "3.8.1",
     "@docusaurus/utils-common": "^3.8.1",
+    "@google/generative-ai": "^0.24.1",
     "@ifla/eslint-config": "workspace:*",
     "@kie/mock-github": "^2.0.1",
     "@memberjunction/ai": "^2.92.0",
