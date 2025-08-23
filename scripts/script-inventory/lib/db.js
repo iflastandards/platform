@@ -56,8 +56,8 @@ class ScriptDatabase {
   run(sql, params = []) {
     return new Promise((resolve, reject) => {
       this.db.run(sql, params, function (err) {
-        if (err) reject(err);
-        else resolve({ lastID: this.lastID, changes: this.changes });
+        if (err) {reject(err);}
+        else {resolve({ lastID: this.lastID, changes: this.changes });}
       });
     });
   }
@@ -68,8 +68,8 @@ class ScriptDatabase {
   get(sql, params = []) {
     return new Promise((resolve, reject) => {
       this.db.get(sql, params, (err, row) => {
-        if (err) reject(err);
-        else resolve(row);
+        if (err) {reject(err);}
+        else {resolve(row);}
       });
     });
   }
@@ -80,8 +80,8 @@ class ScriptDatabase {
   all(sql, params = []) {
     return new Promise((resolve, reject) => {
       this.db.all(sql, params, (err, rows) => {
-        if (err) reject(err);
-        else resolve(rows);
+        if (err) {reject(err);}
+        else {resolve(rows);}
       });
     });
   }
@@ -92,8 +92,8 @@ class ScriptDatabase {
   exec(sql) {
     return new Promise((resolve, reject) => {
       this.db.exec(sql, (err) => {
-        if (err) reject(err);
-        else resolve();
+        if (err) {reject(err);}
+        else {resolve();}
       });
     });
   }
@@ -102,7 +102,7 @@ class ScriptDatabase {
    * Run all migrations
    */
   async migrate() {
-    if (!this.db) await this.connect();
+    if (!this.db) {await this.connect();}
 
     // Create migrations table if it doesn't exist
     await this.exec(`
@@ -128,7 +128,7 @@ class ScriptDatabase {
       const version = file.replace('.sql', '');
 
       if (applied.has(version)) {
-        if (this.verbose) console.log(`✓ Migration ${version} already applied`);
+        if (this.verbose) {console.log(`✓ Migration ${version} already applied`);}
         continue;
       }
 
@@ -198,12 +198,12 @@ class ScriptDatabase {
     // Get the ID of the inserted/updated row
     if (result.lastID) {
       return result.lastID;
-    } else {
+    } 
       const row = await this.get('SELECT id FROM scripts WHERE path = ?', [
         scriptData.path,
       ]);
       return row.id;
-    }
+    
   }
 
   /**
@@ -305,7 +305,7 @@ class ScriptDatabase {
    * Get script by path
    */
   async getScriptByPath(scriptPath) {
-    return await this.get('SELECT * FROM scripts WHERE path = ?', [scriptPath]);
+    return this.get('SELECT * FROM scripts WHERE path = ?', [scriptPath]);
   }
 
   /**
@@ -323,21 +323,21 @@ class ScriptDatabase {
    * Get all scripts
    */
   async getAllScripts() {
-    return await this.all('SELECT * FROM scripts ORDER BY path');
+    return this.all('SELECT * FROM scripts ORDER BY path');
   }
 
   /**
    * Get undocumented scripts
    */
   async getUndocumentedScripts() {
-    return await this.all('SELECT * FROM v_undocumented_scripts');
+    return this.all('SELECT * FROM v_undocumented_scripts');
   }
 
   /**
    * Get deprecated scripts
    */
   async getDeprecatedScripts() {
-    return await this.all('SELECT * FROM v_deprecated_scripts');
+    return this.all('SELECT * FROM v_deprecated_scripts');
   }
 
   /**
@@ -397,14 +397,14 @@ class ScriptDatabase {
    * Find potential duplicates
    */
   async findDuplicates() {
-    return await this.all('SELECT * FROM v_potential_duplicates');
+    return this.all('SELECT * FROM v_potential_duplicates');
   }
 
   /**
    * Search scripts (full-text search)
    */
   async searchScripts(query) {
-    return await this.all(
+    return this.all(
       `
       SELECT s.* 
       FROM scripts s
@@ -420,7 +420,7 @@ class ScriptDatabase {
    * Get scripts by directory
    */
   async getScriptsByDirectory() {
-    return await this.all('SELECT * FROM v_scripts_by_directory');
+    return this.all('SELECT * FROM v_scripts_by_directory');
   }
 
   /**
@@ -429,10 +429,10 @@ class ScriptDatabase {
   async query(sql, params = []) {
     // Determine if it's a SELECT query
     if (sql.trim().toUpperCase().startsWith('SELECT')) {
-      return await this.all(sql, params);
-    } else {
-      return await this.run(sql, params);
-    }
+      return this.all(sql, params);
+    } 
+      return this.run(sql, params);
+    
   }
 
   /**
@@ -442,7 +442,7 @@ class ScriptDatabase {
     return new Promise((resolve, reject) => {
       if (this.db) {
         this.db.close((err) => {
-          if (err) reject(err);
+          if (err) {reject(err);}
           else {
             this.db = null;
             resolve();

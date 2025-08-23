@@ -5,8 +5,7 @@ import * as fs from 'fs';
 import * as path from 'path';
 import { parse } from 'csv-parse/sync';
 import { google } from 'googleapis';
-import { createSpreadsheetAPI, UnifiedSpreadsheetAPI } from '@ifla/unified-spreadsheet';
-import type { Workbook, Sheet, Row } from '@ifla/unified-spreadsheet';
+import { createSpreadsheetAPI, type UnifiedSpreadsheetAPI, type Workbook, type Sheet, type Row } from '@ifla/unified-spreadsheet';
 
 export interface VocabularyInfo {
   name: string;

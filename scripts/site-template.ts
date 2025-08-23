@@ -150,7 +150,7 @@ export const SITE_TEMPLATE = {
   ) => `import { themes as prismThemes } from 'prism-react-renderer';
 import type { Config } from '@docusaurus/types';
 import type * as Preset from '@docusaurus/preset-classic';
-import { getSiteConfig, getSiteConfigMap, type SiteKey, type Environment } from '@ifla/theme/config/siteConfig';${
+import { getSiteConfig, getSiteConfigMap, type SiteKey, type Environment } from '@ifla/contracts';${
     config.features?.enableCustomSidebar
       ? `
 import type { SidebarItemsGeneratorArgs, NormalizedSidebarItem } from '@docusaurus/plugin-content-docs/lib/sidebars/types';

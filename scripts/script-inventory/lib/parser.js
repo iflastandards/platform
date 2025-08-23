@@ -112,10 +112,10 @@ class ScriptParser {
     // Check shebang first
     const shebang = content.match(/^#!.*?(\w+)$/m);
     if (shebang) {
-      if (shebang[1].includes('node')) return 'javascript';
-      if (shebang[1].includes('python')) return 'python';
+      if (shebang[1].includes('node')) {return 'javascript';}
+      if (shebang[1].includes('python')) {return 'python';}
       if (shebang[1].includes('bash') || shebang[1].includes('sh'))
-        return 'shell';
+        {return 'shell';}
     }
 
     // Check by extension
@@ -312,12 +312,12 @@ class ScriptParser {
     matches.forEach((m) => formats.add(m[1].toLowerCase()));
 
     // Also check for explicit format handling
-    if (content.includes('JSON.stringify')) formats.add('json');
-    if (content.includes('csv') || content.includes('CSV')) formats.add('csv');
+    if (content.includes('JSON.stringify')) {formats.add('json');}
+    if (content.includes('csv') || content.includes('CSV')) {formats.add('csv');}
     if (content.includes('markdown') || content.includes('## '))
-      formats.add('markdown');
+      {formats.add('markdown');}
     if (content.includes('<html') || content.includes('</'))
-      formats.add('html');
+      {formats.add('html');}
 
     return Array.from(formats);
   }
@@ -387,15 +387,15 @@ class ScriptParser {
     let score = 0;
 
     // Has documentation (40 points)
-    if (metadata.documentation.docString) score += 15;
-    if (metadata.documentation.docComments.length > 0) score += 15;
-    if (metadata.documentation.headerComments.length > 0) score += 10;
+    if (metadata.documentation.docString) {score += 15;}
+    if (metadata.documentation.docComments.length > 0) {score += 15;}
+    if (metadata.documentation.headerComments.length > 0) {score += 10;}
 
     // Has purpose (20 points)
-    if (metadata.purpose) score += 20;
+    if (metadata.purpose) {score += 20;}
 
     // Has help option (15 points)
-    if (metadata.hasHelpOption) score += 15;
+    if (metadata.hasHelpOption) {score += 15;}
 
     // Has proper CLI args documentation (15 points)
     if (metadata.cliArguments.length > 0) {
@@ -406,10 +406,10 @@ class ScriptParser {
     }
 
     // Has error handling (5 points)
-    if (metadata.hasErrorHandling) score += 5;
+    if (metadata.hasErrorHandling) {score += 5;}
 
     // Has inline comments (5 points)
-    if (metadata.documentation.inlineComments > 5) score += 5;
+    if (metadata.documentation.inlineComments > 5) {score += 5;}
 
     return Math.round(score);
   }

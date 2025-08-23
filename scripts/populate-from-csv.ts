@@ -81,11 +81,11 @@ async function main() {
     for (const record of records as Record<string, unknown>[]) {
       const recordData = record as Record<string, unknown>;
       // Skip header rows or empty records
-      if (!recordData.uri || recordData.uri === 'uri') continue;
+      if (!recordData.uri || recordData.uri === 'uri') {continue;}
 
       // Extract element ID
       const elementId = extractElementId(recordData.uri as string);
-      if (!elementId) continue;
+      if (!elementId) {continue;}
 
       // Determine category
       const category = determineCategory(elementId, config.categories);

@@ -171,11 +171,11 @@ ${content.split('\n').slice(0, 100).join('\n')}
     // Common patterns
     if (analysis.isTest) {
       if (name.includes('e2e'))
-        return `End-to-end tests for ${words.slice(1).join(' ')}`;
+        {return `End-to-end tests for ${words.slice(1).join(' ')}`;}
       if (name.includes('unit'))
-        return `Unit tests for ${words.slice(1).join(' ')}`;
+        {return `Unit tests for ${words.slice(1).join(' ')}`;}
       if (name.includes('integration'))
-        return `Integration tests for ${words.slice(1).join(' ')}`;
+        {return `Integration tests for ${words.slice(1).join(' ')}`;}
       return `Tests for ${words.join(' ')}`;
     }
 

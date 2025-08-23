@@ -2,7 +2,7 @@
 
 import * as fs from 'fs';
 import * as path from 'path';
-import { ElementSet, SiteConfiguration, Vocabulary } from './parse-ifla-report';
+import { type ElementSet, type SiteConfiguration, type Vocabulary } from './parse-ifla-report';
 
 /**
  * Site Configuration Generator
@@ -160,7 +160,7 @@ class SiteConfigurationGenerator {
     config: SiteConfiguration,
     existing: ExistingSiteConfig,
   ): any {
-    const navigationStrategy = config.navigationStrategy;
+    const {navigationStrategy} = config;
 
     return {
       // Core namespace info

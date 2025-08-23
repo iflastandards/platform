@@ -16,7 +16,7 @@ const projectFiles = execSync('find . -name "project.json" -not -path "*/node_mo
   encoding: 'utf8'
 }).trim().split('\n').filter(Boolean);
 
-let issues = [];
+const issues = [];
 let validated = 0;
 
 projectFiles.forEach(file => {

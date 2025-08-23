@@ -28,7 +28,7 @@ import path from 'path';
 dotenv.config();
 
 // Use native fetch (Node.js 18+)
-const fetch = globalThis.fetch;
+const {fetch} = globalThis;
 
 class VocabularyComparisonTool {
     constructor(apiKey, spreadsheetId, options = {}) {
@@ -177,14 +177,14 @@ class VocabularyComparisonTool {
             sheet.title.toLowerCase() === token.toLowerCase()
         );
         
-        if (match) return match;
+        if (match) {return match;}
         
         // Try title match
         if (title) {
             match = availableSheets.find(sheet => 
                 sheet.title.toLowerCase() === title.toLowerCase()
             );
-            if (match) return match;
+            if (match) {return match;}
         }
         
         // Special handling for common patterns
@@ -194,7 +194,7 @@ class VocabularyComparisonTool {
                 sheet.title.toLowerCase().includes('unconstrained') ||
                 sheet.title.toLowerCase() === 'unc/elements'
             );
-            if (match) return match;
+            if (match) {return match;}
         }
         
         if (token === 'isbd') {
@@ -203,7 +203,7 @@ class VocabularyComparisonTool {
                 (sheet.title.toLowerCase().includes('element') && 
                  !sheet.title.toLowerCase().includes('unc'))
             );
-            if (match) return match;
+            if (match) {return match;}
         }
         
         // Try partial matches
@@ -212,7 +212,7 @@ class VocabularyComparisonTool {
             token.toLowerCase().includes(sheet.title.toLowerCase())
         );
         
-        if (match) return match;
+        if (match) {return match;}
         
         // Try title partial matches
         if (title) {
@@ -233,7 +233,7 @@ class VocabularyComparisonTool {
             const index = headers.findIndex(h => 
                 h && h.toLowerCase().includes(name.toLowerCase())
             );
-            if (index >= 0) return index;
+            if (index >= 0) {return index;}
         }
         return -1;
     }
@@ -242,12 +242,12 @@ class VocabularyComparisonTool {
      * Check if a row appears to be instructions rather than data
      */
     isInstructionRow(token, uri) {
-        if (!token) return true;
+        if (!token) {return true;}
         
         // Skip rows that look like instructions
-        if (token.includes(':') || token.length > 50) return true;
-        if (token.toLowerCase().includes('instruction') || token.toLowerCase().includes('example')) return true;
-        if (uri && !uri.startsWith('http') && uri.length > 0) return true;
+        if (token.includes(':') || token.length > 50) {return true;}
+        if (token.toLowerCase().includes('instruction') || token.toLowerCase().includes('example')) {return true;}
+        if (uri && !uri.startsWith('http') && uri.length > 0) {return true;}
         
         return false;
     }
@@ -256,7 +256,7 @@ class VocabularyComparisonTool {
      * Check if URI appears to be a valid RDF endpoint
      */
     hasValidRdfUri(uri) {
-        if (!uri || !uri.startsWith('http')) return false;
+        if (!uri || !uri.startsWith('http')) {return false;}
         // Additional validation could be added here
         return true;
     }
@@ -368,7 +368,7 @@ class VocabularyComparisonTool {
      * - index: 0 (for repeatable values)
      */
     parseColumnHeader(header) {
-        if (!header) return null;
+        if (!header) {return null;}
 
         // Extract array index [n] if present
         const arrayMatch = header.match(/\[(\d+)\]$/);
@@ -396,7 +396,7 @@ class VocabularyComparisonTool {
 
         headers.forEach((header, colIndex) => {
             const parsed = this.parseColumnHeader(header);
-            if (!parsed) return;
+            if (!parsed) {return;}
 
             if (!columnMap.has(parsed.property)) {
                 columnMap.set(parsed.property, new Map());
@@ -446,7 +446,7 @@ class VocabularyComparisonTool {
      * Normalize full URI to prefixed form for comparison
      */
     normalizeUri(fullUri, vocab) {
-        if (!fullUri || !fullUri.startsWith('http')) return fullUri;
+        if (!fullUri || !fullUri.startsWith('http')) {return fullUri;}
         
         // Define namespace mappings
         const namespaceMappings = {
@@ -474,7 +474,7 @@ class VocabularyComparisonTool {
      * Expand prefixed URI to full URI with flexible namespace detection
      */
     expandUri(prefixedUri, vocab) {
-        if (!prefixedUri) return prefixedUri;
+        if (!prefixedUri) {return prefixedUri;}
         
         // If it's already a full URI, return as is
         if (prefixedUri.startsWith('http://') || prefixedUri.startsWith('https://')) {
@@ -488,13 +488,13 @@ class VocabularyComparisonTool {
             const localName = match[2];
             
             // Handle special case of prefix:sheetName/identifier (e.g., "isbd:unc_elements/P1001")
-            if (vocab.uri && vocab.sheetName && localName.startsWith(vocab.sheetName + '/')) {
+            if (vocab.uri && vocab.sheetName && localName.startsWith(`${vocab.sheetName  }/`)) {
                 const actualLocalName = localName.substring(vocab.sheetName.length + 1); // Remove "sheetName/"
                 if (vocab.uri.endsWith('/')) {
                     return `${vocab.uri}${actualLocalName}`;
-                } else {
+                } 
                     return `${vocab.uri}/${actualLocalName}`;
-                }
+                
             }
             
             // Use the vocab URI as the base namespace if available
@@ -503,33 +503,33 @@ class VocabularyComparisonTool {
                 if (vocab.uri.includes('/ns/isbd/terms/')) {
                     // ISBD-specific pattern
                     return `${vocab.uri}/${localName}`;
-                } else if (vocab.uri.endsWith('/')) {
+                } if (vocab.uri.endsWith('/')) {
                     // URI ends with slash
                     return `${vocab.uri}${localName}`;
-                } else {
+                } 
                     // Generic pattern - add slash
                     return `${vocab.uri}/${localName}`;
-                }
+                
             }
         }
         
         // Handle sheet-relative URIs like "unc_elements/P1001" or "elements/P1001"
-        if (vocab.uri && vocab.sheetName && prefixedUri.startsWith(vocab.sheetName + '/')) {
+        if (vocab.uri && vocab.sheetName && prefixedUri.startsWith(`${vocab.sheetName  }/`)) {
             const localName = prefixedUri.substring(vocab.sheetName.length + 1); // Remove "sheetName/"
             if (vocab.uri.endsWith('/')) {
                 return `${vocab.uri}${localName}`;
-            } else {
+            } 
                 return `${vocab.uri}/${localName}`;
-            }
+            
         }
         
         // Handle simple local identifiers like "P1001" or "C2001"
         if (vocab.uri && prefixedUri.match(/^[PC]\d+$/)) {
             if (vocab.uri.endsWith('/')) {
                 return `${vocab.uri}${prefixedUri}`;
-            } else {
+            } 
                 return `${vocab.uri}/${prefixedUri}`;
-            }
+            
         }
         
         return prefixedUri;
@@ -540,7 +540,7 @@ class VocabularyComparisonTool {
      */
     async fetchSheetConcepts(sheetName, vocab = null) {
         const data = await this.fetchSheetData(sheetName);
-        if (data.length === 0) return [];
+        if (data.length === 0) {return [];}
 
         const headers = data[0];
         const columnMap = this.organizeColumns(headers);
@@ -562,9 +562,9 @@ class VocabularyComparisonTool {
             let uriValues = [];
             for (const colName of uriColumns) {
                 uriValues = this.extractPropertyValues(row, columnMap.get(colName) || new Map());
-                if (uriValues.length > 0) break;
+                if (uriValues.length > 0) {break;}
             }
-            if (uriValues.length === 0) continue;
+            if (uriValues.length === 0) {continue;}
 
             // Extract other properties with flexible property names
             const prefLabelValues = this.extractPropertyValues(row, 
@@ -685,9 +685,9 @@ class VocabularyComparisonTool {
                         console.log(`   ✅ Successfully fetched RDF (${rdfText.length} chars) from ${strategy.url} (HTTP ${response.status})`);
                         console.log(`   📄 Content-Type: ${response.headers.get('content-type')}`);
                         return this.parseRdfConcepts(rdfText, vocabUri);
-                    } else {
+                    } 
                         console.log(`   ⚠️  HTTP ${response.status}: Empty or minimal content from ${strategy.url}`);
-                    }
+                    
                 } else {
                     console.log(`   ⚠️  HTTP ${response.status}: ${response.statusText} from ${strategy.url}`);
                 }
@@ -808,7 +808,7 @@ class VocabularyComparisonTool {
                 if (lang !== 'en') {
                     const label = this.extractRdfProperty(descriptionContent, 'prefLabel', lang) ||
                                  this.extractRdfProperty(descriptionContent, 'label', lang);
-                    if (label) concept.labels[lang] = label;
+                    if (label) {concept.labels[lang] = label;}
                 }
             }
 
@@ -866,7 +866,7 @@ class VocabularyComparisonTool {
                 if (lang !== 'en') {
                     const label = this.extractRdfProperty(elementContent, 'prefLabel', lang) ||
                                  this.extractRdfProperty(elementContent, 'label', lang);
-                    if (label) concept.labels[lang] = label;
+                    if (label) {concept.labels[lang] = label;}
                 }
             }
 
@@ -1066,7 +1066,7 @@ class VocabularyComparisonTool {
      * Normalize text for comparison (trim, lowercase, normalize whitespace)
      */
     normalizeText(text) {
-        if (!text) return '';
+        if (!text) {return '';}
         return text.trim().toLowerCase().replace(/\s+/g, ' ');
     }
 
@@ -1074,9 +1074,9 @@ class VocabularyComparisonTool {
      * Compare two arrays for equality (order-independent)
      */
     compareArrays(arr1, arr2) {
-        if (!arr1 && !arr2) return true;
-        if (!arr1 || !arr2) return false;
-        if (arr1.length !== arr2.length) return false;
+        if (!arr1 && !arr2) {return true;}
+        if (!arr1 || !arr2) {return false;}
+        if (arr1.length !== arr2.length) {return false;}
         
         const normalized1 = arr1.map(item => this.normalizeText(item)).sort();
         const normalized2 = arr2.map(item => this.normalizeText(item)).sort();
@@ -1361,18 +1361,18 @@ The following errors occurred during processing:
      */
     getVocabStatus(vocab, results) {
         const hasErrors = results.errors.some(e => e.vocabulary === vocab.token);
-        if (hasErrors) return '❌ Error';
+        if (hasErrors) {return '❌ Error';}
         
-        if (!vocab.sheetId) return '⚠️ No Sheet';
-        if (!vocab.hasRdf && !this.options.skipRdfCheck) return '⚠️ No RDF';
+        if (!vocab.sheetId) {return '⚠️ No Sheet';}
+        if (!vocab.hasRdf && !this.options.skipRdfCheck) {return '⚠️ No RDF';}
         
         const matches = results.matches.filter(m => m.vocabulary === vocab.token).length;
         const mismatches = results.mismatches.filter(m => m.vocabulary === vocab.token).length;
         const missing = results.missing.filter(m => m.vocabulary === vocab.token).length;
         
-        if (this.options.skipRdfCheck) return '✅ Validated';
-        if (mismatches === 0 && missing === 0 && matches > 0) return '✅ Perfect';
-        if (mismatches > 0 || missing > 0) return '⚠️ Issues';
+        if (this.options.skipRdfCheck) {return '✅ Validated';}
+        if (mismatches === 0 && missing === 0 && matches > 0) {return '✅ Perfect';}
+        if (mismatches > 0 || missing > 0) {return '⚠️ Issues';}
         
         return '✅ Processed';
     }
@@ -1381,7 +1381,7 @@ The following errors occurred during processing:
      * Escape markdown special characters
      */
     escapeMarkdown(text) {
-        if (!text) return '';
+        if (!text) {return '';}
         return text.replace(/[|\\`*_{}[\]()#+\-.!"]/g, '\\$&');
     }
 
@@ -1389,17 +1389,17 @@ The following errors occurred during processing:
      * Truncate text for display
      */
     truncateText(text, maxLength) {
-        if (!text) return '';
-        if (text.length <= maxLength) return this.escapeMarkdown(text);
-        return this.escapeMarkdown(text.substring(0, maxLength)) + '...';
+        if (!text) {return '';}
+        if (text.length <= maxLength) {return this.escapeMarkdown(text);}
+        return `${this.escapeMarkdown(text.substring(0, maxLength))  }...`;
     }
 
     /**
      * Format array for markdown display
      */
     formatArrayForMarkdown(arr) {
-        if (!arr || arr.length === 0) return 'none';
-        if (arr.length === 1) return this.escapeMarkdown(arr[0]);
+        if (!arr || arr.length === 0) {return 'none';}
+        if (arr.length === 1) {return this.escapeMarkdown(arr[0]);}
         return arr.map(item => this.escapeMarkdown(item)).join(', ');
     }
 }

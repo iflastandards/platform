@@ -101,13 +101,13 @@ async function checkAnchorExists(page, pageUrl, anchorId) {
       const decodedId = decodeURIComponent(id);
       
       // Check for element with matching id
-      if (document.getElementById(id) || document.getElementById(decodedId)) return true;
+      if (document.getElementById(id) || document.getElementById(decodedId)) {return true;}
       
       // Check for element with matching name attribute
-      if (document.querySelector(`[name="${id}"]`) || document.querySelector(`[name="${decodedId}"]`)) return true;
+      if (document.querySelector(`[name="${id}"]`) || document.querySelector(`[name="${decodedId}"]`)) {return true;}
       
       // Check for any element with the id
-      if (document.querySelector(`[id="${id}"]`) || document.querySelector(`[id="${decodedId}"]`)) return true;
+      if (document.querySelector(`[id="${id}"]`) || document.querySelector(`[id="${decodedId}"]`)) {return true;}
       
       // Check for Docusaurus-generated heading anchors
       const possibleIds = [
@@ -122,15 +122,15 @@ async function checkAnchorExists(page, pageUrl, anchorId) {
       ];
       
       for (const possibleId of possibleIds) {
-        if (document.getElementById(possibleId)) return true;
-        if (document.querySelector(`[id="${possibleId}"]`)) return true;
+        if (document.getElementById(possibleId)) {return true;}
+        if (document.querySelector(`[id="${possibleId}"]`)) {return true;}
       }
       
       // Check if there's a heading with text that would generate this anchor
       const headings = document.querySelectorAll('h1, h2, h3, h4, h5, h6');
       for (const heading of headings) {
         const headingId = heading.id;
-        if (headingId && (headingId === id || headingId === decodedId)) return true;
+        if (headingId && (headingId === id || headingId === decodedId)) {return true;}
         
         const headingText = heading.textContent || '';
         const generatedId = headingText.toLowerCase()
@@ -140,7 +140,7 @@ async function checkAnchorExists(page, pageUrl, anchorId) {
           .replace(/-+/g, '-')
           .replace(/^-|-$/g, '');
         
-        if (generatedId === id || generatedId === decodedId) return true;
+        if (generatedId === id || generatedId === decodedId) {return true;}
       }
       
       return false;
@@ -151,7 +151,7 @@ async function checkAnchorExists(page, pageUrl, anchorId) {
       // Try using Playwright's built-in locator
       const locator = page.locator(`#${CSS.escape(anchorId)}, [name="${anchorId}"]`);
       const count = await locator.count();
-      if (count > 0) return true;
+      if (count > 0) {return true;}
     }
     
     return anchorExists;
@@ -335,15 +335,13 @@ async function validateEnvironmentUrls(siteKey, environment, options = {}) {
         console.log(`📄 Page title: "${title}"`);
         
         // Get selector counts
-        const selectorCounts = await page.evaluate(() => {
-          return {
+        const selectorCounts = await page.evaluate(() => ({
             totalAnchors: document.querySelectorAll('a').length,
             anchorsWithHref: document.querySelectorAll('a[href]').length,
             navLinks: document.querySelectorAll('nav a, .navbar a').length,
             mainLinks: document.querySelectorAll('main a, .main a, [role="main"] a').length,
             markdownLinks: document.querySelectorAll('.markdown a, .theme-doc-markdown a').length
-          };
-        });
+          }));
         console.log(`📄 Link counts:`, selectorCounts);
         
         // Extract links with timeout protection
@@ -444,7 +442,7 @@ async function validateEnvironmentUrls(siteKey, environment, options = {}) {
               const availableAnchors = await page.evaluate(() => {
                 const anchors = new Set();
                 document.querySelectorAll('[id]').forEach(el => {
-                  if (el.id) anchors.add(el.id);
+                  if (el.id) {anchors.add(el.id);}
                 });
                 return Array.from(anchors).slice(0, 10);
               });
@@ -540,7 +538,7 @@ async function validateEnvironmentUrls(siteKey, environment, options = {}) {
               const availableAnchors = await page.evaluate(() => {
                 const anchors = new Set();
                 document.querySelectorAll('[id]').forEach(el => {
-                  if (el.id) anchors.add(el.id);
+                  if (el.id) {anchors.add(el.id);}
                 });
                 return Array.from(anchors).slice(0, 10);
               });
@@ -598,7 +596,7 @@ async function validateEnvironmentUrls(siteKey, environment, options = {}) {
         console.log(`\n❌ HIGH PRIORITY (${high.length}):`);
         high.forEach((issue, idx) => {
           console.log(`  ${idx + 1}. ${issue.type}: "${issue.text}" -> ${issue.link}`);
-          if (issue.error) console.log(`     Error: ${issue.error}`);
+          if (issue.error) {console.log(`     Error: ${issue.error}`);}
         });
       }
       
@@ -606,7 +604,7 @@ async function validateEnvironmentUrls(siteKey, environment, options = {}) {
         console.log(`\n⚠️  MEDIUM PRIORITY (${medium.length}):`);
         medium.forEach((issue, idx) => {
           console.log(`  ${idx + 1}. ${issue.type}: "${issue.text}" -> ${issue.link}`);
-          if (issue.anchor) console.log(`     Missing anchor: #${issue.anchor}`);
+          if (issue.anchor) {console.log(`     Missing anchor: #${issue.anchor}`);}
           if (issue.availableAnchors && issue.availableAnchors.length > 0) {
             console.log(`     Available: ${issue.availableAnchors.join(', ')}`);
           }

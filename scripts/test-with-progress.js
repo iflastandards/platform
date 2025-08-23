@@ -69,7 +69,7 @@ const results = {
   inProgress: new Set(),
 };
 
-let totalStartTime = Date.now();
+const totalStartTime = Date.now();
 
 // Function to run test for a single project
 function runProjectTest(project) {
@@ -142,9 +142,9 @@ function runProjectTest(project) {
 
         if (testMatch || failMatch || skipMatch) {
           const summary = [];
-          if (testMatch) summary.push(chalk.green(`${testMatch[1]} passed`));
-          if (failMatch) summary.push(chalk.red(`${failMatch[1]} failed`));
-          if (skipMatch) summary.push(chalk.yellow(`${skipMatch[1]} skipped`));
+          if (testMatch) {summary.push(chalk.green(`${testMatch[1]} passed`));}
+          if (failMatch) {summary.push(chalk.red(`${failMatch[1]} failed`));}
+          if (skipMatch) {summary.push(chalk.yellow(`${skipMatch[1]} skipped`));}
           console.log(chalk.gray(`     └─ ${summary.join(', ')}`));
         } else if (hasNoTestFiles) {
           console.log(chalk.gray(`     └─ No test files found`));

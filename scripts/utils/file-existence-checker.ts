@@ -1,6 +1,6 @@
 import fs from 'fs/promises';
 import path from 'path';
-import { DocReference } from './sidebar-reference-extractor';
+import { type DocReference } from './sidebar-reference-extractor';
 
 /**
  * Interface for missing file report

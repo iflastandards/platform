@@ -1,7 +1,10 @@
+/**
+ * @unit @api @low-priority
+ */
 #!/usr/bin/env node
 
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
-import { ChildProcess } from 'child_process';
+import { type ChildProcess } from 'child_process';
 
 // Mock the port-manager module
 const mockKillSitePort = vi.fn();
@@ -56,9 +59,7 @@ describe.skip('dev-servers', () => {
     mockSpawn.mockReturnValue(mockProc);
     
     // Import after mocks are set up
-    const module = await import('@ifla/dev-servers');
-    startServers = module.startServers;
-    stopServers = module.stopServers;
+    const { startServers, stopServers } = await import('@ifla/dev-servers');
   });
 
   afterEach(() => {

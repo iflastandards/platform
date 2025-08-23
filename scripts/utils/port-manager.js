@@ -151,7 +151,7 @@ async function killSitePort(siteName, verbose = false) {
     return false;
   }
 
-  return await killPort(port, verbose);
+  return killPort(port, verbose);
 }
 
 /**

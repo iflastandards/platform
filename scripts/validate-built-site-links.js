@@ -251,8 +251,8 @@ async function validateBuiltSiteLinks(siteKey, options = {}) {
           if (link.testUrl && link.testUrl !== link.href) {
             console.error(`     Tested: ${link.testUrl}`);
           }
-          if (link.error) console.error(`     Error: ${link.error}`);
-          if (link.status) console.error(`     Status: ${link.status} ${link.statusText || ''}`);
+          if (link.error) {console.error(`     Error: ${link.error}`);}
+          if (link.status) {console.error(`     Status: ${link.status} ${link.statusText || ''}`);}
         });
       }
       
@@ -263,8 +263,8 @@ async function validateBuiltSiteLinks(siteKey, options = {}) {
           if (link.testUrl && link.testUrl !== link.href) {
             console.error(`     Tested: ${link.testUrl}`);
           }
-          if (link.error) console.error(`     Error: ${link.error}`);
-          if (link.status) console.error(`     Status: ${link.status} ${link.statusText || ''}`);
+          if (link.error) {console.error(`     Error: ${link.error}`);}
+          if (link.status) {console.error(`     Status: ${link.status} ${link.statusText || ''}`);}
         });
       }
       
@@ -303,7 +303,7 @@ async function main() {
       ...validSites.map(s => ({ name: s, value: s }))
     ];
     
-    const siteAnswer = await inquirer.prompt([
+    const { site: siteValue } = await inquirer.prompt([
       {
         type: 'list',
         name: 'site',
@@ -312,11 +312,11 @@ async function main() {
         default: 'ISBDM'
       }
     ]);
-    site = siteAnswer.site;
+    site = siteValue;
   }
 
   if (!port) {
-    const portAnswer = await inquirer.prompt([
+    const { port: portValue } = await inquirer.prompt([
       {
         type: 'number',
         name: 'port',
@@ -325,12 +325,12 @@ async function main() {
         validate: (input) => (input >= 3000 && input <= 9999) || 'Port must be between 3000-9999'
       }
     ]);
-    port = portAnswer.port;
+    port = portValue;
   }
 
   // Ask about additional options if not provided
   if (includeGenerated === undefined) {
-    const includeAnswer = await inquirer.prompt([
+    const { includeGenerated: includeGeneratedValue } = await inquirer.prompt([
       {
         type: 'confirm',
         name: 'includeGenerated',
@@ -338,11 +338,11 @@ async function main() {
         default: false
       }
     ]);
-    includeGenerated = includeAnswer.includeGenerated;
+    includeGenerated = includeGeneratedValue;
   }
 
   if (site === 'all' && continueOnError === undefined) {
-    const continueAnswer = await inquirer.prompt([
+    const { continueOnError: continueOnErrorValue } = await inquirer.prompt([
       {
         type: 'confirm',
         name: 'continueOnError',
@@ -350,7 +350,7 @@ async function main() {
         default: true
       }
     ]);
-    continueOnError = continueAnswer.continueOnError;
+    continueOnError = continueOnErrorValue;
   }
 
   // Update options with prompted values

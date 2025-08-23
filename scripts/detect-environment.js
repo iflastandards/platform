@@ -35,17 +35,17 @@ function detectSystemSpecs() {
       memInfo = execSync('sysctl -n hw.memsize', { encoding: 'utf8' }).trim();
       const memGB = Math.round(parseInt(memInfo) / (1024 * 1024 * 1024));
       return { cores: parseInt(cpuInfo), memoryGB: memGB };
-    } else if (process.platform === 'linux') {
+    } if (process.platform === 'linux') {
       // Linux (including CI)
       cpuInfo = execSync('nproc', { encoding: 'utf8' }).trim();
       memInfo = execSync("free -b | awk '/^Mem:/{print $2}'", { encoding: 'utf8' }).trim();
       const memGB = Math.round(parseInt(memInfo) / (1024 * 1024 * 1024));
       return { cores: parseInt(cpuInfo), memoryGB: memGB };
-    } else {
+    } 
       // Windows or unknown
       const os = require('os');
       return { cores: os.cpus().length, memoryGB: Math.round(os.totalmem() / (1024 * 1024 * 1024)) };
-    }
+    
   } catch (error) {
     console.log('⚠️  Could not detect system specs, using safe defaults');
     return { cores: 2, memoryGB: 4 }; // Safe defaults for CI

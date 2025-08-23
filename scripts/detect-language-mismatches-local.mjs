@@ -94,7 +94,7 @@ const DETECTED_TO_ISO = {
 
 // Extract language tag from text
 function extractLanguageTag(text) {
-  if (!text || typeof text !== 'string') return null;
+  if (!text || typeof text !== 'string') {return null;}
   
   const match = text.match(/@(\w{2,3})$/);
   return match ? match[1] : null;
@@ -102,14 +102,14 @@ function extractLanguageTag(text) {
 
 // Extract text without language tag
 function extractTextContent(text) {
-  if (!text || typeof text !== 'string') return '';
+  if (!text || typeof text !== 'string') {return '';}
   
   return text.replace(/@\w{2,3}$/, '').trim();
 }
 
 // Detect language of text
 function detectLanguage(text) {
-  if (!text || text.length < 10) return null;
+  if (!text || text.length < 10) {return null;}
   
   try {
     const results = detectLang(text);
@@ -152,7 +152,7 @@ function processCSVData(csvData, sourceName) {
   records.forEach((record, index) => {
     // Check all fields in the record
     Object.entries(record).forEach(([field, value]) => {
-      if (!value || typeof value !== 'string') return;
+      if (!value || typeof value !== 'string') {return;}
       
       // Check if this field might contain multilingual text
       const fieldLower = field.toLowerCase();
@@ -163,13 +163,13 @@ function processCSVData(csvData, sourceName) {
           fieldLower.includes('example')) {
         
         const languageTag = extractLanguageTag(value);
-        if (!languageTag) return;
+        if (!languageTag) {return;}
         
         const textContent = extractTextContent(value);
-        if (!textContent || textContent.length < 10) return;
+        if (!textContent || textContent.length < 10) {return;}
         
         const detected = detectLanguage(textContent);
-        if (!detected) return;
+        if (!detected) {return;}
         
         // Check if declared language matches detected language
         if (languageTag !== detected.iso) {

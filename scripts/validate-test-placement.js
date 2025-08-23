@@ -53,35 +53,27 @@ const testPatterns = {
 // Common misplacement patterns to check
 const misplacementChecks = [
   {
-    check: (filePath, content) => {
-      return content.includes('process.env.') && 
+    check: (filePath, content) => content.includes('process.env.') && 
              !filePath.includes('tests/deployment') &&
-             !content.includes('process.env.NODE_ENV');
-    },
+             !content.includes('process.env.NODE_ENV'),
     message: 'Contains environment variable checks - should be in tests/deployment/'
   },
   {
-    check: (filePath, content) => {
-      return content.includes('fetch(') && 
+    check: (filePath, content) => content.includes('fetch(') && 
              content.includes('http') &&
              !filePath.includes('.integration.test') &&
              !filePath.includes('tests/deployment') &&
-             !filePath.includes('/e2e/');
-    },
+             !filePath.includes('/e2e/'),
     message: 'Makes real HTTP calls - should be an integration or E2E test'
   },
   {
-    check: (filePath, content) => {
-      return (content.includes('createTestDatabase') || 
+    check: (filePath, content) => (content.includes('createTestDatabase') || 
               content.includes('TestDatabase')) &&
-             !filePath.includes('.integration.test');
-    },
+             !filePath.includes('.integration.test'),
     message: 'Uses test database - should be an integration test'
   },
   {
-    check: (filePath, content) => {
-      return content.includes('playwright') && !filePath.includes('/e2e/');
-    },
+    check: (filePath, content) => content.includes('playwright') && !filePath.includes('/e2e/'),
     message: 'Uses Playwright - should be in e2e/ directory'
   }
 ];

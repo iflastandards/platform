@@ -33,7 +33,7 @@ function getAffectedProjects() {
   // Use Nx 19+ show projects
   const cmd = 'pnpm nx show projects --affected';
   const out = run(cmd);
-  if (!out) return [];
+  if (!out) {return [];}
   // Output can be CSV or newline-separated depending on Nx; split on commas and newlines
   return out
     .split(/[,\n]+/)

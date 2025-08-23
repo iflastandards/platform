@@ -129,7 +129,7 @@ class ScriptDatabaseCLI {
       const version = file.replace('.sql', '');
 
       if (applied.has(version)) {
-        if (this.verbose) console.log(`✓ Migration ${version} already applied`);
+        if (this.verbose) {console.log(`✓ Migration ${version} already applied`);}
         continue;
       }
 

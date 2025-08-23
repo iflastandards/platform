@@ -13,13 +13,13 @@
  * 4. Stores snapshots for later comparison during migration
  */
 
-import { chromium, Browser } from 'playwright';
+import { chromium, type Browser } from 'playwright';
 import * as fs from 'fs/promises';
 import * as path from 'path';
 import { execSync } from 'child_process';
 import { createHash } from 'crypto';
 import express from 'express';
-import { Server } from 'http';
+import { type Server } from 'http';
 
 // Site configuration - using actual local ports from package.json
 const SITES = [
@@ -190,7 +190,7 @@ class BaselineCapture {
   }
 
   async captureSiteSnapshot(siteKey: string, url: string): Promise<SiteSnapshot> {
-    if (!this.browser) throw new Error('Browser not initialized');
+    if (!this.browser) {throw new Error('Browser not initialized');}
     
     const page = await this.browser.newPage();
     const snapshot: Partial<SiteSnapshot> = {
@@ -255,11 +255,9 @@ class BaselineCapture {
 
       // Capture resources
       const resources = await page.evaluate(() => {
-        const getResourceUrls = (selector: string, attr: string) => {
-          return Array.from(document.querySelectorAll(selector))
+        const getResourceUrls = (selector: string, attr: string) => Array.from(document.querySelectorAll(selector))
             .map(el => el.getAttribute(attr))
             .filter(Boolean) as string[];
-        };
 
         return {
           css: getResourceUrls('link[rel="stylesheet"]', 'href'),

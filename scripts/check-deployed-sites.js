@@ -92,15 +92,13 @@ class DeployedSiteChecker {
       }
       
       // Check for Docusaurus elements
-      const pageInfo = await page.evaluate(() => {
-        return {
+      const pageInfo = await page.evaluate(() => ({
           hasNavbar: !!document.querySelector('nav, .navbar, header nav'),
           hasContent: !!document.querySelector('main, .main-wrapper, article, .container'),
           hasFooter: !!document.querySelector('footer, .footer'),
           title: document.title || '',
           hasDocusaurusData: !!(window.__DOCUSAURUS_DATA__ || window.docusaurus)
-        };
-      });
+        }));
       
       // Validate critical elements
       if (!pageInfo.hasContent) {

@@ -100,7 +100,7 @@ function extractLanguageFromHeader(header) {
 
 // Detect language of text
 function detectLanguage(text) {
-  if (!text || text.length < 10) return null;
+  if (!text || text.length < 10) {return null;}
   
   try {
     const results = langdetect.detect(text);
@@ -165,7 +165,7 @@ function processSkosCSVData(csvData, sourceName) {
     // Check each language-tagged column
     languageColumns.forEach(col => {
       const value = record[col.header];
-      if (!value || value.length < 10) return;
+      if (!value || value.length < 10) {return;}
       
       const detected = detectLanguage(value);
       if (!detected) {

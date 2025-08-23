@@ -1,7 +1,10 @@
+/**
+ * @unit @api @docs @low-priority
+ */
 import * as fs from 'fs';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { PageTemplateGenerator } from './page-template-generator';
-import { SiteConfiguration } from './parse-ifla-report';
+import { type SiteConfiguration } from './parse-ifla-report';
 import { FileStructureValidator } from './utils/file-structure-validator';
 
 // Mock fs module
@@ -19,8 +22,7 @@ vi.mock('fs', () => ({
 }));
 
 // Mock path module
-vi.mock('path', () => {
-  return {
+vi.mock('path', () => ({
     join: vi.fn((...args) => args.join('/')),
     dirname: vi.fn((p) => p.split('/').slice(0, -1).join('/')),
     basename: vi.fn((p) => p.split('/').pop()),
@@ -29,8 +31,7 @@ vi.mock('path', () => {
       dirname: vi.fn((p) => p.split('/').slice(0, -1).join('/')),
       basename: vi.fn((p) => p.split('/').pop()),
     },
-  };
-});
+  }));
 
 // Mock sidebar-reference-extractor
 const mockExtractSidebarReferencesFromFile = vi.fn();

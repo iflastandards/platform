@@ -71,7 +71,7 @@ class FlakyTestDetector {
       'tmp/playwright-results'
     ];
 
-    let currentRun = {
+    const currentRun = {
       timestamp: new Date().toISOString(),
       results: {},
       environment: process.env.NODE_ENV || 'development',
@@ -119,7 +119,7 @@ class FlakyTestDetector {
   findFiles(dir, pattern) {
     const files = [];
     
-    if (!fs.existsSync(dir)) return files;
+    if (!fs.existsSync(dir)) {return files;}
     
     const walk = (currentDir) => {
       const items = fs.readdirSync(currentDir);

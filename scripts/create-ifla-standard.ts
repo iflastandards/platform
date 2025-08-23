@@ -119,7 +119,7 @@ async function updateCodeowners() {
 }
 
 async function createProjectBoard() {
-  if (opts.skipGithub) return;
+  if (opts.skipGithub) {return;}
   const token = process.env.GITHUB_TOKEN;
   if (!token) {
     console.warn(chalk.yellow('⚠ GITHUB_TOKEN not set – skipping project creation'));

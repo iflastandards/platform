@@ -1,7 +1,10 @@
+/**
+ * @unit @api @docs @low-priority
+ */
 import * as fs from 'fs';
 import { describe, expect, it, vi } from 'vitest';
 import { PageTemplateGenerator } from './page-template-generator';
-import { SiteConfiguration } from './parse-ifla-report';
+import { type SiteConfiguration } from './parse-ifla-report';
 
 // Mock fs module
 vi.mock('fs', () => ({

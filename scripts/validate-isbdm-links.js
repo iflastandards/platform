@@ -107,8 +107,8 @@ async function validateISBDMLinks() {
       console.error(`\n❌ Found ${brokenLinks.length} broken navigation links in ISBDM:`);
       brokenLinks.forEach(link => {
         console.error(`  ❌ "${link.text}" -> ${link.href}`);
-        if (link.error) console.error(`     Error: ${link.error}`);
-        if (link.status) console.error(`     Status: ${link.status}`);
+        if (link.error) {console.error(`     Error: ${link.error}`);}
+        if (link.status) {console.error(`     Status: ${link.status}`);}
       });
       process.exit(1);
     } else {

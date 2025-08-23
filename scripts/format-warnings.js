@@ -116,14 +116,14 @@ class WarningFormatter {
     // By site breakdown
     report += '## 📁 By Site\n\n';
     Object.entries(analysis.bySite).forEach(([site, warnings]) => {
-      if (warnings.length === 0) return;
+      if (warnings.length === 0) {return;}
       
       report += `### ${site} (${warnings.length} warnings)\n\n`;
       
       // Group by type for this site
       const typeGroups = {};
       warnings.forEach(({ type, warning }) => {
-        if (!typeGroups[type]) typeGroups[type] = [];
+        if (!typeGroups[type]) {typeGroups[type] = [];}
         typeGroups[type].push(warning);
       });
 
@@ -158,10 +158,10 @@ class WarningFormatter {
     this.data.forEach(({ site, warnings }) => {
       warnings.forEach(warning => {
         let type = 'other';
-        if (/broken link/i.test(warning.line)) type = 'broken-link';
-        else if (/deprecated/i.test(warning.line)) type = 'deprecation';
-        else if (/React/i.test(warning.line)) type = 'react';
-        else if (/missing/i.test(warning.line)) type = 'missing-file';
+        if (/broken link/i.test(warning.line)) {type = 'broken-link';}
+        else if (/deprecated/i.test(warning.line)) {type = 'deprecation';}
+        else if (/React/i.test(warning.line)) {type = 'react';}
+        else if (/missing/i.test(warning.line)) {type = 'missing-file';}
         
         const line = warning.line.replace(/"/g, '""'); // Escape quotes
         csv += `"${site}","${type}","${line}","${warning.timestamp || ''}"\n`;

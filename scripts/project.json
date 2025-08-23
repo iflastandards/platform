@@ -51,6 +51,7 @@
       "outputs": ["{options.outputFile}"],
       "options": {
         "lintFilePatterns": ["scripts/**/*.{ts,tsx,js,jsx}"],
+        "quiet": true,
         "maxWarnings": -1
       },
       "inputs": ["scriptFiles"],

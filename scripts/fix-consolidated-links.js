@@ -40,10 +40,10 @@ function addAnchorToHeading(indexPath, heading, anchorId) {
     fs.writeFileSync(indexPath, content, 'utf8');
     console.log(`✅ Added anchor {#${anchorId}} to heading: "${heading}"`);
     return true;
-  } else {
+  } 
     console.log(`⚠️  Could not find heading: "${heading}" or it already has an anchor`);
     return false;
-  }
+  
 }
 
 // Function to find and update all references to a file across the entire ISBDM site
@@ -67,7 +67,7 @@ function updateReferences(fileId, section) {
       const matchingFiles = execSync(searchCmd, { encoding: 'utf8' }).trim().split('\n').filter(f => f);
       
       matchingFiles.forEach(filePath => {
-        if (!filePath || processedFiles.has(filePath)) return;
+        if (!filePath || processedFiles.has(filePath)) {return;}
         
         let content = fs.readFileSync(filePath, 'utf8');
         const originalContent = content;

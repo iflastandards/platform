@@ -137,12 +137,12 @@ class BuildWarningCollector {
    * Categorize warning by type
    */
   categorizeWarning(line) {
-    if (/broken link|404|not found/i.test(line)) return 'broken-link';
-    if (/deprecated|obsolete/i.test(line)) return 'deprecation';
-    if (/React|prop|component/i.test(line)) return 'react';
-    if (/aria-|alt text|heading/i.test(line)) return 'accessibility';
-    if (/missing file|cannot resolve/i.test(line)) return 'missing-asset';
-    if (/invalid|error/i.test(line)) return 'validation';
+    if (/broken link|404|not found/i.test(line)) {return 'broken-link';}
+    if (/deprecated|obsolete/i.test(line)) {return 'deprecation';}
+    if (/React|prop|component/i.test(line)) {return 'react';}
+    if (/aria-|alt text|heading/i.test(line)) {return 'accessibility';}
+    if (/missing file|cannot resolve/i.test(line)) {return 'missing-asset';}
+    if (/invalid|error/i.test(line)) {return 'validation';}
     return 'other';
   }
 
@@ -150,9 +150,9 @@ class BuildWarningCollector {
    * Assess warning severity
    */
   assessSeverity(line) {
-    if (/error|failed|critical/i.test(line)) return 'critical';
-    if (/deprecated|obsolete/i.test(line)) return 'high';
-    if (/warning|warn/i.test(line)) return 'medium';
+    if (/error|failed|critical/i.test(line)) {return 'critical';}
+    if (/deprecated|obsolete/i.test(line)) {return 'high';}
+    if (/warning|warn/i.test(line)) {return 'medium';}
     return 'low';
   }
 
@@ -238,7 +238,7 @@ class BuildWarningCollector {
     report += '\n## Detailed Warnings\n\n';
     
     Object.entries(this.warnings).forEach(([site, data]) => {
-      if (data.warnings.length === 0) return;
+      if (data.warnings.length === 0) {return;}
       
       report += `### ${site}\n\n`;
       

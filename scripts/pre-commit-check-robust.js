@@ -127,13 +127,11 @@ class PreCommitRunner {
 
       let stdout = '';
       let stderr = '';
-      let progressTimer;
-      let timeoutTimer;
       let cleaned = false;
 
       // Cleanup function to ensure we only clean up once
       const cleanup = () => {
-        if (cleaned) return;
+        if (cleaned) {return;}
         cleaned = true;
 
         clearInterval(progressTimer);
@@ -155,12 +153,12 @@ class PreCommitRunner {
       };
 
       // Progress updates
-      progressTimer = setInterval(() => {
+      const progressTimer = setInterval(() => {
         this.logProgress(`Running: ${description}`);
       }, CONFIG.PROGRESS_INTERVAL);
 
       // Timeout handling
-      timeoutTimer = setTimeout(() => {
+      const timeoutTimer = setTimeout(() => {
         this.log(`Timeout reached for: ${description}`, 'warning');
         this.log(
           `Process has been running for ${Math.round(timeout / 1000)}s`,
@@ -320,20 +318,20 @@ class PreCommitRunner {
     if (isDependencyOnly) {
       this.totalSteps = 3; // secrets, typecheck, lint
       return { type: 'dependency', files: stagedFiles };
-    } else if (isDocumentationOnly) {
+    } if (isDocumentationOnly) {
       this.totalSteps = 1; // secrets only
       return { type: 'documentation', files: stagedFiles };
-    } else {
+    } 
       this.totalSteps = 4; // secrets, typecheck, tests, lint
       return { type: 'code', files: stagedFiles };
-    }
+    
   }
 
   async run() {
     // Check if this is a fast commit
     if (process.env.FAST_COMMIT === '1') {
       console.log('\n⚡ Fast commit mode - running essential checks only...\n');
-      return await this.runFastMode();
+      return this.runFastMode();
     }
 
     console.log(
@@ -482,12 +480,12 @@ class PreCommitRunner {
       this.log('⚡ For fast commits: pnpm commit:fast', 'info');
       this.saveState({ failed: true, reason: 'validation_failed', totalTime });
       return false;
-    } else {
+    } 
       this.log(`✅ All pre-commit checks passed in ${totalTime}s!`, 'success');
       this.log(`🎯 Validated ${analysis.type} changes successfully`, 'success');
       this.clearState();
       return true;
-    }
+    
   }
 
   async runFastMode() {

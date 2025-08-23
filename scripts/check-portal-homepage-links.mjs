@@ -73,16 +73,16 @@ async function checkLinks(targetUrl, currentEnv) {
     let hrefForSelector; 
 
     if (link.toSite === portalSiteKey) {
-        let pathPart = link.siteRelativePath || '';
+        const pathPart = link.siteRelativePath || '';
         if (pathPart.startsWith('#')) {
             hrefForSelector = pathPart;
         } else {
             hrefForSelector = (currentPortalBaseUrl + pathPart).replace(/\/\//g, '/'); 
             
             if (expectTrailingSlashForCurrentEnv) {
-                if (hrefForSelector !== '/' && !hrefForSelector.endsWith('/')) hrefForSelector += '/';
+                if (hrefForSelector !== '/' && !hrefForSelector.endsWith('/')) {hrefForSelector += '/';}
             } else { 
-                if (hrefForSelector !== '/' && hrefForSelector.endsWith('/')) hrefForSelector = hrefForSelector.slice(0, -1);
+                if (hrefForSelector !== '/' && hrefForSelector.endsWith('/')) {hrefForSelector = hrefForSelector.slice(0, -1);}
             }
         }
     } else {
@@ -117,7 +117,7 @@ async function checkLinks(targetUrl, currentEnv) {
                     link.type = 'skip'; 
                 }
             }
-            if (link.type === 'skip') continue;
+            if (link.type === 'skip') {continue;}
 
             selector = `nav .navbar__items li.dropdown ul.dropdown__menu a.dropdown__link[href="${hrefForSelector}"]`;
             break;
@@ -145,9 +145,9 @@ async function checkLinks(targetUrl, currentEnv) {
 
         if (isActualAnchor) { /* no change for anchor */ }
         else if (expectTrailingSlashForCurrentEnv) {
-            if (normActualPath !== '/' && !normActualPath.endsWith('/')) normActualPath += '/';
+            if (normActualPath !== '/' && !normActualPath.endsWith('/')) {normActualPath += '/';}
         } else {
-            if (normActualPath !== '/' && normActualPath.endsWith('/')) normActualPath = normActualPath.slice(0, -1);
+            if (normActualPath !== '/' && normActualPath.endsWith('/')) {normActualPath = normActualPath.slice(0, -1);}
         }
         
         let normExpectedPath = expectedUrl.pathname;
@@ -167,9 +167,9 @@ async function checkLinks(targetUrl, currentEnv) {
         const expectedPathEndsSlash = expectedUrl.pathname.endsWith('/') && expectedUrl.pathname !== '/';
 
         if (actualPathEndsSlash && !expectedPathEndsSlash && !actualIsAnchor && !expectedIsAnchor) {
-            normExpectedForCompare = expectedFullHref + '/';
+            normExpectedForCompare = `${expectedFullHref  }/`;
         } else if (!actualPathEndsSlash && expectedPathEndsSlash && !actualIsAnchor && !expectedIsAnchor) {
-            normActualForCompare = actualHrefFromDOM + '/';
+            normActualForCompare = `${actualHrefFromDOM  }/`;
         }
         urlsMatch = normActualForCompare === normExpectedForCompare;
       }
@@ -182,7 +182,7 @@ async function checkLinks(targetUrl, currentEnv) {
         console.error(`     Expected full URL structure: ${expectedFullHref}`);
         console.error(`     Actual href from DOM:      ${actualHrefFromDOM}`);
         if (actualUrl.protocol === 'http:' && actualUrl.hostname === 'localhost') {
-             console.error(`     Compared Path (Actual from DOM):    ${new URL(actualHrefFromDOM).pathname} (Normalized for env: ${ (()=>{let p = new URL(actualHrefFromDOM).pathname; if(new URL(actualHrefFromDOM).hash !==''){return p;} if(expectTrailingSlashForCurrentEnv){if(p!=='/'&&!p.endsWith('/'))p+='/';}else{if(p!=='/'&&p.endsWith('/'))p=p.slice(0,-1);} return p;})() })`);
+             console.error(`     Compared Path (Actual from DOM):    ${new URL(actualHrefFromDOM).pathname} (Normalized for env: ${ (()=>{let p = new URL(actualHrefFromDOM).pathname; if(new URL(actualHrefFromDOM).hash !==''){return p;} if(expectTrailingSlashForCurrentEnv){if(p!=='/'&&!p.endsWith('/')){p+='/';}}else{if(p!=='/'&&p.endsWith('/')){p=p.slice(0,-1);}} return p;})() })`);
              console.error(`     Compared Path (Expected target):  ${expectedUrl.pathname} (Normalized for env: ${ (()=>{let p = expectedUrl.pathname; if(expectedUrl.hash !==''){return p;} if(!expectTrailingSlashForCurrentEnv && p !=='/' && p.endsWith('/')){p=p.slice(0,-1);} return p;})() })`);
         }
         allTestsPassed = false;

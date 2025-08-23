@@ -2,7 +2,7 @@
 
 import * as fs from 'fs';
 import * as path from 'path';
-import { ElementSet, SiteConfiguration, Vocabulary } from './parse-ifla-report';
+import { type ElementSet, type SiteConfiguration, type Vocabulary } from './parse-ifla-report';
 
 /**
  * Page Template Generator
@@ -502,13 +502,13 @@ ${this.getVocabulariesDescription(config)}
    */
   private getElementSetsDescription(config: SiteConfiguration): string {
     const count = config.elementSets.length;
-    const totalElements = config.statistics.totalElements;
+    const {totalElements} = config.statistics;
 
     if (count === 1) {
       return `This namespace contains one element set with ${totalElements.toLocaleString()} elements.`;
-    } else {
+    } 
       return `This namespace contains ${count} element sets with a total of ${totalElements.toLocaleString()} elements.`;
-    }
+    
   }
 
   /**
@@ -516,13 +516,13 @@ ${this.getVocabulariesDescription(config)}
    */
   private getVocabulariesDescription(config: SiteConfiguration): string {
     const count = config.vocabularies.length;
-    const totalConcepts = config.statistics.totalConcepts;
+    const {totalConcepts} = config.statistics;
 
     if (count === 1) {
       return `This namespace contains one vocabulary with ${totalConcepts.toLocaleString()} concepts.`;
-    } else {
+    } 
       return `This namespace contains ${count} vocabularies with a total of ${totalConcepts.toLocaleString()} concepts.`;
-    }
+    
   }
 
   /**

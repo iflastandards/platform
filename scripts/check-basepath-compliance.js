@@ -152,8 +152,8 @@ function displayViolations(violations) {
     console.log(`   ${firstViolation.description}\n`);
 
     ruleViolations.forEach(violation => {
-      if (violation.severity === 'error') errorCount++;
-      else warningCount++;
+      if (violation.severity === 'error') {errorCount++;}
+      else {warningCount++;}
 
       console.log(`   ${violation.file}:${violation.line}:${violation.column}`);
       console.log(`   ${colors.blue}${violation.code}${colors.reset}`);

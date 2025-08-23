@@ -18,7 +18,7 @@ const path = require('path');
 // Parse arguments
 const args = process.argv.slice(2);
 let site = args[0];
-let env = args[1];
+const env = args[1];
 let type = args[2];
 
 // Show help if requested
@@ -96,15 +96,15 @@ if (!site && !env && !type) {
 } else {
   // Build command with provided arguments
   command = `node "${scriptPath}"`;
-  if (env) command += ` --env ${env}`;
-  if (site) command += ` --site "${site}"`;
-  if (type) command += ` --type ${type}`;
+  if (env) {command += ` --env ${env}`;}
+  if (site) {command += ` --site "${site}"`;}
+  if (type) {command += ` --type ${type}`;}
   
   console.log(`\n🔍 IFLA Standards Link Checker`);
   console.log(`${'='.repeat(50)}`);
-  if (site) console.log(`📍 Site(s): ${site}`);
-  if (env) console.log(`🌍 Environment: ${env}`);
-  if (type) console.log(`🔎 Validation type: ${type}`);
+  if (site) {console.log(`📍 Site(s): ${site}`);}
+  if (env) {console.log(`🌍 Environment: ${env}`);}
+  if (type) {console.log(`🔎 Validation type: ${type}`);}
   console.log(`${'='.repeat(50)}\n`);
 }
 

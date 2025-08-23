@@ -1,8 +1,7 @@
 #!/usr/bin/env tsx
 // scripts/create-vocabulary-sheet.ts
-import { google } from 'googleapis';
+import { google, type sheets_v4, type drive_v3 } from 'googleapis';
 import * as readline from 'readline';
-import { sheets_v4, drive_v3 } from 'googleapis';
 
 // Types
 interface VocabularyConfig {
@@ -55,13 +54,11 @@ async function getUserInput(): Promise<VocabularyConfig> {
     output: process.stdout
   });
 
-  const question = (prompt: string): Promise<string> => {
-    return new Promise((resolve) => {
+  const question = (prompt: string): Promise<string> => new Promise((resolve) => {
       rl.question(prompt, (answer) => {
         resolve(answer.trim());
       });
     });
-  };
 
   console.log('=== ISBDM Vocabulary Creation ===\n');
 

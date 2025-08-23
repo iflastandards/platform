@@ -28,7 +28,7 @@ class TestTagUpdater {
     const analyzer = new TestTaggingAnalyzer();
     await analyzer.analyzeAllTests();
     
-    const results = analyzer.results;
+    const {results} = analyzer;
 
     // Apply updates in priority order
     await this.applyCategoryTags(results.missingCategoryTags);

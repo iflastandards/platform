@@ -20,7 +20,7 @@ function generateExpectedPatterns() {
     patterns[env] = {};
     
     Object.entries(sites).forEach(([siteKey, siteConfigs]) => {
-      if (siteKey === 'github') return; // Skip github as it's not a user-facing site
+      if (siteKey === 'github') {return;} // Skip github as it's not a user-facing site
       
       const config = siteConfigs[env];
       if (config) {

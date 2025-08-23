@@ -201,15 +201,15 @@ class TestingAudit {
    * Categorize file type based on naming pattern
    */
   categorizeFileType(fileName) {
-    if (fileName.includes('.unit.test.')) return 'unit';
-    if (fileName.includes('.integration.')) return 'integration';
-    if (fileName.includes('.e2e.spec.')) return 'e2e';
-    if (fileName.includes('.smoke.spec.')) return 'smoke';
-    if (fileName.includes('.env.spec.')) return 'env';
-    if (fileName.includes('.visual.spec.')) return 'visual';
-    if (fileName.includes('.performance.spec.')) return 'performance';
-    if (fileName.includes('.test.')) return 'test';
-    if (fileName.includes('.spec.')) return 'spec';
+    if (fileName.includes('.unit.test.')) {return 'unit';}
+    if (fileName.includes('.integration.')) {return 'integration';}
+    if (fileName.includes('.e2e.spec.')) {return 'e2e';}
+    if (fileName.includes('.smoke.spec.')) {return 'smoke';}
+    if (fileName.includes('.env.spec.')) {return 'env';}
+    if (fileName.includes('.visual.spec.')) {return 'visual';}
+    if (fileName.includes('.performance.spec.')) {return 'performance';}
+    if (fileName.includes('.test.')) {return 'test';}
+    if (fileName.includes('.spec.')) {return 'spec';}
     return 'other';
   }
 
@@ -301,7 +301,7 @@ class TestingAudit {
     }
     
     // Check file type distribution
-    const totalFiles = this.auditResults.totalFiles;
+    const {totalFiles} = this.auditResults;
     const unitPercentage = (this.auditResults.filesByType.unit || 0) / totalFiles * 100;
     
     if (unitPercentage < 60) {

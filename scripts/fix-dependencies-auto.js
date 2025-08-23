@@ -41,7 +41,7 @@ const rootDeps = {
 console.log('🔧 Automatically fixing dependency versions...\n');
 
 let totalFixed = 0;
-let packagesModified = [];
+const packagesModified = [];
 
 // Fix each package
 PACKAGE_LOCATIONS.forEach(location => {
@@ -53,7 +53,7 @@ PACKAGE_LOCATIONS.forEach(location => {
   
   const pkg = JSON.parse(fs.readFileSync(pkgPath, 'utf8'));
   let modified = false;
-  let fixes = [];
+  const fixes = [];
   
   // Fix dependencies
   if (pkg.dependencies) {

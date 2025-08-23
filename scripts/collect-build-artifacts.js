@@ -61,8 +61,8 @@ function collectWarnings() {
     const warningFiles = findFiles(`warnings-${site}.txt`);
     const buildLogs = findFiles(`build-${site}.log`);
     
-    let siteWarnings = [];
-    let siteBrokenLinks = [];
+    const siteWarnings = [];
+    const siteBrokenLinks = [];
     
     // Collect from warning files
     for (const file of warningFiles) {
@@ -332,8 +332,8 @@ function extractHealthDetails(content, serviceName) {
     const timeMatch = nextLines.match(/(\d+)ms/);
     
     const details = [];
-    if (statusMatch) details.push(`Status: ${statusMatch[1]}`);
-    if (timeMatch) details.push(`Response time: ${timeMatch[1]}ms`);
+    if (statusMatch) {details.push(`Status: ${statusMatch[1]}`);}
+    if (timeMatch) {details.push(`Response time: ${timeMatch[1]}ms`);}
     
     return details.join(', ') || null;
   }

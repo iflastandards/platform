@@ -148,7 +148,7 @@ class CICDTestingAnalyzer {
   }
 
   analyzeJob(jobName, job, analysis) {
-    if (!job.steps) return;
+    if (!job.steps) {return;}
 
     for (const step of job.steps) {
       if (step.run) {
@@ -188,11 +188,11 @@ class CICDTestingAnalyzer {
     let score = 0;
     
     // Positive points
-    if (analysis.usesAffected) score += 25;
-    if (analysis.usesParallel) score += 20;
-    if (analysis.usesTags) score += 20;
-    if (analysis.hasPhaseBasedTesting) score += 15;
-    if (analysis.issues.length === 0) score += 20;
+    if (analysis.usesAffected) {score += 25;}
+    if (analysis.usesParallel) {score += 20;}
+    if (analysis.usesTags) {score += 20;}
+    if (analysis.hasPhaseBasedTesting) {score += 15;}
+    if (analysis.issues.length === 0) {score += 20;}
     
     return Math.min(score, 100);
   }
@@ -217,14 +217,14 @@ class CICDTestingAnalyzer {
   }
 
   identifyTestPhase(scriptName) {
-    if (scriptName.includes('smoke')) return 'smoke';
-    if (scriptName.includes('pre-commit')) return 'pre-commit';
-    if (scriptName.includes('pre-push')) return 'pre-push';
-    if (scriptName.includes('comprehensive')) return 'comprehensive';
-    if (scriptName.includes('ci')) return 'ci';
-    if (scriptName.includes('unit')) return 'selective';
-    if (scriptName.includes('integration')) return 'comprehensive';
-    if (scriptName.includes('e2e')) return 'comprehensive';
+    if (scriptName.includes('smoke')) {return 'smoke';}
+    if (scriptName.includes('pre-commit')) {return 'pre-commit';}
+    if (scriptName.includes('pre-push')) {return 'pre-push';}
+    if (scriptName.includes('comprehensive')) {return 'comprehensive';}
+    if (scriptName.includes('ci')) {return 'ci';}
+    if (scriptName.includes('unit')) {return 'selective';}
+    if (scriptName.includes('integration')) {return 'comprehensive';}
+    if (scriptName.includes('e2e')) {return 'comprehensive';}
     return 'unknown';
   }
 
@@ -404,8 +404,8 @@ ${opt.improvements.map(improvement => `- ${improvement}`).join('\n')}
   groupByPhase() {
     const groups = {};
     for (const script of this.results.testingPatterns) {
-      const phase = script.phase;
-      if (!groups[phase]) groups[phase] = [];
+      const {phase} = script;
+      if (!groups[phase]) {groups[phase] = [];}
       groups[phase].push(script);
     }
     return groups;

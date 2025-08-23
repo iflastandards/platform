@@ -226,10 +226,10 @@ class ScriptQuery {
         md += `### ${script.name}\n\n`;
         md += `- **Path**: ${script.path}\n`;
         md += `- **Purpose**: ${script.purpose || 'Not documented'}\n`;
-        if (script.is_cli) md += `- **CLI**: Yes\n`;
-        if (script.is_test) md += `- **Test**: Yes\n`;
-        if (script.is_deprecated) md += `- **DEPRECATED**\n`;
-        if (script.tags) md += `- **Tags**: ${script.tags}\n`;
+        if (script.is_cli) {md += `- **CLI**: Yes\n`;}
+        if (script.is_test) {md += `- **Test**: Yes\n`;}
+        if (script.is_deprecated) {md += `- **DEPRECATED**\n`;}
+        if (script.tags) {md += `- **Tags**: ${script.tags}\n`;}
         md += '\n';
       }
     }

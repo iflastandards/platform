@@ -98,7 +98,7 @@ if (affectedProjects.length > 0) {
 
 // Smart test detection functions
 function shouldRunSmokeTests() {
-  if (!config.runSmokeTests) return false;
+  if (!config.runSmokeTests) {return false;}
   
   // Run smoke tests if any documentation site or portal is affected
   const smokeTestProjects = ['portal', 'isbd', 'isbdm', 'lrm', 'frbr', 'unimarc', 'mri', 'muldicat', 'pressoo', 'mia'];
@@ -114,7 +114,7 @@ function shouldRunSmokeTests() {
 }
 
 function shouldRunAdminTests() {
-  if (!config.runAdminTests) return false;
+  if (!config.runAdminTests) {return false;}
   
   // Run admin tests if admin project is affected
   const isAdminAffected = affectedProjects.includes('admin');

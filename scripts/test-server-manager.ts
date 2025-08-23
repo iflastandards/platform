@@ -5,9 +5,11 @@
  */
 
 import { program } from 'commander';
-import { startServers, stopServers } from '@ifla/dev-servers';
-import { readServerState } from '@ifla/dev-servers';
-import { ServerMode, ServerInfo } from '@ifla/dev-servers/src/types';
+import {
+  type ServerMode,
+  type ServerInfo,
+  type ServerStateFile,
+} from '@ifla/dev-servers';
 
 // Define test types and their required servers
 type SiteKey = string;
@@ -16,15 +18,32 @@ const TEST_SERVER_REQUIREMENTS: Record<string, SiteKey[]> = {
   'smoke:portal': ['portal'],
   'smoke:standards': ['isbdm', 'lrm', 'frbr', 'isbd', 'muldicat', 'unimarc'],
   'smoke:dashboard': ['portal'],
-  'smoke:all': ['portal', 'isbdm', 'lrm', 'frbr', 'isbd', 'muldicat', 'unimarc'],
-  
+  'smoke:all': [
+    'portal',
+    'isbdm',
+    'lrm',
+    'frbr',
+    'isbd',
+    'muldicat',
+    'unimarc',
+  ],
+
   // Integration tests
   'integration:admin': ['portal', 'admin'],
   'integration:cross-service': ['portal', 'isbdm', 'lrm', 'admin'],
   'integration:site-validation': ['portal', 'isbdm', 'lrm', 'frbr'],
   'integration:rbac': ['portal', 'admin'],
-  'integration:all': ['portal', 'isbdm', 'lrm', 'frbr', 'isbd', 'muldicat', 'unimarc', 'admin'],
-  
+  'integration:all': [
+    'portal',
+    'isbdm',
+    'lrm',
+    'frbr',
+    'isbd',
+    'muldicat',
+    'unimarc',
+    'admin',
+  ],
+
   // E2E tests
   'e2e:portal': ['portal'],
   'e2e:isbdm': ['isbdm'],
@@ -34,25 +53,44 @@ const TEST_SERVER_REQUIREMENTS: Record<string, SiteKey[]> = {
   'e2e:muldicat': ['muldicat'],
   'e2e:unimarc': ['unimarc'],
   'e2e:admin': ['admin'],
-  'e2e:all': ['portal', 'isbdm', 'lrm', 'frbr', 'isbd', 'muldicat', 'unimarc', 'admin'],
-  
+  'e2e:all': [
+    'portal',
+    'isbdm',
+    'lrm',
+    'frbr',
+    'isbd',
+    'muldicat',
+    'unimarc',
+    'admin',
+  ],
+
   // Performance tests
-  'performance': ['portal', 'isbdm', 'lrm'],
-  
+  performance: ['portal', 'isbdm', 'lrm'],
+
   // Visual regression tests
-  'visual': ['portal', 'isbdm', 'lrm', 'frbr'],
-  
+  visual: ['portal', 'isbdm', 'lrm', 'frbr'],
+
   // Build validation tests
   'build-validation': ['portal', 'isbdm', 'lrm'],
-  
+
   // Critical path tests
-  'critical': ['portal', 'isbdm'],
-  
+  critical: ['portal', 'isbdm'],
+
   // Default fallback
-  'default': ['portal', 'isbdm', 'lrm', 'frbr', 'isbd', 'muldicat', 'unimarc', 'admin'],
+  default: [
+    'portal',
+    'isbdm',
+    'lrm',
+    'frbr',
+    'isbd',
+    'muldicat',
+    'unimarc',
+    'admin',
+  ],
 };
 
 interface StartOptions {
+  startServers: (options: any) => Promise<ServerInfo[]>;
   testType: string;
   mode: ServerMode;
   reuseExisting: boolean;
@@ -61,6 +99,8 @@ interface StartOptions {
 }
 
 interface StopOptions {
+  stopServers: (servers: ServerInfo[]) => Promise<void>;
+  readServerState: () => ServerStateFile | null;
   testType?: string;
   sites?: string;
   verbose: boolean;
@@ -83,34 +123,40 @@ function getRequiredSites(testType: string): SiteKey[] {
  */
 async function startTestServers(options: StartOptions): Promise<void> {
   console.log(`🚀 Starting servers for test type: ${options.testType}`);
-  
+
   let sites: SiteKey[];
-  
+
   if (options.sites) {
     // Manual site specification overrides test type
-    sites = options.sites.split(',').map(s => s.trim() as SiteKey);
+    sites = options.sites.split(',').map((s) => s.trim() as SiteKey);
     console.log(`📝 Using manually specified sites: ${sites.join(', ')}`);
   } else {
     // Use test type to determine required sites
     sites = getRequiredSites(options.testType);
-    console.log(`🎯 Required sites for ${options.testType}: ${sites.join(', ')}`);
+    console.log(
+      `🎯 Required sites for ${options.testType}: ${sites.join(', ')}`,
+    );
   }
-  
+
   try {
-    const serverInfo = await startServers({
+    const serverInfo = await options.startServers({
       sites,
       mode: options.mode,
       reuseExisting: options.reuseExisting,
     });
-    
-    console.log(`✅ Successfully started ${Object.keys(serverInfo).length} servers`);
-    
+
+    console.log(
+      `✅ Successfully started ${Object.keys(serverInfo).length} servers`,
+    );
+
     if (options.verbose) {
       serverInfo.forEach((info) => {
-        console.log(`  ${info.site}: http://localhost:${info.port} (PID: ${info.proc?.pid})`);
+        console.log(
+          `  ${info.site}: http://localhost:${info.port} (PID: ${info.proc?.pid})`,
+        );
       });
     }
-    
+
     // Detach from spawned processes so they can run independently
     serverInfo.forEach((info) => {
       if (info.proc && info.proc.pid) {
@@ -118,24 +164,30 @@ async function startTestServers(options: StartOptions): Promise<void> {
         if (typeof info.proc.unref === 'function') {
           // Unref the process so it doesn't keep the parent alive
           info.proc.unref();
-          
+
           // Remove event listeners to prevent memory leaks
           info.proc.removeAllListeners();
-          
+
           // Close stdio streams to fully detach
-          if (info.proc.stdout) info.proc.stdout.destroy();
-          if (info.proc.stderr) info.proc.stderr.destroy();
-          if (info.proc.stdin) info.proc.stdin.destroy();
+          if (info.proc.stdout) {
+            info.proc.stdout.destroy();
+          }
+          if (info.proc.stderr) {
+            info.proc.stderr.destroy();
+          }
+          if (info.proc.stdin) {
+            info.proc.stdin.destroy();
+          }
         }
-        
+
         console.log(`🔄 Detached from ${info.site} (PID: ${info.proc.pid})`);
       }
     });
-    
+
     console.log('🎉 Servers are running in the background!');
     console.log('💡 Use "pnpm test:servers stop" to stop them when done.');
     console.log('💡 Use "pnpm test:servers status" to check their status.');
-    
+
     // Exit the parent process cleanly
     process.nextTick(() => {
       process.exit(0);
@@ -151,10 +203,10 @@ async function startTestServers(options: StartOptions): Promise<void> {
  */
 async function stopTestServers(options: StopOptions): Promise<void> {
   let sites: SiteKey[] | undefined;
-  
+
   if (options.sites) {
     // Manual site specification
-    sites = options.sites.split(',').map(s => s.trim() as SiteKey);
+    sites = options.sites.split(',').map((s) => s.trim() as SiteKey);
     console.log(`🛑 Stopping manually specified sites: ${sites.join(', ')}`);
   } else if (options.testType) {
     // Use test type to determine sites to stop
@@ -164,31 +216,33 @@ async function stopTestServers(options: StopOptions): Promise<void> {
   } else {
     console.log('🛑 Stopping all servers');
   }
-  
+
   try {
     // Read current server state
-    const serverState = readServerState();
-    
+    const serverState = options.readServerState();
+
     if (!serverState || serverState.servers.length === 0) {
       console.log('ℹ️  No running servers found');
       return;
     }
-    
+
     // Filter servers to stop based on sites
     let serversToStop = serverState.servers;
     if (sites) {
-      serversToStop = serverState.servers.filter(server => 
-        sites!.includes(server.site as SiteKey)
+      serversToStop = serverState.servers.filter((server) =>
+        sites!.includes(server.site as SiteKey),
       );
-      
+
       if (serversToStop.length === 0) {
-        console.log(`ℹ️  No running servers found for sites: ${sites.join(', ')}`);
+        console.log(
+          `ℹ️  No running servers found for sites: ${sites.join(', ')}`,
+        );
         return;
       }
     }
-    
+
     // Convert ServerState to ServerInfo format for stopServers
-    const serverInfos: ServerInfo[] = serversToStop.map(server => ({
+    const serverInfos: ServerInfo[] = serversToStop.map((server) => ({
       site: server.site,
       port: server.port,
       proc: {
@@ -197,12 +251,12 @@ async function stopTestServers(options: StopOptions): Promise<void> {
           if (server.pid > 0) {
             process.kill(server.pid, signal || 'SIGTERM');
           }
-        }
+        },
       } as any, // Mock ChildProcess for compatibility
-      mode: server.mode
+      mode: server.mode,
     }));
-    
-    await stopServers(serverInfos);
+
+    await options.stopServers(serverInfos);
     console.log('✅ Successfully stopped servers');
   } catch (error) {
     console.error('❌ Failed to stop servers:', error);
@@ -215,11 +269,11 @@ async function stopTestServers(options: StopOptions): Promise<void> {
  */
 function listTestTypes(): void {
   console.log('📋 Available test types and their server requirements:\n');
-  
+
   Object.entries(TEST_SERVER_REQUIREMENTS).forEach(([testType, sites]) => {
     console.log(`  ${testType.padEnd(25)} → ${sites.join(', ')}`);
   });
-  
+
   console.log('\n💡 Usage examples:');
   console.log('  # Start servers for smoke tests');
   console.log('  pnpm test:servers start --test-type smoke:all');
@@ -243,13 +297,22 @@ program
 program
   .command('start')
   .description('Start servers for specific test type')
-  .option('-t, --test-type <type>', 'Test type (e.g., smoke:portal, e2e:all)', 'default')
+  .option(
+    '-t, --test-type <type>',
+    'Test type (e.g., smoke:portal, e2e:all)',
+    'default',
+  )
   .option('-m, --mode <mode>', 'Server mode (headless|interactive)', 'headless')
-  .option('--no-reuse', 'Don\'t reuse existing servers')
-  .option('-s, --sites <sites>', 'Comma-separated list of sites to start (overrides test-type)')
+  .option('--no-reuse', "Don't reuse existing servers")
+  .option(
+    '-s, --sites <sites>',
+    'Comma-separated list of sites to start (overrides test-type)',
+  )
   .option('-v, --verbose', 'Verbose output')
   .action(async (options) => {
+    const { startServers } = await import('@ifla/dev-servers');
     await startTestServers({
+      startServers,
       testType: options.testType,
       mode: options.mode as ServerMode,
       reuseExisting: !options.noReuse,
@@ -262,10 +325,16 @@ program
   .command('stop')
   .description('Stop servers for specific test type')
   .option('-t, --test-type <type>', 'Test type to stop servers for')
-  .option('-s, --sites <sites>', 'Comma-separated list of sites to stop (overrides test-type)')
+  .option(
+    '-s, --sites <sites>',
+    'Comma-separated list of sites to stop (overrides test-type)',
+  )
   .option('-v, --verbose', 'Verbose output')
   .action(async (options) => {
+    const { stopServers, readServerState } = await import('@ifla/dev-servers');
     await stopTestServers({
+      stopServers,
+      readServerState,
       testType: options.testType,
       sites: options.sites,
       verbose: options.verbose || false,
@@ -285,7 +354,7 @@ program
     const { exec } = await import('child_process');
     const { promisify } = await import('util');
     const execAsync = promisify(exec);
-    
+
     try {
       const { stdout } = await execAsync('tsx scripts/dev-servers.ts status');
       console.log(stdout);

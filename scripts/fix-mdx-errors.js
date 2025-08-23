@@ -244,7 +244,7 @@ async function main() {
   let fixedCount = 0;
   for (const file of allFiles) {
     const wasFixed = await processFile(file);
-    if (wasFixed) fixedCount++;
+    if (wasFixed) {fixedCount++;}
   }
 
   console.log(

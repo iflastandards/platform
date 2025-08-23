@@ -119,7 +119,7 @@ function extractResourceData(store) {
         const quads = store.getQuads(namedNode(subjectUri), null, null, null);
         for (const quad of quads) {
             const predicate = quad.predicate.value;
-            const object = quad.object;
+            const {object} = quad;
             if (!resourceData.properties.has(predicate)) {
                 resourceData.properties.set(predicate, []);
             }

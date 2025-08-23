@@ -358,7 +358,7 @@ class ParallelWarningCollector {
    * Main execution
    */
   async run() {
-    let modeDescription = isDistributedCI
+    const modeDescription = isDistributedCI
       ? 'Distributed CI mode (sequential)'
       : isCI
         ? 'CI mode'

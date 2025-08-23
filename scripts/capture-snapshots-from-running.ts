@@ -11,7 +11,7 @@
  * 2. All sites running with: pnpm serve:all
  */
 
-import { chromium, Browser } from 'playwright';
+import { chromium, type Browser } from 'playwright';
 import * as fs from 'fs/promises';
 import * as path from 'path';
 import { createHash } from 'crypto';
@@ -95,7 +95,7 @@ class SnapshotCapture {
   }
 
   async captureSiteSnapshot(site: typeof SITES[0]): Promise<SiteSnapshot> {
-    if (!this.browser) throw new Error('Browser not initialized');
+    if (!this.browser) {throw new Error('Browser not initialized');}
     
     const url = site.key === 'portal'
       ? `http://localhost:${site.port}/`
@@ -153,11 +153,9 @@ class SnapshotCapture {
 
       // Capture resources
       const resources = await page.evaluate(() => {
-        const getResourceUrls = (selector: string, attr: string) => {
-          return Array.from(document.querySelectorAll(selector))
+        const getResourceUrls = (selector: string, attr: string) => Array.from(document.querySelectorAll(selector))
             .map(el => el.getAttribute(attr))
             .filter(Boolean) as string[];
-        };
 
         return {
           css: getResourceUrls('link[rel="stylesheet"]', 'href'),

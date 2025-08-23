@@ -224,15 +224,15 @@ class ScriptAnalyzer {
 
     // Check by content/purpose
     const purpose = (metadata.purpose || '').toLowerCase();
-    if (purpose.includes('test')) return 'test';
-    if (purpose.includes('build')) return 'build';
-    if (purpose.includes('deploy')) return 'deployment';
-    if (purpose.includes('migrate')) return 'migration';
-    if (purpose.includes('analyze')) return 'analysis';
+    if (purpose.includes('test')) {return 'test';}
+    if (purpose.includes('build')) {return 'build';}
+    if (purpose.includes('deploy')) {return 'deployment';}
+    if (purpose.includes('migrate')) {return 'migration';}
+    if (purpose.includes('analyze')) {return 'analysis';}
     if (purpose.includes('check') || purpose.includes('validate'))
-      return 'validation';
+      {return 'validation';}
     if (purpose.includes('generate') || purpose.includes('scaffold'))
-      return 'generation';
+      {return 'generation';}
 
     return 'other';
   }

@@ -447,8 +447,8 @@ function generateSingleSiteSummary(results) {
     results.navigationIssues.forEach((link, i) => {
       summary += `${i + 1}. "${link.text}"\n`;
       summary += `   URL: ${link.href}\n`;
-      if (link.status) summary += `   Status: ${link.status}\n`;
-      if (link.error) summary += `   Error: ${link.error}\n`;
+      if (link.status) {summary += `   Status: ${link.status}\n`;}
+      if (link.error) {summary += `   Error: ${link.error}\n`;}
       summary += '\n';
     });
   }
@@ -459,8 +459,8 @@ function generateSingleSiteSummary(results) {
     results.contentIssues.forEach((link, i) => {
       summary += `${i + 1}. "${link.text}"\n`;
       summary += `   URL: ${link.href}\n`;
-      if (link.status) summary += `   Status: ${link.status}\n`;
-      if (link.error) summary += `   Error: ${link.error}\n`;
+      if (link.status) {summary += `   Status: ${link.status}\n`;}
+      if (link.error) {summary += `   Error: ${link.error}\n`;}
       summary += '\n';
     });
   }

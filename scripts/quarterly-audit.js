@@ -25,12 +25,12 @@ function summarizeTestTagsUsage() {
   const tagsUsage = {};
 
   TEST_DIRECTORIES.forEach(dir => {
-    if (!fs.existsSync(dir)) return;
+    if (!fs.existsSync(dir)) {return;}
 
     const files = fs.readdirSync(dir);
     files.forEach(file => {
       const filePath = path.join(dir, file);
-      if (fs.statSync(filePath).isDirectory()) return;
+      if (fs.statSync(filePath).isDirectory()) {return;}
 
       const content = fs.readFileSync(filePath, 'utf8');
       const tags = extractTags(content);

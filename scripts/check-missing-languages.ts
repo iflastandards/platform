@@ -75,7 +75,7 @@ function determineVocabularyType(records: any[]): 'elements' | 'concepts' | 'unk
   
   // Check file path as fallback
   if (records.length > 0 && records[0].uri) {
-    const uri = records[0].uri;
+    const {uri} = records[0];
     if (uri.includes('/elements/') || uri.includes(':elements/')) {
       return 'elements';
     }

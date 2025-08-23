@@ -39,7 +39,7 @@ async function checkUrl(url, maxRetries = 30) {
   for (let i = 0; i < maxRetries; i++) {
     try {
       const response = await fetch(url);
-      if (response.ok) return true;
+      if (response.ok) {return true;}
     } catch (e) {
       // URL not ready yet
     }
@@ -51,7 +51,7 @@ async function checkUrl(url, maxRetries = 30) {
 
 // Open URL in default browser
 async function openBrowser(url, preferChrome = false) {
-  const platform = process.platform;
+  const {platform} = process;
   let command;
 
   try {

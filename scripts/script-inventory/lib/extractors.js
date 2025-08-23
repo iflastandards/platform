@@ -57,7 +57,7 @@ class FileExtractor {
     for (const pkgPath of packageJsonFiles) {
       const pkg = await this.loadPackageJson(pkgPath);
 
-      if (!pkg) continue;
+      if (!pkg) {continue;}
 
       // Check scripts section
       if (pkg.scripts) {
@@ -371,7 +371,7 @@ class FileExtractor {
    * Check if a command references a script
    */
   commandReferencesScript(command, scriptName, relativePath) {
-    if (!command) return false;
+    if (!command) {return false;}
 
     // Direct reference
     if (command.includes(scriptName) || command.includes(relativePath)) {
@@ -392,17 +392,17 @@ class FileExtractor {
    * Check if paths match (handling different formats)
    */
   pathsMatch(path1, path2) {
-    if (!path1 || !path2) return false;
+    if (!path1 || !path2) {return false;}
 
     // Normalize paths
     const norm1 = path.normalize(path1).replace(/\\/g, '/');
     const norm2 = path.normalize(path2).replace(/\\/g, '/');
 
     // Direct match
-    if (norm1 === norm2) return true;
+    if (norm1 === norm2) {return true;}
 
     // Check if one is relative version of the other
-    if (norm1.endsWith(norm2) || norm2.endsWith(norm1)) return true;
+    if (norm1.endsWith(norm2) || norm2.endsWith(norm1)) {return true;}
 
     // Check without extension
     const withoutExt1 = norm1.replace(/\.[^.]+$/, '');

@@ -134,6 +134,7 @@ function getStagedTestFiles() {
 
 /**
  * Check if a file is a test file based on its path and name
+ * This aligns with how Vitest, Playwright, and Nx identify test files
  */
 function isTestFile(filePath) {
   // Skip if file doesn't exist (could be deleted)
@@ -143,44 +144,20 @@ function isTestFile(filePath) {
 
   const fileName = path.basename(filePath);
 
-  // Exclude setup files, mock files, and other non-test files
-  const isSetupFile =
-    fileName.startsWith('setup') ||
-    fileName.includes('setup') ||
-    fileName === 'vitest.config.ts' ||
-    fileName === 'jest.config.ts' ||
-    fileName.endsWith('.config.ts');
-
-  const isMockFile =
-    fileName.endsWith('.mock.ts') ||
-    fileName.endsWith('.mock.js') ||
-    fileName.endsWith('.mocks.ts') ||
-    fileName.endsWith('.mocks.js') ||
-    filePath.includes('/mocks/');
-
-  if (isSetupFile || isMockFile) {
-    return false;
-  }
-
   // Exclude vocabulary data files in standards/*/vocabs/tests/ directories
   // These are experimental vocabulary files, not TypeScript test files
   if (filePath.includes('standards/') && filePath.includes('/vocabs/tests/')) {
     return false;
   }
 
-  // Check file naming patterns
+  // IMPORTANT: Align with Vitest/Playwright/Nx test detection
+  // Only files with test/spec patterns are considered test files
+  // Directory location doesn't matter - this matches actual test runner behavior
   const hasValidPattern = VALID_FILE_PATTERNS.some((pattern) =>
     pattern.test(fileName),
   );
 
-  // Check if it's in a test directory
-  const isInTestDir =
-    filePath.includes('/test/') ||
-    filePath.includes('/tests/') ||
-    filePath.includes('/e2e/') ||
-    filePath.includes('/__tests__/');
-
-  return hasValidPattern || isInTestDir;
+  return hasValidPattern;
 }
 
 /**

@@ -40,10 +40,10 @@ class ScriptDocValidator {
           const ext = path.extname(file);
           return this.scriptExtensions.includes(ext);
         })
-        .filter((file) => {
+        .filter((file) => 
           // Include files in scripts/ and tools/ directories
-          return file.startsWith('scripts/') || file.startsWith('tools/');
-        });
+           file.startsWith('scripts/') || file.startsWith('tools/')
+        );
     } catch (error) {
       return [];
     }
@@ -195,7 +195,7 @@ class ScriptDocValidator {
  */
 
 `;
-    } else if (ext === '.py') {
+    } if (ext === '.py') {
       return `#!/usr/bin/env python3
 
 """
@@ -205,7 +205,7 @@ Documentation: developer_notes/scripts.md
 """
 
 `;
-    } else if (ext === '.sh' || ext === '.bash') {
+    } if (ext === '.sh' || ext === '.bash') {
       return `#!/bin/bash
 
 # ${purpose.charAt(0).toUpperCase() + purpose.slice(1)}

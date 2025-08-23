@@ -39,7 +39,7 @@ class TestExecutionAnalyzer {
 
   async analyzePackageScripts() {
     const packageJson = JSON.parse(fs.readFileSync('package.json', 'utf8'));
-    const scripts = packageJson.scripts;
+    const {scripts} = packageJson;
 
     console.log('📝 Analyzing package.json scripts...\n');
 
@@ -57,7 +57,7 @@ class TestExecutionAnalyzer {
     ];
 
     for (const [scriptName, command] of Object.entries(scripts)) {
-      if (typeof command !== 'string') continue;
+      if (typeof command !== 'string') {continue;}
 
       // Check for unnecessary full runs
       const hasFullRun = fullSuitePatterns.some(pattern => command.includes(pattern));

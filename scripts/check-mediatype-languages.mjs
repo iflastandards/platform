@@ -153,7 +153,7 @@ async function loadSheetData(spreadsheetId, sheetName, apiKey, useDirectAccess) 
 }
 
 async function detectLanguageWithAI(text, declaredLang) {
-    if (!anthropic) return null;
+    if (!anthropic) {return null;}
     
     try {
         const prompt = `You are a language detection expert for library cataloging vocabularies. 
@@ -283,7 +283,7 @@ Access Strategy:
     }) : null;
 
     const SPREADSHEET_ID = customSpreadsheetId || process.env.SPREADSHEET_ID || '1_QI2DqNomn0jCqSdjOxCZVF6wxz6FuRuIKBMweaGmfQ';
-    const GOOGLE_SHEETS_API_KEY = process.env.GOOGLE_SHEETS_API_KEY;
+    const {GOOGLE_SHEETS_API_KEY} = process.env;
 
     await main();
 
@@ -295,7 +295,7 @@ Access Strategy:
 
         console.log(`Using spreadsheet ID: ${SPREADSHEET_ID}`);
 
-        let useDirectAccess = true; // Try direct access first
+        const useDirectAccess = true; // Try direct access first
 
         // First get the list of sheets from index
         console.log('📋 Loading sheet index...');
@@ -344,7 +344,7 @@ Access Strategy:
                 const mismatches = [];
 
                 // Process each row with progress updates for AI mode
-                let processedCount = 0;
+                const processedCount = 0;
                 const totalRows = data.length - 1;
 
                 for (let rowIdx = 1; rowIdx < data.length; rowIdx++) {
@@ -360,11 +360,11 @@ Access Strategy:
                         const header = headers[colIdx];
                         const value = row[colIdx];
 
-                        if (!header || !value || !value.trim()) continue;
+                        if (!header || !value || !value.trim()) {continue;}
 
                         // Extract language from header
                         const langMatch = header.match(/@([a-z]{2}(?:-[A-Z]{2})?)/);
-                        if (!langMatch) continue;
+                        if (!langMatch) {continue;}
 
                         const declaredLang = langMatch[1];
                         const text = value.trim();
@@ -380,10 +380,10 @@ Access Strategy:
                             (isArabic && !['ar', 'fa', 'ur'].includes(declaredLang));
 
                         // Skip short text unless it's a script mismatch or technical/structured text
-                        if (!hasScriptMismatch && text.length < (useAI ? 25 : 15)) continue; // Higher threshold for AI to save API calls
+                        if (!hasScriptMismatch && text.length < (useAI ? 25 : 15)) {continue;} // Higher threshold for AI to save API calls
 
                         // Skip text that looks like technical labels or structured data (unless script mismatch)
-                        if (!hasScriptMismatch && isLikelyTechnicalText(text)) continue;
+                        if (!hasScriptMismatch && isLikelyTechnicalText(text)) {continue;}
 
                         // Detect language
                         try {
@@ -412,8 +412,8 @@ Access Strategy:
                             // Adjust confidence threshold based on text characteristics
                             let confidenceThreshold = useAI ? 0.7 : 0.9; // AI is more reliable, lower threshold
                             if (!useAI) {
-                                if (text.length < 30) confidenceThreshold = 0.95;
-                                if (text.length < 50) confidenceThreshold = 0.92;
+                                if (text.length < 30) {confidenceThreshold = 0.95;}
+                                if (text.length < 50) {confidenceThreshold = 0.92;}
                             }
 
                             // Check for mismatches with high confidence or script mismatches

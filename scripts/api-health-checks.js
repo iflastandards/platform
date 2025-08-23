@@ -113,12 +113,12 @@ async function checkSupabase() {
         details: `API endpoint reachable (status: ${response.statusCode})`,
         url: supabaseUrl
       };
-    } else {
+    } 
       return {
         success: false,
         error: `Unexpected status code: ${response.statusCode}`
       };
-    }
+    
   } catch (error) {
     return {
       success: false,
@@ -163,12 +163,12 @@ async function checkClerk() {
         details: `Clerk instance verified (${isProduction ? 'production' : 'test'} mode)`,
         instance: instance
       };
-    } else {
+    } 
       return {
         success: false,
         error: `Failed to reach Clerk instance (status: ${response.statusCode})`
       };
-    }
+    
   } catch (error) {
     return {
       success: false,
@@ -204,17 +204,17 @@ async function checkGitHub() {
         details: `Authenticated as ${data.login || 'GitHub App'}`,
         scopes: response.headers['x-oauth-scopes'] || 'app'
       };
-    } else if (response.statusCode === 401) {
+    } if (response.statusCode === 401) {
       return {
         success: false,
         error: 'Invalid or expired GitHub token'
       };
-    } else {
+    } 
       return {
         success: false,
         error: `GitHub API error (status: ${response.statusCode})`
       };
-    }
+    
   } catch (error) {
     return {
       success: false,
@@ -251,22 +251,22 @@ async function checkRender() {
         details: `Project "${data.name}" found`,
         framework: data.framework
       };
-    } else if (response.statusCode === 401) {
+    } if (response.statusCode === 401) {
       return {
         success: false,
         error: 'Invalid Vercel token'
       };
-    } else if (response.statusCode === 404) {
+    } if (response.statusCode === 404) {
       return {
         success: false,
         error: 'Vercel project not found'
       };
-    } else {
+    } 
       return {
         success: false,
         error: `Vercel API error (status: ${response.statusCode})`
       };
-    }
+    
   } catch (error) {
     return {
       success: false,

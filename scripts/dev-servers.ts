@@ -1,14 +1,22 @@
 #!/usr/bin/env node
 
 import { execSync } from 'child_process';
-import { startServers, stopServers } from '@ifla/dev-servers';
-import type { ServerMode, BrowserType } from '@ifla/dev-servers';
-import { SITE_CONFIG, ADMIN_PORTAL_CONFIG, SiteKey } from '../packages/theme/src/config/siteConfig';
+import {
+  startServers,
+  stopServers,
+  type ServerMode,
+  type BrowserType,
+} from '@ifla/dev-servers';
+import {
+  SITE_CONFIG,
+  ADMIN_PORTAL_CONFIG,
+  type SiteKey,
+} from '@ifla/contracts';
 
 // Generate site ports from siteConfig for CLI status checks
 function getSitePorts() {
   const ports: Record<string, number> = {};
-  
+
   // Add all Docusaurus sites
   for (const siteKey of Object.keys(SITE_CONFIG) as SiteKey[]) {
     const config = SITE_CONFIG[siteKey].local;
@@ -16,13 +24,13 @@ function getSitePorts() {
       ports[siteKey.toLowerCase()] = config.port;
     }
   }
-  
+
   // Add admin portal
   const adminConfig = ADMIN_PORTAL_CONFIG.local;
   if (adminConfig.port) {
     ports.admin = adminConfig.port;
   }
-  
+
   return ports;
 }
 
@@ -35,23 +43,26 @@ const SITE_PORTS = getSitePorts();
  */
 function parseSitesFromArgs(args: string[]): string[] {
   // Check for --sites flag
-  const sitesIndex = args.findIndex(arg => arg === '--sites');
+  const sitesIndex = args.findIndex((arg) => arg === '--sites');
   if (sitesIndex !== -1 && args[sitesIndex + 1]) {
-    return args[sitesIndex + 1].split(',').map(s => s.trim());
+    return args[sitesIndex + 1].split(',').map((s) => s.trim());
   }
-  
+
   // Check for --sites=value format
-  const sitesArg = args.find(arg => arg.startsWith('--sites='));
+  const sitesArg = args.find((arg) => arg.startsWith('--sites='));
   if (sitesArg) {
-    return sitesArg.split('=')[1].split(',').map(s => s.trim());
+    return sitesArg
+      .split('=')[1]
+      .split(',')
+      .map((s) => s.trim());
   }
-  
+
   // Check DOCS_SITES environment variable
   const docsSites = process.env.DOCS_SITES;
   if (docsSites) {
-    return docsSites.split(',').map(s => s.trim());
+    return docsSites.split(',').map((s) => s.trim());
   }
-  
+
   // Default to all sites
   return Object.keys(SITE_PORTS);
 }
@@ -72,7 +83,7 @@ function parseReuseExisting(args: string[]): boolean {
  */
 function parseModeFromArgs(args: string[]): ServerMode {
   // Check for --mode=value format
-  const modeArg = args.find(arg => arg.startsWith('--mode='));
+  const modeArg = args.find((arg) => arg.startsWith('--mode='));
   if (modeArg) {
     const mode = modeArg.split('=')[1] as ServerMode;
     if (mode === 'headless' || mode === 'interactive') {
@@ -80,7 +91,7 @@ function parseModeFromArgs(args: string[]): ServerMode {
     }
     console.warn(`⚠️  Invalid mode '${mode}', defaulting to 'headless'`);
   }
-  
+
   // Default to headless mode
   return 'headless';
 }
@@ -92,7 +103,7 @@ function parseModeFromArgs(args: string[]): ServerMode {
  */
 function parseBrowserFromArgs(args: string[]): BrowserType {
   // Check for --browser=value format
-  const browserArg = args.find(arg => arg.startsWith('--browser='));
+  const browserArg = args.find((arg) => arg.startsWith('--browser='));
   if (browserArg) {
     const browser = browserArg.split('=')[1] as BrowserType;
     if (browser === 'chrome' || browser === 'auto') {
@@ -100,7 +111,7 @@ function parseBrowserFromArgs(args: string[]): BrowserType {
     }
     console.warn(`⚠️  Invalid browser '${browser}', defaulting to 'auto'`);
   }
-  
+
   // Default to auto
   return 'auto';
 }
@@ -110,7 +121,7 @@ function parseBrowserFromArgs(args: string[]): BrowserType {
 // CLI interface when run directly
 if (require.main === module || process.argv.includes('--cli')) {
   const args = process.argv.slice(2);
-  
+
   if (args.includes('--help') || args.includes('-h')) {
     console.log(`
 Dev Servers Manager for IFLA Standards
@@ -158,7 +169,7 @@ Available sites: ${Object.keys(SITE_PORTS).join(', ')}
 `);
     process.exit(0);
   }
-  
+
   // Handle --status flag
   if (args.includes('--status')) {
     console.log('\nPort Status:');
@@ -172,7 +183,7 @@ Available sites: ${Object.keys(SITE_PORTS).join(', ')}
     }
     process.exit(0);
   }
-  
+
   const sites = parseSitesFromArgs(args);
   const reuseExisting = parseReuseExisting(args);
   const noKill = args.includes('--no-kill');
@@ -186,15 +197,14 @@ Available sites: ${Object.keys(SITE_PORTS).join(', ')}
       servers.forEach(({ site, port }) => {
         console.log(`  ${site}: http://localhost:${port}`);
       });
-      
+
       if (noKill) {
         console.log('\n🛑 Servers are left running due to --no-kill flag\n');
         process.exit(0);
-        return;
       }
-      
+
       console.log('\n🔄 Press Ctrl+C to stop all servers\n');
-      
+
       // Handle graceful shutdown
       process.on('SIGINT', () => {
         console.log('\n🛑 Shutting down servers...');
@@ -202,7 +212,7 @@ Available sites: ${Object.keys(SITE_PORTS).join(', ')}
           process.exit(0);
         });
       });
-      
+
       process.on('SIGTERM', () => {
         console.log('\n🛑 Received SIGTERM, shutting down servers...');
         stopServers(servers).then(() => {
@@ -215,4 +225,3 @@ Available sites: ${Object.keys(SITE_PORTS).join(', ')}
       process.exit(1);
     });
 }
-

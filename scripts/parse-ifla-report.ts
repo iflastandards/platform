@@ -164,11 +164,11 @@ function determineNavigationStrategy(
 
   if (totalItems <= 2) {
     return 'simple';
-  } else if (totalItems <= 10) {
+  } if (totalItems <= 10) {
     return 'categorized';
-  } else {
+  } 
     return 'hierarchical';
-  }
+  
 }
 
 /**

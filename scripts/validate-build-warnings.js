@@ -94,12 +94,12 @@ function isLinkAllowed(link, allowedPatterns) {
 function isCrossSiteNavigation(link, currentSite, allowedCrossSites) {
   // Extract site from link (e.g., "/FRBR/docs" -> "FRBR")
   const linkSiteMatch = link.match(/^\/([^\/]+)/);
-  if (!linkSiteMatch) return false;
+  if (!linkSiteMatch) {return false;}
   
   const linkSite = linkSiteMatch[1];
   
   // Don't consider self-links as cross-site
-  if (linkSite === currentSite) return false;
+  if (linkSite === currentSite) {return false;}
   
   // Check if this site is in allowed cross-site navigation
   return allowedCrossSites.includes(linkSite);
@@ -199,14 +199,14 @@ function buildSite(siteName) {
         output: output,
         siteName
       };
-    } else {
+    } 
       return {
         success: false,
         output: output,
         error: error.message,
         siteName
       };
-    }
+    
   }
 }
 

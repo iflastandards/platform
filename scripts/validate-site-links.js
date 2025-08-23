@@ -162,8 +162,8 @@ async function validateSiteLinks(siteKey, options = {}) {
         console.error(`\n🚨 HIGH PRIORITY (Navigation Issues):`);
         highPriority.forEach((link, i) => {
           console.error(`  ${i + 1}. "${link.text}" -> ${link.href}`);
-          if (link.error) console.error(`     Error: ${link.error}`);
-          if (link.status) console.error(`     Status: ${link.status}`);
+          if (link.error) {console.error(`     Error: ${link.error}`);}
+          if (link.status) {console.error(`     Status: ${link.status}`);}
         });
       }
       
@@ -171,8 +171,8 @@ async function validateSiteLinks(siteKey, options = {}) {
         console.error(`\n⚠️  LOW PRIORITY (Content Links):`);
         lowPriority.forEach((link, i) => {
           console.error(`  ${i + 1}. "${link.text}" -> ${link.href}`);
-          if (link.error) console.error(`     Error: ${link.error}`);
-          if (link.status) console.error(`     Status: ${link.status}`);
+          if (link.error) {console.error(`     Error: ${link.error}`);}
+          if (link.status) {console.error(`     Status: ${link.status}`);}
         });
       }
       

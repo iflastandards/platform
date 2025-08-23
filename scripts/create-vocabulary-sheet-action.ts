@@ -2,9 +2,8 @@
 // scripts/create-vocabulary-sheet-action.ts
 // Version for GitHub Actions - reads config from JSON file
 
-import { google } from 'googleapis';
+import { google, type sheets_v4, type drive_v3 } from 'googleapis';
 import * as fs from 'fs';
-import { sheets_v4, drive_v3 } from 'googleapis';
 
 // Types
 interface VocabularyConfig {

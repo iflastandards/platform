@@ -35,7 +35,7 @@ function checkPackageJsonChanges() {
 
     const nonScriptChanges = [...addedLines, ...removedLines].filter((line) => {
       // Skip the closing brace if it's the only change
-      if (line.match(/^\[+-]\s*\}$/)) return false;
+      if (line.match(/^\[+-]\s*\}$/)) {return false;}
 
       // Check if this line matches any script-related pattern
       const isScriptRelated = scriptRelatedPatterns.some((pattern) =>

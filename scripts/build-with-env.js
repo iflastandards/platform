@@ -52,7 +52,7 @@ async function main() {
 
   // If no environment provided, ask user to select
   if (!env) {
-    const envAnswer = await inquirer.prompt([
+    const { env: envAnswer } = await inquirer.prompt([
       {
         type: 'list',
         name: 'environment',
@@ -61,12 +61,12 @@ async function main() {
         default: 'local',
       },
     ]);
-    env = envAnswer.environment;
+    env = envAnswer;
   }
 
   // If no site provided, ask user to select
   if (!site) {
-    const siteAnswer = await inquirer.prompt([
+    const { site: siteAnswer } = await inquirer.prompt([
       {
         type: 'list',
         name: 'site',
@@ -75,7 +75,7 @@ async function main() {
         default: 'all',
       },
     ]);
-    site = siteAnswer.site;
+    site = siteAnswer;
   }
 
   // If clean options not specified via CLI, ask user

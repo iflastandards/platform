@@ -28,7 +28,7 @@ function runCommand(command, silent = false) {
     const result = execSync(command, { encoding: 'utf8', stdio: silent ? 'pipe' : 'inherit' });
     return result.trim();
   } catch (error) {
-    if (!silent) console.error(`Error running: ${command}`);
+    if (!silent) {console.error(`Error running: ${command}`);}
     return null;
   }
 }

@@ -51,11 +51,11 @@ hookFiles.forEach(hook => {
           console.log(`✅ ${hook}: Already properly linked`);
           skipped++;
           return;
-        } else {
+        } 
           console.log(`🔄 ${hook}: Updating symlink`);
           fs.unlinkSync(gitHookPath);
           updated++;
-        }
+        
       } else {
         console.log(`⚠️  ${hook}: Removing non-symlink file`);
         fs.unlinkSync(gitHookPath);

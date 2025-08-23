@@ -36,7 +36,7 @@ const outputPath =
  * Extract project ID from Supabase URL
  */
 function extractProjectIdFromUrl(url) {
-  if (!url) return null;
+  if (!url) {return null;}
   const match = url.match(/https:\/\/([^.]+)\.supabase\.co/);
   return match ? match[1] : null;
 }

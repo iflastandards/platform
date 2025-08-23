@@ -1,4 +1,4 @@
-import React, {JSX} from 'react';
+import React, {type JSX} from 'react';
 import Layout from '@theme/Layout';
 import {useAllDocsData} from '@docusaurus/plugin-content-docs/lib/client';
 import Link from '@docusaurus/Link';
@@ -32,7 +32,7 @@ export default function Sitemap(): JSX.Element {
     const categories: Record<string, DocItem[]> = {};
     
     docs.forEach(doc => {
-      if (!doc.title) return; // Skip docs without titles
+      if (!doc.title) {return;} // Skip docs without titles
       
       // Extract category from doc ID or path
       let category = 'General';
@@ -86,7 +86,7 @@ export default function Sitemap(): JSX.Element {
         <div className={styles.sitemapContent}>
           {Object.entries(allDocsData).map(([pluginId, pluginData]) => {
             const latestVersion = pluginData.versions.find(v => v.isLast);
-            if (!latestVersion) return null;
+            if (!latestVersion) {return null;}
 
             const categories = organizeDocsByCategory(latestVersion.docs as unknown as DocItem[]);
 

@@ -12,7 +12,7 @@ const __dirname = path.dirname(__filename);
 
 // Service account configuration
 const SERVICE_ACCOUNT_PATH = process.env.GOOGLE_SERVICE_ACCOUNT_KEY || path.join(__dirname, '..', 'tmp', 'service-account-key.json');
-const GSHEETS_SA_KEY = process.env.GSHEETS_SA_KEY;
+const {GSHEETS_SA_KEY} = process.env;
 
 // Concept scheme spreadsheets configuration
 const SPREADSHEETS = [
@@ -205,7 +205,7 @@ const DETECTED_TO_ISO = {
 
 // Extract language tag from text
 function extractLanguageTag(text) {
-  if (!text || typeof text !== 'string') return null;
+  if (!text || typeof text !== 'string') {return null;}
   
   const match = text.match(/@(\w{2,3})$/);
   return match ? match[1] : null;
@@ -213,14 +213,14 @@ function extractLanguageTag(text) {
 
 // Extract text without language tag
 function extractTextContent(text) {
-  if (!text || typeof text !== 'string') return '';
+  if (!text || typeof text !== 'string') {return '';}
   
   return text.replace(/@\w{2,3}$/, '').trim();
 }
 
 // Detect language of text
 function detectLanguage(text) {
-  if (!text || text.length < 10) return null;
+  if (!text || text.length < 10) {return null;}
   
   try {
     const results = langdetect.detect(text);
@@ -243,13 +243,13 @@ function detectLanguage(text) {
 // Check a single cell for language mismatch
 function checkCell(cellValue, sheetName, row, column, header) {
   const languageTag = extractLanguageTag(cellValue);
-  if (!languageTag) return null;
+  if (!languageTag) {return null;}
   
   const textContent = extractTextContent(cellValue);
-  if (!textContent || textContent.length < 10) return null;
+  if (!textContent || textContent.length < 10) {return null;}
   
   const detected = detectLanguage(textContent);
-  if (!detected) return null;
+  if (!detected) {return null;}
   
   // Check if declared language matches detected language
   if (languageTag !== detected.iso) {

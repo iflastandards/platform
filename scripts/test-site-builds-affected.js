@@ -39,7 +39,7 @@ const output = execSync('npx nx show projects --affected --type=app', {
 
 // Function to determine which sites to test based on affected projects
 function determineAffectedSites(affectedProjects) {
-  if (!affectedProjects) return null;
+  if (!affectedProjects) {return null;}
   
   const affectedSites = [];
   

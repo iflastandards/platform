@@ -2,7 +2,7 @@
 
 import * as fs from 'fs';
 import * as path from 'path';
-import { ElementSet, SiteConfiguration, Vocabulary } from './parse-ifla-report';
+import { type ElementSet, type SiteConfiguration, type Vocabulary } from './parse-ifla-report';
 
 /**
  * Navigation Generator
