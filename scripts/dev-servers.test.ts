@@ -1,7 +1,7 @@
+#!/usr/bin/env node
 /**
  * @unit @api @low-priority
  */
-#!/usr/bin/env node
 
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
 import { type ChildProcess } from 'child_process';

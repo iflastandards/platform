@@ -447,7 +447,7 @@ RESPONSE FORMAT (return ONLY valid JSON):
 
     const pattern =
       locationPatterns[classification as keyof typeof locationPatterns];
-    if (!pattern) return null;
+    if (!pattern) {return null;}
 
     // Check if file is in wrong location
     const isInWrongLocation = pattern.antiPatterns.some((ap) =>
