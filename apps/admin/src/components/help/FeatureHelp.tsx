@@ -1,6 +1,12 @@
 import React, { useState } from 'react';
 import { Drawer, Tabs, Button, Tooltip, Tour, FloatButton, Input } from 'antd';
-import { QuestionCircleOutlined, BookOutlined, PlayCircleOutlined, ApiOutlined, SearchOutlined } from '@ant-design/icons';
+import {
+  QuestionCircleOutlined,
+  BookOutlined,
+  PlayCircleOutlined,
+  ApiOutlined,
+  SearchOutlined,
+} from '@ant-design/icons';
 import ReactMarkdown from 'react-markdown';
 import { useFeatureDocs } from '@/hooks/useFeatureDocs';
 
@@ -9,15 +15,18 @@ interface FeatureHelpProps {
   children?: React.ReactNode;
 }
 
-export const FeatureHelp: React.FC<FeatureHelpProps> = ({ feature, children }) => {
+export const FeatureHelp: React.FC<FeatureHelpProps> = ({
+  feature,
+  children,
+}) => {
   const [open, setOpen] = useState(false);
   const [tourOpen, setTourOpen] = useState(false);
-  const { docs, tutorials, tooltips, loading } = useFeatureDocs(feature);
+  const { docs, tutorials, tooltips } = useFeatureDocs(feature);
 
   return (
     <>
       {children}
-      
+
       {/* Floating Help Button */}
       <FloatButton
         icon={<QuestionCircleOutlined />}
@@ -85,17 +94,33 @@ export const FeatureHelp: React.FC<FeatureHelpProps> = ({ feature, children }) =
       <Tour
         open={tourOpen}
         onClose={() => setTourOpen(false)}
-        steps={tutorials?.tour?.map(step => ({
-          ...step,
-          target: () => document.querySelector(step.target) as HTMLElement
-        })) || []}
+        steps={
+          tutorials?.tour?.map((step) => ({
+            ...step,
+            target: () => document.querySelector(step.target) as HTMLElement,
+          })) || []
+        }
       />
     </>
   );
 };
 
 // Sub-components
-const QuickHelp: React.FC<{ tooltips: any }> = ({ tooltips }) => (
+interface Tooltip {
+  id: string;
+  title: string;
+  content: string;
+}
+
+interface Tutorial {
+  id: string;
+  title: string;
+  description: string;
+  duration: string;
+  level: string;
+}
+
+const QuickHelp: React.FC<{ tooltips: Tooltip[] | null }> = ({ tooltips }) => (
   <div className="space-y-4">
     <Input.Search
       placeholder="Search help topics..."
@@ -103,7 +128,7 @@ const QuickHelp: React.FC<{ tooltips: any }> = ({ tooltips }) => (
       allowClear
     />
     <div className="space-y-2">
-      {tooltips?.map((tip: any) => (
+      {tooltips?.map((tip) => (
         <div key={tip.id} className="p-3 border rounded">
           <h4 className="font-semibold">{tip.title}</h4>
           <p className="text-gray-600">{tip.content}</p>
@@ -119,10 +144,13 @@ const UserGuide: React.FC<{ content?: string }> = ({ content }) => (
   </div>
 );
 
-const Tutorials: React.FC<{ items?: any[] }> = ({ items }) => (
+const Tutorials: React.FC<{ items?: Tutorial[] }> = ({ items }) => (
   <div className="space-y-4">
     {items?.map((tutorial) => (
-      <div key={tutorial.id} className="p-4 border rounded hover:shadow-md cursor-pointer">
+      <div
+        key={tutorial.id}
+        className="p-4 border rounded hover:shadow-md cursor-pointer"
+      >
         <h3 className="font-semibold">{tutorial.title}</h3>
         <p className="text-gray-600">{tutorial.description}</p>
         <div className="mt-2 text-sm text-blue-600">
@@ -140,13 +168,13 @@ const ApiDocs: React.FC<{ content?: string }> = ({ content }) => (
 );
 
 // Field-level help tooltip component
-export const HelpTooltip: React.FC<{ field: string; children: React.ReactNode }> = ({ 
-  field, 
-  children 
-}) => {
+export const HelpTooltip: React.FC<{
+  field: string;
+  children: React.ReactNode;
+}> = ({ field, children }) => {
   const { getFieldHelp } = useFeatureDocs();
   const help = getFieldHelp(field);
-  
+
   return (
     <Tooltip title={help} placement="top">
       <span style={{ cursor: 'help' }}>{children}</span>
