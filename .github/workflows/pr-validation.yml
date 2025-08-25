@@ -229,7 +229,7 @@ jobs:
           sleep 5
           
       - name: Run Lighthouse
-        uses: treosh/lighthouse-ci-action@v11
+        uses: treosh/lighthouse-ci-action@v12
         with:
           urls: |
             http://localhost:8080
