@@ -86,3 +86,4 @@ output/_reports/
 # Performance optimization
 .env.performance
 _site
+.serena/
