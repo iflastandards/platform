@@ -174,21 +174,71 @@ pnpm nx:graph            # View dep graph
 
 ## 🚪 Port Allocation
 
-| Port | Service | Type |
-|------|---------|------|
-| 3000 | Portal | Docusaurus |
-| 3001-3006 | ISBDM→UNIMARC | Docusaurus |
-| 3007 | Admin | Next.js |
+| Port | Service | Type | URLs |
+|------|---------|------|------|
+| 3000 | Portal | Docusaurus | Local dev |
+| 3001-3006 | ISBDM→UNIMARC | Docusaurus | Local dev |
+| 3007 | Admin | Next.js | Local dev |
+| 3030 | Docs Server | Docusaurus | Local: `localhost:3030` |
 
-## ⚠️ Critical Rules
+### Environment URLs
+| Service | Preview | Production |
+|---------|---------|------------|
+| Docs Server | `docs-iflastandards-preview.onrender.com` | `docs.iflastandards.info` |
 
-1. **NO --no-verify**: Always ask permission before bypassing hooks
-2. **Test failures > commits**: Fix tests before pushing
-3. **Use Grep tool**: Never bash grep, use internal tool
-4. **Nx affected**: Most commands auto-detect changes
-5. **TypeScript config**: No `.env` files, use TS configs (except AI keys)
-6. **Test tagging**: All tests must have category tags (@integration default)
-7. **Integration-first**: Use real I/O, avoid mocks unless necessary
+## ⚠️ Development Rules
+
+### 🔴 Critical (Never Compromise)
+- **Git Safety**: `git status && git branch` → feature branch only, never preview/production
+- **Quality Gates**: `pnpm typecheck && pnpm lint` before completion  
+- **Test Validation**: Never skip tests or use `--no-verify` (ask permission first)
+- **Root Cause Analysis**: Debug failures systematically, fix don't workaround
+
+### 🟡 Important (Strong Preference) 
+- **Task Planning**: TodoWrite for >3 step tasks, parallel operations when possible
+- **Implementation**: Complete features to working state, no TODO comments
+- **Architecture**: Follow multi-site patterns, use `packages/theme/` for shared components
+- **Professional**: Evidence-based claims, no marketing language ("blazingly fast")
+
+### 🟢 Workflow Patterns
+- **Nx Commands**: Use `pnpm nx affected` over individual commands for efficiency
+- **Testing**: Integration-first with `pnpm test:tag --staged` before commits
+- **Multi-Site**: Theme changes affect all sites, test comprehensively
+- **File Placement**: Check existing patterns before creating new directories
+
+### Git Workflow (IFLA-Specific)
+```
+preview branch → feature branch → tests → implement → lint → PR to preview
+```
+- **Branch Model**: Never work directly on preview/production branches
+- **Hooks**: Pre-commit (secrets + TypeScript + unit), Pre-push (integration + builds)
+- **Deployment**: GitHub Pages from preview/production branches
+
+### Quick Decision Trees
+
+**🔴 Before File Operations**
+```
+├─ Writing/Editing? → Read existing → Understand patterns → Edit
+├─ Creating new? → Check existing structure → Place appropriately  
+└─ Multi-site impact? → Test all affected sites
+```
+
+**🟡 Starting New Feature**
+```
+├─ Scope clear? → No → Clarify requirements first
+├─ >3 steps? → Yes → TodoWrite required
+├─ Affects theme? → Yes → Test all sites
+└─ Framework deps? → Check package.json first
+```
+
+**🟢 Tool Selection**
+- Multi-file edits → MultiEdit over individual Edits
+- Code operations → JetBrains MCP first, Serena fallback
+- Search operations → JetBrains search > Grep tool (ripgrep-based) > never bash grep
+- Symbol refactoring → JetBrains rename_refactoring (LSP-aware)
+- Complex analysis → Task agents over native reasoning
+- Nx operations → Use affected commands for efficiency
+- Session management → Serena MCP for `/sc:load` `/sc:save`
 
 ## 📚 Essential Docs
 
