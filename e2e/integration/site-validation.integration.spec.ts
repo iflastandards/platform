@@ -1,6 +1,6 @@
 import { test, expect, describe } from '../utils/tagged-test';
 import { DocsEnv, sites } from '../utils/siteConfig';
-import { getPortalUrl, type Environment } from '@ifla/theme/config';
+import { getPortalUrl, type Environment } from '@ifla/contracts';
 
 // Determine the current environment from env variable or default to localhost
 // Map environment variable values to our enum

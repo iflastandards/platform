@@ -1,11 +1,11 @@
 import { test, expect } from '@playwright/test';
-import { getAdminPortalConfig } from '@ifla/theme';
+import { getAdminPortalConfig } from '@ifla/contracts';
 
 // Get admin portal configuration for local environment
 const adminConfig = getAdminPortalConfig('local');
 
 // Example: Testing multiple documentation sites
-test.describe('Multi-Site E2E Tests @e2e', () => {
+test.describe('Multi-Site E2E Tests @e2e @sites @navigation @critical', () => {
   // Test different sites with their specific ports
   const sites = [
     { name: 'portal', url: 'http://localhost:3000' },
