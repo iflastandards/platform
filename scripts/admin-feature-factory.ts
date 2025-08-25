@@ -12,23 +12,34 @@ import * as path from 'path';
 import chalk from 'chalk';
 import inquirer from 'inquirer';
 
+interface DiscoveredScript {
+  path: string;
+  functionality: string;
+  refactorPotential: 'high' | 'medium' | 'low';
+  dependencies: string[];
+}
+
 interface FeatureState {
   id: string;
   name: string;
   resource: string;
   phase: number;
   iteration: number;
-  status: 'discovery' | 'scaffolded' | 'refining' | 'backend' | 'testing' | 'documenting' | 'complete';
+  status: 'identification' | 'discovery' | 'scaffolded' | 'refining' | 'backend' | 'testing' | 'documenting' | 'complete';
   requirements?: {
     userStories: string[];
     rbacMatrix: Record<string, string[]>;
     schema: any;
   };
+  discoveredScripts: DiscoveredScript[];
   checkpoints: {
     ui_stable: boolean;
     contracts_stable: boolean;
     mocks_complete: boolean;
     backend_ready: boolean;
+  };
+  phaseTransitions: {
+    [key: string]: string;
   };
 }
 
@@ -53,8 +64,8 @@ class FeatureFactory {
   async startFeature(name: string): Promise<void> {
     console.log(chalk.blue('🚀 Starting Feature Factory for:'), chalk.yellow(name));
     
-    // Phase 1: Discovery
-    console.log(chalk.green('\n📋 Phase 1: Discovery'));
+    // Phase 1: Feature Identification & Requirements
+    console.log(chalk.green('\n📋 Phase 1: Feature Identification & Requirements'));
     const answers = await inquirer.prompt([
       {
         type: 'input',
@@ -76,6 +87,12 @@ class FeatureFactory {
         choices: ['admin', 'editor', 'viewer'],
         default: ['admin', 'editor'],
       },
+      {
+        type: 'input',
+        name: 'keywords',
+        message: 'Keywords for script discovery (comma-separated):',
+        default: name.toLowerCase().replace(/\s+/g, ','),
+      },
     ]);
 
     this.state = {
@@ -84,36 +101,113 @@ class FeatureFactory {
       resource: answers.resource,
       phase: 1,
       iteration: 0,
-      status: 'discovery',
+      status: 'identification',
+      discoveredScripts: [],
       checkpoints: {
         ui_stable: false,
         contracts_stable: false,
         mocks_complete: false,
         backend_ready: false,
       },
+      phaseTransitions: {
+        '1_to_2': `Ready to search for existing code? Run \`pnpm admin:discover\``,
+        '2_to_3': `Found scripts to analyze. Ready to scaffold? Run \`pnpm admin:scaffold\``,
+        '3_to_4': `Scaffolding complete! View at http://localhost:3007/${answers.resource}. Ready to refine? Run \`pnpm admin:refine\``,
+        '4_to_5': `UI stable with mocks. Ready for backend? Run \`pnpm admin:backend\``,
+        '5_to_6': `Backend connected! Ready to test? Run \`pnpm admin:test\``,
+        '6_to_7': `Tests passing! Ready to document? Run \`pnpm admin:docs\``,
+        '7_complete': `Feature complete! Deploy or start new feature with \`pnpm admin:feature\``
+      }
     };
 
     await this.saveState(this.state);
-    console.log(chalk.green('✓ Discovery complete'));
+    console.log(chalk.green('✓ Phase 1: Feature identification complete'));
     
-    // Auto-proceed to scaffolding
-    await this.scaffold();
+    // Show next step
+    console.log(chalk.yellow('\n🔄 Next Step:'));
+    console.log(chalk.cyan(this.state.phaseTransitions['1_to_2']));
+  }
+
+  async discover(): Promise<void> {
+    if (!this.state) {
+      this.state = await this.loadState();
+      if (!this.state) {
+        console.error(chalk.red('No active feature. Run "pnpm admin:feature <name>" first.'));
+        return;
+      }
+    }
+
+    if (this.state.phase !== 1) {
+      console.error(chalk.red('Discovery must follow identification. Current phase:', this.state.phase));
+      return;
+    }
+
+    console.log(chalk.green('\n🔍 Phase 2: Code Discovery & Analysis'));
+    
+    // Import the discovery module
+    const { discoverRefactorableCode } = await import('./discover-refactorable-code.js');
+    
+    const keywords = this.state.name.toLowerCase().split(/[,\s]+/).filter(Boolean);
+    console.log(chalk.cyan('Searching for scripts with keywords:'), keywords.join(', '));
+    
+    try {
+      const discoveredScripts = await discoverRefactorableCode(keywords, this.state.resource);
+      
+      this.state.discoveredScripts = discoveredScripts;
+      this.state.phase = 2;
+      this.state.status = 'discovery';
+      
+      await this.saveState(this.state);
+      
+      console.log(chalk.green(`✓ Phase 2: Discovery complete - Found ${discoveredScripts.length} relevant scripts`));
+      
+      if (discoveredScripts.length > 0) {
+        console.log(chalk.cyan('\n📋 Discovered Scripts:'));
+        discoveredScripts.forEach(script => {
+          const potentialColor = script.refactorPotential === 'high' ? chalk.green : 
+                                script.refactorPotential === 'medium' ? chalk.yellow : chalk.red;
+          console.log(`  • ${chalk.blue(script.path)} - ${script.functionality} ${potentialColor(`(${script.refactorPotential} potential)`)}`);
+        });
+      } else {
+        console.log(chalk.yellow('No existing scripts found - will create from scratch'));
+      }
+      
+      // Show next step
+      console.log(chalk.yellow('\n🔄 Next Step:'));
+      console.log(chalk.cyan(this.state.phaseTransitions['2_to_3']));
+      
+    } catch (error) {
+      console.error(chalk.red('Discovery failed:'), error);
+    }
   }
 
   async scaffold(): Promise<void> {
     if (!this.state) {
       this.state = await this.loadState();
       if (!this.state) {
-        console.error(chalk.red('No active feature. Run "start" first.'));
+        console.error(chalk.red('No active feature. Run "pnpm admin:feature <name>" first.'));
         return;
       }
     }
 
-    console.log(chalk.green('\n🏗️  Phase 2: Scaffolding'));
+    if (this.state.phase < 2) {
+      console.error(chalk.red('Must complete discovery first. Run "pnpm admin:discover".'));
+      return;
+    }
+
+    console.log(chalk.green('\n🏗️  Phase 3: Instant Scaffolding'));
+    
+    // Show discovered scripts that will be integrated
+    if (this.state.discoveredScripts.length > 0) {
+      console.log(chalk.cyan('\n📋 Will integrate these scripts:'));
+      this.state.discoveredScripts.forEach(script => {
+        console.log(`  • ${chalk.blue(script.path)} - ${script.functionality}`);
+      });
+    }
     
     const command = `npm run refine create-resource ${this.state.resource} --actions list,create,show,edit --provider data-provider --ui antd`;
     
-    console.log(chalk.cyan('Executing:'), command);
+    console.log(chalk.cyan('\nExecuting:'), command);
     
     const { confirmed } = await inquirer.prompt([
       {
@@ -127,11 +221,14 @@ class FeatureFactory {
     if (confirmed) {
       try {
         execSync(command, { stdio: 'inherit' });
-        this.state.phase = 2;
+        this.state.phase = 3;
         this.state.status = 'scaffolded';
         await this.saveState(this.state);
-        console.log(chalk.green('✓ Scaffolding complete'));
-        console.log(chalk.yellow(`\n👀 View your UI at: http://localhost:3007/${this.state.resource}`));
+        console.log(chalk.green('✓ Phase 3: Scaffolding complete'));
+        
+        // Show next step
+        console.log(chalk.yellow('\n🔄 Next Step:'));
+        console.log(chalk.cyan(this.state.phaseTransitions['3_to_4']));
       } catch (error) {
         console.error(chalk.red('Scaffolding failed:'), error);
       }
@@ -139,16 +236,33 @@ class FeatureFactory {
   }
 
   async refine(): Promise<void> {
-    if (!this.state || this.state.status !== 'scaffolded' && this.state.status !== 'refining') {
-      console.error(chalk.red('Must scaffold first. Run "scaffold" command.'));
+    if (!this.state) {
+      this.state = await this.loadState();
+      if (!this.state) {
+        console.error(chalk.red('No active feature. Run "pnpm admin:feature <name>" first.'));
+        return;
+      }
+    }
+
+    if (this.state.phase < 3 || (this.state.status !== 'scaffolded' && this.state.status !== 'refining')) {
+      console.error(chalk.red('Must scaffold first. Run "pnpm admin:scaffold".'));
       return;
     }
 
-    console.log(chalk.green('\n🔄 Phase 3: Iterative Refinement'));
+    console.log(chalk.green('\n🔄 Phase 4: Iterative Refinement'));
+    this.state.phase = 4;
     this.state.status = 'refining';
     this.state.iteration++;
     
     console.log(chalk.cyan(`Iteration ${this.state.iteration}`));
+    
+    // Show integration opportunities
+    if (this.state.discoveredScripts.length > 0) {
+      console.log(chalk.cyan('\n📋 Integration opportunities:'));
+      this.state.discoveredScripts.forEach(script => {
+        console.log(`  • Integrate ${chalk.blue(script.functionality)} from ${chalk.gray(script.path)}`);
+      });
+    }
     
     const changes = await inquirer.prompt([
       {
@@ -157,11 +271,12 @@ class FeatureFactory {
         message: 'What needs refinement?',
         choices: [
           'UI Components',
-          'Form Validation',
+          'Form Validation', 
           'Table Features',
           'Contracts/Schema',
-          'Mock Data',
+          'Mock Data (MSW)',
           'Error Handling',
+          'Integrate Existing Scripts',
         ],
       },
       {
@@ -176,7 +291,7 @@ class FeatureFactory {
       await this.checkpoint();
     } else {
       await this.saveState(this.state);
-      console.log(chalk.yellow('💡 Make your changes, then run "refine" again or "checkpoint" to save.'));
+      console.log(chalk.yellow('💡 Make your changes, then run "pnpm admin:refine" again or "pnpm admin:checkpoint" to save.'));
     }
   }
 
@@ -214,6 +329,10 @@ class FeatureFactory {
     if (checkpoints.ui_stable && checkpoints.contracts_stable && checkpoints.mocks_complete) {
       this.state.checkpoints.backend_ready = true;
       console.log(chalk.green('✓ Ready for backend implementation!'));
+      
+      // Show next step
+      console.log(chalk.yellow('\n🔄 Next Step:'));
+      console.log(chalk.cyan(this.state.phaseTransitions['4_to_5']));
     }
     
     await this.saveState(this.state);
@@ -221,33 +340,54 @@ class FeatureFactory {
   }
 
   async backend(): Promise<void> {
-    if (!this.state || !this.state.checkpoints.backend_ready) {
-      console.error(chalk.red('UI and contracts must be stable first. Complete refinement phase.'));
+    if (!this.state) {
+      this.state = await this.loadState();
+      if (!this.state) {
+        console.error(chalk.red('No active feature. Run "pnpm admin:feature <name>" first.'));
+        return;
+      }
+    }
+
+    if (!this.state.checkpoints.backend_ready) {
+      console.error(chalk.red('UI and contracts must be stable first. Complete refinement phase with "pnpm admin:checkpoint".'));
       return;
     }
 
-    console.log(chalk.green('\n⚙️  Phase 4: Backend Implementation'));
-    this.state.phase = 4;
+    console.log(chalk.green('\n⚙️  Phase 5: Backend Implementation'));
+    this.state.phase = 5;
     this.state.status = 'backend';
     
     console.log(chalk.cyan('Backend tasks:'));
-    console.log('  1. Create Supabase schema');
-    console.log('  2. Implement service adapters');
-    console.log('  3. Build Edge Functions');
-    console.log('  4. Connect live endpoints');
+    if (this.state.discoveredScripts.length > 0) {
+      console.log('  1. Refactor existing scripts into service modules');
+      console.log('  2. Create API adapters wrapping script functionality'); 
+      console.log('  3. Build/update Supabase schema if needed');
+      console.log('  4. Implement Edge Functions calling refactored code');
+      console.log('  5. Connect live endpoints to refactored services');
+      
+      console.log(chalk.cyan('\n📋 Scripts to refactor:'));
+      this.state.discoveredScripts.forEach(script => {
+        console.log(`  • ${chalk.blue(script.path)} → Service module`);
+      });
+    } else {
+      console.log('  1. Create Supabase schema');
+      console.log('  2. Implement service adapters');
+      console.log('  3. Build Edge Functions');
+      console.log('  4. Connect live endpoints');
+    }
     
     await this.saveState(this.state);
-    console.log(chalk.yellow('💡 Implement backend components, then run "test".'));
+    console.log(chalk.yellow('💡 Implement backend components, then run "pnpm admin:test".'));
   }
 
   async test(): Promise<void> {
-    if (!this.state || this.state.phase < 4) {
+    if (!this.state || this.state.phase < 5) {
       console.error(chalk.red('Complete backend implementation first.'));
       return;
     }
 
-    console.log(chalk.green('\n🧪 Phase 5: Testing'));
-    this.state.phase = 5;
+    console.log(chalk.green('\n🧪 Phase 6: Testing'));
+    this.state.phase = 6;
     this.state.status = 'testing';
     
     const testCommands = [
@@ -267,20 +407,21 @@ class FeatureFactory {
     }
     
     await this.saveState(this.state);
-    console.log(chalk.green('✓ Testing complete'));
+    console.log(chalk.green('✓ Phase 6: Testing complete'));
     
-    // Auto-proceed to documentation
-    await this.docs();
+    // Show next step
+    console.log(chalk.yellow('\n🔄 Next Step:'));
+    console.log(chalk.cyan(this.state.phaseTransitions['6_to_7']));
   }
 
   async docs(): Promise<void> {
-    if (!this.state || this.state.phase < 5) {
+    if (!this.state || this.state.phase < 6) {
       console.error(chalk.red('Complete testing first.'));
       return;
     }
 
-    console.log(chalk.green('\n📚 Phase 6: Documentation'));
-    this.state.phase = 6;
+    console.log(chalk.green('\n📚 Phase 7: Documentation'));
+    this.state.phase = 7;
     this.state.status = 'documenting';
     
     const docTasks = await inquirer.prompt([
@@ -336,7 +477,11 @@ class FeatureFactory {
     
     this.state.status = 'complete';
     await this.saveState(this.state);
-    console.log(chalk.green('✓ Feature complete with documentation!'));
+    console.log(chalk.green('✓ Phase 7: Documentation complete!'));
+    
+    // Show completion message
+    console.log(chalk.yellow('\n🎉 Feature Complete!'));
+    console.log(chalk.cyan(this.state.phaseTransitions['7_complete']));
   }
 
   async status(): Promise<void> {
@@ -349,7 +494,7 @@ class FeatureFactory {
     console.log(chalk.blue('\n📊 Feature Status'));
     console.log(chalk.white('Feature:'), state.name);
     console.log(chalk.white('Resource:'), state.resource);
-    console.log(chalk.white('Phase:'), `${state.phase}/5`);
+    console.log(chalk.white('Phase:'), `${state.phase}/7`);
     console.log(chalk.white('Status:'), state.status);
     console.log(chalk.white('Iteration:'), state.iteration);
     
@@ -359,6 +504,45 @@ class FeatureFactory {
       const color = value ? chalk.green : chalk.gray;
       console.log(color(`  ${icon} ${key.replace(/_/g, ' ')}`));
     });
+  }
+
+  async skip(targetPhase?: number): Promise<void> {
+    if (!this.state) {
+      this.state = await this.loadState();
+      if (!this.state) {
+        console.error(chalk.red('No active feature. Run "pnpm admin:feature <name>" first.'));
+        return;
+      }
+    }
+
+    if (targetPhase && (targetPhase < 1 || targetPhase > 7)) {
+      console.error(chalk.red('Target phase must be between 1 and 7.'));
+      return;
+    }
+
+    const phase = targetPhase || this.state.phase + 1;
+    
+    if (phase > 7) {
+      console.error(chalk.red('Already at final phase.'));
+      return;
+    }
+
+    const phaseNames = ['', 'identification', 'discovery', 'scaffolded', 'refining', 'backend', 'testing', 'documenting'];
+    
+    console.log(chalk.yellow(`⏭️  Skipping to Phase ${phase}: ${phaseNames[phase]}`));
+    
+    this.state.phase = phase;
+    this.state.status = phaseNames[phase] as any;
+    
+    await this.saveState(this.state);
+    console.log(chalk.green(`✓ Skipped to Phase ${phase}`));
+    
+    // Show appropriate next step
+    const nextStepKey = `${phase - 1}_to_${phase}`;
+    if (this.state.phaseTransitions[nextStepKey]) {
+      console.log(chalk.yellow('\n🔄 Current Step:'));
+      console.log(chalk.cyan(this.state.phaseTransitions[nextStepKey]));
+    }
   }
 
   async resume(): Promise<void> {
@@ -407,6 +591,11 @@ program
   .action((name) => factory.startFeature(name));
 
 program
+  .command('discover')
+  .description('Search for existing scripts to refactor')
+  .action(() => factory.discover());
+
+program
   .command('scaffold')
   .description('Generate refine.dev scaffolding')
   .action(() => factory.scaffold());
@@ -440,6 +629,11 @@ program
   .command('status')
   .description('Show current status')
   .action(() => factory.status());
+
+program
+  .command('skip [phase]')
+  .description('Skip to next phase or specific phase (1-7)')
+  .action((phase) => factory.skip(phase ? parseInt(phase) : undefined));
 
 program
   .command('resume')
