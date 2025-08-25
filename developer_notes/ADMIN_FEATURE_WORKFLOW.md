@@ -12,69 +12,84 @@ pnpm admin:feature "user imports"
 pnpm admin:resume
 ```
 
-## 📋 Workflow Overview
+## 📋 7-Phase Workflow Overview
 
-### Phase 1: Discovery (15-30 min)
+### Phase 1: Feature Identification & Requirements (15-30 min)
 ```bash
 pnpm admin:feature "feature-name"
 ```
-- Define user stories
-- Create RBAC matrix  
+- Define user stories and use cases
+- Create RBAC matrix and permissions
 - Draft initial Zod schemas
-- Choose resource name
+- Choose resource name (plural, kebab-case)
+- Define keywords for code discovery
 
-### Phase 2: Instant Scaffolding (5 min)
+### Phase 2: Code Discovery & Analysis (10-15 min)
+```bash
+pnpm admin:discover
+```
+- Search codebase for existing scripts to refactor
+- Analyze refactoring potential (high/medium/low)
+- Identify dependencies and integration opportunities
+- Plan code reuse vs new implementation
+
+**Result**: Discovered scripts ready for integration into UI
+
+### Phase 3: Instant Scaffolding (5 min)
 ```bash
 pnpm admin:scaffold
 ```
 - Generates refine.dev CRUD pages
-- Creates Ant Design UI
+- Creates Ant Design UI components
 - Sets up TypeScript interfaces
 - Connects MSW handlers
+- Plans integration of discovered scripts
 
 **Result**: Working UI at `http://localhost:3007/[resource-name]`
 
-### Phase 3: Iterative Refinement (2-3 hours)
+### Phase 4: Iterative Refinement (2-3 hours)
 ```bash
 pnpm admin:refine
 ```
-- Polish UI components
-- Evolve Zod contracts
-- Perfect MSW mocks
+- Polish UI components and interactions
+- Evolve Zod contracts and validation
+- Perfect MSW mocks with realistic data
+- Integrate existing script functionality
 - **NO BACKEND YET!**
 
 Iterate 3-5 times until UI is perfect with mock data.
 
-### Phase 4: Backend Implementation (2 hours)
+### Phase 5: Backend Implementation (2 hours)
 ```bash
 pnpm admin:backend
 ```
 **Only after UI/contracts are stable:**
-- Create Supabase schema
-- Build service adapters
-- Implement Edge Functions
-- Connect live endpoints
+- Refactor existing scripts into service modules
+- Create API adapters wrapping script functionality
+- Create/update Supabase schema
+- Implement Edge Functions calling refactored code
+- Connect live endpoints to refactored services
 
-### Phase 5: Testing (1 hour)
+### Phase 6: Testing (1 hour)
 ```bash
 pnpm admin:test
 ```
-- Run integration tests
-- Execute E2E tests
-- Validate accessibility
-- Verify RBAC
+- Run integration tests with real refactored code
+- Execute E2E tests with full workflows
+- Validate accessibility compliance
+- Verify RBAC with real permissions
 
-### Phase 6: Documentation (1 hour) - NEW!
+### Phase 7: Documentation (1 hour)
 ```bash
 pnpm admin:docs
 ```
 - Generate API docs from Zod schemas
 - Create user guide with screenshots
-- Write developer README
+- Write developer README including refactored code
 - Build in-app help components
-- Add guided tours
+- Add guided tours for new workflows
 
-**Result**: Complete documentation at `apps/admin/docs/features/[resource-name]/`
+**Result**: Complete feature with documentation at `apps/admin/docs/features/[resource-name]/`
 
 ## 🔧 Utility Commands
 
@@ -84,6 +99,9 @@ pnpm admin:status
 
 # Save stable checkpoint
 pnpm admin:checkpoint
+
+# Skip to next phase or specific phase (1-7)
+pnpm admin:skip [phase]
 
 # Resume from last state
 pnpm admin:resume
@@ -118,26 +136,28 @@ apps/admin/
 
 ## 🎯 Example: CSV Import Feature
 
-### Day 1: UI Development
+### Day 1: Discovery & UI Development
 ```bash
 # Morning
-pnpm admin:feature "csv import"      # 30 min discovery
-pnpm admin:scaffold                  # 5 min scaffolding
+pnpm admin:feature "csv import"      # Phase 1: Requirements (30 min)
+pnpm admin:discover                  # Phase 2: Find existing CSV scripts (15 min)
+pnpm admin:scaffold                  # Phase 3: Generate UI (5 min)
 
 # Afternoon  
-pnpm admin:refine                    # Iteration 1: Add upload
-pnpm admin:refine                    # Iteration 2: Add validation
-pnpm admin:refine                    # Iteration 3: Polish UX
+pnpm admin:refine                    # Phase 4 Iteration 1: Add upload widget
+pnpm admin:refine                    # Phase 4 Iteration 2: Add validation UI
+pnpm admin:refine                    # Phase 4 Iteration 3: Integrate existing scripts
 pnpm admin:checkpoint                # Save stable state
 ```
 
-### Day 2: Backend & Testing
+### Day 2: Backend, Testing & Documentation
 ```bash
 # Morning
-pnpm admin:backend                   # Implement services
+pnpm admin:backend                   # Phase 5: Refactor scripts into services
 
 # Afternoon
-pnpm admin:test                      # Run all tests
+pnpm admin:test                      # Phase 6: Run all tests
+pnpm admin:docs                      # Phase 7: Generate documentation
 ```
 
 ## 🤝 Integration with SuperClaude
