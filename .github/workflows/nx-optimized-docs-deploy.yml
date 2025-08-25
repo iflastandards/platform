@@ -269,7 +269,7 @@ jobs:
 
       - name: Upload Pages artifact
         if: github.event.inputs.deploy_target != 'netlify' && github.event.inputs.deploy_target != 'vercel'
-        uses: actions/upload-pages-artifact@v3
+        uses: actions/upload-pages-artifact@v4
         with:
           path: ./_site
 
