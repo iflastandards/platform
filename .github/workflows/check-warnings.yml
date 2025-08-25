@@ -12,6 +12,10 @@ jobs:
   check-warnings:
     name: Check Docusaurus Build Warnings
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      issues: write
+      pull-requests: write
     
     steps:
       - name: Checkout
