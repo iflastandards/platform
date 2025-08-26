@@ -1,4 +1,5 @@
 import React, { useEffect, useCallback } from 'react';
+import { createPortal } from 'react-dom';
 import styles from './styles.module.scss';
 
 export interface EditChoiceModalProps {
@@ -80,7 +81,8 @@ export function EditChoiceModal({
 
   if (!isOpen) {return null;}
 
-  return (
+  // Render modal in a portal to ensure it appears above all content
+  return createPortal(
     <div 
       className={styles.modalBackdrop} 
       onClick={handleBackdropClick}
@@ -138,7 +140,8 @@ export function EditChoiceModal({
           </small>
         </div>
       </div>
-    </div>
+    </div>,
+    document.body
   );
 }
 
