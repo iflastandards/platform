@@ -1,0 +1,1309 @@
+---
+title: Job Management and Activity Log System Specification
+description: Central job queue and activity logging system for comprehensive platform monitoring and audit compliance
+sidebar_position: 1
+version: 1.0
+date: 2025-01-26
+status: Draft
+priority: "Phase 0 (Foundation)"
+tags:
+  - job-management
+  - activity-logging
+  - audit-trail
+  - real-time-notifications
+  - specification
+---
+
+# Job Management and Activity Log System Specification
+
+import { CompactButton } from '@ifla/theme';
+
+<div className="alert alert--success margin-bottom--md">
+  <p><strong>Status:</strong> Draft - Foundation Phase 0</p>
+  <p><strong>Priority:</strong> Critical - Build first before all other systems</p>
+  <p><strong>Purpose:</strong> Central nervous system for platform operations</p>
+</div>
+
+## Executive Summary
+
+This specification defines a comprehensive job management and activity logging system for the IFLA Standards platform. The system serves as the central nervous system for tracking, managing, and reporting on all platform activities including content edits, builds, deployments, user actions, and system events. It provides real-time notifications, audit trails, and operational insights across all platform components.
+
+## Goals and Objectives
+
+### Primary Goals
+1. **Unified Activity Tracking**: Central logging for all platform activities
+2. **Real-time Notifications**: Instant updates for users and systems
+3. **Audit Compliance**: Complete audit trails for regulatory requirements
+4. **Operational Insights**: Analytics and monitoring for platform health
+5. **Job Management**: Queue and execute background tasks efficiently
+6. **Integration Hub**: Connect all platform components through events
+
+### Success Criteria
+- 100% activity capture across all platform components
+- `<100ms` latency for real-time notifications
+- 99.9% job processing reliability
+- Complete audit trail with tamper protection
+- Scalable to handle 10,000+ events per hour
+
+## System Architecture
+
+### High-Level Architecture
+
+```
+┌─────────────────────────────────────────────────────────────────┐
+│                     Client Applications                         │
+│  ┌──────────────┐  ┌──────────────┐  ┌──────────────────────┐  │
+│  │  TinaCMS     │  │  Admin App   │  │  Documentation Sites │  │
+│  │  Editor      │  │  Dashboard   │  │  (6 sites)           │  │
+│  └──────┬───────┘  └──────┬───────┘  └──────────┬───────────┘  │
+└─────────┼──────────────────┼─────────────────────┼──────────────┘
+          │                  │                     │
+          │                  │                     │
+    ┌─────▼──────────────────▼─────────────────────▼──────┐
+    │              Job Management API                      │
+    │  ┌──────────────┐  ┌──────────────┐  ┌─────────────┐ │
+    │  │   Event      │  │  Real-time   │  │  Activity   │ │
+    │  │  Processor   │  │ Notification │  │   Logger    │ │
+    │  └──────────────┘  └──────────────┘  └─────────────┘ │
+    └─────────────────────────┬────────────────────────────┘
+                              │
+    ┌─────────────────────────▼────────────────────────────┐
+    │                Supabase Backend                      │
+    │  ┌──────────────┐  ┌──────────────┐  ┌─────────────┐ │
+    │  │     Jobs     │  │   Activity   │  │ Realtime    │ │
+    │  │    Queue     │  │     Log      │  │ Channels    │ │
+    │  └──────────────┘  └──────────────┘  └─────────────┘ │
+    └──────────────────────────────────────────────────────┘
+                              │
+    ┌─────────────────────────▼────────────────────────────┐
+    │                External Integrations                 │
+    │  ┌──────────────┐  ┌──────────────┐  ┌─────────────┐ │
+    │  │   GitHub     │  │    Slack     │  │   Email     │ │
+    │  │  Webhooks    │  │Notifications │  │Notifications│ │
+    │  └──────────────┘  └──────────────┘  └─────────────┘ │
+    └──────────────────────────────────────────────────────┘
+```
+
+### Core Components
+
+#### 1. Job Management API
+Central API service that handles all job operations and activity logging.
+
+```typescript
+interface JobManagementAPI {
+  // Job operations
+  createJob(job: JobDefinition): Promise<Job>;
+  getJob(jobId: string): Promise<Job>;
+  updateJobStatus(jobId: string, status: JobStatus): Promise<void>;
+  cancelJob(jobId: string): Promise<void>;
+  
+  // Activity logging
+  logActivity(activity: ActivityEvent): Promise<void>;
+  getActivityLog(filters: ActivityFilters): Promise<ActivityEvent[]>;
+  
+  // Real-time subscriptions
+  subscribeToJob(jobId: string): Promise<EventStream>;
+  subscribeToActivity(channel: string): Promise<EventStream>;
+}
+```
+
+#### 2. Event Processing Engine
+Handles incoming events, enrichment, and routing to appropriate handlers.
+
+```typescript
+class EventProcessor {
+  async processEvent(event: RawEvent): Promise<void> {
+    // Validate event structure
+    const validatedEvent = await this.validateEvent(event);
+    
+    // Enrich with metadata
+    const enrichedEvent = await this.enrichEvent(validatedEvent);
+    
+    // Route to handlers
+    await this.routeEvent(enrichedEvent);
+    
+    // Store in activity log
+    await this.storeActivity(enrichedEvent);
+    
+    // Trigger real-time notifications
+    await this.notifySubscribers(enrichedEvent);
+  }
+}
+```
+
+#### 3. Real-time Notification System
+WebSocket-based system for instant updates to connected clients.
+
+```typescript
+interface NotificationSystem {
+  broadcast(channel: string, event: NotificationEvent): Promise<void>;
+  subscribe(channel: string, callback: EventHandler): Promise<Subscription>;
+  unsubscribe(subscriptionId: string): Promise<void>;
+  
+  // Channel patterns
+  // site:ISBDM - All activity for ISBDM site
+  // user:123 - All activity for specific user
+  // job:456 - Updates for specific job
+  // global - Platform-wide notifications
+}
+```
+
+## Data Models
+
+### Job Definition
+```typescript
+interface Job {
+  id: string;                    // UUID
+  type: JobType;                 // Content edit, build, deploy, etc.
+  title: string;                 // Human-readable title
+  description?: string;          // Detailed description
+  priority: JobPriority;         // high, medium, low
+  status: JobStatus;             // pending, running, completed, failed, cancelled
+  progress: number;              // 0-100 percentage
+  
+  // Ownership and context
+  userId: string;                // User who initiated
+  siteKey?: string;              // Associated site (ISBDM, LRM, etc.)
+  resourceId?: string;           // Associated resource (file path, element ID)
+  
+  // Execution details
+  payload: Record<string, any>;  // Job-specific data
+  result?: Record<string, any>;  // Job output/results
+  error?: JobError;              // Error details if failed
+  
+  // Timing
+  createdAt: string;             // ISO timestamp
+  startedAt?: string;            // When execution began
+  completedAt?: string;          // When finished (success or failure)
+  estimatedDuration?: number;    // Expected duration in seconds
+  
+  // Relationships
+  parentJobId?: string;          // If this is a sub-job
+  childJobs?: string[];          // Sub-jobs spawned by this job
+  dependsOn?: string[];          // Job IDs this job depends on
+  
+  // Metadata
+  tags: string[];                // Searchable tags
+  metadata: Record<string, any>; // Additional context
+}
+
+enum JobType {
+  // Content operations
+  CONTENT_CREATE = 'content_create',
+  CONTENT_UPDATE = 'content_update',
+  CONTENT_DELETE = 'content_delete',
+  CONTENT_PUBLISH = 'content_publish',
+  
+  // Vocabulary operations
+  VOCABULARY_IMPORT = 'vocabulary_import',
+  VOCABULARY_EXPORT = 'vocabulary_export',
+  VOCABULARY_VALIDATE = 'vocabulary_validate',
+  
+  // Build operations
+  SITE_BUILD = 'site_build',
+  THEME_BUILD = 'theme_build',
+  DEPLOYMENT = 'deployment',
+  
+  // System operations
+  BACKUP = 'backup',
+  MAINTENANCE = 'maintenance',
+  MIGRATION = 'migration',
+  
+  // Integration operations
+  GIT_SYNC = 'git_sync',
+  WEBHOOK_PROCESS = 'webhook_process',
+  NOTIFICATION_SEND = 'notification_send',
+}
+
+enum JobStatus {
+  PENDING = 'pending',           // Queued, waiting to start
+  RUNNING = 'running',           // Currently executing
+  COMPLETED = 'completed',       // Finished successfully
+  FAILED = 'failed',            // Finished with error
+  CANCELLED = 'cancelled',       // Cancelled by user or system
+  PAUSED = 'paused',            // Temporarily suspended
+  RETRYING = 'retrying',        // Retrying after failure
+}
+
+enum JobPriority {
+  LOW = 'low',                  // Background tasks
+  MEDIUM = 'medium',            // Normal operations
+  HIGH = 'high',               // User-initiated actions
+  CRITICAL = 'critical',        // System critical operations
+}
+
+interface JobError {
+  code: string;                 // Error code for programmatic handling
+  message: string;              // Human-readable error message
+  details?: Record<string, any>; // Additional error context
+  stackTrace?: string;          // Stack trace for debugging
+  retryable: boolean;           // Whether job can be retried
+  retryCount: number;           // How many retries attempted
+  maxRetries: number;           // Maximum retries allowed
+}
+```
+
+### Activity Event
+```typescript
+interface ActivityEvent {
+  id: string;                   // UUID
+  timestamp: string;            // ISO timestamp
+  type: ActivityType;           // Classification of activity
+  source: ActivitySource;       // Where the activity originated
+  
+  // Actor information
+  userId?: string;              // User who performed action
+  userEmail?: string;           // User email for audit
+  userName?: string;            // Display name
+  userRole?: string;            // User role at time of action
+  
+  // Context
+  siteKey?: string;             // Associated site
+  resourceType?: string;        // Type of resource (element, vocabulary, page)
+  resourceId?: string;          // Specific resource identifier
+  resourceTitle?: string;       // Human-readable resource name
+  
+  // Action details
+  action: ActivityAction;       // What was done
+  description: string;          // Human-readable description
+  
+  // Technical details
+  method?: string;              // HTTP method or API call
+  endpoint?: string;            // API endpoint or file path
+  userAgent?: string;           // Browser/client info
+  ipAddress?: string;           // Source IP (anonymized for privacy)
+  
+  // Change tracking
+  changes?: ChangeSet;          // What actually changed
+  previousValue?: any;          // Value before change
+  newValue?: any;              // Value after change
+  
+  // Relationships
+  jobId?: string;              // Associated job if applicable
+  sessionId?: string;          // User session identifier
+  correlationId?: string;      // Group related activities
+  
+  // Metadata
+  metadata: Record<string, any>; // Additional context
+  tags: string[];               // Searchable tags
+  sensitive: boolean;           // Contains sensitive data
+}
+
+enum ActivityType {
+  // Content activities
+  CONTENT = 'content',
+  VOCABULARY = 'vocabulary',
+  ELEMENT = 'element',
+  
+  // System activities  
+  AUTHENTICATION = 'authentication',
+  AUTHORIZATION = 'authorization',
+  SYSTEM = 'system',
+  
+  // Build activities
+  BUILD = 'build',
+  DEPLOYMENT = 'deployment',
+  
+  // Integration activities
+  GIT = 'git',
+  WEBHOOK = 'webhook',
+  API = 'api',
+}
+
+enum ActivitySource {
+  TINACMS = 'tinacms',          // TinaCMS editor
+  GITHUB = 'github',            // Direct GitHub edits
+  ADMIN = 'admin',              // Admin interface
+  API = 'api',                  // Direct API calls
+  WEBHOOK = 'webhook',          // External webhook
+  SYSTEM = 'system',            // Automated system action
+  CLI = 'cli',                  // Command line tools
+}
+
+enum ActivityAction {
+  // CRUD operations
+  CREATE = 'create',
+  READ = 'read',
+  UPDATE = 'update',
+  DELETE = 'delete',
+  
+  // Authentication
+  LOGIN = 'login',
+  LOGOUT = 'logout',
+  LOGIN_FAILED = 'login_failed',
+  
+  // Content operations
+  PUBLISH = 'publish',
+  UNPUBLISH = 'unpublish',
+  APPROVE = 'approve',
+  REJECT = 'reject',
+  
+  // System operations
+  START = 'start',
+  STOP = 'stop',
+  RESTART = 'restart',
+  CONFIGURE = 'configure',
+  
+  // Git operations
+  COMMIT = 'commit',
+  PUSH = 'push',
+  MERGE = 'merge',
+  BRANCH = 'branch',
+}
+
+interface ChangeSet {
+  type: 'create' | 'update' | 'delete';
+  fields: FieldChange[];
+  summary: string;              // Human-readable summary
+}
+
+interface FieldChange {
+  field: string;                // Field name
+  oldValue: any;               // Previous value
+  newValue: any;               // New value
+  operation: 'add' | 'modify' | 'remove';
+}
+```
+
+## API Specification
+
+### REST API Endpoints
+
+```typescript
+// Job Management
+POST   /api/jobs                    // Create new job
+GET    /api/jobs                    // List jobs with filters
+GET    /api/jobs/:id                // Get specific job
+PATCH  /api/jobs/:id                // Update job status/progress
+DELETE /api/jobs/:id                // Cancel job
+
+// Activity Logging
+POST   /api/activities              // Log activity event
+GET    /api/activities              // Get activity log
+GET    /api/activities/stats        // Activity statistics
+GET    /api/activities/export       // Export activity data
+
+// Real-time subscriptions
+GET    /api/realtime/subscribe/:channel  // Subscribe to WebSocket channel
+POST   /api/realtime/broadcast           // Broadcast to channel
+
+// Health and monitoring
+GET    /api/health                  // System health check
+GET    /api/metrics                 // Performance metrics
+GET    /api/status                  // Current system status
+```
+
+### WebSocket Events
+
+```typescript
+interface WebSocketEvent {
+  type: 'job_update' | 'activity' | 'notification' | 'system';
+  channel: string;
+  payload: any;
+  timestamp: string;
+}
+
+// Client subscription patterns
+ws.subscribe('job:123');              // Updates for specific job
+ws.subscribe('user:456');             // All activities for user
+ws.subscribe('site:ISBDM');           // All ISBDM activities
+ws.subscribe('global');               // Platform-wide notifications
+ws.subscribe('system:errors');        // System error notifications
+```
+
+## Integration Points
+
+### TinaCMS Integration
+```typescript
+// TinaCMS save hook
+export default defineConfig({
+  onSave: async ({ collection, document, user }) => {
+    // Create job for the edit
+    const job = await jobAPI.createJob({
+      type: JobType.CONTENT_UPDATE,
+      title: `Edit ${collection}: ${document.title}`,
+      userId: user.id,
+      siteKey: document.siteKey,
+      resourceId: `${collection}/${document.id}`,
+      payload: {
+        collection,
+        documentId: document.id,
+        changes: document._changes,
+        editMode: user.permissions.editMode,
+      },
+    });
+    
+    // Log the activity
+    await jobAPI.logActivity({
+      type: ActivityType.CONTENT,
+      source: ActivitySource.TINACMS,
+      userId: user.id,
+      siteKey: document.siteKey,
+      resourceType: collection,
+      resourceId: document.id,
+      resourceTitle: document.title,
+      action: ActivityAction.UPDATE,
+      description: `Updated ${collection} "${document.title}" via TinaCMS`,
+      jobId: job.id,
+      changes: document._changes,
+      metadata: {
+        editMode: user.permissions.editMode,
+        collection,
+        documentType: document._template,
+      },
+    });
+    
+    return job;
+  },
+});
+```
+
+### GitHub Webhooks Integration
+```typescript
+// GitHub webhook handler
+export default async function handler(req, res) {
+  const { action, repository, sender, commits, pull_request } = req.body;
+  
+  // Create job for webhook processing
+  const job = await jobAPI.createJob({
+    type: JobType.WEBHOOK_PROCESS,
+    title: `Process GitHub ${action}`,
+    userId: `github:${sender.id}`,
+    payload: req.body,
+  });
+  
+  try {
+    // Process each commit
+    for (const commit of commits || []) {
+      await jobAPI.logActivity({
+        type: ActivityType.GIT,
+        source: ActivitySource.GITHUB,
+        userId: `github:${sender.id}`,
+        userName: sender.login,
+        action: ActivityAction.COMMIT,
+        description: commit.message,
+        jobId: job.id,
+        metadata: {
+          commitSha: commit.id,
+          branch: req.body.ref?.replace('refs/heads/', ''),
+          modifiedFiles: commit.modified,
+          addedFiles: commit.added,
+          removedFiles: commit.removed,
+        },
+      });
+    }
+    
+    // Update job as completed
+    await jobAPI.updateJobStatus(job.id, JobStatus.COMPLETED);
+    
+  } catch (error) {
+    await jobAPI.updateJobStatus(job.id, JobStatus.FAILED);
+    throw error;
+  }
+}
+```
+
+### Admin Dashboard Integration
+```typescript
+// React hook for real-time updates
+export function useActivityFeed(channel: string) {
+  const [activities, setActivities] = useState<ActivityEvent[]>([]);
+  const [loading, setLoading] = useState(true);
+  
+  useEffect(() => {
+    // Subscribe to real-time updates
+    const subscription = jobAPI.subscribeToActivity(channel);
+    
+    subscription.on('activity', (activity: ActivityEvent) => {
+      setActivities(prev => [activity, ...prev.slice(0, 99)]);
+    });
+    
+    // Load initial activities
+    jobAPI.getActivityLog({ channel, limit: 50 })
+      .then(setActivities)
+      .finally(() => setLoading(false));
+      
+    return () => subscription.unsubscribe();
+  }, [channel]);
+  
+  return { activities, loading };
+}
+
+// Activity dashboard component
+export function ActivityDashboard() {
+  const { activities } = useActivityFeed('global');
+  const { jobs } = useJobQueue();
+  
+  return (
+    <div className="activity-dashboard">
+      <div className="job-queue">
+        <h2>Active Jobs</h2>
+        {jobs.filter(job => job.status === JobStatus.RUNNING).map(job => (
+          <JobCard key={job.id} job={job} />
+        ))}
+      </div>
+      
+      <div className="activity-feed">
+        <h2>Recent Activity</h2>
+        {activities.map(activity => (
+          <ActivityCard key={activity.id} activity={activity} />
+        ))}
+      </div>
+    </div>
+  );
+}
+```
+
+## Database Schema (Supabase)
+
+### Jobs Table
+```sql
+CREATE TABLE jobs (
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  type TEXT NOT NULL,
+  title TEXT NOT NULL,
+  description TEXT,
+  priority TEXT NOT NULL DEFAULT 'medium',
+  status TEXT NOT NULL DEFAULT 'pending',
+  progress INTEGER DEFAULT 0 CHECK (progress >= 0 AND progress <= 100),
+  
+  -- Ownership
+  user_id TEXT,
+  site_key TEXT,
+  resource_id TEXT,
+  
+  -- Execution
+  payload JSONB DEFAULT '{}',
+  result JSONB,
+  error JSONB,
+  
+  -- Timing
+  created_at TIMESTAMPTZ DEFAULT NOW(),
+  started_at TIMESTAMPTZ,
+  completed_at TIMESTAMPTZ,
+  estimated_duration INTEGER,
+  
+  -- Relationships
+  parent_job_id UUID REFERENCES jobs(id),
+  depends_on UUID[], -- Array of job IDs
+  
+  -- Metadata
+  tags TEXT[] DEFAULT '{}',
+  metadata JSONB DEFAULT '{}'
+);
+
+-- Indexes for performance
+CREATE INDEX idx_jobs_status ON jobs(status);
+CREATE INDEX idx_jobs_type ON jobs(type);
+CREATE INDEX idx_jobs_user_id ON jobs(user_id);
+CREATE INDEX idx_jobs_site_key ON jobs(site_key);
+CREATE INDEX idx_jobs_created_at ON jobs(created_at DESC);
+CREATE INDEX idx_jobs_priority_status ON jobs(priority, status);
+
+-- Enable RLS (Row Level Security)
+ALTER TABLE jobs ENABLE ROW LEVEL SECURITY;
+
+-- RLS policies
+CREATE POLICY jobs_user_policy ON jobs 
+  FOR ALL USING (user_id = auth.uid()::text OR 
+                 auth.jwt() ->> 'role' IN ('admin', 'reviewer'));
+```
+
+### Activities Table
+```sql
+CREATE TABLE activities (
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  timestamp TIMESTAMPTZ DEFAULT NOW(),
+  type TEXT NOT NULL,
+  source TEXT NOT NULL,
+  
+  -- Actor
+  user_id TEXT,
+  user_email TEXT,
+  user_name TEXT,
+  user_role TEXT,
+  
+  -- Context
+  site_key TEXT,
+  resource_type TEXT,
+  resource_id TEXT,
+  resource_title TEXT,
+  
+  -- Action
+  action TEXT NOT NULL,
+  description TEXT NOT NULL,
+  
+  -- Technical
+  method TEXT,
+  endpoint TEXT,
+  user_agent TEXT,
+  ip_address INET,
+  
+  -- Changes
+  changes JSONB,
+  previous_value JSONB,
+  new_value JSONB,
+  
+  -- Relationships
+  job_id UUID REFERENCES jobs(id),
+  session_id TEXT,
+  correlation_id UUID,
+  
+  -- Metadata
+  metadata JSONB DEFAULT '{}',
+  tags TEXT[] DEFAULT '{}',
+  sensitive BOOLEAN DEFAULT FALSE
+);
+
+-- Indexes for common queries
+CREATE INDEX idx_activities_timestamp ON activities(timestamp DESC);
+CREATE INDEX idx_activities_user_id ON activities(user_id);
+CREATE INDEX idx_activities_type ON activities(type);
+CREATE INDEX idx_activities_source ON activities(source);
+CREATE INDEX idx_activities_site_key ON activities(site_key);
+CREATE INDEX idx_activities_action ON activities(action);
+CREATE INDEX idx_activities_job_id ON activities(job_id);
+CREATE INDEX idx_activities_correlation_id ON activities(correlation_id);
+
+-- Full-text search on descriptions
+CREATE INDEX idx_activities_description_fts ON activities 
+  USING GIN(to_tsvector('english', description));
+
+-- Composite index for common dashboard queries
+CREATE INDEX idx_activities_dashboard ON activities(timestamp DESC, type, source);
+
+-- Enable RLS
+ALTER TABLE activities ENABLE ROW LEVEL SECURITY;
+
+-- RLS policies - more permissive for activities as they're mainly for monitoring
+CREATE POLICY activities_read_policy ON activities 
+  FOR SELECT USING (
+    NOT sensitive OR 
+    user_id = auth.uid()::text OR 
+    auth.jwt() ->> 'role' IN ('admin', 'reviewer')
+  );
+
+CREATE POLICY activities_insert_policy ON activities 
+  FOR INSERT WITH CHECK (
+    auth.jwt() ->> 'role' IS NOT NULL -- Any authenticated user can log activities
+  );
+```
+
+### Real-time Subscriptions
+```sql
+-- Enable real-time on both tables
+ALTER publication supabase_realtime ADD table jobs;
+ALTER publication supabase_realtime ADD table activities;
+
+-- Create channels table for subscription management
+CREATE TABLE realtime_channels (
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  channel_name TEXT NOT NULL UNIQUE,
+  description TEXT,
+  created_at TIMESTAMPTZ DEFAULT NOW(),
+  active_subscriptions INTEGER DEFAULT 0
+);
+
+-- Track subscription counts
+CREATE OR REPLACE FUNCTION increment_subscription_count(channel TEXT)
+RETURNS VOID AS $$
+BEGIN
+  INSERT INTO realtime_channels (channel_name, active_subscriptions)
+  VALUES (channel, 1)
+  ON CONFLICT (channel_name)
+  DO UPDATE SET active_subscriptions = realtime_channels.active_subscriptions + 1;
+END;
+$$ LANGUAGE plpgsql;
+
+CREATE OR REPLACE FUNCTION decrement_subscription_count(channel TEXT)
+RETURNS VOID AS $$
+BEGIN
+  UPDATE realtime_channels 
+  SET active_subscriptions = GREATEST(0, active_subscriptions - 1)
+  WHERE channel_name = channel;
+END;
+$$ LANGUAGE plpgsql;
+```
+
+## Security and Privacy
+
+### Data Protection
+```typescript
+interface SecurityConfig {
+  // PII anonymization
+  anonymizeIP: boolean;           // Anonymize IP addresses after 30 days
+  redactSensitiveFields: string[]; // Fields to automatically redact
+  encryptAtRest: boolean;         // Encrypt sensitive data in database
+  
+  // Access control
+  requireAuthentication: boolean;  // All API calls require auth
+  roleBasedAccess: {
+    admin: string[];              // Admin accessible endpoints
+    reviewer: string[];           // Reviewer accessible endpoints  
+    editor: string[];             // Editor accessible endpoints
+    viewer: string[];             // Read-only accessible endpoints
+  };
+  
+  // Audit requirements
+  retentionPeriod: number;        // How long to keep activity logs (days)
+  immutableLog: boolean;          // Prevent modification of log entries
+  digitalSignature: boolean;      // Sign critical log entries
+}
+
+// Data sanitization
+class DataSanitizer {
+  static sanitizeActivity(activity: ActivityEvent): ActivityEvent {
+    const sanitized = { ...activity };
+    
+    // Anonymize IP after 30 days
+    if (this.isOlderThan(activity.timestamp, 30)) {
+      sanitized.ipAddress = this.anonymizeIP(activity.ipAddress);
+    }
+    
+    // Redact sensitive fields
+    if (activity.sensitive) {
+      sanitized.previousValue = '[REDACTED]';
+      sanitized.newValue = '[REDACTED]';
+      sanitized.metadata = this.redactSensitiveMetadata(activity.metadata);
+    }
+    
+    return sanitized;
+  }
+}
+```
+
+### Rate Limiting
+```typescript
+// API rate limiting configuration
+const rateLimits = {
+  '/api/jobs': {
+    windowMs: 15 * 60 * 1000,      // 15 minutes
+    max: 100,                      // limit each IP to 100 requests per windowMs
+  },
+  '/api/activities': {
+    windowMs: 1 * 60 * 1000,       // 1 minute
+    max: 60,                       // 60 requests per minute
+  },
+  '/api/realtime/broadcast': {
+    windowMs: 1 * 60 * 1000,       // 1 minute
+    max: 10,                       // 10 broadcasts per minute
+  },
+};
+```
+
+## Performance and Scalability
+
+### Optimization Strategies
+```typescript
+// Query optimization
+interface QueryOptimizations {
+  // Pagination for large result sets
+  pagination: {
+    defaultLimit: 50;
+    maxLimit: 1000;
+  };
+  
+  // Caching strategy
+  cache: {
+    activities: {
+      ttl: 300; // 5 minutes
+      invalidateOn: ['new_activity'];
+    };
+    jobs: {
+      ttl: 60; // 1 minute
+      invalidateOn: ['job_update'];
+    };
+  };
+  
+  // Connection pooling
+  database: {
+    maxConnections: 20;
+    idleTimeoutMs: 30000;
+  };
+}
+
+// Background job processing
+class JobProcessor {
+  async processJobQueue() {
+    const pendingJobs = await this.getPendingJobs(10); // Process 10 at a time
+    
+    await Promise.allSettled(
+      pendingJobs.map(job => this.processJob(job))
+    );
+  }
+  
+  private async processJob(job: Job): Promise<void> {
+    try {
+      await this.updateJobStatus(job.id, JobStatus.RUNNING);
+      
+      const processor = this.getProcessor(job.type);
+      const result = await processor.execute(job.payload);
+      
+      await this.completeJob(job.id, result);
+    } catch (error) {
+      await this.failJob(job.id, error);
+    }
+  }
+}
+```
+
+### Monitoring and Alerting
+```typescript
+interface MonitoringConfig {
+  metrics: {
+    // Job queue health
+    queueLength: number;          // Alert if queue > 1000
+    avgProcessingTime: number;    // Alert if > 30 seconds
+    failureRate: number;          // Alert if > 5%
+    
+    // Activity volume
+    activitiesPerMinute: number;  // Alert if > 500
+    errorRate: number;            // Alert if > 1%
+    
+    // System health
+    databaseConnections: number;  // Alert if > 80% of max
+    memoryUsage: number;          // Alert if > 85%
+    responseTime: number;         // Alert if > 2 seconds
+  };
+  
+  alerts: {
+    slack: {
+      webhook: string;
+      channels: {
+        critical: '#alerts-critical';
+        warnings: '#alerts-warnings';
+        info: '#platform-activity';
+      };
+    };
+    email: {
+      recipients: string[];
+      templates: {
+        critical: 'critical-alert-template';
+        summary: 'daily-summary-template';
+      };
+    };
+  };
+}
+```
+
+## Integration Examples
+
+### TinaCMS Content Edit Flow
+```typescript
+// 1. User saves content in TinaCMS
+const onTinaSave = async (document, user) => {
+  // Create job
+  const job = await jobAPI.createJob({
+    type: JobType.CONTENT_UPDATE,
+    title: `Edit Element: ${document.title}`,
+    userId: user.id,
+    siteKey: 'ISBDM',
+    resourceId: `elements/${document.id}`,
+    payload: { document, changes: document._changes },
+  });
+  
+  // Log activity
+  await jobAPI.logActivity({
+    type: ActivityType.CONTENT,
+    source: ActivitySource.TINACMS,
+    userId: user.id,
+    action: ActivityAction.UPDATE,
+    description: `Updated element "${document.title}" definition`,
+    jobId: job.id,
+    changes: document._changes,
+  });
+  
+  // Process based on user permissions
+  if (user.permissions.editMode === 'direct_commit') {
+    await processDirectCommit(job);
+  } else {
+    await createPullRequest(job);
+  }
+  
+  return job;
+};
+
+// 2. Job processor handles the actual work
+const processDirectCommit = async (job: Job) => {
+  try {
+    // Update job status
+    await jobAPI.updateJobStatus(job.id, JobStatus.RUNNING);
+    
+    // Perform Git operations
+    const result = await gitOperations.commit({
+      files: job.payload.document._files,
+      message: `feat: update ${job.payload.document.title}`,
+      author: job.userId,
+    });
+    
+    // Log the commit
+    await jobAPI.logActivity({
+      type: ActivityType.GIT,
+      source: ActivitySource.SYSTEM,
+      action: ActivityAction.COMMIT,
+      description: `Committed changes for job ${job.id}`,
+      jobId: job.id,
+      metadata: { commitSha: result.sha },
+    });
+    
+    // Complete job
+    await jobAPI.updateJobStatus(job.id, JobStatus.COMPLETED);
+    
+    // Notify user
+    await notificationService.send({
+      userId: job.userId,
+      type: 'success',
+      message: `Your changes to "${job.title}" have been saved.`,
+    });
+    
+  } catch (error) {
+    await jobAPI.updateJobStatus(job.id, JobStatus.FAILED);
+    await notificationService.send({
+      userId: job.userId,
+      type: 'error',
+      message: `Failed to save changes: ${error.message}`,
+    });
+  }
+};
+```
+
+### GitHub Webhook Processing
+```typescript
+// GitHub sends webhook -> Job created -> Activities logged
+const processGitHubWebhook = async (payload) => {
+  const { action, commits, pull_request, sender } = payload;
+  
+  // Create job for webhook processing
+  const job = await jobAPI.createJob({
+    type: JobType.WEBHOOK_PROCESS,
+    title: `GitHub ${action}`,
+    userId: `github:${sender.id}`,
+    payload,
+  });
+  
+  try {
+    // Process commits
+    for (const commit of commits || []) {
+      // Log commit activity
+      await jobAPI.logActivity({
+        type: ActivityType.GIT,
+        source: ActivitySource.GITHUB,
+        userId: `github:${sender.id}`,
+        userName: sender.login,
+        action: ActivityAction.COMMIT,
+        description: commit.message,
+        jobId: job.id,
+        metadata: {
+          commitSha: commit.id,
+          modifiedFiles: commit.modified,
+          url: commit.url,
+        },
+      });
+      
+      // Check if commit affects IFLA sites
+      const affectedSites = await detectAffectedSites(commit.modified);
+      
+      for (const siteKey of affectedSites) {
+        // Trigger rebuild if needed
+        const buildJob = await jobAPI.createJob({
+          type: JobType.SITE_BUILD,
+          title: `Rebuild ${siteKey} site`,
+          siteKey,
+          parentJobId: job.id,
+          payload: { trigger: 'git_commit', commitSha: commit.id },
+        });
+        
+        // Log rebuild trigger
+        await jobAPI.logActivity({
+          type: ActivityType.BUILD,
+          source: ActivitySource.SYSTEM,
+          siteKey,
+          action: ActivityAction.START,
+          description: `Triggered ${siteKey} rebuild due to commit ${commit.id}`,
+          jobId: buildJob.id,
+          correlationId: job.id,
+        });
+      }
+    }
+    
+    await jobAPI.updateJobStatus(job.id, JobStatus.COMPLETED);
+    
+  } catch (error) {
+    await jobAPI.updateJobStatus(job.id, JobStatus.FAILED);
+    throw error;
+  }
+};
+```
+
+## Testing Strategy
+
+### Unit Tests
+```typescript
+describe('Job Management API', () => {
+  test('creates job with valid payload', async () => {
+    const jobDef = {
+      type: JobType.CONTENT_UPDATE,
+      title: 'Test Job',
+      userId: 'user123',
+      payload: { test: true },
+    };
+    
+    const job = await jobAPI.createJob(jobDef);
+    
+    expect(job.id).toBeDefined();
+    expect(job.status).toBe(JobStatus.PENDING);
+    expect(job.createdAt).toBeDefined();
+  });
+  
+  test('logs activity with all required fields', async () => {
+    const activity = {
+      type: ActivityType.CONTENT,
+      source: ActivitySource.TINACMS,
+      userId: 'user123',
+      action: ActivityAction.UPDATE,
+      description: 'Test activity',
+    };
+    
+    await jobAPI.logActivity(activity);
+    
+    const logged = await jobAPI.getActivityLog({ userId: 'user123' });
+    expect(logged).toHaveLength(1);
+    expect(logged[0].description).toBe('Test activity');
+  });
+});
+```
+
+### Integration Tests
+```typescript
+describe('End-to-End Job Processing', () => {
+  test('TinaCMS edit creates job and logs activity', async () => {
+    // Simulate TinaCMS save
+    const document = { id: 'P1025', title: 'Test Element' };
+    const user = { id: 'user123', permissions: { editMode: 'direct_commit' } };
+    
+    const job = await simulateTinaSave(document, user);
+    
+    // Check job was created
+    expect(job.type).toBe(JobType.CONTENT_UPDATE);
+    
+    // Check activity was logged
+    const activities = await jobAPI.getActivityLog({ jobId: job.id });
+    expect(activities).toHaveLength(1);
+    expect(activities[0].action).toBe(ActivityAction.UPDATE);
+    
+    // Wait for job processing
+    await waitForJobCompletion(job.id);
+    
+    // Check final status
+    const completedJob = await jobAPI.getJob(job.id);
+    expect(completedJob.status).toBe(JobStatus.COMPLETED);
+  });
+});
+```
+
+### Performance Tests
+```typescript
+describe('Performance Tests', () => {
+  test('handles 1000 concurrent job creations', async () => {
+    const startTime = Date.now();
+    
+    const promises = Array.from({ length: 1000 }, (_, i) => 
+      jobAPI.createJob({
+        type: JobType.CONTENT_UPDATE,
+        title: `Test Job ${i}`,
+        userId: `user${i % 10}`, // 10 different users
+        payload: { index: i },
+      })
+    );
+    
+    await Promise.all(promises);
+    
+    const duration = Date.now() - startTime;
+    expect(duration).toBeLessThan(10000); // Under 10 seconds
+  });
+  
+  test('activity log pagination performs well', async () => {
+    // Create 10,000 activities
+    await seedActivities(10000);
+    
+    const startTime = Date.now();
+    
+    // Query with pagination
+    const activities = await jobAPI.getActivityLog({
+      limit: 50,
+      offset: 5000,
+    });
+    
+    const duration = Date.now() - startTime;
+    expect(duration).toBeLessThan(1000); // Under 1 second
+    expect(activities).toHaveLength(50);
+  });
+});
+```
+
+## Deployment and Operations
+
+### Environment Configuration
+```typescript
+interface EnvironmentConfig {
+  development: {
+    database: {
+      url: process.env.SUPABASE_DATABASE_URL_DEV;
+      maxConnections: 5;
+    };
+    redis: {
+      url: process.env.REDIS_URL_DEV;
+    };
+    logging: {
+      level: 'debug';
+      includeStackTrace: true;
+    };
+  };
+  
+  production: {
+    database: {
+      url: process.env.SUPABASE_DATABASE_URL_PROD;
+      maxConnections: 20;
+      ssl: true;
+    };
+    redis: {
+      url: process.env.REDIS_URL_PROD;
+      cluster: true;
+    };
+    logging: {
+      level: 'info';
+      includeStackTrace: false;
+    };
+    monitoring: {
+      enabled: true;
+      alertingEnabled: true;
+    };
+  };
+}
+```
+
+### Monitoring Dashboard
+```typescript
+// Key metrics to track
+interface SystemMetrics {
+  jobs: {
+    totalJobs: number;
+    pendingJobs: number;
+    runningJobs: number;
+    completedJobs: number;
+    failedJobs: number;
+    avgProcessingTime: number;
+    queueHealthScore: number; // 0-100
+  };
+  
+  activities: {
+    totalActivities: number;
+    activitiesLast24h: number;
+    topActivityTypes: Array<{ type: string; count: number }>;
+    topUsers: Array<{ userId: string; activityCount: number }>;
+    errorRate: number; // percentage
+  };
+  
+  system: {
+    databaseConnections: number;
+    memoryUsage: number;
+    cpuUsage: number;
+    responseTime: number;
+    uptime: number;
+  };
+  
+  realtime: {
+    activeSubscriptions: number;
+    messagesSent: number;
+    messagesReceived: number;
+    connectionErrors: number;
+  };
+}
+```
+
+## Future Enhancements
+
+### Phase 2 Features
+1. **Advanced Analytics**: 
+   - User activity patterns
+   - Content edit frequency analysis
+   - Performance bottleneck identification
+
+2. **Workflow Automation**:
+   - Rule-based job triggers
+   - Content validation pipelines
+   - Automated testing on content changes
+
+3. **Enhanced Notifications**:
+   - Smart notification grouping
+   - User preference management
+   - Mobile push notifications
+
+4. **Integration Expansions**:
+   - Slack bot for activity queries
+   - Email digest reports
+   - Export to external analytics platforms
+
+### Phase 3 Features
+1. **Machine Learning**:
+   - Anomaly detection for unusual activity
+   - Predictive job failure analysis
+   - Content quality scoring
+
+2. **Advanced Security**:
+   - Behavioral analysis for fraud detection
+   - Advanced audit trail visualization
+   - Compliance reporting automation
+
+## Risk Assessment
+
+### High Risk
+1. **Data Loss**: Database corruption or accidental deletion
+   - **Mitigation**: Automated backups, point-in-time recovery, audit trail immutability
+2. **Performance Degradation**: High-volume activity logging impacts system
+   - **Mitigation**: Async processing, database optimization, rate limiting
+
+### Medium Risk  
+1. **Privacy Compliance**: Storing PII in activity logs
+   - **Mitigation**: Data anonymization, retention policies, consent management
+2. **Integration Failures**: Webhook processing failures
+   - **Mitigation**: Retry mechanisms, dead letter queues, monitoring
+
+### Low Risk
+1. **Schema Evolution**: Database schema changes breaking existing functionality
+   - **Mitigation**: Database migrations, backward compatibility, testing
+
+## Success Metrics
+
+### Operational Metrics
+- **System Availability**: 99.9% uptime
+- **Job Processing**: 95% of jobs complete within SLA
+- **Activity Capture**: 100% of platform activities logged
+- **Real-time Latency**: `<100ms` for notifications
+
+### User Experience Metrics
+- **Notification Relevance**: `>90%` user satisfaction
+- **Dashboard Load Time**: `<2 seconds`
+- **Search Performance**: `<500ms` for activity queries
+- **Mobile Responsiveness**: Works on all device types
+
+### Business Metrics
+- **Audit Compliance**: 100% compliance with regulatory requirements
+- **Operational Insights**: Measurable improvement in platform efficiency
+- **User Adoption**: `>80%` of active users engage with notifications
+- **Cost Efficiency**: System costs scale linearly with usage
+
+## Conclusion
+
+The Job Management and Activity Log System provides the foundational infrastructure for comprehensive platform monitoring, audit compliance, and operational excellence. By centralizing all platform activities through a unified system, IFLA Standards platform gains complete visibility into user actions, system operations, and integration events.
+
+This system will serve as the backbone for future enhancements including TinaCMS integration, DCTAP management, and advanced workflow automation while ensuring compliance with audit requirements and providing real-time insights into platform health and usage patterns.
+
+---
+
+**Next Steps**: 
+1. Review and approve this specification
+2. Set up Supabase database schema
+3. Implement core Job Management API
+4. Integrate with existing Clerk authentication
+5. Begin integration with TinaCMS and GitHub webhooks

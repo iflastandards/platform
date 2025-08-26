@@ -1,0 +1,858 @@
+---
+title: TinaCMS Integration Technical Specification
+description: Comprehensive specification for integrating TinaCMS visual editing with IFLA Standards platform
+sidebar_position: 3
+version: 1.0
+date: 2025-01-26
+status: Draft
+priority: "Phase 2 (after Job Management and DCTAP)"
+tags:
+  - tinacms
+  - content-management
+  - visual-editing
+  - specification
+---
+
+# TinaCMS Integration Technical Specification
+
+import { CompactButton } from '@ifla/theme';
+
+<div className="alert alert--info margin-bottom--md">
+  <p><strong>Status:</strong> Draft - Phase 2 implementation</p>
+  <p><strong>Dependencies:</strong> Job Management System, DCTAP Management Interface</p>
+  <p><strong>Target Users:</strong> SMEs, Content Editors, Developers</p>
+</div>
+
+## Executive Summary
+
+This specification outlines the integration of TinaCMS (Tina) as a visual content management system for IFLA Standards documentation sites. TinaCMS will provide SMEs (Subject Matter Experts) with a user-friendly, visual editing interface while maintaining the existing Git-based workflow and MDX content structure.
+
+## Goals and Objectives
+
+### Primary Goals
+1. **Visual Editing Interface**: Provide SMEs with a WYSIWYG editor for MDX content
+2. **Preserve Git Workflow**: Maintain existing Git-based collaboration and version control
+3. **Element/Vocabulary Management**: Enable visual editing of complex RDF structures
+4. **Multi-Site Support**: Centralized editing for all 6 IFLA standards sites
+5. **Seamless Integration**: Work with existing Docusaurus + theme architecture
+
+### Success Criteria
+- SMEs can edit content visually without technical knowledge
+- All changes go through Git review process (PRs)
+- Complex structures (elements, vocabularies) are easily editable
+- No disruption to existing development workflow
+- Performance impact < 200ms for edit mode
+
+## Architecture Overview
+
+### High-Level Architecture
+
+```
+┌─────────────────────────────────────────────────────────────┐
+│                   TinaCMS Admin Panel                       │
+│  ┌─────────────────┐  ┌─────────────────┐  ┌──────────────┐ │
+│  │   Site Editor   │  │  Element Editor │  │ Vocab Editor │ │
+│  └─────────────────┘  └─────────────────┘  └──────────────┘ │
+└─────────────────┬───────────────────────────────────────────┘
+                  │
+         ┌────────┴─────────┐
+         │   Tina Backend   │
+         │ (filesystem API) │
+         └────────┬─────────┘
+                  │
+    ┌─────────────┼─────────────┐
+    │             │             │
+┌───▼───┐    ┌───▼───┐    ┌───▼───┐
+│ ISBDM │    │  LRM  │    │ FRBR  │
+└───────┘    └───────┘    └───────┘
+┌───────┐    ┌───────┐    ┌───────┐
+│ isbd  │    │muldicat│   │unimarc│
+└───────┘    └───────┘    └───────┘
+     │             │             │
+     └─────────────┼─────────────┘
+                   │
+         ┌─────────▼─────────┐
+         │   Git Repository  │
+         │ (Source of Truth) │
+         └───────────────────┘
+```
+
+### Technology Stack
+- **TinaCMS**: v2.x (latest stable)
+- **Tina Cloud**: For hosted backend (optional)
+- **Next.js Admin**: Separate admin application at `/admin`
+- **Integration**: Via filesystem API + Git hooks
+- **Authentication**: Clerk (existing) + GitHub OAuth
+
+## Implementation Approach
+
+### Phase 1: Core Setup (Week 1-2)
+1. **Admin Application**
+   ```bash
+   apps/admin-tina/          # New Next.js app
+   ├── tina/                 # TinaCMS configuration
+   │   ├── config.ts         # Main Tina config
+   │   ├── collections/      # Content collections
+   │   └── templates/        # Field templates
+   ├── pages/
+   │   ├── admin/           # Tina admin routes
+   │   └── api/tina/        # Tina API routes
+   └── components/          # Custom field components
+   ```
+
+2. **Configuration Structure**
+   ```typescript
+   // tina/config.ts
+   export default defineConfig({
+     branch: 'main',
+     clientId: process.env.NEXT_PUBLIC_TINA_CLIENT_ID,
+     token: process.env.TINA_TOKEN,
+     build: {
+       outputFolder: 'admin',
+       publicFolder: 'public',
+     },
+     media: {
+       tina: {
+         mediaRoot: 'static',
+         publicFolder: 'public',
+       },
+     },
+     collections: [
+       elementsCollection,
+       vocabulariesCollection,
+       pagesCollection,
+       sitesCollection,
+     ],
+   });
+   ```
+
+### Phase 2: Content Collections (Week 3-4)
+
+#### Elements Collection
+```typescript
+const elementsCollection: Collection = {
+  name: 'elements',
+  label: 'Elements',
+  path: 'standards/{site}/docs/elements',
+  format: 'mdx',
+  match: {
+    include: '**/*.mdx',
+    exclude: '**/index.mdx',
+  },
+  fields: [
+    // RDF Metadata Group
+    {
+      type: 'object',
+      name: 'RDF',
+      label: 'Element Definition',
+      fields: [
+        {
+          type: 'string',
+          name: 'definition',
+          label: 'Definition',
+          required: true,
+          ui: {
+            component: 'textarea',
+            validate: (value) => {
+              if (value && value.length < 10) {
+                return 'Definition must be at least 10 characters';
+              }
+            },
+          },
+        },
+        {
+          type: 'string',
+          name: 'domain',
+          label: 'Domain',
+          required: true,
+          options: [
+            { value: 'Manifestation', label: 'Manifestation' },
+            { value: 'Work', label: 'Work' },
+            { value: 'Expression', label: 'Expression' },
+            { value: 'Item', label: 'Item' },
+          ],
+        },
+        {
+          type: 'string',
+          name: 'type',
+          label: 'Property Type',
+          required: true,
+          options: [
+            { value: 'DatatypeProperty', label: 'Datatype Property' },
+            { value: 'ObjectProperty', label: 'Object Property' },
+          ],
+        },
+        {
+          type: 'string',
+          name: 'range',
+          label: 'Range',
+          description: 'Expected value type (e.g., Literal, URI)',
+        },
+        {
+          type: 'string',
+          name: 'scopeNote',
+          label: 'Scope Note',
+          ui: { component: 'textarea' },
+        },
+        // Relationships
+        {
+          type: 'object',
+          name: 'elementSubType',
+          label: 'Sub-types',
+          list: true,
+          fields: [
+            { type: 'string', name: 'uri', label: 'URI' },
+            { type: 'string', name: 'url', label: 'URL' },
+            { type: 'string', name: 'label', label: 'Label' },
+          ],
+        },
+        {
+          type: 'object',
+          name: 'elementSuperType',
+          label: 'Super-types',
+          list: true,
+          fields: [
+            { type: 'string', name: 'uri', label: 'URI' },
+            { type: 'string', name: 'url', label: 'URL' },
+            { type: 'string', name: 'label', label: 'Label' },
+          ],
+        },
+        // Deprecation
+        {
+          type: 'boolean',
+          name: 'deprecated',
+          label: 'Deprecated',
+        },
+        {
+          type: 'string',
+          name: 'deprecatedInVersion',
+          label: 'Deprecated in Version',
+          ui: {
+            component: (props) => {
+              // Only show if deprecated is true
+              return props.tinaForm.values.RDF?.deprecated ? (
+                <TinaField {...props} />
+              ) : null;
+            },
+          },
+        },
+      ],
+    },
+    // Content
+    {
+      type: 'rich-text',
+      name: 'body',
+      label: 'Content',
+      isBody: true,
+      templates: [
+        {
+          name: 'ElementReference',
+          label: 'Element Reference',
+          fields: [
+            {
+              type: 'object',
+              name: 'frontMatter',
+              label: 'Reference Data',
+              fields: [
+                { type: 'string', name: 'id', label: 'Element ID' },
+                { type: 'string', name: 'title', label: 'Title' },
+              ],
+            },
+          ],
+        },
+        {
+          name: 'VocabularyTable',
+          label: 'Vocabulary Table',
+          fields: [
+            { type: 'string', name: 'vocabularyId', label: 'Vocabulary ID' },
+            { type: 'string', name: 'title', label: 'Title' },
+          ],
+        },
+      ],
+    },
+  ],
+};
+```
+
+#### Vocabularies Collection
+```typescript
+const vocabulariesCollection: Collection = {
+  name: 'vocabularies',
+  label: 'Vocabularies',
+  path: 'standards/{site}/docs/vocabularies',
+  format: 'mdx',
+  match: {
+    include: '**/*.mdx',
+    exclude: '**/index.mdx',
+  },
+  fields: [
+    {
+      type: 'string',
+      name: 'vocabularyId',
+      label: 'Vocabulary ID',
+      required: true,
+    },
+    {
+      type: 'string',
+      name: 'title',
+      label: 'Title',
+      required: true,
+    },
+    {
+      type: 'string',
+      name: 'description',
+      label: 'Description',
+      ui: { component: 'textarea' },
+    },
+    // Concepts (Method 1: Direct array)
+    {
+      type: 'object',
+      name: 'concepts',
+      label: 'Vocabulary Terms',
+      list: true,
+      fields: [
+        {
+          type: 'string',
+          name: 'value',
+          label: 'Term',
+          required: true,
+        },
+        {
+          type: 'string',
+          name: 'definition',
+          label: 'Definition',
+          required: true,
+          ui: { component: 'textarea' },
+        },
+        {
+          type: 'string',
+          name: 'scopeNote',
+          label: 'Scope Note',
+          ui: { component: 'textarea' },
+        },
+        {
+          type: 'string',
+          name: 'notation',
+          label: 'Notation',
+        },
+        {
+          type: 'string',
+          name: 'example',
+          label: 'Example',
+        },
+      ],
+      ui: {
+        itemProps: (item) => ({
+          label: item?.value || 'New Term',
+        }),
+      },
+    },
+    // Content
+    {
+      type: 'rich-text',
+      name: 'body',
+      label: 'Additional Content',
+      isBody: true,
+    },
+  ],
+};
+```
+
+### Phase 3: Advanced Features (Week 5-6)
+
+#### Multi-Site Management
+```typescript
+const sitesCollection: Collection = {
+  name: 'sites',
+  label: 'Site Management',
+  path: 'standards',
+  format: 'json',
+  match: {
+    include: '**/site-config.json',
+  },
+  fields: [
+    {
+      type: 'string',
+      name: 'siteKey',
+      label: 'Site Key',
+      options: ['ISBDM', 'LRM', 'FRBR', 'isbd', 'muldicat', 'unimarc'],
+    },
+    {
+      type: 'string',
+      name: 'title',
+      label: 'Site Title',
+    },
+    {
+      type: 'string',
+      name: 'tagline',
+      label: 'Tagline',
+    },
+    {
+      type: 'boolean',
+      name: 'published',
+      label: 'Published',
+    },
+    {
+      type: 'object',
+      name: 'navigation',
+      label: 'Navigation Settings',
+      fields: [
+        {
+          type: 'object',
+          name: 'elements',
+          label: 'Elements Configuration',
+          fields: [
+            { type: 'boolean', name: 'enabled', label: 'Show Elements' },
+            { type: 'string', name: 'label', label: 'Menu Label' },
+          ],
+        },
+        {
+          type: 'object',
+          name: 'vocabularies',
+          label: 'Vocabularies Configuration',
+          fields: [
+            { type: 'boolean', name: 'enabled', label: 'Show Vocabularies' },
+            { type: 'string', name: 'label', label: 'Menu Label' },
+          ],
+        },
+      ],
+    },
+  ],
+};
+```
+
+#### Custom Field Components
+```tsx
+// components/ElementReferenceField.tsx
+export const ElementReferenceField = ({ input, meta, ...props }) => {
+  const [availableElements, setAvailableElements] = useState([]);
+  
+  // Load available elements from all sites
+  useEffect(() => {
+    // Fetch elements from Tina's filesystem API
+    loadAvailableElements().then(setAvailableElements);
+  }, []);
+
+  return (
+    <div className="element-reference-field">
+      <label>Referenced Elements</label>
+      <Select
+        isMulti
+        options={availableElements.map(el => ({
+          value: el.id,
+          label: `${el.title} (${el.site})`,
+        }))}
+        value={input.value}
+        onChange={input.onChange}
+      />
+    </div>
+  );
+};
+
+// components/VocabularyImporter.tsx
+export const VocabularyImporter = ({ input }) => {
+  const handleCSVImport = async (file) => {
+    const concepts = await parseCSVFile(file);
+    input.onChange(concepts);
+  };
+
+  const handleCSVExport = () => {
+    const csv = convertConceptsToCSV(input.value);
+    downloadCSV(csv, 'vocabulary.csv');
+  };
+
+  return (
+    <div className="vocabulary-importer">
+      <div className="import-export-controls">
+        <input
+          type="file"
+          accept=".csv"
+          onChange={(e) => handleCSVImport(e.target.files[0])}
+        />
+        <button onClick={handleCSVExport}>Export to CSV</button>
+      </div>
+      
+      <div className="concepts-editor">
+        {input.value?.map((concept, index) => (
+          <ConceptEditor
+            key={index}
+            concept={concept}
+            onChange={(updated) => {
+              const newConcepts = [...input.value];
+              newConcepts[index] = updated;
+              input.onChange(newConcepts);
+            }}
+          />
+        ))}
+      </div>
+    </div>
+  );
+};
+```
+
+## Integration with Existing Architecture
+
+### Git Workflow Integration
+```typescript
+// tina/config.ts - Git integration
+export default defineConfig({
+  // ... other config
+  build: {
+    outputFolder: 'admin',
+    publicFolder: 'public',
+    // Custom build hook for validation
+    postBuild: async () => {
+      // Validate all MDX files
+      await validateMDXFiles();
+      // Run linting
+      await runLinter();
+      // Generate type definitions
+      await generateTypes();
+    },
+  },
+  
+  // Custom save hooks
+  onSave: async ({ collection, document }) => {
+    // Create Git branch for changes
+    const branchName = `tina-edit-${Date.now()}`;
+    await createGitBranch(branchName);
+    
+    // Commit changes
+    await commitChanges(document, `feat: edit ${collection}/${document.id} via TinaCMS`);
+    
+    // Create PR
+    await createPullRequest({
+      branch: branchName,
+      title: `Content Update: ${document.title || document.id}`,
+      body: generatePRDescription(document),
+      labels: ['content-edit', 'tina-cms'],
+    });
+  },
+});
+
+async function generatePRDescription(document) {
+  return `
+## Content Update via TinaCMS
+
+**Document**: ${document.title || document.id}  
+**Type**: ${document._template || 'Unknown'}  
+**Editor**: ${document._lastModifiedBy || 'System'}
+
+### Changes Made
+- Content updated through visual editor
+- All validation checks passed
+- Ready for review
+
+### Review Checklist
+- [ ] Content accuracy verified
+- [ ] Links and references working  
+- [ ] Formatting and structure correct
+- [ ] Follows IFLA standards guidelines
+
+*This PR was generated automatically by TinaCMS integration.*
+`;
+}
+```
+
+### Authentication & Permissions
+```typescript
+// pages/api/auth/tina.ts
+export default async function handler(req, res) {
+  // Integrate with existing Clerk auth
+  const { userId } = getAuth(req);
+  
+  if (!userId) {
+    return res.status(401).json({ error: 'Unauthorized' });
+  }
+  
+  // Check user permissions
+  const user = await clerkClient.users.getUser(userId);
+  const hasEditPermission = user.publicMetadata.roles?.includes('editor') || 
+                           user.publicMetadata.roles?.includes('admin');
+  
+  if (!hasEditPermission) {
+    return res.status(403).json({ error: 'Insufficient permissions' });
+  }
+  
+  // Generate Tina token
+  const tinaToken = generateTinaToken(userId);
+  
+  res.json({ token: tinaToken, user: { id: userId, name: user.firstName } });
+}
+
+// User permission levels
+enum UserRole {
+  VIEWER = 'viewer',     // Can view content in Tina
+  EDITOR = 'editor',     // Can edit content, creates PRs
+  REVIEWER = 'reviewer', // Can approve content changes
+  ADMIN = 'admin',       // Full access including config
+}
+
+// Site-specific permissions
+interface UserPermissions {
+  userId: string;
+  roles: UserRole[];
+  sites: string[];  // Which sites user can edit
+  collections: string[];  // Which content types
+}
+```
+
+### Performance Considerations
+```typescript
+// Optimization strategies
+const optimizations = {
+  // Lazy loading of collections
+  collections: [
+    {
+      ...elementsCollection,
+      ui: {
+        router: ({ document }) => `/admin/elements/${document._sys.filename}`,
+        // Only load when needed
+        lazyLoad: true,
+      },
+    },
+  ],
+  
+  // Caching strategy
+  cache: {
+    // Cache Git operations
+    gitOperations: {
+      ttl: 300, // 5 minutes
+      invalidateOn: ['file-change', 'branch-switch'],
+    },
+    // Cache content queries
+    contentQueries: {
+      ttl: 60, // 1 minute
+      invalidateOn: ['content-update'],
+    },
+  },
+  
+  // Bundle splitting
+  experimental: {
+    bundleSplitting: {
+      adminUI: true,
+      collections: true,
+      fieldComponents: true,
+    },
+  },
+};
+```
+
+## Security Considerations
+
+### Access Control
+1. **Authentication**: Clerk integration + GitHub OAuth
+2. **Authorization**: Role-based permissions per site/collection
+3. **Git Security**: All changes through PR process
+4. **API Security**: Rate limiting on Tina API endpoints
+5. **Content Validation**: Schema validation before Git commits
+
+### Data Protection
+```typescript
+// Security middleware
+export const securityMiddleware = {
+  // Validate all content changes
+  validateContent: async (content) => {
+    // Check for malicious content
+    await scanForMaliciousContent(content);
+    
+    // Validate against schema
+    await validateAgainstSchema(content);
+    
+    // Check for sensitive information
+    await scanForSensitiveData(content);
+  },
+  
+  // Audit logging
+  auditLog: {
+    logEdit: (userId, document, changes) => {
+      console.log({
+        timestamp: new Date().toISOString(),
+        userId,
+        action: 'edit',
+        document: document.id,
+        changes: sanitizeChanges(changes),
+      });
+    },
+  },
+};
+```
+
+## Testing Strategy
+
+### Unit Tests
+```typescript
+// tests/tina/collections.test.ts
+describe('TinaCMS Collections', () => {
+  test('Elements collection validates RDF metadata', () => {
+    const validElement = {
+      RDF: {
+        definition: 'A valid definition with sufficient length',
+        domain: 'Manifestation',
+        type: 'DatatypeProperty',
+      },
+    };
+    
+    expect(validateElementSchema(validElement)).toBe(true);
+  });
+  
+  test('Vocabulary collection handles concepts array', () => {
+    const vocabulary = {
+      concepts: [
+        { value: 'term1', definition: 'Definition 1' },
+        { value: 'term2', definition: 'Definition 2' },
+      ],
+    };
+    
+    expect(validateVocabularySchema(vocabulary)).toBe(true);
+  });
+});
+```
+
+### Integration Tests
+```typescript
+// tests/integration/git-workflow.test.ts
+describe('Git Workflow Integration', () => {
+  test('Creates PR on content save', async () => {
+    const mockDocument = createMockElement();
+    
+    await saveTinaDocument(mockDocument);
+    
+    // Should create branch
+    expect(gitOperations.createBranch).toHaveBeenCalled();
+    
+    // Should commit changes
+    expect(gitOperations.commit).toHaveBeenCalledWith(
+      expect.stringContaining('feat: edit')
+    );
+    
+    // Should create PR
+    expect(githubAPI.createPR).toHaveBeenCalledWith({
+      title: expect.stringContaining('Content Update'),
+      labels: ['content-edit', 'tina-cms'],
+    });
+  });
+});
+```
+
+### E2E Tests
+```typescript
+// e2e/tina-editing.spec.ts
+import { test, expect } from '@playwright/test';
+
+test('SME can edit element definition', async ({ page }) => {
+  // Login as editor
+  await page.goto('/admin/login');
+  await page.fill('[data-testid=email]', 'editor@ifla.org');
+  await page.fill('[data-testid=password]', 'password');
+  await page.click('[data-testid=login]');
+  
+  // Navigate to element
+  await page.goto('/admin/elements/P1025.mdx');
+  
+  // Edit definition
+  await page.fill('[data-testid=definition-field]', 'Updated definition text');
+  
+  // Save changes
+  await page.click('[data-testid=save-button]');
+  
+  // Should show success message
+  await expect(page.locator('[data-testid=success-message]')).toBeVisible();
+  
+  // Should create PR
+  await expect(page.locator('[data-testid=pr-link]')).toBeVisible();
+});
+```
+
+## Deployment Plan
+
+### Phase 1: Development Setup (Week 1-2)
+- [ ] Set up TinaCMS admin application
+- [ ] Configure basic collections
+- [ ] Integrate with Clerk authentication
+- [ ] Basic Git workflow integration
+
+### Phase 2: Content Management (Week 3-4)  
+- [ ] Elements collection with RDF support
+- [ ] Vocabularies collection with concepts
+- [ ] Custom field components
+- [ ] CSV import/export functionality
+
+### Phase 3: Advanced Features (Week 5-6)
+- [ ] Multi-site management
+- [ ] Advanced validation rules
+- [ ] Performance optimizations
+- [ ] Comprehensive testing
+
+### Phase 4: Production Deployment (Week 7)
+- [ ] Security review and hardening
+- [ ] Performance testing and optimization
+- [ ] User training documentation
+- [ ] Production deployment
+
+## Risk Assessment
+
+### High Risk
+1. **Git Conflicts**: Multiple editors working on same content
+   - **Mitigation**: Branch-per-edit strategy + conflict resolution UI
+2. **Performance Impact**: Large vocabulary files
+   - **Mitigation**: Lazy loading + pagination + caching
+3. **Data Loss**: Corrupted Git operations
+   - **Mitigation**: Backup strategy + transaction rollback
+
+### Medium Risk
+1. **User Adoption**: SMEs resistant to new interface
+   - **Mitigation**: Training + gradual rollout + fallback to GitHub
+2. **Schema Evolution**: Changes to MDX structure
+   - **Mitigation**: Versioned schemas + migration tools
+
+### Low Risk
+1. **TinaCMS Updates**: Breaking changes in TinaCMS
+   - **Mitigation**: Version pinning + testing pipeline
+
+## Success Metrics
+
+### Adoption Metrics
+- **Usage Rate**: % of SMEs using TinaCMS vs GitHub direct edit
+- **Content Velocity**: PRs created per week through TinaCMS
+- **Error Reduction**: Decrease in content formatting errors
+
+### Performance Metrics
+- **Load Time**: Admin interface loads within 2 seconds
+- **Save Time**: Content saves within 5 seconds
+- **Sync Time**: Git operations complete within 10 seconds
+
+### Quality Metrics
+- **Schema Compliance**: 100% of TinaCMS edits pass validation
+- **PR Success Rate**: `>95%` of TinaCMS PRs merge without conflicts
+- **User Satisfaction**: `>4/5 stars` in user feedback
+
+## Future Enhancements
+
+### Version 2.0 Features
+1. **Real-time Collaboration**: Multiple editors on same document
+2. **Visual Preview**: Live preview of changes in Docusaurus
+3. **Workflow Management**: Custom approval workflows per site
+4. **Analytics Integration**: Content usage metrics and optimization suggestions
+5. **AI-Assisted Editing**: Content suggestions and validation
+6. **Advanced Import/Export**: Support for multiple formats (JSON-LD, Turtle, etc.)
+
+### Integration Opportunities
+1. **Slack Integration**: Notifications for content changes
+2. **JIRA Integration**: Link content changes to tickets
+3. **Translation Services**: Integration with translation APIs
+4. **Content APIs**: Headless CMS capabilities for external consumers
+
+## Conclusion
+
+TinaCMS integration will significantly improve the content editing experience for IFLA SMEs while preserving the robust Git-based workflow that ensures quality and collaboration. The visual interface will lower the technical barrier for content contributions while maintaining the high standards of the IFLA Standards platform.
+
+The implementation approach balances immediate value delivery with long-term scalability, ensuring that the investment in TinaCMS will serve the IFLA community effectively for years to come.
+
+---
+
+**Next Steps**: 
+1. Review and approve this specification
+2. Set up development environment and Phase 1 implementation
+3. Begin user testing with select SME group
+4. Iterate based on feedback and move to production deployment

@@ -1,0 +1,1737 @@
+---
+title: DCTAP Management Interface Specification
+description: Visual schema definition system that generates Zod contracts, TinaCMS forms, and validation rules for IFLA Standards
+sidebar_position: 2
+version: 1.0
+date: 2025-01-26
+status: Draft
+priority: "Phase 1 (Foundation)"
+tags:
+  - dctap
+  - schema-generation
+  - metadata-profiles
+  - code-generation
+  - specification
+---
+
+# DCTAP Management Interface Specification
+
+import { CompactButton } from '@ifla/theme';
+
+<div className="alert alert--warning margin-bottom--md">
+  <p><strong>Status:</strong> Draft - Foundation Phase 1</p>
+  <p><strong>Dependencies:</strong> Job Management System (Phase 0)</p>
+  <p><strong>Generates:</strong> Zod schemas, TinaCMS forms, CSV profiles, TypeScript types</p>
+</div>
+
+## Executive Summary
+
+This specification defines a comprehensive DCTAP (Dublin Core Tabular Application Profiles) Management Interface for the IFLA Standards platform. DCTAP serves as the foundational schema definition system that generates Zod contracts, TinaCMS form schemas, CSV profiles, and TypeScript types. This interface enables visual creation, editing, and management of application profiles that define the structure and validation rules for IFLA standards elements and vocabularies.
+
+## Goals and Objectives
+
+### Primary Goals
+1. **Visual Profile Creation**: Intuitive interface for defining DCTAP application profiles
+2. **Schema Generation**: Automatic generation of validation schemas and form definitions
+3. **RDF Integration**: Import existing RDF schemas and export to multiple formats
+4. **Multi-Site Support**: Manage profiles for all 6 IFLA standards sites
+5. **Version Control**: Track profile changes with Git-based versioning
+6. **Validation Framework**: Ensure profile consistency and compliance
+
+### Success Criteria
+- SMEs can create and modify application profiles without technical knowledge
+- 100% automated generation of downstream schemas (Zod, TinaCMS, CSV)
+- Import 95%+ of existing RDF element definitions accurately
+- Zero-downtime profile updates with backward compatibility
+- Complete audit trail for all profile changes
+
+## DCTAP Overview
+
+### What is DCTAP?
+Dublin Core Tabular Application Profiles (DCTAP) is a specification for describing metadata application profiles in a simple tabular format. It defines:
+
+- **Shapes**: Groups of properties that describe a resource type
+- **Property Constraints**: Rules and restrictions for individual properties
+- **Value Types**: Expected data types and formats
+- **Cardinality**: Whether properties are mandatory, optional, or repeatable
+- **Value Constraints**: Controlled vocabularies, patterns, or validation rules
+
+### DCTAP in IFLA Context
+For IFLA Standards, DCTAP profiles define:
+- **Element Definitions**: Properties, domains, ranges, and relationships
+- **Vocabulary Structures**: Term definitions, hierarchies, and validation rules
+- **Content Validation**: Rules for MDX front matter and content structure
+- **Form Generation**: Schema for TinaCMS editing interfaces
+
+## System Architecture
+
+### High-Level Architecture
+
+```
+┌─────────────────────────────────────────────────────────────────┐
+│                  DCTAP Management Interface                     │
+│  ┌──────────────┐  ┌──────────────┐  ┌──────────────────────┐  │
+│  │   Profile    │  │   Property   │  │      Validation      │  │
+│  │   Editor     │  │   Designer   │  │      Engine          │  │
+│  └──────────────┘  └──────────────┘  └──────────────────────┘  │
+└─────────────────┬───────────────────────────────────────────────┘
+                  │
+         ┌────────┴─────────┐
+         │  DCTAP Engine    │
+         │ (Core Processing)│
+         └────────┬─────────┘
+                  │
+    ┌─────────────┼─────────────────┐
+    │             │                 │
+┌───▼───┐    ┌───▼────┐    ┌───────▼────┐
+│Profile│    │Property│    │ Validation │
+│ Store │    │Library │    │   Rules    │
+└───────┘    └────────┘    └────────────┘
+    │             │                 │
+    └─────────────┼─────────────────┘
+                  │
+         ┌────────▼─────────┐
+         │  Code Generators │
+         └────────┬─────────┘
+                  │
+┌─────────────────┼─────────────────────────────┐
+│                 │                             │
+│   ┌─────────────▼──┐  ┌─────────────▼──────┐  │
+│   │ Zod Generator  │  │ TinaCMS Generator  │  │
+│   └────────────────┘  └────────────────────┘  │
+│   ┌─────────────▼──┐  ┌─────────────▼──────┐  │
+│   │ CSV Generator  │  │TypeScript Generator│  │
+│   └────────────────┘  └────────────────────┘  │
+└─────────────────────────────────────────────────┘
+```
+
+### Core Components
+
+#### 1. Profile Management System
+```typescript
+interface DCTAPProfile {
+  // Identity
+  id: string;                    // UUID
+  shapeID: string;              // Human-readable identifier (e.g., "ISBD_Element")
+  shapeLabel: string;           // Display name (e.g., "ISBD Element Profile")
+  
+  // Metadata
+  version: string;              // Semantic version (1.0.0)
+  namespace: string;            // Base namespace URI
+  prefix: string;               // Namespace prefix (isbd, lrm, etc.)
+  description: string;          // Profile description
+  created: string;              // ISO timestamp
+  modified: string;             // ISO timestamp
+  createdBy: string;            // User ID
+  modifiedBy: string;           // User ID
+  
+  // DCTAP Core Fields
+  properties: DCTAPProperty[];   // Property definitions
+  
+  // IFLA Extensions
+  siteKey: string;              // ISBDM, LRM, FRBR, etc.
+  profileType: ProfileType;     // Element, Vocabulary, Page
+  parentProfile?: string;       // Inheritance from parent profile
+  
+  // Generation Settings
+  generationConfig: GenerationConfig;
+  
+  // Status
+  status: ProfileStatus;
+  published: boolean;
+  deprecated: boolean;
+}
+
+interface DCTAPProperty {
+  // DCTAP Standard Fields
+  propertyID: string;           // Identifier (P1025, contentForm, etc.)
+  propertyLabel: string;        // Human-readable label
+  propertyURI?: string;         // Full URI (auto-generated if not provided)
+  
+  // Constraints
+  mandatory: MandatoryValue;    // true, false, conditional
+  repeatable: RepeatableValue;  // true, false
+  valueDataType: ValueDataType; // literal, URI, bnode
+  valueConstraint?: string;     // Pattern, vocabulary, etc.
+  valueShape?: string;          // Reference to another shape
+  
+  // Additional Metadata
+  note?: string;                // Usage notes, scope notes
+  propertyDefinition?: string;  // Detailed definition
+  propertyRange?: string;       // Expected range
+  
+  // IFLA Extensions  
+  displayOrder: number;         // Order in forms/displays
+  uiHints: UIHints;            // Form generation hints
+  validation: ValidationRules;  // Additional validation
+  
+  // Relationships
+  subPropertyOf?: string[];     // Parent properties
+  equivalentProperty?: string[]; // Equivalent properties
+  inverseOf?: string;           // Inverse property
+  
+  // Deprecation
+  deprecated: boolean;
+  deprecatedInVersion?: string;
+  replacedBy?: string;
+}
+
+enum ProfileType {
+  ELEMENT = 'element',          // RDF element definitions
+  VOCABULARY = 'vocabulary',    // Controlled vocabulary
+  PAGE = 'page',               // Page structure (intro, about, etc.)
+  SITE_CONFIG = 'site_config',  // Site-wide configuration
+}
+
+enum ProfileStatus {
+  DRAFT = 'draft',             // Work in progress
+  REVIEW = 'review',           // Under review
+  APPROVED = 'approved',       // Approved for use
+  PUBLISHED = 'published',     // Active in production
+  DEPRECATED = 'deprecated',   // No longer recommended
+  ARCHIVED = 'archived',       // Historical record only
+}
+
+enum MandatoryValue {
+  TRUE = 'true',               // Required
+  FALSE = 'false',             // Optional
+  CONDITIONAL = 'conditional',  // Required under certain conditions
+}
+
+enum RepeatableValue {
+  TRUE = 'true',               // Can have multiple values
+  FALSE = 'false',             // Single value only
+}
+
+enum ValueDataType {
+  LITERAL = 'literal',         // String/text value
+  URI = 'URI',                 // URI reference
+  BNODE = 'bnode',            // Blank node
+}
+
+interface UIHints {
+  fieldType: FieldType;        // Form field type
+  placeholder?: string;        // Placeholder text
+  helpText?: string;          // Help/description text
+  defaultValue?: any;         // Default value
+  options?: SelectOption[];   // For select/radio fields
+  validation?: ValidationUI;  // UI-specific validation
+}
+
+enum FieldType {
+  TEXT = 'text',              // Single line text
+  TEXTAREA = 'textarea',      // Multi-line text
+  SELECT = 'select',          // Dropdown selection
+  MULTISELECT = 'multiselect', // Multiple selection
+  CHECKBOX = 'checkbox',      // Boolean checkbox
+  RADIO = 'radio',           // Radio button group
+  DATE = 'date',             // Date picker
+  URI = 'uri',               // URI input with validation
+  RICH_TEXT = 'rich_text',   // Rich text editor
+  REFERENCE = 'reference',   // Reference to other entities
+}
+
+interface ValidationRules {
+  pattern?: string;           // Regex pattern
+  minLength?: number;         // Minimum string length
+  maxLength?: number;         // Maximum string length
+  min?: number;              // Minimum numeric value
+  max?: number;              // Maximum numeric value
+  customValidator?: string;   // Custom validation function name
+}
+
+interface GenerationConfig {
+  generateZod: boolean;       // Generate Zod schemas
+  generateTinaCMS: boolean;   // Generate TinaCMS collections
+  generateCSV: boolean;       // Generate CSV profiles
+  generateTypes: boolean;     // Generate TypeScript types
+  
+  // Target configurations
+  zodConfig: ZodGenerationConfig;
+  tinaConfig: TinaGenerationConfig;
+  csvConfig: CSVGenerationConfig;
+  typesConfig: TypesGenerationConfig;
+}
+```
+
+#### 2. Profile Editor Interface
+Visual interface for creating and editing DCTAP profiles.
+
+```tsx
+// Main profile editor component
+export function ProfileEditor({ profileId }: { profileId?: string }) {
+  const [profile, setProfile] = useState<DCTAPProfile>();
+  const [activeTab, setActiveTab] = useState<'metadata' | 'properties' | 'generation'>('metadata');
+  
+  return (
+    <div className="profile-editor">
+      <ProfileHeader profile={profile} />
+      
+      <Tabs value={activeTab} onChange={setActiveTab}>
+        <Tab value="metadata" label="Profile Metadata" />
+        <Tab value="properties" label="Properties" />
+        <Tab value="generation" label="Code Generation" />
+      </Tabs>
+      
+      {activeTab === 'metadata' && (
+        <MetadataEditor profile={profile} onChange={setProfile} />
+      )}
+      
+      {activeTab === 'properties' && (
+        <PropertiesEditor 
+          properties={profile?.properties || []} 
+          onChange={(properties) => setProfile(p => ({ ...p!, properties }))}
+        />
+      )}
+      
+      {activeTab === 'generation' && (
+        <GenerationConfigEditor 
+          config={profile?.generationConfig} 
+          onChange={(config) => setProfile(p => ({ ...p!, generationConfig: config }))}
+        />
+      )}
+      
+      <EditorActions profile={profile} />
+    </div>
+  );
+}
+
+// Property definition editor
+export function PropertyEditor({ property, onChange }: PropertyEditorProps) {
+  return (
+    <div className="property-editor">
+      <div className="property-header">
+        <TextField
+          label="Property ID"
+          value={property.propertyID}
+          onChange={(value) => onChange({ ...property, propertyID: value })}
+          required
+        />
+        <TextField
+          label="Property Label"
+          value={property.propertyLabel}
+          onChange={(value) => onChange({ ...property, propertyLabel: value })}
+          required
+        />
+      </div>
+      
+      <div className="property-constraints">
+        <Select
+          label="Mandatory"
+          value={property.mandatory}
+          onChange={(value) => onChange({ ...property, mandatory: value as MandatoryValue })}
+          options={[
+            { value: 'true', label: 'Required' },
+            { value: 'false', label: 'Optional' },
+            { value: 'conditional', label: 'Conditional' },
+          ]}
+        />
+        
+        <Select
+          label="Repeatable"
+          value={property.repeatable}
+          onChange={(value) => onChange({ ...property, repeatable: value as RepeatableValue })}
+          options={[
+            { value: 'true', label: 'Multiple Values' },
+            { value: 'false', label: 'Single Value' },
+          ]}
+        />
+        
+        <Select
+          label="Value Data Type"
+          value={property.valueDataType}
+          onChange={(value) => onChange({ ...property, valueDataType: value as ValueDataType })}
+          options={[
+            { value: 'literal', label: 'Literal (Text)' },
+            { value: 'URI', label: 'URI Reference' },
+            { value: 'bnode', label: 'Blank Node' },
+          ]}
+        />
+      </div>
+      
+      <div className="property-validation">
+        <TextField
+          label="Value Constraint"
+          value={property.valueConstraint || ''}
+          onChange={(value) => onChange({ ...property, valueConstraint: value })}
+          placeholder="Regex pattern, vocabulary, or validation rule"
+        />
+        
+        <TextArea
+          label="Definition"
+          value={property.propertyDefinition || ''}
+          onChange={(value) => onChange({ ...property, propertyDefinition: value })}
+          placeholder="Detailed definition of this property"
+        />
+        
+        <TextArea
+          label="Usage Notes"
+          value={property.note || ''}
+          onChange={(value) => onChange({ ...property, note: value })}
+          placeholder="Scope notes, usage guidelines, examples"
+        />
+      </div>
+      
+      <UIHintsEditor 
+        hints={property.uiHints}
+        onChange={(hints) => onChange({ ...property, uiHints: hints })}
+      />
+      
+      <ValidationRulesEditor
+        rules={property.validation}
+        onChange={(rules) => onChange({ ...property, validation: rules })}
+      />
+    </div>
+  );
+}
+
+// UI hints configuration
+export function UIHintsEditor({ hints, onChange }: UIHintsEditorProps) {
+  return (
+    <div className="ui-hints-editor">
+      <h3>Form Generation Hints</h3>
+      
+      <Select
+        label="Field Type"
+        value={hints.fieldType}
+        onChange={(fieldType) => onChange({ ...hints, fieldType: fieldType as FieldType })}
+        options={[
+          { value: 'text', label: 'Text Input' },
+          { value: 'textarea', label: 'Text Area' },
+          { value: 'select', label: 'Dropdown' },
+          { value: 'checkbox', label: 'Checkbox' },
+          { value: 'date', label: 'Date Picker' },
+          { value: 'uri', label: 'URI Input' },
+          { value: 'rich_text', label: 'Rich Text Editor' },
+        ]}
+      />
+      
+      <TextField
+        label="Placeholder Text"
+        value={hints.placeholder || ''}
+        onChange={(placeholder) => onChange({ ...hints, placeholder })}
+      />
+      
+      <TextField
+        label="Help Text"
+        value={hints.helpText || ''}
+        onChange={(helpText) => onChange({ ...hints, helpText })}
+      />
+      
+      {hints.fieldType === 'select' && (
+        <OptionsEditor
+          options={hints.options || []}
+          onChange={(options) => onChange({ ...hints, options })}
+        />
+      )}
+    </div>
+  );
+}
+```
+
+#### 3. RDF Import/Export Engine
+Handles bidirectional conversion between RDF and DCTAP formats.
+
+```typescript
+class RDFImportEngine {
+  async importFromRDF(rdfContent: string, format: 'turtle' | 'rdf-xml' | 'json-ld'): Promise<DCTAPProfile[]> {
+    // Parse RDF content
+    const graph = await this.parseRDF(rdfContent, format);
+    
+    // Extract property definitions
+    const properties = await this.extractProperties(graph);
+    
+    // Create DCTAP profile
+    const profile: DCTAPProfile = {
+      id: generateUUID(),
+      shapeID: this.extractShapeID(graph),
+      shapeLabel: this.extractShapeLabel(graph),
+      version: '1.0.0',
+      namespace: this.extractNamespace(graph),
+      prefix: this.extractPrefix(graph),
+      description: this.extractDescription(graph),
+      created: new Date().toISOString(),
+      modified: new Date().toISOString(),
+      createdBy: 'rdf-import',
+      modifiedBy: 'rdf-import',
+      properties: properties,
+      siteKey: this.detectSiteKey(graph),
+      profileType: this.detectProfileType(graph),
+      generationConfig: this.getDefaultGenerationConfig(),
+      status: ProfileStatus.DRAFT,
+      published: false,
+      deprecated: false,
+    };
+    
+    return [profile];
+  }
+  
+  private async extractProperties(graph: RDFGraph): Promise<DCTAPProperty[]> {
+    const properties: DCTAPProperty[] = [];
+    
+    // Find all property definitions
+    const propertyNodes = graph.getNodes({ type: 'rdf:Property' });
+    
+    for (const node of propertyNodes) {
+      const property: DCTAPProperty = {
+        propertyID: this.extractPropertyID(node),
+        propertyLabel: this.extractLabel(node),
+        propertyURI: node.uri,
+        propertyDefinition: this.extractDefinition(node),
+        
+        // Extract constraints
+        mandatory: this.extractMandatory(node),
+        repeatable: this.extractRepeatable(node),
+        valueDataType: this.extractDataType(node),
+        valueConstraint: this.extractConstraint(node),
+        
+        // Extract relationships
+        subPropertyOf: this.extractSubProperties(node),
+        equivalentProperty: this.extractEquivalentProperties(node),
+        inverseOf: this.extractInverse(node),
+        
+        // UI hints (generated based on data type)
+        displayOrder: properties.length,
+        uiHints: this.generateUIHints(node),
+        validation: this.generateValidationRules(node),
+        
+        deprecated: this.isDeprecated(node),
+      };
+      
+      properties.push(property);
+    }
+    
+    return properties.sort((a, b) => a.displayOrder - b.displayOrder);
+  }
+  
+  private generateUIHints(node: RDFNode): UIHints {
+    // Infer UI field type from RDF properties
+    const range = this.extractRange(node);
+    const datatype = this.extractDatatype(node);
+    
+    if (range === 'xsd:boolean') {
+      return { fieldType: FieldType.CHECKBOX };
+    }
+    
+    if (range === 'xsd:date') {
+      return { fieldType: FieldType.DATE };
+    }
+    
+    if (datatype === 'xsd:anyURI') {
+      return { fieldType: FieldType.URI };
+    }
+    
+    // Check for controlled vocabulary
+    const vocabulary = this.extractVocabulary(node);
+    if (vocabulary) {
+      return {
+        fieldType: FieldType.SELECT,
+        options: this.extractVocabularyOptions(vocabulary),
+      };
+    }
+    
+    // Default to text input
+    return { fieldType: FieldType.TEXT };
+  }
+}
+
+class RDFExportEngine {
+  async exportToRDF(profile: DCTAPProfile, format: 'turtle' | 'rdf-xml' | 'json-ld'): Promise<string> {
+    // Create RDF graph
+    const graph = new RDFGraph();
+    
+    // Add namespace declarations
+    graph.addNamespace(profile.prefix, profile.namespace);
+    
+    // Add shape definition
+    const shapeURI = `${profile.namespace}${profile.shapeID}`;
+    graph.add({
+      subject: shapeURI,
+      predicate: 'rdf:type',
+      object: 'sh:NodeShape',
+    });
+    
+    graph.add({
+      subject: shapeURI,
+      predicate: 'rdfs:label',
+      object: profile.shapeLabel,
+    });
+    
+    // Add property definitions
+    for (const property of profile.properties) {
+      await this.addPropertyToGraph(graph, property, profile);
+    }
+    
+    // Serialize to requested format
+    return await graph.serialize(format);
+  }
+  
+  private async addPropertyToGraph(graph: RDFGraph, property: DCTAPProperty, profile: DCTAPProfile): Promise<void> {
+    const propertyURI = property.propertyURI || `${profile.namespace}${property.propertyID}`;
+    
+    // Basic property definition
+    graph.add({
+      subject: propertyURI,
+      predicate: 'rdf:type',
+      object: 'rdf:Property',
+    });
+    
+    graph.add({
+      subject: propertyURI,
+      predicate: 'rdfs:label',
+      object: property.propertyLabel,
+    });
+    
+    if (property.propertyDefinition) {
+      graph.add({
+        subject: propertyURI,
+        predicate: 'rdfs:comment',
+        object: property.propertyDefinition,
+      });
+    }
+    
+    // Add constraints as SHACL shapes
+    if (property.mandatory === MandatoryValue.TRUE) {
+      graph.add({
+        subject: propertyURI,
+        predicate: 'sh:minCount',
+        object: '1',
+        datatype: 'xsd:integer',
+      });
+    }
+    
+    if (property.repeatable === RepeatableValue.FALSE) {
+      graph.add({
+        subject: propertyURI,
+        predicate: 'sh:maxCount',
+        object: '1',
+        datatype: 'xsd:integer',
+      });
+    }
+    
+    // Add relationships
+    for (const subProp of property.subPropertyOf || []) {
+      graph.add({
+        subject: propertyURI,
+        predicate: 'rdfs:subPropertyOf',
+        object: subProp,
+      });
+    }
+  }
+}
+```
+
+#### 4. Code Generation Engine
+Generates schemas and form definitions from DCTAP profiles.
+
+```typescript
+class ZodGenerator {
+  async generateSchema(profile: DCTAPProfile): Promise<string> {
+    const imports = ["import { z } from 'zod';"];
+    const schemaFields: string[] = [];
+    
+    for (const property of profile.properties) {
+      const fieldSchema = this.generateFieldSchema(property);
+      schemaFields.push(`  ${property.propertyID}: ${fieldSchema}`);
+    }
+    
+    const schemaName = `${profile.shapeID}Schema`;
+    const schema = `
+export const ${schemaName} = z.object({
+${schemaFields.join(',\n')}
+});
+
+export type ${profile.shapeID} = z.infer<typeof ${schemaName}>;
+`;
+    
+    return imports.join('\n') + '\n' + schema;
+  }
+  
+  private generateFieldSchema(property: DCTAPProperty): string {
+    let baseSchema: string;
+    
+    // Base type
+    switch (property.valueDataType) {
+      case ValueDataType.LITERAL:
+        if (property.uiHints.fieldType === FieldType.TEXTAREA) {
+          baseSchema = 'z.string()';
+        } else if (property.uiHints.fieldType === FieldType.DATE) {
+          baseSchema = 'z.string().datetime()';
+        } else {
+          baseSchema = 'z.string()';
+        }
+        break;
+      case ValueDataType.URI:
+        baseSchema = 'z.string().url()';
+        break;
+      default:
+        baseSchema = 'z.string()';
+    }
+    
+    // Add constraints
+    if (property.validation?.minLength) {
+      baseSchema += `.min(${property.validation.minLength})`;
+    }
+    
+    if (property.validation?.maxLength) {
+      baseSchema += `.max(${property.validation.maxLength})`;
+    }
+    
+    if (property.validation?.pattern) {
+      baseSchema += `.regex(/${property.validation.pattern}/)`;
+    }
+    
+    if (property.valueConstraint) {
+      // Handle controlled vocabulary
+      if (property.uiHints.options?.length) {
+        const values = property.uiHints.options.map(opt => `"${opt.value}"`).join(', ');
+        baseSchema = `z.enum([${values}])`;
+      }
+    }
+    
+    // Handle arrays (repeatable)
+    if (property.repeatable === RepeatableValue.TRUE) {
+      baseSchema = `z.array(${baseSchema})`;
+    }
+    
+    // Handle optional fields
+    if (property.mandatory === MandatoryValue.FALSE) {
+      baseSchema += '.optional()';
+    }
+    
+    return baseSchema;
+  }
+}
+
+class TinaCMSGenerator {
+  async generateCollection(profile: DCTAPProfile): Promise<string> {
+    const collectionName = this.toCamelCase(profile.shapeID);
+    
+    const fields = profile.properties.map(property => this.generateField(property));
+    
+    const collection = `
+export const ${collectionName}Collection: Collection = {
+  name: '${profile.shapeID.toLowerCase()}',
+  label: '${profile.shapeLabel}',
+  path: 'standards/${profile.siteKey}/docs/${this.getPathFromProfileType(profile.profileType)}',
+  format: 'mdx',
+  fields: [
+${fields.map(field => '    ' + field).join(',\n')}
+  ],
+};`;
+    
+    return collection;
+  }
+  
+  private generateField(property: DCTAPProperty): string {
+    const fieldConfig: any = {
+      type: this.mapFieldType(property.uiHints.fieldType),
+      name: property.propertyID,
+      label: property.propertyLabel,
+    };
+    
+    if (property.mandatory === MandatoryValue.TRUE) {
+      fieldConfig.required = true;
+    }
+    
+    if (property.uiHints.helpText) {
+      fieldConfig.description = property.uiHints.helpText;
+    }
+    
+    if (property.repeatable === RepeatableValue.TRUE) {
+      fieldConfig.list = true;
+    }
+    
+    // Add options for select fields
+    if (property.uiHints.options?.length) {
+      fieldConfig.options = property.uiHints.options;
+    }
+    
+    // Add validation
+    if (property.validation || property.valueConstraint) {
+      fieldConfig.ui = {
+        validate: this.generateValidationFunction(property),
+      };
+    }
+    
+    return JSON.stringify(fieldConfig, null, 2);
+  }
+  
+  private mapFieldType(fieldType: FieldType): string {
+    switch (fieldType) {
+      case FieldType.TEXT: return 'string';
+      case FieldType.TEXTAREA: return 'string';
+      case FieldType.SELECT: return 'string';
+      case FieldType.CHECKBOX: return 'boolean';
+      case FieldType.DATE: return 'datetime';
+      case FieldType.URI: return 'string';
+      case FieldType.RICH_TEXT: return 'rich-text';
+      case FieldType.REFERENCE: return 'reference';
+      default: return 'string';
+    }
+  }
+}
+
+class CSVGenerator {
+  async generateProfile(profile: DCTAPProfile): Promise<string> {
+    const csvProfile = {
+      name: profile.shapeLabel,
+      version: profile.version,
+      description: profile.description,
+      columns: {} as Record<string, any>,
+    };
+    
+    for (const property of profile.properties) {
+      csvProfile.columns[property.propertyLabel] = {
+        required: property.mandatory === MandatoryValue.TRUE,
+        datatype: this.mapDataType(property.valueDataType),
+        constraint: property.valueConstraint,
+        description: property.propertyDefinition,
+        repeatable: property.repeatable === RepeatableValue.TRUE,
+      };
+    }
+    
+    return JSON.stringify(csvProfile, null, 2);
+  }
+  
+  private mapDataType(dataType: ValueDataType): string {
+    switch (dataType) {
+      case ValueDataType.LITERAL: return 'string';
+      case ValueDataType.URI: return 'uri';
+      case ValueDataType.BNODE: return 'object';
+      default: return 'string';
+    }
+  }
+}
+
+class TypeScriptGenerator {
+  async generateTypes(profile: DCTAPProfile): Promise<string> {
+    const interfaceName = profile.shapeID;
+    const properties: string[] = [];
+    
+    for (const property of profile.properties) {
+      const optional = property.mandatory === MandatoryValue.FALSE ? '?' : '';
+      const type = this.generateTypeScriptType(property);
+      const comment = property.propertyDefinition ? 
+        `  /** ${property.propertyDefinition} */\n` : '';
+      
+      properties.push(
+        comment + `  ${property.propertyID}${optional}: ${type};`
+      );
+    }
+    
+    const interface_ = `
+/**
+ * ${profile.shapeLabel}
+ * ${profile.description}
+ */
+export interface ${interfaceName} {
+${properties.join('\n')}
+}`;
+    
+    return interface_;
+  }
+  
+  private generateTypeScriptType(property: DCTAPProperty): string {
+    let baseType: string;
+    
+    if (property.uiHints.fieldType === FieldType.CHECKBOX) {
+      baseType = 'boolean';
+    } else if (property.uiHints.fieldType === FieldType.DATE) {
+      baseType = 'Date | string';
+    } else if (property.uiHints.options?.length) {
+      const values = property.uiHints.options.map(opt => `'${opt.value}'`).join(' | ');
+      baseType = values;
+    } else {
+      baseType = 'string';
+    }
+    
+    // Handle arrays
+    if (property.repeatable === RepeatableValue.TRUE) {
+      baseType += '[]';
+    }
+    
+    return baseType;
+  }
+}
+```
+
+## Profile Templates and Presets
+
+### Built-in Profile Templates
+```typescript
+const PROFILE_TEMPLATES: Record<string, Partial<DCTAPProfile>> = {
+  'isbd-element': {
+    shapeLabel: 'ISBD Element Profile',
+    profileType: ProfileType.ELEMENT,
+    namespace: 'http://iflastandards.info/ns/isbd/',
+    prefix: 'isbd',
+    properties: [
+      {
+        propertyID: 'definition',
+        propertyLabel: 'Definition',
+        mandatory: MandatoryValue.TRUE,
+        repeatable: RepeatableValue.FALSE,
+        valueDataType: ValueDataType.LITERAL,
+        uiHints: { fieldType: FieldType.TEXTAREA },
+        displayOrder: 1,
+      },
+      {
+        propertyID: 'domain',
+        propertyLabel: 'Domain',
+        mandatory: MandatoryValue.TRUE,
+        repeatable: RepeatableValue.FALSE,
+        valueDataType: ValueDataType.LITERAL,
+        uiHints: { 
+          fieldType: FieldType.SELECT,
+          options: [
+            { value: 'Manifestation', label: 'Manifestation' },
+            { value: 'Work', label: 'Work' },
+            { value: 'Expression', label: 'Expression' },
+            { value: 'Item', label: 'Item' },
+          ],
+        },
+        displayOrder: 2,
+      },
+      {
+        propertyID: 'type',
+        propertyLabel: 'Property Type',
+        mandatory: MandatoryValue.TRUE,
+        repeatable: RepeatableValue.FALSE,
+        valueDataType: ValueDataType.LITERAL,
+        uiHints: {
+          fieldType: FieldType.SELECT,
+          options: [
+            { value: 'DatatypeProperty', label: 'Datatype Property' },
+            { value: 'ObjectProperty', label: 'Object Property' },
+          ],
+        },
+        displayOrder: 3,
+      },
+    ],
+  },
+  
+  'vocabulary': {
+    shapeLabel: 'Vocabulary Profile',
+    profileType: ProfileType.VOCABULARY,
+    properties: [
+      {
+        propertyID: 'vocabularyId',
+        propertyLabel: 'Vocabulary ID',
+        mandatory: MandatoryValue.TRUE,
+        repeatable: RepeatableValue.FALSE,
+        valueDataType: ValueDataType.LITERAL,
+        uiHints: { fieldType: FieldType.TEXT },
+        displayOrder: 1,
+      },
+      {
+        propertyID: 'title',
+        propertyLabel: 'Title',
+        mandatory: MandatoryValue.TRUE,
+        repeatable: RepeatableValue.FALSE,
+        valueDataType: ValueDataType.LITERAL,
+        uiHints: { fieldType: FieldType.TEXT },
+        displayOrder: 2,
+      },
+      {
+        propertyID: 'description',
+        propertyLabel: 'Description',
+        mandatory: MandatoryValue.FALSE,
+        repeatable: RepeatableValue.FALSE,
+        valueDataType: ValueDataType.LITERAL,
+        uiHints: { fieldType: FieldType.TEXTAREA },
+        displayOrder: 3,
+      },
+      {
+        propertyID: 'concepts',
+        propertyLabel: 'Concepts',
+        mandatory: MandatoryValue.TRUE,
+        repeatable: RepeatableValue.TRUE,
+        valueDataType: ValueDataType.BNODE,
+        valueShape: 'VocabularyConcept',
+        uiHints: { fieldType: FieldType.REFERENCE },
+        displayOrder: 4,
+      },
+    ],
+  },
+};
+```
+
+## API Specification
+
+### REST API Endpoints
+```typescript
+// Profile Management
+POST   /api/dctap/profiles              // Create new profile
+GET    /api/dctap/profiles              // List profiles with filters
+GET    /api/dctap/profiles/:id          // Get specific profile
+PUT    /api/dctap/profiles/:id          // Update profile
+DELETE /api/dctap/profiles/:id          // Delete profile
+POST   /api/dctap/profiles/:id/publish  // Publish profile
+
+// Code Generation
+POST   /api/dctap/generate/zod/:id      // Generate Zod schema
+POST   /api/dctap/generate/tinacms/:id  // Generate TinaCMS collection
+POST   /api/dctap/generate/csv/:id      // Generate CSV profile
+POST   /api/dctap/generate/types/:id    // Generate TypeScript types
+POST   /api/dctap/generate/all/:id      // Generate all formats
+
+// RDF Import/Export
+POST   /api/dctap/import/rdf            // Import from RDF
+POST   /api/dctap/export/rdf/:id        // Export to RDF
+GET    /api/dctap/export/rdf/:id/:format // Export in specific format
+
+// Templates and Validation
+GET    /api/dctap/templates             // Get profile templates
+POST   /api/dctap/validate/:id          // Validate profile
+GET    /api/dctap/schema/:id            // Get generated schemas
+```
+
+### Profile Management Service
+```typescript
+class ProfileService {
+  async createProfile(template: string, overrides: Partial<DCTAPProfile>): Promise<DCTAPProfile> {
+    // Load template
+    const templateData = PROFILE_TEMPLATES[template];
+    if (!templateData) {
+      throw new Error(`Template not found: ${template}`);
+    }
+    
+    // Create profile from template
+    const profile: DCTAPProfile = {
+      id: generateUUID(),
+      ...templateData,
+      ...overrides,
+      created: new Date().toISOString(),
+      modified: new Date().toISOString(),
+      status: ProfileStatus.DRAFT,
+      published: false,
+    };
+    
+    // Validate profile
+    await this.validateProfile(profile);
+    
+    // Save to database
+    await this.saveProfile(profile);
+    
+    // Log activity
+    await jobAPI.logActivity({
+      type: ActivityType.CONTENT,
+      source: ActivitySource.ADMIN,
+      userId: getCurrentUser().id,
+      action: ActivityAction.CREATE,
+      description: `Created DCTAP profile: ${profile.shapeLabel}`,
+      resourceType: 'dctap_profile',
+      resourceId: profile.id,
+      metadata: { template, profileType: profile.profileType },
+    });
+    
+    return profile;
+  }
+  
+  async generateSchemas(profileId: string): Promise<GeneratedSchemas> {
+    const profile = await this.getProfile(profileId);
+    
+    // Create generation job
+    const job = await jobAPI.createJob({
+      type: JobType.CODE_GENERATION,
+      title: `Generate schemas for ${profile.shapeLabel}`,
+      userId: getCurrentUser().id,
+      resourceId: profileId,
+      payload: { profileId, generators: ['zod', 'tinacms', 'csv', 'types'] },
+    });
+    
+    try {
+      const schemas: GeneratedSchemas = {};
+      
+      if (profile.generationConfig.generateZod) {
+        schemas.zod = await new ZodGenerator().generateSchema(profile);
+      }
+      
+      if (profile.generationConfig.generateTinaCMS) {
+        schemas.tinacms = await new TinaCMSGenerator().generateCollection(profile);
+      }
+      
+      if (profile.generationConfig.generateCSV) {
+        schemas.csv = await new CSVGenerator().generateProfile(profile);
+      }
+      
+      if (profile.generationConfig.generateTypes) {
+        schemas.types = await new TypeScriptGenerator().generateTypes(profile);
+      }
+      
+      await jobAPI.updateJobStatus(job.id, JobStatus.COMPLETED);
+      
+      return schemas;
+    } catch (error) {
+      await jobAPI.updateJobStatus(job.id, JobStatus.FAILED);
+      throw error;
+    }
+  }
+  
+  async publishProfile(profileId: string): Promise<void> {
+    const profile = await this.getProfile(profileId);
+    
+    // Validate before publishing
+    await this.validateProfile(profile);
+    
+    // Generate all schemas
+    const schemas = await this.generateSchemas(profileId);
+    
+    // Write generated files to appropriate locations
+    await this.writeGeneratedFiles(profile, schemas);
+    
+    // Update profile status
+    profile.status = ProfileStatus.PUBLISHED;
+    profile.published = true;
+    profile.modified = new Date().toISOString();
+    
+    await this.saveProfile(profile);
+    
+    // Create Git commit
+    const job = await jobAPI.createJob({
+      type: JobType.GIT_SYNC,
+      title: `Publish DCTAP profile: ${profile.shapeLabel}`,
+      userId: getCurrentUser().id,
+      resourceId: profileId,
+      payload: { action: 'publish', profileId, schemas },
+    });
+    
+    // Log activity
+    await jobAPI.logActivity({
+      type: ActivityType.CONTENT,
+      source: ActivitySource.ADMIN,
+      userId: getCurrentUser().id,
+      action: ActivityAction.PUBLISH,
+      description: `Published DCTAP profile: ${profile.shapeLabel}`,
+      resourceType: 'dctap_profile',
+      resourceId: profileId,
+      jobId: job.id,
+    });
+  }
+}
+
+interface GeneratedSchemas {
+  zod?: string;
+  tinacms?: string;
+  csv?: string;
+  types?: string;
+}
+```
+
+## Database Schema
+
+### Profiles Table
+```sql
+CREATE TABLE dctap_profiles (
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  shape_id TEXT NOT NULL,
+  shape_label TEXT NOT NULL,
+  version TEXT NOT NULL DEFAULT '1.0.0',
+  namespace TEXT NOT NULL,
+  prefix TEXT,
+  description TEXT,
+  
+  -- Ownership
+  created_by TEXT NOT NULL,
+  modified_by TEXT NOT NULL,
+  created_at TIMESTAMPTZ DEFAULT NOW(),
+  modified_at TIMESTAMPTZ DEFAULT NOW(),
+  
+  -- Classification
+  site_key TEXT NOT NULL,
+  profile_type TEXT NOT NULL,
+  parent_profile_id UUID REFERENCES dctap_profiles(id),
+  
+  -- Status
+  status TEXT NOT NULL DEFAULT 'draft',
+  published BOOLEAN DEFAULT FALSE,
+  deprecated BOOLEAN DEFAULT FALSE,
+  
+  -- Configuration
+  generation_config JSONB DEFAULT '{}',
+  
+  -- Content
+  properties JSONB NOT NULL DEFAULT '[]',
+  
+  -- Search and indexing
+  search_vector tsvector GENERATED ALWAYS AS (
+    to_tsvector('english', 
+      shape_label || ' ' || 
+      COALESCE(description, '') || ' ' ||
+      COALESCE(prefix, '')
+    )
+  ) STORED,
+  
+  -- Constraints
+  UNIQUE(shape_id, site_key, version)
+);
+
+-- Indexes
+CREATE INDEX idx_dctap_profiles_site_key ON dctap_profiles(site_key);
+CREATE INDEX idx_dctap_profiles_type ON dctap_profiles(profile_type);
+CREATE INDEX idx_dctap_profiles_status ON dctap_profiles(status);
+CREATE INDEX idx_dctap_profiles_search ON dctap_profiles USING GIN(search_vector);
+CREATE INDEX idx_dctap_profiles_modified ON dctap_profiles(modified_at DESC);
+
+-- Full-text search function
+CREATE OR REPLACE FUNCTION search_dctap_profiles(query_text TEXT)
+RETURNS TABLE(
+  id UUID,
+  shape_label TEXT,
+  description TEXT,
+  site_key TEXT,
+  profile_type TEXT,
+  rank REAL
+) AS $$
+BEGIN
+  RETURN QUERY
+  SELECT 
+    p.id,
+    p.shape_label,
+    p.description,
+    p.site_key,
+    p.profile_type,
+    ts_rank(p.search_vector, plainto_tsquery('english', query_text)) as rank
+  FROM dctap_profiles p
+  WHERE p.search_vector @@ plainto_tsquery('english', query_text)
+    AND p.published = TRUE
+  ORDER BY rank DESC;
+END;
+$$ LANGUAGE plpgsql;
+
+-- RLS policies
+ALTER TABLE dctap_profiles ENABLE ROW LEVEL SECURITY;
+
+CREATE POLICY dctap_profiles_read_policy ON dctap_profiles
+  FOR SELECT USING (
+    published = TRUE OR 
+    created_by = auth.uid()::text OR 
+    auth.jwt() ->> 'role' IN ('admin', 'reviewer')
+  );
+
+CREATE POLICY dctap_profiles_write_policy ON dctap_profiles
+  FOR ALL USING (
+    auth.jwt() ->> 'role' IN ('admin', 'editor') OR
+    created_by = auth.uid()::text
+  );
+```
+
+### Generated Schemas Table
+```sql
+CREATE TABLE dctap_generated_schemas (
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  profile_id UUID NOT NULL REFERENCES dctap_profiles(id) ON DELETE CASCADE,
+  schema_type TEXT NOT NULL, -- 'zod', 'tinacms', 'csv', 'types'
+  content TEXT NOT NULL,
+  file_path TEXT, -- Where the schema is saved
+  generated_at TIMESTAMPTZ DEFAULT NOW(),
+  generated_by TEXT NOT NULL,
+  hash TEXT NOT NULL, -- SHA256 of content for change detection
+  
+  UNIQUE(profile_id, schema_type)
+);
+
+CREATE INDEX idx_generated_schemas_profile ON dctap_generated_schemas(profile_id);
+CREATE INDEX idx_generated_schemas_type ON dctap_generated_schemas(schema_type);
+CREATE INDEX idx_generated_schemas_generated_at ON dctap_generated_schemas(generated_at DESC);
+```
+
+## Integration Examples
+
+### TinaCMS Schema Generation
+```typescript
+// Generate TinaCMS collection from DCTAP profile
+const generateTinaCMSIntegration = async (profileId: string) => {
+  const profile = await profileService.getProfile(profileId);
+  
+  // Generate TinaCMS collection
+  const collection = await new TinaCMSGenerator().generateCollection(profile);
+  
+  // Write to TinaCMS config
+  const configPath = `apps/admin-tina/tina/collections/${profile.shapeID.toLowerCase()}.ts`;
+  await fs.writeFile(configPath, collection);
+  
+  // Update main TinaCMS config to include new collection
+  await updateTinaCMSConfig(profile.shapeID);
+  
+  // Create Git commit
+  await gitOperations.commit({
+    files: [configPath, 'apps/admin-tina/tina/config.ts'],
+    message: `feat: add TinaCMS collection for ${profile.shapeLabel}`,
+  });
+  
+  return collection;
+};
+```
+
+### Zod Schema Integration  
+```typescript
+// Generate and deploy Zod schemas
+const deployZodSchemas = async (profileId: string) => {
+  const profile = await profileService.getProfile(profileId);
+  const zodSchema = await new ZodGenerator().generateSchema(profile);
+  
+  // Write to validation package
+  const schemaPath = `packages/contracts/src/schemas/${profile.shapeID}.zod.ts`;
+  await fs.writeFile(schemaPath, zodSchema);
+  
+  // Update index exports
+  const indexPath = 'packages/contracts/src/schemas/index.ts';
+  const currentIndex = await fs.readFile(indexPath, 'utf-8');
+  const updatedIndex = currentIndex + `\nexport * from './${profile.shapeID}.zod';`;
+  await fs.writeFile(indexPath, updatedIndex);
+  
+  // Rebuild contracts package
+  await execShell('nx build @ifla/contracts');
+  
+  return zodSchema;
+};
+```
+
+### CSV Profile Generation
+```typescript
+// Generate CSV validation profile
+const generateCSVProfile = async (profileId: string) => {
+  const profile = await profileService.getProfile(profileId);
+  const csvProfile = await new CSVGenerator().generateProfile(profile);
+  
+  // Save CSV profile for vocabulary validation
+  const profilePath = `packages/theme/src/config/csv-profiles/${profile.shapeID}.json`;
+  await fs.writeFile(profilePath, csvProfile);
+  
+  // Update VocabularyTable component to use new profile
+  await updateVocabularyTableProfiles();
+  
+  return csvProfile;
+};
+```
+
+## User Interface Design
+
+### Dashboard Overview
+```tsx
+export function DCTAPDashboard() {
+  const [profiles, setProfiles] = useState<DCTAPProfile[]>([]);
+  const [filter, setFilter] = useState<ProfileFilter>({});
+  
+  return (
+    <div className="dctap-dashboard">
+      <div className="dashboard-header">
+        <h1>DCTAP Profile Management</h1>
+        <div className="dashboard-actions">
+          <Button onClick={() => navigate('/dctap/profiles/new')}>
+            Create Profile
+          </Button>
+          <Button onClick={() => setShowImport(true)}>
+            Import RDF
+          </Button>
+        </div>
+      </div>
+      
+      <div className="dashboard-filters">
+        <Select
+          placeholder="Filter by site"
+          value={filter.siteKey}
+          onChange={(siteKey) => setFilter(f => ({ ...f, siteKey }))}
+          options={SITE_OPTIONS}
+        />
+        <Select
+          placeholder="Filter by type"
+          value={filter.profileType}
+          onChange={(profileType) => setFilter(f => ({ ...f, profileType }))}
+          options={PROFILE_TYPE_OPTIONS}
+        />
+        <Select
+          placeholder="Filter by status"
+          value={filter.status}
+          onChange={(status) => setFilter(f => ({ ...f, status }))}
+          options={STATUS_OPTIONS}
+        />
+      </div>
+      
+      <div className="profiles-grid">
+        {profiles.map(profile => (
+          <ProfileCard key={profile.id} profile={profile} />
+        ))}
+      </div>
+      
+      <ImportRDFModal
+        isOpen={showImport}
+        onClose={() => setShowImport(false)}
+        onImport={handleRDFImport}
+      />
+    </div>
+  );
+}
+
+export function ProfileCard({ profile }: { profile: DCTAPProfile }) {
+  const [showActions, setShowActions] = useState(false);
+  
+  return (
+    <div className="profile-card">
+      <div className="card-header">
+        <h3>{profile.shapeLabel}</h3>
+        <div className="card-badges">
+          <Badge variant={getStatusVariant(profile.status)}>
+            {profile.status}
+          </Badge>
+          <Badge variant="outline">{profile.siteKey}</Badge>
+        </div>
+      </div>
+      
+      <div className="card-content">
+        <p className="profile-description">{profile.description}</p>
+        <div className="profile-stats">
+          <span>{profile.properties.length} properties</span>
+          <span>v{profile.version}</span>
+          <span>{formatDate(profile.modified)}</span>
+        </div>
+      </div>
+      
+      <div className="card-actions">
+        <Button 
+          variant="outline"
+          onClick={() => navigate(`/dctap/profiles/${profile.id}/edit`)}
+        >
+          Edit
+        </Button>
+        <Button
+          onClick={() => navigate(`/dctap/profiles/${profile.id}/generate`)}
+        >
+          Generate Schemas
+        </Button>
+        {profile.status === ProfileStatus.APPROVED && (
+          <Button
+            variant="success"
+            onClick={() => publishProfile(profile.id)}
+          >
+            Publish
+          </Button>
+        )}
+      </div>
+    </div>
+  );
+}
+```
+
+### Property Library
+```tsx
+// Reusable property definitions
+export function PropertyLibrary() {
+  const [library, setLibrary] = useState<PropertyLibraryItem[]>([]);
+  const [search, setSearch] = useState('');
+  
+  const filteredProperties = library.filter(item =>
+    item.label.toLowerCase().includes(search.toLowerCase()) ||
+    item.description.toLowerCase().includes(search.toLowerCase())
+  );
+  
+  return (
+    <div className="property-library">
+      <div className="library-header">
+        <h2>Property Library</h2>
+        <TextField
+          placeholder="Search properties..."
+          value={search}
+          onChange={setSearch}
+          leftIcon={<SearchIcon />}
+        />
+      </div>
+      
+      <div className="property-categories">
+        {PROPERTY_CATEGORIES.map(category => (
+          <PropertyCategory
+            key={category.id}
+            category={category}
+            properties={filteredProperties.filter(p => p.category === category.id)}
+          />
+        ))}
+      </div>
+    </div>
+  );
+}
+
+interface PropertyLibraryItem {
+  id: string;
+  label: string;
+  description: string;
+  category: string;
+  template: Partial<DCTAPProperty>;
+  usageCount: number; // How many profiles use this property
+}
+
+const COMMON_PROPERTIES: PropertyLibraryItem[] = [
+  {
+    id: 'definition',
+    label: 'Definition',
+    description: 'Formal definition of the concept or property',
+    category: 'core',
+    template: {
+      propertyID: 'definition',
+      propertyLabel: 'Definition',
+      mandatory: MandatoryValue.TRUE,
+      repeatable: RepeatableValue.FALSE,
+      valueDataType: ValueDataType.LITERAL,
+      uiHints: { fieldType: FieldType.TEXTAREA },
+    },
+    usageCount: 156,
+  },
+  {
+    id: 'scopeNote',
+    label: 'Scope Note',
+    description: 'Additional usage guidance and examples',
+    category: 'core',
+    template: {
+      propertyID: 'scopeNote',
+      propertyLabel: 'Scope Note',
+      mandatory: MandatoryValue.FALSE,
+      repeatable: RepeatableValue.FALSE,
+      valueDataType: ValueDataType.LITERAL,
+      uiHints: { fieldType: FieldType.TEXTAREA },
+    },
+    usageCount: 89,
+  },
+  // ... more common properties
+];
+```
+
+## Testing Strategy
+
+### Unit Tests
+```typescript
+describe('DCTAP Profile Management', () => {
+  test('creates profile from template', async () => {
+    const profile = await profileService.createProfile('isbd-element', {
+      shapeLabel: 'Test Element Profile',
+      siteKey: 'ISBDM',
+    });
+    
+    expect(profile.shapeLabel).toBe('Test Element Profile');
+    expect(profile.siteKey).toBe('ISBDM');
+    expect(profile.properties).toHaveLength(3); // From template
+  });
+  
+  test('validates profile structure', async () => {
+    const invalidProfile = {
+      shapeLabel: '', // Missing required field
+      properties: [],
+    };
+    
+    await expect(
+      profileService.validateProfile(invalidProfile as DCTAPProfile)
+    ).rejects.toThrow('shapeLabel is required');
+  });
+});
+
+describe('Code Generation', () => {
+  test('generates valid Zod schema', async () => {
+    const profile = createMockProfile();
+    const generator = new ZodGenerator();
+    
+    const schema = await generator.generateSchema(profile);
+    
+    expect(schema).toContain('import { z } from \'zod\'');
+    expect(schema).toContain('export const');
+    expect(schema).toContain('z.object({');
+  });
+  
+  test('generates TinaCMS collection with correct field types', async () => {
+    const profile = createMockProfile();
+    const generator = new TinaCMSGenerator();
+    
+    const collection = await generator.generateCollection(profile);
+    
+    expect(collection).toContain('Collection');
+    expect(collection).toContain('fields:');
+    expect(collection).toContain('type: \'string\'');
+  });
+});
+```
+
+### Integration Tests
+```typescript
+describe('End-to-End Profile Workflow', () => {
+  test('creates profile and generates all schemas', async () => {
+    // Create profile
+    const profile = await profileService.createProfile('vocabulary', {
+      shapeLabel: 'Test Vocabulary',
+      siteKey: 'ISBDM',
+    });
+    
+    // Generate schemas
+    const schemas = await profileService.generateSchemas(profile.id);
+    
+    // Validate schemas
+    expect(schemas.zod).toBeDefined();
+    expect(schemas.tinacms).toBeDefined();
+    expect(schemas.csv).toBeDefined();
+    expect(schemas.types).toBeDefined();
+    
+    // Check that schemas are syntactically valid
+    expect(() => eval(schemas.zod!)).not.toThrow();
+    expect(() => JSON.parse(schemas.csv!)).not.toThrow();
+  });
+  
+  test('publishes profile and creates Git commit', async () => {
+    const profile = await profileService.createProfile('isbd-element', {
+      shapeLabel: 'Test Element',
+      siteKey: 'ISBDM',
+    });
+    
+    await profileService.publishProfile(profile.id);
+    
+    // Check profile status
+    const publishedProfile = await profileService.getProfile(profile.id);
+    expect(publishedProfile.status).toBe(ProfileStatus.PUBLISHED);
+    expect(publishedProfile.published).toBe(true);
+    
+    // Check that job was created
+    const jobs = await jobAPI.getJobs({ resourceId: profile.id });
+    expect(jobs).toContainEqual(
+      expect.objectContaining({ type: JobType.GIT_SYNC })
+    );
+  });
+});
+```
+
+### RDF Import/Export Tests
+```typescript
+describe('RDF Import/Export', () => {
+  test('imports RDF turtle correctly', async () => {
+    const rdfContent = `
+      @prefix isbd: <http://iflastandards.info/ns/isbd/> .
+      @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+      
+      isbd:P1025 a rdf:Property ;
+        rdfs:label "has manifestation statement" ;
+        rdfs:comment "Relates a manifestation to a statement..." ;
+        rdfs:domain isbd:Manifestation .
+    `;
+    
+    const importer = new RDFImportEngine();
+    const profiles = await importer.importFromRDF(rdfContent, 'turtle');
+    
+    expect(profiles).toHaveLength(1);
+    expect(profiles[0].properties).toContainEqual(
+      expect.objectContaining({
+        propertyID: 'P1025',
+        propertyLabel: 'has manifestation statement',
+      })
+    );
+  });
+  
+  test('exports to RDF maintains semantic equivalence', async () => {
+    const profile = createMockElementProfile();
+    const exporter = new RDFExportEngine();
+    
+    const rdfContent = await exporter.exportToRDF(profile, 'turtle');
+    
+    // Re-import and compare
+    const importer = new RDFImportEngine();
+    const reimported = await importer.importFromRDF(rdfContent, 'turtle');
+    
+    expect(reimported[0].properties).toHaveLength(profile.properties.length);
+  });
+});
+```
+
+## Deployment Plan
+
+### Phase 1: Foundation (Weeks 1-2)
+- [ ] Set up DCTAP management interface architecture
+- [ ] Implement profile data models and database schema
+- [ ] Create basic profile CRUD operations
+- [ ] Build profile editor UI components
+- [ ] Implement validation framework
+
+### Phase 2: Code Generation (Weeks 3-4)
+- [ ] Implement Zod schema generator
+- [ ] Build TinaCMS collection generator  
+- [ ] Create CSV profile generator
+- [ ] Develop TypeScript types generator
+- [ ] Add generation configuration interface
+
+### Phase 3: RDF Integration (Weeks 5-6)
+- [ ] Implement RDF import engine (Turtle, RDF-XML, JSON-LD)
+- [ ] Build RDF export functionality
+- [ ] Create property library with common definitions
+- [ ] Add profile templates for different use cases
+- [ ] Implement profile inheritance and composition
+
+### Phase 4: Advanced Features (Weeks 7-8)
+- [ ] Add full-text search across profiles
+- [ ] Implement profile versioning and change tracking
+- [ ] Build approval workflow for profile changes
+- [ ] Create comprehensive testing suite
+- [ ] Add monitoring and analytics
+
+## Risk Assessment
+
+### High Risk
+1. **RDF Complexity**: Accurate import/export of complex RDF structures
+   - **Mitigation**: Comprehensive testing with real IFLA RDF files, expert review
+2. **Code Generation Quality**: Generated schemas must be syntactically correct
+   - **Mitigation**: Automated validation, extensive test coverage
+
+### Medium Risk  
+1. **User Adoption**: SMEs may find DCTAP concepts complex
+   - **Mitigation**: Intuitive UI, comprehensive documentation, training materials
+2. **Performance**: Large profiles with many properties may be slow
+   - **Mitigation**: Pagination, lazy loading, caching strategies
+
+### Low Risk
+1. **Integration Complexity**: Coordinating with TinaCMS and other systems
+   - **Mitigation**: Well-defined APIs, integration testing
+
+## Success Metrics
+
+### Technical Metrics
+- **Import Accuracy**: 95%+ successful import of existing RDF definitions
+- **Generation Success**: 100% syntactically valid generated schemas
+- **Performance**: Profile editor loads within 2 seconds
+- **Validation Coverage**: 100% of DCTAP constraints validated
+
+### User Experience Metrics  
+- **Profile Creation Time**: `<10 minutes` for typical profile
+- **Error Rate**: `<5%` of user actions result in errors
+- **User Satisfaction**: `>4/5 stars` in user feedback
+- **Adoption Rate**: 80% of SMEs use DCTAP instead of manual schema creation
+
+### Business Metrics
+- **Development Efficiency**: 50% reduction in schema maintenance time
+- **Consistency**: 100% alignment between TinaCMS forms and validation rules
+- **Quality**: Zero production issues from malformed schemas
+- **Maintenance**: 80% reduction in manual updates across systems
+
+## Future Enhancements
+
+### Version 2.0 Features
+1. **Advanced Validation**: Cross-property validation rules, conditional constraints
+2. **Profile Marketplace**: Share and discover profiles across IFLA community
+3. **Visual Editing**: Drag-and-drop profile builder interface
+4. **Integration APIs**: REST/GraphQL APIs for external profile consumers
+5. **Multi-language Support**: Internationalized property labels and descriptions
+
+### Integration Opportunities
+1. **SHACL Integration**: Export profiles as SHACL shapes for RDF validation
+2. **JSON Schema**: Generate JSON Schema for API validation
+3. **OpenAPI**: Generate OpenAPI specifications from profiles
+4. **Documentation**: Auto-generate documentation from profile definitions
+
+## Conclusion
+
+The DCTAP Management Interface provides the foundational layer for schema-driven development across the IFLA Standards platform. By centralizing profile definitions and automating code generation, this system ensures consistency, reduces maintenance overhead, and enables rapid iteration on content structures.
+
+The visual interface empowers SMEs to define complex metadata structures without requiring deep technical knowledge, while the automated generation pipeline ensures that all downstream systems remain synchronized and validated.
+
+This foundation will directly enable the successful implementation of TinaCMS integration and provide a scalable framework for future enhancements to the IFLA Standards ecosystem.
+
+---
+
+**Next Steps**: 
+1. Review and approve this specification alongside the Job Management spec
+2. Begin Phase 1 implementation with database schema and core API
+3. Conduct user research with SMEs to refine the editing interface  
+4. Prepare for integration with TinaCMS generation pipeline
+5. Plan RDF import from existing IFLA element definitions
