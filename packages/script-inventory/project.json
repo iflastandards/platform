@@ -1,0 +1,69 @@
+{
+  "name": "script-inventory",
+  "$schema": "../../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "packages/script-inventory/src",
+  "projectType": "library",
+  "targets": {
+    "build": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "tsup",
+        "cwd": "packages/script-inventory"
+      },
+      "outputs": ["{projectRoot}/dist"],
+      "dependsOn": ["^build"]
+    },
+    "dev": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "tsup --watch",
+        "cwd": "packages/script-inventory"
+      }
+    },
+    "test": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "vitest run",
+        "cwd": "packages/script-inventory"
+      },
+      "outputs": ["{projectRoot}/coverage"],
+      "dependsOn": ["build"]
+    },
+    "test:watch": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "vitest",
+        "cwd": "packages/script-inventory"
+      }
+    },
+    "test:ui": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "vitest --ui",
+        "cwd": "packages/script-inventory"
+      }
+    },
+    "lint": {
+      "executor": "@nx/eslint:lint",
+      "options": {
+        "lintFilePatterns": ["packages/script-inventory/src/**/*.{ts,tsx}"]
+      }
+    },
+    "typecheck": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "tsc --noEmit",
+        "cwd": "packages/script-inventory"
+      }
+    },
+    "api:dev": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "tsx src/api/server.ts",
+        "cwd": "packages/script-inventory"
+      },
+      "dependsOn": ["build"]
+    }
+  },
+  "tags": ["type:library", "scope:shared"]
+}
