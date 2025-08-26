@@ -2,7 +2,12 @@
 
 ## Context
 
-Global code style rules for Agent OS projects.
+Global code style rules for Agent OS projects. For framework-specific styling conventions, see:
+
+- **Next.js Projects**: `nextjs/code-style.md` - App Router patterns, server/client components
+- **Docusaurus Projects**: `docusaurus/code-style.md` - MDX, component structure, multi-site patterns
+
+## General Guidelines
 
 <conditional-block context-check="general-formatting">
 IF this General Formatting section already read in current context:
