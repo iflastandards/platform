@@ -64,8 +64,19 @@ jobs:
         with:
           fetch-depth: 0
 
-      - uses: pnpm/action-setup@v4
-        name: Install pnpm
+      - name: Cache pnpm store
+        uses: actions/cache@v4
+        with:
+          path: ~/.pnpm-store
+          key: ${{ runner.os }}-pnpm-${{ hashFiles('pnpm-lock.yaml') }}
+          restore-keys: |
+            ${{ runner.os }}-pnpm-
+
+      - name: Install pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 8.15.6
+          run_install: false
 
       - name: Start Nx Cloud agents
         run: |
@@ -136,7 +147,18 @@ jobs:
         with:
           fetch-depth: 0
 
+      - name: Cache pnpm store
+        uses: actions/cache@v4
+        with:
+          path: ~/.pnpm-store
+          key: ${{ runner.os }}-pnpm-${{ hashFiles('pnpm-lock.yaml') }}
+          restore-keys: |
+            ${{ runner.os }}-pnpm-
+
       - uses: pnpm/action-setup@v4
+        with:
+          version: 8.15.6
+          run_install: false
 
       - uses: actions/setup-node@v4
         with:
@@ -379,8 +401,19 @@ jobs:
             .nx
           sparse-checkout-cone-mode: false
 
+      - name: Cache pnpm store
+        uses: actions/cache@v4
+        with:
+          path: ~/.pnpm-store
+          key: ${{ runner.os }}-pnpm-${{ hashFiles('pnpm-lock.yaml') }}
+          restore-keys: |
+            ${{ runner.os }}-pnpm-
+
       - name: Setup pnpm
         uses: pnpm/action-setup@v4
+        with:
+          version: 8.15.6
+          run_install: false
 
       - name: Stop Nx Cloud agents
         run: |

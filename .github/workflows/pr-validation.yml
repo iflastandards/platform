@@ -66,7 +66,7 @@ jobs:
         with:
           fetch-depth: 0
           
-      - uses: pnpm/action-setup@v4
+      - name: Cache pnpm store\n        uses: actions/cache@v4\n        with:\n          path: ~/.pnpm-store\n          key: ${{ runner.os }}-pnpm-${{ hashFiles('pnpm-lock.yaml') }}\n          restore-keys: |\n            ${{ runner.os }}-pnpm-\n      \n      - uses: pnpm/action-setup@v4\n        with:\n          version: 8.15.6\n          run_install: false
       
       - uses: actions/setup-node@v4
         with:
@@ -120,7 +120,7 @@ jobs:
         with:
           fetch-depth: 0
           
-      - uses: pnpm/action-setup@v4
+      - name: Cache pnpm store\n        uses: actions/cache@v4\n        with:\n          path: ~/.pnpm-store\n          key: ${{ runner.os }}-pnpm-${{ hashFiles('pnpm-lock.yaml') }}\n          restore-keys: |\n            ${{ runner.os }}-pnpm-\n      \n      - uses: pnpm/action-setup@v4\n        with:\n          version: 8.15.6\n          run_install: false
       
       - uses: actions/setup-node@v4
         with:
@@ -167,7 +167,7 @@ jobs:
         with:
           fetch-depth: 0
           
-      - uses: pnpm/action-setup@v4
+      - name: Cache pnpm store\n        uses: actions/cache@v4\n        with:\n          path: ~/.pnpm-store\n          key: ${{ runner.os }}-pnpm-${{ hashFiles('pnpm-lock.yaml') }}\n          restore-keys: |\n            ${{ runner.os }}-pnpm-\n      \n      - uses: pnpm/action-setup@v4\n        with:\n          version: 8.15.6\n          run_install: false
       
       - uses: actions/setup-node@v4
         with:
