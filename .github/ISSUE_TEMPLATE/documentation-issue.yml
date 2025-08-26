@@ -1,0 +1,92 @@
+name: Documentation Issue
+description: Report a problem with IFLA Standards documentation
+title: "[Documentation Issue] "
+labels: ["documentation", "needs-triage"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for taking the time to report a documentation issue! This helps us improve the IFLA Standards documentation for everyone.
+        
+  - type: input
+    id: page-url
+    attributes:
+      label: Page URL
+      description: The URL of the page where you found the issue
+      placeholder: "https://iflastandards.github.io/standards-dev/ISBDM/docs/elements/..."
+    validations:
+      required: true
+      
+  - type: dropdown
+    id: problem-type
+    attributes:
+      label: Type of Problem
+      description: What type of issue did you encounter?
+      options:
+        - Missing content or pages
+        - Formatting or display problems
+        - Structural or navigation issues
+        - Incorrect metadata or information
+        - Broken links or references
+        - Translation or language issues
+        - Other (please describe below)
+    validations:
+      required: true
+      
+  - type: textarea
+    id: description
+    attributes:
+      label: Description
+      description: Please describe the issue you encountered
+      placeholder: "Tell us what you expected to see vs. what you actually saw..."
+    validations:
+      required: true
+      
+  - type: textarea
+    id: reproduction
+    attributes:
+      label: Steps to Reproduce (if applicable)
+      description: If the issue is reproducible, please list the steps
+      placeholder: |
+        1. Go to page...
+        2. Click on...
+        3. Notice that...
+      render: markdown
+      
+  - type: textarea
+    id: expected-behavior
+    attributes:
+      label: Expected Behavior
+      description: What did you expect to happen?
+      placeholder: "The page should display..."
+      
+  - type: textarea
+    id: additional-context
+    attributes:
+      label: Additional Context
+      description: Add any other context about the problem here, including screenshots if helpful
+      placeholder: "Any additional information that might be helpful..."
+      
+  - type: dropdown
+    id: browser
+    attributes:
+      label: Browser (optional)
+      description: Which browser are you using?
+      options:
+        - Chrome
+        - Firefox
+        - Safari
+        - Edge
+        - Other
+        - Not applicable
+        
+  - type: checkboxes
+    id: terms
+    attributes:
+      label: Code of Conduct
+      description: By submitting this issue, you agree to follow our community guidelines
+      options:
+        - label: I have checked that this issue hasn't already been reported
+          required: true
+        - label: I understand this is for documentation issues, not standards content questions
+          required: true

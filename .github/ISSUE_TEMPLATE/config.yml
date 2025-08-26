@@ -1,0 +1,8 @@
+blank_issues_enabled: false
+contact_links:
+  - name: Standards Content Questions
+    url: https://www.ifla.org/programmes/ifla-standards/
+    about: For questions about the standards themselves (not documentation issues), please visit the IFLA Standards page
+  - name: General IFLA Support
+    url: https://www.ifla.org/contact/
+    about: For general IFLA inquiries and support

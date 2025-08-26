@@ -14,10 +14,10 @@ export default defineConfig({
     'components/VocabularyCard/index': 'src/components/VocabularyCard/index.tsx',
     'components/NamespaceHub/index': 'src/components/NamespaceHub/index.tsx',
     'components/ElementSetCard/index': 'src/components/ElementSetCard/index.tsx',
+    'components/EditChoiceModal/index': 'src/components/EditChoiceModal/index.tsx',
     'hooks/usePrevious': 'src/hooks/usePrevious.ts',
     'utils/index': 'src/utils/index.ts',
     'config/index': 'src/config/index.ts',
-    'config/siteConfig': 'src/config/siteConfig.ts',
     'theme/NavbarItem/ComponentTypes':
       'src/theme/NavbarItem/ComponentTypes.tsx',
   },

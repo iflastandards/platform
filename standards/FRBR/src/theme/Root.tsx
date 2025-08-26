@@ -31,7 +31,7 @@ export default function Root({ children }: RootProps): React.ReactElement {
 
         // Extract page information
         const pageUrl = window.location.href;
-        const pageTitle = document.title.replace(' | ISBDM', '').replace(' | ISBD for Manifestation', '');
+        const pageTitle = document.title.replace(' | FRBR', '').replace(' | Functional Requirements for Bibliographic Records', '');
 
         setModalState({
           isOpen: true,
@@ -63,8 +63,8 @@ export default function Root({ children }: RootProps): React.ReactElement {
         editUrl={modalState.editUrl}
         pageUrl={modalState.pageUrl}
         pageTitle={modalState.pageTitle}
-        siteKey="ISBDM"
+        siteKey="FRBR"
       />
     </>
   );
-} 
+}

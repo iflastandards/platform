@@ -9,6 +9,9 @@ export {
   VocabularyTableFromCSV
 } from './VocabularyTable';
 
+// Modal components
+export { EditChoiceModal } from './EditChoiceModal';
+
 // Management components
 export { default as SiteManagement } from './SiteManagement';
 export { 
