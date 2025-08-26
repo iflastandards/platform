@@ -1,13 +1,17 @@
-version: 2
+version: 3
 updates:
-  # Enable version updates for pnpm dependencies
+  # Non-security npm updates with very conservative schedule
   - package-ecosystem: "npm"
     directory: "/"
     schedule:
-      interval: "monthly"
+      interval: "monthly"          # keep monthly for regular maintenance
       day: "monday"
       time: "04:00"
-    open-pull-requests-limit: 5
+    open-pull-requests-limit: 3   # reduce concurrency of PRs
+    # Disable automated major version bumps, handled manually
+    ignore:
+      - dependency-name: "*"
+        update-types: ["version-update:semver-major"]
     groups:
       nx:
         patterns:
@@ -27,15 +31,18 @@ updates:
           - "*vitest*"
           - "*playwright*"
           - "*jest*"
-    ignore:
-      # Don't update major versions automatically
-      - dependency-name: "*"
-        update-types: ["version-update:semver-major"]
-    commit-message:
-      prefix: "chore"
-      include: "scope"
 
-  # Enable security updates for GitHub Actions
+  # Security updates for npm - run immediately or weekly instead of monthly
+  - package-ecosystem: "npm"
+    directory: "/"
+    schedule:
+      interval: "daily"            # to get security fixes ASAP
+    allow:
+      - dependency-type: "direct"   # can control further by only direct deps if desired
+    types:
+      - "version-update:security"  # only security updates here
+
+  # Continue handling GitHub Actions security weekly
   - package-ecosystem: "github-actions"
     directory: "/"
     schedule:
