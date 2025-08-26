@@ -125,7 +125,7 @@ describe('EditChoiceModal Component', () => {
     await user.keyboard('{Enter}');
     
     expect(mockWindowOpen).toHaveBeenCalledWith(
-      expect.stringContaining('https://github.com/iflastandards/standards-dev/issues/new'),
+      expect.stringContaining('https://github.com/iflastandards/platform/issues/new'),
       '_blank'
     );
     expect(onClose).toHaveBeenCalledTimes(1);
@@ -154,7 +154,7 @@ describe('EditChoiceModal Component', () => {
     const calledUrl = mockWindowOpen.mock.calls[0][0];
     
     // Verify the URL structure
-    expect(calledUrl).toContain('https://github.com/iflastandards/standards-dev/issues/new');
+    expect(calledUrl).toContain('https://github.com/iflastandards/platform/issues/new');
     expect(calledUrl).toContain('template=documentation-issue.yml');
     expect(calledUrl).toContain('labels=documentation%2Cisbdm');
     expect(calledUrl).toContain('title=%5BISBDM%5D+Issue+with%3A+has+manifestation+statement');

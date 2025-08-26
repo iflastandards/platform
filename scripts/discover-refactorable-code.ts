@@ -186,11 +186,11 @@ function inferFunctionality(content: string, filePath: string, keywords: string[
   }
   
   // Fallback: use filename to guess functionality
-  if (fileName.includes('generate')) return 'Generation script';
-  if (fileName.includes('process')) return 'Processing script';
-  if (fileName.includes('import')) return 'Import script';
-  if (fileName.includes('export')) return 'Export script';
-  if (fileName.includes('validate')) return 'Validation script';
+  if (fileName.includes('generate')) {return 'Generation script';}
+  if (fileName.includes('process')) {return 'Processing script';}
+  if (fileName.includes('import')) {return 'Import script';}
+  if (fileName.includes('export')) {return 'Export script';}
+  if (fileName.includes('validate')) {return 'Validation script';}
   
   return `${fileName.replace(/[-_]/g, ' ')} utility`;
 }
@@ -209,25 +209,25 @@ function assessRefactorPotential(
   const filePathLower = filePath.toLowerCase();
   
   // High potential indicators
-  if (keywords.some(k => contentLower.includes(k.toLowerCase()))) score += 3;
-  if (contentLower.includes(resourceName.toLowerCase())) score += 3;
-  if (contentLower.includes('csv') || contentLower.includes('spreadsheet')) score += 2;
-  if (contentLower.includes('import') || contentLower.includes('export')) score += 2;
-  if (contentLower.includes('validate')) score += 2;
-  if (contentLower.includes('process')) score += 1;
+  if (keywords.some(k => contentLower.includes(k.toLowerCase()))) {score += 3;}
+  if (contentLower.includes(resourceName.toLowerCase())) {score += 3;}
+  if (contentLower.includes('csv') || contentLower.includes('spreadsheet')) {score += 2;}
+  if (contentLower.includes('import') || contentLower.includes('export')) {score += 2;}
+  if (contentLower.includes('validate')) {score += 2;}
+  if (contentLower.includes('process')) {score += 1;}
   
   // Medium potential indicators
-  if (filePath.includes('scripts/')) score += 1;
-  if (content.includes('inquirer') || content.includes('commander')) score += 1; // CLI tools
-  if (content.includes('fs.') || content.includes('readFile')) score += 1; // File operations
+  if (filePath.includes('scripts/')) {score += 1;}
+  if (content.includes('inquirer') || content.includes('commander')) {score += 1;} // CLI tools
+  if (content.includes('fs.') || content.includes('readFile')) {score += 1;} // File operations
   
   // Low potential detractors
-  if (filePath.includes('build') || filePath.includes('deploy')) score -= 2;
-  if (filePath.includes('test') || filePath.includes('spec')) score -= 3;
-  if (content.includes('execSync') && !content.includes('inquirer')) score -= 1; // Pure shell scripts
+  if (filePath.includes('build') || filePath.includes('deploy')) {score -= 2;}
+  if (filePath.includes('test') || filePath.includes('spec')) {score -= 3;}
+  if (content.includes('execSync') && !content.includes('inquirer')) {score -= 1;} // Pure shell scripts
   
-  if (score >= 4) return 'high';
-  if (score >= 2) return 'medium';
+  if (score >= 4) {return 'high';}
+  if (score >= 2) {return 'medium';}
   return 'low';
 }
 

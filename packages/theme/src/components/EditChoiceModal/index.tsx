@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useEffect, useCallback } from 'react';
 import styles from './styles.module.scss';
 
 export interface EditChoiceModalProps {
@@ -43,7 +43,7 @@ export function EditChoiceModal({
 
   // Generate GitHub issue URL with pre-filled data
   const generateIssueUrl = () => {
-    const baseUrl = 'https://github.com/iflastandards/standards-dev/issues/new';
+    const baseUrl = 'https://github.com/iflastandards/platform/issues/new';
     const template = 'documentation-issue.yml';
     
     // Extract relative path from full URL for cleaner display
@@ -78,7 +78,7 @@ export function EditChoiceModal({
     }
   };
 
-  if (!isOpen) return null;
+  if (!isOpen) {return null;}
 
   return (
     <div 

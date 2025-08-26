@@ -23,7 +23,7 @@ export default function Root({ children }: RootProps): React.ReactElement {
   useEffect(() => {
     const handleEditClick = (event: Event) => {
       const target = event.target as HTMLElement;
-      const editLink = target.closest('a[href*="/edit/"]') as HTMLAnchorElement;
+      const editLink = target.closest('a[href*="github.com"][href*="/tree/"], a[href*="github.com"][href*="/edit/"]') as HTMLAnchorElement;
       
       if (editLink) {
         event.preventDefault();

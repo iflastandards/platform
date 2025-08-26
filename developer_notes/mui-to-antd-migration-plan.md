@@ -213,7 +213,7 @@
 - [ ] Update Playwright E2E tests for Ant Design
 - [ ] Run `pnpm test:builds:affected`
 - [ ] Add Husky pre-commit hook to block MUI imports
-- [ ] Verify test performance (<60s selective, <180s pre-push)
+- [ ] Verify test performance (less than 60s selective, less than 180s pre-push)
 - [ ] Update CI/CD pipeline configurations
 
 **Status**: ⏳ PENDING - Awaiting Phase 6 completion

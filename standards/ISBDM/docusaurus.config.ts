@@ -156,7 +156,7 @@ const config: Config = {
       {
         docs: {
           sidebarPath: require.resolve('./sidebars.ts'),
-          editUrl: 'https://github.com/iflastandards/standards-dev/tree/main/standards/ISBDM/',
+          editUrl: 'https://github.com/iflastandards/platform/tree/preview/standards/ISBDM/',
           showLastUpdateAuthor: true,
           showLastUpdateTime: true,
           sidebarItemsGenerator: customSidebarGenerator,
@@ -171,7 +171,7 @@ const config: Config = {
         },
         blog: {
           showReadingTime: true,
-          editUrl: 'https://github.com/iflastandards/standards-dev/tree/main/standards/ISBDM/',
+          editUrl: 'https://github.com/iflastandards/platform/tree/preview/standards/ISBDM/',
           feedOptions: {
             type: 'all',
             title: 'ISBD for Manifestation Blog',
