@@ -37,7 +37,7 @@ jobs:
       theme_changed: ${{ steps.filter.outputs.theme }}
       config_changed: ${{ steps.filter.outputs.config }}
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
         with:
           fetch-depth: 0
           
@@ -62,7 +62,7 @@ jobs:
     if: needs.changes-detection.outputs.docs_changed == 'true' || needs.changes-detection.outputs.theme_changed == 'true'
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
         with:
           fetch-depth: 0
           
@@ -124,7 +124,7 @@ jobs:
     if: needs.changes-detection.outputs.docs_changed == 'true' || needs.changes-detection.outputs.theme_changed == 'true'
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
         with:
           fetch-depth: 0
           
@@ -179,7 +179,7 @@ jobs:
     needs: [validate-code-quality, test-affected]
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
         with:
           fetch-depth: 0
           
@@ -240,7 +240,7 @@ jobs:
     runs-on: ubuntu-latest
     continue-on-error: true
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
       
       - uses: actions/download-artifact@v4
         with:
