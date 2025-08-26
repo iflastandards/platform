@@ -72,11 +72,8 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-pnpm-
 
-      - name: Install pnpm
-        uses: pnpm/action-setup@v4
-        with:
-          version: 8.15.6
-          run_install: false
+      - uses: pnpm/action-setup@v4
+        name: Install pnpm
 
       - name: Start Nx Cloud agents
         run: |
@@ -156,9 +153,6 @@ jobs:
             ${{ runner.os }}-pnpm-
 
       - uses: pnpm/action-setup@v4
-        with:
-          version: 8.15.6
-          run_install: false
 
       - uses: actions/setup-node@v4
         with:
@@ -411,9 +405,6 @@ jobs:
 
       - name: Setup pnpm
         uses: pnpm/action-setup@v4
-        with:
-          version: 8.15.6
-          run_install: false
 
       - name: Stop Nx Cloud agents
         run: |

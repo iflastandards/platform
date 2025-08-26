@@ -44,12 +44,9 @@ jobs:
           key: ${{ runner.os }}-pnpm-${{ hashFiles('pnpm-lock.yaml') }}
           restore-keys: |
             ${{ runner.os }}-pnpm-
-      
+
       - name: Setup pnpm
         uses: pnpm/action-setup@v4
-        with:
-          version: 8.15.6
-          run_install: false
 
       - name: Get pnpm store directory
         id: pnpm-cache
