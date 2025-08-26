@@ -4,6 +4,12 @@
 
 Global tech stack defaults for Agent OS projects, overridable in project-specific `.agent-os/product/tech-stack.md`.
 
+For detailed implementation guidelines specific to each technology stack, see:
+
+- **Next.js Standards**: `nextjs/` - Complete admin application development guide
+- **Docusaurus Standards**: `docusaurus/` - Documentation site development patterns  
+- **Shared Standards**: `shared/` - Cross-framework development workflows
+
 - ## Core Monorepo Infrastructure
 
   - **Monorepo Tool**: Nx 21.3.11

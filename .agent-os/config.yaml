@@ -71,16 +71,50 @@ key_files:
   - "apps/admin/next.config.js"
   - "portal/docusaurus.config.ts"
   
+standards_paths:
+  nextjs:
+    code_style: ".agent-os/standards/nextjs/code-style.md"
+    data_flow: ".agent-os/standards/nextjs/data-flow.md"
+    feature_factory: ".agent-os/standards/nextjs/feature-factory.md"
+    components: ".agent-os/standards/nextjs/components.md"
+    testing: ".agent-os/standards/nextjs/testing.md"
+  docusaurus:
+    code_style: ".agent-os/standards/docusaurus/code-style.md"
+    multi_site: ".agent-os/standards/docusaurus/multi-site.md"
+    components: ".agent-os/standards/docusaurus/components.md"
+    content_standards: ".agent-os/standards/docusaurus/content-standards.md"
+    testing: ".agent-os/standards/docusaurus/testing.md"
+  shared:
+    git_workflow: ".agent-os/standards/shared/git-workflow.md"
+    testing_principles: ".agent-os/standards/shared/testing-principles.md"
+    development_workflow: ".agent-os/standards/shared/development-workflow.md"
+    accessibility_compliance: ".agent-os/standards/shared/accessibility-compliance.md"
+  
 workflows:
   development:
     - "Review existing patterns in codebase"
     - "Run affected tests before changes"
     - "Use Nx commands for efficiency"
     - "Follow TypeScript strict mode"
+  nextjs_feature_development:
+    - "Phase 1: Discovery & Requirements (30min)"
+    - "Phase 2: Code Discovery & Analysis (15min)" 
+    - "Phase 3: Instant Scaffolding (5min)"
+    - "Phase 4: Iterative Refinement (2-3 hours)"
+    - "Phase 5: Backend Implementation (2 hours)"
+    - "Phase 6: Testing (1 hour)"
+    - "Phase 7: Documentation (1 hour)"
+  docusaurus_site_development:
+    - "Use centralized theme package patterns"
+    - "Follow multi-site architecture"
+    - "Implement content standards for MDX"
+    - "Test content integrity and components"
   testing:
     - "Tag tests appropriately (@unit, @integration, @e2e)"
     - "Use affected testing strategy"
     - "Follow 5-phase testing approach"
+    - "Mock-first development with MSW"
+    - "Integration-heavy testing strategy"
   deployment:
     - "Push to preview branch for staging"
     - "Create PR to main for production"

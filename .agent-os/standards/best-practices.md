@@ -1516,53 +1516,58 @@ ELSE:
 - **Monitor build times**: Target < 5 minutes for full builds
   </conditional-block>
 
+## Framework-Specific Standards
+
+For detailed implementation guidance, refer to the framework-specific standards:
+
+### Next.js Standards (Admin Application)
+- **Code Style**: `nextjs/code-style.md` - Next.js 15 App Router conventions
+- **Data Flow**: `nextjs/data-flow.md` - Contract-first development with Zod schemas
+- **Feature Factory**: `nextjs/feature-factory.md` - 7-phase admin feature development
+- **Components**: `nextjs/components.md` - refine.dev + Ant Design patterns
+- **Testing**: `nextjs/testing.md` - MSW-first integration testing
+
+### Docusaurus Standards (Documentation Sites)
+- **Code Style**: `docusaurus/code-style.md` - MDX and component conventions
+- **Multi-Site**: `docusaurus/multi-site.md` - Centralized theme architecture
+- **Components**: `docusaurus/components.md` - Shared theme component patterns
+- **Content**: `docusaurus/content-standards.md` - Documentation guidelines
+- **Testing**: `docusaurus/testing.md` - Content integrity and component testing
+
+### Shared Standards (Cross-Framework)
+- **Git Workflow**: `shared/git-workflow.md` - Branch strategy and commit standards
+- **Testing Principles**: `shared/testing-principles.md` - Integration-heavy testing philosophy
+- **Development Workflow**: `shared/development-workflow.md` - Task management and quality gates
+- **Accessibility**: `shared/accessibility-compliance.md` - WCAG 2.1 AA compliance standards
+
 ## Summary of IFLA-Specific Augmentations
 
 ### Key Additions to Agent OS Principles
 
-1. **Monorepo-First Approach**: Always use Nx commands and pnpm from root directory
-2. **Affected-Only Development**: Use `nx affected` for all development operations
-3. **Strict TypeScript**: No `any` types, explicit return types, React 19 compatibility
-4. **Centralized Test Organization**: Consistent test placement in dedicated directories
-5. **Separated Integration Tests**: Dedicated directories for broader-scope tests
-6. **Strategic Mocking**: Centralized mocks for framework dependencies, minimal global mocks
-7. **Integration Testing**: Real I/O over mocks, 5-phase testing strategy
-8. **Performance Targets**: Specific time limits for different test phases
-9. **Authentication**: Real test users with standardized code (424242)
-10. **Routing Standards**: Specific patterns for Next.js routing
-11. **Quality Gates**: Mandatory pre/post development checklists
+1. **Framework-Specific Standards**: Dedicated guides for Next.js and Docusaurus development
+2. **Monorepo-First Approach**: Always use Nx commands and pnpm from root directory
+3. **7-Phase Feature Factory**: Structured admin feature development workflow
+4. **Mock-First Development**: MSW-driven development and testing strategy
+5. **Contract-Driven Development**: Zod schemas as single source of truth
+6. **Integration-Heavy Testing**: 5-phase testing strategy with content integrity focus
+7. **Multi-Site Architecture**: Centralized theme package for Docusaurus sites
+8. **Accessibility-First**: WCAG 2.1 AA compliance built into all workflows
+9. **Git Workflow**: Feature branch strategy with quality gates
+10. **Performance Optimization**: Nx affected commands and parallel execution
+11. **Cross-Framework Consistency**: Shared standards for common patterns
 
-### IFLA's Centralized Test Infrastructure Benefits
+### Framework Alignment
 
-- **Consistency**: All tests follow the same organizational pattern across packages
-- **Discoverability**: Tests are in predictable locations (`tests/`, `src/test/`)
-- **Maintainability**: Clear separation between source code and test code
-- **Monorepo Optimization**: Centralized patterns work well with Nx affected testing
-- **Framework Alignment**: Matches Nx and Vitest conventions for workspace testing
-- **Team Efficiency**: Developers know exactly where to find and place tests
+- **Next.js**: App Router patterns, refine.dev CRUD, MSW mocking, Ant Design UI
+- **Docusaurus**: MDX content standards, shared theme architecture, multi-site management
+- **Shared**: Git workflow, testing principles, accessibility compliance, development processes
 
-### IFLA's Test Organization Patterns
+### Integration with Agent OS
 
-- **Unit Tests**: Centralized in `tests/components/`, `tests/lib/`, `src/test/components/`
-- **Complex Components**: `__tests__/` subfolders when multiple test files needed
-- **Integration Tests**: Dedicated `tests/integration/` and `src/test/integration/` directories
-- **Service Tests**: `lib/services/__tests__/` pattern for service-specific tests
-- **Global Mocks**: Framework-specific mocks in `tests/__mocks__/` directories
-- **Fixtures**: Centralized in `tests/fixtures/` with clear hierarchy
+These framework-specific standards extend Agent OS principles while maintaining:
+- **Simplicity**: Clear, actionable guidelines for each framework
+- **Consistency**: Shared patterns across different technologies  
+- **Quality**: Built-in testing, accessibility, and performance standards
+- **Efficiency**: Nx monorepo optimization and parallel execution
 
-### Integration with Existing Tools
-
-- **MCP Servers**: Context7 for documentation, MUI for components
-- **GitHub Integration**: Octokit.js, mock-github for testing
-- **Build System**: Nx with distributed caching and parallel execution
-- **Testing**: Vitest + Playwright with centralized test organization
-- **Global Mocks**: Strategic, framework-focused, easily maintainable
-- **Accessibility**: Comprehensive UK/EU compliance framework (see UI/UX Accessibility Best Practices)
-
-### Additional Best Practice References
-
-- **UI/UX Accessibility**: `developer_notes/ui-ux-accessibility-best-practices.md` - Complete WCAG 2.1 AA compliance guide
-- **Design System**: `system-design-docs/11-design-system-ui-patterns.md` - Comprehensive UI component patterns
-- **Admin Accessibility**: `apps/admin/CLAUDE.md` - Admin-specific accessibility requirements
-
-This augmented version maintains the simplicity and clarity of the Agent OS principles while aligning with IFLA's proven centralized testing approach, ensuring consistency, maintainability, and optimal monorepo performance.
+This multi-tier approach provides targeted guidance while ensuring consistency across the IFLA Standards Platform's diverse technology stack.
