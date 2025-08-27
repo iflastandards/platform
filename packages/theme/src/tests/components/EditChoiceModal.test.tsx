@@ -100,6 +100,23 @@ describe('EditChoiceModal Component', () => {
     expect(onClose).toHaveBeenCalledTimes(1);
   });
 
+  it('automatically focuses modal content when opened', async () => {
+    const { rerender } = render(<EditChoiceModal {...defaultProps} isOpen={false} />);
+    
+    // Modal should not be focused when closed
+    expect(document.activeElement).not.toHaveAttribute('tabIndex', '-1');
+    
+    // Open the modal
+    rerender(<EditChoiceModal {...defaultProps} isOpen={true} />);
+    
+    // Wait for focus to be applied
+    await waitFor(() => {
+      const modalContent = document.querySelector('[role="dialog"] > div');
+      expect(modalContent).toHaveAttribute('tabIndex', '-1');
+      expect(document.activeElement).toBe(modalContent);
+    });
+  });
+
   it('handles keyboard navigation - Enter key on edit button', async () => {
     const user = userEvent.setup();
     const onClose = vi.fn();

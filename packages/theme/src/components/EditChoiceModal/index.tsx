@@ -1,4 +1,4 @@
-import React, { useEffect, useCallback } from 'react';
+import React, { useEffect, useCallback, useRef } from 'react';
 import { createPortal } from 'react-dom';
 import styles from './styles.module.scss';
 
@@ -19,6 +19,8 @@ export function EditChoiceModal({
   siteKey,
   pageTitle,
 }: EditChoiceModalProps) {
+  const modalRef = useRef<HTMLDivElement>(null);
+
   // Handle escape key
   const handleKeyDown = useCallback((event: KeyboardEvent) => {
     if (event.key === 'Escape') {
@@ -41,6 +43,14 @@ export function EditChoiceModal({
       document.body.style.overflow = '';
     };
   }, [isOpen, handleKeyDown]);
+
+  // Focus management - focus the modal when it opens
+  useEffect(() => {
+    if (isOpen && modalRef.current) {
+      // Set focus to the modal content
+      modalRef.current.focus();
+    }
+  }, [isOpen]);
 
   // Generate GitHub issue URL with pre-filled data
   const generateIssueUrl = () => {
@@ -90,14 +100,26 @@ export function EditChoiceModal({
       aria-modal="true"
       aria-labelledby="edit-choice-title"
     >
-      <div className={styles.modalContent}>
+      <div 
+        ref={modalRef}
+        className={styles.modalContent}
+        tabIndex={-1}
+      >
         <button
           className={styles.closeButton}
           onClick={onClose}
           aria-label="Close dialog"
           type="button"
         >
-          ×
+          <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path 
+              d="M12 4L4 12M4 4L12 12" 
+              stroke="currentColor" 
+              strokeWidth="2" 
+              strokeLinecap="round" 
+              strokeLinejoin="round"
+            />
+          </svg>
         </button>
         
         <h2 id="edit-choice-title" className={styles.modalTitle}>
@@ -135,9 +157,7 @@ export function EditChoiceModal({
         </div>
 
         <div className={styles.pageInfo}>
-          <small>
-            <strong>Page:</strong> {pageUrl}
-          </small>
+          <strong>Page:</strong> <small>{pageUrl}</small>
         </div>
       </div>
     </div>,
