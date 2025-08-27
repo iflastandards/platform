@@ -25,7 +25,7 @@ env:
   CI: true
   HUSKY: 0
   NX_DAEMON: true
-  NX_PARALLEL: 3
+  NX_PARALLEL: 4
   NODE_OPTIONS: "--max-old-space-size=4096"
 
 jobs:
@@ -108,7 +108,7 @@ jobs:
           npx nx affected --target=lint \
             --base=${{ steps.nx-set-shas.outputs.base }} \
             --exclude=admin \
-            --parallel=3
+            --parallel=4
             
       - name: Type check affected
         run: |
@@ -116,7 +116,7 @@ jobs:
           npx nx affected --target=typecheck \
             --base=${{ steps.nx-set-shas.outputs.base }} \
             --exclude=admin \
-            --parallel=3
+            --parallel=4
 
   test-affected:
     name: Test Affected Projects
@@ -163,7 +163,7 @@ jobs:
           npx nx affected --target=test \
             --base=${{ steps.nx-set-shas.outputs.base }} \
             --exclude=admin \
-            --parallel=3 \
+            --parallel=4 \
             --code-coverage
             
       - name: Upload coverage

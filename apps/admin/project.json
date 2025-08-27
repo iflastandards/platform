@@ -8,7 +8,7 @@
     "typecheck": {
       "executor": "nx:run-commands",
       "dependsOn": ["@ifla/contracts:build"],
-      "cache": false,
+      "cache": true,
       "options": {
         "command": "tsc --noEmit",
         "cwd": "apps/admin"

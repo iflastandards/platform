@@ -69,7 +69,7 @@ key_files:
   - "CLAUDE.md"
   - "README.md"
   - "apps/admin/next.config.js"
-  - "portal/docusaurus.config.ts"
+  - "isbdm/docusaurus.config.ts"
   
 standards_paths:
   nextjs:
