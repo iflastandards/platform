@@ -65,10 +65,12 @@ File placement within `/apps/admin/` is strict and predictable.
 
 ### 3. Implementation Guardrails: The "How"
 
+- **CRITICAL: Refine.dev First for Admin Features:** For ALL standard CRUD operations, forms, and tables in the admin app, ALWAYS use Refine.dev generators and hooks before custom implementation. Check `npx refine create resource` first for any new admin feature.
 - **Data Flow:** The data lifecycle is always: `UI Component` -> `refine Hook (e.g., useList)` -> `dataProvider` -> `Service Adapter` -> `Live API / MSW`.
 - **Validation:** Every function within a service adapter that receives external data **must** parse it with its corresponding Zod schema before returning it. Throw a structured error on failure.
 - **State Management:** Server state, caching, and re-fetching are managed by `refine` and `@tanstack/react-query`. Do not use `useState` for server data.
-- **UI Components:** Use Ant Design (`antd`) components wherever possible. Custom styling should be minimal and handled via the theme.
+- **UI Components:** Use Ant Design (`antd`) components wherever possible, preferably through Refine.dev's Ant Design integration (`@refinedev/antd`). Custom styling should be minimal and handled via the theme.
+- **Admin Development Priority Order:** 1) Refine.dev generators and hooks, 2) Refine.dev + custom logic, 3) Pure custom implementation (only when necessary).
 - **Authentication & Authorization:** Auth is handled by Clerk. RBAC is implemented by checking `user.publicMetadata` on both the frontend (to hide/disable UI) and backend (to secure API endpoints).
 - **Decision-Making Precedent:** When in doubt, use the existing "RDF Builds" feature as your primary reference and template. It exemplifies the correct implementation of all principles.
 
@@ -166,11 +168,15 @@ While this document contains the core principles, the following documents provid
 
 ### Decision Framework:
 ```
-Is this a straightforward code task?
-├─ YES → Use JetBrains directly
-└─ NO → Is this complex/multi-faceted?
-   ├─ YES → Start with Sequential Thinking
-   └─ MAYBE → Use JetBrains first, fall back to Sequential Thinking if needed
+Is this an admin app feature?
+├─ YES → Is this CRUD/forms/tables?
+│  ├─ YES → Use Refine.dev generators FIRST
+│  └─ NO → Continue to general framework
+└─ NO → Is this a straightforward code task?
+   ├─ YES → Use JetBrains directly
+   └─ NO → Is this complex/multi-faceted?
+      ├─ YES → Start with Sequential Thinking
+      └─ MAYBE → Use JetBrains first, fall back to Sequential Thinking if needed
 ```
 
 ### Hybrid Approach - Common Workflow:
@@ -180,6 +186,9 @@ Is this a straightforward code task?
 4. **JetBrains** to implement the solution
 
 ### Example Task Routing:
+- "Create user management interface" → **Refine.dev generators** (`npx refine create resource users`)
+- "Add vocabulary CRUD operations" → **Refine.dev generators** (`npx refine create resource vocabularies`)
+- "Build settings form" → **Refine.dev useForm** + Ant Design integration
 - "Find all uses of UserService" → **JetBrains**
 - "Why is authentication failing intermittently?" → **Sequential Thinking** + JetBrains
 - "Add a new API endpoint" → **JetBrains** (if pattern is clear)

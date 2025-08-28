@@ -418,12 +418,12 @@ Legend:
 
 ```typescript
 // Admin imports from theme:
-import { SITE_CONFIG, Environment } from '@ifla/theme/config/siteConfig';
+import \{ SITE_CONFIG, Environment \} from '@ifla/theme/config/siteConfig';
 
 // Sites import from theme:
-import { VocabularyTable } from '@ifla/theme';
-import { InLink, OutLink } from '@ifla/theme';
-import { getSiteConfig } from '@ifla/theme/config/siteConfig';
+import \{ VocabularyTable \} from '@ifla/theme';
+import \{ InLink, OutLink \} from '@ifla/theme';
+import \{ getSiteConfig \} from '@ifla/theme/config/siteConfig';
 ```
 
 ### 5. Recommendations for Decoupling
@@ -440,7 +440,7 @@ import { getSiteConfig } from '@ifla/theme/config/siteConfig';
 2. **Implement Dependency Injection**
    ```typescript
    // Instead of direct imports
-   import { SITE_CONFIG } from '@ifla/theme/config/siteConfig';
+   import \{ SITE_CONFIG \} from '@ifla/theme/config/siteConfig';
    
    // Use dependency injection
    interface ConfigProvider {

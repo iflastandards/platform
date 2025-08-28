@@ -83,6 +83,12 @@ IFLA Standards Platform/
 4. **Sequential MCP** (complex analysis)
 5. **Native tools** (simple operations)
 
+### Admin Development Hierarchy (CRITICAL)
+For ALL admin features, **ALWAYS** prioritize in this order:
+1. **Refine.dev generators** (`npx refine create resource`) + hooks (PRIMARY CHOICE)
+2. **Refine.dev base** + custom logic (when generators insufficient)
+3. **Pure custom implementation** (ONLY when Refine cannot handle requirement)
+
 ## Quality Standards
 
 ### Implementation Completeness

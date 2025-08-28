@@ -216,7 +216,7 @@ sidebar_position: 900
 
 Advanced search functionality for ISBD elements and vocabularies.
 
-import { SearchPage } from '@ifla/theme/components/SearchPage';
+import \{ SearchPage \} from '@ifla/theme/components/SearchPage';
 
 <SearchPage namespace="isbd" />
 

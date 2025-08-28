@@ -131,7 +131,7 @@ Each complex component should have a README.md following this pattern:
 
 ### Basic Usage
 ```tsx
-import { ComponentName } from '@ifla/theme/components';
+import \{ ComponentName \} from '@ifla/theme/components';
 
 <ComponentName prop1="value" prop2={data} />
 ```
@@ -531,7 +531,7 @@ describe('Documentation Examples @integration @docs', () => {
 ### Code Example Standards
 ```typescript
 // ✅ CORRECT - Complete, runnable example
-import { VocabularyTable } from '@ifla/theme/components';
+import \{ VocabularyTable \} from '@ifla/theme/components';
 
 export function MyComponent() {
   const vocabularyData = [
