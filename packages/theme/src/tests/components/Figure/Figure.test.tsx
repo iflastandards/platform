@@ -1,3 +1,8 @@
+/**
+ * @unit @ui @accessibility
+ * Tests for the Figure component
+ */
+
 import React from 'react';
 import { describe, it, expect, vi } from 'vitest';
 import { render, screen } from '@testing-library/react';
@@ -15,7 +20,7 @@ vi.mock('@docusaurus/useBaseUrl', () => ({
 let idCounter = 0;
 vi.spyOn(React, 'useId').mockImplementation(() => `test-id-${idCounter++}`);
 
-describe('Figure component', () => {
+describe('Figure component @unit @ui', () => {
   beforeEach(() => {
     idCounter = 0;
   });

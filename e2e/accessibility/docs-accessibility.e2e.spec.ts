@@ -5,7 +5,7 @@ import { runFullAccessibilityTest, runAccessibilityScan } from '../utils/accessi
  * Comprehensive accessibility testing for Documentation sites
  * Tests WCAG 2.1 AA compliance across all Docusaurus sites
  * 
- * @tags @e2e @accessibility @docs @critical
+ * @tags @e2e @server-dependent @local-only @accessibility @docs @critical
  */
 
 const DOCS_SITES = [
@@ -18,7 +18,7 @@ const DOCS_SITES = [
   { name: 'LRM', url: 'http://localhost:3007' },
 ];
 
-test.describe('Documentation Sites Accessibility @e2e @accessibility @docs @critical', () => {
+test.describe('Documentation Sites Accessibility @e2e @server-dependent @local-only @accessibility @docs @critical', () => {
   for (const site of DOCS_SITES) {
     test.describe(`${site.name} Site Accessibility`, () => {
       test.beforeEach(async ({ page }) => {
@@ -173,7 +173,7 @@ test.describe('Documentation Sites Accessibility @e2e @accessibility @docs @crit
   }
 });
 
-test.describe('Documentation Sites Dark Mode Accessibility @e2e @accessibility @docs @dark-mode', () => {
+test.describe('Documentation Sites Dark Mode Accessibility @e2e @server-dependent @local-only @accessibility @docs @dark-mode', () => {
   test('Portal dark mode should be accessible', async ({ page }) => {
     try {
       await page.goto('http://localhost:3001', { waitUntil: 'networkidle', timeout: 30000 });
@@ -199,7 +199,7 @@ test.describe('Documentation Sites Dark Mode Accessibility @e2e @accessibility @
   });
 });
 
-test.describe('Documentation Sites Mobile Accessibility @e2e @accessibility @docs @mobile', () => {
+test.describe('Documentation Sites Mobile Accessibility @e2e @server-dependent @local-only @accessibility @docs @mobile', () => {
   test.use({ 
     viewport: { width: 375, height: 667 } // iPhone SE size
   });
@@ -232,7 +232,7 @@ test.describe('Documentation Sites Mobile Accessibility @e2e @accessibility @doc
   });
 });
 
-test.describe('Cross-Site Accessibility Consistency @e2e @accessibility @docs @consistency', () => {
+test.describe('Cross-Site Accessibility Consistency @e2e @server-dependent @local-only @accessibility @docs @consistency', () => {
   test('All sites should have consistent accessibility patterns', async ({ page }) => {
     interface AccessibilityReport {
       site: string;

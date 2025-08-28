@@ -5,7 +5,7 @@
 
 import { test, expect } from '@playwright/test';
 
-test.describe('Performance Tests @e2e @performance @ui @high-priority', () => {
+test.describe('Performance Tests @e2e @server-dependent @local-only @performance @ui @high-priority', () => {
   test('portal homepage performance metrics', async ({ page }) => {
     // Start measuring performance
     await page.goto('/', { waitUntil: 'networkidle' });

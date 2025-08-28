@@ -5,7 +5,7 @@ import { getAdminPortalConfig } from '@ifla/contracts';
 const adminConfig = getAdminPortalConfig('local');
 
 // Example: Testing multiple documentation sites
-test.describe('Multi-Site E2E Tests @e2e @sites @navigation @critical', () => {
+test.describe('Multi-Site E2E Tests @e2e @server-dependent @local-only @sites @navigation @critical', () => {
   // Test different sites with their specific ports
   const sites = [
     { name: 'portal', url: 'http://localhost:3000' },

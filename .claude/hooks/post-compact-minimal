@@ -1,0 +1,21 @@
+#!/bin/bash
+# Minimal post-compact hook - just restore, no output
+set -e
+
+SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
+PROJECT_ROOT="$( cd "$SCRIPT_DIR/../.." && pwd )"
+STATE_DIR="$PROJECT_ROOT/.claude-state"
+
+if [[ -f "$STATE_DIR/latest_restore.path" ]]; then
+    RESTORE_SCRIPT=$(cat "$STATE_DIR/latest_restore.path")
+    if [[ -f "$RESTORE_SCRIPT" ]]; then
+        bash "$RESTORE_SCRIPT" >/dev/null 2>&1
+        rm -f "$STATE_DIR/.last_compact"
+        rm -f "$STATE_DIR/latest_restore.path"
+        echo "✅ State restored. Use 'git status' to see current work."
+    fi
+else
+    echo "⚠️ No state to restore."
+fi
+
+exit 0

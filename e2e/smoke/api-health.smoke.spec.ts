@@ -5,7 +5,7 @@
 
 import { test, expect, smokeTest } from '../utils/tagged-test';
 
-test.describe('API Health Smoke Tests @smoke @api @critical', () => {
+test.describe('API Health Smoke Tests @smoke @post-deploy @critical @api @critical', () => {
   // Use ADMIN_BASE_URL from environment or construct from BASE_URL
   const adminUrl = process.env.ADMIN_BASE_URL || process.env.ADMIN_URL || 
     (process.env.BASE_URL ? `${process.env.BASE_URL}/admin` : 'http://localhost:3007/admin');

@@ -77,55 +77,111 @@ const TAGGING_RULES = `
 Test Classification and Tagging Rules for IFLA Standards Platform:
 
 1. UNIT TESTS (@unit):
-   - Environment: pre-commit, local development only
+   - Environment: pre-commit, local development, CI
    - Characteristics: 
      * Fully mocked dependencies (using vi.mock, jest.mock, or MSW)
      * No external service calls
      * Fast execution (<5s)
      * Isolated component/function testing
+     * Never requires servers to be running
    - Required tags: @unit, priority tag (@critical/@high-priority/@low-priority), feature area tag
-   - Forbidden tags: @integration, @e2e, @smoke, @server-dependent, @slow
+   - Forbidden tags: @integration, @e2e, @smoke, @server-dependent, @live-api, @post-deploy
    - File location: /unit/, /src/test/unit/, or /src/__tests__/
    - File naming: *.unit.test.ts or *.unit.test.tsx
 
 2. INTEGRATION TESTS (@integration):
-   - Environment: pre-push, local development
+   - Split into two subcategories based on server dependency:
+   
+   2A. MOCK-BASED INTEGRATION (@integration + NO server tags):
+   - Environment: pre-push, local development, CI
    - Characteristics:
-     * Uses real services, databases, or file systems
-     * Tests component interactions
-     * May be slower (>5s is acceptable)
-     * Can make actual API calls
+     * Tests component interactions with MSW or other mocks
+     * Database operations use in-memory or mocked databases
+     * File system operations use temp directories or mocks
+     * API calls intercepted by MSW
+     * No live servers required
    - Required tags: @integration, priority tag, feature area tag
-   - Optional tags: @server-dependent, @slow, @flaky
-   - Forbidden tags: @unit, @smoke
-   - File location: /integration/, /src/test/integration/
-   - File naming: *.integration.test.ts
+   - Optional tags: @slow (if >30s), @flaky
+   - Forbidden tags: @unit, @e2e, @smoke, @server-dependent, @live-api, @post-deploy
+   
+   2B. SERVER-DEPENDENT INTEGRATION (@integration + @server-dependent):
+   - Environment: local development only (NOT CI)
+   - Characteristics:
+     * Requires actual running servers (admin, docusaurus sites)
+     * Makes real API calls to localhost endpoints
+     * Uses actual databases in test mode
+     * File system operations on real directories
+   - Required tags: @integration, @server-dependent, priority tag, feature area tag
+   - Optional tags: @slow, @flaky, @local-only
+   - Forbidden tags: @unit, @e2e, @smoke, @ci-only
 
-3. E2E TESTS (@e2e):
-   - Environment: pre-push, local development
+3. API TESTS (@api):
+   - Split into three subcategories:
+   
+   3A. MOCK API TESTS (@api + @unit or @integration, NO @live-api):
+   - Environment: All environments (local, CI)
+   - Characteristics:
+     * API endpoints tested with MSW mocks
+     * Request/response validation with mocked data
+     * Authentication flows with mocked tokens
+   - Required tags: @api, @unit or @integration, priority tag
+   - Forbidden tags: @live-api, @server-dependent, @post-deploy
+   
+   3B. LOCAL API TESTS (@api + @live-api + @server-dependent):
+   - Environment: local development only
+   - Characteristics:
+     * Tests against running local admin server (port 3007)
+     * Real API calls to localhost endpoints
+     * Requires admin server to be started separately
+   - Required tags: @api, @live-api, @server-dependent, priority tag
+   - Optional tags: @slow, @local-only
+   - Forbidden tags: @ci-only, @post-deploy
+   
+   3C. DEPLOYED API TESTS (@api + @live-api + @post-deploy):
+   - Environment: CI only, after successful deployment
+   - Characteristics:
+     * Tests against deployed preview/production URLs
+     * Real API calls to remote endpoints
+     * Edge service dependency validation
+     * Must wait until deployment completes
+   - Required tags: @api, @live-api, @post-deploy, @critical
+   - Optional tags: @slow
+   - Forbidden tags: @local-only, @server-dependent
+
+4. E2E TESTS (@e2e):
+   - Split based on deployment requirement:
+   
+   4A. LOCAL E2E (@e2e + @server-dependent):
+   - Environment: local development only
    - Characteristics:
      * Browser-based testing using Playwright
-     * Full user workflows
-     * Often slow (>30s)
-     * Tests complete features end-to-end
-   - Required tags: @e2e, priority tag, feature area tag
-   - Optional tags: @slow, @flaky, @browser-specific (chromium-only, firefox-only, webkit-only)
-   - Forbidden tags: @unit, @integration, @smoke
-   - File location: /e2e/
-   - File naming: *.e2e.spec.ts
+     * Tests against localhost URLs
+     * Requires servers to be running locally
+     * Full user workflows on local environment
+   - Required tags: @e2e, @server-dependent, priority tag, feature area tag
+   - Optional tags: @slow, @flaky, @browser-specific, @local-only
+   - Forbidden tags: @ci-only, @post-deploy
+   
+   4B. DEPLOYED E2E (@e2e + @post-deploy):
+   - Environment: CI only, after deployment
+   - Characteristics:
+     * Browser tests against deployed URLs
+     * Full user workflows on deployed environment
+     * Waits for deployment completion
+   - Required tags: @e2e, @post-deploy, priority tag, feature area tag
+   - Optional tags: @slow, @flaky, @browser-specific
+   - Forbidden tags: @server-dependent, @local-only
 
-4. SMOKE TESTS (@smoke):
-   - Environment: CI only (both preview and production)
+5. SMOKE TESTS (@smoke):
+   - Environment: CI only, post-deployment validation
    - Characteristics:
      * Critical path validation only
-     * Must be data-independent
+     * Must be data-independent and URL-configurable
      * Fast and highly reliable
-     * URL-configurable (no hardcoded URLs)
-     * Tests core functionality is working
-   - Required tags: @smoke, @critical (always critical priority)
-   - Forbidden tags: @slow, @flaky, @server-dependent, @unit, @integration
-   - File location: /e2e/smoke/, /test/smoke/
-   - File naming: *.smoke.spec.ts
+     * Tests against deployed URLs
+     * Validates deployment success
+   - Required tags: @smoke, @post-deploy, @critical
+   - Forbidden tags: @slow, @flaky, @server-dependent, @local-only, @unit, @integration
 
 Priority Tags (choose one):
 - @critical: Core functionality that must always work
@@ -144,12 +200,35 @@ Feature Area Tags (choose at least one):
 - @search: Search functionality
 - @vocabulary: Vocabulary management
 
-Optional Environment Tags:
-- @local-only: Only runs locally
+Data Provider Tags (Feature Factory):
+- @mock-provider: Uses MockDataProvider with hardcoded data
+- @demo-provider: Uses DemoDataProvider with MSW or fixtures
+- @live-provider: Uses LiveDataProvider with real services and demo data
+
+Environment and Execution Tags:
+- @demo-data: Uses safe demo/test data (not production)
+- @preview-safe: Safe to run in preview environment
+- @server-dependent: Requires servers running (default: admin only)
+- @requires-portal: Explicitly requires portal server (port 3000)
+- @requires-[site]: Explicitly requires specific Docusaurus site
+- @post-deploy: Runs after deployment (smoke/health only)
+- @health: Service availability check
+- @local-only: Only runs in local development
 - @ci-only: Only runs in CI
-- @server-dependent: Requires live servers
 - @slow: Takes more than 30 seconds
 - @flaky: Known to be unstable (should be fixed)
+
+CRITICAL RULES FOR SERVER DEPENDENCIES:
+- @unit tests MUST NEVER require servers
+- @integration tests without @server-dependent MUST use mocks/MSW
+- @integration + @server-dependent MUST NOT run in CI
+- @api + @live-api + @server-dependent tests localhost only
+- @api + @live-api + @post-deploy tests deployed URLs only
+- @e2e + @server-dependent tests localhost only  
+- @e2e + @post-deploy tests deployed URLs only
+- @smoke tests ALWAYS require @post-deploy
+- Tests with @server-dependent MUST NOT have @ci-only
+- Tests with @post-deploy MUST NOT have @local-only
 `;
 
 class TestTagger {

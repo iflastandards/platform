@@ -5,10 +5,10 @@ import { runFullAccessibilityTest, runAccessibilityScan } from '../utils/accessi
  * Comprehensive accessibility testing for the Admin application
  * Tests WCAG 2.1 AA compliance using axe-core
  * 
- * @tags @e2e @accessibility @admin @critical
+ * @tags @e2e @server-dependent @local-only @accessibility @admin @critical
  */
 
-test.describe('Admin Application Accessibility @e2e @accessibility @admin @critical', () => {
+test.describe('Admin Application Accessibility @e2e @server-dependent @local-only @accessibility @admin @critical', () => {
   test.beforeEach(async ({ page }) => {
     // Navigate to admin application
     await page.goto('/admin');
@@ -195,7 +195,7 @@ test.describe('Admin Application Accessibility @e2e @accessibility @admin @criti
   });
 });
 
-test.describe('Admin Application Mobile Accessibility @e2e @accessibility @mobile', () => {
+test.describe('Admin Application Mobile Accessibility @e2e @server-dependent @local-only @accessibility @mobile', () => {
   test.use({ 
     viewport: { width: 375, height: 667 } // iPhone SE size
   });

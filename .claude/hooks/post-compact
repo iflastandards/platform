@@ -1,0 +1,118 @@
+#!/bin/bash
+# Post-compact hook for Claude Code
+# Restores work state after context compaction
+
+set -e
+
+echo "🔄 Post-compact: Restoring work state..."
+
+# Get the directory of this script
+SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
+PROJECT_ROOT="$( cd "$SCRIPT_DIR/../.." && pwd )"
+STATE_DIR="$PROJECT_ROOT/.claude-state"
+
+# Check if state directory exists
+if [[ ! -d "$STATE_DIR" ]]; then
+    echo "⚠️  No preserved state found. Nothing to restore."
+    exit 0
+fi
+
+# Check for the latest restore script
+if [[ -f "$STATE_DIR/latest_restore.path" ]]; then
+    RESTORE_SCRIPT=$(cat "$STATE_DIR/latest_restore.path")
+    
+    if [[ -f "$RESTORE_SCRIPT" ]]; then
+        echo "═══════════════════════════════════════"
+        echo "  Claude Post-Compact State Restoration"
+        echo "═══════════════════════════════════════"
+        echo ""
+        
+        # Run the restoration script
+        bash "$RESTORE_SCRIPT"
+        
+        # Clean up the marker files
+        rm -f "$STATE_DIR/.last_compact"
+        rm -f "$STATE_DIR/latest_restore.path"
+        
+        echo ""
+        echo "🎉 Work state restored successfully!"
+        echo ""
+        
+        # Provide helpful context summary
+        echo "📋 Current Context Summary:"
+        echo "───────────────────────────"
+        
+        # Show current git status
+        echo ""
+        echo "📌 Git Status:"
+        git status --short 2>/dev/null || echo "Unable to get git status"
+        
+        # Show current branch
+        echo ""
+        echo "🌿 Current Branch: $(git rev-parse --abbrev-ref HEAD 2>/dev/null || echo 'unknown')"
+        
+        # Check for TODO list
+        if [[ -f "$PROJECT_ROOT/.claude/todos.json" ]]; then
+            echo ""
+            echo "✅ TODO list has been restored"
+        fi
+        
+        # Check for running servers
+        echo ""
+        echo "🔧 Server Status:"
+        if lsof -i :3000-3030 > /dev/null 2>&1; then
+            echo "  ✅ Some development servers are running"
+            lsof -i :3000-3030 | grep LISTEN | awk '{print "    - Port", $9}' 2>/dev/null || true
+        else
+            echo "  ⚠️  No development servers running"
+            echo "     Run 'pnpm dev:servers' to start them"
+        fi
+        
+        echo ""
+        echo "═══════════════════════════════════════"
+    else
+        echo "⚠️  Restore script not found: $RESTORE_SCRIPT"
+        exit 1
+    fi
+else
+    # Fallback: Try to find the most recent state
+    echo "🔍 Looking for most recent state..."
+    
+    LATEST_STATE=$(ls -t "$STATE_DIR"/state_*.json 2>/dev/null | head -1)
+    
+    if [[ -n "$LATEST_STATE" ]]; then
+        TIMESTAMP=$(basename "$LATEST_STATE" | sed 's/state_\(.*\)\.json/\1/')
+        echo "📁 Found state from: $TIMESTAMP"
+        
+        # Attempt basic restoration
+        if [[ -f "$STATE_DIR/todos_${TIMESTAMP}.json" ]] && [[ -f "$PROJECT_ROOT/.claude/todos.json" ]]; then
+            cp "$STATE_DIR/todos_${TIMESTAMP}.json" "$PROJECT_ROOT/.claude/todos.json"
+            echo "✅ Restored TODO list"
+        fi
+        
+        echo ""
+        echo "💡 For full restoration, run:"
+        echo "   bash $STATE_DIR/restore_${TIMESTAMP}.sh"
+    else
+        echo "⚠️  No preserved state found to restore."
+    fi
+fi
+
+# Optional: Show a reminder about what was being worked on
+if [[ -f "$STATE_DIR/.last_compact" ]]; then
+    LAST_COMPACT=$(cat "$STATE_DIR/.last_compact")
+    
+    # Try to find what was being worked on
+    if [[ -f "$STATE_DIR/bash_history_${LAST_COMPACT}.txt" ]]; then
+        echo ""
+        echo "📜 Recent commands before compact:"
+        echo "──────────────────────────────────"
+        tail -5 "$STATE_DIR/bash_history_${LAST_COMPACT}.txt" | sed 's/^/  /'
+    fi
+fi
+
+echo ""
+echo "💭 Claude says: 'Context compacted and state restored! Ready to continue where we left off.'"
+echo ""
+
+exit 0

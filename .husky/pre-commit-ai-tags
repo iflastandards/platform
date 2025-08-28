@@ -1,0 +1,40 @@
+#!/bin/sh
+. "$(dirname "$0")/_/husky.sh"
+
+# Enhanced AI Test Tagging Pre-commit Hook
+# Ensures all test files are properly tagged with AI assistance
+
+echo "🤖 Running AI test tag validation..."
+
+# Check if we have API keys configured
+if [ -z "$GEMINI_API_KEY" ] && [ -z "$GOOGLE_API_KEY" ] && [ -z "$ANTHROPIC_API_KEY" ]; then
+  echo "⚠️  No AI API keys found. Using local pattern matching only."
+  echo "   Set GEMINI_API_KEY or ANTHROPIC_API_KEY for AI-powered tagging."
+fi
+
+# Run the enhanced test tagger on staged files
+pnpm test:tag:staged:v2
+
+# Check if tagging was successful
+if [ $? -ne 0 ]; then
+  echo "❌ AI test tagging failed. Please fix the issues and try again."
+  exit 1
+fi
+
+# Validate tag rules
+echo "🔍 Validating test tag rules..."
+pnpm test:validate-tags
+
+if [ $? -ne 0 ]; then
+  echo "❌ Test tag validation failed. Please fix invalid tag combinations."
+  echo "   Run 'pnpm test:validate-tags' for details."
+  exit 1
+fi
+
+echo "✅ All test files are properly tagged and validated!"
+
+# Continue with existing pre-commit checks
+exec < /dev/tty
+
+# Run the rest of the pre-commit checks
+node scripts/pre-commit-check-optimized.js
