@@ -17,6 +17,9 @@ global.fetch = vi.fn(() =>
   })
 ) as any;
 
+/**
+ * @integration @ui @vocabulary @high-priority
+ */
 describe('Sensory Test Vocabulary Page', () => {
   beforeEach(() => {
     vi.clearAllMocks();
