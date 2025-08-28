@@ -386,10 +386,10 @@ describe('Needs update', () => {
   it('uses MSW', () => { server.listen(); });
 });`);
 
-      // Correct tags
+      // Correct tags (including required priority tag)
       mockFiles.set('correct.test.ts', `
 /**
- * @unit @ui
+ * @unit @ui @high-priority
  */
 describe('Correct', () => {
   it('renders', () => { render(<Component />); });
