@@ -117,6 +117,30 @@ const FEATURE_AREA_TAGS = [
   '@admin', '@navigation', '@search', '@vocabulary'
 ];
 
+// Priority mapping based on functional areas
+const PRIORITY_MAPPING = {
+  // Critical priority areas (security, auth, core functionality)
+  '@auth': '@critical',
+  '@security': '@critical',
+  '@rbac': '@critical',
+  '@validation': '@critical',
+  
+  // High priority areas (user-facing features, APIs)
+  '@api': '@high-priority',
+  '@ui': '@high-priority', 
+  '@dashboard': '@high-priority',
+  '@admin': '@high-priority',
+  '@navigation': '@high-priority',
+  '@search': '@high-priority',
+  '@vocabulary': '@high-priority',
+  
+  // Low priority areas (utilities, caching, edge cases)
+  '@utility': '@low-priority',
+  '@cache': '@low-priority',
+  '@error-handling': '@low-priority',
+  '@edge-case': '@low-priority'
+};
+
 class TestTagger {
   private llm: BaseLLM | null = null;
   private spinner: any; // ora.Ora type
@@ -211,6 +235,45 @@ class TestTagger {
     }
   }
 
+  /**
+   * Infer priority tag based on functional area tags and test classification
+   */
+  private inferPriorityTag(tags: string[], classification: string, content: string): string {
+    // Special case: smoke tests are always critical
+    if (tags.includes('@smoke') || content.includes('smoke test') || content.includes('critical path')) {
+      return '@critical';
+    }
+
+    // Check functional area mapping
+    for (const tag of tags) {
+      if (PRIORITY_MAPPING[tag as keyof typeof PRIORITY_MAPPING]) {
+        return PRIORITY_MAPPING[tag as keyof typeof PRIORITY_MAPPING];
+      }
+    }
+
+    // Fallback based on classification and content patterns
+    if (classification === 'e2e' || classification === 'smoke') {
+      return '@critical';
+    }
+    
+    if (classification === 'integration' && (
+      content.includes('auth') || 
+      content.includes('security') ||
+      content.includes('login') ||
+      content.includes('permission') ||
+      content.includes('role')
+    )) {
+      return '@critical';
+    }
+
+    if (classification === 'integration' || tags.some(tag => ['@api', '@ui', '@dashboard'].includes(tag))) {
+      return '@high-priority';
+    }
+
+    // Default for unit tests and utilities
+    return '@low-priority';
+  }
+
   async analyzeTestFile(filePath: string): Promise<TestAnalysis> {
     if (!this.llm) {
       throw new Error('TestTagger not initialized. Call initialize() first.');
@@ -277,10 +340,20 @@ class TestTagger {
       const analysis = JSON.parse(cleanContent);
 
       // Ensure all required fields are present
+      let tags = Array.isArray(analysis.tags) ? analysis.tags : [];
+      const classification = analysis.classification || 'unit';
+      
+      // Ensure priority tag is included
+      const hasPriorityTag = tags.some((tag: string) => PRIORITY_TAGS.includes(tag));
+      if (!hasPriorityTag) {
+        const inferredPriority = this.inferPriorityTag(tags, classification, content);
+        tags.push(inferredPriority);
+      }
+
       return {
-        classification: analysis.classification || 'unit',
+        classification: classification,
         confidence: analysis.confidence || 'low',
-        tags: Array.isArray(analysis.tags) ? analysis.tags : [],
+        tags,
         reasoning: analysis.reasoning || 'No reasoning provided',
         concerns: Array.isArray(analysis.concerns) ? analysis.concerns : [],
         recommendations: Array.isArray(analysis.recommendations)
@@ -597,7 +670,8 @@ RESPONSE FORMAT (return ONLY valid JSON):
 
           // Extract and parse content
           const content = this.extractContentFromResult(result);
-          const analysis = this.parseAnalysis(content);
+          const fileContent = fs.readFileSync(filePath, 'utf8');
+          const analysis = this.parseAnalysis(content, fileContent);
           
           // Handle the analysis result
           await this.handleAnalysisResult(filePath, analysis, results);
@@ -636,7 +710,7 @@ RESPONSE FORMAT (return ONLY valid JSON):
     return content;
   }
 
-  private parseAnalysis(content: string): TestAnalysis {
+  private parseAnalysis(content: string, fileContent: string): TestAnalysis {
     // Clean up markdown code blocks if present
     let cleanContent = content.trim();
     if (cleanContent.startsWith('```json')) {
@@ -653,10 +727,20 @@ RESPONSE FORMAT (return ONLY valid JSON):
     const analysis = JSON.parse(cleanContent);
 
     // Ensure all required fields are present
+    let tags = Array.isArray(analysis.tags) ? analysis.tags : [];
+    const classification = analysis.classification || 'unit';
+    
+    // Ensure priority tag is included
+    const hasPriorityTag = tags.some((tag: string) => PRIORITY_TAGS.includes(tag));
+    if (!hasPriorityTag) {
+      const inferredPriority = this.inferPriorityTag(tags, classification, fileContent);
+      tags.push(inferredPriority);
+    }
+
     return {
-      classification: analysis.classification || 'unit',
+      classification: classification,
       confidence: analysis.confidence || 'low',
-      tags: Array.isArray(analysis.tags) ? analysis.tags : [],
+      tags,
       reasoning: analysis.reasoning || 'No reasoning provided',
       concerns: Array.isArray(analysis.concerns) ? analysis.concerns : [],
       recommendations: Array.isArray(analysis.recommendations)

@@ -110,12 +110,32 @@ const TEST_PATTERNS = {
 // Functional area patterns
 const FUNCTIONAL_PATTERNS = {
   auth: /(?:auth|login|logout|session|user|permission|role|rbac)/i,
-  api: /(?:api|endpoint|rest|graphql|fetch|axios|request|response)/i,
-  ui: /(?:render|component|button|form|input|display|view|screen)/i,
+  api: /(?:\bapi\b|endpoint|rest|graphql|fetch|axios|request|response)/i,
+  ui: /(?:render|component|button|form|input|display|view|screen|react|vue|dom)/i,
   validation: /(?:valid|validate|schema|zod|yup|joi|rules?)/i,
   security: /(?:security|csrf|xss|injection|sanitize|encrypt)/i,
   cache: /(?:cache|redis|memcache|storage|persist)/i,
   rbac: /(?:rbac|role|permission|access|authorize)/i,
+  utility: /(?:util|helper|tool|format|parse|transform)/i,
+  dashboard: /(?:dashboard|admin|panel|overview)/i,
+};
+
+// Priority mapping based on functional areas  
+const PRIORITY_MAPPING_V2 = {
+  // Critical priority areas (security, auth, core functionality)
+  '@auth': '@critical',
+  '@security': '@critical', 
+  '@rbac': '@critical',
+  '@validation': '@critical',
+  
+  // High priority areas (user-facing features, APIs)
+  '@api': '@high-priority',
+  '@ui': '@high-priority',
+  '@dashboard': '@high-priority',
+  
+  // Low priority areas (utilities, caching, edge cases)
+  '@utility': '@low-priority',
+  '@cache': '@low-priority'
 };
 
 class EnhancedTestTagger {
@@ -221,7 +241,56 @@ class EnhancedTestTagger {
     // Apply validation rules
     this.applyTagValidationRules(suggestedTags);
 
+    // Ensure priority tag is included
+    this.ensurePriorityTag(suggestedTags, content);
+
     return Array.from(suggestedTags);
+  }
+
+  /**
+   * Ensure a priority tag is included based on functional areas and content
+   */
+  private ensurePriorityTag(tags: Set<string>, content: string): void {
+    // Check if already has priority tag
+    const priorityTags = ['@critical', '@high-priority', '@low-priority'];
+    const hasPriorityTag = Array.from(tags).some(tag => priorityTags.includes(tag));
+    
+    if (!hasPriorityTag) {
+      // Collect all priority levels from detected functional areas
+      const detectedPriorities: string[] = [];
+      
+      for (const tag of tags) {
+        const mappedPriority = PRIORITY_MAPPING_V2[tag as keyof typeof PRIORITY_MAPPING_V2];
+        if (mappedPriority) {
+          detectedPriorities.push(mappedPriority);
+        }
+      }
+      
+      // Determine priority with special handling for utility tests
+      let inferredPriority = '@low-priority'; // default
+      
+      if (detectedPriorities.includes('@critical')) {
+        inferredPriority = '@critical';
+      } else if (tags.has('@utility')) {
+        // If utility is detected, prefer low priority even if other areas are present
+        inferredPriority = '@low-priority';
+      } else if (detectedPriorities.includes('@high-priority')) {
+        inferredPriority = '@high-priority';
+      } else if (detectedPriorities.length > 0) {
+        inferredPriority = detectedPriorities[0]; // Use first detected priority
+      }
+      
+      // Content-based priority inference as fallback
+      if (inferredPriority === '@low-priority' && detectedPriorities.length === 0) {
+        if (content.includes('auth') || content.includes('security') || content.includes('login')) {
+          inferredPriority = '@critical';
+        } else if (content.includes('dashboard') || content.includes('api') || content.includes('component')) {
+          inferredPriority = '@high-priority';
+        }
+      }
+      
+      tags.add(inferredPriority);
+    }
   }
 
   /**
