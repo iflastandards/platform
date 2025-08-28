@@ -23,7 +23,7 @@ import { glob } from 'glob';
 import * as fs from 'fs';
 import * as path from 'path';
 import { execSync } from 'child_process';
-import dotenv from 'dotenv';
+import * as dotenv from 'dotenv';
 import { type BaseLLM, type ChatParams, type ChatResult } from '@memberjunction/ai';
 
 // Load environment variables
@@ -74,162 +74,48 @@ interface ProcessingResults {
 
 // Test tagging rules constant
 const TAGGING_RULES = `
-Test Classification and Tagging Rules for IFLA Standards Platform:
+TEST CLASSIFICATION RULES:
 
-1. UNIT TESTS (@unit):
-   - Environment: pre-commit, local development, CI
-   - Characteristics: 
-     * Fully mocked dependencies (using vi.mock, jest.mock, or MSW)
-     * No external service calls
-     * Fast execution (<5s)
-     * Isolated component/function testing
-     * Never requires servers to be running
-   - Required tags: @unit, priority tag (@critical/@high-priority/@low-priority), feature area tag
-   - Forbidden tags: @integration, @e2e, @smoke, @server-dependent, @live-api, @post-deploy
-   - File location: /unit/, /src/test/unit/, or /src/__tests__/
-   - File naming: *.unit.test.ts or *.unit.test.tsx
+1. @unit - Fast isolated tests with mocked dependencies
+   • Uses: vi.mock, jest.mock, or MSW for all external deps
+   • Runs: pre-commit, CI, local
+   • Forbids: @integration, @e2e, @server-dependent
 
-2. INTEGRATION TESTS (@integration):
-   - Split into two subcategories based on server dependency:
-   
-   2A. MOCK-BASED INTEGRATION (@integration + NO server tags):
-   - Environment: pre-push, local development, CI
-   - Characteristics:
-     * Tests component interactions with MSW or other mocks
-     * Database operations use in-memory or mocked databases
-     * File system operations use temp directories or mocks
-     * API calls intercepted by MSW
-     * No live servers required
-   - Required tags: @integration, priority tag, feature area tag
-   - Optional tags: @slow (if >30s), @flaky
-   - Forbidden tags: @unit, @e2e, @smoke, @server-dependent, @live-api, @post-deploy
-   
-   2B. SERVER-DEPENDENT INTEGRATION (@integration + @server-dependent):
-   - Environment: local development only (NOT CI)
-   - Characteristics:
-     * Requires actual running servers (admin, docusaurus sites)
-     * Makes real API calls to localhost endpoints
-     * Uses actual databases in test mode
-     * File system operations on real directories
-   - Required tags: @integration, @server-dependent, priority tag, feature area tag
-   - Optional tags: @slow, @flaky, @local-only
-   - Forbidden tags: @unit, @e2e, @smoke, @ci-only
+2. @integration - Component interaction tests
+   • Without @server-dependent: Uses MSW/mocks, runs in CI
+   • With @server-dependent: Needs local servers, no CI
+   • Forbids: @unit, @e2e, @smoke
 
-3. API TESTS (@api):
-   - Split into three subcategories:
-   
-   3A. MOCK API TESTS (@api + @unit or @integration, NO @live-api):
-   - Environment: All environments (local, CI)
-   - Characteristics:
-     * API endpoints tested with MSW mocks
-     * Request/response validation with mocked data
-     * Authentication flows with mocked tokens
-   - Required tags: @api, @unit or @integration, priority tag
-   - Forbidden tags: @live-api, @server-dependent, @post-deploy
-   
-   3B. LOCAL API TESTS (@api + @live-api + @server-dependent):
-   - Environment: local development only
-   - Characteristics:
-     * Tests against running local admin server (port 3007)
-     * Real API calls to localhost endpoints
-     * Requires admin server to be started separately
-   - Required tags: @api, @live-api, @server-dependent, priority tag
-   - Optional tags: @slow, @local-only
-   - Forbidden tags: @ci-only, @post-deploy
-   
-   3C. DEPLOYED API TESTS (@api + @live-api + @post-deploy):
-   - Environment: CI only, after successful deployment
-   - Characteristics:
-     * Tests against deployed preview/production URLs
-     * Real API calls to remote endpoints
-     * Edge service dependency validation
-     * Must wait until deployment completes
-   - Required tags: @api, @live-api, @post-deploy, @critical
-   - Optional tags: @slow
-   - Forbidden tags: @local-only, @server-dependent
+3. @e2e - Browser automation tests (Playwright)
+   • With @server-dependent: Tests localhost, local-only
+   • With @post-deploy: Tests deployed URLs, CI-only
+   • Forbids: @unit, @integration
 
-4. E2E TESTS (@e2e):
-   - Split based on deployment requirement:
-   
-   4A. LOCAL E2E (@e2e + @server-dependent):
-   - Environment: local development only
-   - Characteristics:
-     * Browser-based testing using Playwright
-     * Tests against localhost URLs
-     * Requires servers to be running locally
-     * Full user workflows on local environment
-   - Required tags: @e2e, @server-dependent, priority tag, feature area tag
-   - Optional tags: @slow, @flaky, @browser-specific, @local-only
-   - Forbidden tags: @ci-only, @post-deploy
-   
-   4B. DEPLOYED E2E (@e2e + @post-deploy):
-   - Environment: CI only, after deployment
-   - Characteristics:
-     * Browser tests against deployed URLs
-     * Full user workflows on deployed environment
-     * Waits for deployment completion
-   - Required tags: @e2e, @post-deploy, priority tag, feature area tag
-   - Optional tags: @slow, @flaky, @browser-specific
-   - Forbidden tags: @server-dependent, @local-only
+4. @api - API endpoint tests
+   • With MSW mocks: Runs everywhere
+   • With @live-api + @server-dependent: Local server required
+   • With @live-api + @post-deploy: Tests deployed APIs
 
-5. SMOKE TESTS (@smoke):
-   - Environment: CI only, post-deployment validation
-   - Characteristics:
-     * Critical path validation only
-     * Must be data-independent and URL-configurable
-     * Fast and highly reliable
-     * Tests against deployed URLs
-     * Validates deployment success
-   - Required tags: @smoke, @post-deploy, @critical
-   - Forbidden tags: @slow, @flaky, @server-dependent, @local-only, @unit, @integration
+5. @smoke - Critical path validation
+   • Runs: CI-only, after deployment
+   • Must be fast and data-independent
 
-Priority Tags (choose one):
-- @critical: Core functionality that must always work
-- @high-priority: Important features that should work before release
-- @low-priority: Nice-to-have features that can be fixed later
+REQUIRED TAGS:
+• Priority: @critical, @high-priority, or @low-priority
+• Feature: @auth, @api, @ui, @validation, @security, etc.
 
-Feature Area Tags (choose at least one):
-- @auth: Authentication and authorization
-- @api: API endpoints and data operations
-- @ui: User interface components
-- @rbac: Role-based access control
-- @validation: Data validation and sanitization
-- @dashboard: Dashboard-specific features
-- @admin: Admin panel features
-- @navigation: Navigation and routing
-- @search: Search functionality
-- @vocabulary: Vocabulary management
+FILE CONVENTIONS:
+• Unit: *.unit.test.ts, in /unit/ directories
+• Integration: *.integration.test.ts
+• E2E: *.e2e.spec.ts, in /e2e/ directories`;
 
-Data Provider Tags (Feature Factory):
-- @mock-provider: Uses MockDataProvider with hardcoded data
-- @demo-provider: Uses DemoDataProvider with MSW or fixtures
-- @live-provider: Uses LiveDataProvider with real services and demo data
-
-Environment and Execution Tags:
-- @demo-data: Uses safe demo/test data (not production)
-- @preview-safe: Safe to run in preview environment
-- @server-dependent: Requires servers running (default: admin only)
-- @requires-portal: Explicitly requires portal server (port 3000)
-- @requires-[site]: Explicitly requires specific Docusaurus site
-- @post-deploy: Runs after deployment (smoke/health only)
-- @health: Service availability check
-- @local-only: Only runs in local development
-- @ci-only: Only runs in CI
-- @slow: Takes more than 30 seconds
-- @flaky: Known to be unstable (should be fixed)
-
-CRITICAL RULES FOR SERVER DEPENDENCIES:
-- @unit tests MUST NEVER require servers
-- @integration tests without @server-dependent MUST use mocks/MSW
-- @integration + @server-dependent MUST NOT run in CI
-- @api + @live-api + @server-dependent tests localhost only
-- @api + @live-api + @post-deploy tests deployed URLs only
-- @e2e + @server-dependent tests localhost only  
-- @e2e + @post-deploy tests deployed URLs only
-- @smoke tests ALWAYS require @post-deploy
-- Tests with @server-dependent MUST NOT have @ci-only
-- Tests with @post-deploy MUST NOT have @local-only
-`;
+// Priority and feature area tag definitions
+const PRIORITY_TAGS = ['@critical', '@high-priority', '@low-priority'];
+const FEATURE_AREA_TAGS = [
+  '@auth', '@api', '@ui', '@rbac', '@validation', '@security', '@cache', 
+  '@error-handling', '@edge-case', '@happy-path', '@utility', '@dashboard', 
+  '@admin', '@navigation', '@search', '@vocabulary'
+];
 
 class TestTagger {
   private llm: BaseLLM | null = null;
@@ -424,8 +310,12 @@ class TestTagger {
     filePath: string,
     content: string,
   ): string {
-    // Truncate content if too long to avoid token limits
-    const maxContentLength = 8000;
+    // Calculate available space for content after accounting for the template
+    // The template without content is approximately 5000-6000 characters
+    const templateOverhead = 6000; // Conservative estimate for template text
+    const maxTotalLength = 14000; // Leave buffer under 15000
+    const maxContentLength = maxTotalLength - templateOverhead;
+    
     const truncatedContent =
       content.length > maxContentLength
         ? content.slice(0, maxContentLength) +
@@ -512,21 +402,27 @@ RESPONSE FORMAT (return ONLY valid JSON):
 
     const pattern =
       locationPatterns[classification as keyof typeof locationPatterns];
-    if (!pattern) {return null;}
+    if (!pattern) {
+      return null;
+    }
 
     // Check if file is in wrong location
-    const isInWrongLocation = pattern.antiPatterns.some((ap) =>
-      dirPath.includes(ap),
-    );
-    const isInRightLocation = pattern.preferredDirs.some((pd) =>
-      dirPath.includes(pd),
-    );
+    const isInWrongLocation = pattern.antiPatterns.some((ap) => {
+      // Remove leading/trailing slashes for more flexible matching
+      const cleanPattern = ap.replace(/^\/|\/$/g, '');
+      return dirPath.includes(cleanPattern);
+    });
+    const isInRightLocation = pattern.preferredDirs.some((pd) => {
+      // Remove leading/trailing slashes for more flexible matching
+      const cleanPattern = pd.replace(/^\/|\/$/g, '');
+      return dirPath.includes(cleanPattern);
+    });
     const hasCorrectSuffix = fileName.includes(
       pattern.preferredSuffix.replace('.ts', ''),
     );
 
-    if (!isInWrongLocation && (isInRightLocation || hasCorrectSuffix)) {
-      return null; // Location is fine
+    if (!isInWrongLocation && isInRightLocation && hasCorrectSuffix) {
+      return null; // Location and naming are both fine
     }
 
     // Suggest new location
@@ -1028,59 +924,74 @@ RESPONSE FORMAT (return ONLY valid JSON):
   }
 
   private async applyTags(filePath: string, tags: string[]): Promise<void> {
-    const content = fs.readFileSync(filePath, 'utf8');
+    try {
+      const content = fs.readFileSync(filePath, 'utf8');
 
-    // Check if tags already exist
-    const existingTagMatch = content.match(
-      /^\s*\/\*\*\s*\n\s*\*\s*(@\w+.*)\n\s*\*\//m,
-    );
-    if (existingTagMatch) {
-      // Update existing tags
-      const newTagComment = `/**\n * ${tags.join(' ')}\n */`;
-      const newContent = content.replace(existingTagMatch[0], newTagComment);
+      // Check if tags already exist
+      const existingTagMatch = content.match(
+        /^\s*\/\*\*\s*\n\s*\*\s*(@\w+.*)\n\s*\*\//m,
+      );
+      if (existingTagMatch) {
+        // Update existing tags
+        const newTagComment = `/**\n * ${tags.join(' ')}\n */`;
+        const newContent = content.replace(existingTagMatch[0], newTagComment);
+
+        if (!this.options.dryRun) {
+          try {
+            fs.writeFileSync(filePath, newContent);
+            console.log(chalk.green(`  ✓ Updated tags: ${tags.join(' ')}`));
+          } catch (writeError) {
+            const errorMessage = writeError instanceof Error ? writeError.message : String(writeError);
+            console.error(chalk.red(`  ✗ Failed to write ${filePath}: ${errorMessage}`));
+          }
+        }
+        return;
+      }
+
+      // Find first test/describe block
+      const testMatch = content.match(
+        /(describe|it|test|smokeTest|integrationTest|e2eTest)\s*\(/,
+      );
+      if (!testMatch || testMatch.index === undefined) {
+        console.error(chalk.red(`  ✗ Cannot find test block in ${filePath}`));
+        return;
+      }
+
+      // Build tag comment
+      const tagComment = `/**\n * ${tags.join(' ')}\n */\n`;
+
+      // Insert before test block
+      const lines = content.slice(0, testMatch.index).split('\n');
+      const lastNonEmptyLine = lines
+        .map((line, i) => ({ line, index: i }))
+        .filter(({ line }) => line.trim().length > 0)
+        .pop();
+
+      const insertPos = lastNonEmptyLine
+        ? content
+            .split('\n')
+            .slice(0, lastNonEmptyLine.index + 1)
+            .join('\n').length + 1
+        : 0;
+
+      const newContent =
+        content.slice(0, insertPos) +
+        '\n' +
+        tagComment +
+        content.slice(insertPos);
 
       if (!this.options.dryRun) {
-        fs.writeFileSync(filePath, newContent);
-        console.log(chalk.green(`  ✓ Updated tags: ${tags.join(' ')}`));
+        try {
+          fs.writeFileSync(filePath, newContent);
+          console.log(chalk.green(`  ✓ Applied tags: ${tags.join(' ')}`));
+        } catch (writeError) {
+          const errorMessage = writeError instanceof Error ? writeError.message : String(writeError);
+          console.error(chalk.red(`  ✗ Failed to write ${filePath}: ${errorMessage}`));
+        }
       }
-      return;
-    }
-
-    // Find first test/describe block
-    const testMatch = content.match(
-      /(describe|it|test|smokeTest|integrationTest|e2eTest)\s*\(/,
-    );
-    if (!testMatch || testMatch.index === undefined) {
-      console.error(chalk.red(`  ✗ Cannot find test block in ${filePath}`));
-      return;
-    }
-
-    // Build tag comment
-    const tagComment = `/**\n * ${tags.join(' ')}\n */\n`;
-
-    // Insert before test block
-    const lines = content.slice(0, testMatch.index).split('\n');
-    const lastNonEmptyLine = lines
-      .map((line, i) => ({ line, index: i }))
-      .filter(({ line }) => line.trim().length > 0)
-      .pop();
-
-    const insertPos = lastNonEmptyLine
-      ? content
-          .split('\n')
-          .slice(0, lastNonEmptyLine.index + 1)
-          .join('\n').length + 1
-      : 0;
-
-    const newContent =
-      content.slice(0, insertPos) +
-      '\n' +
-      tagComment +
-      content.slice(insertPos);
-
-    if (!this.options.dryRun) {
-      fs.writeFileSync(filePath, newContent);
-      console.log(chalk.green(`  ✓ Applied tags: ${tags.join(' ')}`));
+    } catch (error) {
+      const errorMessage = error instanceof Error ? error.message : String(error);
+      console.error(chalk.red(`  ✗ Error processing ${filePath}: ${errorMessage}`));
     }
   }
 
@@ -1250,7 +1161,10 @@ Examples:
     }
   });
 
-program.parse();
+// Only parse command line if this is the main module (not being imported for testing)
+if (require.main === module) {
+  program.parse();
+}
 
 // Export for testing
 export { TestTagger, TestAnalysis, ProcessingOptions };

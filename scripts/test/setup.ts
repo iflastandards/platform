@@ -44,5 +44,4 @@ vi.mock('child_process', () => ({
 // Global fetch mock
 global.fetch = vi.fn();
 
-// Environment setup
-process.env.NODE_ENV = 'test';
+// Environment setup - NODE_ENV should already be set by the test runner

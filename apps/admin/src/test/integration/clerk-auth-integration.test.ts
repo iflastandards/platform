@@ -13,7 +13,7 @@ import {
 import * as fs from 'node:fs/promises';
 import * as path from 'node:path';
 
-describe('Clerk Authentication Integration @integration @auth @clerk @critical', () => {
+describe('Clerk Authentication Integration @integration @auth @clerk @critical @authentication @security', () => {
   const testDir = path.join(__dirname, '.test-output');
 
   beforeEach(async () => {

@@ -4,7 +4,7 @@
  */
 
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
-import { TestTagger, ProcessingOptions } from '../../auto-tag-tests';
+import { TestTagger, type ProcessingOptions } from '../../auto-tag-tests';
 import { TEST_FILE_FIXTURES, AI_RESPONSE_FIXTURES } from '../fixtures/test-files.fixtures';
 import * as fs from 'fs';
 import * as path from 'path';

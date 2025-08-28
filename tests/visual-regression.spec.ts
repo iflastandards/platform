@@ -1,3 +1,9 @@
+/**
+ * @e2e @visual @server-dependent @local-only @low-priority @ui
+ * 
+ * Visual regression tests for all sites
+ */
+
 import { test, expect } from '@playwright/test';
 
 // All sites currently running on serve:all

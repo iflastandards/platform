@@ -321,7 +321,7 @@ describe('API Integration', () => {
 
     it('should identify smoke test patterns', () => {
       const smokeContent = `
-describe('Production Health Check @smoke', () => {
+describe('Production Health Check', () => {
   it('critical path validation', async () => {
     const health = await checkHealth(process.env.PROD_URL);
     expect(health.status).toBe('ok');

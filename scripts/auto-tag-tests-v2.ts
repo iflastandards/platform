@@ -11,7 +11,6 @@
  */
 
 import * as fs from 'fs';
-import * as path from 'path';
 import { glob } from 'glob';
 import chalk from 'chalk';
 import { z } from 'zod';
@@ -24,8 +23,8 @@ const AI_REVIEW_REGEX = /\/\/\s*@ai-reviewed\s+by:\s*([\w-]+)\s+on:\s*([\d-]+)\s
 
 // Configuration schema
 const ConfigSchema = z.object({
-  provider: z.enum(['gemini', 'anthropic', 'openai', 'local']).default('gemini'),
-  fallbackProvider: z.enum(['anthropic', 'openai', 'local']).optional(),
+  provider: z.enum(['gemini', 'anthropic']).default('gemini'),
+  fallbackProvider: z.enum(['gemini', 'anthropic']).optional(),
   apiKey: z.string().optional(),
   fallbackApiKey: z.string().optional(),
   model: z.string().optional(),
@@ -268,9 +267,9 @@ class EnhancedTestTagger {
 
     if (provider === 'gemini') {
       return this.callGemini(prompt, apiKey);
-    } else {
+    } 
       return this.callAnthropic(prompt, apiKey);
-    }
+    
   }
 
   /**
@@ -458,16 +457,17 @@ Respond in JSON format:
             reasoning = aiResult.reasoning;
           } else if (this.config.fallbackApiKey) {
             // Try fallback if confidence is low
+            const fallbackProvider = this.config.fallbackProvider || 'anthropic';
             const fallbackResult = await this.callAIProvider(
               content,
               filePath,
-              this.config.fallbackProvider,
+              fallbackProvider,
               this.config.fallbackApiKey
             );
             
             suggestedTags = fallbackResult.tags;
             confidence = fallbackResult.confidence;
-            provider = this.config.fallbackProvider;
+            provider = fallbackProvider;
             reasoning = fallbackResult.reasoning;
           }
         }

@@ -1,4 +1,6 @@
 /**
+ * @e2e @example @server-dependent @local-only
+ * 
  * E2E TEST EXAMPLE - IFLA Standards Platform
  * ==========================================
  * 

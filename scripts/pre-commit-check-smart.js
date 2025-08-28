@@ -148,6 +148,7 @@ if (isDependencyOnly) {
       env: {
         ...process.env,
         NODE_OPTIONS: '--max-old-space-size=6144',
+        NX_CLOUD_SILENT: 'true',
       },
     });
     console.log('✅ Tests passed\n');

@@ -1,5 +1,5 @@
 /**
- * @integration @critical @workflow
+ * @integration @critical @workflow @server-dependent @local-only
  * 
  * Integration tests for pre-commit hook workflow
  */

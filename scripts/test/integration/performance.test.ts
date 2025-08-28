@@ -1,5 +1,5 @@
 /**
- * @integration @performance @stress
+ * @integration @performance @stress @api @validation @high-priority
  * 
  * Performance tests for large-scale batch processing
  */
@@ -338,7 +338,7 @@ describe('Module ${d} Test ${f}', () => {
         results.push(...batchResults);
         
         // Allow GC between batches
-        if (global.gc) global.gc();
+        if (global.gc) {global.gc();}
       }
 
       const endMem = process.memoryUsage().heapUsed;

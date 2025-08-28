@@ -1,5 +1,5 @@
 /**
- * @integration @e2e @critical @workflow
+ * @integration @e2e @critical @workflow @server-dependent @local-only
  * 
  * End-to-end tests for complete tagging workflow
  */
@@ -307,7 +307,7 @@ describe('UserProfile with API integration', () => {
             }),
             statusText: 'OK'
           } as Response;
-        } else {
+        } 
           // High confidence from fallback
           return {
             ok: true,
@@ -322,7 +322,7 @@ describe('UserProfile with API integration', () => {
             }),
             statusText: 'OK'
           } as Response;
-        }
+        
       });
 
       const { EnhancedTestTagger } = await import('../../auto-tag-tests-v2');

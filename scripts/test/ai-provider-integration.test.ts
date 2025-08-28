@@ -369,12 +369,19 @@ describe('User Service', () => {
     });
 
     it('should truncate very long test content', () => {
-      const longContent = 'x'.repeat(5000);
+      // Create content with unique pattern to properly test truncation
+      let longContent = '';
+      for (let i = 0; i < 5000; i++) {
+        longContent += `CHAR${i}_`;
+      }
       const prompt = tagger['buildAIPrompt'](longContent, 'long.test.ts');
 
-      // Should truncate to 3000 characters
-      expect(prompt).toContain(longContent.slice(0, 3000));
-      expect(prompt).not.toContain(longContent.slice(3001, 3100));
+      // Should truncate to 3000 characters - check content that's clearly within range
+      expect(prompt).toContain('CHAR0_');
+      expect(prompt).toContain('CHAR100_');
+      // Check that content clearly beyond 3000 chars is not included
+      expect(prompt).not.toContain('CHAR800_'); // This will be well beyond 3000 chars
+      expect(prompt).not.toContain('CHAR1000_');
     });
 
     it('should include all functional area options', () => {

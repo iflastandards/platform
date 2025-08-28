@@ -141,7 +141,7 @@ class TestTagValidator {
 
     // Check required combinations
     for (const rule of REQUIRED_COMBINATIONS) {
-      if (!tags.includes(rule.ifHas)) continue;
+      if (!tags.includes(rule.ifHas)) {continue;}
 
       // Check must have tags
       if (rule.mustHave) {

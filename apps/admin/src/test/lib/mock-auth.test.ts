@@ -15,7 +15,7 @@ import {
 } from '../../app/lib/mock-auth';
 import { type UserRoles } from '../../lib/auth';
 
-describe('Mock Authentication @unit @critical @auth', () => {
+describe('Mock Authentication @unit @critical @auth @authentication @security', () => {
   beforeEach(() => {
     clearUsers();
   });

@@ -7,7 +7,6 @@
 
 import { execSync } from 'child_process';
 import fs from 'fs';
-import path from 'path';
 import { z } from 'zod';
 import chalk from 'chalk';
 import inquirer from 'inquirer';
@@ -289,11 +288,11 @@ class FeatureTracker {
     
     if (diff < 60) {
       return `${diff} minutes`;
-    } else {
+    } 
       const hours = Math.floor(diff / 60);
       const minutes = diff % 60;
       return `${hours}h ${minutes}m`;
-    }
+    
   }
 }
 
