@@ -21,10 +21,10 @@
     "@ant-design/icons": "*",
     "@octokit/auth-app": "*",
     "@octokit/rest": "*",
-    "react-markdown": "^10.1.0",
+    "react-markdown": "*",
     "svix": "*"
   },
   "devDependencies": {
-    "@anatine/zod-openapi": "^2.2.8"
+    "@anatine/zod-openapi": "*"
   }
 }

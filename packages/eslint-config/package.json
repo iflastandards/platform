@@ -20,7 +20,7 @@
     "eslint-plugin-unused-imports": "*"
   },
   "peerDependencies": {
-    "eslint": "^9.0.0"
+    "eslint": "*"
   },
   "keywords": [
     "eslint",
