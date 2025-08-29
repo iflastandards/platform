@@ -18,6 +18,10 @@ async function mockAdminSession(page: Page, session: any) {
 }
 
 e2eTest.describe('Superadmin Dashboard @admin @rbac @critical @e2e @server-dependent @local-only @navigation', () => {
+
+/**
+ * @e2e @server-dependent @critical @admin @auth @rbac @validation @error-handling @teams @monitoring @navigation @ui
+ */
   e2eTest.describe('Access Control @auth', () => {
     e2eTest('redirects unauthenticated users to login', async ({ page }) => {
       // Mock no session

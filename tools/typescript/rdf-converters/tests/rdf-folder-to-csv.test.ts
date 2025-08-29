@@ -3,6 +3,10 @@ import { execSync } from 'child_process';
 import * as fs from 'fs';
 import * as path from 'path';
 
+/**
+ * @unit @low-priority @docs @validation
+ */
+
 describe('rdf-folder-to-csv CLI @unit', () => {
   const fixturesDir = path.join(__dirname, 'fixtures', 'batch');
   const tempDir = '/tmp/rdf-folder-to-csv-tests';

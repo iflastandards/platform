@@ -9,6 +9,10 @@ import { describe, it, expect } from 'vitest';
 import fs from 'fs';
 import path from 'path';
 
+/**
+ * @integration @ui @auth @high-priority @navigation
+ */
+
 describe('Navbar Component Integration', () => {
   describe('Central Theme Components', () => {
     it('should have AuthDropdownNavbarItem components in central theme', () => {

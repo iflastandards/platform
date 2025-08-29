@@ -65,6 +65,10 @@ function getExpectedPortalUrl(env: DocsEnv): string {
   return getPortalUrl(environment);
 }
 
+/**
+ * @e2e @integration @sites @validation @critical @navigation @accessibility @high-priority
+ */
+
 describe('Site Validation Tests', '@sites @validation @integration', () => {
   // Test each site
   Object.entries(sites).forEach(([siteKey, siteConfigs]) => {

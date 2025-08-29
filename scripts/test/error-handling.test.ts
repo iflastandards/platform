@@ -47,6 +47,10 @@ vi.mock('glob', () => ({
 const mockFs = vi.mocked(fs);
 const mockExecSync = vi.mocked(execSync);
 
+/**
+ * @unit @critical @validation @high-priority
+ */
+
 describe('Error Handling and Edge Cases', () => {
   let consoleSpy: {
     log: any;

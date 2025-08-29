@@ -119,7 +119,7 @@ describe('Test needing update', () => {
     it('should extract tags from JSDoc comments', () => {
       const content = `
 /**
- * @unit @api @validation @critical
+ * @unit @ai @testing @high-priority
  */
 describe('Test', () => {});`;
 

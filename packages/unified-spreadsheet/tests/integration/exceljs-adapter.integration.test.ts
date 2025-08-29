@@ -13,6 +13,10 @@ import { fileURLToPath } from 'node:url';
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
+/**
+ * @integration @api @high-priority
+ */
+
 describe('ExcelJSAdapter @integration @api', () => {
   let adapter: ExcelJSAdapter;
   const testDir = path.join(__dirname, '.xlsx-test-output');

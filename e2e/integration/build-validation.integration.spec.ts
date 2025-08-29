@@ -62,6 +62,10 @@ const getSiteUrl = (siteName: string, sitePath: string) => {
 };
 
 integrationTest.describe('Post-Build Site Validation @build @validation @integration', () => {
+
+/**
+ * @e2e @integration @post-deploy @critical @validation @build @security @navigation @ui @portal @deployment
+ */
   const env = process.env.DOCS_ENV || 'local';
   
   integrationTest.beforeEach(async ({ page }) => {

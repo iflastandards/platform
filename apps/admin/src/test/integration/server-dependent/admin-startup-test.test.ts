@@ -1,6 +1,10 @@
 import { describe, it } from 'vitest';
 import { spawn } from 'child_process';
 
+/**
+ * @integration @admin @api @server-dependent @low-priority
+ */
+
 describe('Admin Startup Test @integration @admin @api @low-priority', () => {
   it('should be able to start admin server with detailed logging', async () => {
     console.log('Starting admin server with detailed logging...');

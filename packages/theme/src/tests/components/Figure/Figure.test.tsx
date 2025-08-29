@@ -20,6 +20,10 @@ vi.mock('@docusaurus/useBaseUrl', () => ({
 let idCounter = 0;
 vi.spyOn(React, 'useId').mockImplementation(() => `test-id-${idCounter++}`);
 
+/**
+ * @unit @ui @accessibility @high-priority
+ */
+
 describe('Figure component @unit @ui', () => {
   beforeEach(() => {
     idCounter = 0;

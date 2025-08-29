@@ -8,6 +8,10 @@
 import { describe, it, expect } from 'vitest';
 import { execSync } from 'child_process';
 
+/**
+ * @integration @build @ui @high-priority @navigation
+ */
+
 describe('Navbar Theme Build Validation', () => {
   describe('Theme Package Build', () => {
     it('should build theme package with navbar components successfully', () => {

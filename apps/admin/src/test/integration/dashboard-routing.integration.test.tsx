@@ -1,5 +1,5 @@
 /**
- * @vitest-environment jsdom
+ * @integration @ui @navigation @high-priority @dashboard
  */
 
 import React from 'react';

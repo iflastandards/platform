@@ -1,5 +1,5 @@
 /**
- * @unit @critical @auth
+ * @unit @critical @auth @security
  */
 
 import { describe, it, expect, beforeEach } from 'vitest';

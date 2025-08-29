@@ -14,6 +14,10 @@ import {
   DASHBOARD_ROUTES,
 } from '../../mocks/user-fixtures';
 
+/**
+ * @integration @auth @critical @ui @validation
+ */
+
 describe('Dashboard Access Control @smoke @navigation', () => {
   beforeEach(() => {
     clearAuthentication();

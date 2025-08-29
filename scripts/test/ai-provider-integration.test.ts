@@ -11,6 +11,10 @@ import { EnhancedTestTagger } from '../auto-tag-tests-v2';
 // Mock fetch globally
 global.fetch = vi.fn();
 
+/**
+ * @integration @api @high-priority @ai
+ */
+
 describe('AI Provider Integration Tests @unit @ai', () => {
   let tagger: EnhancedTestTagger;
   

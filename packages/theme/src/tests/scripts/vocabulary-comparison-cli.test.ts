@@ -33,6 +33,10 @@ describe.skip('Vocabulary Comparison CLI Integration', () => {
     delete process.env.GOOGLE_SHEETS_API_KEY;
   });
 
+/**
+ * @integration @api @low-priority @vocabulary
+ */
+
   describe('CLI Help Command', () => {
     it('should display help when --help is used', async () => {
       const { stdout } = await execAsync(`node ${scriptPath} --help`);

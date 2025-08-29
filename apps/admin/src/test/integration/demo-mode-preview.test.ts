@@ -10,6 +10,10 @@ import { describe, it, expect, beforeAll } from 'vitest';
 
 const PREVIEW_URL = 'https://admin-iflastandards-preview.onrender.com';
 
+/**
+ * @integration @low-priority @api @admin @server-dependent @security
+ */
+
 describe('Demo Mode on Preview Server', () => {
   let isDemoEnabled = false;
 

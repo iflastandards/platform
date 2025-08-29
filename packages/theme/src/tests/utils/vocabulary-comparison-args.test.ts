@@ -24,6 +24,10 @@ function parseArgs(args: string[]) {
   args.forEach((arg) => {
     if (arg.startsWith('--spreadsheet-id=')) {
       options.spreadsheetId = arg.split('=')[1];
+
+/**
+ * @unit @utility @vocabulary @low-priority
+ */
     } else if (arg.startsWith('--index-sheet=')) {
       options.indexSheet = arg.split('=')[1];
     } else if (arg.startsWith('--output=')) {

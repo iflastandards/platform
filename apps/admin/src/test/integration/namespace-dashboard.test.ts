@@ -10,6 +10,10 @@ import { clearAuthentication } from '../setup-msw';
 import { hasNamespaceAccess } from '../../lib/clerk-github-auth';
 import { getUserFixture, fixtureToAppUser } from '../../mocks/user-fixtures';
 
+/**
+ * @integration @auth @high-priority @critical @namespace @navigation @dashboard
+ */
+
 describe('Namespace Dashboard ([siteKey]) @namespace @critical @navigation', () => {
   beforeEach(() => {
     clearAuthentication();

@@ -5,6 +5,10 @@ import { describe, it, expect, beforeAll } from 'vitest';
  * These tests verify that the deployment environment can connect to required services
  * without testing the full functionality of development tools
  */
+
+/**
+ * @critical @high-priority @api @server-dependent @deployment
+ */
 describe('External Service Connectivity @unit @deployment', () => {
   describe('Google Services', () => {
     beforeAll(() => {

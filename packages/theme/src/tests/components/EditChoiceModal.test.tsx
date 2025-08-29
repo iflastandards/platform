@@ -1,5 +1,5 @@
 /**
- * @integration @ui @critical @accessibility
+ * @integration @ui @critical @accessibility @auth
  */
 import React from 'react';
 import { render, screen, fireEvent, waitFor } from '@testing-library/react';

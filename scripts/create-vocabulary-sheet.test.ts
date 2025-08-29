@@ -1,5 +1,5 @@
 /**
- * @unit @api @low-priority
+ * @unit @api @low-priority @validation
  */
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
 import { google } from 'googleapis';

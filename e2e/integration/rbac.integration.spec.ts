@@ -7,6 +7,10 @@ import { test, integrationTest } from '../utils/tagged-test';
 import { tags } from '../utils/test-tags';
 
 test.describe('RBAC Integration Tests @integration @rbac @auth @critical @security', () => {
+
+/**
+ * @integration @rbac @auth @critical @security
+ */
   // These tests would normally use actual auth fixtures
   // For now, they're examples of how to structure integration tests
   

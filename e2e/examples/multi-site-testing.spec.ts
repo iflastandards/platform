@@ -6,6 +6,10 @@ const adminConfig = getAdminPortalConfig('local');
 
 // Example: Testing multiple documentation sites
 test.describe('Multi-Site E2E Tests @e2e @server-dependent @local-only @sites @navigation @critical', () => {
+
+/**
+ * @e2e @server-dependent @local-only @critical @ui @sites @navigation
+ */
   // Test different sites with their specific ports
   const sites = [
     { name: 'portal', url: 'http://localhost:3000' },

@@ -64,6 +64,10 @@ vi.mock('commander', () => ({
   })),
 }));
 
+/**
+ * @unit @low-priority @api @integration
+ */
+
 describe('SheetSync @unit', () => {
   let sheetSync: SheetSync;
 

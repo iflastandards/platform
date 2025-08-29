@@ -19,6 +19,10 @@ const DOCS_SITES = [
 ];
 
 test.describe('Documentation Sites Accessibility @e2e @server-dependent @local-only @accessibility @docs @critical', () => {
+
+/**
+ * @e2e @server-dependent @accessibility @docs @critical @ui @high-priority
+ */
   for (const site of DOCS_SITES) {
     test.describe(`${site.name} Site Accessibility`, () => {
       test.beforeEach(async ({ page }) => {

@@ -1,5 +1,5 @@
 /**
- * @unit @api @docs @low-priority
+ * @unit @integration @low-priority @ui
  */
 import * as fs from 'fs';
 import { describe, expect, it, vi } from 'vitest';

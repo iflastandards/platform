@@ -31,6 +31,10 @@ import PendingDashboard from '../../app/(authenticated)/dashboard/pending/Pendin
 import ReviewGroupDashboard from '../../app/(authenticated)/dashboard/rg/ReviewGroupDashboard';
 import NamespaceDashboard from '../../app/(authenticated)/namespaces/[namespace]/NamespaceDashboard';
 
+/**
+ * @integration @ui @high-priority @dashboard
+ */
+
 describe('Dashboard Components - Basic Rendering @integration @dashboard', () => {
   let testUser: AppUser;
 

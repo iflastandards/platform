@@ -19,6 +19,10 @@ const testPages = [
 ];
 
 e2eTest.describe('Enhanced Visual Regression Testing @visual @slow @e2e @server-dependent @local-only @ui @low-priority', () => {
+
+/**
+ * @e2e @server-dependent @ui @visual @low-priority @local-only
+ */
   for (const viewport of viewports) {
     e2eTest.describe(`${viewport.name} viewport (${viewport.width}x${viewport.height})`, () => {
       e2eTest.beforeEach(async ({ page }) => {

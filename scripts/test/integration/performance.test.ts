@@ -9,6 +9,10 @@ import * as fs from 'fs';
 import * as path from 'path';
 import { performance } from 'perf_hooks';
 
+/**
+ * @integration @performance @stress @api @validation @high-priority
+ */
+
 describe('Performance Testing @integration @performance', () => {
   const perfTestDir = '/tmp/perf-test-' + Date.now();
   const testFileCounts = [10, 50, 100, 500];

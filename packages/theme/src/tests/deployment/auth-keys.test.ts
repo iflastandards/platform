@@ -6,6 +6,10 @@ import { describe, it, expect } from 'vitest';
  * Validates that required authentication keys are available
  * in the CI environment for successful deployment
  */
+
+/**
+ * @critical @auth @security @deployment @integration @server-dependent
+ */
 describe('Authentication Keys @unit @critical @auth @authentication @security @deployment', () => {
   describe('Supabase Configuration', () => {
     it('should have Supabase URL configured', () => {

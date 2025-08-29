@@ -1,5 +1,5 @@
 /**
- * @integration @auth @critical
+ * @integration @auth @critical @security @clerk
  */
 
 import { describe, it, expect, beforeEach, afterEach } from 'vitest';

@@ -7,6 +7,10 @@ import { test, expect, integrationTest } from '../utils/tagged-test';
 import { tags } from '../utils/test-tags';
 
 test.describe('Admin Flows Integration Tests @integration @admin @ui', () => {
+
+/**
+ * @e2e @integration @ui @admin @high-priority
+ */
   test.beforeEach(async ({ page }) => {
     // Navigate to admin portal
     await page.goto('/admin');

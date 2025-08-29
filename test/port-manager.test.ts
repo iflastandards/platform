@@ -9,6 +9,10 @@ import { killPort, killPorts, SITE_PORTS } from '../packages/dev-servers/src/por
 
 const mockExecSync = vi.mocked(execSync);
 
+/**
+ * @unit @api @low-priority @utility
+ */
+
 describe('port-manager utilities @unit @api @low-priority @utility', () => {
   beforeEach(() => {
     vi.clearAllMocks();

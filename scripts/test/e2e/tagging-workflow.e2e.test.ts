@@ -11,6 +11,10 @@ import * as fs from 'fs';
 import * as path from 'path';
 import { glob } from 'glob';
 
+/**
+ * @e2e @workflow @high-priority @ui @auth
+ */
+
 describe('End-to-End Tagging Workflow', () => {
   const testProjectDir = '/tmp/test-e2e-project-' + Date.now();
   const scriptsDir = path.join(process.cwd(), 'scripts');

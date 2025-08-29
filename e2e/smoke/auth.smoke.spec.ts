@@ -7,6 +7,10 @@
 import { test, expect, smokeTest } from '../utils/tagged-test';
 
 test.describe('Admin Authentication Smoke Tests @smoke @post-deploy @critical @auth @critical @authentication @security', () => {
+
+/**
+ * @e2e @smoke @post-deploy @critical @auth @security
+ */
   const adminUrl = process.env.ADMIN_BASE_URL || process.env.ADMIN_URL || 'https://admin-iflastandards-preview.onrender.com';
   
   test.beforeEach(async ({ page }) => {

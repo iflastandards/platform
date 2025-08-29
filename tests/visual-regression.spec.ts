@@ -18,6 +18,10 @@ const sites = [
 ];
 
 test.describe('Visual Regression Tests @e2e @visual', () => {
+
+/**
+ * @e2e @visual @server-dependent @local-only @low-priority @ui
+ */
   for (const site of sites) {
     test(`${site.name} homepage visual regression`, async ({ page }) => {
       await page.goto(`${site.url}${site.path}`);

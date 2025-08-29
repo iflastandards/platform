@@ -8,6 +8,10 @@ import * as fs from 'fs';
 import { TestTagger } from '../auto-tag-tests';
 import { EnhancedTestTagger } from '../auto-tag-tests-v2';
 
+/**
+ * @integration @critical @high-priority @low-priority @auth @api @ui @security @testing @ai
+ */
+
 describe('Priority Tag Inference Tests', () => {
   const mockTestFiles = {
     // Critical: Authentication/Security test

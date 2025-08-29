@@ -69,6 +69,10 @@ const mockIFLAData: IFLAReportData = {
   },
 };
 
+/**
+ * @unit @high-priority @validation
+ */
+
 describe('IFLA Report Data Parser @unit', () => {
   describe('transformElementSet', () => {
     it('should transform element set data correctly', () => {

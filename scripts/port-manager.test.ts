@@ -2,7 +2,6 @@ import { describe, it, expect } from 'vitest';
 
 // Import the port manager directly
 const portManager = require('./utils/port-manager.js');
-
 /**
  * @unit @utility @sites @low-priority
  */

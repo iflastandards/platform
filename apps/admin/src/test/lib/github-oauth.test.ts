@@ -1,5 +1,9 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
 
+/**
+ * @unit @critical @authentication @security
+ */
+
 describe('GitHub OAuth Flow @unit @critical @authentication @security', () => {
   const mockFetch = vi.fn();
   

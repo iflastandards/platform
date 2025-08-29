@@ -11,6 +11,10 @@
  * - OR grouped under: `src/test/unit/service-name.test.ts`
  * 
  * REQUIRED TAGS: @unit (not yet enforced but recommended for future categorization)
+
+/**
+ * @unit @validation @low-priority
+ */
  * 
  * NX TARGETS THAT RUN THIS TEST:
  * - nx affected --target=test (pre-commit hook)

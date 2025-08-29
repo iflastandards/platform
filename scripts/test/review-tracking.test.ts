@@ -87,7 +87,7 @@ describe('Test', () => {});`;
     it('should return undefined when no review comment exists', () => {
       const content = `
 /**
- * @unit @api
+ * @unit @validation @high-priority @tracking
  */
 describe('Unreviewed test', () => {});`;
 

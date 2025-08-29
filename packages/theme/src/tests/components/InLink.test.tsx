@@ -1,5 +1,5 @@
 /**
- * @unit @ui @vocabulary @low-priority
+ * @unit @ui @low-priority @vocabulary
  */
 import React from 'react';
 import { render, screen } from '@testing-library/react';

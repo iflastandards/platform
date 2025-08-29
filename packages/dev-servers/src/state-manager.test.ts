@@ -10,7 +10,15 @@ import {
   vi,
   type MockedFunction,
 } from 'vitest';
-import type { ServerStateFile, ServerInfo } from './types';
+
+// Mock os.tmpdir to return consistent path - MUST be hoisted before imports
+vi.mock('os', async (importOriginal) => {
+  const actual = await importOriginal();
+  return {
+    ...actual,
+    tmpdir: vi.fn(() => '/tmp'),
+  };
+});
 
 // Mock fs functions completely to avoid real file system access
 vi.mock('fs', async (importOriginal) => {
@@ -23,14 +31,7 @@ vi.mock('fs', async (importOriginal) => {
   };
 });
 
-// Mock os.tmpdir to return consistent path
-vi.mock('os', async (importOriginal) => {
-  const actual = await importOriginal();
-  return {
-    ...actual,
-    tmpdir: vi.fn(() => '/tmp'),
-  };
-});
+import type { ServerStateFile, ServerInfo } from './types';
 
 // Import after mocking to ensure mocks are applied
 import {

@@ -11,7 +11,6 @@ vi.mock('@docusaurus/Link', () => ({
     </a>
   ),
 }));
-
 /**
  * @unit @ui @low-priority
  */

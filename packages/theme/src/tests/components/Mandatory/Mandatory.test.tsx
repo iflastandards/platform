@@ -11,7 +11,6 @@ expect.extend(toHaveNoViolations);
 vi.mock('@docusaurus/useBaseUrl', () => ({
   default: (url: string) => url,
 }));
-
 /**
  * @unit @ui @high-priority @accessibility
  */

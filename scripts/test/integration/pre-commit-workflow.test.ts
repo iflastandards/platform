@@ -79,7 +79,7 @@ describe('Unstaged test', () => {
       // Create test with invalid tag combination
       fs.writeFileSync(testFile, `
 /**
- * @unit @server-dependent
+ * @integration @critical @workflow @server-dependent @local-only @high-priority
  */
 describe('Invalid combination', () => {
   it('should fail validation', () => {});

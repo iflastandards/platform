@@ -13,6 +13,10 @@ import { fileURLToPath } from 'node:url';
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
+/**
+ * @integration @api @high-priority
+ */
+
 describe('CSVAdapter @integration @api', () => {
   let adapter: CsvAdapter;
   const testDir = path.join(__dirname, '.csv-test-output');

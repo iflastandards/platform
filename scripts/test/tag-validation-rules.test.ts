@@ -8,6 +8,10 @@
 import { describe, it, expect, beforeEach } from 'vitest';
 import { EnhancedTestTagger } from '../auto-tag-tests-v2';
 
+/**
+ * @unit @validation @high-priority
+ */
+
 describe('Tag Validation Rules @unit @validation', () => {
   let tagger: EnhancedTestTagger;
 

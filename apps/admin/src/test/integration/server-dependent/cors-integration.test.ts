@@ -4,6 +4,10 @@ import {
   SERVER_CONFIGS,
 } from '../../../lib/test-helpers/server-manager';
 
+/**
+ * @integration @server-dependent @api @admin @low-priority @local-only
+ */
+
 describe('CORS Integration (Server-Dependent) @integration @server-dependent @local-only @api @admin @low-priority', () => {
   const adminBaseUrl = `http://localhost:${SERVER_CONFIGS.ADMIN.port}/admin`;
   const portalOrigin = `http://localhost:${SERVER_CONFIGS.PORTAL.port}`;

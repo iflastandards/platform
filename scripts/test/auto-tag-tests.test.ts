@@ -496,9 +496,8 @@ describe('UserService', () => {
 });`;
 
       const expectedContent = `import { describe, it } from 'vitest';
-
 /**
- * @unit @critical @api
+ * @unit @critical @testing
  */
 describe('UserService', () => {
   it('should create user', () => {

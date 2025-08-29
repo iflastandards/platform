@@ -9,6 +9,10 @@ import { runFullAccessibilityTest, runAccessibilityScan } from '../utils/accessi
  */
 
 test.describe('Admin Application Accessibility @e2e @server-dependent @local-only @accessibility @admin @critical', () => {
+
+/**
+ * @e2e @server-dependent @local-only @accessibility @admin @critical @ui @high-priority
+ */
   test.beforeEach(async ({ page }) => {
     // Navigate to admin application
     await page.goto('/admin');

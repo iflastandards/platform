@@ -16,7 +16,6 @@ global.fetch = vi.fn(() =>
     text: () => Promise.resolve(mockCSVContent)
   })
 ) as any;
-
 /**
  * @integration @ui @vocabulary @high-priority
  */

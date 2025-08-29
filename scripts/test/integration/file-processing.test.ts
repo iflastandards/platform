@@ -41,6 +41,10 @@ vi.mock('glob', () => ({
 const mockFs = vi.mocked(fs);
 const mockExecSync = vi.mocked(execSync);
 
+/**
+ * @integration @critical @testing @api @validation
+ */
+
 describe('File Processing Integration Tests', () => {
   let testTagger: TestTagger;
   let tempDir: string;

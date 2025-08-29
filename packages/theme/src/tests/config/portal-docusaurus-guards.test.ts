@@ -1,5 +1,5 @@
 /**
- * @integration @sites @high-priority
+ * @integration @high-priority @critical @config @validation
  */
 import { describe, it, expect } from 'vitest';
 import fs from 'fs';
