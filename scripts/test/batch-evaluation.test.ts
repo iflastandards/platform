@@ -126,9 +126,9 @@ describe('Test', () => {});`;
       const tags = tagger['extractExistingTags'](content);
       
       expect(tags).toContain('@unit');
-      expect(tags).toContain('@api');
-      expect(tags).toContain('@validation');
-      expect(tags).toContain('@critical');
+      expect(tags).toContain('@ai');
+      expect(tags).toContain('@testing');
+      expect(tags).toContain('@high-priority');
     });
 
     it('should extract tags from describe blocks', () => {

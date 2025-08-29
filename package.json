@@ -87,7 +87,7 @@
     "test:affected": "./scripts/nx-affected-test.sh",
     "test:pre-commit": "PRE_COMMIT=1 nx affected --target=test --base=HEAD~1 --grep '@unit|@integration' --grep-invert '@server-dependent'",
     "test:pre-push": "PRE_PUSH=1 nx affected --target=test --base=origin/main --grep '@integration|@e2e'",
-    "test:unit": "nx affected --target=test --base=HEAD~1 --grep '@unit'",
+    "test:unit": "nx affected --target=test --base=HEAD~1 --testNamePattern='@unit'",
     "test:integration:mock": "nx affected --target=test --base=HEAD~1 --grep '@integration' --grep-invert '@server-dependent'",
     "test:integration:demo": "nx affected --target=test --base=HEAD~1 --grep '@integration.*@demo-data.*@server-dependent'",
     "test:admin": "nx affected --target=test --base=HEAD~1 --grep '@admin.*@server-dependent' --grep-invert '@requires-'",

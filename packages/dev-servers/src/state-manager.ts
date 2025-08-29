@@ -4,9 +4,12 @@ import { tmpdir } from 'os';
 import { type ServerState, type ServerStateFile, type ServerMode, type ServerInfo } from './types';
 
 /**
- * Path to the server state file in system temp directory
+ * Get the path to the server state file in system temp directory
+ * Using a function to allow for mocking in tests
  */
-const STATE_FILE_PATH = join(tmpdir(), '.ifla-server-state.json');
+function getStateFilePath(): string {
+  return join(tmpdir(), '.ifla-server-state.json');
+}
 
 /**
  * Read the current server state from disk
@@ -14,11 +17,12 @@ const STATE_FILE_PATH = join(tmpdir(), '.ifla-server-state.json');
  */
 export function readServerState(): ServerStateFile | null {
   try {
-    if (!existsSync(STATE_FILE_PATH)) {
+    const stateFilePath = getStateFilePath();
+    if (!existsSync(stateFilePath)) {
       return null;
     }
 
-    const content = readFileSync(STATE_FILE_PATH, 'utf-8');
+    const content = readFileSync(stateFilePath, 'utf-8');
     const state: ServerStateFile = JSON.parse(content);
 
     // Validate the structure
@@ -39,7 +43,7 @@ export function readServerState(): ServerStateFile | null {
  */
 export function writeServerState(state: ServerStateFile): void {
   try {
-    writeFileSync(STATE_FILE_PATH, JSON.stringify(state, null, 2));
+    writeFileSync(getStateFilePath(), JSON.stringify(state, null, 2));
   } catch (error) {
     console.error(`Failed to write server state file: ${error}`);
   }
@@ -50,8 +54,9 @@ export function writeServerState(state: ServerStateFile): void {
  */
 export function clearServerState(): void {
   try {
-    if (existsSync(STATE_FILE_PATH)) {
-      writeFileSync(STATE_FILE_PATH, JSON.stringify({
+    const stateFilePath = getStateFilePath();
+    if (existsSync(stateFilePath)) {
+      writeFileSync(stateFilePath, JSON.stringify({
         servers: [],
         lastUpdated: Date.now(),
         mode: 'headless'
@@ -134,6 +139,4 @@ export function checkModeCompatibility(requestedMode: ServerMode): {
 /**
  * Get the path to the state file (useful for tests)
  */
-export function getStateFilePath(): string {
-  return STATE_FILE_PATH;
-}
+export { getStateFilePath };
