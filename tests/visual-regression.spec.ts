@@ -31,4 +31,17 @@ test.describe('Visual Regression Tests @e2e @visual', () => {
       await expect(page).toHaveScreenshot(`${site.name}-docs.png`);
     });
   }
+
+  // UNIMARC has additional shared config tests
+  test('unimarc homepage shared config visual regression', async ({ page }) => {
+    await page.goto('http://localhost:3006/unimarc/');
+    await page.waitForLoadState('networkidle');
+    await expect(page).toHaveScreenshot('unimarc-homepage-shared-config.png');
+  });
+
+  test('unimarc docs shared config visual regression', async ({ page }) => {
+    await page.goto('http://localhost:3006/unimarc/docs/intro');
+    await page.waitForLoadState('networkidle');
+    await expect(page).toHaveScreenshot('unimarc-docs-shared-config.png');
+  });
 });
