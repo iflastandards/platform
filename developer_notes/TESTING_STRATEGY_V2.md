@@ -1,14 +1,17 @@
-# Testing Strategy V2 - Feature Factory & Contract-Driven Development
+# Testing Strategy V2 - TDD & Contract-Driven Development
 
 ## Overview
 
-Our testing strategy has evolved to support the Feature Factory method with contract-driven development, emphasizing:
-1. **Contracts First**: Define Zod schemas and data contracts
-2. **Mock-First UI Development**: Build UI with mock data providers
-3. **Progressive Enhancement**: Switch from mock → demo → live data
-4. **Nx Affected**: Minimize test execution at every stage
+Our testing strategy follows Test-Driven Development (TDD) principles with contract-driven development, emphasizing:
+1. **Tests First (Red)**: Write failing tests before implementation
+2. **Implementation (Green)**: Write minimal code to make tests pass
+3. **Refactor**: Improve code while keeping tests green
+4. **Contracts First**: Define Zod schemas and data contracts before tests
+5. **Mock-First UI Development**: Build UI with mock data providers
+6. **Progressive Enhancement**: Switch from mock → demo → live data
+7. **Nx Affected**: Minimize test execution at every stage
 
-## 🏭 Feature Factory Testing Workflow
+## 🏭 TDD Feature Factory Testing Workflow
 
 ### Phase 1: Contract Definition
 ```typescript
@@ -24,42 +27,122 @@ const UserContract = z.object({
 type User = z.infer<typeof UserContract>;
 ```
 
-### Phase 2: Mock Data Provider (UI Development)
+### Phase 2: Write Tests First (RED - Failing Tests)
 ```typescript
 /**
- * @unit @critical @ui
- * Tests UI with mock data provider
+ * TDD Step 1: Write failing tests BEFORE implementation
+ * These tests will fail because the code doesn't exist yet
  */
-describe('UserList with Mock Provider', () => {
-  const mockProvider = createMockDataProvider({
-    getUsers: async () => mockUsers
-  });
-  
+
+// @unit @critical @ui
+describe('UserList Component (TDD)', () => {
   it('should render users from mock provider', () => {
-    // Test UI components with deterministic mock data
-  });
-});
-```
-
-### Phase 3: Demo Data Provider (Integration)
-```typescript
-/**
- * @integration @critical @api
- * Tests with demo data provider (MSW or fixtures)
- */
-describe('UserList with Demo Provider', () => {
-  const demoProvider = createDemoDataProvider({
-    // Uses MSW or test fixtures
-    endpoint: '/api/users'
+    // This test will fail - UserList doesn't exist yet
+    const { getByText } = render(<UserList users={mockUsers} />);
+    expect(getByText('John Doe')).toBeInTheDocument();
   });
   
-  it('should handle demo data correctly', () => {
-    // Test with realistic but safe demo data
+  it('should handle empty user list', () => {
+    // This test will fail - no implementation yet
+    const { getByText } = render(<UserList users={[]} />);
+    expect(getByText('No users found')).toBeInTheDocument();
+  });
+});
+
+// @integration @critical @api
+describe('UserService (TDD)', () => {
+  it('should validate user data with contract', async () => {
+    // This test will fail - UserService doesn't exist yet
+    const user = { id: '1', name: 'John', email: 'invalid-email' };
+    expect(() => UserService.validate(user)).toThrow();
+  });
+  
+  it('should fetch users from API', async () => {
+    // This test will fail - no implementation yet
+    const users = await UserService.getAll();
+    expect(users).toHaveLength(3);
   });
 });
 ```
 
-### Phase 4: Live Data Provider (Local/Preview)
+### Phase 3: Write Minimal Code (GREEN - Make Tests Pass)
+```typescript
+/**
+ * TDD Step 2: Write MINIMAL code to make tests pass
+ * Don't add features that aren't tested
+ */
+
+// UserList.tsx - Minimal implementation to pass tests
+export const UserList = ({ users }) => {
+  if (users.length === 0) {
+    return <div>No users found</div>;
+  }
+  return (
+    <ul>
+      {users.map(user => (
+        <li key={user.id}>{user.name}</li>
+      ))}
+    </ul>
+  );
+};
+
+// UserService.ts - Minimal implementation to pass tests
+export const UserService = {
+  validate: (user: unknown) => {
+    return UserContract.parse(user);
+  },
+  
+  getAll: async () => {
+    // Minimal implementation with mock data
+    return mockUsers;
+  }
+};
+```
+
+### Phase 4: Refactor (REFACTOR - Improve Code)
+```typescript
+/**
+ * TDD Step 3: Refactor while keeping tests green
+ * Improve code quality without changing behavior
+ */
+
+// UserList.tsx - Refactored with better structure
+export const UserList: FC<{ users: User[] }> = ({ users }) => {
+  if (users.length === 0) {
+    return <Empty description="No users found" />;
+  }
+  
+  return (
+    <List
+      dataSource={users}
+      renderItem={(user) => (
+        <List.Item key={user.id}>
+          <UserCard user={user} />
+        </List.Item>
+      )}
+    />
+  );
+};
+
+// UserService.ts - Refactored with data provider pattern
+export class UserService {
+  constructor(private dataProvider: DataProvider) {}
+  
+  validate(user: unknown): User {
+    return UserContract.parse(user);
+  }
+  
+  async getAll(): Promise<User[]> {
+    const response = await this.dataProvider.getList('users');
+    return response.data.map(user => this.validate(user));
+  }
+}
+```
+
+### Phase 5: Progressive Enhancement (Demo → Live Data)
+
+Once your tests are green and code is refactored, progress through data providers:
+
 ```typescript
 /**
  * @integration @server-dependent @api @local-only
@@ -419,20 +502,26 @@ test.describe('Production Health', () => {
 
 ## ✅ Key Principles
 
-1. **Contract-First**: Define data contracts before implementation
-2. **Mock-First UI**: Build UI with mock providers before backend
-3. **Progressive Enhancement**: Mock → Demo → Live data
-4. **Nx Affected Everything**: Only test what changed
-5. **Explicit Server Requirements**: Default is admin-only, others must be explicit
-6. **Demo Data Safety**: Never test with production data
-7. **Environment Appropriate**: Right tests at right time
-8. **Fast Feedback**: Unit/mock tests on commit, integration on push
-9. **Production Caution**: Only smoke/health checks in production
+1. **TDD Red-Green-Refactor**: Write failing tests → Make them pass → Improve code
+2. **Test-First Development**: Always write tests before implementation
+3. **Contract-First**: Define data contracts before tests and implementation
+4. **Mock-First UI**: Build UI with mock providers before backend
+5. **Progressive Enhancement**: Mock → Demo → Live data
+6. **Nx Affected Everything**: Only test what changed
+7. **Explicit Server Requirements**: Default is admin-only, others must be explicit
+8. **Demo Data Safety**: Never test with production data
+9. **Environment Appropriate**: Right tests at right time
+10. **Fast Feedback**: Unit/mock tests on commit, integration on push
+11. **Production Caution**: Only smoke/health checks in production
 
 ## 🚨 Critical Rules
 
-1. **Server dependencies must be explicit** - Don't assume servers are running
-2. **@requires-[server] tags are mandatory** - For any non-admin server needs
-3. **Demo data only in preview** - Never modify production data
-4. **Nx affected is non-negotiable** - Always use affected commands
-5. **Progressive data providers** - Mock → Demo → Live in that order
+1. **Tests come first** - Write tests before implementation code (TDD)
+2. **Red before Green** - Tests must fail first, then make them pass
+3. **Server dependencies must be explicit** - Don't assume servers are running
+4. **@requires-[server] tags are mandatory** - For any non-admin server needs
+5. **Demo data only in preview** - Never modify production data
+6. **Nx affected is non-negotiable** - Always use affected commands
+7. **Progressive data providers** - Mock → Demo → Live in that order
+8. **Minimal implementation** - Only write code needed to pass tests
+9. **Refactor with confidence** - Tests protect against regressions
