@@ -1,5 +1,5 @@
 /**
- * @unit @critical
+ * @unit @critical @admin
  * Tests for environment configuration and testing strategy
  */
 
