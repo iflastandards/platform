@@ -427,6 +427,185 @@ export const testHelpers = {
 };
 
 /**
+ * Test-specific configurations for 5-phase testing strategy
+ */
+export type TestTag =
+  | '@unit'
+  | '@integration'
+  | '@e2e'
+  | '@smoke'
+  | '@contract'
+  | '@performance'
+  | '@security'
+  | '@critical'
+  | '@essential'
+  | '@important'
+  | '@nice-to-have'
+  | '@mock-only'
+  | '@real-only'
+  | '@staging-only'
+  | '@prod-only'
+  | '@all-envs'
+  | '@service-availability';
+
+/**
+ * Test tag mappings for each environment
+ * Defines which test types run in each environment
+ */
+export const testTagsByEnvironment = {
+  test_mock: ['@unit', '@integration', '@contract', '@mock-only'] as TestTag[],
+  test_local: ['@e2e', '@real-only'] as TestTag[],
+  test_integration: ['@integration', '@e2e', '@real-only'] as TestTag[],
+  staging: ['@smoke', '@service-availability', '@critical'] as TestTag[],
+  production: ['@smoke', '@service-availability', '@critical'] as TestTag[],
+  development: ['@unit', '@integration', '@e2e'] as TestTag[], // Flexible for dev
+} as const;
+
+/**
+ * Phase mapping for 5-phase testing strategy
+ */
+export const phaseByEnvironment = {
+  test_mock: 2, // Phase 2: Pre-commit (Unit + Integration with MSW)
+  test_local: 3, // Phase 3: Pre-push (E2E with real local services)
+  test_integration: 4, // Phase 4: Pull Request (Full suite)
+  staging: 5, // Phase 5: Preview deployment (Smoke only)
+  production: 5, // Phase 5: Production deployment (Smoke only)
+  development: 1, // Phase 1: Selective (Development)
+} as const;
+
+/**
+ * Test timeout configurations by environment
+ */
+export const testTimeouts = {
+  test_mock: 5000, // 5s for mocked tests
+  test_local: 30000, // 30s for local E2E
+  test_integration: 60000, // 1m for full integration
+  staging: 10000, // 10s for smoke tests
+  production: 10000, // 10s for smoke tests
+  development: 30000, // 30s default for dev
+} as const;
+
+/**
+ * Check if current environment should run tests with given tags
+ */
+export function shouldRunTest(testTags: TestTag[]): boolean {
+  const allowedTags = testTagsByEnvironment[currentEnv] || [];
+  return testTags.some((tag) => allowedTags.includes(tag as any));
+}
+
+/**
+ * Get test timeout for current environment
+ */
+export function getTestTimeout(): number {
+  return testTimeouts[currentEnv] || 30000;
+}
+
+/**
+ * Get test phase for current environment
+ */
+export function getCurrentTestPhase(): number {
+  return phaseByEnvironment[currentEnv] || 1;
+}
+
+/**
+ * Priority-based test filtering
+ * Determines which priority levels are enforced in each environment
+ */
+export function filterTestsByPriority(
+  priority: '@critical' | '@essential' | '@important' | '@nice-to-have',
+): boolean {
+  type PriorityTag =
+    | '@critical'
+    | '@essential'
+    | '@important'
+    | '@nice-to-have';
+
+  const priorityRules: Record<string, readonly PriorityTag[]> = {
+    test_mock: ['@critical', '@essential', '@important', '@nice-to-have'],
+    test_local: ['@critical', '@essential', '@important'],
+    test_integration: ['@critical', '@essential', '@important'],
+    staging: ['@critical', '@essential'],
+    production: ['@critical'],
+    development: ['@critical', '@essential', '@important', '@nice-to-have'],
+  };
+
+  const allowed = priorityRules[currentEnv] || priorityRules.development;
+  return allowed.includes(priority as PriorityTag);
+}
+
+/**
+ * Get nx affected configuration for current environment
+ */
+export function getNxAffectedConfig() {
+  const phase = getCurrentTestPhase();
+
+  switch (phase) {
+    case 2: // Pre-commit
+      return {
+        base: 'HEAD~1',
+        targets: ['typecheck', 'lint', 'test', 'test:integration'],
+        parallel: true,
+        useNxAffected: true,
+      };
+    case 3: // Pre-push
+      return {
+        base: 'origin/main',
+        targets: ['e2e'],
+        parallel: false, // E2E tests often need sequential execution
+        useNxAffected: true,
+      };
+    case 4: // Pull Request
+      return {
+        base: 'origin/main',
+        targets: ['test', 'test:integration', 'e2e'],
+        all: true,
+        parallel: true,
+        useNxAffected: true,
+      };
+    case 5: // Deployment
+      // No nx affected for deployment - run specific smoke tests
+      return {
+        useNxAffected: false,
+        targets: ['test:smoke', 'test:service-availability'],
+        projects: ['admin', 'portal'],
+      };
+    default: // Development (Phase 1)
+      return {
+        base: 'HEAD',
+        targets: ['test'],
+        watch: true,
+        useNxAffected: true,
+      };
+  }
+}
+
+/**
+ * Test execution helpers integrated with 5-phase strategy
+ */
+export const testingStrategy = {
+  getCurrentPhase: getCurrentTestPhase,
+  shouldRunTest,
+  getTestTimeout,
+  filterTestsByPriority,
+  getNxAffectedConfig,
+
+  // Phase-specific helpers
+  isPreCommitPhase: () => getCurrentTestPhase() === 2,
+  isPrePushPhase: () => getCurrentTestPhase() === 3,
+  isPullRequestPhase: () => getCurrentTestPhase() === 4,
+  isDeploymentPhase: () => getCurrentTestPhase() === 5,
+
+  // Environment-specific test checks
+  canRunUnitTests: () => shouldRunTest(['@unit']),
+  canRunIntegrationTests: () => shouldRunTest(['@integration']),
+  canRunE2ETests: () => shouldRunTest(['@e2e']),
+  canRunSmokeTests: () => shouldRunTest(['@smoke']),
+
+  // Get allowed test tags for current environment
+  getAllowedTags: () => testTagsByEnvironment[currentEnv] || [],
+};
+
+/**
  * Export a type-safe configuration object
  */
 export const config = {
@@ -437,6 +616,7 @@ export const config = {
   switchEnvironment,
   getConnectionStrings,
   testHelpers,
+  testingStrategy, // Testing strategy integration
   // Expose current environment for logging
   currentEnvironment: currentEnv,
 } as const;

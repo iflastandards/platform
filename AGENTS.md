@@ -79,6 +79,12 @@ File placement within `/apps/admin/` is strict and predictable.
   5. Customize generated code to make all tests pass (GREEN phase - step 9)
   6. Refactor while keeping tests green (REFACTOR phase - step 11)
   - See `developer_notes/TDD_WITH_REFINE_GENERATORS.md` and `developer_notes/REFINE_RESOURCE_METADATA_PATTERN.md`
+- **Automated TDD Workflow:** All features MUST follow the automated TDD workflow with 5-phase testing:
+  - **Complete Guide**: `developer_notes/AUTOMATED_TDD_WORKFLOW.md`
+  - **Agent Prompts**: `developer_notes/prompts/automated-tdd-agent-prompts.md`
+  - **Environment Config**: `apps/admin/src/config/environment.ts`
+  - Tests are tagged (`@unit`, `@integration`, `@e2e`, `@smoke`) for phase-specific execution
+  - All phases use `nx affected` for optimal performance
 - **Data Flow:** The data lifecycle is always: `UI Component` -> `refine Hook (e.g., useList)` -> `dataProvider` -> `Service Adapter` -> `Live API / MSW`.
 - **Validation:** Every function within a service adapter that receives external data **must** parse it with its corresponding Zod schema before returning it. Throw a structured error on failure.
 - **State Management:** Server state, caching, and re-fetching are managed by `refine` and `@tanstack/react-query`. Do not use `useState` for server data.
@@ -91,7 +97,12 @@ File placement within `/apps/admin/` is strict and predictable.
 
 ## Testing Strategy - Critical for All Features
 
-### Environment-Based Testing
+### Environment-Based Testing & TDD Workflow
+**MANDATORY: Follow the Automated TDD Workflow for all feature development**
+- **Complete Guide**: `developer_notes/AUTOMATED_TDD_WORKFLOW.md`
+- **Agent Prompts**: `developer_notes/prompts/automated-tdd-agent-prompts.md`
+- **Environment Config**: `apps/admin/src/config/environment.ts`
+
 **All features MUST support seamless mock/real switching:**
 
 ```typescript
@@ -103,35 +114,56 @@ const service = new FeatureService({
 });
 ```
 
-### Progressive Testing Levels
+### 5-Phase Testing Strategy (All Using nx affected)
 
-| Level | Trigger | Time | What Runs | Environment |
-|-------|---------|------|-----------|-------------|
-| 1 | On Save | Instant | Typecheck + Lint | N/A |
-| 2 | Pre-commit | <5s | Unit tests with mocks | USE_MOCKS=true |
-| 3 | Pre-push | <30s | Integration with MSW | USE_MOCKS=true |
-| 4 | PR | <2m | E2E with mock + real | Both |
-| 5 | Deploy | <30s | Smoke tests only | Production |
+| Phase | Trigger | Timing | Test Tags | Environment | What Runs |
+|-------|---------|--------|-----------|-------------|-----------|
+| **1: Selective** | On Save | Instant | N/A | N/A | Type check + Lint only |
+| **2: Pre-commit** | Git commit | <10s | `@unit` | `USE_MOCKS=true` | Unit tests with mocks |
+| **3: Pre-push** | Git push | <1m | `@unit` + `@integration` | `USE_MOCKS=true` | Unit + Integration with MSW |
+| **4: Comprehensive** | PR/Manual | <5m | `@unit` + `@integration` + `@e2e` | Real services | Full suite with local services |
+| **5: CI/Deployment** | Deploy | <30s | `@smoke` | Production | Critical path validation only |
 
-### Quick Test Commands
+### Phase-Aware Test Commands
 ```bash
-# During development (continuous feedback)
-pnpm test:watch      # Runs tests on file change
+# Phase 1: During development (instant feedback)
+pnpm typecheck       # Type checking only
+pnpm lint           # Linting only
 
-# Before committing (fast validation)
-pnpm test:quick      # Type + Lint + Unit tests
+# Phase 2: Before committing (fast unit tests)
+pnpm test:unit      # Runs @unit tagged tests with mocks
 
-# Before pushing (thorough check)
-pnpm test:integration # All tests with mocks
+# Phase 3: Before pushing (integration with MSW)
+pnpm test:integration # Runs @unit + @integration with MSW mocks
 
-# Before deploying (complete validation)
-pnpm test:e2e        # Full suite with real services
+# Phase 4: Before PR/merge (full validation)
+pnpm test:e2e       # Full suite with real local services
 
-# After deploying (health check)
-pnpm test:smoke      # Minimal production tests
+# Phase 5: Production deployment (smoke tests)
+pnpm test:smoke     # Critical path validation in production
 ```
 
-See `developer_notes/WORKFLOW_TESTING_EMPHASIS.md` for detailed patterns.
+### Test Tagging System
+```typescript
+// Use tags in your test files
+describe('UserService @unit', () => {
+  // Fast, isolated unit tests
+});
+
+describe('API Integration @integration', () => {
+  // Tests with MSW mocks or real services
+});
+
+describe('User Flow @e2e', () => {
+  // Full end-to-end scenarios
+});
+
+describe('Health Check @smoke', () => {
+  // Critical production validations
+});
+```
+
+See `developer_notes/AUTOMATED_TDD_WORKFLOW.md` for complete TDD methodology.
 
 ## Specialized Task Guidance (Domain-Specific Prompts)
 
@@ -478,14 +510,18 @@ Is this an admin app feature?
 - **TDD Red-Green-Refactor**: Write failing tests first, then implementation, then refactor
 - **Test-First Development**: ALWAYS write tests before writing implementation code
 - **5-phase testing strategy**: Selective → Pre-commit → Pre-push → Comprehensive → CI
+- **Automated TDD Workflow**: Follow `developer_notes/AUTOMATED_TDD_WORKFLOW.md` for step-by-step process
 - **MANDATORY**: Read `developer_notes/TESTING_STRATEGY_V2.md` for TDD approach
 - **Templates**: Use `developer_notes/TEST_TEMPLATES.md` for proper test structure
+- **Environment Configuration**: `apps/admin/src/config/environment.ts` for phase-aware testing
+- **Test Tagging**: Use `@unit`, `@integration`, `@e2e`, `@smoke` tags for phase-specific execution
 - **Write @unit tests first** for components and pure functions
-- **Follow with @integration tests** for API and service layers
+- **Follow with @integration tests** for API and service layers  
 - **Command format**: `pnpm nx test [project]` (NEVER forget pnpm prefix)
 - **Performance targets**: <30s per integration test, <5s per unit test
 - **Real test data**: Create actual files, use temp directories, clean up in afterEach
 - **Minimal implementation**: Only write code needed to make tests pass
+- **nx affected**: All phases use `nx affected` for optimal performance (except Phase 5)
 
 ## Phase 5 CI/CD Compliance
 - **CI/CD focuses ONLY on environment validation** - no code testing
@@ -685,6 +721,52 @@ Before starting any feature:
 | Simple forms and tables | `ai-brief-feature-factory.md` + Refine.dev |
 
 See workflow documents for detailed guidance.
+
+## Automated TDD Workflow - MANDATORY for All Features
+
+### Complete TDD Methodology
+- **Main Guide**: `developer_notes/AUTOMATED_TDD_WORKFLOW.md`
+- **Agent Prompts**: `developer_notes/prompts/automated-tdd-agent-prompts.md`
+- **Environment Config**: `apps/admin/src/config/environment.ts`
+
+### TDD Process Overview
+1. **RED Phase**: Write failing tests that define expected behavior
+2. **GREEN Phase**: Write minimal code to make tests pass
+3. **REFACTOR Phase**: Improve code while keeping tests green
+
+### Test Tagging & Phases
+- **@unit**: Fast, isolated tests (Phase 2: Pre-commit)
+- **@integration**: Tests with MSW mocks (Phase 3: Pre-push)
+- **@e2e**: Full end-to-end tests (Phase 4: Comprehensive)
+- **@smoke**: Production validation (Phase 5: CI/Deploy)
+
+### Environment-Based Execution
+```typescript
+// Tests automatically adapt to environment
+if (process.env.USE_MOCKS === 'true') {
+  // Use MSW handlers (Phases 2-3)
+} else {
+  // Use real services (Phase 4)
+}
+```
+
+### Commands by Phase
+```bash
+# Phase 1: Development (instant feedback)
+pnpm typecheck && pnpm lint
+
+# Phase 2: Pre-commit (unit tests)
+pnpm nx affected --target=test --tag=unit
+
+# Phase 3: Pre-push (integration with mocks)
+pnpm nx affected --target=test --tag=unit,integration
+
+# Phase 4: PR/Manual (full suite)
+pnpm nx affected --target=test --tag=unit,integration,e2e
+
+# Phase 5: Production (smoke tests)
+pnpm nx run-many --target=test --tag=smoke
+```
 
 ## Git Workflow for Feature Development
 
