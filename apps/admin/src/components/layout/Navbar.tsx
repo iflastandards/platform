@@ -1,10 +1,21 @@
 'use client';
 
 import { useState } from 'react';
+import { config } from '@/config/environment';
 import Link from 'next/link';
 import { useUser, UserButton } from '@clerk/nextjs';
 import { useTheme as useAppTheme } from '@/contexts/theme-context';
-import { Layout, Menu, Button, Badge, Tag, Drawer, Space, Grid, type MenuProps } from 'antd';
+import {
+  Layout,
+  Menu,
+  Button,
+  Badge,
+  Tag,
+  Drawer,
+  Space,
+  Grid,
+  type MenuProps,
+} from 'antd';
 import {
   MenuOutlined,
   DashboardOutlined,
@@ -32,7 +43,7 @@ function Navbar() {
 
   // Get current user from Clerk
   const { user: clerkUser, isLoaded } = useUser();
-  const isDemo = process.env.NEXT_PUBLIC_IFLA_DEMO === 'true';
+  const isDemo = config.env.iflaDemo;
 
   // Determine user role based on demo mode
   let userRole = 'member';

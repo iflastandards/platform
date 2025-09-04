@@ -7,6 +7,7 @@ import routerProvider from '@refinedev/nextjs-router';
 import { dataProvider } from './dataProvider';
 import { initMsw } from '@/lib/msw-init';
 import { antdTheme } from '@/lib/antd-theme';
+import { config } from '@/config/environment';
 
 interface RefineProviderProps {
   children: ReactNode;
@@ -27,7 +28,7 @@ export function RefineProvider({ children }: RefineProviderProps) {
   }, []);
 
   // Don't render refine until MSW is ready (in mock mode)
-  if (process.env.NEXT_PUBLIC_USE_MOCK === 'true' && !mswReady) {
+  if (config.env.useMock && !mswReady) {
     return <div>Initializing mock services...</div>;
   }
 
@@ -38,32 +39,32 @@ export function RefineProvider({ children }: RefineProviderProps) {
           dataProvider={dataProvider}
           routerProvider={routerProvider}
           resources={[
-          {
-            name: 'rdf-builds',
-            list: '/rdf-builds',
-            create: '/rdf-builds/new',
-            show: '/rdf-builds/:id',
-            meta: {
-              label: 'RDF Builds',
-              icon: '🔧',
+            {
+              name: 'rdf-builds',
+              list: '/rdf-builds',
+              create: '/rdf-builds/new',
+              show: '/rdf-builds/:id',
+              meta: {
+                label: 'RDF Builds',
+                icon: '🔧',
+              },
             },
-          },
-          {
-            name: 'jobs',
-            list: '/jobs',
-            show: '/jobs/:id',
-            meta: {
-              label: 'Jobs',
-              icon: '📋',
+            {
+              name: 'jobs',
+              list: '/jobs',
+              show: '/jobs/:id',
+              meta: {
+                label: 'Jobs',
+                icon: '📋',
+              },
             },
-          },
-        ]}
-        options={{
-          syncWithLocation: true,
-          warnWhenUnsavedChanges: true,
-          projectId: 'ifla-admin',
-        }}
-      >
+          ]}
+          options={{
+            syncWithLocation: true,
+            warnWhenUnsavedChanges: true,
+            projectId: 'ifla-admin',
+          }}
+        >
           {children}
         </Refine>
       </AntdApp>

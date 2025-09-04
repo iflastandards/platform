@@ -1,4 +1,5 @@
 import { createClient } from '@supabase/supabase-js';
+import { config } from '@/config/environment';
 
 // Supabase types
 export interface ImportJob {
@@ -115,16 +116,16 @@ export interface Database {
 }
 
 // Create Supabase client
-const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
-const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
+const { supabaseUrl, supabaseAnonKey } = config.env;
 
 if (!supabaseUrl || !supabaseAnonKey) {
   console.warn('Supabase environment variables not set. Using mock mode.');
 }
 
-export const supabase = supabaseUrl && supabaseAnonKey
-  ? createClient<Database>(supabaseUrl, supabaseAnonKey)
-  : null;
+export const supabase =
+  supabaseUrl && supabaseAnonKey
+    ? createClient<Database>(supabaseUrl, supabaseAnonKey)
+    : null;
 
 // Mock storage for development
 const mockStorage: Record<string, any[]> = {
@@ -141,30 +142,41 @@ export const mockSupabase = {
   from: (table: string) => ({
     select: () => ({
       eq: (field: string, value: any) => ({
-        single: () => Promise.resolve({
-          data: mockStorage[table]?.find((row) => row[field] === value) || null,
+        single: () =>
+          Promise.resolve({
+            data:
+              mockStorage[table]?.find((row) => row[field] === value) || null,
+            error: null,
+          }),
+        order: () =>
+          Promise.resolve({
+            data:
+              mockStorage[table]?.filter((row) => row[field] === value) || [],
+            error: null,
+          }),
+      }),
+      order: (column: string, options?: { ascending?: boolean }) =>
+        Promise.resolve({
+          data:
+            mockStorage[table]?.sort((a, b) => {
+              const ascending = options?.ascending !== false;
+              const aVal = a[column];
+              const bVal = b[column];
+              if (aVal < bVal) {
+                return ascending ? -1 : 1;
+              }
+              if (aVal > bVal) {
+                return ascending ? 1 : -1;
+              }
+              return 0;
+            }) || [],
           error: null,
         }),
-        order: () => Promise.resolve({
-          data: mockStorage[table]?.filter((row) => row[field] === value) || [],
+      single: () =>
+        Promise.resolve({
+          data: mockStorage[table]?.[0] || null,
           error: null,
         }),
-      }),
-      order: (column: string, options?: { ascending?: boolean }) => Promise.resolve({
-        data: mockStorage[table]?.sort((a, b) => {
-          const ascending = options?.ascending !== false;
-          const aVal = a[column];
-          const bVal = b[column];
-          if (aVal < bVal) {return ascending ? -1 : 1;}
-          if (aVal > bVal) {return ascending ? 1 : -1;}
-          return 0;
-        }) || [],
-        error: null,
-      }),
-      single: () => Promise.resolve({
-        data: mockStorage[table]?.[0] || null,
-        error: null,
-      }),
     }),
     insert: (data: any) => ({
       select: () => ({
@@ -174,7 +186,9 @@ export const mockSupabase = {
             created_at: new Date().toISOString(),
             ...data,
           };
-          if (!mockStorage[table]) {mockStorage[table] = [];}
+          if (!mockStorage[table]) {
+            mockStorage[table] = [];
+          }
           mockStorage[table].push(newItem);
           return { data: newItem, error: null };
         },
@@ -182,10 +196,15 @@ export const mockSupabase = {
     }),
     update: (data: any) => ({
       eq: (field: string, value: any) => {
-        const index = mockStorage[table]?.findIndex((row) => row[field] === value);
+        const index = mockStorage[table]?.findIndex(
+          (row) => row[field] === value,
+        );
         if (index !== -1 && mockStorage[table]) {
           mockStorage[table][index] = { ...mockStorage[table][index], ...data };
-          return Promise.resolve({ data: mockStorage[table][index], error: null });
+          return Promise.resolve({
+            data: mockStorage[table][index],
+            error: null,
+          });
         }
         return Promise.resolve({ data: null, error: { message: 'Not found' } });
       },

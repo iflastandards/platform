@@ -1,6 +1,7 @@
 'use client';
 
 import React, { useState } from 'react';
+import { config } from '@/config/environment';
 import {
   Alert,
   Button,
@@ -28,7 +29,10 @@ import {
 } from '@ant-design/icons';
 import { type AppUser } from '@/lib/clerk-github-auth';
 import Link from 'next/link';
-import { TabBasedDashboardLayout, type NavigationItem } from '@/components/layout/TabBasedDashboardLayout';
+import {
+  TabBasedDashboardLayout,
+  type NavigationItem,
+} from '@/components/layout/TabBasedDashboardLayout';
 
 const { Text, Title } = Typography;
 const { Item: ListItem } = List;
@@ -57,7 +61,7 @@ function getRoleIcon(role: string) {
 export default function PersonalDashboard({ user }: PersonalDashboardProps) {
   const [selectedTab, setSelectedTab] = useState('overview');
   const projectCount = Object.keys(user.projects).length;
-  const isDemo = process.env.NEXT_PUBLIC_IFLA_DEMO === 'true';
+  const isDemo = config.env.iflaDemo;
 
   const navigationItems: NavigationItem[] = [
     {
@@ -120,13 +124,7 @@ export default function PersonalDashboard({ user }: PersonalDashboardProps) {
                     Review Group Admin
                   </Tag>
                 )}
-                {isDemo && (
-                  <Tag
-                    color="warning"
-                  >
-                    DEMO MODE
-                  </Tag>
-                )}
+                {isDemo && <Tag color="warning">DEMO MODE</Tag>}
               </Space>
             </div>
 
@@ -137,7 +135,7 @@ export default function PersonalDashboard({ user }: PersonalDashboardProps) {
             <Row gutter={[24, 24]}>
               <Col xs={24} sm={12} md={6}>
                 <Card
-                  style={{ 
+                  style={{
                     minHeight: 140,
                     display: 'flex',
                     flexDirection: 'column',
@@ -146,9 +144,22 @@ export default function PersonalDashboard({ user }: PersonalDashboardProps) {
                   role="region"
                   aria-labelledby="review-groups-card"
                 >
-                  <div style={{ display: 'flex', alignItems: 'center', marginBottom: 16 }}>
-                    <TeamOutlined style={{ marginRight: 8, color: '#1890ff', fontSize: 20 }} aria-hidden="true" />
-                    <Title id="review-groups-card" level={3} style={{ margin: 0 }}>
+                  <div
+                    style={{
+                      display: 'flex',
+                      alignItems: 'center',
+                      marginBottom: 16,
+                    }}
+                  >
+                    <TeamOutlined
+                      style={{ marginRight: 8, color: '#1890ff', fontSize: 20 }}
+                      aria-hidden="true"
+                    />
+                    <Title
+                      id="review-groups-card"
+                      level={3}
+                      style={{ margin: 0 }}
+                    >
                       Review Groups
                     </Title>
                   </div>
@@ -165,7 +176,7 @@ export default function PersonalDashboard({ user }: PersonalDashboardProps) {
 
               <Col xs={24} sm={12} md={6}>
                 <Card
-                  style={{ 
+                  style={{
                     minHeight: 140,
                     display: 'flex',
                     flexDirection: 'column',
@@ -174,8 +185,17 @@ export default function PersonalDashboard({ user }: PersonalDashboardProps) {
                   role="region"
                   aria-labelledby="projects-card"
                 >
-                  <div style={{ display: 'flex', alignItems: 'center', marginBottom: 16 }}>
-                    <ApartmentOutlined style={{ marginRight: 8, color: '#722ed1', fontSize: 20 }} aria-hidden="true" />
+                  <div
+                    style={{
+                      display: 'flex',
+                      alignItems: 'center',
+                      marginBottom: 16,
+                    }}
+                  >
+                    <ApartmentOutlined
+                      style={{ marginRight: 8, color: '#722ed1', fontSize: 20 }}
+                      aria-hidden="true"
+                    />
                     <Title id="projects-card" level={3} style={{ margin: 0 }}>
                       Active Projects
                     </Title>
@@ -193,7 +213,7 @@ export default function PersonalDashboard({ user }: PersonalDashboardProps) {
 
               <Col xs={24} sm={12} md={6}>
                 <Card
-                  style={{ 
+                  style={{
                     minHeight: 140,
                     display: 'flex',
                     flexDirection: 'column',
@@ -202,8 +222,17 @@ export default function PersonalDashboard({ user }: PersonalDashboardProps) {
                   role="region"
                   aria-labelledby="namespaces-card"
                 >
-                  <div style={{ display: 'flex', alignItems: 'center', marginBottom: 16 }}>
-                    <FolderOutlined style={{ marginRight: 8, color: '#52c41a', fontSize: 20 }} aria-hidden="true" />
+                  <div
+                    style={{
+                      display: 'flex',
+                      alignItems: 'center',
+                      marginBottom: 16,
+                    }}
+                  >
+                    <FolderOutlined
+                      style={{ marginRight: 8, color: '#52c41a', fontSize: 20 }}
+                      aria-hidden="true"
+                    />
                     <Title id="namespaces-card" level={3} style={{ margin: 0 }}>
                       Namespaces
                     </Title>
@@ -221,7 +250,7 @@ export default function PersonalDashboard({ user }: PersonalDashboardProps) {
 
               <Col xs={24} sm={12} md={6}>
                 <Card
-                  style={{ 
+                  style={{
                     minHeight: 140,
                     display: 'flex',
                     flexDirection: 'column',
@@ -230,15 +259,29 @@ export default function PersonalDashboard({ user }: PersonalDashboardProps) {
                   role="region"
                   aria-labelledby="role-card"
                 >
-                  <div style={{ display: 'flex', alignItems: 'center', marginBottom: 16 }}>
-                    <DashboardOutlined style={{ marginRight: 8, color: '#13c2c2', fontSize: 20 }} aria-hidden="true" />
+                  <div
+                    style={{
+                      display: 'flex',
+                      alignItems: 'center',
+                      marginBottom: 16,
+                    }}
+                  >
+                    <DashboardOutlined
+                      style={{ marginRight: 8, color: '#13c2c2', fontSize: 20 }}
+                      aria-hidden="true"
+                    />
                     <Title id="role-card" level={3} style={{ margin: 0 }}>
                       Your Role
                     </Title>
                   </div>
                   <Statistic
-                    value={user.systemRole === 'admin' ? 'System Admin' :
-                           user.isReviewGroupAdmin ? 'RG Admin' : 'Member'}
+                    value={
+                      user.systemRole === 'admin'
+                        ? 'System Admin'
+                        : user.isReviewGroupAdmin
+                          ? 'RG Admin'
+                          : 'Member'
+                    }
                     valueStyle={{ fontWeight: 'bold', fontSize: 24 }}
                   />
                   <Text type="secondary" style={{ marginTop: 8 }}>
@@ -262,7 +305,12 @@ export default function PersonalDashboard({ user }: PersonalDashboardProps) {
                 renderItem={(rg, index) => (
                   <ListItem
                     key={rg.slug}
-                    style={{ borderBottom: index < user.reviewGroups.length - 1 ? '1px solid #f0f0f0' : 'none' }}
+                    style={{
+                      borderBottom:
+                        index < user.reviewGroups.length - 1
+                          ? '1px solid #f0f0f0'
+                          : 'none',
+                    }}
                     actions={[
                       rg.role === 'maintainer' && (
                         <Link href={`/dashboard/rg/${rg.slug}`} key="manage">
@@ -274,7 +322,7 @@ export default function PersonalDashboard({ user }: PersonalDashboardProps) {
                             Manage
                           </Button>
                         </Link>
-                      )
+                      ),
                     ].filter(Boolean)}
                   >
                     <ListItem.Meta
@@ -283,8 +331,10 @@ export default function PersonalDashboard({ user }: PersonalDashboardProps) {
                       description={
                         <Space wrap>
                           <Tag>{rg.role}</Tag>
-                          {rg.namespaces.map(ns => (
-                            <Tag key={ns} bordered={false}>{ns}</Tag>
+                          {rg.namespaces.map((ns) => (
+                            <Tag key={ns} bordered={false}>
+                              {ns}
+                            </Tag>
                           ))}
                         </Space>
                       }
@@ -314,7 +364,12 @@ export default function PersonalDashboard({ user }: PersonalDashboardProps) {
                 renderItem={([projectId, project], index) => (
                   <ListItem
                     key={projectId}
-                    style={{ borderBottom: index < Object.entries(user.projects).length - 1 ? '1px solid #f0f0f0' : 'none' }}
+                    style={{
+                      borderBottom:
+                        index < Object.entries(user.projects).length - 1
+                          ? '1px solid #f0f0f0'
+                          : 'none',
+                    }}
                     actions={[
                       <Link href={`/dashboard/project/${projectId}`} key="open">
                         <Button
@@ -324,7 +379,7 @@ export default function PersonalDashboard({ user }: PersonalDashboardProps) {
                         >
                           Open
                         </Button>
-                      </Link>
+                      </Link>,
                     ]}
                   >
                     <ListItem.Meta
@@ -334,8 +389,10 @@ export default function PersonalDashboard({ user }: PersonalDashboardProps) {
                         <Space wrap>
                           <Tag color="blue">{project.role}</Tag>
                           <Tag>Team: {project.sourceTeam}</Tag>
-                          {project.namespaces.map(ns => (
-                            <Tag key={ns} bordered={false}>{ns}</Tag>
+                          {project.namespaces.map((ns) => (
+                            <Tag key={ns} bordered={false}>
+                              {ns}
+                            </Tag>
                           ))}
                         </Space>
                       }

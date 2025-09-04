@@ -1,6 +1,7 @@
 'use client';
 
 import { useState } from 'react';
+import { config } from '@/config/environment';
 import { Typography, Alert, Button, Card, Space, Tag } from 'antd';
 import {
   MailOutlined,
@@ -24,7 +25,7 @@ interface PendingDashboardProps {
 
 export default function PendingDashboard({ user }: PendingDashboardProps) {
   const [selectedTab, setSelectedTab] = useState('status');
-  const isDemo = process.env.NEXT_PUBLIC_IFLA_DEMO === 'true';
+  const isDemo = config.env.iflaDemo;
 
   const navigationItems: NavigationItem[] = [
     { id: 'status', label: 'Account Status', icon: ClockCircleOutlined },

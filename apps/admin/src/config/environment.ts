@@ -32,22 +32,31 @@ function detectEnvironment():
 
   // Test environment detection
   if (process.env.NODE_ENV === 'test') {
-    if (process.env.USE_MOCKS === 'true') return 'test_mock';
-    if (process.env.USE_LOCAL_SUPABASE === 'true') return 'test_local';
+    if (process.env.USE_MOCKS === 'true') {
+      return 'test_mock';
+    }
+    if (process.env.USE_LOCAL_SUPABASE === 'true') {
+      return 'test_local';
+    }
     return 'test_integration';
   }
 
   // Production/staging detection based on URLs
   if (process.env.NEXT_PUBLIC_SUPABASE_URL?.includes('supabase.co')) {
-    if (process.env.NEXT_PUBLIC_SUPABASE_URL.includes('staging'))
+    if (process.env.NEXT_PUBLIC_SUPABASE_URL.includes('staging')) {
       return 'staging';
+    }
     return 'production';
   }
 
   // Local development with various configurations
   if (process.env.NODE_ENV === 'development') {
-    if (process.env.USE_MOCKS === 'true') return 'test_mock';
-    if (process.env.USE_LOCAL_SUPABASE === 'true') return 'test_local';
+    if (process.env.USE_MOCKS === 'true') {
+      return 'test_mock';
+    }
+    if (process.env.USE_LOCAL_SUPABASE === 'true') {
+      return 'test_local';
+    }
     return 'development';
   }
 
@@ -169,6 +178,18 @@ export const env = {
   // Clerk Authentication
   clerkPublishableKey: process.env.NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY || '',
   clerkSecretKey: process.env.CLERK_SECRET_KEY || '',
+  clerkSignInUrl: process.env.NEXT_PUBLIC_CLERK_SIGN_IN_URL || '/sign-in',
+  clerkSignUpUrl: process.env.NEXT_PUBLIC_CLERK_SIGN_UP_URL || '/sign-up',
+  clerkAfterSignInUrl:
+    process.env.NEXT_PUBLIC_CLERK_AFTER_SIGN_IN_URL || '/admin',
+  clerkAfterSignOutUrl: process.env.NEXT_PUBLIC_CLERK_AFTER_SIGN_OUT_URL || '/',
+  clerkSignInFallbackUrl:
+    process.env.NEXT_PUBLIC_CLERK_SIGN_IN_FALLBACK_REDIRECT_URL ||
+    '/admin/api/auth/callback',
+  clerkSignUpFallbackUrl:
+    process.env.NEXT_PUBLIC_CLERK_SIGN_UP_FALLBACK_REDIRECT_URL ||
+    '/admin/api/auth/callback',
+  clerkWebhookSecret: process.env.CLERK_WEBHOOK_SECRET || '',
 
   // Supabase
   supabaseUrl: envConfig.supabaseUrl,
