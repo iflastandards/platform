@@ -138,6 +138,7 @@ export default function NamespacesList({
                 type="text"
                 icon={<MoreOutlined />}
                 onClick={(e) => e.stopPropagation()}
+                aria-label="More options"
               />
             </Dropdown>
           }

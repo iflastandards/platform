@@ -11,5 +11,5 @@ export default async function ProjectsPage() {
     redirect('/sign-in?redirect_url=/dashboard/editor/projects');
   }
 
-  return <SharedProjectsPage user={user} role="editor" />;
+  return <SharedProjectsPage user={user} userRole="editor" />;
 }

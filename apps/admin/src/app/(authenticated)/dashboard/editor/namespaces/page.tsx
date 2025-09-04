@@ -11,5 +11,5 @@ export default async function NamespacesPage() {
     redirect('/sign-in?redirect_url=/dashboard/editor/namespaces');
   }
 
-  return <SharedNamespacesPage user={user} role="editor" />;
+  return <SharedNamespacesPage user={user} userRole="editor" />;
 }

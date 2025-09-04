@@ -18,7 +18,7 @@ export default async function NamespacesPage({
   // In demo mode, use mock data
   if (isDemo) {
     const demoUserId = userId || 'user-admin-1';
-    return <NamespacesList userId={demoUserId} isDemo={true} />;
+    return <NamespacesList userId={demoUserId} isDemo />;
   }
 
   // Production mode - use real auth

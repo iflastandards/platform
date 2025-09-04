@@ -229,7 +229,11 @@ export default function NamespaceDashboard({
             placement="bottomRight"
             trigger={['click']}
           >
-            <Button type="text" icon={<MoreOutlined />} />
+            <Button
+              type="text"
+              icon={<MoreOutlined />}
+              aria-label="More options"
+            />
           </Dropdown>
         </div>
 

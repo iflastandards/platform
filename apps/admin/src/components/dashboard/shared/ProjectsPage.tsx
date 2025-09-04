@@ -1,74 +1,78 @@
 'use client';
 
 import React from 'react';
-import {
-  Typography,
-  List,
-  Button,
-  Tag,
-  Space,
-} from 'antd';
-import {
-  EditOutlined,
-  ProjectOutlined,
-} from '@ant-design/icons';
+import { Typography, List, Button, Tag, Space } from 'antd';
+import { EditOutlined, ProjectOutlined } from '@ant-design/icons';
 import Link from 'next/link';
 import { type AppUser } from '@/lib/clerk-github-auth';
 
 interface SharedProjectsPageProps {
   user: AppUser;
-  role: 'author' | 'editor';
+  userRole: 'author' | 'editor';
 }
 
 const { Title, Text } = Typography;
 
-export function SharedProjectsPage({ user, role }: SharedProjectsPageProps) {
+export function SharedProjectsPage({
+  user,
+  userRole,
+}: SharedProjectsPageProps) {
   const userProjects = Object.values(user.projects);
-  
+
   // Filter projects based on role
-  const filteredProjects = role === 'author' 
-    ? userProjects.filter(p => p.role === 'reviewer' || p.role === 'translator')
-    : userProjects.filter(p => p.role === 'lead' || p.role === 'editor');
+  const filteredProjects =
+    userRole === 'author'
+      ? userProjects.filter(
+          (p) => p.role === 'reviewer' || p.role === 'translator',
+        )
+      : userProjects.filter((p) => p.role === 'lead' || p.role === 'editor');
 
   // Get role display
   const getRoleDisplay = (projectRole: string) => {
     const roleMap: Record<string, string> = {
-      'reviewer': 'Reviewer',
-      'translator': 'Translator',
-      'lead': 'Project Lead',
-      'editor': 'Editor',
+      reviewer: 'Reviewer',
+      translator: 'Translator',
+      lead: 'Project Lead',
+      editor: 'Editor',
     };
     return roleMap[projectRole] || projectRole;
   };
 
   // Get role color for authors only (editors use primary)
   const getRoleColor = (projectRole: string) => {
-    if (role === 'editor') {return 'blue';}
-    
+    if (userRole === 'editor') {
+      return 'blue';
+    }
+
     switch (projectRole) {
-      case 'reviewer': return 'purple';
-      case 'translator': return 'cyan';
-      default: return 'default';
+      case 'reviewer':
+        return 'purple';
+      case 'translator':
+        return 'cyan';
+      default:
+        return 'default';
     }
   };
 
   const getEmptyMessage = () => {
-    if (role === 'author') {
+    if (userRole === 'author') {
       return {
         primary: 'No projects assigned',
-        secondary: "You don't have any projects with reviewer or translator roles"
+        secondary:
+          "You don't have any projects with reviewer or translator roles",
       };
-    } 
-      return {
-        primary: 'No projects assigned',
-        secondary: "You don't have any projects with editor or lead roles"
-      };
-    
+    }
+    return {
+      primary: 'No projects assigned',
+      secondary: "You don't have any projects with editor or lead roles",
+    };
   };
 
   return (
     <div>
-      <Title level={2} style={{ marginBottom: 24 }}>My Projects</Title>
+      <Title level={2} style={{ marginBottom: 24 }}>
+        My Projects
+      </Title>
       <List
         dataSource={filteredProjects}
         renderItem={(project) => (
@@ -78,7 +82,11 @@ export function SharedProjectsPage({ user, role }: SharedProjectsPageProps) {
                 <Button
                   icon={<EditOutlined />}
                   size="small"
-                  aria-label={role === 'author' ? `View ${project.title} project` : `Edit ${project.title}`}
+                  aria-label={
+                    userRole === 'author'
+                      ? `View ${project.title} project`
+                      : `Edit ${project.title}`
+                  }
                 />
               </Link>,
             ]}

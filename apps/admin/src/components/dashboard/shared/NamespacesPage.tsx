@@ -1,36 +1,31 @@
 'use client';
 
 import React from 'react';
-import {
-  Typography,
-  Card,
-  Button,
-  List,
-  Row,
-  Col,
-} from 'antd';
-import {
-  EditOutlined,
-  FolderOutlined,
-} from '@ant-design/icons';
+import { Typography, Card, Button, List, Row, Col } from 'antd';
+import { EditOutlined, FolderOutlined } from '@ant-design/icons';
 import Link from 'next/link';
 import { type AppUser } from '@/lib/clerk-github-auth';
 
 interface SharedNamespacesPageProps {
   user: AppUser;
-  role: 'author' | 'editor';
+  userRole: 'author' | 'editor';
 }
 
 const { Title, Text } = Typography;
 
-export function SharedNamespacesPage({ user, role }: SharedNamespacesPageProps) {
-  const {accessibleNamespaces} = user;
+export function SharedNamespacesPage({
+  user,
+  userRole,
+}: SharedNamespacesPageProps) {
+  const { accessibleNamespaces } = user;
 
   // Author view: Card layout
-  if (role === 'author') {
+  if (userRole === 'author') {
     return (
       <div>
-        <Title level={2} style={{ marginBottom: 24 }}>Accessible Namespaces</Title>
+        <Title level={2} style={{ marginBottom: 24 }}>
+          Accessible Namespaces
+        </Title>
         <Row gutter={[16, 16]}>
           {accessibleNamespaces.map((namespace) => (
             <Col xs={24} sm={12} md={8} key={namespace}>
@@ -38,7 +33,10 @@ export function SharedNamespacesPage({ user, role }: SharedNamespacesPageProps) 
                 <Title level={4} style={{ marginBottom: 8 }}>
                   {namespace.toUpperCase()}
                 </Title>
-                <Text type="secondary" style={{ display: 'block', marginBottom: 16 }}>
+                <Text
+                  type="secondary"
+                  style={{ display: 'block', marginBottom: 16 }}
+                >
                   Content to review/translate
                 </Text>
                 <Link href={`/namespaces/${namespace}`}>
@@ -66,7 +64,9 @@ export function SharedNamespacesPage({ user, role }: SharedNamespacesPageProps) 
   // Editor view: List layout
   return (
     <div>
-      <Title level={2} style={{ marginBottom: 24 }}>Accessible Namespaces</Title>
+      <Title level={2} style={{ marginBottom: 24 }}>
+        Accessible Namespaces
+      </Title>
       <List
         dataSource={accessibleNamespaces}
         renderItem={(namespace) => (
@@ -93,7 +93,9 @@ export function SharedNamespacesPage({ user, role }: SharedNamespacesPageProps) 
             <div>
               <Text strong>No namespaces accessible</Text>
               <br />
-              <Text type="secondary">You don't have access to any namespaces</Text>
+              <Text type="secondary">
+                You don&apos;t have access to any namespaces
+              </Text>
             </div>
           ),
         }}

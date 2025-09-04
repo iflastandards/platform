@@ -107,7 +107,8 @@ export default function ImportWorkflow({
         `isbd:P1002,"Statement of responsibility","Names of persons or corporate bodies responsible","published"\n` +
         `,"Missing identifier","This should cause an error","published"`
       );
-    } if (profile.includes('concepts')) {
+    }
+    if (profile.includes('concepts')) {
       return (
         `identifier,prefLabel@en,definition@en,broader\n` +
         `isbd:C1001,"Monograph","A bibliographic resource that is complete",""\n` +
@@ -212,7 +213,7 @@ export default function ImportWorkflow({
       }
 
       // Store job ID for tracking
-      const {jobId} = data;
+      const { jobId } = data;
 
       // Redirect to status page to monitor progress
       router.push(`/import/status/${jobId}`);
@@ -255,8 +256,12 @@ export default function ImportWorkflow({
   const getStepStatus = (
     index: number,
   ): 'wait' | 'process' | 'finish' | 'error' => {
-    if (index < current) {return 'finish';}
-    if (index === current) {return 'process';}
+    if (index < current) {
+      return 'finish';
+    }
+    if (index === current) {
+      return 'process';
+    }
     return 'wait';
   };
 
@@ -537,7 +542,8 @@ export default function ImportWorkflow({
             {!validationComplete && !isValidating && (
               <div style={{ textAlign: 'center', padding: '32px' }}>
                 <Text type="secondary">
-                  Click "Validate" to check your data for errors and warnings.
+                  Click &quot;Validate&quot; to check your data for errors and
+                  warnings.
                 </Text>
               </div>
             )}
