@@ -1,6 +1,6 @@
 {
   "name": "apps-docs",
-  "version": "0.0.0",
+  "version": "*",
   "private": true,
   "scripts": {
     "docusaurus": "docusaurus",
@@ -15,30 +15,6 @@
     "write-translations": "docusaurus write-translations",
     "write-heading-ids": "docusaurus write-heading-ids",
     "typecheck": "tsc"
-  },
-  "dependencies": {
-    "@clerk/nextjs": "*",
-    "@docusaurus/core": "*",
-    "@docusaurus/preset-classic": "*",
-    "@mdx-js/react": "*",
-    "@redocly/openapi-core": "^2.0.6",
-    "@supabase/supabase-js": "*",
-    "clsx": "*",
-    "docusaurus-plugin-redoc": "*",
-    "docusaurus-plugin-typedoc": "*",
-    "docusaurus-theme-redoc": "^2.5.0",
-    "prism-react-renderer": "*",
-    "react": "*",
-    "react-dom": "*",
-    "typedoc": "*",
-    "typedoc-plugin-markdown": "^4.8.1",
-    "typedoc-plugin-zod": "*"
-  },
-  "devDependencies": {
-    "@docusaurus/module-type-aliases": "*",
-    "@docusaurus/tsconfig": "*",
-    "@docusaurus/types": "*",
-    "typescript": "*"
   },
   "browserslist": {
     "production": [

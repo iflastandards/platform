@@ -13,10 +13,9 @@
  * 
  * NX TARGETS THAT RUN THIS TEST:
  * - nx affected --target=test (CI trigger)
-
-/**
+ *
  * @integration @api @critical @high-priority
- */
+ *
  * - nx run-many --target=test --all (full suite)
  * - pnpm test:vitest (direct execution with Vitest)
  * 

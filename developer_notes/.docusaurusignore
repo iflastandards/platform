@@ -1,0 +1,13 @@
+# Files that cause MDX parsing issues
+AI_TEST_TAGGING_INSTRUCTIONS.md
+AI_TEST_TAGGING_README.md
+ISBDM_PROOFREADING_IMPLEMENTATION_PLAN.md
+PAGE_INVENTORY_ARCHITECTURE.md
+WORKFLOW_TESTING_EMPHASIS.md
+warp_integration_plan.md
+
+# Other files to exclude from docs build
+*.bak
+*.tmp
+.DS_Store
+node_modules/

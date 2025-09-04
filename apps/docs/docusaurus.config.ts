@@ -1,10 +1,10 @@
 import { themes as prismThemes } from 'prism-react-renderer';
 import type { Config } from '@docusaurus/types';
 import type * as Preset from '@docusaurus/preset-classic';
-import {
-  getAdminDocsConfig,
-  type Environment,
-} from '@ifla/contracts';
+import { getAdminDocsConfig, type Environment } from '@ifla/contracts';
+
+// Import our custom remark plugin
+const remarkJsxSanitizer = require('./src/plugins/remark-jsx-sanitizer');
 
 // This runs in Node.js - Don't use client-side code here (browser APIs, JSX...)
 const DOCS_ENV =
@@ -43,6 +43,14 @@ const config: Config = {
   onBrokenMarkdownLinks: 'warn',
   onBrokenAnchors: 'ignore',
 
+  // Configure markdown processing
+  // 'detect' means .md files are CommonMark, .mdx files are MDX
+  // This prevents MDX parsing errors in .md files with angle brackets
+  // Files can override with frontmatter: format: 'mdx' or format: 'md'
+  markdown: {
+    format: 'detect',
+  },
+
   // Even if you don't use internationalization, you can use this field to set
   // useful metadata like html lang. For example, if your site is Chinese, you
   // may want to replace "en" with "zh-Hans".
@@ -59,6 +67,7 @@ const config: Config = {
         path: '../../system-design-docs', // Path relative to the docusaurus site
         routeBasePath: 'system-design',
         sidebarPath: './sidebarsSystemDesign.ts',
+        remarkPlugins: [remarkJsxSanitizer],
       },
     ],
     [
@@ -68,6 +77,7 @@ const config: Config = {
         path: '../../docs', // Path to the main docs folder
         routeBasePath: 'docs',
         sidebarPath: './sidebarsUserDocs.ts',
+        remarkPlugins: [remarkJsxSanitizer],
       },
     ],
     [
@@ -77,6 +87,7 @@ const config: Config = {
         path: './docs', // Local docs folder
         routeBasePath: 'intro',
         sidebarPath: './sidebars.ts',
+        remarkPlugins: [remarkJsxSanitizer],
       },
     ],
     [
@@ -86,6 +97,10 @@ const config: Config = {
         path: '../../developer_notes', // Path to developer notes
         routeBasePath: 'developer-notes',
         sidebarPath: './sidebarsDevNotes.ts',
+        remarkPlugins: [remarkJsxSanitizer],
+        // With markdown.format: 'detect' and our sanitizer plugin,
+        // we should be able to handle all .md files without exclusions
+        exclude: ['**/*.bak', '**/*.tmp'],
       },
     ],
     [
@@ -99,10 +114,11 @@ const config: Config = {
     [
       '@docusaurus/plugin-content-docs',
       {
-        id: 'generated-api',
+        id: 'api-docs',
         path: './static/generated-api',
-        routeBasePath: 'generated-api',
+        routeBasePath: 'api-reference',
         sidebarPath: false,
+        remarkPlugins: [remarkJsxSanitizer],
       },
     ],
   ],
@@ -113,6 +129,7 @@ const config: Config = {
         docs: false, // Disable default docs plugin since we're using custom instances
         blog: {
           showReadingTime: true,
+          remarkPlugins: [remarkJsxSanitizer],
           feedOptions: {
             type: ['rss', 'atom'],
             xslt: true,
@@ -146,10 +163,10 @@ const config: Config = {
       },
       items: [
         {
-          to: '/docs', // Your main user-facing docs
+          to: '/intro', // Changed from /docs to /intro to match routeBasePath
           label: 'Dev Docs',
           position: 'left',
-          activeBaseRegex: `/docs`,
+          activeBaseRegex: `/intro`,
         },
         {
           to: '/system-design',
@@ -162,7 +179,7 @@ const config: Config = {
           position: 'left',
         },
         {
-          to: '/generated-api', // Link to your TypeDoc generated API
+          to: '/api-reference', // Link to your TypeDoc generated API
           label: 'Code Reference',
           position: 'left',
         },
