@@ -1,766 +1,448 @@
-# Automated TDD Workflow with Environment-Based Testing
+# Automated TDD Workflow - Complete Integration Guide
 
 ## Overview
 
-This document defines our automated Test-Driven Development workflow that integrates:
-- 4 testing environments (test_mock, test_integration, staging, production)
-- Type and priority tags for test organization
-- Progressive testing stages from unit to production
-- Agent-driven automation patterns
+This document consolidates our Test-Driven Development (TDD) workflow with automated environment switching, 5-phase testing strategy, and commit conventions. It supersedes and combines guidance from TDD_WORKFLOW.md, TESTING_STRATEGY_V2.md, and WORKFLOW_TESTING_EMPHASIS.md.
 
-## Core Testing Philosophy
+## 🎯 Core Principles
 
+1. **Test-First Development**: ALWAYS write failing tests before implementation
+2. **Environment Switching**: Seamless mock/real service switching via configuration
+3. **5-Phase Testing**: Progressive validation from development to production
+4. **Contract-Driven**: Zod schemas define and validate all data shapes
+5. **nx affected**: Optimize test execution at every phase
+
+## 📋 Commit Conventions (Enforced by Git Hooks)
+
+Our TDD workflow is enforced through conventional commit patterns that map directly to the red/green/refactor cycle:
+
+### 🔴 RED Phase Commits
+```bash
+# Write failing tests (implementation comes later)
+git commit -m "test(RED): add failing user authentication tests"
+git commit -m "test(RED): create failing validation for email format"
+git commit -m "test(RED): add failing tests for user role permissions"
 ```
-Contracts → Tests → Mock Implementation → Real Implementation → Production
+
+### 🟢 GREEN Phase Commits  
+```bash
+# Minimal implementation to pass tests
+git commit -m "feat(GREEN): implement user authentication service"
+git commit -m "fix(GREEN): add email validation to user form"
+git commit -m "feat(GREEN): add role-based access control"
 ```
 
-Every feature follows this progression:
-1. **Define contracts** (Zod schemas)
-2. **Write tests with tags** (type, priority, environment)
-3. **Implement with mocks** (MSW/fixtures)
-4. **Connect real services** (progressive environments)
-5. **Deploy with confidence** (smoke tests only)
+### 🔵 REFACTOR Phase Commits
+```bash
+# Code cleanup while keeping tests green
+git commit -m "refactor(REFACTOR): extract authentication logic to service"
+git commit -m "refactor(REFACTOR): simplify user validation functions"
+git commit -m "refactor(REFACTOR): consolidate role checking utilities"
+```
 
-## Test Tagging System
+## 🏭 5-Phase Testing Strategy
 
-### Type Tags (What the test validates)
-
+### Phase Configuration
 ```typescript
-/**
- * Test Type Tags:
- * @unit        - Pure functions, components, isolated logic
- * @integration - Service interactions, API calls, data flow
- * @e2e         - User workflows, browser automation
- * @smoke       - Critical path verification, health checks
- * @contract    - Data shape validation, schema compliance
- * @performance - Response times, memory usage, optimization
- * @security    - Auth, permissions, vulnerability checks
- */
+// apps/admin/src/config/environment.ts
+import { TestPhase, TestTag } from './environment';
+
+// Current phase determines which tests run
+const currentPhase = getCurrentTestPhase();
+const tagsToRun = getTestTagsForPhase(currentPhase);
 ```
 
-### Priority Tags (Failure tolerance)
+### Phase Boundaries & Execution
 
-```typescript
-/**
- * Priority Tags:
- * @critical    - Must pass in ALL environments (blocks deployment)
- * @essential   - Must pass in staging/production (blocks production)
- * @important   - Should pass in production (warning only)
- * @nice-to-have - Optional improvements (never blocks)
- */
+| Phase | Trigger | Test Tags | Environment | nx Command |
+|-------|---------|-----------|-------------|------------|
+| **1: Selective** | On Save | None | N/A | `nx affected --target=typecheck && nx affected --target=lint` |
+| **2: Pre-commit** | Git commit | `@unit` | `USE_MOCKS=true` | `nx affected --target=test --tag=unit` |
+| **3: Pre-push** | Git push | `@unit`, `@integration` | `USE_MOCKS=true` | `nx affected --target=test --tag=unit,integration` |
+| **4: Comprehensive** | PR/Manual | `@unit`, `@integration`, `@e2e` | Real services | `nx affected --target=test --tag=unit,integration,e2e` |
+| **5: CI/Deployment** | Deploy | `@smoke` | Production | `nx run-many --target=test --tag=smoke` |
+
+## 🔄 TDD Cycle Implementation
+
+### Step 1: Create Feature Branch
+```bash
+git checkout -b feature/[feature-name]
 ```
 
-### Environment Tags (Where it runs)
-
+### Step 2: Define Contracts (Pre-RED)
 ```typescript
-/**
- * Environment Tags:
- * @mock-only      - Only runs with USE_MOCKS=true
- * @real-only      - Only runs with USE_MOCKS=false
- * @staging-only   - Only runs in staging environment
- * @prod-only      - Only runs in production
- * @all-envs       - Runs in all environments (default)
- */
-```
-
-## Environment Configuration
-
-```typescript
-// apps/admin/src/config/environments.ts
-export const environments = {
-  test_mock: {
-    USE_MOCKS: true,
-    SUPABASE_URL: 'http://localhost:54321',
-    DATABASE: 'mock',
-    TEST_TAGS: ['@unit', '@contract', '@mock-only']
-  },
-  test_integration: {
-    USE_MOCKS: false,
-    SUPABASE_URL: 'http://localhost:54321',
-    DATABASE: 'local',
-    TEST_TAGS: ['@integration', '@e2e', '@real-only']
-  },
-  staging: {
-    USE_MOCKS: false,
-    SUPABASE_URL: process.env.STAGING_SUPABASE_URL,
-    DATABASE: 'staging',
-    TEST_TAGS: ['@smoke', '@essential', '@staging-only']
-  },
-  production: {
-    USE_MOCKS: false,
-    SUPABASE_URL: process.env.NEXT_PUBLIC_SUPABASE_URL,
-    DATABASE: 'production',
-    TEST_TAGS: ['@smoke', '@critical', '@prod-only']
-  }
-};
-
-// Get current environment
-export function getCurrentEnvironment() {
-  return environments[process.env.TEST_ENV || 'test_mock'];
-}
-```
-
-## Test Runner Configuration
-
-```typescript
-// apps/admin/vitest.config.ts
-import { defineConfig } from 'vitest/config';
-import { getCurrentEnvironment } from './src/config/environments';
-
-export default defineConfig({
-  test: {
-    globals: true,
-    environment: 'jsdom',
-    setupFiles: ['./src/test/setup.ts'],
-    
-    // Filter tests by environment tags
-    include: getTestPatterns(),
-    
-    // Configure timeouts by test type
-    testTimeout: getTestTimeout(),
-    hookTimeout: 10000,
-    
-    // Reporter configuration
-    reporters: getReporters(),
-    
-    // Coverage thresholds by priority
-    coverage: getCoverageConfig(),
-  },
-});
-
-function getTestPatterns() {
-  const env = getCurrentEnvironment();
-  const patterns = [];
-  
-  // Include tests matching environment tags
-  if (env.TEST_TAGS.includes('@unit')) {
-    patterns.push('**/*.unit.test.{ts,tsx}');
-  }
-  if (env.TEST_TAGS.includes('@integration')) {
-    patterns.push('**/*.integration.test.{ts,tsx}');
-  }
-  if (env.TEST_TAGS.includes('@e2e')) {
-    patterns.push('**/*.e2e.test.{ts,tsx}');
-  }
-  if (env.TEST_TAGS.includes('@smoke')) {
-    patterns.push('**/*.smoke.test.{ts,tsx}');
-  }
-  
-  return patterns.length > 0 ? patterns : ['**/*.test.{ts,tsx}'];
-}
-
-function getTestTimeout() {
-  const env = getCurrentEnvironment();
-  
-  if (env.DATABASE === 'mock') return 5000;  // 5s for mock tests
-  if (env.DATABASE === 'local') return 30000; // 30s for local integration
-  if (env.DATABASE === 'staging') return 60000; // 1m for staging
-  return 10000; // 10s for production smoke tests
-}
-
-function getReporters() {
-  const env = getCurrentEnvironment();
-  
-  if (env.DATABASE === 'production') {
-    return ['json', 'junit']; // Machine-readable for monitoring
-  }
-  
-  return ['verbose', 'html']; // Human-readable for development
-}
-
-function getCoverageConfig() {
-  return {
-    provider: 'v8',
-    thresholds: {
-      // Critical code must have high coverage
-      'src/lib/services/**': {
-        statements: 90,
-        branches: 85,
-        functions: 90,
-        lines: 90
-      },
-      // UI components can have lower coverage
-      'src/components/**': {
-        statements: 70,
-        branches: 60,
-        functions: 70,
-        lines: 70
-      }
-    }
-  };
-}
-```
-
-## Test Setup with Environment Switching
-
-```typescript
-// apps/admin/src/test/setup.ts
-import { beforeAll, afterAll, beforeEach, afterEach } from 'vitest';
-import { server } from '@/mocks/server';
-import { getCurrentEnvironment } from '@/config/environments';
-
-const env = getCurrentEnvironment();
-
-beforeAll(() => {
-  // Setup based on environment
-  if (env.USE_MOCKS) {
-    server.listen({ onUnhandledRequest: 'warn' });
-  }
-  
-  // Configure test database
-  if (env.DATABASE === 'local') {
-    // Setup test database connection
-  }
-});
-
-afterAll(() => {
-  if (env.USE_MOCKS) {
-    server.close();
-  }
-});
-
-beforeEach(() => {
-  // Reset mocks between tests
-  if (env.USE_MOCKS) {
-    server.resetHandlers();
-  }
-});
-
-// Custom test runner that respects tags
-export function describeWithTags(
-  name: string,
-  tags: string[],
-  fn: () => void
-) {
-  const env = getCurrentEnvironment();
-  const shouldRun = tags.some(tag => env.TEST_TAGS.includes(tag));
-  
-  if (shouldRun) {
-    describe(name, fn);
-  } else {
-    describe.skip(name, fn);
-  }
-}
-
-// Tagged test helper
-export function testWithTags(
-  name: string,
-  tags: string[],
-  fn: () => void | Promise<void>
-) {
-  const env = getCurrentEnvironment();
-  const shouldRun = tags.some(tag => env.TEST_TAGS.includes(tag));
-  
-  if (shouldRun) {
-    test(name, fn);
-  } else {
-    test.skip(name, fn);
-  }
-}
-```
-
-## Progressive Test Implementation Pattern
-
-### Step 1: Contract Definition with Tests
-
-```typescript
-// packages/contracts/src/Vocabulary.zod.ts
-import { z } from 'zod';
-
-export const VocabularyContract = z.object({
+// packages/contracts/src/User.zod.ts
+export const UserContract = z.object({
   id: z.string().uuid(),
-  name: z.string().min(1).max(100),
-  namespace: z.string().url(),
-  prefix: z.string().regex(/^[a-z]+$/),
-  status: z.enum(['draft', 'published', 'deprecated']),
-  createdAt: z.string().datetime(),
-  updatedAt: z.string().datetime(),
+  name: z.string().min(1),
+  email: z.string().email(),
+  role: z.enum(['admin', 'editor', 'viewer'])
 });
 
-// Contract validation test
-/**
- * @contract @critical @all-envs
- * Contract validation is critical and runs everywhere
- */
-export const vocabularyContractTests = () => {
-  test('should validate correct vocabulary data', () => {
-    const valid = {
-      id: '123e4567-e89b-12d3-a456-426614174000',
-      name: 'Dublin Core',
-      namespace: 'http://purl.org/dc/terms/',
-      prefix: 'dc',
-      status: 'published',
-      createdAt: new Date().toISOString(),
-      updatedAt: new Date().toISOString(),
-    };
+export type User = z.infer<typeof UserContract>;
+```
+
+### Step 3: Write Tests (RED Phase)
+
+#### Tag Your Tests Appropriately
+```typescript
+// UserList.test.tsx
+describe('UserList Component @unit', () => {
+  it('should render list of users', () => {
+    // This will fail - component doesn't exist
+    const { getByText } = render(<UserList users={mockUsers} />);
+    expect(getByText('John Doe')).toBeInTheDocument();
+  });
+});
+
+describe('UserService @integration', () => {
+  it('should fetch users with MSW mock', async () => {
+    // This will fail - service doesn't exist
+    const users = await userService.getAll();
+    expect(users).toMatchContract(UserContract.array());
+  });
+});
+
+describe('User Management @e2e', () => {
+  it('should create and list users', async () => {
+    // This will fail - full flow doesn't exist
+    await createUser(testUser);
+    const users = await listUsers();
+    expect(users).toContainEqual(testUser);
+  });
+});
+```
+
+#### Environment-Aware Test Setup
+```typescript
+// test-utils/setup.ts
+export function setupTestEnvironment() {
+  const phase = getCurrentTestPhase();
+  
+  if (phase <= TestPhase.PRE_PUSH) {
+    // Phases 2-3: Use MSW mocks
+    beforeAll(() => server.listen());
+    afterEach(() => server.resetHandlers());
+    afterAll(() => server.close());
+  } else if (phase === TestPhase.COMPREHENSIVE) {
+    // Phase 4: Use real local services
+    beforeAll(async () => {
+      await startLocalServices();
+    });
+    afterAll(async () => {
+      await stopLocalServices();
+    });
+  }
+  // Phase 5: Production smoke tests run against live services
+}
+```
+
+### Step 4: Create MSW Handlers
+```typescript
+// mocks/handlers.ts
+export const handlers = [
+  rest.get('/api/users', (req, res, ctx) => {
+    return res(
+      ctx.json({
+        data: mockUsers,
+        total: mockUsers.length
+      })
+    );
+  }),
+  
+  rest.post('/api/users', async (req, res, ctx) => {
+    const body = await req.json();
     
-    expect(() => VocabularyContract.parse(valid)).not.toThrow();
+    // Validate against contract even in mocks
+    try {
+      const user = UserContract.parse(body);
+      return res(ctx.status(201), ctx.json(user));
+    } catch (error) {
+      return res(ctx.status(400), ctx.json({ error: 'Invalid user data' }));
+    }
+  })
+];
+```
+
+### Step 5: Implement Minimal Code (GREEN Phase)
+
+#### Service with Environment Switching
+```typescript
+// services/UserService.ts
+export class UserService {
+  private provider: DataProvider;
+  
+  constructor() {
+    // Environment determines provider
+    this.provider = process.env.USE_MOCKS === 'true'
+      ? new MockDataProvider()
+      : new SupabaseDataProvider();
+  }
+  
+  async getAll(): Promise<User[]> {
+    const response = await this.provider.getList('users');
+    // Always validate with contract
+    return UserContract.array().parse(response.data);
+  }
+  
+  async create(data: unknown): Promise<User> {
+    // Validate input
+    const validated = UserContract.parse(data);
+    const response = await this.provider.create('users', validated);
+    // Validate output
+    return UserContract.parse(response.data);
+  }
+}
+```
+
+#### Component Implementation
+```typescript
+// components/UserList.tsx
+export const UserList: FC = () => {
+  const { data: users, isLoading } = useList<User>({
+    resource: 'users',
+    dataProviderName: 'default'
   });
   
-  test('should reject invalid vocabulary data', () => {
-    const invalid = {
-      name: '', // Empty name
-      namespace: 'not-a-url',
-      prefix: 'DC', // Uppercase not allowed
-    };
-    
-    expect(() => VocabularyContract.parse(invalid)).toThrow();
-  });
+  if (isLoading) return <Spin />;
+  if (!users || users.length === 0) return <Empty description="No users found" />;
+  
+  return (
+    <List
+      dataSource={users}
+      renderItem={(user) => (
+        <List.Item key={user.id}>
+          {user.name} ({user.email})
+        </List.Item>
+      )}
+    />
+  );
 };
 ```
 
-### Step 2: Unit Tests with Mocks
+### Step 6: Refactor (REFACTOR Phase)
 
+#### Extract Common Patterns
 ```typescript
-// apps/admin/src/app/vocabularies/__tests__/VocabularyService.unit.test.ts
-
-/**
- * @unit @critical @mock-only
- * Service logic tests that run only with mocks
- */
-describe('VocabularyService - Unit Tests', () => {
-  let service: VocabularyService;
-  
-  beforeEach(() => {
-    process.env.TEST_ENV = 'test_mock';
-    service = new VocabularyService();
+// hooks/useValidatedData.ts
+export function useValidatedData<T>(
+  resource: string,
+  contract: z.ZodType<T>
+) {
+  const { data, ...rest } = useList({
+    resource,
+    dataProviderName: 'default'
   });
   
-  test('should validate vocabulary before creation', async () => {
-    const invalid = { name: '' };
+  const validatedData = useMemo(() => {
+    if (!data) return undefined;
+    try {
+      return contract.array().parse(data);
+    } catch (error) {
+      console.error(`Validation failed for ${resource}:`, error);
+      return undefined;
+    }
+  }, [data, contract, resource]);
+  
+  return { data: validatedData, ...rest };
+}
+
+// Refactored component
+export const UserList: FC = () => {
+  const { data: users, isLoading } = useValidatedData('users', UserContract);
+  // ... rest of component
+};
+```
+
+## 🚀 Running Tests by Phase
+
+### Development (Phase 1)
+```bash
+# Continuous type checking
+pnpm nx affected --target=typecheck --watch
+
+# Continuous linting
+pnpm nx affected --target=lint --watch
+```
+
+### Pre-commit (Phase 2)
+```bash
+# Automatic via git hooks, or manual:
+USE_MOCKS=true pnpm nx affected --target=test --tag=unit
+```
+
+### Pre-push (Phase 3)
+```bash
+# Automatic via git hooks, or manual:
+USE_MOCKS=true pnpm nx affected --target=test --tag=unit,integration
+```
+
+### Comprehensive (Phase 4)
+```bash
+# Start local services first
+pnpm start:services
+
+# Run full test suite
+pnpm nx affected --target=test --tag=unit,integration,e2e
+
+# Or with specific project
+pnpm nx test admin --tag=unit,integration,e2e
+```
+
+### Production (Phase 5)
+```bash
+# Smoke tests only
+pnpm nx run-many --target=test --tag=smoke --projects=admin,portal
+```
+
+## 📊 Test Tagging Best Practices
+
+### Tag Hierarchy
+```typescript
+// Combine tags for better organization
+describe('UserService @integration @api @critical', () => {
+  // Critical API integration tests
+});
+
+describe('UserForm @unit @ui @accessibility', () => {
+  // Accessibility-focused unit tests
+});
+
+describe('User Flow @e2e @smoke @auth', () => {
+  // Auth flow that's also a smoke test
+});
+```
+
+### Performance Tags
+```typescript
+describe('Large Dataset @integration @performance', () => {
+  it('should handle 10,000 users @slow', async () => {
+    // Test with large dataset
+  }, 30000); // 30 second timeout
+});
+```
+
+## 🔧 Environment Configuration
+
+### Test Environment Detection
+```typescript
+// apps/admin/src/config/environment.ts
+export function getCurrentTestPhase(): TestPhase {
+  // Automatic detection based on environment
+  if (process.env.CI) return TestPhase.CI;
+  if (process.env.TEST_PHASE) return parseInt(process.env.TEST_PHASE);
+  if (process.env.USE_MOCKS === 'true') return TestPhase.PRE_PUSH;
+  return TestPhase.COMPREHENSIVE;
+}
+
+export function shouldRunTest(tags: TestTag[]): boolean {
+  const phase = getCurrentTestPhase();
+  const allowedTags = getTestTagsForPhase(phase);
+  return tags.some(tag => allowedTags.includes(tag));
+}
+```
+
+### Dynamic Provider Selection
+```typescript
+// providers/dataProvider.ts
+export const dataProvider = (() => {
+  const phase = getCurrentTestPhase();
+  
+  switch (phase) {
+    case TestPhase.PRE_COMMIT:
+    case TestPhase.PRE_PUSH:
+      return mockDataProvider; // MSW-based
     
-    await expect(service.create(invalid)).rejects.toThrow(
-      'Validation failed'
-    );
-  });
-  
-  test('should generate prefix from name', () => {
-    const prefix = service.generatePrefix('Dublin Core Terms');
-    expect(prefix).toBe('dcterms');
-  });
-  
-  test('should check namespace uniqueness', async () => {
-    // Mock returns predetermined result
-    const exists = await service.checkNamespaceExists(
-      'http://purl.org/dc/terms/'
-    );
-    expect(exists).toBe(true);
-  });
-});
+    case TestPhase.COMPREHENSIVE:
+      return demoDataProvider; // Local services
+    
+    case TestPhase.CI:
+      return productionDataProvider; // Real APIs
+    
+    default:
+      return mockDataProvider;
+  }
+})();
 ```
 
-### Step 3: Integration Tests with MSW
+## 📈 Coverage Requirements by Phase
 
-```typescript
-// apps/admin/src/app/vocabularies/__tests__/VocabularyAPI.integration.test.ts
+| Phase | Unit Coverage | Integration Coverage | E2E Coverage |
+|-------|--------------|---------------------|--------------|
+| Pre-commit | 80% | N/A | N/A |
+| Pre-push | 80% | 70% | N/A |
+| Comprehensive | 80% | 70% | Key flows |
+| Production | N/A | N/A | Critical paths |
 
-/**
- * @integration @essential @all-envs
- * API integration tests that work with both mock and real
- */
-describe('Vocabulary API - Integration Tests', () => {
-  const env = getCurrentEnvironment();
-  
-  describeWithTags(
-    'CRUD Operations',
-    ['@integration', '@essential'],
-    () => {
-      test('should create vocabulary', async () => {
-        const vocabulary = {
-          name: 'Test Vocabulary',
-          namespace: 'http://example.org/test',
-          prefix: 'test',
-          status: 'draft'
-        };
-        
-        const response = await fetch('/api/vocabularies', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify(vocabulary)
-        });
-        
-        expect(response.ok).toBe(true);
-        
-        const created = await response.json();
-        
-        // Validate against contract regardless of environment
-        expect(() => VocabularyContract.parse(created)).not.toThrow();
-        
-        // Environment-specific assertions
-        if (env.USE_MOCKS) {
-          expect(created.id).toBe('mock-id-123'); // Mock returns fixed ID
-        } else {
-          expect(created.id).toMatch(/^[0-9a-f-]{36}$/); // Real returns UUID
-        }
-      });
-      
-      test('should list vocabularies with pagination', async () => {
-        const response = await fetch('/api/vocabularies?page=1&limit=10');
-        const data = await response.json();
-        
-        expect(data).toHaveProperty('items');
-        expect(data).toHaveProperty('total');
-        expect(data.items.length).toBeLessThanOrEqual(10);
-        
-        // Validate each item
-        data.items.forEach(item => {
-          expect(() => VocabularyContract.parse(item)).not.toThrow();
-        });
-      });
-    }
-  );
-});
-```
-
-### Step 4: E2E Tests with Environment Toggle
-
-```typescript
-// apps/admin/src/app/vocabularies/__tests__/VocabularyWorkflow.e2e.test.ts
-import { test, expect } from '@playwright/test';
-
-/**
- * @e2e @essential @real-only
- * End-to-end workflow tests that need real services
- */
-test.describe('Vocabulary Management Workflow', () => {
-  // Run same test against different environments
-  ['test_integration', 'staging'].forEach(envName => {
-    test.describe(`Environment: ${envName}`, () => {
-      test.beforeAll(async () => {
-        process.env.TEST_ENV = envName;
-      });
-      
-      test('should complete vocabulary lifecycle', async ({ page }) => {
-        // Navigate to vocabularies
-        await page.goto('/vocabularies');
-        
-        // Create new vocabulary
-        await page.click('[data-testid="create-vocabulary"]');
-        await page.fill('[name="name"]', 'E2E Test Vocabulary');
-        await page.fill('[name="namespace"]', 'http://example.org/e2e');
-        await page.fill('[name="prefix"]', 'e2e');
-        await page.click('[type="submit"]');
-        
-        // Verify creation
-        await expect(page.locator('text=E2E Test Vocabulary')).toBeVisible();
-        
-        // Edit vocabulary
-        await page.click('[data-testid="edit-vocabulary"]');
-        await page.selectOption('[name="status"]', 'published');
-        await page.click('[type="submit"]');
-        
-        // Verify status change
-        await expect(page.locator('.ant-tag-green')).toContainText('PUBLISHED');
-        
-        // Delete vocabulary (only in test environment)
-        if (envName === 'test_integration') {
-          await page.click('[data-testid="delete-vocabulary"]');
-          await page.click('text=Confirm');
-          await expect(page.locator('text=E2E Test Vocabulary')).not.toBeVisible();
-        }
-      });
-    });
-  });
-});
-```
-
-### Step 5: Smoke Tests for Production
-
-```typescript
-// apps/admin/src/app/vocabularies/__tests__/VocabularySmoke.smoke.test.ts
-
-/**
- * @smoke @critical @prod-only
- * Minimal smoke tests for production health checks
- */
-describe('Vocabulary Service - Smoke Tests', () => {
-  testWithTags(
-    'should reach vocabulary API endpoint',
-    ['@smoke', '@critical'],
-    async () => {
-      const response = await fetch(
-        `${process.env.NEXT_PUBLIC_APP_URL}/api/vocabularies/health`
-      );
-      
-      expect(response.status).toBe(200);
-      
-      const health = await response.json();
-      expect(health.status).toBe('healthy');
-      expect(health.database).toBe('connected');
-    }
-  );
-  
-  testWithTags(
-    'should have correct permissions configured',
-    ['@smoke', '@critical'],
-    async () => {
-      // Check anonymous access is blocked
-      const response = await fetch(
-        `${process.env.NEXT_PUBLIC_APP_URL}/api/vocabularies`,
-        { headers: {} } // No auth header
-      );
-      
-      expect(response.status).toBe(401);
-    }
-  );
-  
-  testWithTags(
-    'should serve vocabulary UI',
-    ['@smoke', '@essential'],
-    async () => {
-      const response = await fetch(
-        `${process.env.NEXT_PUBLIC_APP_URL}/vocabularies`
-      );
-      
-      expect(response.status).toBe(200);
-      
-      const html = await response.text();
-      expect(html).toContain('<!DOCTYPE html>');
-      expect(html).toContain('vocabulary');
-    }
-  );
-});
-```
-
-## Automated Test Execution Pipeline
-
-### Local Development Commands
+## 🎯 Quick Reference Commands
 
 ```bash
-# Development with continuous testing
-pnpm test:dev
-# Runs: TEST_ENV=test_mock vitest --watch
+# Check what phase you're in
+pnpm nx run admin:test --tag=debug
 
-# Pre-commit validation
-pnpm test:commit
-# Runs: TEST_ENV=test_mock vitest --run --grep "@unit|@critical"
+# Run tests for current phase
+pnpm test:current
 
-# Pre-push comprehensive
-pnpm test:push
-# Runs: TEST_ENV=test_integration vitest --run --grep "@essential|@critical"
+# Run specific phase tests
+TEST_PHASE=2 pnpm nx test admin  # Pre-commit
+TEST_PHASE=3 pnpm nx test admin  # Pre-push
+TEST_PHASE=4 pnpm nx test admin  # Comprehensive
 
-# Pre-deploy verification
-pnpm test:deploy
-# Runs: TEST_ENV=staging playwright test
+# Skip certain tags
+pnpm nx test admin --skip-tags=slow,flaky
+
+# Run only critical tests
+pnpm nx test admin --tag=critical
+
+# Parallel test execution
+pnpm nx affected --target=test --parallel=3
 ```
 
-### CI/CD Pipeline Commands
+## 🚨 Common Pitfalls & Solutions
 
-```yaml
-# .github/workflows/test.yml
-name: Progressive Testing
-
-on: [push, pull_request]
-
-jobs:
-  unit-tests:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v3
-      - run: pnpm install
-      - run: TEST_ENV=test_mock pnpm test:ci
-      
-  integration-tests:
-    needs: unit-tests
-    runs-on: ubuntu-latest
-    services:
-      postgres:
-        image: postgres:15
-    steps:
-      - uses: actions/checkout@v3
-      - run: pnpm install
-      - run: TEST_ENV=test_integration pnpm test:ci
-      
-  e2e-tests:
-    needs: integration-tests
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v3
-      - run: pnpm install
-      - run: npx playwright install
-      - run: TEST_ENV=staging pnpm test:e2e
-      
-  deploy:
-    needs: e2e-tests
-    if: github.ref == 'refs/heads/main'
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v3
-      - run: pnpm build
-      - run: pnpm deploy:staging
-      - run: TEST_ENV=staging pnpm test:smoke
+### Pitfall: Tests Pass Locally but Fail in CI
+**Solution**: Ensure environment variables match:
+```bash
+# Test with CI environment locally
+CI=true USE_MOCKS=false pnpm test
 ```
 
-## Agent Automation Patterns
+### Pitfall: Slow Test Execution
+**Solution**: Use tags to run subsets:
+```bash
+# Fast tests only during development
+pnpm nx test admin --tag=unit --skip-tags=slow
+```
 
-### Pattern 1: Test-First Feature Development
-
+### Pitfall: Contract Mismatches
+**Solution**: Always validate both input and output:
 ```typescript
-// Agent prompt template
-const featureDevelopmentPrompt = `
-Create a new feature: ${featureName}
+// Good: Validate at boundaries
+const input = InputContract.parse(rawData);
+const result = await process(input);
+const output = OutputContract.parse(result);
 
-Step 1: Define contracts
-- Create Zod schema in packages/contracts
-- Add contract validation tests (@contract @critical)
-
-Step 2: Write failing tests
-- Unit tests with @unit @critical @mock-only
-- Integration tests with @integration @essential @all-envs
-- E2E tests with @e2e @important @real-only
-
-Step 3: Implement with mocks
-- Create MSW handlers
-- Implement service with USE_MOCKS check
-- Run TEST_ENV=test_mock pnpm test
-
-Step 4: Connect real services
-- Add real API implementation
-- Run TEST_ENV=test_integration pnpm test
-
-Step 5: Add smoke tests
-- Create minimal health checks (@smoke @critical)
-- Verify in staging environment
-`;
+// Bad: Trust without validation
+const result = await process(rawData);
 ```
 
-### Pattern 2: Test Tag Analysis
+## 📚 Related Documentation
 
-```typescript
-// Agent analyzes test coverage by tags
-async function analyzeTestCoverage() {
-  const tests = await findAllTests();
-  
-  const analysis = {
-    byType: {
-      unit: tests.filter(t => t.tags.includes('@unit')).length,
-      integration: tests.filter(t => t.tags.includes('@integration')).length,
-      e2e: tests.filter(t => t.tags.includes('@e2e')).length,
-      smoke: tests.filter(t => t.tags.includes('@smoke')).length,
-    },
-    byPriority: {
-      critical: tests.filter(t => t.tags.includes('@critical')).length,
-      essential: tests.filter(t => t.tags.includes('@essential')).length,
-      important: tests.filter(t => t.tags.includes('@important')).length,
-      niceToHave: tests.filter(t => t.tags.includes('@nice-to-have')).length,
-    },
-    byEnvironment: {
-      mockOnly: tests.filter(t => t.tags.includes('@mock-only')).length,
-      realOnly: tests.filter(t => t.tags.includes('@real-only')).length,
-      allEnvs: tests.filter(t => t.tags.includes('@all-envs')).length,
-    },
-    
-    // Identify gaps
-    gaps: {
-      missingCritical: findFeaturesWithoutCriticalTests(),
-      missingSmoke: findEndpointsWithoutSmokeTests(),
-      missingContracts: findServicesWithoutContractTests(),
-    }
-  };
-  
-  return analysis;
-}
-```
+- `TDD_WITH_REFINE_GENERATORS.md` - Using Refine.dev with TDD
+- `WORKFLOW_TESTING_EMPHASIS.md` - Mock/real switching patterns
+- `TESTING_STRATEGY_V2.md` - Detailed testing strategy
+- `COMPLETE_FEATURE_FACTORY_WORKFLOW.md` - Full feature development
+- `apps/admin/src/config/environment.ts` - Environment configuration
 
-### Pattern 3: Automated Test Generation
+## ✅ Checklist for Every Feature
 
-```typescript
-// Agent generates tests based on contracts
-function generateTestsFromContract(contract: ZodSchema) {
-  const tests = [];
-  
-  // Generate contract validation tests
-  tests.push({
-    type: '@contract @critical',
-    code: generateContractValidationTest(contract)
-  });
-  
-  // Generate unit tests for each field
-  contract.shape.forEach(field => {
-    tests.push({
-      type: '@unit @essential',
-      code: generateFieldValidationTest(field)
-    });
-  });
-  
-  // Generate integration test skeleton
-  tests.push({
-    type: '@integration @essential',
-    code: generateCRUDIntegrationTest(contract)
-  });
-  
-  // Generate smoke test
-  tests.push({
-    type: '@smoke @critical',
-    code: generateHealthCheckTest(contract)
-  });
-  
-  return tests;
-}
-```
-
-## Test Priority Matrix
-
-| Test Type | Critical | Essential | Important | Nice-to-Have |
-|-----------|----------|-----------|-----------|--------------|
-| **Unit** | Core business logic | Service methods | Helper functions | Utility functions |
-| **Integration** | Auth, Database | API endpoints | External services | Third-party APIs |
-| **E2E** | User registration | CRUD workflows | Advanced features | UI polish |
-| **Smoke** | API health | Auth check | Database connection | Feature flags |
-| **Contract** | All schemas | - | - | - |
-
-## Failure Handling by Environment
-
-```typescript
-// Environment-specific failure policies
-const failurePolicies = {
-  test_mock: {
-    '@critical': 'block', // Stop immediately
-    '@essential': 'warn',  // Continue but warn
-    '@important': 'info',  // Just log
-    '@nice-to-have': 'ignore'
-  },
-  test_integration: {
-    '@critical': 'block',
-    '@essential': 'block', // Stricter in integration
-    '@important': 'warn',
-    '@nice-to-have': 'ignore'
-  },
-  staging: {
-    '@critical': 'block',
-    '@essential': 'block',
-    '@important': 'block', // Even stricter in staging
-    '@nice-to-have': 'warn'
-  },
-  production: {
-    '@critical': 'alert', // Page ops team
-    '@essential': 'alert',
-    '@important': 'log',
-    '@nice-to-have': 'ignore'
-  }
-};
-```
-
-## Implementation Checklist
-
-- [ ] Configure 4 environments in `environments.ts`
-- [ ] Set up test runner with tag filtering
-- [ ] Create test helpers for tag-based execution
-- [ ] Write contract tests for all schemas
-- [ ] Tag all existing tests appropriately
-- [ ] Set up MSW handlers for mock environment
-- [ ] Create environment-aware service implementations
-- [ ] Configure CI/CD pipeline with progressive stages
-- [ ] Add smoke tests for production monitoring
-- [ ] Document test coverage by tags
-- [ ] Create agent prompts for automated testing
-
-## Summary
-
-This automated TDD workflow ensures:
-1. **Contracts drive everything** - Single source of truth
-2. **Tests are properly tagged** - Clear organization and priority
-3. **Progressive confidence** - From mocks to production
-4. **Environment-aware execution** - Right tests at right time
-5. **Automated enforcement** - CI/CD prevents bad deployments
-6. **Agent assistance** - Consistent implementation patterns
+- [ ] Feature branch created
+- [ ] Contracts defined in `packages/contracts`
+- [ ] Tests written with appropriate tags
+- [ ] Tests fail correctly (RED phase)
+- [ ] MSW handlers created for mock data
+- [ ] Minimal implementation passes tests (GREEN phase)
+- [ ] Code refactored while keeping tests green (REFACTOR phase)
+- [ ] Environment switching works (mock/real)
+- [ ] All phase tests pass progressively
+- [ ] Commit messages follow TDD conventions

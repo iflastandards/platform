@@ -1,5 +1,10 @@
 # TDD Workflow for Feature Development
 
+> **Note**: This document has been integrated into the comprehensive `AUTOMATED_TDD_WORKFLOW.md`. 
+> Please refer to that document for the complete, up-to-date TDD methodology with 5-phase testing strategy and environment configuration.
+> 
+> **Primary Reference**: [`developer_notes/AUTOMATED_TDD_WORKFLOW.md`](./AUTOMATED_TDD_WORKFLOW.md)
+
 ## Overview
 
 This document outlines our Test-Driven Development (TDD) workflow, which must be followed for all feature development in the IFLA Standards platform.

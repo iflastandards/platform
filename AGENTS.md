@@ -273,6 +273,9 @@ Goal: [desired outcome]"
 
 ## Specialized Subagent Strategy
 
+**Implementation Guide**: See `developer_notes/SUBAGENT_IMPLEMENTATION_GUIDE.md` for detailed usage patterns
+**Specifications**: See `developer_notes/SUBAGENT_SPECIFICATIONS.md` for documentation requirements
+
 ### Available Specialized Agents
 
 When developing specific feature types, I invoke specialized subagents through the Task tool. Each subagent is an expert in their domain with deep, specific knowledge:

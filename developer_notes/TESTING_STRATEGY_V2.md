@@ -1,5 +1,10 @@
 # Testing Strategy V2 - TDD & Contract-Driven Development
 
+> **Note**: This document has been integrated into the comprehensive `AUTOMATED_TDD_WORKFLOW.md`. 
+> Please refer to that document for the complete, up-to-date testing strategy with 5-phase approach and environment configuration.
+> 
+> **Primary Reference**: [`developer_notes/AUTOMATED_TDD_WORKFLOW.md`](./AUTOMATED_TDD_WORKFLOW.md)
+
 ## Overview
 
 Our testing strategy follows Test-Driven Development (TDD) principles with contract-driven development, emphasizing:

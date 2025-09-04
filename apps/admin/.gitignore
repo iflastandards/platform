@@ -10,3 +10,7 @@
 
 # clerk configuration (can include secrets)
 /.clerk/
+
+# Supabase local development files
+/supabase/.temp/
+/supabase/.branches/

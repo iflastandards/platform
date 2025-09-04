@@ -1,5 +1,9 @@
 # Specialized Subagent Specifications
 
+> **Implementation Guide**: For practical usage patterns and invocation examples, see [`SUBAGENT_IMPLEMENTATION_GUIDE.md`](./SUBAGENT_IMPLEMENTATION_GUIDE.md)
+> 
+> **Integration with TDD**: All subagents follow the [`AUTOMATED_TDD_WORKFLOW.md`](./AUTOMATED_TDD_WORKFLOW.md)
+
 ## MCP Context7 Usage Pattern
 
 ### CRITICAL: Always Check Current Documentation

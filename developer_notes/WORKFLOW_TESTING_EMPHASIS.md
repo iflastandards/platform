@@ -1,5 +1,10 @@
 # Workflow Testing Emphasis - Mock/Real Switching Throughout
 
+> **Note**: This document has been integrated into the comprehensive `AUTOMATED_TDD_WORKFLOW.md`. 
+> Please refer to that document for the complete, up-to-date workflow with 5-phase testing and environment switching.
+> 
+> **Primary Reference**: [`developer_notes/AUTOMATED_TDD_WORKFLOW.md`](./AUTOMATED_TDD_WORKFLOW.md)
+
 ## Core Principle: Test-Driven with Environment Switching
 
 Every feature, regardless of type, must support seamless switching between mock and real services through environment configuration.

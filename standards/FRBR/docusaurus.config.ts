@@ -1,20 +1,25 @@
 import { themes as prismThemes } from 'prism-react-renderer';
 import type { Config } from '@docusaurus/types';
 import type * as Preset from '@docusaurus/preset-classic';
-import { getSiteConfig, getSiteConfigMap, createStandardFooter, type SiteKey, type Environment } from '@ifla/theme/config';
+import {
+  getSiteConfig,
+  getSiteConfigMap,
+  createStandardFooter,
+  type SiteKey,
+} from '@ifla/theme/config';
 
 // Get current environment from DOCS_ENV
-const DOCS_ENV = process.env.DOCS_ENV as Environment;
+const DOCS_ENV = process.env.DOCS_ENV;
 if (!DOCS_ENV) {
   throw new Error(
     'DOCS_ENV environment variable is required but not set. ' +
-    'Valid values: local, preview, production'
+      'Valid values: local, preview, production',
   );
 }
 
 // Get configuration for this site
-const siteConfig = getSiteConfig('FRBR' as SiteKey, DOCS_ENV);
-const siteConfigMap = getSiteConfigMap(DOCS_ENV);
+const siteConfig = getSiteConfig('FRBR' as SiteKey, DOCS_ENV as any);
+const siteConfigMap = getSiteConfigMap(DOCS_ENV as any);
 
 const config: Config = {
   future: {
@@ -43,30 +48,30 @@ const config: Config = {
     siteConfigMap,
     // Vocabulary configuration
     vocabularyDefaults: {
-      prefix: "ifla",
+      prefix: 'ifla',
       startCounter: 1000,
-      uriStyle: "numeric",
-      numberPrefix: "T", // Prefix for numeric URIs. Can be blank for no prefix.
-      caseStyle: "kebab-case",
+      uriStyle: 'numeric',
+      numberPrefix: 'T', // Prefix for numeric URIs. Can be blank for no prefix.
+      caseStyle: 'kebab-case',
       showFilter: true,
-      filterPlaceholder: "Filter vocabulary terms...",
+      filterPlaceholder: 'Filter vocabulary terms...',
       showTitle: false,
       showURIs: true, // Whether to display URIs in the table, set to false for glossaries
       showCSVErrors: false, // Whether to display CSV validation errors by default
-      profile: "vocabulary-profile.csv",
-      profileShapeId: "Concept",
+      profile: 'vocabulary-profile.csv',
+      profileShapeId: 'Concept',
       RDF: {
-        "rdf:type": ["skos:ConceptScheme"]
+        'rdf:type': ['skos:ConceptScheme'],
       },
       // Common defaults for elements and defines the vocabulary properties
       elementDefaults: {
-        uri: "https://www.iflastandards.info/elements",
-        classPrefix: "C", // Class Prefix for numeric URIs. Can be blank for no prefix.
-        propertyPrefix: "P", // Property Prefix for numeric URIs. Can be blank for no prefix.
-        profile: "elements-profile.csv",
-        profileShapeId: "Element",
-      }
-    }
+        uri: 'https://www.iflastandards.info/elements',
+        classPrefix: 'C', // Class Prefix for numeric URIs. Can be blank for no prefix.
+        propertyPrefix: 'P', // Property Prefix for numeric URIs. Can be blank for no prefix.
+        profile: 'elements-profile.csv',
+        profileShapeId: 'Element',
+      },
+    },
   },
 
   i18n: {
@@ -88,7 +93,6 @@ const config: Config = {
         indexBlog: true,
       },
     ],
-    
   ],
 
   presets: [
@@ -97,7 +101,8 @@ const config: Config = {
       {
         docs: {
           sidebarPath: './sidebars.ts',
-          editUrl: 'https://github.com/iflastandards/standards-dev/tree/main/standards/FRBR/',
+          editUrl:
+            'https://github.com/iflastandards/standards-dev/tree/main/standards/FRBR/',
           showLastUpdateAuthor: true,
           showLastUpdateTime: true,
           versions: {
@@ -111,7 +116,8 @@ const config: Config = {
         },
         blog: {
           showReadingTime: true,
-          editUrl: 'https://github.com/iflastandards/standards-dev/tree/main/standards/FRBR/',
+          editUrl:
+            'https://github.com/iflastandards/standards-dev/tree/main/standards/FRBR/',
           feedOptions: {
             type: 'all',
             title: 'IFLA FR Family of Models Blog',
@@ -153,7 +159,7 @@ const config: Config = {
           position: 'left',
           label: 'Introduction',
         },
-        {to: '/blog', label: 'Blog', position: 'right'},
+        { to: '/blog', label: 'Blog', position: 'right' },
         {
           type: 'docsVersionDropdown',
           position: 'right',
@@ -168,7 +174,7 @@ const config: Config = {
         },
       ],
     },
-    footer: createStandardFooter(DOCS_ENV, 'FRBR'),
+    footer: createStandardFooter(DOCS_ENV as any, 'FRBR'),
     prism: {
       theme: prismThemes.github,
       darkTheme: prismThemes.dracula,
