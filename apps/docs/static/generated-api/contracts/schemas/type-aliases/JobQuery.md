@@ -8,6 +8,8 @@
 
 > **JobQuery** = `object`
 
+Schema for job filtering and search
+
 ## Type declaration
 
 ### limit?

@@ -1,5 +1,5 @@
 // Auto-generated Supabase database types
-// Generated at: 2025-08-20T03:45:29.674Z
+// Generated at: 2025-09-04T11:31:49.650Z
 // Project ID not configured - using placeholder types
 
 export type Database = {

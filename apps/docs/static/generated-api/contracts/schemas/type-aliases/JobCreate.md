@@ -8,6 +8,8 @@
 
 > **JobCreate** = `object`
 
+Schema for creating new jobs
+
 ## Type declaration
 
 ### description?

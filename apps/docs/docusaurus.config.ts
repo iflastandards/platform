@@ -61,6 +61,28 @@ const config: Config = {
 
   plugins: [
     [
+      '@easyops-cn/docusaurus-search-local',
+      {
+        hashed: true,
+        indexBlog: true,
+        indexDocs: true,
+        indexPages: false,
+        docsRouteBasePath: [
+          '/intro',
+          '/system-design',
+          '/developer-notes',
+          '/docs',
+          '/api-reference',
+        ],
+        blogRouteBasePath: '/blog',
+        language: ['en'],
+        highlightSearchTermsOnTargetPage: true,
+        searchResultLimits: 8,
+        searchResultContextMaxLength: 50,
+        docsPluginIdForPreferredVersion: 'intro',
+      },
+    ],
+    [
       '@docusaurus/plugin-content-docs',
       {
         id: 'system-design',
@@ -194,6 +216,10 @@ const config: Config = {
           label: 'GitHub',
           position: 'right',
         },
+        {
+          type: 'search',
+          position: 'right',
+        },
       ],
     },
     footer: {
@@ -204,7 +230,7 @@ const config: Config = {
           items: [
             {
               label: 'Tutorial',
-              to: '/docs/intro',
+              to: '/intro',
             },
           ],
         },

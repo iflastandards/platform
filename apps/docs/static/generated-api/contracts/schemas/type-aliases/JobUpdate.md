@@ -8,6 +8,8 @@
 
 > **JobUpdate** = `object`
 
+Schema for updating job status (internal use)
+
 ## Type declaration
 
 ### error?

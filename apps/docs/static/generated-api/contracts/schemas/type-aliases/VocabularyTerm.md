@@ -8,6 +8,8 @@
 
 > **VocabularyTerm** = `object`
 
+Vocabulary Term Schema - Individual terms within a vocabulary
+
 ## Type declaration
 
 ### code?

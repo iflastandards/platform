@@ -8,6 +8,8 @@
 
 > **VocabularyQuery** = `object`
 
+Schema for vocabulary search and filtering
+
 ## Type declaration
 
 ### includeTerm?

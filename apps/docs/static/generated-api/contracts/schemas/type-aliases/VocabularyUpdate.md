@@ -8,6 +8,8 @@
 
 > **VocabularyUpdate** = `object`
 
+Schema for updating vocabularies
+
 ## Type declaration
 
 ### description?

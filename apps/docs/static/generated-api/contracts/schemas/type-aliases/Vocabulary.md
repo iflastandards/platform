@@ -8,6 +8,8 @@
 
 > **Vocabulary** = `object`
 
+Vocabulary Schema - Collection of terms for a specific domain/standard
+
 ## Type declaration
 
 ### createdAt?
