@@ -166,8 +166,10 @@ jobs:
       - name: Install dependencies
         run: pnpm install --frozen-lockfile --prefer-offline
 
-      - name: Build theme package
+      - name: Build dependencies and theme
         run: |
+          echo "📦 Building contracts package..."
+          npx nx run @ifla/contracts:build --skip-nx-cache=false
           echo "🎨 Building theme package..."
           npx nx run @ifla/theme:build --skip-nx-cache=false
 
