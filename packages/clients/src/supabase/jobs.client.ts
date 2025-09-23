@@ -46,7 +46,7 @@ export class SupabaseJobsClient {
     const validationResult = JobSchema.safeParse(data);
     if (!validationResult.success) {
       throw new ClientValidationError(
-        `Invalid job data from database: ${fromZodError(validationResult.error).message}`,
+        `Invalid job data from database: ${fromZodError(validationResult.error as any).message}`,
       );
     }
     return validationResult.data;
@@ -101,7 +101,7 @@ export class SupabaseJobsClient {
     const validationResult = JobSchema.array().safeParse(data);
     if (!validationResult.success) {
       throw new ClientValidationError(
-        `Invalid job list data from database: ${fromZodError(validationResult.error).message}`,
+        `Invalid job list data from database: ${fromZodError(validationResult.error as any).message}`,
       );
     }
     return { jobs: validationResult.data, total: count ?? 0 };
@@ -115,7 +115,7 @@ export class SupabaseJobsClient {
     const validationResult = JobCreateSchema.safeParse(jobData);
     if (!validationResult.success) {
       throw new ClientValidationError(
-        `Invalid job creation data provided: ${fromZodError(validationResult.error).message}`,
+        `Invalid job creation data provided: ${fromZodError(validationResult.error as any).message}`,
       );
     }
 
@@ -145,7 +145,7 @@ export class SupabaseJobsClient {
     const returnValidationResult = JobSchema.safeParse(data);
     if (!returnValidationResult.success) {
       throw new ClientValidationError(
-        `Invalid job data returned after creation: ${fromZodError(returnValidationResult.error).message}`,
+        `Invalid job data returned after creation: ${fromZodError(returnValidationResult.error as any).message}`,
       );
     }
     return returnValidationResult.data;
@@ -159,7 +159,7 @@ export class SupabaseJobsClient {
     const validationResult = JobUpdateSchema.safeParse(updates);
     if (!validationResult.success) {
       throw new ClientValidationError(
-        `Invalid job update data provided: ${fromZodError(validationResult.error).message}`,
+        `Invalid job update data provided: ${fromZodError(validationResult.error as any).message}`,
       );
     }
 
@@ -185,7 +185,7 @@ export class SupabaseJobsClient {
     const returnValidationResult = JobSchema.safeParse(data);
     if (!returnValidationResult.success) {
       throw new ClientValidationError(
-        `Invalid job data after update: ${fromZodError(returnValidationResult.error).message}`,
+        `Invalid job data after update: ${fromZodError(returnValidationResult.error as any).message}`,
       );
     }
     return returnValidationResult.data;

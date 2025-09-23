@@ -72,7 +72,6 @@ const config: Config = {
           '/system-design',
           '/developer-notes',
           '/docs',
-          '/api-reference',
         ],
         blogRouteBasePath: '/blog',
         language: ['en'],
