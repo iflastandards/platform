@@ -64,14 +64,6 @@ jobs:
         with:
           fetch-depth: 0
 
-      - name: Cache pnpm store
-        uses: actions/cache@v4
-        with:
-          path: ~/.pnpm-store
-          key: ${{ runner.os }}-pnpm-${{ hashFiles('pnpm-lock.yaml') }}
-          restore-keys: |
-            ${{ runner.os }}-pnpm-
-
       - uses: pnpm/action-setup@v4
         name: Install pnpm
 
@@ -104,6 +96,9 @@ jobs:
 
       - uses: nrwl/nx-set-shas@v4
         id: nx-set-shas
+        with:
+          main-branch-name: 'preview'  # Use preview as the main branch for base comparison
+          workflow-id: '180593718'     # Explicitly set the workflow ID
 
       - name: Analyze affected projects
         id: affected
@@ -143,14 +138,6 @@ jobs:
       - uses: actions/checkout@v4
         with:
           fetch-depth: 0
-
-      - name: Cache pnpm store
-        uses: actions/cache@v4
-        with:
-          path: ~/.pnpm-store
-          key: ${{ runner.os }}-pnpm-${{ hashFiles('pnpm-lock.yaml') }}
-          restore-keys: |
-            ${{ runner.os }}-pnpm-
 
       - uses: pnpm/action-setup@v4
 
@@ -394,14 +381,6 @@ jobs:
             .npmrc
             .nx
           sparse-checkout-cone-mode: false
-
-      - name: Cache pnpm store
-        uses: actions/cache@v4
-        with:
-          path: ~/.pnpm-store
-          key: ${{ runner.os }}-pnpm-${{ hashFiles('pnpm-lock.yaml') }}
-          restore-keys: |
-            ${{ runner.os }}-pnpm-
 
       - name: Setup pnpm
         uses: pnpm/action-setup@v4

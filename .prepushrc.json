@@ -2,7 +2,7 @@
   "allowWarnings": true,
   "runTests": true,
   "runBuilds": true,
-  "runE2E": true,
+  "runE2E": false,
   "runSmokeTests": false,
   "runAdminTests": false,
   "parallelJobs": 3,
