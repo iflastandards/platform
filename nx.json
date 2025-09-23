@@ -373,7 +373,7 @@
   },
   "tasksRunnerOptions": {
     "default": {
-      "runner": "@nx/nx-cloud",
+      "runner": "nx-cloud",
       "options": {
         "parallel": 12,
         "cacheableOperations": [

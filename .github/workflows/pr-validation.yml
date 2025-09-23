@@ -259,6 +259,24 @@ jobs:
     if: always()
     runs-on: ubuntu-latest
     steps:
+      - uses: actions/checkout@v4
+        with:
+          sparse-checkout: |
+            nx.json
+            package.json
+            pnpm-lock.yaml
+            .npmrc
+          sparse-checkout-cone-mode: false
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
+
+      - name: Fix CI Configuration with AI
+        run: |
+          pnpm dlx nx-cloud fix-ci
+        if: always()
+        continue-on-error: true
+
       - name: Generate PR comment
         uses: actions/github-script@v7
         with:

@@ -390,6 +390,11 @@ jobs:
           pnpm dlx nx-cloud stop-all-agents
         continue-on-error: true
 
+      - name: Fix CI Configuration with AI
+        run: |
+          pnpm dlx nx-cloud fix-ci
+        if: always()
+        continue-on-error: true
 
       - name: Generate summary report
         run: |
