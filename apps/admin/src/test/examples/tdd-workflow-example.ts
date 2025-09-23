@@ -221,10 +221,10 @@ export class ExampleService {
 
   private createMockProvider() {
     return {
-      getData: async () => {
+      getData: async () => 
         // Return mock data instantly
-        return { id: 'mock-123', name: 'Mock Data' };
-      },
+         ({ id: 'mock-123', name: 'Mock Data' })
+      ,
     };
   }
 
