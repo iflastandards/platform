@@ -65,8 +65,11 @@ jobs:
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
 
-      - name: Build theme package
-        run: pnpm build:theme
+      - name: Build required packages
+        run: |
+          echo "📦 Building dependency packages for link checker..."
+          pnpm nx run @ifla/contracts:build
+          pnpm nx run @ifla/theme:build
 
       - name: Check links (workflow dispatch)
         if: github.event_name == 'workflow_dispatch'
