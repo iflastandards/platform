@@ -69,7 +69,7 @@ jobs:
 
       - name: Start Nx Cloud agents
         run: |
-          pnpm dlx nx-cloud start-ci-run \
+          npx nx-cloud start-ci-run \
             --distribute-on="4 linux-medium-js" \
             --stop-agents-after="build" \
             --with-env-vars="DOCS_ENV,NODE_OPTIONS"
@@ -387,12 +387,12 @@ jobs:
 
       - name: Stop Nx Cloud agents
         run: |
-          pnpm dlx nx-cloud stop-all-agents
+          npx nx-cloud stop-all-agents
         continue-on-error: true
 
       - name: Fix CI Configuration with AI
         run: |
-          pnpm dlx nx-cloud fix-ci
+          npx nx-cloud fix-ci
         if: always()
         continue-on-error: true
 

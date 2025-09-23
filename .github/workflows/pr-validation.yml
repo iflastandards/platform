@@ -273,7 +273,7 @@ jobs:
 
       - name: Fix CI Configuration with AI
         run: |
-          pnpm dlx nx-cloud fix-ci
+          npx nx-cloud fix-ci
         if: always()
         continue-on-error: true
 

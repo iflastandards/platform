@@ -9,7 +9,7 @@ import {
 } from '@ifla/theme/config';
 
 // Get current environment from DOCS_ENV
-const DOCS_ENV = process.env.DOCS_ENV;
+const {DOCS_ENV} = process.env;
 if (!DOCS_ENV) {
   throw new Error(
     'DOCS_ENV environment variable is required but not set. ' +
