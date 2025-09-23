@@ -1,0 +1,583 @@
+---
+title: Examples Components
+description: Comprehensive guide to using Examples, Example, and Steps components for documentation
+---
+
+# Examples Components
+
+The Examples components (`Examples`, `Example`, and `Steps`) provide a structured, accessible way to display examples and procedural content in IFLA documentation sites. These components were specifically designed based on the ISBDM assessment page requirements to handle complex property-value tables, collapsible example sections, and structured step-by-step procedures.
+
+## Component Overview
+
+### Examples
+A collapsible wrapper around `<details>/<summary>` for organizing multiple examples in an accessible, themed container.
+
+### Example  
+A structured component for displaying property-value tables and custom content with optional headers, labels, and full example links.
+
+### Steps
+A flexible wrapper for nested lists with configurable numbering styles (decimal, alpha, roman) at multiple levels.
+
+## Examples Component
+
+### Basic Usage
+
+```mdx
+import { Examples } from '@ifla/theme';
+
+<Examples>
+  <p>Your example content goes here...</p>
+</Examples>
+```
+
+### Props
+
+| Prop | Type | Default | Description |
+|------|------|---------|-------------|
+| `summary` | `string` | `"Examples"` | Text displayed in the summary/toggle button |
+| `open` | `boolean` | `false` | Whether the examples section is expanded by default |
+| `children` | `ReactNode` | - | Content to display inside the collapsible section |
+
+### Advanced Usage
+
+```mdx
+<Examples summary="Property Examples" open>
+  <p>These examples demonstrate proper usage of manifestation properties.</p>
+  
+  <Example
+    properties={[
+      { property: "has category of carrier", value: '"volume"' },
+      { property: "has extent of manifestation", value: '"1 volume (306 pages)"' }
+    ]}
+  />
+</Examples>
+```
+
+### Styling
+
+The Examples component uses CSS modules with the following classes:
+- `.examples` - Main container with border and background
+- `.summary` - Clickable summary element with cursor pointer
+- `.body` - Content area with padding
+
+## Example Component
+
+### Basic Usage
+
+#### With Structured Properties
+
+```mdx
+import { Example } from '@ifla/theme';
+
+<Example
+  properties={[
+    { property: "has category of carrier", value: '"volume"' },
+    { property: "has extent of manifestation", value: '"1 volume (18 x 18 cm; 10 pages)"' },
+    { property: "has dimensions", value: '"18 x 18 cm"' },
+    { property: "has extent of embodied content", value: '"10 pages"' }
+  ]}
+  fullExampleHref="/docs/fullex/fx017"
+/>
+```
+
+#### With Custom Content (Markdown Tables)
+
+```mdx
+<Example>
+  | Property | Value |
+  | :-- | :-- |
+  | has category of carrier | "volume" |
+  | has extent of manifestation | "1 volume (18 x 18 cm; 10 pages)" |
+  | has dimensions | "18 x 18 cm" |
+  
+  _[Full example: [Gruffalo example](/docs/fullex/fx017).]_
+</Example>
+```
+
+### Props
+
+| Prop | Type | Default | Description |
+|------|------|---------|-------------|
+| `header` | `ReactNode` | - | Optional header displayed above the example |
+| `label` | `ReactNode` | - | Optional label/title for the example |
+| `properties` | `ExampleProperty[]` | - | Array of property-value pairs for structured table |
+| `fullExampleHref` | `string` | - | Link to full example page |
+| `note` | `ReactNode` | - | Optional note displayed below the table |
+| `showTableHeader` | `boolean` | `true` | Whether to show "Property" and "Value" table headers |
+| `children` | `ReactNode` | - | Custom content (alternative to structured properties) |
+
+### ExampleProperty Type
+
+```typescript
+type ExampleProperty = {
+  property: string;
+  value: React.ReactNode;
+};
+```
+
+### Advanced Examples
+
+#### Multiple Examples with Headers
+
+```mdx
+<Examples summary="Unit Structure Examples">
+  <Example
+    header="Single Unit Manifestation"
+    properties={[
+      { property: "has unitary structure", value: '"single unit"' },
+      { property: "has category of carrier", value: '"volume"' },
+      { property: "has extent of manifestation", value: '"1 volume (306 pages)"' }
+    ]}
+    fullExampleHref="/docs/fullex/fx030"
+    note="This manifestation is published as a single physical unit."
+  />
+  
+  <Example
+    header="Multiple Unit Manifestation"
+    properties={[
+      { property: "has unitary structure", value: '"multiple unit"' },
+      { property: "has category of carrier", value: '"audio disc"' },
+      { property: "has sub-unit", value: '"CD 1"' },
+      { property: "has sub-unit", value: '"CD 2"' }
+    ]}
+    fullExampleHref="/docs/fullex/fx049"
+  />
+</Examples>
+```
+
+#### Without Table Headers
+
+```mdx
+<Example
+  showTableHeader={false}
+  properties={[
+    { property: "has expression embodied in manifestation", value: '"IFLA ISBD Review Group. ISBD (text; English)"' }
+  ]}
+  fullExampleHref="/docs/fullex/fx012"
+/>
+```
+
+#### With Complex Values
+
+```mdx
+<Example
+  properties={[
+    { 
+      property: "has category of carrier", 
+      value: <><InLink href="/docs/attributes/1022">volume</InLink></> 
+    },
+    { 
+      property: "has extent of manifestation", 
+      value: <>1 volume (<Mandatory />18 x 18 cm; 10 pages)</> 
+    }
+  ]}
+/>
+```
+
+## Steps Component
+
+### Basic Usage
+
+```mdx
+import { Steps } from '@ifla/theme';
+
+<Steps>
+  <ol>
+    <li>
+      How does the manifestation describe itself?
+      <ol>
+        <li>Record manifestation statement elements</li>
+        <li>Record title and responsibility elements</li>
+      </ol>
+    </li>
+    <li>
+      What appellations are used?
+      <ol>
+        <li>Record appellation elements</li>
+      </ol>
+    </li>
+  </ol>
+</Steps>
+```
+
+### Props
+
+| Prop | Type | Default | Description |
+|------|------|---------|-------------|
+| `level1` | `string` | `"decimal"` | CSS list-style-type for first level (1, 2, 3...) |
+| `level2` | `string` | `"lower-alpha"` | CSS list-style-type for second level (a, b, c...) |
+| `level3` | `string` | `"lower-roman"` | CSS list-style-type for third level (i, ii, iii...) |
+| `children` | `ReactNode` | - | Nested list content |
+
+### Available List Styles
+
+- `"decimal"` - 1, 2, 3, 4...
+- `"lower-alpha"` - a, b, c, d...
+- `"upper-alpha"` - A, B, C, D...
+- `"lower-roman"` - i, ii, iii, iv...
+- `"upper-roman"` - I, II, III, IV...
+
+### Advanced Usage
+
+#### Custom Numbering Styles
+
+```mdx
+<Steps level1="upper-alpha" level2="decimal" level3="lower-roman">
+  <ol>
+    <li>
+      First level (A, B, C...)
+      <ol>
+        <li>
+          Second level (1, 2, 3...)
+          <ol>
+            <li>Third level (i, ii, iii...)</li>
+            <li>More third level items</li>
+          </ol>
+        </li>
+        <li>More second level items</li>
+      </ol>
+    </li>
+    <li>More first level items</li>
+  </ol>
+</Steps>
+```
+
+#### With Complex Content
+
+```mdx
+<Steps>
+  <ol>
+    <li>
+      How does the manifestation describe itself?
+      <ol>
+        <li>
+          <Mandatory />Record <InLink href="/docs/statements/1025">has manifestation statement</InLink> elements
+        </li>
+        <li>
+          <Mandatory />Record <InLink href="/docs/statements/1028">has manifestation statement of title and responsibility</InLink> elements
+        </li>
+        <li>
+          Record <InLink href="/docs/notes/1200">has note on manifestation statement</InLink> elements
+        </li>
+      </ol>
+    </li>
+    <li>
+      What appellations are used to label the manifestation?
+      <ol>
+        <li>
+          <Mandatory />Record <InLink href="/docs/relationships/1274">has appellation of manifestation</InLink> elements
+          <ol>
+            <li>Record <InLink href="/docs/relationships/1037">has title of manifestation</InLink> elements</li>
+            <li>Record <InLink href="/docs/relationships/1111">has identifier of manifestation</InLink> elements</li>
+          </ol>
+        </li>
+      </ol>
+    </li>
+  </ol>
+</Steps>
+```
+
+## Real-World Usage Patterns
+
+### Pattern 1: Assessment Page Structure
+
+Based on the ISBDM assessment page, here's how to structure comprehensive documentation:
+
+```mdx
+---
+title: Preliminary Assessment
+---
+
+<section className="guid">
+Carry out a preliminary assessment of the manifestation before recording a description.
+</section>
+
+<section className="guid">
+The preliminary assessment covers three distinct characteristics:
+
+| Characteristic | Description |
+|----------------|-------------|
+| Units | A manifestation may be published or produced in one or more units. |
+| Expressions | A manifestation may embody one or more expressions. |
+| Content Change | A manifestation may embody content that is static or changes over time. |
+</section>
+
+<section className="guid">
+<Examples summary="Unit Structure Examples">
+  <Example
+    properties={[
+      { property: "has unitary structure", value: '"single unit"' },
+      { property: "has category of carrier", value: '"volume"' }
+    ]}
+    fullExampleHref="/docs/fullex/fx030"
+  />
+  
+  <Example
+    properties={[
+      { property: "has unitary structure", value: '"multiple unit"' },
+      { property: "has sub-unit", value: '"myScience Canada (English)"' },
+      { property: "has sub-unit", value: '"myScience Canada (French)"' }
+    ]}
+    fullExampleHref="/docs/fullex/fx015"
+  />
+</Examples>
+</section>
+
+<section className="guid">
+<Steps>
+  <ol>
+    <li>
+      Assess the number and hierarchical structure of units
+      <ol>
+        <li>Determine if manifestation is single or multiple unit</li>
+        <li>Identify logical or physical parts</li>
+        <li>Consider URL structure for online resources</li>
+      </ol>
+    </li>
+    <li>
+      Record unitary structure information
+      <ol>
+        <li>Record has unitary structure element</li>
+        <li>Record sub-unit relationships if applicable</li>
+      </ol>
+    </li>
+  </ol>
+</Steps>
+</section>
+```
+
+### Pattern 2: Property Documentation
+
+For documenting element properties:
+
+```mdx
+<Examples summary="Property Usage Examples">
+  <Example
+    header="Basic Usage"
+    properties={[
+      { property: "has category of carrier", value: '"volume"' },
+      { property: "has extent of manifestation", value: '"1 volume (306 pages)"' }
+    ]}
+    fullExampleHref="/docs/fullex/basic-example"
+    note="This shows the most common usage pattern."
+  />
+  
+  <Example
+    header="With Multiple Carriers"
+    showTableHeader={false}
+    properties={[
+      { property: "has category of carrier", value: '"audio disc"' },
+      { property: "has category of carrier", value: '"volume"' }
+    ]}
+    fullExampleHref="/docs/fullex/mixed-media-example"
+  />
+</Examples>
+```
+
+### Pattern 3: Process Documentation
+
+For step-by-step procedures:
+
+```mdx
+<Steps>
+  <ol>
+    <li>
+      Initial Assessment
+      <ol>
+        <li>Examine the manifestation physically or logically</li>
+        <li>Identify the number of units</li>
+        <li>Determine the type of content embodied</li>
+      </ol>
+    </li>
+    <li>
+      Record Mandatory Elements
+      <ol>
+        <li><Mandatory />Record category of carrier</li>
+        <li><Mandatory />Record manifestation statements</li>
+        <li>
+          Record additional elements as needed
+          <ol>
+            <li>Physical characteristics</li>
+            <li>Extent information</li>
+            <li>Notes for clarification</li>
+          </ol>
+        </li>
+      </ol>
+    </li>
+  </ol>
+</Steps>
+```
+
+## Accessibility Features
+
+### Examples Component
+- Uses semantic HTML `<details>` and `<summary>` elements
+- Proper ARIA attributes for screen readers
+- Keyboard navigable (Space/Enter to toggle)
+- Focus indicators for summary element
+
+### Example Component
+- Semantic `<table>` structure with proper headers
+- `<th scope="col">` for column headers
+- Proper table caption support via header prop
+- Alternative content support via children prop
+
+### Steps Component
+- Uses semantic `<ol>` and `<li>` elements
+- Maintains proper nesting hierarchy
+- Screen readers announce list structure and numbering
+- No custom JavaScript required
+
+## Integration with Other Components
+
+### With Mandatory/Unique Components
+
+```mdx
+<Example
+  properties={[
+    { 
+      property: "has category of carrier", 
+      value: <><Mandatory />volume</> 
+    },
+    { 
+      property: "has identifier", 
+      value: <><Unique />ISBN 978-0-123456-78-9</> 
+    }
+  ]}
+/>
+```
+
+### With InLink/OutLink Components
+
+```mdx
+<Steps>
+  <ol>
+    <li>
+      Record <InLink href="/docs/statements/1025">manifestation statement</InLink> elements
+    </li>
+    <li>
+      Consult <OutLink href="https://www.ifla.org">IFLA guidelines</OutLink> for additional guidance
+    </li>
+  </ol>
+</Steps>
+```
+
+### With Figure Components
+
+```mdx
+<Examples summary="Visual Examples">
+  <Example header="Entity Relationship">
+    <Figure
+      src="/img/manifestation-hierarchy.png"
+      caption="Manifestation unit hierarchy"
+      expandLink="/docs/fullimages/manifestation-hierarchy"
+    />
+  </Example>
+</Examples>
+```
+
+## Best Practices
+
+### When to Use Examples vs Example
+
+- **Use Examples** when you have multiple related examples that users might want to collapse/expand
+- **Use Example** for single, standalone examples or when you always want examples visible
+- **Combine both** for complex documentation with multiple example categories
+
+### Property Table vs Markdown Tables
+
+- **Use structured properties** when:
+  - Content is purely property-value pairs
+  - You need consistent styling across examples
+  - You want to leverage TypeScript type safety
+  
+- **Use children/markdown** when:
+  - You need complex table structures
+  - Content includes mixed formatting
+  - You're migrating existing markdown content
+
+### Numbering Style Guidelines
+
+- **decimal** (1, 2, 3) - Most common, use for primary procedures
+- **lower-alpha** (a, b, c) - Good for sub-procedures or alternative approaches
+- **lower-roman** (i, ii, iii) - Use for detailed sub-steps or clarifications
+- **upper-alpha/upper-roman** - Use sparingly, for emphasis or formal procedures
+
+### Performance Considerations
+
+- Examples components are lightweight with minimal JavaScript
+- CSS is loaded only when components are used (CSS modules)
+- No external dependencies beyond theme components
+- Properly tree-shakeable when bundled
+
+## Migration from Existing Content
+
+### From Manual Details/Summary
+
+```mdx
+<!-- Old approach -->
+<details>
+  <summary>Examples</summary>
+  <div>
+    <table>
+      <tr><th>Property</th><th>Value</th></tr>
+      <tr><td>has category</td><td>"volume"</td></tr>
+    </table>
+  </div>
+</details>
+
+<!-- New approach -->
+<Examples>
+  <Example
+    properties={[
+      { property: "has category", value: '"volume"' }
+    ]}
+  />
+</Examples>
+```
+
+### From Manual Numbered Lists
+
+```mdx
+<!-- Old approach -->
+<ol style="list-style-type: decimal">
+  <li>First step
+    <ol style="list-style-type: lower-alpha">
+      <li>Sub-step a</li>
+      <li>Sub-step b</li>
+    </ol>
+  </li>
+</ol>
+
+<!-- New approach -->
+<Steps>
+  <ol>
+    <li>First step
+      <ol>
+        <li>Sub-step a</li>
+        <li>Sub-step b</li>
+      </ol>
+    </li>
+  </ol>
+</Steps>
+```
+
+## Troubleshooting
+
+### Common Issues
+
+1. **Table headers not showing**: Check `showTableHeader` prop (defaults to `true`)
+2. **Numbering styles not applying**: Ensure proper nesting of `<ol>` elements within Steps
+3. **Styling conflicts**: Components use CSS modules; check for style overrides
+4. **TypeScript errors**: Ensure proper import of types: `import type { ExampleProps } from '@ifla/theme'`
+
+### Debug Tips
+
+1. Use browser dev tools to inspect CSS module class names
+2. Check console for any import/export errors
+3. Verify component props match expected TypeScript interfaces
+4. Test accessibility with screen readers or browser accessibility tools
+
+---
+
+These components provide a solid foundation for creating consistent, accessible documentation examples and procedures across all IFLA documentation sites.

@@ -1,0 +1,414 @@
+---
+title: Steps Component
+description: Multi-level ordered lists with configurable numbering styles
+sidebar_position: 9
+---
+
+# Steps Component
+
+The `Steps` component provides configurable multi-level numbering for nested ordered lists. It allows you to customize the numbering style for up to three levels of nesting while maintaining clean, semantic HTML structure.
+
+## Overview
+
+The Steps component wraps your nested `<ol>` lists and applies consistent numbering styles via CSS custom properties. This approach maintains semantic HTML while providing flexible visual presentation.
+
+## Basic Usage
+
+```mdx
+<Steps>
+<ol>
+  <li>First main step</li>
+  <li>
+    Second main step
+    <ol>
+      <li>Substep A</li>
+      <li>Substep B</li>
+    </ol>
+  </li>
+  <li>Third main step</li>
+</ol>
+</Steps>
+```
+
+**Result:**
+
+<Steps>
+<ol>
+  <li>First main step</li>
+  <li>
+    Second main step
+    <ol>
+      <li>Substep A</li>
+      <li>Substep B</li>
+    </ol>
+  </li>
+  <li>Third main step</li>
+</ol>
+</Steps>
+
+## Props
+
+| Prop | Type | Default | Description |
+|------|------|---------|-------------|
+| `level1` | `string` | `'decimal'` | Numbering style for first level lists |
+| `level2` | `string` | `'lower-alpha'` | Numbering style for second level lists |
+| `level3` | `string` | `'lower-roman'` | Numbering style for third level lists |
+
+### Available Numbering Styles
+
+- `decimal` - 1, 2, 3, 4...
+- `lower-alpha` - a, b, c, d...
+- `upper-alpha` - A, B, C, D...
+- `lower-roman` - i, ii, iii, iv...
+- `upper-roman` - I, II, III, IV...
+
+## Examples
+
+### Default Three-Level Numbering
+
+<Steps>
+<ol>
+  <li>
+    Install required software
+    <ol>
+      <li>Download the installer</li>
+      <li>
+        Run the installation
+        <ol>
+          <li>Accept the license</li>
+          <li>Choose installation directory</li>
+          <li>Configure options</li>
+        </ol>
+      </li>
+      <li>Restart your system</li>
+    </ol>
+  </li>
+  <li>
+    Configure your environment
+    <ol>
+      <li>Set environment variables</li>
+      <li>Update your PATH</li>
+    </ol>
+  </li>
+  <li>Verify installation</li>
+</ol>
+</Steps>
+
+### Custom Numbering: All Roman Numerals
+
+<Steps level1="upper-roman" level2="lower-roman" level3="decimal">
+<ol>
+  <li>
+    Planning Phase
+    <ol>
+      <li>
+        Requirements gathering
+        <ol>
+          <li>Stakeholder interviews</li>
+          <li>Technical assessment</li>
+          <li>Risk analysis</li>
+        </ol>
+      </li>
+      <li>Resource allocation</li>
+    </ol>
+  </li>
+  <li>
+    Implementation Phase
+    <ol>
+      <li>Development</li>
+      <li>Testing</li>
+    </ol>
+  </li>
+  <li>Deployment Phase</li>
+</ol>
+</Steps>
+
+### Alphabetical with Decimal Sub-steps
+
+<Steps level1="upper-alpha" level2="decimal" level3="lower-alpha">
+<ol>
+  <li>
+    Data Collection Methods
+    <ol>
+      <li>
+        Surveys and questionnaires
+        <ol>
+          <li>Online surveys</li>
+          <li>Paper-based surveys</li>
+          <li>Phone interviews</li>
+        </ol>
+      </li>
+      <li>Focus groups</li>
+      <li>Observational studies</li>
+    </ol>
+  </li>
+  <li>
+    Data Analysis Techniques
+    <ol>
+      <li>Quantitative analysis</li>
+      <li>Qualitative analysis</li>
+    </ol>
+  </li>
+  <li>Reporting and Documentation</li>
+</ol>
+</Steps>
+
+### Simple Two-Level Process
+
+<Steps level1="decimal" level2="upper-alpha">
+<ol>
+  <li>
+    Prepare materials
+    <ol>
+      <li>Gather tools</li>
+      <li>Set up workspace</li>
+      <li>Review instructions</li>
+    </ol>
+  </li>
+  <li>
+    Execute procedure
+    <ol>
+      <li>Follow safety protocols</li>
+      <li>Complete each step in order</li>
+      <li>Document results</li>
+    </ol>
+  </li>
+  <li>Clean up and finalize</li>
+</ol>
+</Steps>
+
+## Code Examples
+
+Here are the code snippets for the examples above:
+
+```mdx title="Default Three-Level Numbering"
+<Steps>
+<ol>
+  <li>
+    Install required software
+    <ol>
+      <li>Download the installer</li>
+      <li>
+        Run the installation
+        <ol>
+          <li>Accept the license</li>
+          <li>Choose installation directory</li>
+          <li>Configure options</li>
+        </ol>
+      </li>
+      <li>Restart your system</li>
+    </ol>
+  </li>
+  <li>
+    Configure your environment
+    <ol>
+      <li>Set environment variables</li>
+      <li>Update your PATH</li>
+    </ol>
+  </li>
+  <li>Verify installation</li>
+</ol>
+</Steps>
+```
+
+```mdx title="Custom Roman Numerals"
+<Steps level1="upper-roman" level2="lower-roman" level3="decimal">
+<ol>
+  <li>
+    Planning Phase
+    <ol>
+      <li>
+        Requirements gathering
+        <ol>
+          <li>Stakeholder interviews</li>
+          <li>Technical assessment</li>
+          <li>Risk analysis</li>
+        </ol>
+      </li>
+      <li>Resource allocation</li>
+    </ol>
+  </li>
+  <li>
+    Implementation Phase
+    <ol>
+      <li>Development</li>
+      <li>Testing</li>
+    </ol>
+  </li>
+  <li>Deployment Phase</li>
+</ol>
+</Steps>
+```
+
+## Use Cases
+
+### Assessment Procedures
+
+Perfect for documenting multi-step assessment processes:
+
+<Steps>
+<ol>
+  <li>
+    Initial Assessment
+    <ol>
+      <li>Review submission requirements</li>
+      <li>
+        Verify completeness
+        <ol>
+          <li>Check all required fields</li>
+          <li>Validate file formats</li>
+          <li>Confirm supporting documentation</li>
+        </ol>
+      </li>
+    </ol>
+  </li>
+  <li>
+    Technical Review
+    <ol>
+      <li>Schema validation</li>
+      <li>Content quality check</li>
+      <li>Compliance verification</li>
+    </ol>
+  </li>
+  <li>Final Approval Process</li>
+</ol>
+</Steps>
+
+### Installation Guides
+
+Ideal for software installation and configuration:
+
+<Steps level1="decimal" level2="lower-alpha" level3="lower-roman">
+<ol>
+  <li>
+    System Requirements
+    <ol>
+      <li>
+        Hardware requirements
+        <ol>
+          <li>Minimum RAM: 8GB</li>
+          <li>Storage: 20GB available</li>
+          <li>Processor: 2GHz dual-core</li>
+        </ol>
+      </li>
+      <li>Software dependencies</li>
+    </ol>
+  </li>
+  <li>
+    Installation Steps
+    <ol>
+      <li>Download installer</li>
+      <li>Run installation wizard</li>
+      <li>Configure settings</li>
+    </ol>
+  </li>
+</ol>
+</Steps>
+
+### Research Methodologies
+
+Great for documenting research procedures:
+
+<Steps level1="upper-roman" level2="upper-alpha" level3="decimal">
+<ol>
+  <li>
+    Literature Review
+    <ol>
+      <li>
+        Database Searches
+        <ol>
+          <li>Academic databases</li>
+          <li>Professional repositories</li>
+          <li>Grey literature sources</li>
+        </ol>
+      </li>
+      <li>Citation Management</li>
+    </ol>
+  </li>
+  <li>
+    Data Collection
+    <ol>
+      <li>Participant Recruitment</li>
+      <li>Data Gathering Protocols</li>
+    </ol>
+  </li>
+</ol>
+</Steps>
+
+## Accessibility Features
+
+The Steps component maintains semantic HTML structure:
+
+- Uses proper `<ol>` and `<li>` elements for screen readers
+- Preserves hierarchical relationships between list levels
+- Maintains keyboard navigation through list items
+- Custom numbering is visual-only and doesn't affect screen reader interpretation
+
+## Technical Implementation
+
+The component uses CSS custom properties to apply numbering styles:
+
+- Wraps content in a container with `data-*` attributes
+- CSS maps attributes to custom properties
+- Nested selectors apply appropriate styles to each level
+- No JavaScript required - pure CSS solution
+
+## Related Components
+
+- **[Examples](./examples)** - For organizing example blocks with collapsible sections
+- **[Example](./examples#example-component)** - For property-value demonstration tables
+- **[Element Reference](./element-reference)** - For documenting vocabulary elements
+
+## Best Practices
+
+1. **Consistent Nesting**: Keep your nesting levels consistent within a document
+2. **Logical Hierarchy**: Use numbering styles that make sense for your content type
+3. **Three Levels Max**: Avoid going deeper than three levels for readability
+4. **Semantic HTML**: Always use proper `<ol>` and `<li>` elements inside Steps
+5. **Content Length**: Keep individual steps concise and actionable
+6. **Line Breaks**: When nesting content in `<li>` tags, use line breaks after the opening tag
+
+## Common Patterns
+
+```mdx
+<!-- Process Documentation -->
+<Steps level1="decimal" level2="lower-alpha" level3="lower-roman">
+
+<!-- Legal/Formal Documents -->
+<Steps level1="upper-roman" level2="upper-alpha" level3="decimal">
+
+<!-- Quick Reference/Checklists -->
+<Steps level1="decimal" level2="upper-alpha">
+
+<!-- Academic/Research -->
+<Steps level1="upper-alpha" level2="decimal" level3="lower-alpha">
+```
+
+## Troubleshooting
+
+### MDX Parsing Issues
+
+If you encounter MDX parsing errors:
+
+1. **Line Breaks**: Ensure `<li>` tags with nested content have line breaks after the opening tag
+2. **Proper Nesting**: Always close nested `<ol>` tags inside their parent `<li>`
+3. **Consistent Indentation**: Use consistent indentation for readability
+
+**Correct Format:**
+```mdx
+<li>
+  Parent item text
+  <ol>
+    <li>Child item</li>
+  </ol>
+</li>
+```
+
+**Incorrect Format:**
+```mdx
+<li>Parent item text
+  <ol>
+    <li>Child item</li>
+  </ol>
+</li>
+```
