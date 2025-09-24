@@ -19,7 +19,14 @@ const siteConfigMap = getSiteConfigMap(DOCS_ENV);
 const config: Config = {
   future: {
     v4: true,
-    experimental_faster: true,
+    experimental_faster: {
+      swcJsLoader: true,        // Keep for performance
+      swcJsMinimizer: true,     // Keep for performance
+      swcHtmlMinimizer: true,   // Keep for performance
+      lightningCssMinimizer: true, // Keep for performance
+      rspackBundler: false,     // DISABLE - use webpack
+      mdxCrossCompilerCache: true, // Keep for performance
+    },
   },
   title: 'UNIMARC',
   tagline: 'Universal MARC Format',

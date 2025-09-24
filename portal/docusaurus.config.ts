@@ -35,7 +35,17 @@ const adminConfig     = getAdminPortalConfig(DOCS_ENV);
  * -------------------------------------------------------------------------- */
 
 const config: Config = {
-  future: { v4: true, experimental_faster: true },
+  future: {
+    v4: true,
+    experimental_faster: {
+      swcJsLoader: true,        // Keep for performance
+      swcJsMinimizer: true,     // Keep for performance
+      swcHtmlMinimizer: true,   // Keep for performance
+      lightningCssMinimizer: true, // Keep for performance
+      rspackBundler: false,     // DISABLE - use webpack to avoid cache corruption bug
+      mdxCrossCompilerCache: true, // Keep for performance
+    },
+  },
 
   title:   'IFLA Standards Portal',
   tagline: 'International Federation of Library Associations and Institutions',

@@ -29,8 +29,15 @@ const config: Config = {
 
   // Future flags, see https://docusaurus.io/docs/api/docusaurus-config#future
   future: {
-    v4: true, // Improve compatibility with the upcoming Docusaurus v4
-    experimental_faster: true,
+    v4: true,
+    experimental_faster: {
+      swcJsLoader: true,        // Keep for performance
+      swcJsMinimizer: true,     // Keep for performance
+      swcHtmlMinimizer: true,   // Keep for performance
+      lightningCssMinimizer: true, // Keep for performance
+      rspackBundler: false,     // DISABLE - use webpack
+      mdxCrossCompilerCache: true, // Keep for performance
+    },
   },
 
   url: adminConfig.url,

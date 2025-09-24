@@ -59,9 +59,4 @@
   &[data-list-level3='upper-roman'] {
     --steps-level3: upper-roman;
   }
-
-  // Optional: small spacing for nested list items
-  li {
-    margin: 0.25rem 0;
-  }
 }

@@ -18,13 +18,20 @@ if (!DOCS_ENV) {
 }
 
 // Get configuration for this site
-const siteConfig = getSiteConfig('FRBR' as SiteKey, DOCS_ENV as any);
-const siteConfigMap = getSiteConfigMap(DOCS_ENV as any);
+const siteConfig = getSiteConfig('FRBR' as SiteKey, DOCS_ENV as never);
+const siteConfigMap = getSiteConfigMap(DOCS_ENV as never);
 
 const config: Config = {
   future: {
     v4: true,
-    experimental_faster: true,
+    experimental_faster: {
+      swcJsLoader: true,        // Keep for performance
+      swcJsMinimizer: true,     // Keep for performance
+      swcHtmlMinimizer: true,   // Keep for performance
+      lightningCssMinimizer: true, // Keep for performance
+      rspackBundler: false,     // DISABLE - use webpack
+      mdxCrossCompilerCache: true, // Keep for performance
+    },
   },
   title: 'IFLA FR Family of Models',
   tagline: 'Conceptual Models for Bibliographic Information',
@@ -174,7 +181,7 @@ const config: Config = {
         },
       ],
     },
-    footer: createStandardFooter(DOCS_ENV as any, 'FRBR'),
+    footer: createStandardFooter(DOCS_ENV as never, 'FRBR'),
     prism: {
       theme: prismThemes.github,
       darkTheme: prismThemes.dracula,
