@@ -1,5 +1,8 @@
 blank_issues_enabled: false
 contact_links:
+  - name: View Live Platform
+    url: https://iflastandards.github.io/platform/
+    about: Visit the live IFLA Standards platform to browse the standards
   - name: Standards Content Questions
     url: https://www.ifla.org/programmes/ifla-standards/
     about: For questions about the standards themselves (not documentation issues), please visit the IFLA Standards page

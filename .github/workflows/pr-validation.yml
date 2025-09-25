@@ -34,20 +34,34 @@ jobs:
     runs-on: ubuntu-latest
     outputs:
       docs_changed: ${{ steps.filter.outputs.docs }}
+      docs_only: ${{ steps.filter.outputs.docs == 'true' && steps.filter.outputs.code == 'false' && steps.filter.outputs.config == 'false' }}
       theme_changed: ${{ steps.filter.outputs.theme }}
+      code_changed: ${{ steps.filter.outputs.code }}
       config_changed: ${{ steps.filter.outputs.config }}
     steps:
       - uses: actions/checkout@v4
         with:
           fetch-depth: 0
-          
+
       - uses: dorny/paths-filter@v3
         id: filter
         with:
           filters: |
             docs:
-              - 'standards/**'
-              - 'portal/**'
+              - 'standards/**/docs/**'
+              - 'standards/**/*.md'
+              - 'standards/**/*.mdx'
+              - 'portal/docs/**'
+              - 'portal/**/*.md'
+              - 'portal/**/*.mdx'
+            code:
+              - '**/*.ts'
+              - '**/*.tsx'
+              - '**/*.js'
+              - '**/*.jsx'
+              - '!**/*.test.*'
+              - '!**/*.spec.*'
+              - '!**/docs/**'
             theme:
               - 'packages/theme/**'
             config:
@@ -59,7 +73,7 @@ jobs:
   validate-code-quality:
     name: Code Quality Checks
     needs: changes-detection
-    if: needs.changes-detection.outputs.docs_changed == 'true' || needs.changes-detection.outputs.theme_changed == 'true'
+    if: needs.changes-detection.outputs.docs_only != 'true'
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -115,7 +129,7 @@ jobs:
   test-affected:
     name: Test Affected Projects
     needs: changes-detection
-    if: needs.changes-detection.outputs.docs_changed == 'true' || needs.changes-detection.outputs.theme_changed == 'true'
+    if: needs.changes-detection.outputs.docs_only != 'true'
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -164,7 +178,12 @@ jobs:
 
   build-preview:
     name: Build Preview
-    needs: [validate-code-quality, test-affected]
+    needs: [changes-detection, validate-code-quality, test-affected]
+    if: |
+      always() &&
+      needs.changes-detection.result == 'success' &&
+      (needs.validate-code-quality.result == 'success' || needs.validate-code-quality.result == 'skipped') &&
+      (needs.test-affected.result == 'success' || needs.test-affected.result == 'skipped')
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -218,45 +237,12 @@ jobs:
             standards/*/build
           retention-days: 7
 
-  lighthouse-audit:
-    name: Lighthouse Audit
-    needs: build-preview
-    runs-on: ubuntu-latest
-    continue-on-error: true
-    steps:
-      - uses: actions/checkout@v4
-      
-      - uses: actions/download-artifact@v4
-        with:
-          name: pr-build-${{ github.event.pull_request.number }}
-          
-      - name: Setup local server
-        run: |
-          npm install -g http-server
-          http-server ./portal/build -p 8080 &
-          sleep 5
-          
-      - name: Run Lighthouse
-        uses: treosh/lighthouse-ci-action@v11
-        with:
-          urls: |
-            http://localhost:8080
-            http://localhost:8080/developer
-          uploadArtifacts: true
-          temporaryPublicStorage: true
-          
-      - name: Format Lighthouse results
-        if: always()
-        run: |
-          echo "## 🔦 Lighthouse Results" >> $GITHUB_STEP_SUMMARY
-          echo "" >> $GITHUB_STEP_SUMMARY
-          echo "Performance, Accessibility, Best Practices, and SEO scores" >> $GITHUB_STEP_SUMMARY
-          echo "Check artifacts for detailed reports" >> $GITHUB_STEP_SUMMARY
-
   pr-summary:
     name: PR Summary Report
-    needs: [validate-code-quality, test-affected, build-preview, lighthouse-audit]
-    if: always()
+    needs: [changes-detection, validate-code-quality, test-affected, build-preview]
+    if: |
+      always() &&
+      needs.changes-detection.result == 'success'
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4

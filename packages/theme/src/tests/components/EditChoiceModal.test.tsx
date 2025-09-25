@@ -173,8 +173,8 @@ describe('EditChoiceModal Component', () => {
     // Verify the URL structure
     expect(calledUrl).toContain('https://github.com/iflastandards/platform/issues/new');
     expect(calledUrl).toContain('template=documentation-issue.yml');
-    expect(calledUrl).toContain('labels=documentation%2Cisbdm');
-    expect(calledUrl).toContain('title=%5BISBDM%5D+Issue+with%3A+has+manifestation+statement');
+    expect(calledUrl).toContain('labels=documentation%2Cneeds-triage%2Cstandard%3Aisbdm');
+    expect(calledUrl).toContain('title=%5BISBDM+Documentation%5D+has+manifestation+statement');
     expect(calledUrl).toContain('page-url=http%3A%2F%2Flocalhost%3A3001%2FISBDM%2Fdocs%2Felements%2F1025');
   });
 
@@ -188,7 +188,7 @@ describe('EditChoiceModal Component', () => {
     await user.click(reportButton);
     
     const calledUrl = mockWindowOpen.mock.calls[0][0];
-    expect(calledUrl).toContain('title=%5BISBDM%5D+Documentation+Issue');
+    expect(calledUrl).toContain('title=%5BISBDM+Documentation%5D+Issue');
   });
 
   it('displays page information correctly', () => {
@@ -233,8 +233,8 @@ describe('EditChoiceModal Component', () => {
     await user.click(reportButton);
     
     const calledUrl = mockWindowOpen.mock.calls[0][0];
-    expect(calledUrl).toContain('labels=documentation%2Clrm');
-    expect(calledUrl).toContain('title=%5BLRM%5D+');
+    expect(calledUrl).toContain('labels=documentation%2Cneeds-triage%2Cstandard%3Alrm');
+    expect(calledUrl).toContain('title=%5BLRM+Documentation%5D+');
   });
 
   it('has proper ARIA attributes', () => {

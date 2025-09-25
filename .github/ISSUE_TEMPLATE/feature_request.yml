@@ -1,0 +1,70 @@
+name: Feature Request
+description: Suggest an idea for IFLA Standards platform
+title: "[Feature] "
+labels: ["enhancement", "needs-triage"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for taking the time to suggest a feature! This helps us improve the IFLA Standards platform for everyone.
+
+  - type: dropdown
+    id: standard
+    attributes:
+      label: Which standard does this feature relate to?
+      description: Select the IFLA standard this feature would affect
+      options:
+        - All standards
+        - ISBDM
+        - FRBR
+        - LRM
+        - ISBD
+        - MulDiCat
+        - UNIMARC
+        - Platform/General
+    validations:
+      required: true
+
+  - type: textarea
+    id: problem
+    attributes:
+      label: Problem Statement
+      description: Please describe the problem you're trying to solve
+      placeholder: "I'm always frustrated when..."
+    validations:
+      required: true
+
+  - type: textarea
+    id: solution
+    attributes:
+      label: Proposed Solution
+      description: Describe the solution you'd like to see
+      placeholder: "I would like to be able to..."
+    validations:
+      required: true
+
+  - type: textarea
+    id: alternatives
+    attributes:
+      label: Alternatives Considered
+      description: Describe any alternative solutions you've considered
+      placeholder: "I've also thought about..."
+
+  - type: textarea
+    id: additional-context
+    attributes:
+      label: Additional Context
+      description: Add any other context, mockups, or screenshots about the feature request
+      placeholder: "Any additional information that might be helpful..."
+
+  - type: dropdown
+    id: priority
+    attributes:
+      label: Priority
+      description: How important is this feature to you?
+      options:
+        - Low - Nice to have
+        - Medium - Would help significantly
+        - High - Critical for my use case
+    validations:
+      required: true

@@ -1,0 +1,109 @@
+name: General Issue
+description: Report a general issue with IFLA Standards platform
+title: "[General] "
+labels: ["needs-triage"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for taking the time to report an issue! Please provide as much detail as possible.
+
+  - type: dropdown
+    id: issue-type
+    attributes:
+      label: Issue Type
+      description: What type of issue are you reporting?
+      options:
+        - UI/UX Problem
+        - Performance Issue
+        - Security Concern
+        - Accessibility Issue
+        - Content Error
+        - Navigation Problem
+        - Search Issue
+        - Other
+    validations:
+      required: true
+
+  - type: dropdown
+    id: standard
+    attributes:
+      label: Which standard does this issue relate to?
+      description: Select the IFLA standard this issue affects
+      options:
+        - All standards
+        - ISBDM
+        - FRBR
+        - LRM
+        - ISBD
+        - MulDiCat
+        - UNIMARC
+        - Platform/General
+    validations:
+      required: true
+
+  - type: textarea
+    id: description
+    attributes:
+      label: Description
+      description: Please describe the issue in detail
+      placeholder: "A clear and concise description of the issue..."
+    validations:
+      required: true
+
+  - type: input
+    id: url
+    attributes:
+      label: URL (if applicable)
+      description: The URL where you encountered this issue
+      placeholder: "https://iflastandards.github.io/platform/..."
+
+  - type: textarea
+    id: steps
+    attributes:
+      label: Steps to Reproduce (if applicable)
+      description: How can we reproduce this issue?
+      placeholder: |
+        1. Go to...
+        2. Click on...
+        3. See issue...
+
+  - type: textarea
+    id: expected
+    attributes:
+      label: Expected Behavior
+      description: What did you expect to happen?
+      placeholder: "The system should..."
+
+  - type: textarea
+    id: actual
+    attributes:
+      label: Actual Behavior
+      description: What actually happened?
+      placeholder: "Instead, the system..."
+
+  - type: dropdown
+    id: browser
+    attributes:
+      label: Browser (if applicable)
+      description: Which browser are you using?
+      options:
+        - Chrome
+        - Firefox
+        - Safari
+        - Edge
+        - Other
+        - Not applicable
+
+  - type: dropdown
+    id: priority
+    attributes:
+      label: Priority
+      description: How would you rate the priority of this issue?
+      options:
+        - Low - Minor inconvenience
+        - Medium - Significant issue
+        - High - Major problem
+        - Critical - Blocking issue
+    validations:
+      required: true
