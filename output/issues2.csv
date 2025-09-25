@@ -1,0 +1,63 @@
+Issue #,Priority,Type,Title,Page/Location,Problem Description,Fix/Action Required
+26,5-Medium,Bug,Example open/close state with browser back,Inline examples throughout,Open inline examples close when browser back link is clicked from full example,Maintain open/closed state of inline examples
+27,6-Medium,Content,Title page content incorrect,Homepage/Title page,Current text is promotional/advertisement rather than standard title,Replace with text from pilot version
+28,7-Low,Design,Color scheme - green vs red,Throughout site,ISBD traditionally uses red but site uses green,Decide on consistent color scheme (ISBD red or IFLA green)
+29,7-Low,Design,Color scheme incoherence,Throughout site,"Multiple colors used inconsistently (green, dark blue, blue)",Develop coherent color swatch
+30,7-Low,Design,Light green contrast issues,Current section indicator,Same contrast problems that were to be improved from original,Fix contrast for accessibility
+31,6-Medium,Navigation,Instructions menu content arbitrary,Horizontal menu bar,Content under Instructions is unclear and arbitrary,Clarify or remove Instructions menu item
+32,7-Low,Design,IFLA logo in black,Header,IFLA logo should match color scheme not be black,Update logo color to match chosen scheme
+33,6-Medium,Navigation,Sections collapsed to single pages,Introduction and About sections,"Multiple pages collapsed into single long pages, losing hierarchy",Restore subsections as distinct pages
+34,5-Medium,Design,See also formatting issues,Throughout,See also links have green vertical bar and obtrusive formatting,Restore See also formatting to pilot version
+35,5-Medium,Design,Hyperlink display too heavy,Throughout,"Links displayed as buttons with borders, link symbols, and hover colors",Simplify to color change on hover only
+36,4-Medium,Content,Assessment tables vs bullets,Assessment section,Tables with interpretation used instead of bullet lists,Restore bullet list format from pilot
+37,6-Medium,Navigation,Entity-Relationship Diagrams menu option,Assessment section,Separate menu option for diagrams not required,Remove from navigation menu
+38,5-Medium,Bug,Attribute:Value button inactive,Element Reference sections,Button/link present but non-functional,Remove or implement functionality
+39,3-High,Bug,Element sub-type row display issue,Element Reference sections,Row not displayed when there is no content,Always display row even if empty
+40,3-High,Bug,Element super-type row display issue,Element Reference sections,Row not displayed when there is no content,Always display row even if empty
+41,6-Medium,Design,Row banding in tables,Value vocabularies and examples,Alternating white/light violet background in rows,Remove banding for cleaner display
+42,5-Medium,Content,Value vocabulary duplicate guidance,Value vocabularies,Link moved to preceding paragraph duplicating guidance,Restore original text and link placement
+43,7-Low,UI,Filter vocabulary terms functionality,Value vocabularies,Search/filter box functionality unclear,Clarify or remove filter facility
+44,3-High,RDF,Type field shows datatype for all,All Element Reference sections,All elements incorrectly show Type: datatype,Remove type or correctly differentiate property types
+45,2-High,RDF,ISBDM namespace not loaded,IFLA standards namespace,Namespace not published to IFLA registry,Complete namespace publication
+46,5-Medium,Content,Full Examples vs Examples title,Examples section,Section renamed from Examples to Full Examples,Restore title to Examples throughout
+47,5-Medium,Content,Duplicate examples list,Examples introduction page,List of examples duplicates menu without additional utility,Remove duplicate list
+48,5-Medium,Design,Example title formatting inconsistent,Examples list,2nd and 3rd lines have different layout and font,Fix consistent formatting
+49,5-Medium,Design,Yellow vertical bar in examples,Full examples,Current example marked with yellow bar on left,Consider consistency with other indicators
+50,5-Medium,Design,Example row text formatting,Full examples,"Bold, centered text is obtrusive",Use italic left-aligned headers
+51,5-Medium,Bug,Example notes close automatically,Full examples,Opening one note closes others preventing comparison,Allow multiple notes to stay open
+52,7-Low,UI,Sitemap uses opaque URLs,Sitemap,Uses page URLs instead of human-readable titles,Display human-readable page titles
+53,2-High,Content,Sources of information missing,/docs/notes/1272 and others,Missing Sources of information sections,Add missing sections
+54,3-High,Content,Element sub-type separator missing,Multiple relationship elements,No separator between entity vs element hierarchy,Add separator line between groups
+55,3-High,Content,Element super-type text missing,/docs/relationships/1029,publisher collective agent missing super-type text,Add missing text
+56,5-Medium,Content,Stipulation paragraph breaks,Multiple elements,"Stipulations run together, should be separate paragraphs",Break into separate paragraphs
+57,5-Medium,Content,Additional information formatting,Multiple relationship elements,Multiple sentences should be on separate lines,Fix line breaks
+58,5-Medium,Content,ISO 8601 format stipulations,Work embodied in manifestation,"Linked open data, relational database not in italics",Format these terms in italics consistently
+59,5-Medium,Content,Bullets vs numbering format,Multiple stipulation sections,Numbering format should be numbers then letters,Fix to match pilot format
+60,4-Medium,Content,Missing stipulations text,Value vocabularies,"Text 'The values, definitions, and scope notes...' missing",Add missing stipulation text
+61,5-Medium,Content,Display of metadata examples incorrect,Display of ISBDM metadata,Examples 2 both wrong,Correct the examples
+62,4-Medium,Content,SES examples formatting,Multiple SES sections,Examples use different format than pilot,Restore pilot formatting
+63,5-Medium,Content,Missing link to Collective Agent SES,Agent SES,Link to Collective Agent SES missing,Add missing link
+64,5-Medium,Content,Font issues in SES sections,Multiple SES sections,Text in curly brackets has wrong font,Fix font consistency
+65,5-Medium,Content,Compound title SES missing list,Compound title SES,Numbered list 1-3 missing after first sentence,Add the missing numbered list
+66,4-Medium,Content,About section table formatting,Credits and acknowledgements,"Tables use column headers, inconsistent alignment, borders, banding","Remove headers, align columns, remove borders and banding"
+67,5-Medium,Content,Terms of reference formatting,Background and history,Uses bullets instead of numbers,Change to numbered list
+68,5-Medium,Content,Deliverables formatting,Background and history,Nested list formatting incorrect,Fix nested list indentation
+69,5-Medium,Content,Review timeframe formatting,Background and history,Text incorrectly put in table,Restore as paragraph text
+70,4-Medium,Design,Three-column template issues,Throughout site,Fixed 3-column template wastes space on many pages,Consider 2-column default with 3rd when needed
+71,7-Low,UI,Bottom page navigation,All pages,Previous/Next navigation not functional for catalogers,Remove Previous/Next options
+72,5-Medium,Content,Red asterisk for mandatory,Data granularity,Mandatory element symbol should be red,Fix color to red
+73,5-Medium,Content,Red repeatable symbol,Data granularity,Repeatable element symbol should be red,Fix color to red
+74,4-Medium,Content,Example note formatting,Throughout examples,Notes in square brackets should be italics not bold,Fix formatting to italics only
+75,5-Medium,Content,Diagram expand image missing,Collections section,Entity-relationship diagram lacks expand image link,Add expand image functionality
+76,4-Medium,Content,Diagram link formatting,Number of units,Elements in diagram text should be links in yellow boxes,Fix link formatting
+77,5-Medium,Content,Missing full example link,Number of units,Mojo example link missing,Add missing example link
+78,4-Medium,Content,Table text alignment,Assessment examples,Text in tables not aligned and bold incorrectly,Fix alignment and remove bold
+79,5-Medium,Content,Workflow numeration different,Describing the manifestation,Numeration differs from pilot but is consistent,Note difference or align with pilot
+80,4-Medium,Content,Link 404 error,has manifestation statement,Pete Townshend example link returns 404,Fix broken link
+81,4-Medium,Content,Example content incomplete,has manifestation statement of title,3rd element content missing after Philip Glass,Complete the example text
+82,7-Low,UI,Page width in examples,Full examples,Right column empty but table doesn't expand,Use available space for better legibility
+83,6-Medium,Content,Missing sources section end text,General stipulations for notes,Text missing at end of section,Add missing text about sources
+84,5-Medium,Content,Missing link,Display of ISBDM metadata,Links missing for place and date of creation,Add missing links
+85,5-Medium,Content,Names of persons link issue,Person SES,Link turns red on return from site,Fix link behavior
+86,5-Medium,Content,Example value line breaks,Multiple SES examples,Values split across lines incorrectly,Fix to keep values on single line
+87,4-Medium,Bug,Related element link style,Element Reference sections,Link style significantly different from pilot,Restore simple black/white normal with red/green hover
