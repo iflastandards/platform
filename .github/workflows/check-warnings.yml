@@ -1,9 +1,10 @@
 name: Check Build Warnings
 
 on:
-  pull_request:
-    types: [opened, synchronize]
+  # Remove pull_request trigger to avoid parallel builds
+  # This check will be called from the main PR validation workflow instead
   workflow_dispatch:
+  workflow_call:  # Allow this workflow to be called from other workflows
   schedule:
     # Run daily at 2 AM UTC
     - cron: '0 2 * * *'

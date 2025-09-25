@@ -237,9 +237,21 @@ jobs:
             standards/*/build
           retention-days: 7
 
+  check-build-warnings:
+    name: Check Build Warnings
+    needs: [build-preview]
+    if: |
+      always() &&
+      needs.build-preview.result == 'success'
+    uses: ./.github/workflows/check-warnings.yml
+    permissions:
+      contents: read
+      issues: write
+      pull-requests: write
+
   pr-summary:
     name: PR Summary Report
-    needs: [changes-detection, validate-code-quality, test-affected, build-preview]
+    needs: [changes-detection, validate-code-quality, test-affected, build-preview, check-build-warnings]
     if: |
       always() &&
       needs.changes-detection.result == 'success'
