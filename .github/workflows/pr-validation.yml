@@ -108,12 +108,13 @@ jobs:
       - name: Format check
         run: |
           echo "🎨 Checking code formatting..."
-          npx nx format:check --base=${{ steps.nx-set-shas.outputs.base }}
+          NX_CLOUD_DISTRIBUTED_EXECUTION=false npx nx format:check --base=${{ steps.nx-set-shas.outputs.base }}
 
       - name: Lint affected
         run: |
           echo "🔍 Linting affected projects..."
-          npx nx affected --target=lint \
+          # Disable distributed execution - module resolution issues
+          NX_CLOUD_DISTRIBUTED_EXECUTION=false npx nx affected --target=lint \
             --base=${{ steps.nx-set-shas.outputs.base }} \
             --exclude=admin \
             --parallel=4
@@ -121,7 +122,8 @@ jobs:
       - name: Type check affected
         run: |
           echo "📝 Type checking affected projects..."
-          npx nx affected --target=typecheck \
+          # Disable distributed execution - module resolution issues
+          NX_CLOUD_DISTRIBUTED_EXECUTION=false npx nx affected --target=typecheck \
             --base=${{ steps.nx-set-shas.outputs.base }} \
             --exclude=admin \
             --parallel=4
@@ -162,7 +164,9 @@ jobs:
       - name: Run affected tests
         run: |
           echo "🧪 Testing affected projects..."
-          npx nx affected --target=test \
+          # Disable Nx Cloud distributed execution for tests
+          # Tests fail on distributed agents due to module resolution issues
+          NX_CLOUD_DISTRIBUTED_EXECUTION=false npx nx affected --target=test \
             --base=${{ steps.nx-set-shas.outputs.base }} \
             --exclude=admin \
             --parallel=4 \
@@ -216,14 +220,15 @@ jobs:
       - name: Build dependencies and theme
         run: |
           echo "📦 Building contracts package..."
-          npx nx run @ifla/contracts:build
+          NX_CLOUD_DISTRIBUTED_EXECUTION=false npx nx run @ifla/contracts:build
           echo "🎨 Building theme package..."
-          npx nx run @ifla/theme:build
+          NX_CLOUD_DISTRIBUTED_EXECUTION=false npx nx run @ifla/theme:build
 
       - name: Build affected sites
         run: |
           echo "🏗️ Building affected documentation sites..."
-          npx nx affected --target=build \
+          # Disable distributed execution - module resolution issues with pnpm workspaces
+          NX_CLOUD_DISTRIBUTED_EXECUTION=false npx nx affected --target=build \
             --base=${{ steps.nx-set-shas.outputs.base }} \
             --exclude=admin \
             --parallel=2
