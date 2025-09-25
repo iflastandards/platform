@@ -91,8 +91,8 @@ jobs:
       - uses: nrwl/nx-set-shas@v4
         id: nx-set-shas
         with:
-          main-branch-name: 'preview'  # Use preview as the main branch for base comparison
-          workflow-id: '180593718'     # Explicitly set the workflow ID
+          main-branch-name: 'preview' # Use preview as the main branch for base comparison
+          workflow-id: '180593718' # Explicitly set the workflow ID
 
       - name: Analyze affected projects
         id: affected
