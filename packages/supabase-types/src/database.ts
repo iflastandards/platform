@@ -1,5 +1,5 @@
 // Auto-generated Supabase database types
-// Generated at: 2025-09-25T17:57:04.381Z
+// Generated at: 2025-09-25T18:22:40.888Z
 // Project ID not configured - using placeholder types
 
 export type Database = {
@@ -34,6 +34,9 @@ export type Database = {
   };
 };
 
-export type Tables<T extends keyof Database['public']['Tables']> = Database['public']['Tables'][T]['Row'];
-export type TablesInsert<T extends keyof Database['public']['Tables']> = Database['public']['Tables'][T]['Insert'];
-export type TablesUpdate<T extends keyof Database['public']['Tables']> = Database['public']['Tables'][T]['Update'];
+export type Tables<T extends keyof Database['public']['Tables']> =
+  Database['public']['Tables'][T]['Row'];
+export type TablesInsert<T extends keyof Database['public']['Tables']> =
+  Database['public']['Tables'][T]['Insert'];
+export type TablesUpdate<T extends keyof Database['public']['Tables']> =
+  Database['public']['Tables'][T]['Update'];
