@@ -18,3 +18,8 @@ src/.generated/
 
 # Ignore auto-generated Supabase types
 packages/supabase-types/src/database.ts
+
+# Ignore auto-generated lock files
+pnpm-lock.yaml
+package-lock.json
+yarn.lock
