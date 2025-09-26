@@ -19,9 +19,20 @@
         "command": "docusaurus build standards/ISBDM"
       },
       "inputs": [
-        "production",
-        "^production",
-        "docusaurus"
+        "docusaurus",
+        {
+          "dependentTasksOutputFiles": "packages/theme/dist/**/*",
+          "transitive": false
+        }
+      ],
+      "dependsOn": [
+        {
+          "target": "build",
+          "projects": [
+            "@ifla/theme"
+          ],
+          "params": "forward"
+        }
       ]
     },
     "start": {
@@ -110,7 +121,24 @@
       "options": {
         "command": "tsc --noEmit",
         "cwd": "standards/ISBDM"
-      }
+      },
+      "dependsOn": [
+        {
+          "target": "build",
+          "projects": [
+            "@ifla/theme"
+          ]
+        }
+      ],
+      "inputs": [
+        "{projectRoot}/src/**/*.{ts,tsx}",
+        "{projectRoot}/**/*.{ts,tsx}",
+        "{projectRoot}/tsconfig.json",
+        "{workspaceRoot}/tsconfig.json",
+        "!{projectRoot}/build/**/*",
+        "!{projectRoot}/.docusaurus/**/*",
+        "!{projectRoot}/node_modules/**/*"
+      ]
     },
     "e2e": {
       "executor": "nx:run-commands",

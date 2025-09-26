@@ -20,13 +20,27 @@
       },
       "outputs": ["{projectRoot}/dist"],
       "inputs": [
-        "production",
         "{projectRoot}/src/**/*",
         "{projectRoot}/tsup.config.ts",
         "{projectRoot}/tsconfig.declarations.json",
-        "{projectRoot}/package.json"
+        "{projectRoot}/package.json",
+        "!{projectRoot}/**/*.test.*",
+        "!{projectRoot}/**/*.spec.*",
+        "!{projectRoot}/**/*.md",
+        "!{projectRoot}/README.md",
+        {
+          "dependentTasksOutputFiles": "packages/contracts/dist/**/*",
+          "transitive": false
+        }
       ],
-      "dependsOn": []
+      "dependsOn": [
+        {
+          "target": "build",
+          "projects": ["@ifla/contracts"],
+          "params": "forward"
+        }
+      ],
+      "cache": true
     },
     "test": {
       "executor": "@nx/vite:test",
@@ -78,11 +92,19 @@
         "cwd": "packages/theme"
       },
       "cache": true,
-      "dependsOn": ["^build"],
+      "dependsOn": [
+        {
+          "target": "build",
+          "projects": ["@ifla/contracts"]
+        }
+      ],
       "inputs": [
-        "default",
+        "{projectRoot}/src/**/*",
+        "{projectRoot}/**/*.{ts,tsx}",
         "{projectRoot}/tsconfig.json",
-        "{workspaceRoot}/tsconfig.json"
+        "{workspaceRoot}/tsconfig.json",
+        "!{projectRoot}/dist/**/*",
+        "!{projectRoot}/**/*.test.*"
       ]
     }
   }

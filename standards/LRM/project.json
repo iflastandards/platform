@@ -19,15 +19,26 @@
         "command": "docusaurus build standards/LRM"
       },
       "inputs": [
-        "production",
-        "^production",
-        "docusaurus"
+        "docusaurus",
+        {
+          "dependentTasksOutputFiles": "packages/theme/dist/**/*",
+          "transitive": false
+        }
       ],
       "outputs": [
         "{projectRoot}/build",
         "{projectRoot}/.docusaurus"
       ],
-      "cache": true
+      "cache": true,
+      "dependsOn": [
+        {
+          "target": "build",
+          "projects": [
+            "@ifla/theme"
+          ],
+          "params": "forward"
+        }
+      ]
     },
     "start": {
       "executor": "nx:run-commands",
@@ -105,12 +116,21 @@
       },
       "cache": true,
       "dependsOn": [
-        "^build"
+        {
+          "target": "build",
+          "projects": [
+            "@ifla/theme"
+          ]
+        }
       ],
       "inputs": [
-        "default",
+        "{projectRoot}/src/**/*.{ts,tsx}",
+        "{projectRoot}/**/*.{ts,tsx}",
         "{projectRoot}/tsconfig.json",
-        "{workspaceRoot}/tsconfig.json"
+        "{workspaceRoot}/tsconfig.json",
+        "!{projectRoot}/build/**/*",
+        "!{projectRoot}/.docusaurus/**/*",
+        "!{projectRoot}/node_modules/**/*"
       ]
     }
   }

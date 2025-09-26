@@ -107,12 +107,21 @@
     "taggedTestInputs": [
       "{projectRoot}/**/*.test.*",
       "{projectRoot}/**/*.spec.*"
+    ],
+    "packageBuildInputs": [
+      "{projectRoot}/src/**/*",
+      "{projectRoot}/tsup.config.ts",
+      "{projectRoot}/tsconfig*.json",
+      "{projectRoot}/package.json",
+      "!{projectRoot}/**/*.test.*",
+      "!{projectRoot}/**/*.spec.*",
+      "!{projectRoot}/**/*.md"
     ]
   },
   "targetDefaults": {
     "build": {
       "dependsOn": ["^build"],
-      "inputs": ["buildInputs", "^buildInputs", "sharedGlobals"],
+      "inputs": ["buildInputs", "sharedGlobals"],
       "outputs": ["{projectRoot}/build", "{projectRoot}/dist"],
       "cache": true
     },
