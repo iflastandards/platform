@@ -93,8 +93,9 @@ jobs:
           path: |
             .nx/cache
             node_modules/.cache/nx
-          key: nx-pr-${{ runner.os }}-${{ github.sha }}
+          key: nx-pr-${{ runner.os }}-${{ hashFiles('pnpm-lock.yaml') }}-${{ hashFiles('nx.json') }}
           restore-keys: |
+            nx-pr-${{ runner.os }}-${{ hashFiles('pnpm-lock.yaml') }}-
             nx-pr-${{ runner.os }}-
 
       - name: Install dependencies
@@ -151,7 +152,10 @@ jobs:
           path: |
             .nx/cache
             node_modules/.cache/nx
-          key: nx-pr-${{ runner.os }}-${{ github.sha }}
+          key: nx-pr-${{ runner.os }}-${{ hashFiles('pnpm-lock.yaml') }}-${{ hashFiles('nx.json') }}
+          restore-keys: |
+            nx-pr-${{ runner.os }}-${{ hashFiles('pnpm-lock.yaml') }}-
+            nx-pr-${{ runner.os }}-
 
       - name: Install dependencies
         run: pnpm install --frozen-lockfile --prefer-offline
@@ -206,7 +210,10 @@ jobs:
           path: |
             .nx/cache
             node_modules/.cache/nx
-          key: nx-pr-${{ runner.os }}-${{ github.sha }}
+          key: nx-pr-${{ runner.os }}-${{ hashFiles('pnpm-lock.yaml') }}-${{ hashFiles('nx.json') }}
+          restore-keys: |
+            nx-pr-${{ runner.os }}-${{ hashFiles('pnpm-lock.yaml') }}-
+            nx-pr-${{ runner.os }}-
 
       - name: Install dependencies
         run: pnpm install --frozen-lockfile --prefer-offline
