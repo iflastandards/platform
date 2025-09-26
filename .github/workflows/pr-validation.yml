@@ -254,12 +254,11 @@ jobs:
   check-build-warnings:
     name: Check Build Warnings
     needs: [build-preview]
+    # Always run but don't block - using success() || failure() in pr-summary
     if: |
       always() &&
       needs.build-preview.result == 'success'
     uses: ./.github/workflows/check-warnings.yml
-    # Continue on error - warnings shouldn't block PR merge
-    continue-on-error: true
     permissions:
       contents: read
       issues: write
@@ -275,9 +274,11 @@ jobs:
         build-preview,
         check-build-warnings,
       ]
+    # Run even if warnings check fails - it's non-blocking
     if: |
       always() &&
-      needs.changes-detection.result == 'success'
+      needs.changes-detection.result == 'success' &&
+      (needs.check-build-warnings.result == 'success' || needs.check-build-warnings.result == 'failure')
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
