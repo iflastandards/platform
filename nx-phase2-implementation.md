@@ -23,29 +23,31 @@ env:
 - name: Test Distributed Execution (Phase 2 - Lint Only)
   run: |
     npx nx-cloud start-ci-run \
-      --distribute-on="2 linux-medium-js" \
+      --distribute-on="3 linux-medium-js" \
       --stop-agents-after="lint" \
       --with-env-vars="NODE_OPTIONS,NODE_PATH,NX_WORKSPACE_ROOT,CI,DOCS_ENV,HUSKY"
 
     npx nx affected --target=lint \
       --base=${{ steps.nx-set-shas.outputs.base }} \
       --exclude=admin \
-      --parallel=2 \
+      --parallel=3 \
       --ci
 ```
 
 **Configuration**:
-- **Agent count**: 2 (minimal for testing)
+- **Agent count**: 3 (minimum required by Nx Cloud)
 - **Agent type**: `linux-medium-js`
 - **Target**: `lint` only (fastest, safest)
-- **Parallel**: 2 (matches agent count)
+- **Parallel**: 3 (matches agent count)
 - **Stop condition**: After lint completes
 - **Env vars passed**: All workspace context + CI flags
+
+**Note**: Nx Cloud requires minimum 3 agents for distributed execution.
 
 ## Testing Strategy
 
 ### Phase 2A: Lint Only (Current)
-- ✅ 2 agents
+- ✅ 3 agents (Nx Cloud minimum)
 - ✅ Single target (lint)
 - ✅ All env vars passed
 - 🔍 Monitor for module resolution errors

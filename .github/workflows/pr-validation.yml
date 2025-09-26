@@ -122,12 +122,12 @@ jobs:
 
       - name: Test Distributed Execution (Phase 2 - Lint Only)
         run: |
-          echo "🧪 Phase 2: Testing distributed execution with 2 agents..."
+          echo "🧪 Phase 2: Testing distributed execution with 3 agents (minimum required)..."
           echo "⚙️ Starting Nx Cloud agents with environment variables..."
 
           # Start distributed execution with minimal scope
           npx nx-cloud start-ci-run \
-            --distribute-on="2 linux-medium-js" \
+            --distribute-on="3 linux-medium-js" \
             --stop-agents-after="lint" \
             --with-env-vars="NODE_OPTIONS,NODE_PATH,NX_WORKSPACE_ROOT,CI,DOCS_ENV,HUSKY"
 
@@ -135,7 +135,7 @@ jobs:
           npx nx affected --target=lint \
             --base=${{ steps.nx-set-shas.outputs.base }} \
             --exclude=admin \
-            --parallel=2 \
+            --parallel=3 \
             --ci
 
       - name: Type check affected
