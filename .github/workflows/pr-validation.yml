@@ -27,6 +27,7 @@ env:
   NX_DAEMON: true
   NX_PARALLEL: 4
   NODE_OPTIONS: '--max-old-space-size=4096'
+  NX_CLOUD_ACCESS_TOKEN: ${{ secrets.NX_CLOUD_ACCESS_TOKEN }}
 
 jobs:
   changes-detection:
@@ -118,7 +119,7 @@ jobs:
           NX_CLOUD_DISTRIBUTED_EXECUTION=false npx nx affected --target=lint \
             --base=${{ steps.nx-set-shas.outputs.base }} \
             --exclude=admin \
-            --parallel=4
+            --parallel=6
 
       - name: Type check affected
         run: |
@@ -127,7 +128,7 @@ jobs:
           NX_CLOUD_DISTRIBUTED_EXECUTION=false npx nx affected --target=typecheck \
             --base=${{ steps.nx-set-shas.outputs.base }} \
             --exclude=admin \
-            --parallel=4
+            --parallel=6
 
   test-affected:
     name: Test Affected Projects
@@ -173,7 +174,7 @@ jobs:
           NX_CLOUD_DISTRIBUTED_EXECUTION=false npx nx affected --target=test \
             --base=${{ steps.nx-set-shas.outputs.base }} \
             --exclude=admin \
-            --parallel=4
+            --parallel=6
 
       - name: Upload coverage
         uses: codecov/codecov-action@v4
@@ -223,21 +224,15 @@ jobs:
         with:
           main-branch-name: 'preview' # Use preview as the main branch for base comparison
 
-      - name: Build dependencies and theme
+      - name: Build affected projects
         run: |
-          echo "📦 Building contracts package..."
-          NX_CLOUD_DISTRIBUTED_EXECUTION=false npx nx run @ifla/contracts:build
-          echo "🎨 Building theme package..."
-          NX_CLOUD_DISTRIBUTED_EXECUTION=false npx nx run @ifla/theme:build
-
-      - name: Build affected sites
-        run: |
-          echo "🏗️ Building affected documentation sites..."
-          # Disable distributed execution - module resolution issues with pnpm workspaces
+          echo "🏗️ Building affected projects (including dependencies)..."
+          # Nx will automatically build dependencies first when needed
+          # Using higher parallelism and letting Nx handle the dependency graph
           NX_CLOUD_DISTRIBUTED_EXECUTION=false npx nx affected --target=build \
             --base=${{ steps.nx-set-shas.outputs.base }} \
             --exclude=admin \
-            --parallel=2
+            --parallel=6
         env:
           DOCS_ENV: preview
 
