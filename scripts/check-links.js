@@ -18,8 +18,14 @@ const path = require('path');
 // Parse arguments
 const args = process.argv.slice(2);
 let site = args[0];
-const env = args[1];
+let env = args[1];
 let type = args[2];
+
+// Default to 'all' and 'preview' if no arguments and not interactive (CI environment)
+if (!site && !env && !type && (process.env.CI === 'true' || !process.stdin.isTTY)) {
+  site = 'all';
+  env = 'preview';
+}
 
 // Show help if requested
 if (args[0] === '--help' || args[0] === '-h') {
