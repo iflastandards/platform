@@ -135,8 +135,7 @@ jobs:
           npx nx affected --target=lint \
             --base=${{ steps.nx-set-shas.outputs.base }} \
             --exclude=admin \
-            --parallel=3 \
-            --ci
+            --parallel=3
 
       - name: Type check affected
         run: |
