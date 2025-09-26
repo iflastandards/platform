@@ -28,6 +28,8 @@ env:
   NX_PARALLEL: 4
   NODE_OPTIONS: '--max-old-space-size=4096'
   NX_CLOUD_ACCESS_TOKEN: ${{ secrets.NX_CLOUD_ACCESS_TOKEN }}
+  NX_CLOUD_FLAKY_TASKS_ENABLED: true
+  NX_CLOUD_FLAKY_TASKS_MAX_RETRIES: 2
 
 jobs:
   changes-detection:
@@ -397,11 +399,9 @@ jobs:
       - name: Setup pnpm
         uses: pnpm/action-setup@v4
 
-      - name: Fix CI Configuration with AI
-        run: |
-          npx nx-cloud fix-ci
-        if: always()
-        continue-on-error: true
+      - name: AI Analysis on Failure
+        run: npx nx-cloud fix-ci
+        if: failure()
 
       - name: Generate PR comment
         uses: actions/github-script@v7
