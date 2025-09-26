@@ -15,3 +15,6 @@ src/.generated/
 .yarn
 /.nx/cache
 /.nx/workspace-data
+
+# Ignore auto-generated Supabase types
+packages/supabase-types/src/database.ts
