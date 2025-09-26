@@ -10,7 +10,11 @@ set -e
 # Uses the new organized test structure
 echo "🔍 Running Group 3: Pre-commit tests..."
 
-# First, validate YAML files
+# First, format staged files with Prettier via Nx
+echo "✨ Formatting staged files..."
+npx nx format:write --uncommitted
+
+# Validate YAML files
 echo "📝 Validating YAML files..."
 node scripts/validate-yaml.js
 
