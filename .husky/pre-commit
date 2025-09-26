@@ -10,10 +10,6 @@ set -e
 # Uses the new organized test structure
 echo "🔍 Running Group 3: Pre-commit tests..."
 
-# First, format staged files with Prettier via Nx
-echo "✨ Formatting staged files..."
-npx nx format:write --uncommitted
-
 # Validate YAML files
 echo "📝 Validating YAML files..."
 node scripts/validate-yaml.js
@@ -29,5 +25,11 @@ echo "✅ Test tagging validation passed!"
 # Use the smart pre-commit path for intelligent validation based on changes
 echo "🧠 Running smart pre-commit checks (intelligently optimized based on changes)"
 pnpm test:pre-commit:smart
+
+echo "✅ All checks passed!"
+
+# Finally, format staged files with Prettier via Nx (only if all checks passed)
+echo "✨ Formatting staged files..."
+npx nx format:write --uncommitted
 
 echo "✅ Group 3 pre-commit tests passed!"
