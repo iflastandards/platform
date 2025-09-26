@@ -26,7 +26,8 @@ function extractWarnings(logFile) {
   const sitePattern = /nx run ([^:]+):build/;
   const buildingPattern = /Building.*?(?:for|site|project)[:\s]+([^\s]+)/i;
   const warningPattern = /\[WARNING\]|\[WARN\]|Warning:/i;
-  const docusaurusWarningPattern = /Broken link|Duplicate route|deprecated|unsafe lifecycle|componentWillMount/i;
+  const docusaurusWarningPattern =
+    /Broken link|Duplicate route|deprecated|unsafe lifecycle|componentWillMount/i;
 
   lines.forEach((line, index) => {
     // Check for site/project being built
@@ -56,11 +57,15 @@ function extractWarnings(logFile) {
       const warning = {
         line: index + 1,
         message: line.trim(),
-        context: []
+        context: [],
       };
 
       // Add context lines (2 before, 2 after if available)
-      for (let i = Math.max(0, index - 2); i < Math.min(lines.length, index + 3); i++) {
+      for (
+        let i = Math.max(0, index - 2);
+        i < Math.min(lines.length, index + 3);
+        i++
+      ) {
         if (i !== index) {
           warning.context.push(lines[i]);
         }
@@ -69,7 +74,7 @@ function extractWarnings(logFile) {
       currentWarnings.push(warning);
       warnings.push({
         site: currentSite || 'unknown',
-        ...warning
+        ...warning,
       });
     }
   });
@@ -85,30 +90,30 @@ function extractWarnings(logFile) {
   // Format output
   const output = Object.entries(siteWarnings).map(([site, warnings]) => ({
     site,
-    warnings: warnings.map(w => ({
+    warnings: warnings.map((w) => ({
       message: w.message,
-      line: w.line
+      line: w.line,
     })),
     warningCount: warnings.length,
-    success: warnings.length === 0
+    success: warnings.length === 0,
   }));
 
   // Add sites that built successfully without warnings
   const builtSites = new Set();
-  lines.forEach(line => {
+  lines.forEach((line) => {
     const match = line.match(/nx run ([^:]+):build/);
     if (match) {
       builtSites.add(match[1]);
     }
   });
 
-  builtSites.forEach(site => {
+  builtSites.forEach((site) => {
     if (!siteWarnings[site]) {
       output.push({
         site,
         warnings: [],
         warningCount: 0,
-        success: true
+        success: true,
       });
     }
   });
