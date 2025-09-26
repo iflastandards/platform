@@ -74,6 +74,7 @@
     "check:secrets": "secretlint .",
     "check:secrets:staged": "node scripts/check-secrets-staged.js",
     "check:secrets:fix": "secretlint . --fix",
+    "check:yaml": "node scripts/validate-yaml.js",
     "test:tag": "tsx scripts/auto-tag-tests.ts",
     "test:tag:staged": "tsx scripts/auto-tag-tests.ts --staged",
     "test:tag:affected": "tsx scripts/auto-tag-tests.ts --affected",
@@ -691,7 +692,8 @@
     "typescript": "*",
     "typescript-eslint": "^8.38.0",
     "vitest": "^3.2.4",
-    "whatwg-fetch": "^3.6.20"
+    "whatwg-fetch": "^3.6.20",
+    "yaml-lint": "^1.7.0"
   },
   "peerDependencies": {
     "@docusaurus/core": "^3.0.0",

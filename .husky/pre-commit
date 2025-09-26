@@ -10,7 +10,13 @@ set -e
 # Uses the new organized test structure
 echo "🔍 Running Group 3: Pre-commit tests..."
 
-# First, validate test file tagging and naming conventions
+# First, validate YAML files
+echo "📝 Validating YAML files..."
+node scripts/validate-yaml.js
+
+echo "✅ YAML validation passed!"
+
+# Next, validate test file tagging and naming conventions
 echo "📋 Validating test file tagging..."
 node scripts/validate-test-tagging.js
 
