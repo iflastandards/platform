@@ -3,15 +3,8 @@
   "root": "standards/ISBDM",
   "sourceRoot": "standards/ISBDM",
   "projectType": "application",
-  "tags": [
-    "docusaurus",
-    "site",
-    "standard",
-    "isbdm"
-  ],
-  "implicitDependencies": [
-    "@ifla/theme"
-  ],
+  "tags": ["docusaurus", "site", "standard", "isbdm"],
+  "implicitDependencies": ["@ifla/theme"],
   "targets": {
     "build": {
       "executor": "nx:run-commands",
@@ -28,9 +21,7 @@
       "dependsOn": [
         {
           "target": "build",
-          "projects": [
-            "@ifla/theme"
-          ],
+          "projects": ["@ifla/theme"],
           "params": "forward"
         }
       ]
@@ -84,20 +75,14 @@
       "executor": "@nx/vite:test",
       "options": {
         "config": "{workspaceRoot}/vitest.config.nx.ts",
-        "exclude": [
-          "**/scripts/**",
-          "**/deployment/**"
-        ]
+        "exclude": ["**/scripts/**", "**/deployment/**"]
       }
     },
     "test:integration": {
       "executor": "@nx/vite:test",
       "options": {
         "config": "{workspaceRoot}/vitest.config.nx.ts",
-        "include": [
-          "**/scripts/**",
-          "**/deployment/**"
-        ]
+        "include": ["**/scripts/**", "**/deployment/**"]
       }
     },
     "lint": {
@@ -111,9 +96,7 @@
           "standards/isbdm/src/**/*.{md,mdx}"
         ]
       },
-      "inputs": [
-        "default"
-      ],
+      "inputs": ["default"],
       "cache": true
     },
     "typecheck": {
@@ -125,9 +108,7 @@
       "dependsOn": [
         {
           "target": "build",
-          "projects": [
-            "@ifla/theme"
-          ]
+          "projects": ["@ifla/theme"]
         }
       ],
       "inputs": [

@@ -3,15 +3,8 @@
   "root": "standards/muldicat",
   "sourceRoot": "standards/muldicat",
   "projectType": "application",
-  "tags": [
-    "docusaurus",
-    "site",
-    "standard",
-    "muldicat"
-  ],
-  "implicitDependencies": [
-    "@ifla/theme"
-  ],
+  "tags": ["docusaurus", "site", "standard", "muldicat"],
+  "implicitDependencies": ["@ifla/theme"],
   "targets": {
     "build": {
       "executor": "nx:run-commands",
@@ -37,17 +30,12 @@
           "transitive": false
         }
       ],
-      "outputs": [
-        "{projectRoot}/build",
-        "{projectRoot}/.docusaurus"
-      ],
+      "outputs": ["{projectRoot}/build", "{projectRoot}/.docusaurus"],
       "cache": true,
       "dependsOn": [
         {
           "target": "build",
-          "projects": [
-            "@ifla/theme"
-          ],
+          "projects": ["@ifla/theme"],
           "params": "forward"
         }
       ]
@@ -115,9 +103,7 @@
           "standards/muldicat/src/**/*.{md,mdx}"
         ]
       },
-      "inputs": [
-        "default"
-      ],
+      "inputs": ["default"],
       "cache": true
     },
     "typecheck": {
@@ -130,9 +116,7 @@
       "dependsOn": [
         {
           "target": "build",
-          "projects": [
-            "@ifla/theme"
-          ]
+          "projects": ["@ifla/theme"]
         }
       ],
       "inputs": [
