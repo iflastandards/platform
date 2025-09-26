@@ -120,15 +120,15 @@ jobs:
           echo "🎨 Checking code formatting..."
           NX_CLOUD_DISTRIBUTED_EXECUTION=false npx nx format:check --base=${{ steps.nx-set-shas.outputs.base }}
 
-      - name: Test Distributed Execution (Phase 2 - Lint Only)
+      - name: Run Quality Checks with Distributed Execution (Phase 3)
         run: |
-          echo "🧪 Phase 2: Testing distributed execution with 3 agents (minimum required)..."
+          echo "🚀 Phase 3: Running lint and typecheck with distributed execution (3 agents)..."
           echo "⚙️ Starting Nx Cloud agents with environment variables..."
 
-          # Start distributed execution with minimal scope
+          # Start distributed execution for lint and typecheck
           npx nx-cloud start-ci-run \
             --distribute-on="3 linux-medium-js" \
-            --stop-agents-after="lint" \
+            --stop-agents-after="typecheck" \
             --with-env-vars="NODE_OPTIONS,NODE_PATH,NX_WORKSPACE_ROOT,CI,DOCS_ENV,HUSKY"
 
           echo "🔍 Running lint with distributed execution..."
@@ -137,14 +137,11 @@ jobs:
             --exclude=admin \
             --parallel=3
 
-      - name: Type check affected
-        run: |
-          echo "📝 Type checking affected projects..."
-          # Disable distributed execution - module resolution issues
-          NX_CLOUD_DISTRIBUTED_EXECUTION=false npx nx affected --target=typecheck \
+          echo "📝 Running typecheck with distributed execution..."
+          npx nx affected --target=typecheck \
             --base=${{ steps.nx-set-shas.outputs.base }} \
             --exclude=admin \
-            --parallel=6
+            --parallel=3
 
   test-affected:
     name: Test Affected Projects
@@ -184,15 +181,22 @@ jobs:
           # Use the last successful run for better cache hits
           last-successful-event: 'push'
 
-      - name: Run affected tests
+      - name: Run affected tests with Distributed Execution (Phase 3)
         run: |
-          echo "🧪 Testing affected projects..."
-          # Disable Nx Cloud distributed execution for tests
-          # Tests fail on distributed agents due to module resolution issues
-          NX_CLOUD_DISTRIBUTED_EXECUTION=false npx nx affected --target=test \
+          echo "🧪 Phase 3: Testing affected projects with distributed execution (3 agents)..."
+          echo "⚙️ Starting Nx Cloud agents with environment variables..."
+
+          # Start distributed execution for tests
+          npx nx-cloud start-ci-run \
+            --distribute-on="3 linux-medium-js" \
+            --stop-agents-after="test" \
+            --with-env-vars="NODE_OPTIONS,NODE_PATH,NX_WORKSPACE_ROOT,CI,DOCS_ENV,HUSKY"
+
+          echo "🧪 Running tests with distributed execution..."
+          npx nx affected --target=test \
             --base=${{ steps.nx-set-shas.outputs.base }} \
             --exclude=admin \
-            --parallel=6
+            --parallel=3
 
       - name: Upload coverage
         uses: codecov/codecov-action@v4
@@ -244,19 +248,26 @@ jobs:
           # Use the last successful run for better cache hits
           last-successful-event: 'push'
 
-      - name: Build affected projects and collect warnings
+      - name: Build affected projects with Distributed Execution (Phase 3)
         id: build
         run: |
-          echo "🏗️ Building affected projects and capturing warnings..."
+          echo "🏗️ Phase 3: Building affected projects with distributed execution (3 agents)..."
+          echo "⚙️ Starting Nx Cloud agents with environment variables..."
 
           # Create directory for warnings
           mkdir -p output/_reports
 
+          # Start distributed execution for builds
+          npx nx-cloud start-ci-run \
+            --distribute-on="3 linux-medium-js" \
+            --stop-agents-after="build" \
+            --with-env-vars="NODE_OPTIONS,NODE_PATH,NX_WORKSPACE_ROOT,CI,DOCS_ENV,HUSKY"
+
           # Build and capture output (both stdout and stderr)
-          NX_CLOUD_DISTRIBUTED_EXECUTION=false npx nx affected --target=build \
+          npx nx affected --target=build \
             --base=${{ steps.nx-set-shas.outputs.base }} \
             --exclude=admin \
-            --parallel=1 2>&1 | tee output/_reports/build-output.log
+            --parallel=3 2>&1 | tee output/_reports/build-output.log
 
           # Extract warnings from build output
           echo "📊 Extracting build warnings..."
