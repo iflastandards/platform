@@ -106,6 +106,8 @@ jobs:
         id: nx-set-shas
         with:
           main-branch-name: 'preview' # Use preview as the main branch for base comparison
+          # Use the last successful run for better cache hits
+          last-successful-event: 'push'
 
       - name: Format check
         run: |
@@ -165,6 +167,8 @@ jobs:
         id: nx-set-shas
         with:
           main-branch-name: 'preview' # Use preview as the main branch for base comparison
+          # Use the last successful run for better cache hits
+          last-successful-event: 'push'
 
       - name: Run affected tests
         run: |
@@ -223,6 +227,8 @@ jobs:
         id: nx-set-shas
         with:
           main-branch-name: 'preview' # Use preview as the main branch for base comparison
+          # Use the last successful run for better cache hits
+          last-successful-event: 'push'
 
       - name: Build affected projects
         run: |
@@ -252,6 +258,8 @@ jobs:
       always() &&
       needs.build-preview.result == 'success'
     uses: ./.github/workflows/check-warnings.yml
+    # Continue on error - warnings shouldn't block PR merge
+    continue-on-error: true
     permissions:
       contents: read
       issues: write
