@@ -345,12 +345,7 @@ jobs:
   pr-summary:
     name: PR Summary Report
     needs:
-      [
-        changes-detection,
-        validate-all,
-        build-preview,
-        check-build-warnings,
-      ]
+      [changes-detection, validate-all, build-preview, check-build-warnings]
     # Run even if warnings check fails - it's non-blocking
     if: |
       always() &&
