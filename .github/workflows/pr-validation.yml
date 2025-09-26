@@ -30,6 +30,10 @@ env:
   NX_CLOUD_ACCESS_TOKEN: ${{ secrets.NX_CLOUD_ACCESS_TOKEN }}
   NX_CLOUD_FLAKY_TASKS_ENABLED: true
   NX_CLOUD_FLAKY_TASKS_MAX_RETRIES: 2
+  # Phase 2: Environment variables for distributed execution agents
+  NODE_PATH: ${{ github.workspace }}/node_modules
+  NX_WORKSPACE_ROOT: ${{ github.workspace }}
+  DOCS_ENV: preview
 
 jobs:
   changes-detection:
@@ -116,14 +120,23 @@ jobs:
           echo "🎨 Checking code formatting..."
           NX_CLOUD_DISTRIBUTED_EXECUTION=false npx nx format:check --base=${{ steps.nx-set-shas.outputs.base }}
 
-      - name: Lint affected
+      - name: Test Distributed Execution (Phase 2 - Lint Only)
         run: |
-          echo "🔍 Linting affected projects..."
-          # Disable distributed execution - module resolution issues
-          NX_CLOUD_DISTRIBUTED_EXECUTION=false npx nx affected --target=lint \
+          echo "🧪 Phase 2: Testing distributed execution with 2 agents..."
+          echo "⚙️ Starting Nx Cloud agents with environment variables..."
+
+          # Start distributed execution with minimal scope
+          npx nx-cloud start-ci-run \
+            --distribute-on="2 linux-medium-js" \
+            --stop-agents-after="lint" \
+            --with-env-vars="NODE_OPTIONS,NODE_PATH,NX_WORKSPACE_ROOT,CI,DOCS_ENV,HUSKY"
+
+          echo "🔍 Running lint with distributed execution..."
+          npx nx affected --target=lint \
             --base=${{ steps.nx-set-shas.outputs.base }} \
             --exclude=admin \
-            --parallel=6
+            --parallel=2 \
+            --ci
 
       - name: Type check affected
         run: |
