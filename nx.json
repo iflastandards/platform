@@ -140,7 +140,11 @@
     "lint": {
       "inputs": ["default", "^default"],
       "outputs": [],
-      "cache": true
+      "cache": true,
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "eslint . --max-warnings=0"
+      }
     },
     "typecheck": {
       "dependsOn": ["^build"],
