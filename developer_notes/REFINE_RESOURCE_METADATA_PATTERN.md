@@ -487,7 +487,7 @@ export async function generateResource(name: string) {
 {
   "targetDefaults": {
     "generate-resource": {
-      "executor": "@nrwl/workspace:run-commands",
+      "executor": "@nx/workspace:run-commands",
       "options": {
         "command": "ts-node tools/scripts/generate-resource.ts {args.name}"
       }

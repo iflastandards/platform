@@ -14,7 +14,7 @@ We've created NX-optimized versions of key workflows that use `nx affected` to d
 - Uses `nx affected --target=build` for PR builds (only builds changed sites)
 - Uses `nx run-many --target=build --all` for main branch (builds everything)
 - Dynamic build combining using NX project graph
-- Automatic affected detection with `nrwl/nx-set-shas@v4`
+- Automatic affected detection with `nx-dev/nx-set-shas@v4`
 
 **Performance Impact:**
 - PR builds: 70-90% faster (only builds 1-3 sites vs all 7)
@@ -168,7 +168,7 @@ nx affected --target=build --parallel=1
 ### Common Issues:
 
 1. **"No affected projects"**: Add `fetch-depth: 0` to checkout action
-2. **Cache misses**: Ensure `nrwl/nx-set-shas@v4` is configured
+2. **Cache misses**: Ensure `nx-dev/nx-set-shas@v4` is configured
 3. **Build failures**: Check `parallel=1` for contamination prevention
 
 ### Debug Commands:
