@@ -231,6 +231,8 @@ jobs:
             --base=${{ steps.nx-set-shas.outputs.base }} \
             --exclude=admin \
             --parallel=2
+        env:
+          DOCS_ENV: preview
 
       - name: Upload build artifacts
         uses: actions/upload-artifact@v4
