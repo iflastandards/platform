@@ -62,8 +62,7 @@
       "{workspaceRoot}/eslint.config.mjs",
       "{workspaceRoot}/.prettierrc",
       "{workspaceRoot}/vite.config.ts",
-      "{workspaceRoot}/playwright.config.ts",
-      "{workspaceRoot}/.github/workflows/**/*"
+      "{workspaceRoot}/playwright.config.ts"
     ],
     "buildInputs": [
       "{projectRoot}/src/**/*",
