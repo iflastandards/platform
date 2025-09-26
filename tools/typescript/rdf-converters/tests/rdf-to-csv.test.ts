@@ -28,9 +28,19 @@ describe('rdf-to-csv CLI @unit', () => {
 
   describe('Basic functionality', () => {
     it('should convert a simple Turtle file to CSV', () => {
-      const inputFile = path.join(fixturesDir, 'elements', 'minimal', 'input.ttl');
+      const inputFile = path.join(
+        fixturesDir,
+        'elements',
+        'minimal',
+        'input.ttl',
+      );
       const outputFile = path.join(tempDir, 'output.csv');
-      const expectedFile = path.join(fixturesDir, 'elements', 'minimal', 'expected.csv');
+      const expectedFile = path.join(
+        fixturesDir,
+        'elements',
+        'minimal',
+        'expected.csv',
+      );
 
       // Skip if fixtures don't exist yet
       if (!fs.existsSync(inputFile)) {
@@ -39,7 +49,7 @@ describe('rdf-to-csv CLI @unit', () => {
       }
 
       // Run the conversion
-      const command = `tsx ${scriptPath} -i ${inputFile} -o ${outputFile}`;
+      const command = `npx tsx ${scriptPath} -i ${inputFile} -o ${outputFile}`;
       execSync(command);
 
       // Check output exists
@@ -54,8 +64,18 @@ describe('rdf-to-csv CLI @unit', () => {
     });
 
     it('should apply a DCTAP profile when provided', () => {
-      const inputFile = path.join(fixturesDir, 'elements', 'minimal', 'input.ttl');
-      const profileFile = path.join(fixturesDir, 'elements', 'minimal', 'profile.csv');
+      const inputFile = path.join(
+        fixturesDir,
+        'elements',
+        'minimal',
+        'input.ttl',
+      );
+      const profileFile = path.join(
+        fixturesDir,
+        'elements',
+        'minimal',
+        'profile.csv',
+      );
       const outputFile = path.join(tempDir, 'output-with-profile.csv');
 
       // Skip if fixtures don't exist yet
@@ -65,7 +85,7 @@ describe('rdf-to-csv CLI @unit', () => {
       }
 
       // Run the conversion with profile
-      const command = `tsx ${scriptPath} -i ${inputFile} -o ${outputFile} -p ${profileFile}`;
+      const command = `npx tsx ${scriptPath} -i ${inputFile} -o ${outputFile} -p ${profileFile}`;
       execSync(command);
 
       // Check output exists
@@ -75,7 +95,12 @@ describe('rdf-to-csv CLI @unit', () => {
 
   describe('Format support', () => {
     it('should auto-detect Turtle format', () => {
-      const inputFile = path.join(fixturesDir, 'formats', 'turtle', 'input.ttl');
+      const inputFile = path.join(
+        fixturesDir,
+        'formats',
+        'turtle',
+        'input.ttl',
+      );
       const outputFile = path.join(tempDir, 'turtle-output.csv');
 
       if (!fs.existsSync(inputFile)) {
@@ -83,14 +108,19 @@ describe('rdf-to-csv CLI @unit', () => {
         return;
       }
 
-      const command = `tsx ${scriptPath} -i ${inputFile} -o ${outputFile}`;
+      const command = `npx tsx ${scriptPath} -i ${inputFile} -o ${outputFile}`;
       execSync(command);
 
       expect(fs.existsSync(outputFile)).toBe(true);
     });
 
     it('should handle JSON-LD format', () => {
-      const inputFile = path.join(fixturesDir, 'formats', 'jsonld', 'input.jsonld');
+      const inputFile = path.join(
+        fixturesDir,
+        'formats',
+        'jsonld',
+        'input.jsonld',
+      );
       const outputFile = path.join(tempDir, 'jsonld-output.csv');
 
       if (!fs.existsSync(inputFile)) {
@@ -98,7 +128,7 @@ describe('rdf-to-csv CLI @unit', () => {
         return;
       }
 
-      const command = `tsx ${scriptPath} -i ${inputFile} -o ${outputFile} -f jsonld`;
+      const command = `npx tsx ${scriptPath} -i ${inputFile} -o ${outputFile} -f jsonld`;
       execSync(command);
 
       expect(fs.existsSync(outputFile)).toBe(true);
@@ -107,7 +137,12 @@ describe('rdf-to-csv CLI @unit', () => {
 
   describe('Error handling', () => {
     it('should fail gracefully with invalid RDF', () => {
-      const inputFile = path.join(fixturesDir, 'error-cases', 'invalid-rdf', 'syntax-error.ttl');
+      const inputFile = path.join(
+        fixturesDir,
+        'error-cases',
+        'invalid-rdf',
+        'syntax-error.ttl',
+      );
       const outputFile = path.join(tempDir, 'error-output.csv');
 
       if (!fs.existsSync(inputFile)) {
@@ -116,13 +151,23 @@ describe('rdf-to-csv CLI @unit', () => {
       }
 
       expect(() => {
-        execSync(`tsx ${scriptPath} -i ${inputFile} -o ${outputFile}`);
+        execSync(`npx tsx ${scriptPath} -i ${inputFile} -o ${outputFile}`);
       }).toThrow();
     });
 
     it('should report missing mandatory fields', () => {
-      const inputFile = path.join(fixturesDir, 'error-cases', 'missing-mandatory', 'input.ttl');
-      const profileFile = path.join(fixturesDir, 'error-cases', 'missing-mandatory', 'profile.csv');
+      const inputFile = path.join(
+        fixturesDir,
+        'error-cases',
+        'missing-mandatory',
+        'input.ttl',
+      );
+      const profileFile = path.join(
+        fixturesDir,
+        'error-cases',
+        'missing-mandatory',
+        'profile.csv',
+      );
       const outputFile = path.join(tempDir, 'mandatory-error.csv');
 
       if (!fs.existsSync(inputFile) || !fs.existsSync(profileFile)) {
@@ -132,8 +177,8 @@ describe('rdf-to-csv CLI @unit', () => {
 
       // This should either fail or produce a CSV with validation warnings
       const result = execSync(
-        `tsx ${scriptPath} -i ${inputFile} -o ${outputFile} -p ${profileFile} -v`,
-        { encoding: 'utf-8' }
+        `npx tsx ${scriptPath} -i ${inputFile} -o ${outputFile} -p ${profileFile} -v`,
+        { encoding: 'utf-8' },
       );
 
       // Check for validation warnings in verbose output
