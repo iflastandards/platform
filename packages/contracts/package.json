@@ -6,19 +6,19 @@
   "types": "./dist/index.d.ts",
   "exports": {
     ".": {
+      "types": "./dist/index.d.ts",
       "import": "./dist/index.js",
-      "require": "./dist/index.js",
-      "types": "./dist/index.d.ts"
+      "require": "./dist/index.js"
     },
     "./schemas": {
+      "types": "./dist/schemas/index.d.ts",
       "import": "./dist/schemas/index.js",
-      "require": "./dist/schemas/index.js",
-      "types": "./dist/schemas/index.d.ts"
+      "require": "./dist/schemas/index.js"
     },
     "./types": {
+      "types": "./dist/types/index.d.ts",
       "import": "./dist/types/index.js",
-      "require": "./dist/types/index.js",
-      "types": "./dist/types/index.d.ts"
+      "require": "./dist/types/index.js"
     }
   },
   "scripts": {

@@ -469,7 +469,7 @@ jobs:
         with:
           fetch-depth: 0
       
-      - uses: nrwl/nx-set-shas@v4
+      - uses: nx-dev/nx-set-shas@v4
       - uses: pnpm/action-setup@v2
       - uses: actions/setup-node@v4
         with:

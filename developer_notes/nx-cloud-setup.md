@@ -151,7 +151,7 @@ pnpm nx:cache:stats
 ### Issue: "Could not find Nx Cloud runner"
 ```bash
 # Reinstall Nx Cloud
-pnpm add -D @nrwl/nx-cloud@latest
+pnpm add -D nx-cloud@latest
 ```
 
 ### Issue: "Unauthorized" errors
@@ -186,7 +186,7 @@ curl -I https://nx.app
 1. **Don't Commit Tokens**: Use environment variables or `.env` files
 2. **Monitor Cache Hits**: Low hit rate indicates configuration issues
 3. **Use Affected Commands**: `nx affected` for optimal performance
-4. **Regular Updates**: Keep `@nrwl/nx-cloud` updated
+4. **Regular Updates**: Keep `nx-cloud` updated
 5. **Clean Cache Periodically**: Prevent stale cache issues
 
 ## Advanced Configuration

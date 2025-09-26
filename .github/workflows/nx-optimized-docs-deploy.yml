@@ -91,8 +91,8 @@ jobs:
       - uses: nrwl/nx-set-shas@v4
         id: nx-set-shas
         with:
-          main-branch-name: 'preview'  # Use preview as the main branch for base comparison
-          workflow-id: '180593718'     # Explicitly set the workflow ID
+          main-branch-name: 'preview' # Use preview as the main branch for base comparison
+          workflow-id: '180593718' # Explicitly set the workflow ID
 
       - name: Analyze affected projects
         id: affected
@@ -189,31 +189,16 @@ jobs:
           # Nx will automatically determine and build dependencies (contracts, theme) first
           echo "🚀 Starting build with Nx (dependencies will be built automatically)..."
 
-          # For distributed execution in CI with multiple projects
-          if [ "$CI" == "true" ] && [ $(echo "$PROJECTS_TO_BUILD" | tr ',' ' ' | wc -w) -gt 2 ]; then
-            echo "☁️ Using Nx Cloud distributed execution for parallel builds..."
-            npx nx-cloud start-ci-run \
-              --distribute-on="4 linux-medium-js" \
-              --stop-agents-after="build"
+          # Always use local parallel execution for builds
+          # Distributed execution causes issues with module resolution and environment variables
+          echo "🔨 Using local parallel execution (distributed disabled for stability)..."
+          npx nx run-many \
+            --target=build \
+            --projects="$PROJECTS_TO_BUILD" \
+            --parallel=4 \
+            --skip-nx-cache=false
 
-            npx nx run-many \
-              --target=build \
-              --projects="$PROJECTS_TO_BUILD" \
-              --parallel=4 \
-              --skip-nx-cache=false
-
-            BUILD_EXIT_CODE=$?
-            npx nx-cloud stop-all-agents
-          else
-            echo "🔨 Using local parallel execution..."
-            npx nx run-many \
-              --target=build \
-              --projects="$PROJECTS_TO_BUILD" \
-              --parallel=4 \
-              --skip-nx-cache=false
-
-            BUILD_EXIT_CODE=$?
-          fi
+          BUILD_EXIT_CODE=$?
 
           if [ $BUILD_EXIT_CODE -ne 0 ]; then
             echo "❌ Build failed! Check the logs above for details."
