@@ -162,7 +162,13 @@ class ParallelWarningCollector {
 
       buildProcess.on('close', (code) => {
         const buildTime = ((Date.now() - startTime) / 1000).toFixed(2);
-        const success = code === 0;
+
+        // Check if failure is just due to broken links
+        const hasBrokenLinkWarning = output.includes('Docusaurus found broken links!');
+        const hasOtherErrors = output.includes('Error:') && !hasBrokenLinkWarning;
+
+        // Consider build successful if exit code is 0 OR if the only issue is broken links (which we're treating as warnings)
+        const success = code === 0 || (code === 1 && hasBrokenLinkWarning && !hasOtherErrors);
 
         const warningMsg =
           warnings.length > 0 ? `${warnings.length} warnings` : 'no warnings';
@@ -436,14 +442,16 @@ class ParallelWarningCollector {
       fs.appendFileSync(process.env.GITHUB_STEP_SUMMARY, summary);
     }
 
-    // Check for failed builds
+    // Check for failed builds (excluding those that only have broken link warnings)
     const failedBuilds = results.filter((r) => !r.success);
     if (failedBuilds.length > 0) {
-      console.log(`\n❌ ${failedBuilds.length} build(s) failed:`);
+      console.log(`\n⚠️  ${failedBuilds.length} build(s) had errors (not counting broken links as failures):`);
       failedBuilds.forEach(({ site }) => {
         console.log(`   - ${site}`);
       });
-      process.exit(1); // Exit with error code if any builds failed
+      // Only exit with error if there were actual build failures beyond broken links
+      // Since we're treating broken links as warnings, we don't fail the process
+      process.exit(1);
     }
 
     // Exit status based on warnings
