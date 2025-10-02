@@ -164,11 +164,15 @@ class ParallelWarningCollector {
         const buildTime = ((Date.now() - startTime) / 1000).toFixed(2);
 
         // Check if failure is just due to broken links
-        const hasBrokenLinkWarning = output.includes('Docusaurus found broken links!');
-        const hasOtherErrors = output.includes('Error:') && !hasBrokenLinkWarning;
+        const hasBrokenLinkWarning = output.includes(
+          'Docusaurus found broken links!',
+        );
+        const hasOtherErrors =
+          output.includes('Error:') && !hasBrokenLinkWarning;
 
         // Consider build successful if exit code is 0 OR if the only issue is broken links (which we're treating as warnings)
-        const success = code === 0 || (code === 1 && hasBrokenLinkWarning && !hasOtherErrors);
+        const success =
+          code === 0 || (code === 1 && hasBrokenLinkWarning && !hasOtherErrors);
 
         const warningMsg =
           warnings.length > 0 ? `${warnings.length} warnings` : 'no warnings';
@@ -445,7 +449,9 @@ class ParallelWarningCollector {
     // Check for failed builds (excluding those that only have broken link warnings)
     const failedBuilds = results.filter((r) => !r.success);
     if (failedBuilds.length > 0) {
-      console.log(`\n⚠️  ${failedBuilds.length} build(s) had errors (not counting broken links as failures):`);
+      console.log(
+        `\n⚠️  ${failedBuilds.length} build(s) had errors (not counting broken links as failures):`,
+      );
       failedBuilds.forEach(({ site }) => {
         console.log(`   - ${site}`);
       });
