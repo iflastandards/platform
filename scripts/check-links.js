@@ -2,9 +2,9 @@
 
 /**
  * Simple wrapper for common link validation use cases
- * 
+ *
  * Full documentation: developer_notes/link-validation.md
- * 
+ *
  * Examples:
  *   check-links                    # Check all sites on local dev servers
  *   check-links isbdm              # Check ISBDM on local dev server
@@ -22,7 +22,12 @@ let env = args[1];
 let type = args[2];
 
 // Default to 'all' and 'preview' if no arguments and not interactive (CI environment)
-if (!site && !env && !type && (process.env.CI === 'true' || !process.stdin.isTTY)) {
+if (
+  !site &&
+  !env &&
+  !type &&
+  (process.env.CI === 'true' || !process.stdin.isTTY)
+) {
   site = 'all';
   env = 'preview';
 }
@@ -91,8 +96,8 @@ if (site === 'quick') {
   console.log('🔍 Running full comprehensive check for all sites...');
 }
 
-// Build the command - use Playwright version for better performance
-const scriptPath = path.join(__dirname, 'validate-environment-urls-playwright.js');
+// Build the command - use Puppeteer version for JSON report generation
+const scriptPath = path.join(__dirname, 'validate-environment-urls.js');
 let command;
 
 // If no arguments provided, run in interactive mode
@@ -102,27 +107,41 @@ if (!site && !env && !type) {
 } else {
   // Build command with provided arguments
   command = `node "${scriptPath}"`;
-  if (env) {command += ` --env ${env}`;}
-  if (site) {command += ` --site "${site}"`;}
-  if (type) {command += ` --type ${type}`;}
-  
+  if (env) {
+    command += ` --env ${env}`;
+  }
+  if (site) {
+    command += ` --site "${site}"`;
+  }
+  if (type) {
+    command += ` --type ${type}`;
+  }
+
   console.log(`\n🔍 IFLA Standards Link Checker`);
   console.log(`${'='.repeat(50)}`);
-  if (site) {console.log(`📍 Site(s): ${site}`);}
-  if (env) {console.log(`🌍 Environment: ${env}`);}
-  if (type) {console.log(`🔎 Validation type: ${type}`);}
+  if (site) {
+    console.log(`📍 Site(s): ${site}`);
+  }
+  if (env) {
+    console.log(`🌍 Environment: ${env}`);
+  }
+  if (type) {
+    console.log(`🔎 Validation type: ${type}`);
+  }
   console.log(`${'='.repeat(50)}\n`);
 }
 
 // Show helpful tips for local environment (only if we have enough info)
 if (env === 'local' && site && type) {
-  console.log('💡 Tip: For local testing, make sure your dev servers are running:');
+  console.log(
+    '💡 Tip: For local testing, make sure your dev servers are running:',
+  );
   if (site === 'all') {
     console.log('   pnpm start:all\n');
   } else if (!site.includes(',')) {
     console.log(`   pnpm start:${site.toLowerCase()}\n`);
   }
-  
+
   // Only show build tip if using sitemap validation
   if (type === 'sitemap' || type === 'comprehensive' || type === 'both') {
     console.log('💡 Also ensure sites are built for sitemap validation:');
@@ -137,12 +156,11 @@ if (env === 'local' && site && type) {
 // Execute the validation
 try {
   execSync(command, { stdio: 'inherit' });
-  
+
   console.log(`\n✨ Validation complete!`);
   console.log(`\n📊 View the reports:`);
   console.log(`   node output/link-validation/view-report.js`);
   console.log(`   Then open http://localhost:8080 in your browser\n`);
-  
 } catch (error) {
   // Error already shown by inherited stdio
   process.exit(1);

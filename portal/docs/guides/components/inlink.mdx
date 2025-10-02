@@ -14,18 +14,20 @@ The `InLink` component provides a standardized way to create links to internal d
 
 ## Basic Usage
 
-<InLink href="/docs/attributes/1277">has extent of embodied content</InLink>
+{/* <InLink href="/docs/attributes/1277">has extent of embodied content</InLink> */}
+<InLink href="/docs/guides/components">Component Documentation</InLink>
 
 ```jsx
-<InLink href="/docs/attributes/1277">has extent of embodied content</InLink>
+{/* <InLink href="/docs/attributes/1277">has extent of embodied content</InLink> */}
+<InLink href="/docs/guides/components">Component Documentation</InLink>
 ```
 
 ## With Custom Class
 
-<InLink href="/docs/attributes/1277" className="emphasized">has extent of embodied content</InLink>
+<InLink href="/docs/guides/components" className="emphasized">Component Documentation</InLink>
 
 ```jsx
-<InLink href="/docs/attributes/1277" className="emphasized">has extent of embodied content</InLink>
+<InLink href="/docs/guides/components" className="emphasized">Component Documentation</InLink>
 ```
 
 ## Props
@@ -42,7 +44,7 @@ The `InLink` component provides a standardized way to create links to internal d
 The InLink component includes intelligent text wrapping to prevent awkward line breaks in long link labels. By default, it prevents wrapping except before parentheses, making links like bibliographic citations more readable:
 
 <div style={{maxWidth: '300px', border: '1px solid #ccc', padding: '10px'}}>
-  <InLink href="/docs/example">
+  <InLink href="/docs/guides/examples">
     Catalogue of shipwrecked books (2018; William Collins; volume; case binding)
   </InLink>
 </div>
@@ -54,7 +56,7 @@ The InLink component includes intelligent text wrapping to prevent awkward line 
 </InLink>
 
 // Disable smart wrapping if needed
-<InLink href="/docs/example" smartWrap={false}>
+<InLink href="/docs/guides/examples" smartWrap={false}>
   Long text without smart wrapping
 </InLink>
 ```
@@ -107,8 +109,8 @@ The component automatically adapts to RTL languages and supports the Docusaurus 
 <Tabs>
   <TabItem value="basic" label="Basic Internal Link">
     ```jsx
-    <InLink href="/docs/attributes/1277">
-      has extent of embodied content
+    <InLink href="/docs/guides/components">
+      Component Documentation
     </InLink>
     ```
   </TabItem>

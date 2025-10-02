@@ -13,9 +13,9 @@ DCTAP is a simple model for application profiles that can be developed in a spre
 
 ## Available Profiles
 
-The DCTAP profiles are now available for download at `/data/DCTAP/`:
+The DCTAP profiles are now available for download:
 
-### 1. [`isbdm-elements-profile.csv`](/data/DCTAP/isbdm-elements-profile.csv)
+### 1. `isbdm-elements-profile.csv`
 
 This profile defines the structure and constraints for ISBDM element metadata that appears in MDX front matter.
 
@@ -24,7 +24,7 @@ Key components:
 - **ElementSubType** shape - References to more specific element types
 - **ElementSuperType** shape - References to more general element types
 
-### 2. [`isbdm-values-profile.csv`](/data/DCTAP/isbdm-values-profile.csv)
+### 2. `isbdm-values-profile.csv`
 
 This profile defines the structure and constraints for ISBDM value vocabulary metadata that appears in MDX front matter.
 
@@ -52,7 +52,7 @@ The profiles can be used with DCTAP validation tools to verify that content conf
 
 ### For JSON-LD Context Generation
 
-The profiles serve as the source for generating JSON-LD contexts, which are available for download at `/data/contexts/`.
+The profiles serve as the source for generating JSON-LD contexts.
 
 ## Profile Constraints
 
@@ -73,4 +73,4 @@ This is version 1.0 of the ISBDM application profiles, created in May 2025.
 
 - [DCTAP Specification](https://www.dublincore.org/specifications/dctap/)
 - [ISBDM Documentation](https://www.iflastandards.info/ISBDM/)
-- JSON-LD contexts: [`/data/contexts/`](/data/contexts/)
+- JSON-LD contexts: `portal/docs/guides/profiles/contexts/`

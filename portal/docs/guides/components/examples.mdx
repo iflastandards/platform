@@ -127,7 +127,6 @@ The `Example` component displays structured property-value data in a semantic ta
     { property: "has extent of manifestation", value: '"1 volume (18 x 18 cm; 10 pages)"' },
     { property: "has dimensions", value: '"18 x 18 cm"' }
   ]}
-  fullExampleHref="/docs/fullex/fx017"
 />
 ```
 
@@ -141,7 +140,6 @@ The `Example` component displays structured property-value data in a semantic ta
     { property: "has extent of manifestation", value: '"1 volume (18 x 18 cm; 10 pages)"' },
     { property: "has dimensions", value: '"18 x 18 cm"' }
   ]}
-  fullExampleHref="/docs/fullex/fx017"
 />
 
 ### Without Table Headers
@@ -153,7 +151,6 @@ The `Example` component displays structured property-value data in a semantic ta
     { property: "has expression embodied", value: '"IFLA ISBD Review Group. ISBD (text; English)"' },
     { property: "has appellation", value: '"International Standard Bibliographic Description"' }
   ]}
-  fullExampleHref="/docs/fullex/fx012"
 />
 ```
 
@@ -165,7 +162,6 @@ The `Example` component displays structured property-value data in a semantic ta
     { property: "has expression embodied", value: '"IFLA ISBD Review Group. ISBD (text; English)"' },
     { property: "has appellation", value: '"International Standard Bibliographic Description"' }
   ]}
-  fullExampleHref="/docs/fullex/fx012"
 />
 
 ### With Header, Label, and Note
@@ -181,7 +177,6 @@ The `Example` component displays structured property-value data in a semantic ta
     { property: "has sub-unit", value: '"Booklet"' }
   ]}
   note="Multiple physical items form one manifestation."
-  fullExampleHref="/docs/fullex/fx049"
 />
 ```
 
@@ -197,7 +192,6 @@ The `Example` component displays structured property-value data in a semantic ta
     { property: "has sub-unit", value: '"Booklet"' }
   ]}
   note="Multiple physical items form one manifestation."
-  fullExampleHref="/docs/fullex/fx049"
 />
 
 ### Custom Content with Markdown Tables
@@ -210,7 +204,6 @@ The `Example` component displays structured property-value data in a semantic ta
   | has extent of manifestation | "1 volume (306 pages)" |
   | has publisher agent | "National Library of Ukraine" |
   
-  _Full example: [Ukrainian National Bibliography](/docs/fullex/fx076)._
 </Example>
 ```
 
@@ -223,7 +216,6 @@ The `Example` component displays structured property-value data in a semantic ta
   | has extent of manifestation | "1 volume (306 pages)" |
   | has publisher agent | "National Library of Ukraine" |
   
-  _Full example: [Ukrainian National Bibliography](/docs/fullex/fx076)._
 </Example>
 
 ### With React Components in Values
@@ -238,7 +230,7 @@ The `Example` component displays structured property-value data in a semantic ta
     },
     { 
       property: "has title of manifestation", 
-      value: <><InLink href="/docs/relationships/1037">Gruffalo</InLink></> 
+      value: <>Gruffalo</> 
     },
     { 
       property: "has identifier", 
@@ -260,7 +252,7 @@ The `Example` component displays structured property-value data in a semantic ta
     },
     { 
       property: "has title of manifestation", 
-      value: <><InLink href="/docs/relationships/1037">Gruffalo</InLink></> 
+      value: <>Gruffalo</> 
     },
     { 
       property: "has identifier", 
@@ -283,8 +275,7 @@ The `Example` component displays structured property-value data in a semantic ta
       { property: "has category of carrier", value: '"volume"' },
       { property: "assessment decision", value: '"Record as single manifestation"' }
     ]}
-    fullExampleHref="/docs/fullex/fx030"
-    note="Simple case: one physical volume equals one manifestation."
+      note="Simple case: one physical volume equals one manifestation."
   />
   
   <Example
@@ -295,8 +286,7 @@ The `Example` component displays structured property-value data in a semantic ta
       { property: "has sub-unit", value: '"CD 2"' },
       { property: "assessment decision", value: '"Record with sub-unit relationships"' }
     ]}
-    fullExampleHref="/docs/fullex/fx049"
-    note="Complex case: multiple items form one manifestation."
+      note="Complex case: multiple items form one manifestation."
   />
 </Examples>
 ```
@@ -311,8 +301,7 @@ The `Example` component displays structured property-value data in a semantic ta
       { property: "has category of carrier", value: '"volume"' },
       { property: "assessment decision", value: '"Record as single manifestation"' }
     ]}
-    fullExampleHref="/docs/fullex/fx030"
-    note="Simple case: one physical volume equals one manifestation."
+      note="Simple case: one physical volume equals one manifestation."
   />
   
   <Example
@@ -323,8 +312,7 @@ The `Example` component displays structured property-value data in a semantic ta
       { property: "has sub-unit", value: '"CD 2"' },
       { property: "assessment decision", value: '"Record with sub-unit relationships"' }
     ]}
-    fullExampleHref="/docs/fullex/fx049"
-    note="Complex case: multiple items form one manifestation."
+      note="Complex case: multiple items form one manifestation."
   />
 </Examples>
 

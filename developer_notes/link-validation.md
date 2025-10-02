@@ -1,11 +1,15 @@
 # Link Validation Scripts
 
+> **📚 See Also:** [Link Validation CI Integration](./LINK_VALIDATION_CI_INTEGRATION.md) - Complete guide to automated link validation in CI/CD workflows
+
 ## Overview
 The IFLA Standards project provides two link validation tools:
-- **`validate-environment-urls-playwright.js`** (Recommended) - Uses Playwright for 3x faster performance and better reliability
-- **`validate-environment-urls.js`** - Original Puppeteer version (being phased out)
+- **`validate-environment-urls.js`** (Puppeteer) - **Currently used in CI** - Generates JSON/HTML reports
+- **`validate-environment-urls-playwright.js`** (Playwright) - 3x faster, console output only (no reports)
 
 Both tools check for broken links across any or all Docusaurus sites, support multiple environments (local, preview, production), and use sitemaps to find ALL pages and links (hundreds, not just homepage links).
+
+**Note:** The wrapper script `check-links.js` uses the Puppeteer version for CI report generation.
 
 ## Quick Start
 

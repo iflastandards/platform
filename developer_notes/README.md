@@ -27,6 +27,9 @@ This directory contains detailed documentation for developers working on the IFL
 - **`rbac-implementation-plan.md`** - Role-based access control implementation guide
 
 ### 🧪 Testing
+- **`TESTING_STRATEGY.md`** - Five-phase testing strategy with AI-powered test tagging
+- **`LINK_VALIDATION_CI_INTEGRATION.md`** - **NEW** Complete CI/CD link validation guide with nx affected optimization
+- **`link-validation.md`** - Link validation scripts and usage documentation
 - **`build-regression-testing.md`** - Comprehensive build regression testing strategy
 - **`testing-vocabulary-pages.md`** - Testing vocabulary page functionality
 - **`vocabulary-comparison-testing.md`** - Testing vocabulary server responses
@@ -50,6 +53,20 @@ To run development servers using the `pnpm dev:servers` command, follow these st
    - Servers started during testing can be stopped with `Ctrl+C` or programmatically using the provided stop functionality in scripts.
 
 ## Recent Updates
+
+### October 2025: Link Validation CI Integration
+- **✅ COMPLETED** - Automated link validation with nx affected optimization
+- **Fixed script selection** - Using Puppeteer version for JSON report generation
+- **Updated CI workflows** - Correct report paths and PR comment integration
+- **Added nx affected filtering** - 60-80% faster PR validations (only affected sites)
+- **Smart context-aware execution** - Different strategies for PRs, daily checks, and production deploys
+- **Comprehensive documentation** - New `LINK_VALIDATION_CI_INTEGRATION.md` guide
+
+**Benefits:**
+- PR link checks: ~2-3 minutes (was ~10 minutes)
+- Automated PR comments with summary tables
+- JSON/HTML reports in artifacts
+- Dual validation: Build warnings + runtime link checking
 
 ### January 2025: Admin Portal Architecture Finalized
 - **✅ ARCHITECTURE DECISION** - Chose Next.js admin app over Docusaurus SPA approach

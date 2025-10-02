@@ -92,12 +92,27 @@ jobs:
       - name: Check links (automatic)
         if: github.event_name != 'workflow_dispatch'
         run: |
-          if [ "${{ github.event_name }}" = "schedule" ] || ([ "${{ github.event_name }}" = "workflow_run" ] && [ "${{ github.event.workflow_run.head_branch }}" = "main" ]); then
-            # Check all sites on schedule or main branch deployment
-            pnpm check:links:all
+          if [ "${{ github.event_name }}" = "schedule" ]; then
+            # Daily schedule: check all sites on preview
+            echo "📅 Daily check: validating all sites on preview environment"
+            pnpm check:links all preview sitemap
+          elif [ "${{ github.event_name }}" = "workflow_run" ] && [ "${{ github.event.workflow_run.head_branch }}" = "main" ]; then
+            # Main branch deployment: check all sites on production
+            echo "🚀 Main deployment: validating all sites on production"
+            pnpm check:links all production sitemap
           else
-            # Check affected sites for preview deployments
-            pnpm check:links
+            # Preview deployment: check only affected sites
+            echo "🔍 Preview deployment: checking affected sites only"
+            AFFECTED=$(pnpm nx show projects --affected --type app 2>/dev/null | \
+              grep -E '^(portal|ISBDM|LRM|FRBR|isbd|muldicat|unimarc)$' | \
+              tr '\n' ',' | sed 's/,$//')
+
+            if [ -n "$AFFECTED" ]; then
+              echo "📊 Affected sites: $AFFECTED"
+              pnpm check:links "$AFFECTED" preview sitemap
+            else
+              echo "ℹ️  No affected documentation sites to check"
+            fi
           fi
 
       - name: Upload link check report
@@ -106,8 +121,10 @@ jobs:
         with:
           name: link-check-report-${{ github.run_number }}
           path: |
-            .github/reports/link-check-*.md
-            .github/reports/link-check-*.json
+            output/link-validation/*.json
+            output/link-validation/*.txt
+            output/link-validation/*.html
+            output/link-validation/index-data.json
           retention-days: 30
 
       - name: Comment PR with results
@@ -118,45 +135,58 @@ jobs:
             const fs = require('fs');
             const path = require('path');
 
-            // Find the most recent report
-            const reportsDir = path.join(process.cwd(), '.github', 'reports');
-            let reportPath = null;
+            // Read link validation reports from output/link-validation/
+            const validationDir = path.join(process.cwd(), 'output', 'link-validation');
+            const indexDataFile = path.join(validationDir, 'index-data.json');
 
-            if (fs.existsSync(reportsDir)) {
-              const files = fs.readdirSync(reportsDir)
-                .filter(f => f.startsWith('link-check-') && f.endsWith('.md'))
-                .sort()
-                .reverse();
-              
-              if (files.length > 0) {
-                reportPath = path.join(reportsDir, files[0]);
+            let indexData = {};
+            let totalBrokenLinks = 0;
+            let siteResults = [];
+
+            if (fs.existsSync(indexDataFile)) {
+              try {
+                indexData = JSON.parse(fs.readFileSync(indexDataFile, 'utf8'));
+
+                // Process each site's results
+                Object.entries(indexData).forEach(([site, data]) => {
+                  if (data.results) {
+                    const failed = data.results.failedLinks || 0;
+                    totalBrokenLinks += failed;
+                    siteResults.push({
+                      site: site.toUpperCase(),
+                      passed: data.results.passedLinks || 0,
+                      failed: failed,
+                      total: data.results.totalLinks || 0,
+                      status: failed === 0 ? '✅' : '❌',
+                      reportFile: data.reportFile
+                    });
+                  }
+                });
+              } catch (e) {
+                console.error('Error parsing index data:', e);
               }
             }
 
-            if (reportPath && fs.existsSync(reportPath)) {
-              const report = fs.readFileSync(reportPath, 'utf8');
-              
-              // Extract summary from report
-              const summaryMatch = report.match(/## Summary[\s\S]*?(?=##|$)/);
-              let summary = summaryMatch ? summaryMatch[0] : 'Link check completed.';
-              
-              // Check if there are broken links
-              const brokenLinksMatch = report.match(/Broken Links Found:\*\* (\d+)/);
-              const hasBrokenLinks = brokenLinksMatch && parseInt(brokenLinksMatch[1]) > 0;
-              
+            if (siteResults.length > 0) {
+              // Build summary table
+              let summary = '### Link Validation Summary\n\n';
+              summary += '| Site | Status | Links Tested | Passed | Failed |\n';
+              summary += '|------|--------|--------------|--------|--------|\n';
+
+              siteResults.forEach(site => {
+                summary += `| ${site.site} | ${site.status} | ${site.total} | ${site.passed} | ${site.failed} |\n`;
+              });
+
               // Create comment
               const comment = `## 🔗 Link Check Results
-              
+
               ${summary}
-              
-              ${hasBrokenLinks ? '⚠️ **Action Required**: Please fix the broken links before merging.' : '✅ All links are valid!'}
-              
-              <details>
-              <summary>View full report</summary>
-              
-              ${report}
-              
-              </details>`;
+
+              ${totalBrokenLinks > 0
+                ? `⚠️ **Action Required**: ${totalBrokenLinks} broken link${totalBrokenLinks === 1 ? '' : 's'} found. Please fix before merging.`
+                : '✅ All links are valid!'}
+
+              📊 [View detailed reports in artifacts](https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}#artifacts)`;
 
               // Find the PR number from the workflow run
               const workflowRun = context.payload.workflow_run;
