@@ -87,7 +87,7 @@ TypeScript configs (not `.env`) • Integration > Unit testing (tag-based)
 ## ⚠️ Rules
 
 ### 🔴 Critical
-**NEVER `git push` WITHOUT EXPLICIT REQUEST** • `git status && git branch` → feature branch only • `typecheck && lint` before completion • Never skip tests/`--no-verify` • Debug systematically (fix don't workaround)
+**NEVER `git push` WITHOUT EXPLICIT REQUEST** • **NEVER use `--no-verify` unless user EXPLICITLY requests it** • `git status && git branch` → feature branch only • `typecheck && lint` before completion • Debug systematically (fix don't workaround)
 
 ### 🟡 Important  
 **Refine.dev first** for admin CRUD/forms/tables • TodoWrite >3 steps • Complete features (no TODO comments) • Multi-site patterns (`packages/theme/`) • Evidence-based claims (no marketing)

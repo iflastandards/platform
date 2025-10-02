@@ -148,7 +148,8 @@ if (config.runTests) {
   console.log('📋 Running affected integration tests...');
   try {
     // Run integration tests specifically (pre-commit already ran unit tests)
-    safeExecSync(`pnpm nx affected --target=test:integration --parallel=${config.parallelJobs} --skip-nx-cache`, {
+    // Use Nx cache - if code hasn't changed since pre-commit, tests won't re-run
+    safeExecSync(`pnpm nx affected --target=test:integration --parallel=${config.parallelJobs}`, {
       stdio: 'inherit',
       encoding: 'utf8',
       timeout: 600000 // 10 minutes timeout
@@ -164,7 +165,8 @@ if (config.runTests) {
 if (config.runBuilds) {
   console.log('📋 Running affected builds (production readiness)...');
   try {
-    safeExecSync(`pnpm nx affected --target=build --parallel=${config.parallelJobs} --skip-nx-cache`, {
+    // Use Nx cache - builds will only re-run if source files changed
+    safeExecSync(`pnpm nx affected --target=build --parallel=${config.parallelJobs}`, {
       stdio: 'inherit',
       encoding: 'utf8',
       timeout: 600000 // 10 minutes timeout
@@ -223,10 +225,11 @@ if (shouldRunSmokeTests()) {
 // Run admin-specific tests if admin is affected
 if (shouldRunAdminTests()) {
   console.log('📋 Running admin-specific tests...');
-  
+
   // Run admin integration tests (unit tests already ran in pre-commit)
+  // Use Nx cache - tests won't re-run if code hasn't changed
   try {
-    safeExecSync('pnpm nx run admin:test:integration --skip-nx-cache', {
+    safeExecSync('pnpm nx run admin:test:integration', {
       stdio: 'inherit',
       encoding: 'utf8',
       timeout: 600000 // 10 minutes timeout
@@ -236,12 +239,13 @@ if (shouldRunAdminTests()) {
     console.log('❌ Admin integration tests failed\n');
     hasErrors = true;
   }
-  
+
   // Run admin server-dependent tests if configured
   if (config.runAdminTests) {
     try {
       console.log('📋 Running admin server-dependent tests...');
-      safeExecSync('pnpm nx run admin:test:server-dependent --skip-nx-cache', {
+      // Use Nx cache for server-dependent tests too
+      safeExecSync('pnpm nx run admin:test:server-dependent', {
         stdio: 'inherit',
         encoding: 'utf8',
         timeout: 600000 // 10 minutes timeout
