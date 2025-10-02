@@ -1,14 +1,7 @@
 'use client';
 
 import { useState } from 'react';
-import {
-  Button,
-  Modal,
-  Form,
-  Input,
-  Typography,
-  message,
-} from 'antd';
+import { Button, Modal, Form, Input, Typography, message } from 'antd';
 
 const { Text } = Typography;
 
@@ -21,13 +14,13 @@ export default function RequestInviteButton() {
     try {
       const values = await form.validateFields();
       setLoading(true);
-      
+
       const res = await fetch('/api/request-invite', {
         method: 'POST',
         body: JSON.stringify({ email: values.email }),
         headers: { 'Content-Type': 'application/json' },
       });
-      
+
       if (res.ok) {
         message.success('Invitation sent successfully!');
         setOpen(false);
@@ -47,8 +40,8 @@ export default function RequestInviteButton() {
       <Button
         type="link"
         size="small"
-        style={{ 
-          fontWeight: 'bold', 
+        style={{
+          fontWeight: 'bold',
           fontSize: '14px',
           textDecoration: 'underline',
           padding: '4px 8px',
@@ -57,7 +50,7 @@ export default function RequestInviteButton() {
       >
         Request Invitation
       </Button>
-      
+
       <Modal
         title="Request an Invitation"
         open={open}
@@ -70,11 +63,7 @@ export default function RequestInviteButton() {
         okText="Send"
         cancelText="Cancel"
       >
-        <Form
-          form={form}
-          layout="vertical"
-          style={{ marginTop: 16 }}
-        >
+        <Form form={form} layout="vertical" style={{ marginTop: 16 }}>
           <Form.Item
             name="email"
             label="Your Email"
@@ -89,11 +78,7 @@ export default function RequestInviteButton() {
               },
             ]}
           >
-            <Input 
-              type="email" 
-              placeholder="Enter your email address"
-              autoFocus
-            />
+            <Input type="email" placeholder="Enter your email address" />
           </Form.Item>
         </Form>
       </Modal>

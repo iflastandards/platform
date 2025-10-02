@@ -42,10 +42,12 @@ You must place files in their correct location within the `pnpm` monorepo.
 
 #### **3. Implementation Guardrails: The "How"**
 
+- **CRITICAL: Refine.dev First for Admin Development:** For ALL standard CRUD operations, forms, tables, and admin interfaces, ALWAYS use Refine.dev generators (`npx refine create resource`) and hooks before custom implementation. This is non-negotiable for admin features.
+- **Admin Development Hierarchy:** 1) Refine.dev generators + hooks, 2) Refine.dev base + custom logic, 3) Pure custom implementation (only when Refine cannot handle the requirement).
 - **Data Flow:** The data lifecycle is always: `UI Component` -> `refine Hook (e.g., useList)` -> `dataProvider` -> `Service Adapter` -> `Live API / MSW`.
 - **Validation:** Every function within a service adapter that receives data from an external source **must** parse that data with its corresponding Zod schema before returning it. If validation fails, it must throw a structured error.
 - **State Management:** Server state, caching, and re-fetching are managed by `refine` and `@tanstack/react-query` under the hood. Do not use `useState` for server data.
-- **UI Components:** Use Ant Design (`antd`) components wherever possible. Custom styling should be minimal.
+- **UI Components:** Use Ant Design (`antd`) components wherever possible, preferably through Refine.dev's Ant Design integration (`@refinedev/antd`). Custom styling should be minimal.
 - **Authentication & Authorization:** Authentication is handled by Clerk. Authorization (Role-Based Access Control - RBAC) must be implemented by checking the user's role/permissions, both on the frontend (to hide/disable UI elements) and on the backend (to secure API endpoints).
 - **Decision-Making Precedent:** When designing a new feature, always use the existing "RDF Builds" vertical slice as your primary reference and template. It exemplifies the correct implementation of all the principles above.
 

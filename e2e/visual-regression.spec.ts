@@ -5,7 +5,11 @@
 
 import { test, expect } from '@playwright/test';
 
-test.describe('Visual Regression Tests @e2e @visual @ui @low-priority', () => {
+test.describe('Visual Regression Tests @e2e @server-dependent @local-only @visual @ui @low-priority', () => {
+
+/**
+ * @e2e @server-dependent @ui @visual @low-priority
+ */
   test('portal homepage visual test', async ({ page }) => {
     await page.goto('/');
     await page.waitForLoadState('networkidle');

@@ -87,3 +87,4 @@ output/_reports/
 .env.performance
 _site
 .serena/
+.feature-state.json

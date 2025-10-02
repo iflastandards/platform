@@ -1,5 +1,5 @@
 /**
- * @unit @critical @auth
+ * @unit @critical @auth @security
  */
 
 import { describe, it, expect, beforeEach } from 'vitest';
@@ -15,7 +15,7 @@ import {
 } from '../../app/lib/mock-auth';
 import { type UserRoles } from '../../lib/auth';
 
-describe('Mock Authentication @unit @critical @auth', () => {
+describe('Mock Authentication @unit @critical @auth @authentication @security', () => {
   beforeEach(() => {
     clearUsers();
   });

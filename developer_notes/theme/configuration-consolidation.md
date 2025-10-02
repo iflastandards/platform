@@ -55,9 +55,9 @@ baseDocusaurusConfig (theme package)
 ### Implementation Pattern
 ```typescript
 // In each site's docusaurus.config.ts
-import { baseDocusaurusConfig, standardsDropdown } from '@ifla/theme/config/docusaurus';
-import { getCurrentEnv } from '@ifla/theme/config/siteConfig.server';
-import { getSiteDocusaurusConfig } from '@ifla/theme/config/siteConfig';
+import \{ baseDocusaurusConfig, standardsDropdown \} from '@ifla/theme/config/docusaurus';
+import \{ getCurrentEnv \} from '@ifla/theme/config/siteConfig.server';
+import \{ getSiteDocusaurusConfig \} from '@ifla/theme/config/siteConfig';
 
 const siteKey: SiteKey = 'ISBDM'; // or 'LRM', etc.
 const currentEnv = getCurrentEnv();

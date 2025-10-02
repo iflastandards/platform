@@ -6,19 +6,19 @@
   "types": "./dist/index.d.ts",
   "exports": {
     ".": {
+      "types": "./dist/index.d.ts",
       "import": "./dist/index.js",
-      "require": "./dist/index.js",
-      "types": "./dist/index.d.ts"
+      "require": "./dist/index.js"
     },
     "./supabase": {
+      "types": "./dist/supabase/index.d.ts",
       "import": "./dist/supabase/index.js",
-      "require": "./dist/supabase/index.js",
-      "types": "./dist/supabase/index.d.ts"
+      "require": "./dist/supabase/index.js"
     },
     "./github": {
+      "types": "./dist/github/index.d.ts",
       "import": "./dist/github/index.js",
-      "require": "./dist/github/index.js",
-      "types": "./dist/github/index.d.ts"
+      "require": "./dist/github/index.js"
     }
   },
   "scripts": {

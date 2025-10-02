@@ -56,18 +56,32 @@ export function EditChoiceModal({
   const generateIssueUrl = () => {
     const baseUrl = 'https://github.com/iflastandards/platform/issues/new';
     const template = 'documentation-issue.yml';
-    
+
     // Extract relative path from full URL for cleaner display
     const relativePath = pageUrl.split('/docs/')[1] || pageUrl;
-    const issueTitle = pageTitle 
-      ? `[${siteKey}] Issue with: ${pageTitle}` 
-      : `[${siteKey}] Documentation Issue`;
+
+    // Format the title to match our convention
+    const issueTitle = pageTitle
+      ? `[${siteKey.toUpperCase()} Documentation] ${pageTitle}`
+      : `[${siteKey.toUpperCase()} Documentation] Issue`;
+
+    // Map siteKey to the exact standard name in the dropdown
+    const standardMapping: { [key: string]: string } = {
+      'isbdm': 'ISBDM',
+      'frbr': 'FRBR',
+      'lrm': 'LRM',
+      'isbd': 'ISBD',
+      'muldicat': 'MulDiCat',
+      'unimarc': 'UNIMARC',
+    };
 
     const params = new URLSearchParams({
       template,
-      labels: `documentation,${siteKey.toLowerCase()}`,
+      labels: `documentation,needs-triage,standard:${siteKey.toLowerCase()}`,
       title: issueTitle,
       'page-url': pageUrl,
+      // Pre-select the standard in the dropdown
+      'standard': standardMapping[siteKey.toLowerCase()] || siteKey.toUpperCase(),
     });
 
     return `${baseUrl}?${params.toString()}`;

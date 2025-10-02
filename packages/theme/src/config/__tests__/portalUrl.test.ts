@@ -6,6 +6,10 @@
 import { describe, it, expect } from 'vitest';
 import { getPortalUrl, type Environment } from '@ifla/contracts';
 
+/**
+ * @unit @critical @navigation @sites @config
+ */
+
 describe('getPortalUrl', () => {
   it('should return the correct URL for local environment', () => {
     const url = getPortalUrl('local');

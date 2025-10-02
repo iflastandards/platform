@@ -1,15 +1,13 @@
 name: Check Docusaurus Links
 
 on:
-  push:
-    branches: [main, develop]
-  pull_request:
-    paths:
-      - 'portal/**'
-      - 'standards/**'
-      - 'packages/theme/**'
-      - '.github/workflows/check-links.yml'
-      - 'scripts/check-docusaurus-links.js'
+  workflow_run:
+    workflows: ['Nx Optimized Documentation Deploy']
+    types:
+      - completed
+    branches:
+      - preview
+      - main
   workflow_dispatch:
     inputs:
       sites:
@@ -22,11 +20,16 @@ on:
         required: false
         default: false
         type: boolean
+  schedule:
+    # Run daily at 2 AM UTC (same as Lighthouse)
+    - cron: '0 2 * * *'
 
 jobs:
   check-links:
     runs-on: ubuntu-latest
     timeout-minutes: 30
+    # Only run if deployment succeeded, or manually triggered, or on schedule
+    if: github.event.workflow_run.conclusion == 'success' || github.event_name == 'workflow_dispatch' || github.event_name == 'schedule'
 
     steps:
       - name: Checkout code
@@ -36,14 +39,6 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: '22'
-
-      - name: Cache pnpm store
-        uses: actions/cache@v4
-        with:
-          path: ~/.pnpm-store
-          key: ${{ runner.os }}-pnpm-${{ hashFiles('pnpm-lock.yaml') }}
-          restore-keys: |
-            ${{ runner.os }}-pnpm-
 
       - name: Setup pnpm
         uses: pnpm/action-setup@v4
@@ -65,8 +60,14 @@ jobs:
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
 
-      - name: Build theme package
-        run: pnpm build:theme
+      - name: Install Playwright browsers
+        run: pnpm exec playwright install --with-deps chromium
+
+      - name: Build required packages
+        run: |
+          echo "📦 Building dependency packages for link checker..."
+          pnpm nx run @ifla/contracts:build
+          pnpm nx run @ifla/theme:build
 
       - name: Check links (workflow dispatch)
         if: github.event_name == 'workflow_dispatch'
@@ -91,11 +92,11 @@ jobs:
       - name: Check links (automatic)
         if: github.event_name != 'workflow_dispatch'
         run: |
-          if [ "${{ github.event_name }}" = "push" ] && [ "${{ github.ref }}" = "refs/heads/main" ]; then
-            # Check all sites on main branch push
+          if [ "${{ github.event_name }}" = "schedule" ] || ([ "${{ github.event_name }}" = "workflow_run" ] && [ "${{ github.event.workflow_run.head_branch }}" = "main" ]); then
+            # Check all sites on schedule or main branch deployment
             pnpm check:links:all
           else
-            # Check affected sites for PRs and other pushes
+            # Check affected sites for preview deployments
             pnpm check:links
           fi
 
@@ -110,7 +111,7 @@ jobs:
           retention-days: 30
 
       - name: Comment PR with results
-        if: github.event_name == 'pull_request' && always()
+        if: github.event.workflow_run.event == 'pull_request' && always()
         uses: actions/github-script@v7
         with:
           script: |
@@ -156,12 +157,17 @@ jobs:
               ${report}
               
               </details>`;
-              
-              // Post comment
-              await github.rest.issues.createComment({
-                owner: context.repo.owner,
-                repo: context.repo.repo,
-                issue_number: context.issue.number,
-                body: comment
-              });
+
+              // Find the PR number from the workflow run
+              const workflowRun = context.payload.workflow_run;
+              if (workflowRun && workflowRun.pull_requests && workflowRun.pull_requests.length > 0) {
+                const prNumber = workflowRun.pull_requests[0].number;
+
+                await github.rest.issues.createComment({
+                  owner: context.repo.owner,
+                  repo: context.repo.repo,
+                  issue_number: prNumber,
+                  body: comment
+                });
+              }
             }

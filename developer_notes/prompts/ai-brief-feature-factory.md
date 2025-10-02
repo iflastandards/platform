@@ -1,4 +1,6 @@
-### **AI Brief: "Feature Factory" Prompt (Version 2)**
+### **AI Brief: "Feature Factory" Prompt (Version 3 - Production Ready)**
+
+**Note:** For comprehensive production features including jobs, caching, monitoring, and accessibility, see `developer_notes/COMPLETE_FEATURE_FACTORY_WORKFLOW.md`
 
 
 
@@ -22,37 +24,71 @@ Our workflow will have 4 phases:
    - **Edge Cases:** What happens on success, failure, or with invalid inputs?
 3. We will continue this dialogue until we both agree on the detailed requirements. You will then summarize the final requirements for my confirmation.
 
-**Phase 2: UI Mockup & Approval**
+**Phase 2: Resource Metadata & Inferencer Planning**
 
-1. Once the requirements are confirmed, you will generate a **high-fidelity UI mockup** as a detailed SVG.
-2. This SVG should be a near-pixel-perfect representation of the final page, accurately rendering Ant Design components (`Table`, `Form`, `Input`, `Button`, `Tag`, etc.) with realistic placeholder data and layout.
-3. I will review the SVG. You will make any requested revisions until I give my final approval by saying **"UI approved."**
+1. Once the requirements are confirmed, you will:
+   - **Generate resource metadata** from the Zod contract that will guide Inferencer
+   - **Define field configurations:** UI components, validation rules, display formats
+   - **Specify RBAC permissions:** Which roles can perform which actions
+   - **Identify customizations beyond Inferencer:** Business logic, workflows, integrations
+   
+2. You will present the resource configuration showing:
+   ```typescript
+   {
+     name: "resourceName",
+     meta: {
+       contract: ResourceContract,
+       fields: {
+         // Field metadata derived from Zod schema
+         fieldName: { type, component, validation, permissions }
+       },
+       permissions: { list, create, edit, delete },
+       inferencer: { excludeFields, fieldOverrides },
+       customFeatures: [ /* what Inferencer won't handle */ ]
+     }
+   }
+   ```
+
+3. I will review the resource metadata plan. You will make any requested revisions until I give my final approval by saying **"Resource metadata approved."**
 
 **Phase 3: Development Plan & Approval**
 
-1. Once the UI is approved, you will generate a complete development plan. This plan must include:
+1. Once the customization plan is approved, you will generate a complete development plan. This plan must include:
+   - **Git Branch Creation:** The first step must always be creating a feature branch with the command: `git checkout -b feature/[feature-name]`
    - **A brief PRD (Product Requirements Document):**
      - **Feature:** A one-sentence description.
      - **User Story:** "As a **[user role]** with **[permissions]**, I want to **[action]** so that **[benefit]**."
      - **Acceptance Criteria:** A checklist of conditions that must be met for the feature to be considered complete, including RBAC enforcement.
-   - **A Technical Task Checklist:** A detailed, numbered list of all the coding tasks required to implement the feature. This list must cover every part of our architecture:
-     1. `contracts`: Define Zod schemas.
-     2. `fixtures`: Create mock data JSON.
-     3. `mocks`: Implement MSW handlers for all new API endpoints.
-     4. `providers/adapters`: Implement the live service adapter.
-     5. `UI Scaffolding (refine.dev CLI)`: Provide the exact `refine` CLI command to generate the boilerplate UI pages.
-     6. `UI Customization`: Implement the specific business logic, form fields, and custom components on top of the generated scaffold.
-     7. `testing`: Write unit tests for adapters/validation and integration tests for the UI flow, **including tests for access control based on user roles.**
+   - **A Technical Task Checklist:** A detailed, numbered list of all the coding tasks required to implement the feature. This list must cover every part of our architecture using TDD:
+     1. `git branch`: Create feature branch with `git checkout -b feature/[feature-name]`
+     2. `contracts`: Define Zod schemas and derive input/output types
+     3. `resource metadata`: Generate metadata configuration from contracts for Inferencer
+     4. `tests (RED phase)`: Write failing tests for expected behavior (unit and integration)
+     5. `MSW handlers`: Implement handlers returning contract-compliant mock data
+     6. `resource config`: Add resource with metadata to Refine configuration
+     7. `Inferencer scaffolding`: Use Inferencer to generate UI from MSW + metadata
+     8. `tests (verify scaffold)`: Run tests against Inferencer-generated code
+     9. `UI customization (GREEN phase)`: Copy generated code and add business logic to pass tests
+     10. `providers/adapters`: Implement live service adapter with contract validation
+     11. `refactor`: Clean up code while keeping all tests green
+     12. `testing (final)`: Verify all tests pass including RBAC and edge cases
 2. I will review the plan. You will make any requested revisions until I give my final approval by saying **"Plan approved. Begin implementation."**
 
-**Phase 4: Implementation & Progress Tracking**
+**Phase 4: Implementation & Progress Tracking (TDD Workflow)**
 
-1. After I approve the plan, you will begin implementing the tasks one by one, in order.
-2. **Crucially, after generating the code or instructions for each numbered task, you will stop, present the output, and show the updated checklist with the completed item marked off.**
-3. **Special Instruction for UI Scaffolding:** When you reach step 5, you will provide the exact `refine dev` command for me to run in my terminal. You will then pause and wait for my confirmation (e.g., "Scaffolding complete") before proceeding to the next step.
+1. After I approve the plan, you will begin implementing the tasks one by one, in order, following TDD principles.
+2. **First Task - Git Branch:** The very first task must always be creating the feature branch. You will provide the exact git command and wait for confirmation before proceeding.
+3. **TDD Red Phase:** When you reach the test writing step (step 3), you will write failing tests FIRST that define the expected behavior. These tests should fail because the implementation doesn't exist yet.
+4. **Inferencer Scaffolding:** When you reach step 7, you will:
+   - Show how to use Inferencer with the resource metadata
+   - Explain that Inferencer will analyze MSW responses to generate UI
+   - Provide instructions to view and copy the generated code
+   - Wait for confirmation that generated code has been copied
+5. **TDD Green Phase:** After scaffolding, you will run tests against the generated code, identify what fails, and then customize the code to make all tests pass.
+6. **Crucially, after generating the code or instructions for each numbered task, you will stop, present the output, and show the updated checklist with the completed item marked off.**
 4. You will then wait for my command to proceed to the next task (e.g., "Continue" or "Looks good, next step").
 5. This process will continue until all tasks on the checklist are complete.
 
 Let's begin.
 
-To start, I will now describe the new feature I want to build. Please confirm you have understood these instructions and are ready to proceed.
+To start Phase 1, I will now describe the new feature I want to build. You will then ask me clarifying questions to fully understand the requirements before we proceed to the UI mockup phase. Please confirm you have understood these instructions and are ready to proceed.

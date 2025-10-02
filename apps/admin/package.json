@@ -15,16 +15,30 @@
     "test:coverage": "vitest run --coverage",
     "typecheck": "tsc --noEmit",
     "lint": "next lint",
-    "generate:openapi": "tsx scripts/generate-openapi.ts"
+    "generate:openapi": "tsx scripts/generate-openapi.ts",
+    "env:mock": "./scripts/switch-env.sh test_mock",
+    "env:local": "./scripts/switch-env.sh test_local",
+    "env:integration": "./scripts/switch-env.sh test_integration",
+    "env:staging": "./scripts/switch-env.sh staging",
+    "env:production": "./scripts/switch-env.sh production",
+    "supabase:start": "supabase start",
+    "supabase:stop": "supabase stop",
+    "supabase:status": "supabase status",
+    "test:with-local": "pnpm env:local && pnpm test:integration",
+    "test:with-mock": "pnpm env:mock && pnpm test:unit",
+    "test:full": "pnpm env:integration && pnpm test",
+    "dev:mock": "pnpm env:mock && pnpm dev",
+    "dev:local": "pnpm env:local && pnpm dev",
+    "dev:staging": "pnpm env:staging && pnpm dev"
   },
   "dependencies": {
     "@ant-design/icons": "*",
     "@octokit/auth-app": "*",
     "@octokit/rest": "*",
-    "react-markdown": "^10.1.0",
+    "react-markdown": "*",
     "svix": "*"
   },
   "devDependencies": {
-    "@anatine/zod-openapi": "^2.2.8"
+    "@anatine/zod-openapi": "*"
   }
 }

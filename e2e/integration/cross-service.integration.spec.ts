@@ -6,6 +6,10 @@
 import { test, expect, integrationTest } from '../utils/tagged-test';
 
 test.describe('Cross-Service Integration Tests @integration @api', () => {
+
+/**
+ * @integration @api @high-priority @auth @validation
+ */
   integrationTest('vocabulary changes should sync across services', async ({ page, request, context }) => {
     // This test verifies that vocabulary changes in admin are reflected in documentation sites
     test.skip(true, 'Requires full service integration setup');

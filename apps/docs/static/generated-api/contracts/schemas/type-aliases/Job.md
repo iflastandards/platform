@@ -8,6 +8,9 @@
 
 > **Job** = `object`
 
+Unified Job Model - All asynchronous operations conform to this model
+Used throughout the admin portal for job management and monitoring
+
 ## Type declaration
 
 ### createdAt?

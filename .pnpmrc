@@ -14,6 +14,12 @@ resolve-peers-from-workspace-root=true
 # Performance Optimizations
 side-effects-cache=true
 use-lockfile-v9=true
+# Enable strict peer dependencies for consistency
+strict-peer-dependencies=false
+# Enable cache for node_modules linking
+modules-cache-max-age=7776000
+# Use hard links when possible for faster installs
+hardlink-local-packages=true
 
 # Hoisting Configuration for Better Compatibility
 # Docusaurus-related packages
@@ -51,12 +57,20 @@ public-hoist-pattern[]=*vite*
 public-hoist-pattern[]=*nx*
 public-hoist-pattern[]=tsup
 
-# Store Configuration
+# Store Configuration (Optimized for modern hardware)
 store-dir=~/.pnpm-store
-# use-running-store-server=true  # Disabled - causes "No store server" error
+virtual-store-dir=.pnpm
+use-running-store-server=false
 
 # Network Settings
-network-concurrency=16
+network-concurrency=32
+
+# Additional hoist patterns for common dependencies
+public-hoist-pattern[]=*supabase*
+public-hoist-pattern[]=*clerk*
+public-hoist-pattern[]=*refine*
+public-hoist-pattern[]=*antd*
+public-hoist-pattern[]=*zod*
 
 # Logging
 loglevel=warn

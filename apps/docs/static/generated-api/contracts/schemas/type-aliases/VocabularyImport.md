@@ -8,6 +8,8 @@
 
 > **VocabularyImport** = `object`
 
+Schema for vocabulary import/export operations
+
 ## Type declaration
 
 ### mapping?

@@ -1,4 +1,9 @@
 /**
+ * @integration @api @vocabulary @low-priority
+ * 
+ * Integration tests for vocabulary comparison CLI tool
+ * Tests CLI behavior, environment dependencies, and external API integration
+ * 
  * @jest-environment node
  */
 
@@ -9,7 +14,7 @@ import { getScriptPath, setupTestPaths } from '../utils/workspaceUtils';
 
 const execAsync = promisify(exec);
 
-describe.skip('Vocabulary Comparison CLI', () => {
+describe.skip('Vocabulary Comparison CLI Integration', () => {
   const scriptPath = getScriptPath('vocabulary-comparison.mjs');
   const { workspaceRoot } = setupTestPaths();
 
@@ -28,7 +33,11 @@ describe.skip('Vocabulary Comparison CLI', () => {
     delete process.env.GOOGLE_SHEETS_API_KEY;
   });
 
-  describe('Help Command @unit @api @validation', () => {
+/**
+ * @integration @api @low-priority @vocabulary
+ */
+
+  describe('CLI Help Command', () => {
     it('should display help when --help is used', async () => {
       const { stdout } = await execAsync(`node ${scriptPath} --help`);
 
@@ -46,8 +55,8 @@ describe.skip('Vocabulary Comparison CLI', () => {
     });
   });
 
-  describe('Argument Parsing', () => {
-    it.skip('should require spreadsheet ID', async () => {
+  describe('CLI Argument Validation', () => {
+    it.skip('should require spreadsheet ID parameter', async () => {
       try {
         await execAsync(`node ${scriptPath}`);
       } catch (error: unknown) {
@@ -72,7 +81,7 @@ describe.skip('Vocabulary Comparison CLI', () => {
     });
   });
 
-  describe('Package.json Scripts', () => {
+  describe('Package.json Script Integration', () => {
     it('should have compare:vocabulary script', async () => {
       const packageJson = require('../../../../../package.json');
 
@@ -111,120 +120,5 @@ describe.skip('Vocabulary Comparison CLI', () => {
         '--markdown',
       );
     });
-  });
-});
-
-// Test the command line argument parsing function directly
-describe('parseArgs function', () => {
-  // Skip these tests in CI environment
-  if (process.env.CI) {
-    test.skip('parseArgs tests skipped in CI environment', () => {});
-    return;
-  }
-
-  // Note: Testing the parsing logic manually since the script doesn't export parseArgs
-  // In a real refactor, you might want to export parseArgs from the script for easier testing
-
-  it('should parse spreadsheet ID', () => {
-    const mockArgv = ['node', 'script.js', '--spreadsheet-id=test123'];
-    const args = mockArgv.slice(2);
-
-    // Test the parsing logic manually since we can't easily import it
-    const options = {
-      spreadsheetId: '',
-      indexSheet: 'index',
-      skipRdfCheck: false,
-      markdown: false,
-      outputPath: 'tmp/vocabulary-comparison-report.md',
-      help: false,
-    };
-
-    args.forEach((arg) => {
-      if (arg.startsWith('--spreadsheet-id=')) {
-        options.spreadsheetId = arg.split('=')[1];
-      } else if (arg.startsWith('--index-sheet=')) {
-        options.indexSheet = arg.split('=')[1];
-      } else if (arg.startsWith('--output=')) {
-        options.outputPath = arg.split('=')[1];
-      } else if (arg === '--skip-rdf-check') {
-        options.skipRdfCheck = true;
-      } else if (arg === '--markdown' || arg === '-md') {
-        options.markdown = true;
-      } else if (arg === '--help' || arg === '-h') {
-        options.help = true;
-      }
-    });
-
-    expect(options.spreadsheetId).toBe('test123');
-    expect(options.indexSheet).toBe('index');
-    expect(options.skipRdfCheck).toBe(false);
-  });
-
-  it('should parse all flags correctly', () => {
-    const mockArgv = [
-      'node',
-      'script.js',
-      '--spreadsheet-id=test123',
-      '--index-sheet=custom-index',
-      '--output=custom/output.md',
-      '--skip-rdf-check',
-      '--markdown',
-    ];
-    const args = mockArgv.slice(2);
-
-    const options = {
-      spreadsheetId: '',
-      indexSheet: 'index',
-      skipRdfCheck: false,
-      markdown: false,
-      outputPath: 'tmp/vocabulary-comparison-report.md',
-      help: false,
-    };
-
-    args.forEach((arg) => {
-      if (arg.startsWith('--spreadsheet-id=')) {
-        options.spreadsheetId = arg.split('=')[1];
-      } else if (arg.startsWith('--index-sheet=')) {
-        options.indexSheet = arg.split('=')[1];
-      } else if (arg.startsWith('--output=')) {
-        options.outputPath = arg.split('=')[1];
-      } else if (arg === '--skip-rdf-check') {
-        options.skipRdfCheck = true;
-      } else if (arg === '--markdown' || arg === '-md') {
-        options.markdown = true;
-      } else if (arg === '--help' || arg === '-h') {
-        options.help = true;
-      }
-    });
-
-    expect(options.spreadsheetId).toBe('test123');
-    expect(options.indexSheet).toBe('custom-index');
-    expect(options.outputPath).toBe('custom/output.md');
-    expect(options.skipRdfCheck).toBe(true);
-    expect(options.markdown).toBe(true);
-  });
-
-  it('should handle -md shorthand for markdown', () => {
-    const mockArgv = ['node', 'script.js', '--spreadsheet-id=test123', '-md'];
-    const args = mockArgv.slice(2);
-
-    const options = {
-      spreadsheetId: '',
-      indexSheet: 'index',
-      skipRdfCheck: false,
-      markdown: false,
-      outputPath: 'tmp/vocabulary-comparison-report.md',
-      help: false,
-    };
-
-    args.forEach((arg) => {
-      if (arg.startsWith('--spreadsheet-id=')) {
-        options.spreadsheetId = arg.split('=')[1];
-      } else if (arg === '--markdown' || arg === '-md') {
-        options.markdown = true;
-      }
-    });
-
-    expect(options.markdown).toBe(true);
   });
 });

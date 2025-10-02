@@ -8,6 +8,9 @@
     "site",
     "portal"
   ],
+  "implicitDependencies": [
+    "@ifla/theme"
+  ],
   "targets": {
     "build": {
       "executor": "nx:run-commands",

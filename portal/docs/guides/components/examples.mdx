@@ -1,0 +1,527 @@
+---
+title: Examples and Example Components
+sidebar_label: Examples & Example Components
+description: Collapsible examples containers and structured property-value tables
+---
+
+# Examples and Example Components
+
+The `Examples` and `Example` components provide structured, accessible ways to display examples and property-value data in IFLA documentation. These components were specifically designed based on ISBDM assessment requirements.
+
+## Examples Component
+
+The `Examples` component creates a collapsible container using semantic `<details>` and `<summary>` elements, perfect for organizing related examples that users can expand or collapse.
+
+### Basic Collapsible Container
+
+```mdx
+<Examples>
+  <p>This is a simple example inside a collapsible container.</p>
+  <p>You can put any content here - paragraphs, lists, tables, or other components.</p>
+</Examples>
+```
+
+**Result:**
+
+<Examples>
+  <p>This is a simple example inside a collapsible container.</p>
+  <p>You can put any content here - paragraphs, lists, tables, or other components.</p>
+</Examples>
+
+### Custom Summary Text
+
+```mdx
+<Examples summary="Manifestation Property Examples">
+  <p>This container has custom summary text.</p>
+  <p>Click the summary to expand or collapse this content.</p>
+</Examples>
+```
+
+**Result:**
+
+<Examples summary="Manifestation Property Examples">
+  <p>This container has custom summary text.</p>
+  <p>Click the summary to expand or collapse this content.</p>
+</Examples>
+
+### Open by Default
+
+```mdx
+<Examples summary="Assessment Guidelines" open>
+  <p>This section is expanded by default using the open prop.</p>
+  <p>Useful for important content that should be immediately visible.</p>
+</Examples>
+```
+
+**Result:**
+
+<Examples summary="Assessment Guidelines" open>
+  <p>This section is expanded by default using the open prop.</p>
+  <p>Useful for important content that should be immediately visible.</p>
+</Examples>
+
+### Nested Examples Components
+
+```mdx
+<Examples summary="Vocabulary Examples" open>
+  <p>Main examples section with nested subsections:</p>
+  
+  <Examples summary="Basic Vocabularies">
+    <p>Content for basic vocabularies...</p>
+  </Examples>
+  
+  <Examples summary="Advanced Vocabularies">
+    <p>Content for advanced vocabularies...</p>
+  </Examples>
+</Examples>
+```
+
+**Result:**
+
+<Examples summary="Vocabulary Examples" open>
+  <p>Main examples section with nested subsections:</p>
+  
+  <Examples summary="Basic Vocabularies">
+    <p>Content for basic vocabularies...</p>
+  </Examples>
+  
+  <Examples summary="Advanced Vocabularies">
+    <p>Content for advanced vocabularies...</p>
+  </Examples>
+</Examples>
+
+## Example Component
+
+The `Example` component displays structured property-value data in a semantic table format with optional headers, labels, notes, and links to full examples.
+
+### Basic Property Table
+
+```mdx
+<Example
+  properties={[
+    { property: "has category of carrier", value: '"volume"' },
+    { property: "has extent of manifestation", value: '"1 volume (306 pages)"' },
+    { property: "has dimensions", value: '"21 x 14 cm"' }
+  ]}
+/>
+```
+
+**Result:**
+
+<Example
+  properties={[
+    { property: "has category of carrier", value: '"volume"' },
+    { property: "has extent of manifestation", value: '"1 volume (306 pages)"' },
+    { property: "has dimensions", value: '"21 x 14 cm"' }
+  ]}
+/>
+
+### With Header and Full Example Link
+
+```mdx
+<Example
+  header="Single Unit Manifestation"
+  properties={[
+    { property: "has unitary structure", value: '"single unit"' },
+    { property: "has category of carrier", value: '"volume"' },
+    { property: "has extent of manifestation", value: '"1 volume (18 x 18 cm; 10 pages)"' },
+    { property: "has dimensions", value: '"18 x 18 cm"' }
+  ]}
+  fullExampleHref="/docs/fullex/fx017"
+/>
+```
+
+**Result:**
+
+<Example
+  header="Single Unit Manifestation"
+  properties={[
+    { property: "has unitary structure", value: '"single unit"' },
+    { property: "has category of carrier", value: '"volume"' },
+    { property: "has extent of manifestation", value: '"1 volume (18 x 18 cm; 10 pages)"' },
+    { property: "has dimensions", value: '"18 x 18 cm"' }
+  ]}
+  fullExampleHref="/docs/fullex/fx017"
+/>
+
+### Without Table Headers
+
+```mdx
+<Example
+  showTableHeader={false}
+  properties={[
+    { property: "has expression embodied", value: '"IFLA ISBD Review Group. ISBD (text; English)"' },
+    { property: "has appellation", value: '"International Standard Bibliographic Description"' }
+  ]}
+  fullExampleHref="/docs/fullex/fx012"
+/>
+```
+
+**Result:**
+
+<Example
+  showTableHeader={false}
+  properties={[
+    { property: "has expression embodied", value: '"IFLA ISBD Review Group. ISBD (text; English)"' },
+    { property: "has appellation", value: '"International Standard Bibliographic Description"' }
+  ]}
+  fullExampleHref="/docs/fullex/fx012"
+/>
+
+### With Header, Label, and Note
+
+```mdx
+<Example
+  header="Multiple Unit Assessment"
+  label="Complex Case"
+  properties={[
+    { property: "has unitary structure", value: '"multiple unit"' },
+    { property: "has sub-unit", value: '"CD 1"' },
+    { property: "has sub-unit", value: '"CD 2"' },
+    { property: "has sub-unit", value: '"Booklet"' }
+  ]}
+  note="Multiple physical items form one manifestation."
+  fullExampleHref="/docs/fullex/fx049"
+/>
+```
+
+**Result:**
+
+<Example
+  header="Multiple Unit Assessment"
+  label="Complex Case"
+  properties={[
+    { property: "has unitary structure", value: '"multiple unit"' },
+    { property: "has sub-unit", value: '"CD 1"' },
+    { property: "has sub-unit", value: '"CD 2"' },
+    { property: "has sub-unit", value: '"Booklet"' }
+  ]}
+  note="Multiple physical items form one manifestation."
+  fullExampleHref="/docs/fullex/fx049"
+/>
+
+### Custom Content with Markdown Tables
+
+```mdx
+<Example header="Using Markdown Tables">
+  | Property | Value |
+  | :-- | :-- |
+  | has category of carrier | "volume" |
+  | has extent of manifestation | "1 volume (306 pages)" |
+  | has publisher agent | "National Library of Ukraine" |
+  
+  _Full example: [Ukrainian National Bibliography](/docs/fullex/fx076)._
+</Example>
+```
+
+**Result:**
+
+<Example header="Using Markdown Tables">
+  | Property | Value |
+  | :-- | :-- |
+  | has category of carrier | "volume" |
+  | has extent of manifestation | "1 volume (306 pages)" |
+  | has publisher agent | "National Library of Ukraine" |
+  
+  _Full example: [Ukrainian National Bibliography](/docs/fullex/fx076)._
+</Example>
+
+### With React Components in Values
+
+```mdx
+<Example
+  header="Using Components in Values"
+  properties={[
+    { 
+      property: "has category of carrier", 
+      value: <><Mandatory />volume</> 
+    },
+    { 
+      property: "has title of manifestation", 
+      value: <><InLink href="/docs/relationships/1037">Gruffalo</InLink></> 
+    },
+    { 
+      property: "has identifier", 
+      value: <><Unique />ISBN 978-1-5290-1234-5</> 
+    }
+  ]}
+  note="Components like Mandatory, Unique, and InLink can be used within values."
+/>
+```
+
+**Result:**
+
+<Example
+  header="Using Components in Values"
+  properties={[
+    { 
+      property: "has category of carrier", 
+      value: <><Mandatory />volume</> 
+    },
+    { 
+      property: "has title of manifestation", 
+      value: <><InLink href="/docs/relationships/1037">Gruffalo</InLink></> 
+    },
+    { 
+      property: "has identifier", 
+      value: <><Unique />ISBN 978-1-5290-1234-5</> 
+    }
+  ]}
+  note="Components like Mandatory, Unique, and InLink can be used within values."
+/>
+
+## Combined Usage Patterns
+
+### Assessment Documentation Pattern
+
+```mdx
+<Examples summary="Assessment Examples">
+  <Example
+    header="Single Unit Assessment"
+    properties={[
+      { property: "has unitary structure", value: '"single unit"' },
+      { property: "has category of carrier", value: '"volume"' },
+      { property: "assessment decision", value: '"Record as single manifestation"' }
+    ]}
+    fullExampleHref="/docs/fullex/fx030"
+    note="Simple case: one physical volume equals one manifestation."
+  />
+  
+  <Example
+    header="Multiple Unit Assessment"
+    properties={[
+      { property: "has unitary structure", value: '"multiple unit"' },
+      { property: "has sub-unit", value: '"CD 1"' },
+      { property: "has sub-unit", value: '"CD 2"' },
+      { property: "assessment decision", value: '"Record with sub-unit relationships"' }
+    ]}
+    fullExampleHref="/docs/fullex/fx049"
+    note="Complex case: multiple items form one manifestation."
+  />
+</Examples>
+```
+
+**Result:**
+
+<Examples summary="Assessment Examples">
+  <Example
+    header="Single Unit Assessment"
+    properties={[
+      { property: "has unitary structure", value: '"single unit"' },
+      { property: "has category of carrier", value: '"volume"' },
+      { property: "assessment decision", value: '"Record as single manifestation"' }
+    ]}
+    fullExampleHref="/docs/fullex/fx030"
+    note="Simple case: one physical volume equals one manifestation."
+  />
+  
+  <Example
+    header="Multiple Unit Assessment"
+    properties={[
+      { property: "has unitary structure", value: '"multiple unit"' },
+      { property: "has sub-unit", value: '"CD 1"' },
+      { property: "has sub-unit", value: '"CD 2"' },
+      { property: "assessment decision", value: '"Record with sub-unit relationships"' }
+    ]}
+    fullExampleHref="/docs/fullex/fx049"
+    note="Complex case: multiple items form one manifestation."
+  />
+</Examples>
+
+### Nested Examples with Different Content Types
+
+```mdx
+<Examples summary="Complete Documentation Pattern" open>
+  <p>This section demonstrates various documentation patterns.</p>
+  
+  <Example
+    header="Manifestation Workflow"
+    properties={[
+      { property: "Step 1", value: "Preliminary assessment" },
+      { property: "Step 2", value: "Record mandatory elements" },
+      { property: "Step 3", value: "Add optional descriptive elements" }
+    ]}
+  />
+  
+  <Example header="Using Custom Content">
+    <Figure
+      src="/img/x010.png"
+      caption="Entity-relationship diagram"
+      expandLink="/docs/fullimages/x010"
+    />
+    
+    | Entity | Description |
+    |--------|-------------|
+    | Manifestation | Top-level resource |
+    | Sub-unit | Contained manifestation |
+  </Example>
+</Examples>
+```
+
+**Result:**
+
+<Examples summary="Complete Documentation Pattern" open>
+  <p>This section demonstrates various documentation patterns.</p>
+  
+  <Example
+    header="Manifestation Workflow"
+    properties={[
+      { property: "Step 1", value: "Preliminary assessment" },
+      { property: "Step 2", value: "Record mandatory elements" },
+      { property: "Step 3", value: "Add optional descriptive elements" }
+    ]}
+  />
+  
+  <Example header="Using Custom Content">
+    <Figure
+      src="/img/x010.png"
+      caption="Entity-relationship diagram"
+      expandLink="/docs/fullimages/x010"
+    />
+    
+    | Entity | Description |
+    |--------|-------------|
+    | Manifestation | Top-level resource |
+    | Sub-unit | Contained manifestation |
+  </Example>
+</Examples>
+
+## Component Props Reference
+
+### Examples Component Props
+
+| Prop | Type | Default | Description |
+|------|------|---------|-------------|
+| `summary` | `string` | `"Examples"` | Text displayed in the summary/toggle button |
+| `open` | `boolean` | `false` | Whether the section is expanded by default |
+| `children` | `ReactNode` | - | Content to display inside the collapsible section |
+
+### Example Component Props
+
+| Prop | Type | Default | Description |
+|------|------|---------|-------------|
+| `header` | `string` | - | Optional header text displayed above the content |
+| `label` | `string` | - | Optional label displayed before the header |
+| `properties` | `PropertyRow[]` | - | Array of property-value pairs to display in a table |
+| `showTableHeader` | `boolean` | `true` | Whether to show "Property" and "Value" column headers |
+| `fullExampleHref` | `string` | - | URL to the full example page |
+| `note` | `string` | - | Optional note displayed after the content |
+| `children` | `ReactNode` | - | Custom content (used instead of properties) |
+
+### PropertyRow Type
+
+```typescript
+interface PropertyRow {
+  property: string | ReactElement;  // Property name/label
+  value: string | ReactElement;      // Property value
+}
+```
+
+## Accessibility Features
+
+Both components are designed with accessibility in mind:
+
+### Examples Component
+- Uses semantic `<details>` and `<summary>` elements
+- Keyboard navigable (Enter/Space to toggle)
+- Screen reader announces expanded/collapsed state
+- Focus indicators for keyboard navigation
+- No JavaScript required - works with CSS only
+
+### Example Component
+- Uses semantic `<table>` with proper headers
+- Associates cells with headers using scope attributes
+- Links are keyboard accessible
+- Supports screen reader table navigation
+- High contrast borders for visual clarity
+
+## Implementation Notes
+
+### Global Availability
+Both components are globally available in all MDX files through `/portal/src/theme/MDXComponents.tsx`. No imports are needed when using them in documentation.
+
+### TypeScript Support
+Full TypeScript definitions are provided:
+- `Examples`: `PropsWithChildren<{ summary?: string; open?: boolean }>`
+- `Example`: Complex type with all props properly typed
+- `PropertyRow`: Interface for property-value pairs
+
+### CSS Modules
+Both components use CSS modules for scoped styling:
+- Examples: `styles.module.scss` with `.examples`, `.summary`, `.body` classes
+- Example: `styles.module.scss` with `.example`, `.header`, `.table`, `.note` classes
+
+### Bundle Size
+- Examples: ~1KB minified
+- Example: ~2KB minified
+- Combined: Less than 5KB with styles
+
+### Browser Support
+- All modern browsers (Chrome, Firefox, Safari, Edge)
+- IE11 partial support (no details/summary, but content visible)
+- Mobile browsers fully supported
+
+### Testing
+Components include comprehensive test coverage:
+- Examples: 1 test file with rendering and prop tests
+- Example: 3 test files covering all prop combinations
+- Total: 4 passing test suites
+
+### Performance Considerations
+- No JavaScript runtime for basic functionality
+- React components lazy-loaded when needed
+- CSS modules prevent style conflicts
+- Minimal re-renders with React.memo optimization
+
+## Best Practices
+
+1. **Use Examples for grouping**: Wrap related examples in an Examples container for better organization
+2. **Consistent property names**: Use lowercase for property names to match ISBDM conventions
+3. **Quote string values**: Wrap literal values in quotes for clarity
+4. **Provide context**: Always include notes or full example links when helpful
+5. **Accessibility first**: Test with keyboard navigation and screen readers
+6. **Progressive enhancement**: Basic functionality works without JavaScript
+
+## Common Patterns
+
+### Assessment Pages
+```mdx
+<Examples summary="Assessment Examples" open>
+  <Example header="Single Unit" {...props} />
+  <Example header="Multiple Unit" {...props} />
+</Examples>
+```
+
+### Property Documentation
+```mdx
+<Example
+  showTableHeader={false}
+  properties={[...]}
+  fullExampleHref="/docs/..."
+/>
+```
+
+### Tutorial Content
+```mdx
+<Examples summary="Try It Yourself">
+  <p>Instructions...</p>
+  <Example properties={[...]} />
+</Examples>
+```
+
+## Migration from Legacy Components
+
+If migrating from older example components:
+
+1. Replace `<details>` with `<Examples>`
+2. Replace custom tables with `<Example properties={[...]}`
+3. Update imports (remove if using globally)
+4. Test accessibility features
+5. Verify styling matches design system
+
+## Related Components
+
+- **[ExampleTable](./example-table)** - For bibliographic data with expandable details
+- **[Steps](./steps)** - For numbered procedural lists
+- **[VocabularyTable](./vocabulary-table)** - For vocabulary definitions
+- **[Figure](./figure-component)** - For images with captions

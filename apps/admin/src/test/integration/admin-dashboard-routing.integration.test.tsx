@@ -6,6 +6,10 @@ import { AdminUsersPage } from '@/components/dashboard/admin/AdminUsersPage';
 import { AdminProjectsPage } from '@/components/dashboard/admin/AdminProjectsPage';
 import { AdminActivityPage } from '@/components/dashboard/admin/AdminActivityPage';
 
+/**
+ * @integration @ui @admin @dashboard @high-priority @navigation
+ */
+
 describe('Admin Dashboard Routing @integration @dashboard @admin @navigation @high-priority', () => {
   let queryClient: QueryClient;
 

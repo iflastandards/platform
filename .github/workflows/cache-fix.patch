@@ -1,0 +1,21 @@
+# Fix for pnpm cache path issue in GitHub workflows
+#
+# The issue: Workflows try to cache ~/.pnpm-store which doesn't exist
+# The fix: Remove redundant cache actions since setup-node already handles pnpm caching
+#
+# To apply:
+# 1. Remove all "Cache pnpm store" steps that use ~/.pnpm-store
+# 2. Keep the setup-node action with cache: 'pnpm' - it handles caching correctly
+#
+# Example removal:
+#   - name: Cache pnpm store              # DELETE THIS ENTIRE STEP
+#     uses: actions/cache@v4               # DELETE
+#     with:                                # DELETE
+#       path: ~/.pnpm-store                # DELETE
+#       key: ${{ runner.os }}-pnpm-...    # DELETE
+#
+# Keep this (it handles caching correctly):
+#   - uses: actions/setup-node@v4
+#     with:
+#       node-version: 22
+#       cache: 'pnpm'   # This automatically caches the correct pnpm store location

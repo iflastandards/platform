@@ -13,14 +13,14 @@
     "utils/"
   ],
   "dependencies": {
-    "globals": "*",
-    "typescript-eslint": "*",
     "eslint-plugin-react": "*",
     "eslint-plugin-react-hooks": "*",
-    "eslint-plugin-unused-imports": "*"
+    "eslint-plugin-unused-imports": "*",
+    "globals": "*",
+    "typescript-eslint": "*"
   },
   "peerDependencies": {
-    "eslint": "^9.0.0"
+    "eslint": "*"
   },
   "keywords": [
     "eslint",
@@ -30,5 +30,8 @@
     "ifla"
   ],
   "author": "IFLA Standards Team",
-  "license": "MIT"
+  "license": "MIT",
+  "devDependencies": {
+    "@next/eslint-plugin-next": "^15.5.2"
+  }
 }

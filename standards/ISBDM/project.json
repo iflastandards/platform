@@ -3,15 +3,8 @@
   "root": "standards/ISBDM",
   "sourceRoot": "standards/ISBDM",
   "projectType": "application",
-  "tags": [
-    "docusaurus",
-    "site",
-    "standard",
-    "isbdm"
-  ],
-  "implicitDependencies": [
-    "@ifla/theme"
-  ],
+  "tags": ["docusaurus", "site", "standard", "isbdm"],
+  "implicitDependencies": ["@ifla/theme"],
   "targets": {
     "build": {
       "executor": "nx:run-commands",
@@ -19,9 +12,18 @@
         "command": "docusaurus build standards/ISBDM"
       },
       "inputs": [
-        "production",
-        "^production",
-        "docusaurus"
+        "docusaurus",
+        {
+          "dependentTasksOutputFiles": "packages/theme/dist/**/*",
+          "transitive": false
+        }
+      ],
+      "dependsOn": [
+        {
+          "target": "build",
+          "projects": ["@ifla/theme"],
+          "params": "forward"
+        }
       ]
     },
     "start": {
@@ -73,20 +75,14 @@
       "executor": "@nx/vite:test",
       "options": {
         "config": "{workspaceRoot}/vitest.config.nx.ts",
-        "exclude": [
-          "**/scripts/**",
-          "**/deployment/**"
-        ]
+        "exclude": ["**/scripts/**", "**/deployment/**"]
       }
     },
     "test:integration": {
       "executor": "@nx/vite:test",
       "options": {
         "config": "{workspaceRoot}/vitest.config.nx.ts",
-        "include": [
-          "**/scripts/**",
-          "**/deployment/**"
-        ]
+        "include": ["**/scripts/**", "**/deployment/**"]
       }
     },
     "lint": {
@@ -100,9 +96,7 @@
           "standards/isbdm/src/**/*.{md,mdx}"
         ]
       },
-      "inputs": [
-        "default"
-      ],
+      "inputs": ["default"],
       "cache": true
     },
     "typecheck": {
@@ -110,7 +104,22 @@
       "options": {
         "command": "tsc --noEmit",
         "cwd": "standards/ISBDM"
-      }
+      },
+      "dependsOn": [
+        {
+          "target": "build",
+          "projects": ["@ifla/theme"]
+        }
+      ],
+      "inputs": [
+        "{projectRoot}/src/**/*.{ts,tsx}",
+        "{projectRoot}/**/*.{ts,tsx}",
+        "{projectRoot}/tsconfig.json",
+        "{workspaceRoot}/tsconfig.json",
+        "!{projectRoot}/build/**/*",
+        "!{projectRoot}/.docusaurus/**/*",
+        "!{projectRoot}/node_modules/**/*"
+      ]
     },
     "e2e": {
       "executor": "nx:run-commands",

@@ -5,6 +5,7 @@ import { QueryClientContextProvider } from '@/contexts/query-client-context';
 import { RefineProvider } from '@/providers/RefineProvider';
 import { Suspense } from 'react';
 import type { Metadata } from 'next';
+import { config } from '@/config/environment';
 
 export const metadata: Metadata = {
   title: 'IFLA Admin Portal',
@@ -21,7 +22,7 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
-      <body suppressHydrationWarning={true}>
+      <body suppressHydrationWarning>
         <ClerkProvider
           appearance={{
             elements: {
@@ -29,11 +30,9 @@ export default function RootLayout({
               card: 'shadow-none',
             },
           }}
-          signInUrl={process.env.NEXT_PUBLIC_CLERK_SIGN_IN_URL || '/sign-in'}
-          signUpUrl={process.env.NEXT_PUBLIC_CLERK_SIGN_UP_URL || '/sign-up'}
-          afterSignOutUrl={
-            process.env.NEXT_PUBLIC_CLERK_AFTER_SIGN_OUT_URL || '/'
-          }
+          signInUrl={config.env.clerkSignInUrl}
+          signUpUrl={config.env.clerkSignUpUrl}
+          afterSignOutUrl={config.env.clerkAfterSignOutUrl}
         >
           <QueryClientContextProvider>
             <ThemeProvider>

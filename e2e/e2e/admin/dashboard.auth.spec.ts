@@ -4,7 +4,11 @@ import { e2eTest as test, expect } from '../../utils/tagged-test';
  * Example authenticated test that uses pre-authenticated state
  * These tests run in the chromium-admin project with admin user context
  */
-test.describe('Admin Dashboard - Authenticated Tests @admin @auth @e2e @critical @authentication @security @navigation', () => {
+test.describe('Admin Dashboard - Authenticated Tests @admin @auth @e2e @server-dependent @local-only @critical @authentication @security @navigation', () => {
+
+/**
+ * @e2e @server-dependent @local-only @critical @auth @security @admin @ui @navigation
+ */
   test.beforeEach(async ({ page }) => {
     // Navigate to dashboard - should already be authenticated
     await page.goto('/dashboard');

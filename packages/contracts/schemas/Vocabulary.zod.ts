@@ -14,7 +14,7 @@ export const VocabularyTermSchema = z.object({
   order: z.number().int().min(0).default(0),
   
   // Multilingual support
-  translations: z.record(z.object({
+  translations: z.record(z.string(), z.object({
     label: z.string(),
     definition: z.string().optional(),
     note: z.string().optional(),
@@ -39,14 +39,12 @@ export const VocabularySchema = z.object({
   namespace: z.string().url('Invalid namespace URL').optional(),
   
   // Status and publishing
-  status: z.enum(['draft', 'review', 'published', 'deprecated'], {
-    errorMap: () => ({ message: 'Invalid vocabulary status' }),
-  }),
+  status: z.enum(['draft', 'review', 'published', 'deprecated'] as const).describe('Invalid vocabulary status'),
   publishedAt: z.string().datetime().optional(),
   
   // Schema and validation
   schemaUrl: z.string().url().optional(),
-  validationRules: z.record(z.unknown()).optional(),
+  validationRules: z.record(z.string(), z.unknown()).optional(),
   
   // Integration settings
   googleSheetId: z.string().optional(),
@@ -101,7 +99,7 @@ export const VocabularyImportSchema = z.object({
   vocabularyId: z.string().uuid(),
   source: z.enum(['google_sheets', 'csv', 'rdf', 'json']),
   sourceUrl: z.string().url().optional(),
-  mapping: z.record(z.string()).optional(), // Field mapping configuration
+  mapping: z.record(z.string(), z.string()).optional(), // Field mapping configuration
   options: z.object({
     overwrite: z.boolean().default(false),
     validateTerms: z.boolean().default(true),

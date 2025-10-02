@@ -3,6 +3,10 @@ import { execSync } from 'child_process';
 import * as fs from 'fs';
 import * as path from 'path';
 
+/**
+ * @unit @low-priority @docs @validation
+ */
+
 describe('rdf-folder-to-csv CLI @unit', () => {
   const fixturesDir = path.join(__dirname, 'fixtures', 'batch');
   const tempDir = '/tmp/rdf-folder-to-csv-tests';
@@ -34,7 +38,7 @@ describe('rdf-folder-to-csv CLI @unit', () => {
       }
 
       // Run the conversion
-      const command = `tsx ${scriptPath} -s ${sourceDir} -o ${outputDir}`;
+      const command = `npx tsx ${scriptPath} -s ${sourceDir} -o ${outputDir}`;
       execSync(command);
 
       // Check that output files exist with same structure
@@ -45,10 +49,11 @@ describe('rdf-folder-to-csv CLI @unit', () => {
       expect(fs.existsSync(expectedTermsDir)).toBe(true);
 
       // Check for specific output files
-      const elementsFiles = fs.readdirSync(path.join(sourceDir, 'elements'))
-        .filter(f => f.endsWith('.ttl'));
-      
-      elementsFiles.forEach(ttlFile => {
+      const elementsFiles = fs
+        .readdirSync(path.join(sourceDir, 'elements'))
+        .filter((f) => f.endsWith('.ttl'));
+
+      elementsFiles.forEach((ttlFile) => {
         const csvFile = ttlFile.replace('.ttl', '.csv');
         const outputFile = path.join(expectedElementsDir, csvFile);
         expect(fs.existsSync(outputFile)).toBe(true);
@@ -64,11 +69,13 @@ describe('rdf-folder-to-csv CLI @unit', () => {
         return;
       }
 
-      const command = `tsx ${scriptPath} -s ${sourceDir} -o ${outputDir}`;
+      const command = `npx tsx ${scriptPath} -s ${sourceDir} -o ${outputDir}`;
       execSync(command);
 
       // Check nested structure is preserved
-      expect(fs.existsSync(path.join(outputDir, 'isbd', 'elements'))).toBe(true);
+      expect(fs.existsSync(path.join(outputDir, 'isbd', 'elements'))).toBe(
+        true,
+      );
       expect(fs.existsSync(path.join(outputDir, 'isbd', 'terms'))).toBe(true);
       expect(fs.existsSync(path.join(outputDir, 'lrm', 'elements'))).toBe(true);
       expect(fs.existsSync(path.join(outputDir, 'lrm', 'terms'))).toBe(true);
@@ -84,7 +91,7 @@ describe('rdf-folder-to-csv CLI @unit', () => {
         return;
       }
 
-      const command = `tsx ${scriptPath} -s ${sourceDir} -o ${outputDir} -p ${profileFile}`;
+      const command = `npx tsx ${scriptPath} -s ${sourceDir} -o ${outputDir} -p ${profileFile}`;
       execSync(command);
 
       // Just check that it runs without error and produces output
@@ -102,7 +109,7 @@ describe('rdf-folder-to-csv CLI @unit', () => {
         return;
       }
 
-      const command = `tsx ${scriptPath} -s ${sourceDir} -o ${outputDir} --dry-run 2>&1`;
+      const command = `npx tsx ${scriptPath} -s ${sourceDir} -o ${outputDir} --dry-run 2>&1`;
       const output = execSync(command, { encoding: 'utf-8', shell: true });
 
       // Should show what would be done
@@ -120,8 +127,8 @@ describe('rdf-folder-to-csv CLI @unit', () => {
       const outputDir = tempDir;
 
       expect(() => {
-        execSync(`tsx ${scriptPath} -s ${sourceDir} -o ${outputDir}`, {
-          stdio: 'pipe'
+        execSync(`npx tsx ${scriptPath} -s ${sourceDir} -o ${outputDir}`, {
+          stdio: 'pipe',
         });
       }).toThrow();
     });
@@ -132,8 +139,8 @@ describe('rdf-folder-to-csv CLI @unit', () => {
       fs.mkdirSync(emptyDir, { recursive: true });
 
       const output = execSync(
-        `tsx ${scriptPath} -s ${emptyDir} -o ${tempDir} 2>&1`,
-        { encoding: 'utf-8', shell: true }
+        `npx tsx ${scriptPath} -s ${emptyDir} -o ${tempDir} 2>&1`,
+        { encoding: 'utf-8', shell: true },
       );
 
       expect(output).toMatch(/no rdf files found/i);

@@ -13,6 +13,10 @@ import { fileURLToPath } from 'node:url';
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
+/**
+ * @integration @api @critical @high-priority @file-io
+ */
+
 describe('UnifiedSpreadsheetAPI @integration @api', () => {
   let api: UnifiedSpreadsheetAPI;
   const testDir = path.join(__dirname, '.test-output');

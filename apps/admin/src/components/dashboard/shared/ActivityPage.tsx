@@ -96,13 +96,13 @@ function ActivityItemComponent({
 }
 
 interface SharedActivityPageProps {
-  role: 'admin' | 'rg-admin';
+  userRole: 'admin' | 'rg-admin';
   reviewGroupName?: string;
   activities?: ActivityItem[];
 }
 
 export function SharedActivityPage({
-  role,
+  userRole,
   reviewGroupName = 'ISBD',
   activities: providedActivities,
 }: SharedActivityPageProps) {
@@ -110,7 +110,7 @@ export function SharedActivityPage({
 
   // Default activities based on role
   const defaultActivities: ActivityItem[] =
-    role === 'admin'
+    userRole === 'admin'
       ? [
           {
             action: 'Project "MulDiCat French Translation" milestone completed',
@@ -213,17 +213,17 @@ export function SharedActivityPage({
 
   // Filtering is only available for admin role
   const filteredActivities =
-    role === 'admin' && filter !== 'all'
+    userRole === 'admin' && filter !== 'all'
       ? activities.filter((a) => a.severity === filter)
       : activities;
 
-  const title = role === 'admin' ? 'System Activity Log' : 'Activity Log';
+  const title = userRole === 'admin' ? 'System Activity Log' : 'Activity Log';
   const subtitle =
-    role === 'admin'
+    userRole === 'admin'
       ? 'Monitor all system activities and events'
       : 'Recent activities in your review group';
   const cardTitle =
-    role === 'admin'
+    userRole === 'admin'
       ? 'Recent Activities'
       : `${reviewGroupName} Review Group Activity`;
 
@@ -246,11 +246,12 @@ export function SharedActivityPage({
           <Title level={4} style={{ margin: 0 }}>
             {cardTitle}
           </Title>
-          {role === 'admin' && (
+          {userRole === 'admin' && (
             <Select
               value={filter}
               style={{ width: 120 }}
               onChange={(value) => setFilter(value)}
+              aria-label="Filter activity by type"
               options={[
                 { value: 'all', label: 'All' },
                 { value: 'info', label: 'Info' },
@@ -264,7 +265,7 @@ export function SharedActivityPage({
 
         <div
           role="feed"
-          aria-label={`${role === 'admin' ? 'System' : 'Review group'} activity feed`}
+          aria-label={`${userRole === 'admin' ? 'System' : 'Review group'} activity feed`}
         >
           {filteredActivities.map((activity, index) => (
             <ActivityItemComponent key={index} {...activity} />

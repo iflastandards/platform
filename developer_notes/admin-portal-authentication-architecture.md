@@ -255,7 +255,7 @@ export default defineConfig({
 #### Dynamic URL Configuration in Tests
 ```typescript
 // e2e/admin-portal/cross-site-auth-communication.e2e.test.ts
-import { getAdminPortalConfig } from '../../packages/theme/src/config/siteConfig';
+import \{ getAdminPortalConfig \} from '../../packages/theme/src/config/siteConfig';
 
 test.describe('Cross-Site Authentication Communication', () => {
   let adminConfig: any;
@@ -293,7 +293,7 @@ nx run standards-dev:e2e:admin-portal:fail-fast
 
 ```typescript
 // Using dynamic admin portal configuration
-import { getAdminPortalConfigAuto } from '@ifla/theme/config/siteConfig';
+import \{ getAdminPortalConfigAuto \} from '@ifla/theme/config/siteConfig';
 
 const MyComponent = () => {
   const adminConfig = getAdminPortalConfigAuto();

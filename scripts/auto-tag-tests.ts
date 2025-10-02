@@ -23,7 +23,7 @@ import { glob } from 'glob';
 import * as fs from 'fs';
 import * as path from 'path';
 import { execSync } from 'child_process';
-import dotenv from 'dotenv';
+import * as dotenv from 'dotenv';
 import { type BaseLLM, type ChatParams, type ChatResult } from '@memberjunction/ai';
 
 // Load environment variables
@@ -74,83 +74,72 @@ interface ProcessingResults {
 
 // Test tagging rules constant
 const TAGGING_RULES = `
-Test Classification and Tagging Rules for IFLA Standards Platform:
+TEST CLASSIFICATION RULES:
 
-1. UNIT TESTS (@unit):
-   - Environment: pre-commit, local development only
-   - Characteristics: 
-     * Fully mocked dependencies (using vi.mock, jest.mock, or MSW)
-     * No external service calls
-     * Fast execution (<5s)
-     * Isolated component/function testing
-   - Required tags: @unit, priority tag (@critical/@high-priority/@low-priority), feature area tag
-   - Forbidden tags: @integration, @e2e, @smoke, @server-dependent, @slow
-   - File location: /unit/, /src/test/unit/, or /src/__tests__/
-   - File naming: *.unit.test.ts or *.unit.test.tsx
+1. @unit - Fast isolated tests with mocked dependencies
+   • Uses: vi.mock, jest.mock, or MSW for all external deps
+   • Runs: pre-commit, CI, local
+   • Forbids: @integration, @e2e, @server-dependent
 
-2. INTEGRATION TESTS (@integration):
-   - Environment: pre-push, local development
-   - Characteristics:
-     * Uses real services, databases, or file systems
-     * Tests component interactions
-     * May be slower (>5s is acceptable)
-     * Can make actual API calls
-   - Required tags: @integration, priority tag, feature area tag
-   - Optional tags: @server-dependent, @slow, @flaky
-   - Forbidden tags: @unit, @smoke
-   - File location: /integration/, /src/test/integration/
-   - File naming: *.integration.test.ts
+2. @integration - Component interaction tests
+   • Without @server-dependent: Uses MSW/mocks, runs in CI
+   • With @server-dependent: Needs local servers, no CI
+   • Forbids: @unit, @e2e, @smoke
 
-3. E2E TESTS (@e2e):
-   - Environment: pre-push, local development
-   - Characteristics:
-     * Browser-based testing using Playwright
-     * Full user workflows
-     * Often slow (>30s)
-     * Tests complete features end-to-end
-   - Required tags: @e2e, priority tag, feature area tag
-   - Optional tags: @slow, @flaky, @browser-specific (chromium-only, firefox-only, webkit-only)
-   - Forbidden tags: @unit, @integration, @smoke
-   - File location: /e2e/
-   - File naming: *.e2e.spec.ts
+3. @e2e - Browser automation tests (Playwright)
+   • With @server-dependent: Tests localhost, local-only
+   • With @post-deploy: Tests deployed URLs, CI-only
+   • Forbids: @unit, @integration
 
-4. SMOKE TESTS (@smoke):
-   - Environment: CI only (both preview and production)
-   - Characteristics:
-     * Critical path validation only
-     * Must be data-independent
-     * Fast and highly reliable
-     * URL-configurable (no hardcoded URLs)
-     * Tests core functionality is working
-   - Required tags: @smoke, @critical (always critical priority)
-   - Forbidden tags: @slow, @flaky, @server-dependent, @unit, @integration
-   - File location: /e2e/smoke/, /test/smoke/
-   - File naming: *.smoke.spec.ts
+4. @api - API endpoint tests
+   • With MSW mocks: Runs everywhere
+   • With @live-api + @server-dependent: Local server required
+   • With @live-api + @post-deploy: Tests deployed APIs
 
-Priority Tags (choose one):
-- @critical: Core functionality that must always work
-- @high-priority: Important features that should work before release
-- @low-priority: Nice-to-have features that can be fixed later
+5. @smoke - Critical path validation
+   • Runs: CI-only, after deployment
+   • Must be fast and data-independent
 
-Feature Area Tags (choose at least one):
-- @auth: Authentication and authorization
-- @api: API endpoints and data operations
-- @ui: User interface components
-- @rbac: Role-based access control
-- @validation: Data validation and sanitization
-- @dashboard: Dashboard-specific features
-- @admin: Admin panel features
-- @navigation: Navigation and routing
-- @search: Search functionality
-- @vocabulary: Vocabulary management
+REQUIRED TAGS:
+• Priority: @critical, @high-priority, or @low-priority
+• Feature: @auth, @api, @ui, @validation, @security, etc.
 
-Optional Environment Tags:
-- @local-only: Only runs locally
-- @ci-only: Only runs in CI
-- @server-dependent: Requires live servers
-- @slow: Takes more than 30 seconds
-- @flaky: Known to be unstable (should be fixed)
-`;
+FILE CONVENTIONS:
+• Unit: *.unit.test.ts, in /unit/ directories
+• Integration: *.integration.test.ts
+• E2E: *.e2e.spec.ts, in /e2e/ directories`;
+
+// Priority and feature area tag definitions
+const PRIORITY_TAGS = ['@critical', '@high-priority', '@low-priority'];
+const FEATURE_AREA_TAGS = [
+  '@auth', '@api', '@ui', '@rbac', '@validation', '@security', '@cache', 
+  '@error-handling', '@edge-case', '@happy-path', '@utility', '@dashboard', 
+  '@admin', '@navigation', '@search', '@vocabulary'
+];
+
+// Priority mapping based on functional areas
+const PRIORITY_MAPPING = {
+  // Critical priority areas (security, auth, core functionality)
+  '@auth': '@critical',
+  '@security': '@critical',
+  '@rbac': '@critical',
+  '@validation': '@critical',
+  
+  // High priority areas (user-facing features, APIs)
+  '@api': '@high-priority',
+  '@ui': '@high-priority', 
+  '@dashboard': '@high-priority',
+  '@admin': '@high-priority',
+  '@navigation': '@high-priority',
+  '@search': '@high-priority',
+  '@vocabulary': '@high-priority',
+  
+  // Low priority areas (utilities, caching, edge cases)
+  '@utility': '@low-priority',
+  '@cache': '@low-priority',
+  '@error-handling': '@low-priority',
+  '@edge-case': '@low-priority'
+};
 
 class TestTagger {
   private llm: BaseLLM | null = null;
@@ -246,6 +235,45 @@ class TestTagger {
     }
   }
 
+  /**
+   * Infer priority tag based on functional area tags and test classification
+   */
+  private inferPriorityTag(tags: string[], classification: string, content: string): string {
+    // Special case: smoke tests are always critical
+    if (tags.includes('@smoke') || content.includes('smoke test') || content.includes('critical path')) {
+      return '@critical';
+    }
+
+    // Check functional area mapping
+    for (const tag of tags) {
+      if (PRIORITY_MAPPING[tag as keyof typeof PRIORITY_MAPPING]) {
+        return PRIORITY_MAPPING[tag as keyof typeof PRIORITY_MAPPING];
+      }
+    }
+
+    // Fallback based on classification and content patterns
+    if (classification === 'e2e' || classification === 'smoke') {
+      return '@critical';
+    }
+    
+    if (classification === 'integration' && (
+      content.includes('auth') || 
+      content.includes('security') ||
+      content.includes('login') ||
+      content.includes('permission') ||
+      content.includes('role')
+    )) {
+      return '@critical';
+    }
+
+    if (classification === 'integration' || tags.some(tag => ['@api', '@ui', '@dashboard'].includes(tag))) {
+      return '@high-priority';
+    }
+
+    // Default for unit tests and utilities
+    return '@low-priority';
+  }
+
   async analyzeTestFile(filePath: string): Promise<TestAnalysis> {
     if (!this.llm) {
       throw new Error('TestTagger not initialized. Call initialize() first.');
@@ -312,10 +340,20 @@ class TestTagger {
       const analysis = JSON.parse(cleanContent);
 
       // Ensure all required fields are present
+      let tags = Array.isArray(analysis.tags) ? analysis.tags : [];
+      const classification = analysis.classification || 'unit';
+      
+      // Ensure priority tag is included
+      const hasPriorityTag = tags.some((tag: string) => PRIORITY_TAGS.includes(tag));
+      if (!hasPriorityTag) {
+        const inferredPriority = this.inferPriorityTag(tags, classification, content);
+        tags.push(inferredPriority);
+      }
+
       return {
-        classification: analysis.classification || 'unit',
+        classification: classification,
         confidence: analysis.confidence || 'low',
-        tags: Array.isArray(analysis.tags) ? analysis.tags : [],
+        tags,
         reasoning: analysis.reasoning || 'No reasoning provided',
         concerns: Array.isArray(analysis.concerns) ? analysis.concerns : [],
         recommendations: Array.isArray(analysis.recommendations)
@@ -345,8 +383,12 @@ class TestTagger {
     filePath: string,
     content: string,
   ): string {
-    // Truncate content if too long to avoid token limits
-    const maxContentLength = 8000;
+    // Calculate available space for content after accounting for the template
+    // The template without content is approximately 5000-6000 characters
+    const templateOverhead = 6000; // Conservative estimate for template text
+    const maxTotalLength = 14000; // Leave buffer under 15000
+    const maxContentLength = maxTotalLength - templateOverhead;
+    
     const truncatedContent =
       content.length > maxContentLength
         ? content.slice(0, maxContentLength) +
@@ -433,21 +475,27 @@ RESPONSE FORMAT (return ONLY valid JSON):
 
     const pattern =
       locationPatterns[classification as keyof typeof locationPatterns];
-    if (!pattern) {return null;}
+    if (!pattern) {
+      return null;
+    }
 
     // Check if file is in wrong location
-    const isInWrongLocation = pattern.antiPatterns.some((ap) =>
-      dirPath.includes(ap),
-    );
-    const isInRightLocation = pattern.preferredDirs.some((pd) =>
-      dirPath.includes(pd),
-    );
+    const isInWrongLocation = pattern.antiPatterns.some((ap) => {
+      // Remove leading/trailing slashes for more flexible matching
+      const cleanPattern = ap.replace(/^\/|\/$/g, '');
+      return dirPath.includes(cleanPattern);
+    });
+    const isInRightLocation = pattern.preferredDirs.some((pd) => {
+      // Remove leading/trailing slashes for more flexible matching
+      const cleanPattern = pd.replace(/^\/|\/$/g, '');
+      return dirPath.includes(cleanPattern);
+    });
     const hasCorrectSuffix = fileName.includes(
       pattern.preferredSuffix.replace('.ts', ''),
     );
 
-    if (!isInWrongLocation && (isInRightLocation || hasCorrectSuffix)) {
-      return null; // Location is fine
+    if (!isInWrongLocation && isInRightLocation && hasCorrectSuffix) {
+      return null; // Location and naming are both fine
     }
 
     // Suggest new location
@@ -622,7 +670,8 @@ RESPONSE FORMAT (return ONLY valid JSON):
 
           // Extract and parse content
           const content = this.extractContentFromResult(result);
-          const analysis = this.parseAnalysis(content);
+          const fileContent = fs.readFileSync(filePath, 'utf8');
+          const analysis = this.parseAnalysis(content, fileContent);
           
           // Handle the analysis result
           await this.handleAnalysisResult(filePath, analysis, results);
@@ -661,7 +710,7 @@ RESPONSE FORMAT (return ONLY valid JSON):
     return content;
   }
 
-  private parseAnalysis(content: string): TestAnalysis {
+  private parseAnalysis(content: string, fileContent: string): TestAnalysis {
     // Clean up markdown code blocks if present
     let cleanContent = content.trim();
     if (cleanContent.startsWith('```json')) {
@@ -678,10 +727,20 @@ RESPONSE FORMAT (return ONLY valid JSON):
     const analysis = JSON.parse(cleanContent);
 
     // Ensure all required fields are present
+    let tags = Array.isArray(analysis.tags) ? analysis.tags : [];
+    const classification = analysis.classification || 'unit';
+    
+    // Ensure priority tag is included
+    const hasPriorityTag = tags.some((tag: string) => PRIORITY_TAGS.includes(tag));
+    if (!hasPriorityTag) {
+      const inferredPriority = this.inferPriorityTag(tags, classification, fileContent);
+      tags.push(inferredPriority);
+    }
+
     return {
-      classification: analysis.classification || 'unit',
+      classification: classification,
       confidence: analysis.confidence || 'low',
-      tags: Array.isArray(analysis.tags) ? analysis.tags : [],
+      tags,
       reasoning: analysis.reasoning || 'No reasoning provided',
       concerns: Array.isArray(analysis.concerns) ? analysis.concerns : [],
       recommendations: Array.isArray(analysis.recommendations)
@@ -949,59 +1008,74 @@ RESPONSE FORMAT (return ONLY valid JSON):
   }
 
   private async applyTags(filePath: string, tags: string[]): Promise<void> {
-    const content = fs.readFileSync(filePath, 'utf8');
+    try {
+      const content = fs.readFileSync(filePath, 'utf8');
 
-    // Check if tags already exist
-    const existingTagMatch = content.match(
-      /^\s*\/\*\*\s*\n\s*\*\s*(@\w+.*)\n\s*\*\//m,
-    );
-    if (existingTagMatch) {
-      // Update existing tags
-      const newTagComment = `/**\n * ${tags.join(' ')}\n */`;
-      const newContent = content.replace(existingTagMatch[0], newTagComment);
+      // Check if tags already exist
+      const existingTagMatch = content.match(
+        /^\s*\/\*\*\s*\n\s*\*\s*(@\w+.*)\n\s*\*\//m,
+      );
+      if (existingTagMatch) {
+        // Update existing tags
+        const newTagComment = `/**\n * ${tags.join(' ')}\n */`;
+        const newContent = content.replace(existingTagMatch[0], newTagComment);
+
+        if (!this.options.dryRun) {
+          try {
+            fs.writeFileSync(filePath, newContent);
+            console.log(chalk.green(`  ✓ Updated tags: ${tags.join(' ')}`));
+          } catch (writeError) {
+            const errorMessage = writeError instanceof Error ? writeError.message : String(writeError);
+            console.error(chalk.red(`  ✗ Failed to write ${filePath}: ${errorMessage}`));
+          }
+        }
+        return;
+      }
+
+      // Find first test/describe block
+      const testMatch = content.match(
+        /(describe|it|test|smokeTest|integrationTest|e2eTest)\s*\(/,
+      );
+      if (!testMatch || testMatch.index === undefined) {
+        console.error(chalk.red(`  ✗ Cannot find test block in ${filePath}`));
+        return;
+      }
+
+      // Build tag comment
+      const tagComment = `/**\n * ${tags.join(' ')}\n */\n`;
+
+      // Insert before test block
+      const lines = content.slice(0, testMatch.index).split('\n');
+      const lastNonEmptyLine = lines
+        .map((line, i) => ({ line, index: i }))
+        .filter(({ line }) => line.trim().length > 0)
+        .pop();
+
+      const insertPos = lastNonEmptyLine
+        ? content
+            .split('\n')
+            .slice(0, lastNonEmptyLine.index + 1)
+            .join('\n').length + 1
+        : 0;
+
+      const newContent =
+        content.slice(0, insertPos) +
+        '\n' +
+        tagComment +
+        content.slice(insertPos);
 
       if (!this.options.dryRun) {
-        fs.writeFileSync(filePath, newContent);
-        console.log(chalk.green(`  ✓ Updated tags: ${tags.join(' ')}`));
+        try {
+          fs.writeFileSync(filePath, newContent);
+          console.log(chalk.green(`  ✓ Applied tags: ${tags.join(' ')}`));
+        } catch (writeError) {
+          const errorMessage = writeError instanceof Error ? writeError.message : String(writeError);
+          console.error(chalk.red(`  ✗ Failed to write ${filePath}: ${errorMessage}`));
+        }
       }
-      return;
-    }
-
-    // Find first test/describe block
-    const testMatch = content.match(
-      /(describe|it|test|smokeTest|integrationTest|e2eTest)\s*\(/,
-    );
-    if (!testMatch || testMatch.index === undefined) {
-      console.error(chalk.red(`  ✗ Cannot find test block in ${filePath}`));
-      return;
-    }
-
-    // Build tag comment
-    const tagComment = `/**\n * ${tags.join(' ')}\n */\n`;
-
-    // Insert before test block
-    const lines = content.slice(0, testMatch.index).split('\n');
-    const lastNonEmptyLine = lines
-      .map((line, i) => ({ line, index: i }))
-      .filter(({ line }) => line.trim().length > 0)
-      .pop();
-
-    const insertPos = lastNonEmptyLine
-      ? content
-          .split('\n')
-          .slice(0, lastNonEmptyLine.index + 1)
-          .join('\n').length + 1
-      : 0;
-
-    const newContent =
-      content.slice(0, insertPos) +
-      '\n' +
-      tagComment +
-      content.slice(insertPos);
-
-    if (!this.options.dryRun) {
-      fs.writeFileSync(filePath, newContent);
-      console.log(chalk.green(`  ✓ Applied tags: ${tags.join(' ')}`));
+    } catch (error) {
+      const errorMessage = error instanceof Error ? error.message : String(error);
+      console.error(chalk.red(`  ✗ Error processing ${filePath}: ${errorMessage}`));
     }
   }
 
@@ -1171,7 +1245,10 @@ Examples:
     }
   });
 
-program.parse();
+// Only parse command line if this is the main module (not being imported for testing)
+if (require.main === module) {
+  program.parse();
+}
 
 // Export for testing
 export { TestTagger, TestAnalysis, ProcessingOptions };

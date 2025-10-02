@@ -71,9 +71,9 @@ Created `packages/theme/src/config/standardSiteFactory.ts` with `createStandardS
 
 ### Before (LRM - 125 lines):
 ```typescript
-import type { Config } from '@docusaurus/types';
+import type { Config \} from '@docusaurus/types';
 import type * as Preset from '@docusaurus/preset-classic';
-import {
+import \{
   sharedPlugins,
   sharedThemes,
   commonDefaults,
@@ -81,7 +81,7 @@ import {
   getCurrentEnv,
   type SiteKey,
   type DocsEnv
-} from '@ifla/theme/config';
+\} from '@ifla/theme/config';
 
 const siteKey: SiteKey = 'LRM';
 const currentEnv: DocsEnv = getCurrentEnv();
@@ -100,7 +100,7 @@ const config: Config = {
 
 ### After (LRM - 42 lines):
 ```typescript
-import { createStandardSiteConfig } from '@ifla/theme/config';
+import \{ createStandardSiteConfig \} from '@ifla/theme/config';
 
 const config = createStandardSiteConfig({
   siteKey: 'LRM',

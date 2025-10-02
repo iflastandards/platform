@@ -2,11 +2,11 @@
 
 // Core components
 export { default as ElementReference } from './ElementReference';
-export { 
+export {
   VocabularyTable as default,
   VocabularyTable,
   CSVVocabulary,
-  VocabularyTableFromCSV
+  VocabularyTableFromCSV,
 } from './VocabularyTable';
 
 // Modal components
@@ -14,11 +14,11 @@ export { EditChoiceModal } from './EditChoiceModal';
 
 // Management components
 export { default as SiteManagement } from './SiteManagement';
-export { 
+export {
   default as SiteManagementLink,
   SiteManagementButton,
   SiteManagementNavbarLink,
-  SiteManagementTextLink
+  SiteManagementTextLink,
 } from './SiteManagementLink';
 
 // Link components
@@ -36,9 +36,12 @@ export { VocabularyCard } from './VocabularyCard';
 export { NamespaceHub } from './NamespaceHub';
 export { CompactButton } from './CompactButton';
 
+// Documentation components
+export { default as Examples } from './Examples';
+export { default as Example } from './Example';
+export { default as Steps } from './Steps';
+
 // Auth components - removed (authentication now handled by admin app)
-
-
 
 // Legacy exports for backward compatibility
 export { default as DownloadPanel } from './DownloadPanel';
@@ -58,7 +61,7 @@ export type {
   ExampleTableProps,
   RDFData,
   IFLAThemeConfig,
-  VocabularyDefaults
+  VocabularyDefaults,
 } from '../types';
 
 // Export component-specific types
@@ -75,7 +78,8 @@ export type {
   CSVConceptRow,
   TOCItem,
   UriCaseStyle,
-  RDFMetadata
+  RDFMetadata,
 } from './VocabularyTable';
 
-
+// Documentation component types
+export type { ExampleProps, ExampleProperty } from './Example';

@@ -50,7 +50,7 @@ export function validateData<T>(
 export function safeValidateData<T>(
   schema: z.ZodSchema<T>,
   data: unknown,
-): z.SafeParseReturnType<unknown, T> {
+) {
   return schema.safeParse(data);
 }
 

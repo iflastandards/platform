@@ -1,7 +1,7 @@
 {
   "$schema": "./node_modules/nx/schemas/nx-schema.json",
   "installation": {
-    "version": "21.4.0",
+    "version": "21.4.1",
     "ensurePackageJsonConsistency": true
   },
   "namedInputs": {
@@ -62,8 +62,7 @@
       "{workspaceRoot}/eslint.config.mjs",
       "{workspaceRoot}/.prettierrc",
       "{workspaceRoot}/vite.config.ts",
-      "{workspaceRoot}/playwright.config.ts",
-      "{workspaceRoot}/.github/workflows/**/*"
+      "{workspaceRoot}/playwright.config.ts"
     ],
     "buildInputs": [
       "{projectRoot}/src/**/*",
@@ -107,12 +106,21 @@
     "taggedTestInputs": [
       "{projectRoot}/**/*.test.*",
       "{projectRoot}/**/*.spec.*"
+    ],
+    "packageBuildInputs": [
+      "{projectRoot}/src/**/*",
+      "{projectRoot}/tsup.config.ts",
+      "{projectRoot}/tsconfig*.json",
+      "{projectRoot}/package.json",
+      "!{projectRoot}/**/*.test.*",
+      "!{projectRoot}/**/*.spec.*",
+      "!{projectRoot}/**/*.md"
     ]
   },
   "targetDefaults": {
     "build": {
       "dependsOn": ["^build"],
-      "inputs": ["buildInputs", "^buildInputs", "sharedGlobals"],
+      "inputs": ["buildInputs", "sharedGlobals"],
       "outputs": ["{projectRoot}/build", "{projectRoot}/dist"],
       "cache": true
     },
@@ -131,11 +139,15 @@
     "lint": {
       "inputs": ["default", "^default"],
       "outputs": [],
-      "cache": true
+      "cache": true,
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "eslint . --max-warnings=0"
+      }
     },
     "typecheck": {
       "dependsOn": ["^build"],
-      "cache": false,
+      "cache": true,
       "inputs": [
         "default",
         "{projectRoot}/tsconfig.json",
@@ -280,23 +292,8 @@
   "cacheDirectory": ".nx/cache",
   "useDaemonProcess": true,
   "useInferencePlugins": true,
-  "defaultTasksRunnerOptions": {
-    "parallel": 12,
-    "cacheableOperations": [
-      "build",
-      "test",
-      "lint",
-      "typecheck",
-      "e2e",
-      "test:smoke",
-      "test:integration:e2e",
-      "test:e2e:full"
-    ],
-    "runtimeCacheInputs": ["node -v", "pnpm --version"],
-    "remoteCache": {
-      "enabled": true,
-      "silent": false
-    }
+  "cloud": {
+    "readOnly": false
   },
   "runtimeCacheInputs": [
     "node -v",
@@ -309,34 +306,102 @@
     "@nx/next": {
       "application": {
         "style": "tailwind",
-        "linter": "none"
+        "linter": "eslint",
+        "unitTestRunner": "vitest",
+        "e2eTestRunner": "playwright",
+        "strict": true,
+        "skipFormat": false,
+        "tags": "scope:frontend,type:app"
       }
     },
     "@nx/node": {
+      "application": {
+        "linter": "eslint",
+        "unitTestRunner": "vitest",
+        "strict": true,
+        "skipFormat": false,
+        "tags": "scope:backend,type:app"
+      },
       "library": {
-        "unitTestRunner": "vitest"
+        "linter": "eslint",
+        "unitTestRunner": "vitest",
+        "strict": true,
+        "skipFormat": false,
+        "tags": "scope:shared,type:lib"
       }
     },
     "@nx/js": {
       "library": {
-        "unitTestRunner": "vitest"
+        "linter": "eslint",
+        "unitTestRunner": "vitest",
+        "strict": true,
+        "skipFormat": false,
+        "tags": "scope:shared,type:lib"
       }
     },
     "@nx/react": {
+      "application": {
+        "style": "tailwind",
+        "linter": "eslint",
+        "unitTestRunner": "vitest",
+        "e2eTestRunner": "playwright",
+        "strict": true,
+        "skipFormat": false,
+        "tags": "scope:frontend,type:app"
+      },
       "library": {
-        "unitTestRunner": "vitest"
+        "style": "tailwind",
+        "linter": "eslint",
+        "unitTestRunner": "vitest",
+        "strict": true,
+        "skipFormat": false,
+        "tags": "scope:shared,type:lib"
+      },
+      "component": {
+        "style": "tailwind",
+        "skipTests": false,
+        "skipFormat": false
+      }
+    },
+    "@nx/web": {
+      "application": {
+        "linter": "eslint",
+        "unitTestRunner": "vitest",
+        "e2eTestRunner": "playwright",
+        "strict": true,
+        "skipFormat": false,
+        "tags": "scope:frontend,type:app"
+      }
+    },
+    "@nx/vite": {
+      "library": {
+        "linter": "eslint",
+        "unitTestRunner": "vitest",
+        "strict": true,
+        "skipFormat": false,
+        "tags": "scope:shared,type:lib"
       }
     }
   },
   "tasksRunnerOptions": {
     "default": {
+      "runner": "nx-cloud",
       "options": {
+        "parallel": 12,
+        "cacheableOperations": [
+          "build",
+          "test",
+          "lint",
+          "typecheck",
+          "e2e",
+          "test:smoke",
+          "test:integration",
+          "test:integration:e2e",
+          "test:e2e:full",
+          "test:unit"
+        ],
         "canTrackAnalytics": false,
         "showUsageWarnings": true,
-        "lifeCycle": {
-          "startCommand": "echo 'Starting Nx Cloud execution'",
-          "endCommand": "echo 'Nx Cloud execution completed'"
-        },
         "remoteCache": {
           "enabled": true,
           "timeout": 300,

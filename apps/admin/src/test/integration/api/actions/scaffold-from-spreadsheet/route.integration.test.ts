@@ -36,6 +36,10 @@ vi.mock('@/lib/services/import-service', () => ({
   },
 }));
 
+/**
+ * @integration @api @high-priority @auth
+ */
+
 describe('Scaffold API - Integration Tests @integration @api @high-priority', () => {
   beforeEach(() => {
     mockJobs.clear();

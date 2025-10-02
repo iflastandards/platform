@@ -3,6 +3,7 @@ import { NextResponse } from 'next/server';
 import { Webhook } from 'svix';
 import { type WebhookEvent, clerkClient } from '@clerk/nextjs/server';
 import { checkIflaOrganizationOwnership } from '@/lib/github-integration';
+import { config } from '@/config/environment';
 
 export async function POST(req: Request) {
   // Get the headers
@@ -23,7 +24,7 @@ export async function POST(req: Request) {
   const body = JSON.stringify(payload);
 
   // Create a new Svix instance with your webhook secret
-  const webhookSecret = process.env.CLERK_WEBHOOK_SECRET;
+  const webhookSecret = config.env.clerkWebhookSecret;
   if (!webhookSecret) {
     console.error('CLERK_WEBHOOK_SECRET not configured');
     return new Response('Server configuration error', { status: 500 });
@@ -54,12 +55,12 @@ export async function POST(req: Request) {
   // Handle user sign-in and creation events
   if (eventType === 'user.created' || eventType === 'session.created') {
     const { id: userId } = evt.data;
-    
+
     try {
       // Get the full user object
       const client = await clerkClient();
       const user = await client.users.getUser(userId);
-      
+
       // Check for superadmin email
       const email = user.emailAddresses?.[0]?.emailAddress;
       if (email === 'superadmin+clerk_test@example.com') {
@@ -76,33 +77,42 @@ export async function POST(req: Request) {
         });
         return NextResponse.json({ message: 'Superadmin status granted' });
       }
-      
+
       // Check for GitHub account
       const githubAccount = user.externalAccounts?.find(
-        (account: any) => account.provider === 'oauth_github'
+        (account: any) => account.provider === 'oauth_github',
       );
-      
+
       if (githubAccount) {
-        console.log(`GitHub account found for user ${userId}: ${githubAccount.username}`);
-        
+        console.log(
+          `GitHub account found for user ${userId}: ${githubAccount.username}`,
+        );
+
         // Check if we have an access token (only available during initial OAuth)
-        const {accessToken} = (githubAccount as any);
-        
+        const { accessToken } = githubAccount as any;
+
         let isOrgOwner = false;
-        
+
         if (accessToken) {
           // We have a token, check GitHub API directly with user's token
           isOrgOwner = await checkIflaOrganizationOwnership(accessToken);
-          console.log(`GitHub API check with user token - is org owner: ${isOrgOwner}`);
+          console.log(
+            `GitHub API check with user token - is org owner: ${isOrgOwner}`,
+          );
         } else {
           // No user token available, use the better org check with app token
-          const { isOrganizationOwner } = await import('@/lib/github-org-check');
+          const { isOrganizationOwner } = await import(
+            '@/lib/github-org-check'
+          );
           isOrgOwner = await isOrganizationOwner(githubAccount.username || '');
-          console.log(`GitHub org check with app token - is org owner: ${isOrgOwner}`);
+          console.log(
+            `GitHub org check with app token - is org owner: ${isOrgOwner}`,
+          );
         }
-        
+
         // Update user metadata
-        const currentMetadata = (user.publicMetadata as Record<string, unknown>) || {};
+        const currentMetadata =
+          (user.publicMetadata as Record<string, unknown>) || {};
         const updateData: any = {
           publicMetadata: {
             ...currentMetadata,
@@ -110,24 +120,26 @@ export async function POST(req: Request) {
             githubId: githubAccount.id,
           },
         };
-        
+
         // If user is an org owner, grant superadmin
         if (isOrgOwner) {
-          console.log(`Granting superadmin status to GitHub org owner: ${githubAccount.username}`);
+          console.log(
+            `Granting superadmin status to GitHub org owner: ${githubAccount.username}`,
+          );
           updateData.publicMetadata.systemRole = 'superadmin';
           updateData.publicMetadata.iflaRole = 'admin';
           updateData.publicMetadata.roles = ['superadmin'];
           updateData.publicMetadata.isIflaOrgOwner = true;
         }
-        
+
         // Update profile image from GitHub if not already set
         if (githubAccount.imageUrl && !user.imageUrl) {
           updateData.profileImageUrl = githubAccount.imageUrl;
         }
-        
+
         // Update the user
         await client.users.updateUser(userId, updateData);
-        
+
         console.log('User metadata updated successfully');
       }
     } catch (error) {

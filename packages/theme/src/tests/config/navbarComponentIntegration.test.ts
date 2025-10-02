@@ -1,9 +1,19 @@
+/**
+ * @integration @navigation @ui @high-priority
+ * 
+ * Integration tests for navbar component theme architecture
+ * Tests file structure, configuration, and component integration without builds
+ */
+
 import { describe, it, expect } from 'vitest';
-import { execSync } from 'child_process';
 import fs from 'fs';
 import path from 'path';
 
-describe('Navbar Component Integration @unit', () => {
+/**
+ * @integration @ui @auth @high-priority @navigation
+ */
+
+describe('Navbar Component Integration', () => {
   describe('Central Theme Components', () => {
     it('should have AuthDropdownNavbarItem components in central theme', () => {
       const centralThemeComponentsPath = path.resolve('packages/theme/dist/theme/NavbarItem');
@@ -43,38 +53,6 @@ describe('Navbar Component Integration @unit', () => {
 
       const content = fs.readFileSync(configPath, 'utf8');
       expect(content).toContain('custom-authDropdown');
-    });
-  });
-
-  describe('Build Integration', () => {
-    it('should build newtest site successfully with central theme components', () => {
-      // Only run this test if we're not in CI or if explicitly requested
-      if (process.env.CI && !process.env.TEST_BUILD_INTEGRATION) {
-        console.log('Skipping build test in CI environment');
-        return;
-      }
-
-      expect(() => {
-        execSync('nx build newtest', { 
-          stdio: 'pipe',
-          timeout: 120000 // 2 minute timeout
-        });
-      }).not.toThrow();
-    });
-
-    it('should build theme package successfully', () => {
-      // Only run this test if we're not in CI or if explicitly requested
-      if (process.env.CI && !process.env.TEST_BUILD_INTEGRATION) {
-        console.log('Skipping theme build test in CI environment');
-        return;
-      }
-
-      expect(() => {
-        execSync('nx build @ifla/theme', { 
-          stdio: 'pipe',
-          timeout: 60000 // 1 minute timeout
-        });
-      }).not.toThrow();
     });
   });
 

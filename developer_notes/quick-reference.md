@@ -93,7 +93,7 @@ pnpm build:new-site
 ### Basic Site Setup
 ```typescript
 // standards/new-site/docusaurus.config.ts
-import { createStandardSiteConfig } from '@ifla/theme/config';
+import \{ createStandardSiteConfig \} from '@ifla/theme/config';
 
 export default createStandardSiteConfig({
   siteKey: 'new-site',
@@ -337,11 +337,11 @@ pnpm install
 ### Navigation Issues
 ```typescript
 // Debug environment detection
-import { getCurrentEnv } from '@ifla/theme/config';
+import \{ getCurrentEnv \} from '@ifla/theme/config';
 console.log('Environment:', getCurrentEnv());
 
 // Debug URL generation
-import { getSiteUrl } from '@ifla/theme/config';
+import \{ getSiteUrl \} from '@ifla/theme/config';
 console.log('Portal URL:', getSiteUrl('portal', '/', getCurrentEnv()));
 ```
 

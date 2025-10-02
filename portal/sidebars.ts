@@ -1,4 +1,4 @@
-import type {SidebarsConfig} from '@docusaurus/plugin-content-docs';
+import type { SidebarsConfig } from '@docusaurus/plugin-content-docs';
 
 // This runs in Node.js - Don't use client-side code here (browser APIs, JSX...)
 
@@ -33,13 +33,17 @@ const sidebars: SidebarsConfig = {
           link: {
             type: 'generated-index',
             title: 'Component Usage Guides',
-            description: 'Learn how to use the components available in MDX files',
+            description:
+              'Learn how to use the components available in MDX files',
           },
           items: [
+            'guides/components/components-index',
             'guides/components/vocabulary-table',
             'guides/components/element-reference',
             'guides/components/figure-component',
             'guides/components/example-table',
+            'guides/components/examples',
+            'guides/components/steps',
             'guides/components/mandatory-component',
             'guides/components/seealso-component',
             'guides/components/inlink-component',

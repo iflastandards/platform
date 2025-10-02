@@ -32,10 +32,8 @@ env:
   CI: true
   HUSKY: 0
 
-  # Nx Cloud configuration with distributed agents
+  # Nx Cloud configuration
   NX_CLOUD_ACCESS_TOKEN: ${{ secrets.NX_CLOUD_ACCESS_TOKEN }}
-  NX_CLOUD_DISTRIBUTED_EXECUTION: true
-  NX_CLOUD_DISTRIBUTED_EXECUTION_AGENT_COUNT: 4
   NX_BRANCH: ${{ github.head_ref || github.ref_name }}
 
   # Nx optimizations
@@ -57,6 +55,7 @@ jobs:
     outputs:
       affected_docs: ${{ steps.affected.outputs.docs }}
       should_deploy: ${{ steps.affected.outputs.should_deploy }}
+      projects_list: ${{ steps.affected.outputs.projects_list }}
       base: ${{ steps.nx-set-shas.outputs.base }}
       head: ${{ steps.nx-set-shas.outputs.head }}
     steps:
@@ -64,23 +63,10 @@ jobs:
         with:
           fetch-depth: 0
 
-      - name: Cache pnpm store
-        uses: actions/cache@v4
-        with:
-          path: ~/.pnpm-store
-          key: ${{ runner.os }}-pnpm-${{ hashFiles('pnpm-lock.yaml') }}
-          restore-keys: |
-            ${{ runner.os }}-pnpm-
-
       - uses: pnpm/action-setup@v4
         name: Install pnpm
 
-      - name: Start Nx Cloud agents
-        run: |
-          pnpm dlx nx-cloud start-ci-run \
-            --distribute-on="4 linux-medium-js" \
-            --stop-agents-after="build" \
-            --with-env-vars="DOCS_ENV,NODE_OPTIONS"
+      # Note: Distributed execution handled per-command where beneficial
 
       - uses: actions/setup-node@v4
         with:
@@ -104,6 +90,9 @@ jobs:
 
       - uses: nrwl/nx-set-shas@v4
         id: nx-set-shas
+        with:
+          main-branch-name: 'preview' # Use preview as the main branch for base comparison
+          workflow-id: '180593718' # Explicitly set the workflow ID
 
       - name: Analyze affected projects
         id: affected
@@ -115,9 +104,16 @@ jobs:
 
           # Filter for documentation sites only (exclude admin)
           DOCS_AFFECTED=""
+          DOCS_PROJECTS_LIST=""
           for project in $AFFECTED; do
-            if [[ "$project" != "admin" ]] && [[ "$project" =~ ^(portal|isbd|isbdm|lrm|frbr|muldicat|unimarc|@ifla/theme)$ ]]; then
+            if [[ "$project" != "admin" ]] && [[ "$project" =~ ^(portal|isbd|isbdm|lrm|frbr|muldicat|unimarc|@ifla/theme|@ifla/contracts)$ ]]; then
               DOCS_AFFECTED="$DOCS_AFFECTED $project"
+              # Build comma-separated list for nx run-many
+              if [ -z "$DOCS_PROJECTS_LIST" ]; then
+                DOCS_PROJECTS_LIST="$project"
+              else
+                DOCS_PROJECTS_LIST="$DOCS_PROJECTS_LIST,$project"
+              fi
             fi
           done
 
@@ -125,7 +121,9 @@ jobs:
           if [ -n "$DOCS_AFFECTED" ] || [ "${{ github.event_name }}" == "workflow_dispatch" ]; then
             echo "should_deploy=true" >> $GITHUB_OUTPUT
             echo "docs=$DOCS_AFFECTED" >> $GITHUB_OUTPUT
+            echo "projects_list=$DOCS_PROJECTS_LIST" >> $GITHUB_OUTPUT
             echo "✅ Documentation sites affected: $DOCS_AFFECTED"
+            echo "📦 Projects to build: $DOCS_PROJECTS_LIST"
           else
             echo "should_deploy=false" >> $GITHUB_OUTPUT
             echo "ℹ️ No documentation sites affected, skipping deployment"
@@ -143,14 +141,6 @@ jobs:
       - uses: actions/checkout@v4
         with:
           fetch-depth: 0
-
-      - name: Cache pnpm store
-        uses: actions/cache@v4
-        with:
-          path: ~/.pnpm-store
-          key: ${{ runner.os }}-pnpm-${{ hashFiles('pnpm-lock.yaml') }}
-          restore-keys: |
-            ${{ runner.os }}-pnpm-
 
       - uses: pnpm/action-setup@v4
 
@@ -179,22 +169,52 @@ jobs:
       - name: Install dependencies
         run: pnpm install --frozen-lockfile --prefer-offline
 
-      - name: Build theme package
-        run: |
-          echo "🎨 Building theme package..."
-          npx nx run @ifla/theme:build --skip-nx-cache=false
-
-      - name: Build documentation sites and collect warnings
+      - name: Build affected documentation sites
         id: build-warnings
         run: |
-          echo "🏗️ Building documentation sites and collecting warnings..."
+          echo "🏗️ Building affected documentation sites..."
 
-          # This script builds all sites AND collects warnings in a single pass
-          # It runs: pnpm nx build [site] for each site in parallel
-          # The script will exit with code 1 if any builds fail
-          if ! node scripts/collect-warnings-parallel.js; then
+          # Get the list of affected projects from the previous step
+          PROJECTS_TO_BUILD="${{ needs.setup-and-analyze.outputs.projects_list }}"
+
+          # If workflow_dispatch or no specific projects, build all docs sites
+          if [ -z "$PROJECTS_TO_BUILD" ] || [ "${{ github.event_name }}" == "workflow_dispatch" ]; then
+            echo "📦 Building all documentation sites (workflow_dispatch or full build)..."
+            PROJECTS_TO_BUILD="portal,isbdm,lrm,frbr,isbd,muldicat,unimarc"
+          else
+            echo "📦 Building affected projects: $PROJECTS_TO_BUILD"
+          fi
+
+          # Use nx run-many to build all affected projects in parallel
+          # Nx will automatically determine and build dependencies (contracts, theme) first
+          echo "🚀 Starting build with Nx (dependencies will be built automatically)..."
+
+          # Always use local parallel execution for builds
+          # Distributed execution causes issues with module resolution and environment variables
+          echo "🔨 Using local parallel execution (distributed disabled for stability)..."
+          npx nx run-many \
+            --target=build \
+            --projects="$PROJECTS_TO_BUILD" \
+            --parallel=4 \
+            --skip-nx-cache=false
+
+          BUILD_EXIT_CODE=$?
+
+          if [ $BUILD_EXIT_CODE -ne 0 ]; then
             echo "❌ Build failed! Check the logs above for details."
             exit 1
+          fi
+
+          echo "✅ All affected projects built successfully!"
+
+          # Collect warnings from build outputs (optional, non-blocking)
+          echo "📊 Collecting build warnings..."
+          if [ -f "scripts/collect-warnings-from-outputs.js" ]; then
+            node scripts/collect-warnings-from-outputs.js "$PROJECTS_TO_BUILD" || true
+          else
+            echo "⚠️ Warning collection script not found, skipping..."
+            echo "warning_count=0" >> $GITHUB_OUTPUT
+            echo "site_summary=[]" >> $GITHUB_OUTPUT
           fi
 
           # Extract warning data for later steps (only runs if builds succeeded)
@@ -395,24 +415,23 @@ jobs:
             .nx
           sparse-checkout-cone-mode: false
 
-      - name: Cache pnpm store
-        uses: actions/cache@v4
-        with:
-          path: ~/.pnpm-store
-          key: ${{ runner.os }}-pnpm-${{ hashFiles('pnpm-lock.yaml') }}
-          restore-keys: |
-            ${{ runner.os }}-pnpm-
-
       - name: Setup pnpm
         uses: pnpm/action-setup@v4
 
       - name: Stop Nx Cloud agents
         run: |
-          pnpm dlx nx-cloud stop-all-agents
+          npx nx-cloud stop-all-agents
         continue-on-error: true
 
-      - name: Fix CI Configuration
-        run: npx nx-cloud fix-ci
+      - name: Fix CI Configuration with AI
+        run: |
+          # Only run fix-ci if there were failures and NX_CLOUD_ACCESS_TOKEN is available
+          if [ -n "$NX_CLOUD_ACCESS_TOKEN" ]; then
+            echo "🤖 Running Nx Cloud AI-powered CI diagnostics..."
+            npx nx-cloud fix-ci || echo "⚠️ Fix-CI analysis completed with warnings"
+          else
+            echo "ℹ️ Skipping fix-ci (Nx Cloud token not available)"
+          fi
         if: always()
         continue-on-error: true
 

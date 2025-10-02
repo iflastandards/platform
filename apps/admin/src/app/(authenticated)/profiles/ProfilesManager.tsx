@@ -317,7 +317,11 @@ export default function ProfilesManager({
       key: 'actions',
       render: (_: any, record: DCTAPProfile) => (
         <Dropdown menu={getActionMenu(record)} trigger={['click']}>
-          <Button type="text" icon={<MoreOutlined />} />
+          <Button
+            type="text"
+            icon={<MoreOutlined />}
+            aria-label="More actions"
+          />
         </Dropdown>
       ),
     },
@@ -325,10 +329,12 @@ export default function ProfilesManager({
 
   const renderProfileModal = () => {
     const isViewMode = modalMode === 'view';
-    const modalTitle = 
-      modalMode === 'create' ? 'Create New Profile' :
-      modalMode === 'edit' ? 'Edit Profile' :
-      'View Profile';
+    const modalTitle =
+      modalMode === 'create'
+        ? 'Create New Profile'
+        : modalMode === 'edit'
+          ? 'Edit Profile'
+          : 'View Profile';
 
     return (
       <Modal
@@ -337,18 +343,24 @@ export default function ProfilesManager({
         onCancel={() => setModalOpen(false)}
         width={800}
         footer={
-          isViewMode ? [
-            <Button key="close" onClick={() => setModalOpen(false)}>
-              Close
-            </Button>
-          ] : [
-            <Button key="cancel" onClick={() => setModalOpen(false)}>
-              Cancel
-            </Button>,
-            <Button key="submit" type="primary" onClick={() => form.submit()}>
-              {modalMode === 'create' ? 'Create' : 'Save'}
-            </Button>
-          ]
+          isViewMode
+            ? [
+                <Button key="close" onClick={() => setModalOpen(false)}>
+                  Close
+                </Button>,
+              ]
+            : [
+                <Button key="cancel" onClick={() => setModalOpen(false)}>
+                  Cancel
+                </Button>,
+                <Button
+                  key="submit"
+                  type="primary"
+                  onClick={() => form.submit()}
+                >
+                  {modalMode === 'create' ? 'Create' : 'Save'}
+                </Button>,
+              ]
         }
       >
         {isViewMode && selectedProfile ? (
@@ -406,7 +418,8 @@ export default function ProfilesManager({
                       title: 'Mandatory',
                       dataIndex: 'mandatory',
                       key: 'mandatory',
-                      render: (value: string) => value === 'true' ? 'Yes' : 'No',
+                      render: (value: string) =>
+                        value === 'true' ? 'Yes' : 'No',
                     },
                     {
                       title: 'Type',
@@ -434,9 +447,11 @@ export default function ProfilesManager({
                 };
                 setProfiles([...profiles, newProfile]);
               } else {
-                setProfiles(profiles.map((p) => 
-                  p.id === selectedProfile?.id ? { ...p, ...values } : p
-                ));
+                setProfiles(
+                  profiles.map((p) =>
+                    p.id === selectedProfile?.id ? { ...p, ...values } : p,
+                  ),
+                );
               }
               setModalOpen(false);
             }}
@@ -444,14 +459,18 @@ export default function ProfilesManager({
             <Form.Item
               name="name"
               label="Profile Name"
-              rules={[{ required: true, message: 'Please enter a profile name' }]}
+              rules={[
+                { required: true, message: 'Please enter a profile name' },
+              ]}
             >
               <Input placeholder="Enter profile name" />
             </Form.Item>
             <Form.Item
               name="description"
               label="Description"
-              rules={[{ required: true, message: 'Please enter a description' }]}
+              rules={[
+                { required: true, message: 'Please enter a description' },
+              ]}
             >
               <TextArea rows={3} placeholder="Enter profile description" />
             </Form.Item>
@@ -460,7 +479,9 @@ export default function ProfilesManager({
                 <Form.Item
                   name="namespace"
                   label="Namespace"
-                  rules={[{ required: true, message: 'Please enter a namespace' }]}
+                  rules={[
+                    { required: true, message: 'Please enter a namespace' },
+                  ]}
                 >
                   <Input placeholder="https://example.org/ns/profile" />
                 </Form.Item>
@@ -469,7 +490,9 @@ export default function ProfilesManager({
                 <Form.Item
                   name="version"
                   label="Version"
-                  rules={[{ required: true, message: 'Please enter a version' }]}
+                  rules={[
+                    { required: true, message: 'Please enter a version' },
+                  ]}
                 >
                   <Input placeholder="1.0.0" />
                 </Form.Item>
@@ -480,7 +503,9 @@ export default function ProfilesManager({
                 <Form.Item
                   name="status"
                   label="Status"
-                  rules={[{ required: true, message: 'Please select a status' }]}
+                  rules={[
+                    { required: true, message: 'Please select a status' },
+                  ]}
                 >
                   <Select placeholder="Select status">
                     <Option value="draft">Draft</Option>
@@ -511,7 +536,13 @@ export default function ProfilesManager({
       label: 'All Profiles',
       children: (
         <>
-          <div style={{ marginBottom: 16, display: 'flex', justifyContent: 'space-between' }}>
+          <div
+            style={{
+              marginBottom: 16,
+              display: 'flex',
+              justifyContent: 'space-between',
+            }}
+          >
             <Space>
               <Input.Search
                 placeholder="Search profiles..."
@@ -557,7 +588,8 @@ export default function ProfilesManager({
         <Card>
           <Title level={4}>Property Library</Title>
           <Paragraph>
-            Manage reusable property definitions that can be used across multiple profiles.
+            Manage reusable property definitions that can be used across
+            multiple profiles.
           </Paragraph>
           <Alert
             message="Coming Soon"
@@ -607,7 +639,9 @@ export default function ProfilesManager({
             renderItem={(item) => (
               <List.Item
                 actions={[
-                  <Button key="view" type="link" size="small">View Details</Button>
+                  <Button key="view" type="link" size="small">
+                    View Details
+                  </Button>,
                 ]}
               >
                 <List.Item.Meta
@@ -616,10 +650,15 @@ export default function ProfilesManager({
                     <Space>
                       <Text type="secondary">{item.namespace}</Text>
                       <Text type="secondary">{item.timestamp}</Text>
-                      <Tag color={
-                        item.status === 'success' ? 'success' :
-                        item.status === 'warning' ? 'warning' : 'error'
-                      }>
+                      <Tag
+                        color={
+                          item.status === 'success'
+                            ? 'success'
+                            : item.status === 'warning'
+                              ? 'warning'
+                              : 'error'
+                        }
+                      >
                         {item.status.toUpperCase()}
                       </Tag>
                       <Text type="secondary">{item.records} records</Text>
@@ -694,15 +733,12 @@ export default function ProfilesManager({
       <div style={{ marginBottom: 24 }}>
         <Title level={2}>DCTAP Profiles Manager</Title>
         <Paragraph type="secondary">
-          Manage Dublin Core Tabular Application Profiles for vocabulary validation
+          Manage Dublin Core Tabular Application Profiles for vocabulary
+          validation
         </Paragraph>
       </div>
 
-      <Tabs
-        activeKey={activeTab}
-        onChange={setActiveTab}
-        items={tabItems}
-      />
+      <Tabs activeKey={activeTab} onChange={setActiveTab} items={tabItems} />
 
       {renderProfileModal()}
     </div>

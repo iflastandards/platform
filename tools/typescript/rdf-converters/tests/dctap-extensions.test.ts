@@ -3,6 +3,10 @@ import { execSync } from 'child_process';
 import * as fs from 'fs';
 import * as path from 'path';
 
+/**
+ * @unit @low-priority @validation
+ */
+
 describe('DCTAP Extensions @unit', () => {
   const fixturesDir = path.join(__dirname, 'fixtures', 'dctap-extensions');
   const tempDir = '/tmp/rdf-converters-tests';

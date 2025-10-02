@@ -7,13 +7,29 @@ body:
     attributes:
       value: |
         Thanks for taking the time to report a documentation issue! This helps us improve the IFLA Standards documentation for everyone.
-        
+
+  - type: dropdown
+    id: standard
+    attributes:
+      label: Which standard does this issue relate to?
+      description: Select the IFLA standard this documentation issue affects
+      options:
+        - ISBDM
+        - FRBR
+        - LRM
+        - ISBD
+        - MulDiCat
+        - UNIMARC
+        - Other/General
+    validations:
+      required: true
+
   - type: input
     id: page-url
     attributes:
       label: Page URL
       description: The URL of the page where you found the issue
-      placeholder: "https://iflastandards.github.io/standards-dev/ISBDM/docs/elements/..."
+      placeholder: "https://iflastandards.github.io/platform/ISBDM/docs/..."
     validations:
       required: true
       

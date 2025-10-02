@@ -1,5 +1,5 @@
 /**
- * @unit @ui @vocabulary @low-priority
+ * @unit @ui @vocabulary @validation @low-priority
  */
 import React from 'react';
 import { render, screen, fireEvent } from '@testing-library/react';

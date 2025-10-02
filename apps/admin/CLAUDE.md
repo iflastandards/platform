@@ -710,13 +710,208 @@ import { DeleteOutlined, EditOutlined } from '@ant-design/icons';
 
 ---
 
+## 🔧 Refine.dev Integration (PRIORITY FOR ADMIN FEATURES)
+
+### 🔴 CRITICAL RULE: Refine-First Development
+
+**For ALL new admin features, ALWAYS consider Refine.dev generators FIRST before custom implementation.**
+
+### Quick Decision Framework
+
+#### 1. **Standard CRUD Operations** → **ALWAYS Use Refine**
+```bash
+# Generate complete CRUD resource
+npx refine create resource [resource-name] --actions list,create,edit,show
+```
+
+**Use Refine When:**
+- ✅ Data listing with pagination/filtering
+- ✅ Create/Edit/Delete operations  
+- ✅ Standard form handling
+- ✅ Table display with sorting
+- ✅ Modal management
+- ✅ User management, vocabulary management, etc.
+
+#### 2. **Custom Complex Logic** → **Refine + Custom**
+```bash
+# Generate base, then customize
+npx refine create resource [resource-name] --actions list,create
+# Then add custom logic on top
+```
+
+**Use Refine Base + Custom When:**
+- ✅ AI analysis workflows (like Test Tag Manager)
+- ✅ Multi-step wizards
+- ✅ Complex configuration interfaces
+- ✅ Domain-specific business logic
+
+#### 3. **Pure Custom** → **Only When Necessary**
+**Rarely Use Custom When:**
+- ❌ Simple CRUD (use Refine instead)
+- ❌ Standard admin patterns (use Refine instead)
+- ✅ Completely unique UX requirements
+- ✅ Non-data-driven interfaces
+
+### Refine.dev + Ant Design Patterns
+
+#### Core Hooks (Use These Instead of Manual State)
+```tsx
+// ✅ PREFERRED - Refine hooks
+import { useList, useCreate, useUpdate, useDelete } from "@refinedev/core";
+import { useForm, useTable } from "@refinedev/antd";
+
+// Replace manual useState with Refine hooks
+const { data, isLoading, refetch } = useList({ 
+  resource: "vocabularies",
+  pagination: { current: 1, pageSize: 10 },
+  filters: [{ field: "status", operator: "eq", value: "active" }]
+});
+
+const { mutate: createVocab } = useCreate();
+const { mutate: updateVocab } = useUpdate();
+const { mutate: deleteVocab } = useDelete();
+```
+
+#### Form Management
+```tsx
+// ✅ PREFERRED - Refine + Ant Design forms
+import { Create, useForm } from "@refinedev/antd";
+
+const { formProps, saveButtonProps } = useForm({
+  resource: "vocabularies",
+  action: "create",
+  redirect: "list"
+});
+
+return (
+  <Create saveButtonProps={saveButtonProps}>
+    <Form {...formProps} layout="vertical">
+      <Form.Item name="name" label="Name" rules={[{ required: true }]}>
+        <Input />
+      </Form.Item>
+    </Form>
+  </Create>
+);
+```
+
+#### Table/List Management
+```tsx
+// ✅ PREFERRED - Refine + Ant Design tables
+import { List, useTable } from "@refinedev/antd";
+
+const { tableProps, searchFormProps } = useTable({
+  resource: "vocabularies",
+  filters: { initial: [{ field: "status", operator: "eq", value: "active" }] },
+});
+
+return (
+  <List>
+    <Table {...tableProps} rowKey="id">
+      <Table.Column dataIndex="name" title="Name" />
+      <Table.Column dataIndex="status" title="Status" />
+    </Table>
+  </List>
+);
+```
+
+### Data Provider Integration
+
+#### Standard REST API Pattern
+```tsx
+// src/providers/data-provider.ts
+import { DataProvider } from "@refinedev/core";
+
+const dataProvider: DataProvider = {
+  getList: async ({ resource, pagination, filters, sorters }) => {
+    const url = `/api/${resource}`;
+    // Convert Refine params to API params
+    const response = await fetch(url);
+    return {
+      data: response.data,
+      total: response.total,
+    };
+  },
+  create: async ({ resource, variables }) => {
+    const response = await fetch(`/api/${resource}`, {
+      method: "POST",
+      body: JSON.stringify(variables),
+    });
+    return { data: response.data };
+  },
+  // ... other CRUD methods
+};
+```
+
+### Generator Commands (Use These First)
+
+#### Create New Resource
+```bash
+# Complete CRUD resource
+npx refine create resource vocabularies --actions list,create,edit,show
+
+# List-only resource
+npx refine create resource analytics --actions list
+
+# Custom resource with base
+npx refine create resource test-tags --actions list,create
+```
+
+#### Add Authentication
+```bash
+npx refine add auth-provider clerk
+```
+
+#### Add UI Framework Integration
+```bash
+npx refine add ui antd
+```
+
+### When NOT to Use Custom Implementation
+
+**❌ DON'T Build Manually:**
+- User management pages
+- Settings/configuration forms  
+- Data listing tables
+- Standard create/edit modals
+- Search/filter interfaces
+- Pagination controls
+
+**✅ USE Refine Generators:**
+- All standard admin CRUD operations
+- Data tables with sorting/filtering
+- Form validation and submission
+- Modal management
+- Navigation and routing
+- Authentication flows
+
+### Migration Strategy for Existing Features
+
+**For New Features:**
+1. Try Refine generators first
+2. Customize generated code as needed
+3. Add domain-specific logic on top
+
+**For Existing Custom Features:**
+1. Continue maintaining (don't rewrite working code)
+2. Consider Refine migration only during major updates
+3. Use Refine patterns for similar new features
+
+---
+
 ## 🚨 BEFORE YOU CODE
 
 Ask yourself:
+- [ ] Can I use a Refine generator for this? (**CHECK FIRST!**)
+- [ ] Am I building standard CRUD operations? (→ Use Refine)
 - [ ] Am I using standard Next.js routing patterns?
 - [ ] Are my API calls using standard paths (/api/*)?
 - [ ] Are my Links using standard Next.js routing?
 - [ ] Is this a client or server component?
 - [ ] Have I checked existing patterns in the codebase?
 
-Remember: **Use standard Next.js routing - no special path handling needed!**
+**Priority Order:**
+1. **Refine generators** (for CRUD/admin patterns)
+2. **Standard Next.js patterns** (for routing/API)
+3. **Custom implementation** (only when necessary)
+
+Remember: **Refine-first for admin features, then standard Next.js patterns!**

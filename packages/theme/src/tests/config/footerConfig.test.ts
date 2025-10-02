@@ -2,6 +2,10 @@ import { describe, it, expect } from 'vitest';
 import { createStandardFooter } from '../../config/footerConfig';
 import type { Environment, SiteKey } from '../../config/siteConfig';
 
+/**
+ * @integration @ui @critical @navigation
+ */
+
 describe('Footer Management Link @integration @navigation @critical', () => {
   const testSites: SiteKey[] = ['portal', 'isbd', 'ISBDM', 'LRM', 'FRBR', 'muldicat', 'unimarc'];
 

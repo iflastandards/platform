@@ -67,7 +67,11 @@ TypeScript configs (not `.env`) • Integration > Unit testing (tag-based)
 
 ## 🎯 Tasks
 
-**Admin (6-Phase Factory)**: `admin:{feature,scaffold,refine,backend,test,docs}` • `admin:{status,checkpoint,resume}`
+**Admin (7-Phase Factory)**: 
+- **Start**: `admin:feature "name"` (auto-creates `feature/name` branch)
+- **Workflow**: `admin:{scaffold,refine,backend,test,docs}`
+- **Tracking**: `admin:{status,checkpoint,pause,resume,switch}`
+- **Natural**: "Where are we?" • "Let's take a break" • "Let's park this"
 
 **Sites**: `tsx scripts/scaffold-site.ts --siteKey=X --title="Y"` • `tsx scripts/page-template-generator.ts --namespace=X`
 
@@ -83,18 +87,19 @@ TypeScript configs (not `.env`) • Integration > Unit testing (tag-based)
 ## ⚠️ Rules
 
 ### 🔴 Critical
-`git status && git branch` → feature branch only • `typecheck && lint` before completion • Never skip tests/`--no-verify` • Debug systematically (fix don't workaround)
+**NEVER `git push` WITHOUT EXPLICIT REQUEST** • `git status && git branch` → feature branch only • `typecheck && lint` before completion • Never skip tests/`--no-verify` • Debug systematically (fix don't workaround)
 
 ### 🟡 Important  
-TodoWrite >3 steps • Complete features (no TODO comments) • Multi-site patterns (`packages/theme/`) • Evidence-based claims (no marketing)
+**Refine.dev first** for admin CRUD/forms/tables • TodoWrite >3 steps • Complete features (no TODO comments) • Multi-site patterns (`packages/theme/`) • Evidence-based claims (no marketing)
 
 ### 🟢 Patterns
 `nx affected` commands • Integration-first + `test:tag --staged` • Theme changes → test all sites • Check patterns before creating
 
 ### Decision Trees
+**Admin Features**: Admin CRUD? → Refine generators first → Customize if needed  
 **File Ops**: Write/Edit → Read existing → Understand patterns → Edit  
 **Features**: Scope clear? → >3 steps? → TodoWrite → Theme impact? → Test all  
-**Tools**: MultiEdit > Edit • JetBrains > Serena • Grep > bash grep • Task agents > native • `/sc:load` `/sc:save`
+**Tools**: Refine > custom admin • MultiEdit > Edit • JetBrains > Serena • Grep > bash grep • Task agents > native • `/sc:load` `/sc:save`
 
 ## 📚 Docs
 

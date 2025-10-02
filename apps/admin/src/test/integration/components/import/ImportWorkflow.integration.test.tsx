@@ -32,6 +32,10 @@ vi.mock('@/lib/mock-data/namespaces-extended', () => ({
   },
 }));
 
+/**
+ * @integration @ui @high-priority
+ */
+
 describe('ImportWorkflow - Fast Unit Tests', () => {
   it('should render without crashing', () => {
     render(

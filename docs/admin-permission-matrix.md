@@ -21,20 +21,20 @@ Clerk Organization Level (Review Groups):
 └── PUC Organization (org_puc)
 
 Custom Permission Level:
-├── namespace:admin:{namespace} (16-32 users)
-├── namespace:editor:{namespace} (48-160 users)
-├── namespace:reviewer:{namespace} (32-80 users)
-├── namespace:translator:{namespace}:{lang} (100-400 users)
-├── project:lead:{projectId} (10-20 users)
-├── project:editor:{projectId} (40-160 users)
-├── project:reviewer:{projectId} (15-60 users)
-└── project:translator:{projectId}:{lang} (50-200 users)
+├── namespace:admin:\{namespace\} (16-32 users)
+├── namespace:editor:\{namespace\} (48-160 users)
+├── namespace:reviewer:\{namespace\} (32-80 users)
+├── namespace:translator:\{namespace\}:\{lang\} (100-400 users)
+├── project:lead:\{projectId\} (10-20 users)
+├── project:editor:\{projectId\} (40-160 users)
+├── project:reviewer:\{projectId\} (15-60 users)
+└── project:translator:\{projectId\}:\{lang\} (50-200 users)
 ```
 
 ### Permission Implementation
 - **Clerk Organization Roles**: `admin` (RG Admin) | `basic_member` (RG Member)
 - **Custom Permissions**: Granular permissions stored in user metadata
-- **Permission Format**: `{resource}:{action}:{scope}` (e.g., `namespace:editor:isbd`)
+- **Permission Format**: `\{resource\}:\{action\}:\{scope\}` (e.g., `namespace:editor:isbd`)
 
 ### Permission Scope Summary (Clerk Organizations)
 
@@ -43,14 +43,14 @@ Custom Permission Level:
 | **Superadmin** | ✅ All | ✅ All | ✅ All | ✅ All | ✅ All |
 | **Org Admin** (Clerk role) | ❌ | ✅ Own Org | ✅ Org Namespaces | ✅ Org Projects | ✅ Org Languages |
 | **Org Member** (Clerk role) | ❌ | ✅ Read Own | ✅ Read Org NS | ✅ Assigned | ❌ |
-| **namespace:admin:{ns}** | ❌ | ❌ | ✅ Specific NS | ❌ | ✅ NS Languages |
-| **namespace:editor:{ns}** | ❌ | ❌ | ✅ Edit Specific NS | ❌ | ❌ |
-| **namespace:reviewer:{ns}** | ❌ | ❌ | ✅ Review Specific NS | ❌ | ❌ |
-| **namespace:translator:{ns}:{lang}** | ❌ | ❌ | ✅ Translate Specific NS | ❌ | ✅ Specific Lang |
-| **project:lead:{id}** | ❌ | ❌ | ✅ Project NS | ✅ Specific Project | ❌ |
-| **project:editor:{id}** | ❌ | ❌ | ✅ Project NS | ✅ Edit Specific Project | ❌ |
-| **project:reviewer:{id}** | ❌ | ❌ | ✅ Review Project NS | ✅ Review Specific Project | ❌ |
-| **project:translator:{id}:{lang}** | ❌ | ❌ | ✅ Translate Project NS | ✅ Specific Project | ✅ Project Lang |
+| **namespace:admin:\{ns\}** | ❌ | ❌ | ✅ Specific NS | ❌ | ✅ NS Languages |
+| **namespace:editor:\{ns\}** | ❌ | ❌ | ✅ Edit Specific NS | ❌ | ❌ |
+| **namespace:reviewer:\{ns\}** | ❌ | ❌ | ✅ Review Specific NS | ❌ | ❌ |
+| **namespace:translator:\{ns\}:\{lang\}** | ❌ | ❌ | ✅ Translate Specific NS | ❌ | ✅ Specific Lang |
+| **project:lead:\{id\}** | ❌ | ❌ | ✅ Project NS | ✅ Specific Project | ❌ |
+| **project:editor:\{id\}** | ❌ | ❌ | ✅ Project NS | ✅ Edit Specific Project | ❌ |
+| **project:reviewer:\{id\}** | ❌ | ❌ | ✅ Review Project NS | ✅ Review Specific Project | ❌ |
+| **project:translator:\{id\}:\{lang\}** | ❌ | ❌ | ✅ Translate Project NS | ✅ Specific Project | ✅ Project Lang |
 
 ## Comprehensive Permission Matrix
 

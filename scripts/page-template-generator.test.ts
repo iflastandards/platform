@@ -1,5 +1,5 @@
 /**
- * @unit @api @docs @low-priority
+ * @unit @api @low-priority @docs
  */
 import * as fs from 'fs';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';

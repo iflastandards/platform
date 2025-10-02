@@ -11,6 +11,9 @@ vi.mock('@docusaurus/Link', () => ({
     </a>
   ),
 }));
+/**
+ * @unit @ui @low-priority
+ */
 
 describe('QuickStart', () => {
   it('renders with default content and paths', () => {

@@ -1,5 +1,5 @@
 /**
- * @unit @api @low-priority
+ * @unit @api @low-priority @validation
  */
 import { describe, it, expect, afterEach, vi } from 'vitest';
 import { VocabularyComparisonTool } from './vocabulary-comparison.mjs';

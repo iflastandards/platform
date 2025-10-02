@@ -1,6 +1,5 @@
-
 /**
- * @integration @accessibility @dashboard @high-priority
+ * @integration @accessibility @dashboard @high-priority @ui
  */
 import React from 'react';
 import { render } from '@testing-library/react';

@@ -62,6 +62,10 @@ beforeEach(() => {
   });
 });
 
+/**
+ * @integration @api @validation @high-priority
+ */
+
 describe('ImportService - Integration Tests @integration @api @validation', () => {
   beforeEach(() => {
     vi.clearAllMocks();

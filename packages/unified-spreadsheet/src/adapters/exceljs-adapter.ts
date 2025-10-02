@@ -31,7 +31,7 @@ export class ExcelJSAdapter {
    */
   async readBuffer(buffer: Buffer): Promise<Workbook> {
     const workbook = new ExcelJS.Workbook();
-    await workbook.xlsx.load(buffer);
+    await workbook.xlsx.load(buffer as any);
     
     return this.convertFromExcelJS(workbook);
   }
@@ -65,7 +65,8 @@ export class ExcelJSAdapter {
    */
   async writeBuffer(workbook: Workbook, options?: WriteOptions): Promise<Buffer> {
     const excelWorkbook = this.convertToExcelJS(workbook, options);
-    return await excelWorkbook.xlsx.writeBuffer() as Buffer;
+    const result = await excelWorkbook.xlsx.writeBuffer();
+    return Buffer.from(result as ArrayBuffer);
   }
 
   /**

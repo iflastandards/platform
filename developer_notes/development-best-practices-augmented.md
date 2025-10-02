@@ -126,7 +126,7 @@ ELSE:
 
 ```typescript
 // ✅ CORRECT - Use site factory
-import { createStandardSiteConfig } from '@ifla/theme/config';
+import \{ createStandardSiteConfig \} from '@ifla/theme/config';
 
 const config = createStandardSiteConfig({
   siteKey: 'mystandard',
@@ -145,8 +145,8 @@ const config = createStandardSiteConfig({
 
 ```tsx
 // ✅ CORRECT - Leverage existing theme components
-import { SiteLink, CompactButton } from '@ifla/theme/components';
-import { getSiteConfig } from '@ifla/theme/config';
+import \{ SiteLink, CompactButton \} from '@ifla/theme/components';
+import \{ getSiteConfig \} from '@ifla/theme/config';
 
 // Custom site component
 export function StandardNavigation() {
@@ -193,7 +193,7 @@ export default function MyComponent({ title, children }: MyComponentProps) {
 **Shared Docusaurus Components**: `packages/theme/src/components/`
 - Used across multiple documentation sites
 - Examples: `VocabularyTable`, `NamespaceHub`, `SiteLink`, `DownloadPanel`
-- Import: `import { ComponentName } from '@ifla/theme/components'`
+- Import: `import \{ ComponentName \} from '@ifla/theme/components'`
 
 **Site-Specific Components**: `standards/{site}/src/components/`
 - Used only within a specific Docusaurus site
@@ -306,8 +306,8 @@ fetch('/api/users')
 
 ```typescript
 // ✅ CORRECT - API Route Handler
-import { NextResponse } from 'next/server';
-import { z } from 'zod';
+import \{ NextResponse \} from 'next/server';
+import \{ z \} from 'zod';
 
 const CreateUserSchema = z.object({
   name: z.string().min(1),
@@ -338,7 +338,7 @@ export async function POST(request: Request) {
 
 ```typescript
 // ✅ CORRECT - Clerk-only authorization
-import { auth } from '@clerk/nextjs/server';
+import \{ auth \} from '@clerk/nextjs/server';
 
 export async function checkPermission(
   resource: string,
@@ -387,8 +387,8 @@ export async function GET() {
 
 ```typescript
 // ✅ CORRECT - Standard protected API route pattern
-import { auth } from '@clerk/nextjs/server';
-import { NextResponse } from 'next/server';
+import \{ auth \} from '@clerk/nextjs/server';
+import \{ NextResponse \} from 'next/server';
 
 export async function GET() {
   // 1. ALWAYS check authentication first
@@ -477,7 +477,7 @@ interface UserMetadata {
 }
 
 // Permission hook for React components
-import { useAuth, useOrganization } from "@clerk/nextjs";
+import \{ useAuth, useOrganization \} from "@clerk/nextjs";
 
 export function usePermissions() {
   const { isSignedIn, sessionClaims } = useAuth();
@@ -511,7 +511,7 @@ export function usePermissions() {
 - Used only within the admin portal application
 - Examples: `Navbar`, `ProgressBar`, `StatusChip`, `SpreadsheetViewer`
 - Organized by feature: `auth/`, `layout/`, `ui/`, `vocabulary/`, etc.
-- Import: `import { ComponentName } from '@/components/feature'`
+- Import: `import \{ ComponentName \} from '@/components/feature'`
 
 **Shared React Hooks**: `apps/admin/src/hooks/` (if admin-specific) or `packages/theme/src/hooks/` (if reusable)
 - Admin-specific hooks stay local
@@ -535,7 +535,7 @@ components/
 'use client';
 
 import React from 'react';
-import { Box, Chip, ChipProps } from '@mui/material';
+import \{ Box, Chip, ChipProps \} from '@mui/material';
 
 interface StatusChipProps extends Omit<ChipProps, 'color'> {
   status: 'active' | 'pending' | 'inactive';
@@ -614,7 +614,7 @@ export function AlertDescription({ children, className = '' }: AlertDescriptionP
 'use client';
 
 import React from 'react';
-import { Box, Paper, Typography } from '@mui/material';
+import \{ Box, Paper, Typography \} from '@mui/material';
 
 // Pattern 2: Compound components within the same file
 function SpreadsheetHeader({ title }: { title: string }) {
@@ -645,8 +645,8 @@ export function SpreadsheetViewer({ title, data }: SpreadsheetViewerProps) {
 
 // Pattern 3: Feature-level index file
 // components/vocabulary/index.ts
-export { SpreadsheetViewer } from './SpreadsheetViewer';
-export { ValidationReport } from './ValidationReport';
+export { SpreadsheetViewer \} from './SpreadsheetViewer';
+export { ValidationReport \} from './ValidationReport';
 ```
 
 ### Additional Best Practices
@@ -969,7 +969,7 @@ export const mockApiService: ApiService = {
 };
 
 // In test file: apps/admin/src/test/lib/user-service.test.ts
-import { mockApiService } from '../mocks/api-service';
+import \{ mockApiService \} from '../mocks/api-service';
 const userService = new UserService(mockApiService);
 ```
 
@@ -1049,8 +1049,8 @@ packages/theme/src/components/VocabularyTable/__tests__/vocabulary-table-main.te
 **Unit Test Template (Centralized)**:
 ```typescript
 // tests/components/ComponentName.test.tsx (centralized location)
-import { render, screen } from '@testing-library/react';
-import { ComponentName } from '../../src/components/ComponentName';
+import \{ render, screen \} from '@testing-library/react';
+import \{ ComponentName \} from '../../src/components/ComponentName';
 
 describe('ComponentName @unit', () => {
   it('should render with required props', () => {
@@ -1073,9 +1073,9 @@ describe('ComponentName @unit', () => {
 ```typescript
 // src/components/VocabularyTable/__tests__/vocabulary-table-main.test.tsx
 import React from 'react';
-import { render, screen, fireEvent } from '@testing-library/react';
-import { VocabularyTable } from '../VocabularyTable';
-import { expect, describe, it, vi, beforeEach } from 'vitest';
+import \{ render, screen, fireEvent \} from '@testing-library/react';
+import \{ VocabularyTable \} from '../VocabularyTable';
+import \{ expect, describe, it, vi, beforeEach \} from 'vitest';
 
 // Mock Docusaurus dependencies (local override)
 vi.mock('@docusaurus/theme-common', () => ({
@@ -1113,8 +1113,8 @@ describe('VocabularyTable Main Features @unit @ui', () => {
 **Integration Test Template (IFLA Pattern)**:
 ```typescript
 // tests/integration/feature-workflow.integration.test.ts
-import { describe, it, expect, beforeEach, afterEach } from 'vitest';
-import { promises as fs } from 'fs';
+import \{ describe, it, expect, beforeEach, afterEach \} from 'vitest';
+import \{ promises as fs \} from 'fs';
 import path from 'path';
 
 describe('Feature Workflow @integration @api', () => {
@@ -1150,8 +1150,8 @@ describe('Feature Workflow @integration @api', () => {
 **Service Test Template (IFLA Pattern)**:
 ```typescript
 // lib/services/__tests__/adoption-service.test.ts
-import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
-import { AdoptionService } from '../adoption-service';
+import \{ describe, it, expect, vi, beforeEach, afterEach \} from 'vitest';
+import \{ AdoptionService \} from '../adoption-service';
 
 // Mock external dependencies (centralized pattern)
 vi.mock('@/lib/supabase/client', () => ({
@@ -1385,8 +1385,8 @@ ELSE:
 
 ```typescript
 // ✅ CORRECT
-import { ReactElement } from 'react';
-import { z } from 'zod';
+import \{ ReactElement \} from 'react';
+import \{ z \} from 'zod';
 
 const UserSchema = z.object({
   id: z.string().uuid(),

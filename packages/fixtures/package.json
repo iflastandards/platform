@@ -11,14 +11,14 @@
       "require": "./dist/index.js"
     },
     "./jobs": {
+      "types": "./dist/jobs.d.ts",
       "import": "./dist/jobs.js",
-      "require": "./dist/jobs.js",
-      "types": "./dist/jobs.d.ts"
+      "require": "./dist/jobs.js"
     },
     "./vocabularies": {
+      "types": "./dist/vocabularies.d.ts",
       "import": "./dist/vocabularies.js",
-      "require": "./dist/vocabularies.js",
-      "types": "./dist/vocabularies.d.ts"
+      "require": "./dist/vocabularies.js"
     },
     "./rdf-builds.json": "./rdf-builds.json",
     "./clerk-users.json": "./clerk-users.json"

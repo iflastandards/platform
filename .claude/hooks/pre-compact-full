@@ -1,0 +1,226 @@
+#!/bin/bash
+# Pre-compact hook for Claude Code
+# Preserves current work state before context compaction
+
+set -e
+
+echo "🔄 Pre-compact: Preserving work state..."
+
+# Get the directory of this script
+SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
+PROJECT_ROOT="$( cd "$SCRIPT_DIR/../.." && pwd )"
+
+# Create state preservation directory
+STATE_DIR="$PROJECT_ROOT/.claude-state"
+TIMESTAMP=$(date +"%Y%m%d_%H%M%S")
+STATE_FILE="$STATE_DIR/state_${TIMESTAMP}.json"
+
+mkdir -p "$STATE_DIR"
+
+# Function to check if a command exists
+command_exists() {
+    command -v "$1" >/dev/null 2>&1
+}
+
+# Save git state
+save_git_state() {
+    echo "📌 Saving git state..."
+    
+    # Save current branch
+    CURRENT_BRANCH=$(git rev-parse --abbrev-ref HEAD 2>/dev/null || echo "unknown")
+    
+    # Save uncommitted changes
+    git diff > "$STATE_DIR/uncommitted_${TIMESTAMP}.diff" 2>/dev/null || true
+    
+    # Save staged changes
+    git diff --staged > "$STATE_DIR/staged_${TIMESTAMP}.diff" 2>/dev/null || true
+    
+    # Save untracked files list
+    git ls-files --others --exclude-standard > "$STATE_DIR/untracked_${TIMESTAMP}.txt" 2>/dev/null || true
+    
+    # Save stash list
+    git stash list > "$STATE_DIR/stash_${TIMESTAMP}.txt" 2>/dev/null || true
+    
+    # Create a temporary commit if there are changes
+    if [[ -n $(git status --porcelain 2>/dev/null) ]]; then
+        echo "💾 Creating temporary commit for safety..."
+        git add -A
+        git commit -m "[CLAUDE-COMPACT] Temporary commit at ${TIMESTAMP}" --no-verify || true
+        echo "${TIMESTAMP}" > "$STATE_DIR/temp_commit.marker"
+    fi
+}
+
+# Save open files and todo state
+save_work_state() {
+    echo "📝 Saving work state..."
+    
+    # Create state JSON
+    cat > "$STATE_FILE" <<EOF
+{
+  "timestamp": "${TIMESTAMP}",
+  "branch": "${CURRENT_BRANCH}",
+  "working_directory": "$(pwd)",
+  "compact_reason": "claude_context_compact",
+  "environment": {
+    "node_version": "$(node --version 2>/dev/null || echo 'unknown')",
+    "npm_version": "$(npm --version 2>/dev/null || echo 'unknown')",
+    "pnpm_version": "$(pnpm --version 2>/dev/null || echo 'unknown')"
+  }
+}
+EOF
+    
+    # Save current TODO list if using the todo tracking system
+    if [[ -f "$PROJECT_ROOT/.claude/todos.json" ]]; then
+        cp "$PROJECT_ROOT/.claude/todos.json" "$STATE_DIR/todos_${TIMESTAMP}.json"
+        echo "✅ Saved TODO list"
+    fi
+    
+    # Save any test results if they exist
+    if [[ -f "$PROJECT_ROOT/test-results.json" ]]; then
+        cp "$PROJECT_ROOT/test-results.json" "$STATE_DIR/test-results_${TIMESTAMP}.json"
+        echo "🧪 Saved test results"
+    fi
+    
+    # Save package.json in case of changes
+    if [[ -f "$PROJECT_ROOT/package.json" ]]; then
+        cp "$PROJECT_ROOT/package.json" "$STATE_DIR/package_${TIMESTAMP}.json"
+        echo "📦 Saved package.json"
+    fi
+}
+
+# Save terminal history if available
+save_terminal_history() {
+    echo "🖥️ Saving terminal history..."
+    
+    # Save bash history (last 100 commands)
+    if [[ -f "$HOME/.bash_history" ]]; then
+        tail -100 "$HOME/.bash_history" > "$STATE_DIR/bash_history_${TIMESTAMP}.txt" 2>/dev/null || true
+    fi
+    
+    # Save zsh history if using zsh
+    if [[ -f "$HOME/.zsh_history" ]]; then
+        tail -100 "$HOME/.zsh_history" > "$STATE_DIR/zsh_history_${TIMESTAMP}.txt" 2>/dev/null || true
+    fi
+}
+
+# Save running processes
+save_running_processes() {
+    echo "🔧 Checking running processes..."
+    
+    # Check for running dev servers
+    if lsof -i :3000-3030 > /dev/null 2>&1; then
+        lsof -i :3000-3030 > "$STATE_DIR/running_servers_${TIMESTAMP}.txt" 2>&1 || true
+        echo "⚠️  Note: Development servers are still running"
+    fi
+    
+    # Check for running tests
+    if pgrep -f "vitest|jest|playwright" > /dev/null 2>&1; then
+        echo "⚠️  Note: Test processes are still running"
+        ps aux | grep -E "vitest|jest|playwright" > "$STATE_DIR/running_tests_${TIMESTAMP}.txt" 2>&1 || true
+    fi
+}
+
+# Create a restoration script
+create_restore_script() {
+    echo "🔧 Creating restoration script..."
+    
+    cat > "$STATE_DIR/restore_${TIMESTAMP}.sh" <<'RESTORE_SCRIPT'
+#!/bin/bash
+# Restoration script for Claude state
+
+TIMESTAMP="__TIMESTAMP__"
+STATE_DIR="__STATE_DIR__"
+PROJECT_ROOT="__PROJECT_ROOT__"
+
+echo "🔄 Restoring state from ${TIMESTAMP}..."
+
+cd "$PROJECT_ROOT"
+
+# Restore git state
+if [[ -f "$STATE_DIR/temp_commit.marker" ]]; then
+    MARKER_TIME=$(cat "$STATE_DIR/temp_commit.marker")
+    if [[ "$MARKER_TIME" == "$TIMESTAMP" ]]; then
+        echo "↩️ Undoing temporary commit..."
+        git reset --soft HEAD~1
+    fi
+fi
+
+# Apply uncommitted changes
+if [[ -f "$STATE_DIR/uncommitted_${TIMESTAMP}.diff" ]] && [[ -s "$STATE_DIR/uncommitted_${TIMESTAMP}.diff" ]]; then
+    echo "📝 Applying uncommitted changes..."
+    git apply "$STATE_DIR/uncommitted_${TIMESTAMP}.diff" 2>/dev/null || echo "⚠️  Some uncommitted changes couldn't be applied"
+fi
+
+# Apply staged changes
+if [[ -f "$STATE_DIR/staged_${TIMESTAMP}.diff" ]] && [[ -s "$STATE_DIR/staged_${TIMESTAMP}.diff" ]]; then
+    echo "📝 Applying staged changes..."
+    git apply --cached "$STATE_DIR/staged_${TIMESTAMP}.diff" 2>/dev/null || echo "⚠️  Some staged changes couldn't be applied"
+fi
+
+# Restore TODO list
+if [[ -f "$STATE_DIR/todos_${TIMESTAMP}.json" ]]; then
+    echo "✅ Restoring TODO list..."
+    cp "$STATE_DIR/todos_${TIMESTAMP}.json" "$PROJECT_ROOT/.claude/todos.json"
+fi
+
+echo "✅ State restoration complete!"
+echo ""
+echo "📋 Summary:"
+echo "  - Working directory: $PROJECT_ROOT"
+echo "  - Branch: $(git rev-parse --abbrev-ref HEAD)"
+echo "  - Uncommitted changes: $(git status --porcelain | wc -l) files"
+echo ""
+echo "💡 Next steps:"
+echo "  1. Run 'git status' to review changes"
+echo "  2. Check your TODO list if you were using one"
+echo "  3. Restart any dev servers if needed"
+RESTORE_SCRIPT
+
+    # Replace placeholders
+    sed -i.bak "s|__TIMESTAMP__|${TIMESTAMP}|g" "$STATE_DIR/restore_${TIMESTAMP}.sh"
+    sed -i.bak "s|__STATE_DIR__|${STATE_DIR}|g" "$STATE_DIR/restore_${TIMESTAMP}.sh"
+    sed -i.bak "s|__PROJECT_ROOT__|${PROJECT_ROOT}|g" "$STATE_DIR/restore_${TIMESTAMP}.sh"
+    rm "$STATE_DIR/restore_${TIMESTAMP}.sh.bak"
+    
+    chmod +x "$STATE_DIR/restore_${TIMESTAMP}.sh"
+    
+    # Save the latest restore script path
+    echo "$STATE_DIR/restore_${TIMESTAMP}.sh" > "$STATE_DIR/latest_restore.path"
+}
+
+# Main execution
+main() {
+    echo "═══════════════════════════════════════"
+    echo "  Claude Pre-Compact State Preservation"
+    echo "═══════════════════════════════════════"
+    echo ""
+    
+    save_git_state
+    save_work_state
+    save_terminal_history
+    save_running_processes
+    create_restore_script
+    
+    echo ""
+    echo "✅ State preserved successfully!"
+    echo ""
+    echo "📁 State saved to: $STATE_DIR"
+    echo "🔧 Restore script: $STATE_DIR/restore_${TIMESTAMP}.sh"
+    echo ""
+    echo "💾 Preserved:"
+    echo "  - Git state (branch, changes, stash)"
+    echo "  - TODO list and work context"
+    echo "  - Test results and package.json"
+    echo "  - Terminal history"
+    echo "  - Running process information"
+    echo ""
+    echo "═══════════════════════════════════════"
+    
+    # Create a marker file for post-compact
+    echo "${TIMESTAMP}" > "$STATE_DIR/.last_compact"
+}
+
+# Run main function
+main
+
+exit 0

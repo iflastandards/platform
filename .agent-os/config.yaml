@@ -69,7 +69,7 @@ key_files:
   - "CLAUDE.md"
   - "README.md"
   - "apps/admin/next.config.js"
-  - "portal/docusaurus.config.ts"
+  - "isbdm/docusaurus.config.ts"
   
 standards_paths:
   nextjs:
@@ -97,9 +97,10 @@ workflows:
     - "Use Nx commands for efficiency"
     - "Follow TypeScript strict mode"
   nextjs_feature_development:
+    - "CRITICAL: Check Refine.dev generators FIRST for admin features"
     - "Phase 1: Discovery & Requirements (30min)"
     - "Phase 2: Code Discovery & Analysis (15min)" 
-    - "Phase 3: Instant Scaffolding (5min)"
+    - "Phase 3: Instant Scaffolding with Refine.dev (5min)"
     - "Phase 4: Iterative Refinement (2-3 hours)"
     - "Phase 5: Backend Implementation (2 hours)"
     - "Phase 6: Testing (1 hour)"

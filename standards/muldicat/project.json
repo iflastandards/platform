@@ -3,15 +3,8 @@
   "root": "standards/muldicat",
   "sourceRoot": "standards/muldicat",
   "projectType": "application",
-  "tags": [
-    "docusaurus",
-    "site",
-    "standard",
-    "muldicat"
-  ],
-  "implicitDependencies": [
-    "@ifla/theme"
-  ],
+  "tags": ["docusaurus", "site", "standard", "muldicat"],
+  "implicitDependencies": ["@ifla/theme"],
   "targets": {
     "build": {
       "executor": "nx:run-commands",
@@ -31,15 +24,21 @@
         }
       },
       "inputs": [
-        "production",
-        "^production",
-        "docusaurus"
+        "docusaurus",
+        {
+          "dependentTasksOutputFiles": "packages/theme/dist/**/*",
+          "transitive": false
+        }
       ],
-      "outputs": [
-        "{projectRoot}/build",
-        "{projectRoot}/.docusaurus"
-      ],
-      "cache": true
+      "outputs": ["{projectRoot}/build", "{projectRoot}/.docusaurus"],
+      "cache": true,
+      "dependsOn": [
+        {
+          "target": "build",
+          "projects": ["@ifla/theme"],
+          "params": "forward"
+        }
+      ]
     },
     "start": {
       "executor": "nx:run-commands",
@@ -104,9 +103,7 @@
           "standards/muldicat/src/**/*.{md,mdx}"
         ]
       },
-      "inputs": [
-        "default"
-      ],
+      "inputs": ["default"],
       "cache": true
     },
     "typecheck": {
@@ -117,12 +114,19 @@
       },
       "cache": true,
       "dependsOn": [
-        "^build"
+        {
+          "target": "build",
+          "projects": ["@ifla/theme"]
+        }
       ],
       "inputs": [
-        "default",
+        "{projectRoot}/src/**/*.{ts,tsx}",
+        "{projectRoot}/**/*.{ts,tsx}",
         "{projectRoot}/tsconfig.json",
-        "{workspaceRoot}/tsconfig.json"
+        "{workspaceRoot}/tsconfig.json",
+        "!{projectRoot}/build/**/*",
+        "!{projectRoot}/.docusaurus/**/*",
+        "!{projectRoot}/node_modules/**/*"
       ]
     }
   }

@@ -20,7 +20,9 @@ export default async function NamespacePage({
   const isDemo = demo === 'true';
 
   // Validate namespace exists
-  const namespaceData = Object.values(mockNamespaces).find(ns => ns.slug === namespace);
+  const namespaceData = Object.values(mockNamespaces).find(
+    (ns) => ns.slug === namespace,
+  );
   if (!namespaceData) {
     notFound();
   }
@@ -29,18 +31,16 @@ export default async function NamespacePage({
   if (isDemo) {
     const demoUserId = userId || 'user-admin-1';
     return (
-      <NamespaceDashboard 
-        namespace={namespace} 
-        userId={demoUserId}
-        isDemo={true}
-      />
+      <NamespaceDashboard namespace={namespace} userId={demoUserId} isDemo />
     );
   }
 
   // Production mode - use real auth
   const user = await getAuthUser();
   if (!user) {
-    redirect(`/sign-in?redirect_url=${encodeURIComponent(`/namespaces/${namespace}`)}`);
+    redirect(
+      `/sign-in?redirect_url=${encodeURIComponent(`/namespaces/${namespace}`)}`,
+    );
   }
 
   return <NamespaceDashboard namespace={namespace} />;

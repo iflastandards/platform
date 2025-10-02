@@ -47,10 +47,10 @@ async function fetchNamespaces(): Promise<Namespace[]> {
   try {
     // Try the real API first
     const response = await fetch('/api/admin/namespaces');
-    
+
     if (response.ok) {
       const data = await response.json();
-      
+
       // If we got data, use it
       if (data.data && data.data.length > 0) {
         return data.data;
@@ -59,11 +59,11 @@ async function fetchNamespaces(): Promise<Namespace[]> {
   } catch (error) {
     // Silent fallback
   }
-  
+
   // Fallback to test endpoint with mock data
   try {
     const response = await fetch('/api/test-namespaces');
-    
+
     if (response.ok) {
       const data = await response.json();
       return data.data || [];
@@ -71,7 +71,7 @@ async function fetchNamespaces(): Promise<Namespace[]> {
   } catch (error) {
     // Silent fallback
   }
-  
+
   // Last resort: return mock data directly
   return mockNamespaceData;
 }
@@ -80,11 +80,17 @@ async function fetchNamespaceStats(namespaceId: string) {
   try {
     const [elementSetsRes, conceptSchemesRes] = await Promise.all([
       fetch(`/api/admin/namespace/${namespaceId}/element-sets`),
-      fetch(`/api/admin/namespace/${namespaceId}/concept-schemes`).catch(() => null),
+      fetch(`/api/admin/namespace/${namespaceId}/concept-schemes`).catch(
+        () => null,
+      ),
     ]);
 
-    const elementSets = elementSetsRes.ok ? await elementSetsRes.json() : { data: [] };
-    const conceptSchemes = conceptSchemesRes?.ok ? await conceptSchemesRes.json() : { data: [] };
+    const elementSets = elementSetsRes.ok
+      ? await elementSetsRes.json()
+      : { data: [] };
+    const conceptSchemes = conceptSchemesRes?.ok
+      ? await conceptSchemesRes.json()
+      : { data: [] };
 
     return {
       elementSets: elementSets.data?.length || 0,
@@ -125,10 +131,10 @@ export function AdminNamespacesPage() {
         setIsLoading(false);
       }
     };
-    
+
     loadNamespaces();
   }, []);
-  
+
   const refetch = async () => {
     setIsLoading(true);
     try {
@@ -153,13 +159,13 @@ export function AdminNamespacesPage() {
         // Stats are already in the mock data
         return;
       }
-      
+
       const fetchAllStats = async () => {
         const stats: Record<string, any> = {};
         await Promise.all(
           namespaces.map(async (ns) => {
             stats[ns.id] = await fetchNamespaceStats(ns.id);
-          })
+          }),
         );
         setNamespaceStats(stats);
       };
@@ -177,7 +183,7 @@ export function AdminNamespacesPage() {
           ns.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
           ns.id.toLowerCase().includes(searchQuery.toLowerCase()) ||
           ns.description?.toLowerCase().includes(searchQuery.toLowerCase()) ||
-          ns.reviewGroup?.toLowerCase().includes(searchQuery.toLowerCase())
+          ns.reviewGroup?.toLowerCase().includes(searchQuery.toLowerCase()),
       );
     }
 
@@ -207,7 +213,8 @@ export function AdminNamespacesPage() {
     }
   };
 
-  const getVisibilityColor = (visibility: string) => visibility === 'public' ? 'blue' : 'default';
+  const getVisibilityColor = (visibility: string) =>
+    visibility === 'public' ? 'blue' : 'default';
 
   const handleDelete = async (id: string) => {
     // Implement delete logic
@@ -235,7 +242,8 @@ export function AdminNamespacesPage() {
       title: 'Review Group',
       dataIndex: 'reviewGroup',
       key: 'reviewGroup',
-      sorter: (a, b) => (a.reviewGroup || '').localeCompare(b.reviewGroup || ''),
+      sorter: (a, b) =>
+        (a.reviewGroup || '').localeCompare(b.reviewGroup || ''),
       render: (reviewGroup: string) =>
         reviewGroup ? (
           <Link href={`/dashboard/admin/review-groups/${reviewGroup}`}>
@@ -257,11 +265,17 @@ export function AdminNamespacesPage() {
         return (
           <Space>
             <Tooltip title="Element Sets">
-              <Tag>Elements: {record.elementSets || stats.elementSets || 0}</Tag>
+              <Tag>
+                Elements: {record.elementSets || stats.elementSets || 0}
+              </Tag>
             </Tooltip>
             <Tooltip title="Vocabularies / Concept Schemes">
               <Tag>
-                Vocabularies: {record.conceptSchemes || stats.conceptSchemes || stats.vocabularies || 0}
+                Vocabularies:{' '}
+                {record.conceptSchemes ||
+                  stats.conceptSchemes ||
+                  stats.vocabularies ||
+                  0}
               </Tag>
             </Tooltip>
           </Space>
@@ -281,9 +295,12 @@ export function AdminNamespacesPage() {
       title: 'Status',
       dataIndex: 'status',
       key: 'status',
-      sorter: (a, b) => (a.status || 'active').localeCompare(b.status || 'active'),
+      sorter: (a, b) =>
+        (a.status || 'active').localeCompare(b.status || 'active'),
       render: (status: string) => (
-        <Tag color={getStatusColor(status || 'active')}>{status || 'active'}</Tag>
+        <Tag color={getStatusColor(status || 'active')}>
+          {status || 'active'}
+        </Tag>
       ),
     },
     {
@@ -300,8 +317,8 @@ export function AdminNamespacesPage() {
           {lastModified
             ? new Date(lastModified).toLocaleDateString()
             : record.createdAt
-            ? new Date(record.createdAt).toLocaleDateString()
-            : '—'}
+              ? new Date(record.createdAt).toLocaleDateString()
+              : '—'}
         </Text>
       ),
     },
@@ -313,7 +330,11 @@ export function AdminNamespacesPage() {
         <Space>
           <Tooltip title="View">
             <Link href={`/namespaces/${record.id}`}>
-              <Button icon={<EyeOutlined />} size="small" />
+              <Button
+                icon={<EyeOutlined />}
+                size="small"
+                aria-label="View namespace"
+              />
             </Link>
           </Tooltip>
           <Tooltip title="Open in Portal">
@@ -322,12 +343,20 @@ export function AdminNamespacesPage() {
               target="_blank"
               rel="noopener noreferrer"
             >
-              <Button icon={<ExportOutlined />} size="small" />
+              <Button
+                icon={<ExportOutlined />}
+                size="small"
+                aria-label="Open in Portal"
+              />
             </a>
           </Tooltip>
           <Tooltip title="Edit">
             <Link href={`/dashboard/admin/namespaces/${record.id}/edit`}>
-              <Button icon={<EditOutlined />} size="small" />
+              <Button
+                icon={<EditOutlined />}
+                size="small"
+                aria-label="Edit namespace"
+              />
             </Link>
           </Tooltip>
           <Tooltip title="Delete">
@@ -336,6 +365,7 @@ export function AdminNamespacesPage() {
               size="small"
               danger
               onClick={() => handleDelete(record.id)}
+              aria-label="Delete namespace"
             />
           </Tooltip>
         </Space>
@@ -374,7 +404,14 @@ export function AdminNamespacesPage() {
 
   return (
     <div>
-      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 24 }}>
+      <div
+        style={{
+          display: 'flex',
+          justifyContent: 'space-between',
+          alignItems: 'center',
+          marginBottom: 24,
+        }}
+      >
         <Title level={2}>Namespace Management</Title>
         <Link href="/dashboard/admin/namespaces/create">
           <Button type="primary" icon={<PlusOutlined />}>
@@ -397,6 +434,7 @@ export function AdminNamespacesPage() {
             value={statusFilter}
             onChange={setStatusFilter}
             style={{ width: 120 }}
+            aria-label="Filter by status"
             options={[
               { value: 'all', label: 'All Status' },
               { value: 'active', label: 'Active' },
@@ -408,6 +446,7 @@ export function AdminNamespacesPage() {
             value={visibilityFilter}
             onChange={setVisibilityFilter}
             style={{ width: 120 }}
+            aria-label="Filter by visibility"
             options={[
               { value: 'all', label: 'All Visibility' },
               { value: 'public', label: 'Public' },

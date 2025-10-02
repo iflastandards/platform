@@ -31,6 +31,10 @@ vi.mock('path', () => ({
   default: {
     join: vi.fn((...args) => args.join('/')),
     dirname: vi.fn((p) => p.split('/').slice(0, -1).join('/')),
+
+/**
+ * @unit @validation @low-priority
+ */
     basename: vi.fn((p) => p.split('/').pop()),
   },
   join: vi.fn((...args) => args.join('/')),

@@ -2,7 +2,7 @@
 name: "Bug Report"
 description: "File a bug report for a feature under test."
 title: "[BUG] - <A brief, descriptive title>"
-labels: ["bug", "triage"]
+labels: ["bug", "needs-triage"]
 ---
 
 ### Feature

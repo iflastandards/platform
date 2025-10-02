@@ -2,7 +2,7 @@
  * Dashboard Access Smoke Tests
  * Tests that each user role is routed to the correct dashboard
  * Uses MSW for mocking Clerk authentication
- * @integration @auth @smoke @critical
+ * @integration @auth @smoke @post-deploy @critical
  */
 
 import { describe, it, expect, beforeEach } from 'vitest';
@@ -14,7 +14,11 @@ import {
   DASHBOARD_ROUTES,
 } from '../../mocks/user-fixtures';
 
-describe('Dashboard Access Control @smoke', () => {
+/**
+ * @integration @auth @critical @ui @validation
+ */
+
+describe('Dashboard Access Control @smoke @navigation', () => {
   beforeEach(() => {
     clearAuthentication();
   });

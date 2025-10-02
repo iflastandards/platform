@@ -32,14 +32,6 @@ jobs:
         with:
           fetch-depth: 0
           
-      - name: Cache pnpm store
-        uses: actions/cache@v4
-        with:
-          path: ~/.pnpm-store
-          key: ${{ runner.os }}-pnpm-${{ hashFiles('pnpm-lock.yaml') }}
-          restore-keys: |
-            ${{ runner.os }}-pnpm-
-
       - name: Setup pnpm
         uses: pnpm/action-setup@v4
         
@@ -58,8 +50,12 @@ jobs:
           pnpm nx:optimize:environment
           echo "✅ Nx configured with CI-optimized settings"
         
-      - name: Build theme package
-        run: pnpm nx build @ifla/theme
+      - name: Build dependencies and theme
+        run: |
+          echo "📦 Building contracts package..."
+          pnpm nx build @ifla/contracts
+          echo "🎨 Building theme package..."
+          pnpm nx build @ifla/theme
         
       - name: Build all documentation sites and collect warnings
         id: build-warnings

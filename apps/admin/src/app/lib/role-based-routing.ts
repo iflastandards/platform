@@ -4,6 +4,7 @@
  */
 
 import { type UserRoles } from '@/lib/auth';
+import { config } from '@/config/environment';
 
 type Environment = 'local' | 'preview' | 'development' | 'production';
 
@@ -30,8 +31,8 @@ export function getRoleBasedLandingPage(
 
   // Review Group Admins get the general dashboard to choose sites
   if (roles.reviewGroups && roles.reviewGroups.length > 0) {
-    const adminRgs = roles.reviewGroups.filter(rg => rg.role === 'admin');
-    
+    const adminRgs = roles.reviewGroups.filter((rg) => rg.role === 'admin');
+
     if (adminRgs.length === 1) {
       const rg = adminRgs[0].reviewGroupId;
 
@@ -46,8 +47,8 @@ export function getRoleBasedLandingPage(
   // Team members with single namespace access
   if (roles.teams && roles.teams.length > 0) {
     const allNamespaces = new Set<string>();
-    roles.teams.forEach(team => {
-      team.namespaces.forEach(ns => allNamespaces.add(ns));
+    roles.teams.forEach((team) => {
+      team.namespaces.forEach((ns) => allNamespaces.add(ns));
     });
 
     // If user has access to exactly one namespace, redirect there
@@ -101,8 +102,18 @@ export function getCurrentEnvironment(): Environment {
     return 'local';
   }
 
-  // Server-side: use environment variable or default to local
-  return (process.env.DOCS_ENV as Environment) || 'local';
+  // Server-side: use config to determine environment
+  const envName = config.currentEnvironment;
+  if (envName === 'production') {
+    return 'production';
+  }
+  if (envName === 'staging') {
+    return 'preview';
+  }
+  if (envName.startsWith('test_')) {
+    return 'local';
+  }
+  return 'local';
 }
 
 /**
@@ -117,7 +128,7 @@ export function generateTestingURL(user: SessionUser): string {
   const landingPage = getRoleBasedLandingPage(user, baseUrl);
 
   // For mock auth, we'll pass the user data as URL parameters (development only)
-  if (process.env.NODE_ENV === 'development') {
+  if (config.runtime.isDevelopment) {
     const userParam = encodeURIComponent(JSON.stringify(user));
     return `${baseUrl}/auth/signin?mockUser=${userParam}&callbackUrl=${encodeURIComponent(landingPage)}`;
   }
@@ -172,16 +183,16 @@ export function userHasSiteAccess(user: SessionUser, siteKey: string): boolean {
   }
 
   // Check team-based namespace access
-  const hasTeamAccess = roles.teams?.some(team => 
-    team.namespaces.includes(siteKey)
+  const hasTeamAccess = roles.teams?.some((team) =>
+    team.namespaces.includes(siteKey),
   );
   if (hasTeamAccess) {
     return true;
   }
 
   // Check translation access
-  const hasTranslationAccess = roles.translations?.some(trans => 
-    trans.namespaces.includes(siteKey)
+  const hasTranslationAccess = roles.translations?.some((trans) =>
+    trans.namespaces.includes(siteKey),
   );
   if (hasTranslationAccess) {
     return true;
@@ -220,7 +231,10 @@ export function userHasSiteAccess(user: SessionUser, siteKey: string): boolean {
   };
 
   const rg = siteToRg[siteKey];
-  if (rg && roles.reviewGroups?.some(reviewGroup => reviewGroup.reviewGroupId === rg)) {
+  if (
+    rg &&
+    roles.reviewGroups?.some((reviewGroup) => reviewGroup.reviewGroupId === rg)
+  ) {
     return true;
   }
 

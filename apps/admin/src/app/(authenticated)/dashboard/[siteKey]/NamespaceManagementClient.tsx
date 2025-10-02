@@ -65,7 +65,7 @@ const LiveRegion = ({ message }: { message: string }) => (
     role="status"
     aria-live="polite"
     aria-atomic="true"
-    style={{ 
+    style={{
       position: 'absolute',
       left: '-9999px',
       width: '1px',
@@ -116,7 +116,8 @@ const standardNamespaceTabs: TabData[] = [
       {
         id: 'create-page',
         title: 'Create New Page',
-        description: 'Add new documentation pages for elements, terms, or concepts',
+        description:
+          'Add new documentation pages for elements, terms, or concepts',
         type: 'github-cli',
       },
       {
@@ -176,7 +177,8 @@ const standardNamespaceTabs: TabData[] = [
       {
         id: 'update-dctap',
         title: 'Manage DC-TAP',
-        description: 'Maintain DC-TAP and JSON-LD context files for this namespace',
+        description:
+          'Maintain DC-TAP and JSON-LD context files for this namespace',
         type: 'codespaces',
       },
       {
@@ -456,13 +458,15 @@ function NamespaceDashboard({
           description={
             namespaceKey === 'portal' ? (
               <>
-                The Portal is not a standard namespace. It serves as the main IFLA standards platform 
-                and requires superadmin permissions for all management operations.
+                The Portal is not a standard namespace. It serves as the main
+                IFLA standards platform and requires superadmin permissions for
+                all management operations.
               </>
             ) : (
               <>
-                This is a development/testing environment, not a standard namespace. 
-                It requires superadmin permissions and should be used with caution.
+                This is a development/testing environment, not a standard
+                namespace. It requires superadmin permissions and should be used
+                with caution.
               </>
             )
           }
@@ -474,18 +478,30 @@ function NamespaceDashboard({
 
       <Row gutter={[24, 24]}>
         <Col xs={24} md={12}>
-          <Card 
-            title={isSpecialCase ? 'System Status' : 'Namespace Status'}
-          >
+          <Card title={isSpecialCase ? 'System Status' : 'Namespace Status'}>
             <List
               size="small"
               split
               dataSource={[
-                { label: 'Type', value: isSpecialCase ? 'Special System Area' : 'Standard Namespace' },
+                {
+                  label: 'Type',
+                  value: isSpecialCase
+                    ? 'Special System Area'
+                    : 'Standard Namespace',
+                },
                 { label: 'Last Updated', value: '2 hours ago' },
-                { label: 'Build Status', value: <Tag color="success">Passing</Tag> },
-                { label: isSpecialCase ? 'System Issues' : 'Open PRs', value: '3' },
-                { label: isSpecialCase ? 'Active Tasks' : 'Pending Reviews', value: '5' },
+                {
+                  label: 'Build Status',
+                  value: <Tag color="success">Passing</Tag>,
+                },
+                {
+                  label: isSpecialCase ? 'System Issues' : 'Open PRs',
+                  value: '3',
+                },
+                {
+                  label: isSpecialCase ? 'Active Tasks' : 'Pending Reviews',
+                  value: '5',
+                },
               ]}
               renderItem={(item) => (
                 <List.Item>
@@ -497,27 +513,32 @@ function NamespaceDashboard({
         </Col>
 
         <Col xs={24} md={12}>
-          <Card 
-            title={`Recent Activity - ${namespaceCode}`}
-          >
+          <Card title={`Recent Activity - ${namespaceCode}`}>
             <List
               size="small"
               dataSource={
-                isSpecialCase ? [
-                  { text: 'System configuration updated', time: '1h ago' },
-                  { text: 'New namespace created: test-ns', time: '3h ago' },
-                  { text: 'Platform deployment completed', time: '1d ago' },
-                ] : [
-                  { text: 'Updated element C2001', time: '2h ago' },
-                  { text: 'Merged PR #45', time: '1d ago' },
-                  { text: 'Added new vocabulary terms', time: '2d ago' },
-                ]
+                isSpecialCase
+                  ? [
+                      { text: 'System configuration updated', time: '1h ago' },
+                      {
+                        text: 'New namespace created: test-ns',
+                        time: '3h ago',
+                      },
+                      { text: 'Platform deployment completed', time: '1d ago' },
+                    ]
+                  : [
+                      { text: 'Updated element C2001', time: '2h ago' },
+                      { text: 'Merged PR #45', time: '1d ago' },
+                      { text: 'Added new vocabulary terms', time: '2d ago' },
+                    ]
               }
               renderItem={(item) => (
                 <List.Item>
                   <Space direction="vertical" size={0}>
                     <Text>{item.text}</Text>
-                    <Text type="secondary" style={{ fontSize: 12 }}>{item.time}</Text>
+                    <Text type="secondary" style={{ fontSize: 12 }}>
+                      {item.time}
+                    </Text>
                   </Space>
                 </List.Item>
               )}
@@ -528,26 +549,13 @@ function NamespaceDashboard({
         <Col xs={24} md={12}>
           <Card title="Quick Actions">
             <Space direction="vertical" style={{ width: '100%' }}>
-              <Button
-                type="primary"
-                disabled
-                block
-                style={{ minHeight: 44 }}
-              >
+              <Button type="primary" disabled block style={{ minHeight: 44 }}>
                 {isSpecialCase ? 'System Config' : 'New Content'}
               </Button>
-              <Button
-                disabled
-                block
-                style={{ minHeight: 44 }}
-              >
+              <Button disabled block style={{ minHeight: 44 }}>
                 {isSpecialCase ? 'User Management' : 'Sync Sheets'}
               </Button>
-              <Button
-                disabled
-                block
-                style={{ minHeight: 44 }}
-              >
+              <Button disabled block style={{ minHeight: 44 }}>
                 {isSpecialCase ? 'Deploy' : 'View PRs'}
               </Button>
             </Space>
@@ -560,23 +568,39 @@ function NamespaceDashboard({
               {isSpecialCase ? (
                 <>
                   <Col span={12} style={{ textAlign: 'center' }}>
-                    <Title level={2} style={{ color: '#1890ff', margin: 0 }}>12</Title>
-                    <Text type="secondary" style={{ fontSize: 12 }}>NAMESPACES</Text>
+                    <Title level={2} style={{ color: '#1890ff', margin: 0 }}>
+                      12
+                    </Title>
+                    <Text type="secondary" style={{ fontSize: 12 }}>
+                      NAMESPACES
+                    </Text>
                   </Col>
                   <Col span={12} style={{ textAlign: 'center' }}>
-                    <Title level={2} style={{ color: '#1890ff', margin: 0 }}>156</Title>
-                    <Text type="secondary" style={{ fontSize: 12 }}>TOTAL USERS</Text>
+                    <Title level={2} style={{ color: '#1890ff', margin: 0 }}>
+                      156
+                    </Title>
+                    <Text type="secondary" style={{ fontSize: 12 }}>
+                      TOTAL USERS
+                    </Text>
                   </Col>
                 </>
               ) : (
                 <>
                   <Col span={12} style={{ textAlign: 'center' }}>
-                    <Title level={2} style={{ color: '#1890ff', margin: 0 }}>8</Title>
-                    <Text type="secondary" style={{ fontSize: 12 }}>TEAM MEMBERS</Text>
+                    <Title level={2} style={{ color: '#1890ff', margin: 0 }}>
+                      8
+                    </Title>
+                    <Text type="secondary" style={{ fontSize: 12 }}>
+                      TEAM MEMBERS
+                    </Text>
                   </Col>
                   <Col span={12} style={{ textAlign: 'center' }}>
-                    <Title level={2} style={{ color: '#1890ff', margin: 0 }}>3</Title>
-                    <Text type="secondary" style={{ fontSize: 12 }}>ACTIVE REVIEWERS</Text>
+                    <Title level={2} style={{ color: '#1890ff', margin: 0 }}>
+                      3
+                    </Title>
+                    <Text type="secondary" style={{ fontSize: 12 }}>
+                      ACTIVE REVIEWERS
+                    </Text>
                   </Col>
                 </>
               )}
@@ -590,8 +614,9 @@ function NamespaceDashboard({
           message="Namespace Management"
           description={
             <>
-              This dashboard manages the <strong>{namespaceTitle}</strong> namespace. 
-              Each namespace represents a distinct IFLA standard with its own content, team, and workflow.
+              This dashboard manages the <strong>{namespaceTitle}</strong>{' '}
+              namespace. Each namespace represents a distinct IFLA standard with
+              its own content, team, and workflow.
             </>
           }
           type="info"
@@ -603,10 +628,10 @@ function NamespaceDashboard({
   );
 }
 
-function ActionGrid({ 
-  actions, 
-  isSuperAdmin 
-}: { 
+function ActionGrid({
+  actions,
+  isSuperAdmin,
+}: {
   actions: ManagementAction[];
   isSuperAdmin?: boolean;
 }) {
@@ -641,7 +666,9 @@ function ActionGrid({
   };
 
   const canAccessAction = (action: ManagementAction) => {
-    if (!action.requiredRole) {return true;}
+    if (!action.requiredRole) {
+      return true;
+    }
     return action.requiredRole === 'superadmin' ? isSuperAdmin : true;
   };
 
@@ -651,17 +678,15 @@ function ActionGrid({
         const hasAccess = canAccessAction(action);
         return (
           <Col xs={24} md={12} lg={8} key={action.id}>
-            <Card 
-              style={{ height: '100%', opacity: hasAccess ? 1 : 0.6 }}
-            >
+            <Card style={{ height: '100%', opacity: hasAccess ? 1 : 0.6 }}>
               <Space direction="vertical" style={{ width: '100%' }}>
                 <Space>
                   {getActionTypeIcon(action.type)}
-                  <Title level={5} style={{ margin: 0 }}>{action.title}</Title>
+                  <Title level={5} style={{ margin: 0 }}>
+                    {action.title}
+                  </Title>
                 </Space>
-                <Paragraph type="secondary">
-                  {action.description}
-                </Paragraph>
+                <Paragraph type="secondary">{action.description}</Paragraph>
                 <Space>
                   <Button
                     type="primary"
@@ -669,7 +694,11 @@ function ActionGrid({
                     disabled={!hasAccess || action.disabled === true}
                     style={{ minHeight: 36 }}
                   >
-                    {!hasAccess ? 'Superadmin Only' : action.disabled === true ? 'Coming Soon' : 'Run Action'}
+                    {!hasAccess
+                      ? 'Superadmin Only'
+                      : action.disabled === true
+                        ? 'Coming Soon'
+                        : 'Run Action'}
                   </Button>
                   <Tag>{getActionTypeLabel(action.type)}</Tag>
                 </Space>
@@ -683,18 +712,29 @@ function ActionGrid({
 }
 
 function getTabIcon(tabId: string) {
-  switch(tabId) {
-    case 'overview': return <DashboardOutlined />;
-    case 'content': return <FileTextOutlined />;
-    case 'rdf': return <DatabaseOutlined />;
-    case 'workflow': return <BranchesOutlined />;
-    case 'team': return <TeamOutlined />;
-    case 'releases': return <DeploymentUnitOutlined />;
-    case 'quality': return <SafetyCertificateOutlined />;
-    case 'github': return <GithubOutlined />;
-    case 'settings': return <SettingOutlined />;
-    case 'system': return <ToolOutlined />;
-    default: return null;
+  switch (tabId) {
+    case 'overview':
+      return <DashboardOutlined />;
+    case 'content':
+      return <FileTextOutlined />;
+    case 'rdf':
+      return <DatabaseOutlined />;
+    case 'workflow':
+      return <BranchesOutlined />;
+    case 'team':
+      return <TeamOutlined />;
+    case 'releases':
+      return <DeploymentUnitOutlined />;
+    case 'quality':
+      return <SafetyCertificateOutlined />;
+    case 'github':
+      return <GithubOutlined />;
+    case 'settings':
+      return <SettingOutlined />;
+    case 'system':
+      return <ToolOutlined />;
+    default:
+      return null;
   }
 }
 
@@ -710,11 +750,12 @@ export default function NamespaceManagementClient({
   const [mobileOpen, setMobileOpen] = useState(false);
   const [liveMessage, setLiveMessage] = useState('');
 
-  const availableTabs = isSpecialCase && isSuperAdmin 
-    ? [...standardNamespaceTabs, ...specialCaseTabs]
-    : standardNamespaceTabs;
+  const availableTabs =
+    isSpecialCase && isSuperAdmin
+      ? [...standardNamespaceTabs, ...specialCaseTabs]
+      : standardNamespaceTabs;
 
-  const currentTab = availableTabs.find(tab => tab.id === selectedTab);
+  const currentTab = availableTabs.find((tab) => tab.id === selectedTab);
 
   const handleDrawerToggle = () => {
     setMobileOpen(!mobileOpen);
@@ -744,7 +785,9 @@ export default function NamespaceManagementClient({
   const drawerContent = (
     <div role="navigation" aria-label="Dashboard navigation">
       <div style={{ padding: 16, borderBottom: '1px solid #f0f0f0' }}>
-        <Title level={4} style={{ margin: 0 }}>{namespaceCode}</Title>
+        <Title level={4} style={{ margin: 0 }}>
+          {namespaceCode}
+        </Title>
         <Text type="secondary" style={{ fontSize: 12 }}>
           {isSpecialCase ? 'System Management' : 'Namespace Management'}
         </Text>
@@ -773,30 +816,34 @@ export default function NamespaceManagementClient({
     <>
       <SkipLinks />
       <LiveRegion message={liveMessage} />
-      
+
       <div style={{ display: 'flex', minHeight: '100vh' }}>
         {/* Mobile Header */}
-        <div style={{ 
-          display: 'none',
-          position: 'fixed',
-          top: 0,
-          left: 0,
-          right: 0,
-          height: 64,
-          background: '#fff',
-          borderBottom: '1px solid #f0f0f0',
-          padding: '0 16px',
-          alignItems: 'center',
-          zIndex: 100,
-        }}
-        className="mobile-header"
+        <div
+          style={{
+            display: 'none',
+            position: 'fixed',
+            top: 0,
+            left: 0,
+            right: 0,
+            height: 64,
+            background: '#fff',
+            borderBottom: '1px solid #f0f0f0',
+            padding: '0 16px',
+            alignItems: 'center',
+            zIndex: 100,
+          }}
+          className="mobile-header"
         >
           <Button
             icon={<MenuOutlined />}
             onClick={handleDrawerToggle}
             style={{ marginRight: 16 }}
+            aria-label="Open navigation menu"
           />
-          <Title level={4} style={{ margin: 0 }}>{namespaceTitle}</Title>
+          <Title level={4} style={{ margin: 0 }}>
+            {namespaceTitle}
+          </Title>
         </div>
 
         {/* Mobile Drawer */}
@@ -813,8 +860,8 @@ export default function NamespaceManagementClient({
         </Drawer>
 
         {/* Desktop Sidebar */}
-        <div 
-          style={{ 
+        <div
+          style={{
             width: 240,
             background: '#fff',
             borderRight: '1px solid #f0f0f0',
@@ -846,29 +893,26 @@ export default function NamespaceManagementClient({
           </div>
 
           {selectedTab === 'overview' ? (
-            <NamespaceDashboard 
-              namespaceTitle={namespaceTitle} 
+            <NamespaceDashboard
+              namespaceTitle={namespaceTitle}
               namespaceCode={namespaceCode}
               namespaceKey={namespaceKey}
               isSpecialCase={isSpecialCase}
             />
           ) : (
-            <ActionGrid 
-              actions={currentTab?.actions || []} 
+            <ActionGrid
+              actions={currentTab?.actions || []}
               isSuperAdmin={isSuperAdmin}
             />
           )}
 
-          <div 
+          <div
             style={{ marginTop: 32 }}
             id="external-resources"
             role="region"
             aria-labelledby="external-resources-title"
           >
-            <Title 
-              level={4}
-              id="external-resources-title"
-            >
+            <Title level={4} id="external-resources-title">
               External Resources
             </Title>
             <Space wrap>
@@ -910,7 +954,7 @@ export default function NamespaceManagementClient({
         </div>
       </div>
 
-      <style jsx>{`
+      <style>{`
         @media (max-width: 768px) {
           .mobile-header {
             display: flex !important;

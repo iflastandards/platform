@@ -16,21 +16,16 @@ export const JobSchema = z.object({
       'export_rdf',
       'validate_terms',
       'generate_docs',
-    ],
-    {
-      errorMap: () => ({ message: 'Invalid job type' }),
-    },
-  ),
-  status: z.enum(['queued', 'running', 'success', 'failed', 'cancelled'], {
-    errorMap: () => ({ message: 'Invalid job status' }),
-  }),
+    ] as const
+  ).describe('Invalid job type'),
+  status: z.enum(['queued', 'running', 'success', 'failed', 'cancelled'] as const).describe('Invalid job status'),
   progress: z.number().min(0).max(100).default(0),
   createdAt: z.string().datetime('Invalid created date format'),
   updatedAt: z.string().datetime('Invalid updated date format').optional(),
   finishedAt: z.string().datetime('Invalid finished date format').optional(),
   outputUrl: z.string().url('Invalid output URL').optional(),
   error: z.string().optional(),
-  metadata: z.record(z.unknown()).optional(),
+  metadata: z.record(z.string(), z.unknown()).optional(),
 
   // Related resource IDs
   namespaceId: z.string().optional(),

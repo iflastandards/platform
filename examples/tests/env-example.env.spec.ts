@@ -29,6 +29,10 @@
 
 import { describe, it, expect } from 'vitest';
 
+/**
+ * @unit @env @high-priority @validation
+ */
+
 describe('Environment Configuration @unit', () => {
   it('should have valid API credentials in production', () => {
     if (process.env.NODE_ENV === 'production') {

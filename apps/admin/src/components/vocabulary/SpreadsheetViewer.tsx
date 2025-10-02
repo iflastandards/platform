@@ -81,10 +81,10 @@ export default function SpreadsheetViewer({
       return;
     }
 
-    const filtered = data.filter(row =>
-      Object.values(row).some(value =>
-        value?.toString().toLowerCase().includes(searchTerm.toLowerCase())
-      )
+    const filtered = data.filter((row) =>
+      Object.values(row).some((value) =>
+        value?.toString().toLowerCase().includes(searchTerm.toLowerCase()),
+      ),
     );
     setFilteredData(filtered);
     setCurrentPage(1);
@@ -110,18 +110,20 @@ export default function SpreadsheetViewer({
   };
 
   const downloadCSV = () => {
-    const headers = columns.map(col => col.label).join(',');
-    const rows = filteredData.map(row =>
-      columns.map(col => {
-        const value = row[col.id];
-        // Escape values containing commas or quotes
-        if (value && value.toString().includes(',')) {
-          return `"${value.toString().replace(/"/g, '""')}"`;
-        }
-        return value || '';
-      }).join(',')
+    const headers = columns.map((col) => col.label).join(',');
+    const rows = filteredData.map((row) =>
+      columns
+        .map((col) => {
+          const value = row[col.id];
+          // Escape values containing commas or quotes
+          if (value && value.toString().includes(',')) {
+            return `"${value.toString().replace(/"/g, '""')}"`;
+          }
+          return value || '';
+        })
+        .join(','),
     );
-    
+
     const csv = [headers, ...rows].join('\n');
     const blob = new Blob([csv], { type: 'text/csv' });
     const url = URL.createObjectURL(blob);
@@ -151,12 +153,16 @@ export default function SpreadsheetViewer({
         icon: <EyeOutlined />,
         onClick: () => onRowClick?.(record),
       },
-      ...(onEdit ? [{
-        key: 'edit',
-        label: 'Edit',
-        icon: <EditOutlined />,
-        onClick: () => onEdit(record),
-      }] : []),
+      ...(onEdit
+        ? [
+            {
+              key: 'edit',
+              label: 'Edit',
+              icon: <EditOutlined />,
+              onClick: () => onEdit(record),
+            },
+          ]
+        : []),
       {
         key: 'copy',
         label: 'Copy ID',
@@ -196,11 +202,15 @@ export default function SpreadsheetViewer({
   };
 
   const tableColumns = [
-    ...columns.map(col => ({
+    ...columns.map((col) => ({
       title: (
         <Space direction="vertical" size={0}>
           <Text strong>{col.label}</Text>
-          {col.required && <Tag color="red" style={{ fontSize: 10 }}>Required</Tag>}
+          {col.required && (
+            <Tag color="red" style={{ fontSize: 10 }}>
+              Required
+            </Tag>
+          )}
           {col.description && (
             <Text type="secondary" style={{ fontSize: 11 }}>
               {col.description}
@@ -220,7 +230,11 @@ export default function SpreadsheetViewer({
       fixed: 'right' as const,
       render: (_: any, record: SpreadsheetData) => (
         <Dropdown menu={getRowMenu(record)} trigger={['click']}>
-          <Button type="text" icon={<MoreOutlined />} />
+          <Button
+            type="text"
+            icon={<MoreOutlined />}
+            aria-label="More actions"
+          />
         </Dropdown>
       ),
     },
@@ -273,7 +287,9 @@ export default function SpreadsheetViewer({
       <div style={{ marginBottom: 24 }}>
         <Row justify="space-between" align="middle">
           <Col>
-            <Title level={4} style={{ margin: 0 }}>{title}</Title>
+            <Title level={4} style={{ margin: 0 }}>
+              {title}
+            </Title>
             {subtitle && <Text type="secondary">{subtitle}</Text>}
           </Col>
           <Col>
@@ -287,16 +303,10 @@ export default function SpreadsheetViewer({
                   prefix={<SearchOutlined />}
                 />
               )}
-              {filterable && (
-                <Button icon={<FilterOutlined />}>
-                  Filters
-                </Button>
-              )}
+              {filterable && <Button icon={<FilterOutlined />}>Filters</Button>}
               {downloadable && (
                 <Dropdown menu={downloadMenu}>
-                  <Button icon={<DownloadOutlined />}>
-                    Download
-                  </Button>
+                  <Button icon={<DownloadOutlined />}>Download</Button>
                 </Dropdown>
               )}
             </Space>
@@ -326,7 +336,7 @@ export default function SpreadsheetViewer({
           <Card size="small">
             <Text type="secondary">Required Fields</Text>
             <Title level={4} style={{ margin: '8px 0 0 0' }}>
-              {columns.filter(c => c.required).length}
+              {columns.filter((c) => c.required).length}
             </Title>
           </Card>
         </Col>
@@ -337,12 +347,19 @@ export default function SpreadsheetViewer({
               {Math.round(
                 (filteredData.reduce((acc, row) => {
                   const filledRequired = columns
-                    .filter(c => c.required)
-                    .filter(c => row[c.id] !== null && row[c.id] !== undefined)
-                    .length;
-                  return acc + (filledRequired / columns.filter(c => c.required).length);
-                }, 0) / filteredData.length) * 100
-              )}%
+                    .filter((c) => c.required)
+                    .filter(
+                      (c) => row[c.id] !== null && row[c.id] !== undefined,
+                    ).length;
+                  return (
+                    acc +
+                    filledRequired / columns.filter((c) => c.required).length
+                  );
+                }, 0) /
+                  filteredData.length) *
+                  100,
+              )}
+              %
             </Title>
           </Card>
         </Col>
@@ -376,7 +393,7 @@ export default function SpreadsheetViewer({
             cursor: onRowClick ? 'pointer' : 'default',
           },
         })}
-        rowClassName={(record) => 
+        rowClassName={(record) =>
           selectedRow?.id === record.id ? 'ant-table-row-selected' : ''
         }
       />
@@ -390,7 +407,9 @@ export default function SpreadsheetViewer({
           onChange={handlePageChange}
           showSizeChanger
           showQuickJumper
-          showTotal={(total, range) => `${range[0]}-${range[1]} of ${total} items`}
+          showTotal={(total, range) =>
+            `${range[0]}-${range[1]} of ${total} items`
+          }
           pageSizeOptions={['10', '25', '50', '100']}
         />
       </div>

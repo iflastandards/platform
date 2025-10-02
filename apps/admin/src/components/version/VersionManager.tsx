@@ -141,7 +141,7 @@ export default function VersionManager({
 
   const handleVersionSelection = (versionId: string) => {
     if (selectedVersions.includes(versionId)) {
-      setSelectedVersions(selectedVersions.filter(id => id !== versionId));
+      setSelectedVersions(selectedVersions.filter((id) => id !== versionId));
     } else if (selectedVersions.length < 2) {
       setSelectedVersions([...selectedVersions, versionId]);
     }
@@ -149,8 +149,8 @@ export default function VersionManager({
 
   const handleCompareSelected = () => {
     if (selectedVersions.length === 2) {
-      const v1 = versions.find(v => v.id === selectedVersions[0]);
-      const v2 = versions.find(v => v.id === selectedVersions[1]);
+      const v1 = versions.find((v) => v.id === selectedVersions[0]);
+      const v2 = versions.find((v) => v.id === selectedVersions[1]);
       if (v1 && v2) {
         onCompareVersions?.(v1, v2);
       }
@@ -179,11 +179,13 @@ export default function VersionManager({
   const publishSteps = [
     {
       title: 'Pre-publish Validation',
-      description: 'Validating vocabulary files and ensuring all requirements are met...',
+      description:
+        'Validating vocabulary files and ensuring all requirements are met...',
     },
     {
       title: 'Generate Release Notes',
-      description: 'Generating release notes from changelog and recent commits...',
+      description:
+        'Generating release notes from changelog and recent commits...',
     },
     {
       title: 'Create GitHub Release',
@@ -218,12 +220,8 @@ export default function VersionManager({
       render: (version: string, record: Version) => (
         <Space>
           <Text strong>{version}</Text>
-          {record.preRelease && (
-            <Tag>Pre-release</Tag>
-          )}
-          {version === currentVersion && (
-            <Tag color="success">Current</Tag>
-          )}
+          {record.preRelease && <Tag>Pre-release</Tag>}
+          {version === currentVersion && <Tag color="success">Current</Tag>}
         </Space>
       ),
     },
@@ -232,9 +230,7 @@ export default function VersionManager({
       dataIndex: 'status',
       key: 'status',
       render: (status: string) => (
-        <Tag color={getStatusColor(status)}>
-          {status.toUpperCase()}
-        </Tag>
+        <Tag color={getStatusColor(status)}>{status.toUpperCase()}</Tag>
       ),
     },
     {
@@ -268,11 +264,16 @@ export default function VersionManager({
                   setSelectedVersion(record);
                   setPublishModalVisible(true);
                 }}
+                aria-label="Publish version"
               />
             </Tooltip>
           )}
           <Tooltip title="Download">
-            <Button type="text" icon={<DownloadOutlined />} />
+            <Button
+              type="text"
+              icon={<DownloadOutlined />}
+              aria-label="Download version"
+            />
           </Tooltip>
         </Space>
       ),
@@ -282,20 +283,26 @@ export default function VersionManager({
   return (
     <div>
       {/* Header */}
-      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: 24 }}>
+      <div
+        style={{
+          display: 'flex',
+          justifyContent: 'space-between',
+          alignItems: 'flex-start',
+          marginBottom: 24,
+        }}
+      >
         <div>
-          <Title level={4} style={{ marginBottom: 4 }}>Version Management</Title>
+          <Title level={4} style={{ marginBottom: 4 }}>
+            Version Management
+          </Title>
           <Text type="secondary">
             {namespace} • {versions.length} versions
           </Text>
         </div>
-        
+
         <Space>
           {selectedVersions.length === 2 && (
-            <Button
-              icon={<DiffOutlined />}
-              onClick={handleCompareSelected}
-            >
+            <Button icon={<DiffOutlined />} onClick={handleCompareSelected}>
               Compare Selected
             </Button>
           )}
@@ -326,8 +333,10 @@ export default function VersionManager({
         {/* Versions Table */}
         <Col xs={24} lg={18}>
           <Card>
-            <Title level={5} style={{ marginBottom: 16 }}>All Versions</Title>
-            
+            <Title level={5} style={{ marginBottom: 16 }}>
+              All Versions
+            </Title>
+
             <Table
               columns={columns}
               dataSource={versions}
@@ -344,21 +353,36 @@ export default function VersionManager({
         {/* Recent Releases */}
         <Col xs={24} lg={6}>
           <Card>
-            <Title level={5} style={{ marginBottom: 16 }}>Recent Releases</Title>
-            
+            <Title level={5} style={{ marginBottom: 16 }}>
+              Recent Releases
+            </Title>
+
             <List
               dataSource={versions
-                .filter(v => v.status === 'published')
-                .sort((a, b) => new Date(b.publishedDate || b.createdDate).getTime() - new Date(a.publishedDate || a.createdDate).getTime())
+                .filter((v) => v.status === 'published')
+                .sort(
+                  (a, b) =>
+                    new Date(b.publishedDate || b.createdDate).getTime() -
+                    new Date(a.publishedDate || a.createdDate).getTime(),
+                )
                 .slice(0, 5)}
               renderItem={(version) => (
                 <List.Item>
-                  <Space direction="vertical" size={0} style={{ width: '100%' }}>
+                  <Space
+                    direction="vertical"
+                    size={0}
+                    style={{ width: '100%' }}
+                  >
                     <Badge status="processing" text={version.version} />
                     <Text type="secondary" style={{ fontSize: 12 }}>
-                      {new Date(version.publishedDate || version.createdDate).toLocaleDateString()}
+                      {new Date(
+                        version.publishedDate || version.createdDate,
+                      ).toLocaleDateString()}
                     </Text>
-                    <Paragraph ellipsis={{ rows: 2 }} style={{ fontSize: 12, marginBottom: 0 }}>
+                    <Paragraph
+                      ellipsis={{ rows: 2 }}
+                      style={{ fontSize: 12, marginBottom: 0 }}
+                    >
                       {version.description}
                     </Paragraph>
                   </Space>
@@ -380,11 +404,7 @@ export default function VersionManager({
         footer={null}
         width={600}
       >
-        <Form
-          form={form}
-          layout="vertical"
-          onFinish={handleCreateVersion}
-        >
+        <Form form={form} layout="vertical" onFinish={handleCreateVersion}>
           <Form.Item
             name="version"
             label="Version Number"
@@ -393,7 +413,7 @@ export default function VersionManager({
           >
             <Input placeholder="e.g., 1.2.0" />
           </Form.Item>
-          
+
           <Form.Item
             name="description"
             label="Description"
@@ -404,11 +424,8 @@ export default function VersionManager({
               placeholder="Brief description of changes in this version"
             />
           </Form.Item>
-          
-          <Form.Item
-            name="preRelease"
-            valuePropName="checked"
-          >
+
+          <Form.Item name="preRelease" valuePropName="checked">
             <Checkbox>Mark as pre-release</Checkbox>
           </Form.Item>
 
@@ -421,10 +438,12 @@ export default function VersionManager({
 
           <Form.Item style={{ marginBottom: 0 }}>
             <Space>
-              <Button onClick={() => {
-                setCreateModalVisible(false);
-                form.resetFields();
-              }}>
+              <Button
+                onClick={() => {
+                  setCreateModalVisible(false);
+                  form.resetFields();
+                }}
+              >
                 Cancel
               </Button>
               <Button type="primary" htmlType="submit">
@@ -445,7 +464,7 @@ export default function VersionManager({
           setCurrentStep(0);
         }}
         footer={[
-          <Button 
+          <Button
             key="cancel"
             onClick={() => {
               setPublishModalVisible(false);
@@ -455,21 +474,22 @@ export default function VersionManager({
           >
             Cancel
           </Button>,
-          <Button 
-            key="publish"
-            type="primary"
-            onClick={handlePublishVersion}
-          >
+          <Button key="publish" type="primary" onClick={handlePublishVersion}>
             Publish Version
           </Button>,
         ]}
         width={700}
       >
         <Paragraph type="secondary">
-          Publishing will make this version available to the public and update all documentation.
+          Publishing will make this version available to the public and update
+          all documentation.
         </Paragraph>
 
-        <Steps current={currentStep} direction="vertical" style={{ marginTop: 24 }}>
+        <Steps
+          current={currentStep}
+          direction="vertical"
+          style={{ marginTop: 24 }}
+        >
           {publishSteps.map((step, index) => (
             <Step
               key={index}
@@ -478,7 +498,12 @@ export default function VersionManager({
                 index === currentStep ? (
                   <div>
                     <Text type="secondary">{step.description}</Text>
-                    <Progress percent={30} size="small" status="active" style={{ marginTop: 8 }} />
+                    <Progress
+                      percent={30}
+                      size="small"
+                      status="active"
+                      style={{ marginTop: 8 }}
+                    />
                   </div>
                 ) : (
                   <Text type="secondary">{step.description}</Text>

@@ -6,7 +6,11 @@
 
 import { test, expect, smokeTest } from '../utils/tagged-test';
 
-test.describe('Admin Homepage Smoke Tests @smoke @admin @ui @critical', () => {
+test.describe('Admin Homepage Smoke Tests @smoke @post-deploy @critical @admin @ui @critical @navigation', () => {
+
+/**
+ * @e2e @smoke @post-deploy @critical @admin @ui @navigation
+ */
   const adminUrl = process.env.ADMIN_BASE_URL || process.env.ADMIN_URL || 'https://admin-iflastandards-preview.onrender.com';
   
   test.beforeEach(async ({ page }) => {

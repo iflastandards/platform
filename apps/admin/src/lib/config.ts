@@ -2,6 +2,8 @@
  * Admin app configuration
  */
 
+import { config } from '@/config/environment';
+
 export type Environment = 'local' | 'preview' | 'production';
 
 export const ADMIN_CONFIG = {
@@ -25,16 +27,17 @@ export const ADMIN_CONFIG = {
  * Determine the current environment based on the URL
  */
 export function getEnvironment(): Environment {
-  // In server components, we need to check environment variables or URLs
-  const url = process.env.NEXT_PUBLIC_CLERK_AFTER_SIGN_IN_URL || process.env.RENDER_EXTERNAL_URL || '';
-  
-  if (url.includes('localhost')) {
+  // Use the centralized config's environment detection
+  const envName = config.currentEnvironment;
+
+  // Map config environment names to Environment type
+  if (envName.startsWith('test_') || envName === 'development') {
     return 'local';
-  } if (url.includes('github.io') || url.includes('onrender.com')) {
+  }
+  if (envName === 'staging') {
     return 'preview';
-  } 
-    return 'production';
-  
+  }
+  return 'production';
 }
 
 /**
@@ -44,10 +47,10 @@ export function getEnvironment(): Environment {
 export function getPortalUrl(): string {
   // Determine environment based on the current URL
   const env = getEnvironment();
-  
+
   // Get portal configuration for this environment
   const portalConfig = ADMIN_CONFIG.portal[env];
-  
+
   // Return the portal URL
   return portalConfig.url;
 }

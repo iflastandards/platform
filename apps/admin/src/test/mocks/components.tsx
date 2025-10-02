@@ -1,9 +1,16 @@
 import React from 'react';
 import { vi } from 'vitest';
 
+// Type definitions for mock components
+interface MockTableProps {
+  headers?: string[];
+  rows?: React.ReactNode[][];
+  className?: string;
+}
+
 // Mock SiteManagementLink component from theme
 export const MockSiteManagementLink = vi.fn(({ children, ...props }) => (
-  <button data-testid="site-management-link" {...props}>
+  <button type="button" data-testid="site-management-link" {...props}>
     {children || 'Site Management'}
   </button>
 ));
@@ -24,6 +31,7 @@ export const MockButton = vi.fn(
       data-testid="button"
       onClick={onClick}
       disabled={disabled}
+      // eslint-disable-next-line react/button-has-type
       type={type}
       {...props}
     >
@@ -31,89 +39,6 @@ export const MockButton = vi.fn(
     </button>
   ),
 );
-
-export const MockInput = vi.fn(({ value, onChange, placeholder, ...props }) => (
-  <input
-    data-testid="input"
-    value={value}
-    onChange={onChange}
-    placeholder={placeholder}
-    {...props}
-  />
-));
-
-export const MockTextarea = vi.fn(
-  ({ value, onChange, placeholder, rows = 4, ...props }) => (
-    <textarea
-      data-testid="textarea"
-      value={value}
-      onChange={onChange}
-      placeholder={placeholder}
-      rows={rows}
-      {...props}
-    />
-  ),
-);
-
-export const MockSelect = vi.fn(({ value, onChange, children, ...props }) => (
-  <select data-testid="select" value={value} onChange={onChange} {...props}>
-    {children}
-  </select>
-));
-
-// Mock loading components
-export const MockLoadingSpinner = vi.fn(() => (
-  <div data-testid="loading-spinner">Loading...</div>
-));
-
-export const MockErrorBoundary = vi.fn(({ children, fallback }) => (
-  <div data-testid="error-boundary">{fallback || children}</div>
-));
-
-// Mock layout components
-export const MockContainer = vi.fn(({ children, className = '' }) => (
-  <div data-testid="container" className={className}>
-    {children}
-  </div>
-));
-
-export const MockCard = vi.fn(({ children, title, className = '' }) => (
-  <div data-testid="card" className={className}>
-    {title && <h3 data-testid="card-title">{title}</h3>}
-    <div data-testid="card-content">{children}</div>
-  </div>
-));
-
-// Mock tab components
-export const MockTabs = vi.fn(({ activeTab, onTabChange, children }) => (
-  <div data-testid="tabs">
-    <div data-testid="tab-list">
-      {React.Children.map(children, (child, index) => (
-        <button
-          key={index}
-          data-testid={`tab-${index}`}
-          onClick={() => onTabChange?.(index)}
-          className={activeTab === index ? 'active' : ''}
-        >
-          Tab {index}
-        </button>
-      ))}
-    </div>
-    <div data-testid="tab-content">
-      {React.Children.toArray(children)[activeTab]}
-    </div>
-  </div>
-));
-
-export const MockTabPanel = vi.fn(({ children }) => (
-  <div data-testid="tab-panel">{children}</div>
-));
-
-interface MockTableProps {
-  headers: string[];
-  rows: React.ReactNode[][];
-  className?: string;
-}
 
 export const MockTable = vi.fn(
   ({ headers, rows, className = '' }: MockTableProps) => (
@@ -154,15 +79,6 @@ export const mockComponents = {
   Navbar: MockNavbar,
   Sidebar: MockSidebar,
   Button: MockButton,
-  Input: MockInput,
-  Textarea: MockTextarea,
-  Select: MockSelect,
-  LoadingSpinner: MockLoadingSpinner,
-  ErrorBoundary: MockErrorBoundary,
-  Container: MockContainer,
-  Card: MockCard,
-  Tabs: MockTabs,
-  TabPanel: MockTabPanel,
   Table: MockTable,
   Badge: MockBadge,
 };

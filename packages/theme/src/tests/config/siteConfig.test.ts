@@ -1,6 +1,10 @@
 import { describe, it, expect } from 'vitest';
 import { getSiteConfig, type SiteKey, type Environment } from '@ifla/contracts';
 
+/**
+ * @unit @low-priority @validation
+ */
+
 describe('getSiteConfig @unit @low-priority @validation', () => {
   describe('basic functionality', () => {
     it('should return correct config for portal in local environment', () => {

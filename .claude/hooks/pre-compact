@@ -1,0 +1,208 @@
+#!/bin/bash
+# Lean Pre-compact hook for Claude Code
+# Preserves essential work state with optional features
+#
+# Environment variables for optional features:
+#   COMPACT_SAVE_HISTORY=true    - Save terminal history
+#   COMPACT_CREATE_COMMIT=true   - Create temporary git commit
+#   COMPACT_CHECK_PROCESSES=true - Check running servers/tests
+
+set -e
+
+echo "🔄 Pre-compact: Preserving essential state..."
+
+# Get the directory of this script
+SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
+PROJECT_ROOT="$( cd "$SCRIPT_DIR/../.." && pwd )"
+
+# Create state preservation directory
+STATE_DIR="$PROJECT_ROOT/.claude-state"
+TIMESTAMP=$(date +"%Y%m%d_%H%M%S")
+STATE_FILE="$STATE_DIR/state_${TIMESTAMP}.json"
+
+mkdir -p "$STATE_DIR"
+
+# === ESSENTIAL: Git State (Always save) ===
+save_git_state() {
+    echo "📌 Saving git state..."
+    
+    # Save current branch
+    CURRENT_BRANCH=$(git rev-parse --abbrev-ref HEAD 2>/dev/null || echo "unknown")
+    
+    # Save uncommitted changes (critical for restoration)
+    git diff > "$STATE_DIR/uncommitted_${TIMESTAMP}.diff" 2>/dev/null || true
+    
+    # Save staged changes (critical for restoration)
+    git diff --staged > "$STATE_DIR/staged_${TIMESTAMP}.diff" 2>/dev/null || true
+    
+    # Save list of untracked files (helpful for context)
+    git ls-files --others --exclude-standard > "$STATE_DIR/untracked_${TIMESTAMP}.txt" 2>/dev/null || true
+    
+    # Optional: Create temporary commit (OFF by default to avoid pollution)
+    if [[ "${COMPACT_CREATE_COMMIT}" == "true" ]]; then
+        if [[ -n $(git status --porcelain 2>/dev/null) ]]; then
+            echo "💾 Creating temporary commit (optional feature enabled)..."
+            git add -A
+            git commit -m "[CLAUDE-COMPACT] Temporary commit at ${TIMESTAMP}" --no-verify || true
+            echo "${TIMESTAMP}" > "$STATE_DIR/temp_commit.marker"
+        fi
+    fi
+}
+
+# === ESSENTIAL: Work State (Always save) ===
+save_work_state() {
+    echo "📝 Saving work state..."
+    
+    # Create minimal state JSON
+    cat > "$STATE_FILE" <<EOF
+{
+  "timestamp": "${TIMESTAMP}",
+  "branch": "${CURRENT_BRANCH}",
+  "working_directory": "$(pwd)",
+  "compact_type": "lean"
+}
+EOF
+    
+    # Save TODO list if it exists (essential for continuation)
+    if [[ -f "$PROJECT_ROOT/.claude/todos.json" ]]; then
+        cp "$PROJECT_ROOT/.claude/todos.json" "$STATE_DIR/todos_${TIMESTAMP}.json"
+        echo "✅ Saved TODO list"
+    fi
+    
+    # Save package.json for dependency context (small file, valuable)
+    if [[ -f "$PROJECT_ROOT/package.json" ]]; then
+        cp "$PROJECT_ROOT/package.json" "$STATE_DIR/package_${TIMESTAMP}.json"
+    fi
+    
+    # Save test results if recent (< 5 minutes old)
+    if [[ -f "$PROJECT_ROOT/test-results.json" ]]; then
+        if [[ $(find "$PROJECT_ROOT/test-results.json" -mmin -5 2>/dev/null) ]]; then
+            cp "$PROJECT_ROOT/test-results.json" "$STATE_DIR/test-results_${TIMESTAMP}.json"
+            echo "🧪 Saved recent test results"
+        fi
+    fi
+}
+
+# === OPTIONAL: Terminal History (OFF by default) ===
+save_terminal_history() {
+    if [[ "${COMPACT_SAVE_HISTORY}" == "true" ]]; then
+        echo "🖥️ Saving terminal history (optional feature enabled)..."
+        
+        # Save last 50 commands (reduced from 100)
+        if [[ -f "$HOME/.bash_history" ]]; then
+            tail -50 "$HOME/.bash_history" > "$STATE_DIR/bash_history_${TIMESTAMP}.txt" 2>/dev/null || true
+        fi
+        
+        if [[ -f "$HOME/.zsh_history" ]]; then
+            tail -50 "$HOME/.zsh_history" > "$STATE_DIR/zsh_history_${TIMESTAMP}.txt" 2>/dev/null || true
+        fi
+    fi
+}
+
+# === OPTIONAL: Running Processes (OFF by default) ===
+check_running_processes() {
+    if [[ "${COMPACT_CHECK_PROCESSES}" == "true" ]]; then
+        echo "🔧 Checking running processes (optional feature enabled)..."
+        
+        # Quick check for dev servers
+        lsof -i :3000-3030 > "$STATE_DIR/running_servers_${TIMESTAMP}.txt" 2>&1 || true
+    fi
+}
+
+# === ESSENTIAL: Create Restoration Script ===
+create_restore_script() {
+    cat > "$STATE_DIR/restore_${TIMESTAMP}.sh" <<'RESTORE_SCRIPT'
+#!/bin/bash
+# Lean restoration script for Claude state
+
+TIMESTAMP="__TIMESTAMP__"
+STATE_DIR="__STATE_DIR__"
+PROJECT_ROOT="__PROJECT_ROOT__"
+
+echo "🔄 Restoring state from ${TIMESTAMP}..."
+
+cd "$PROJECT_ROOT"
+
+# Restore git state
+if [[ -f "$STATE_DIR/temp_commit.marker" ]]; then
+    MARKER_TIME=$(cat "$STATE_DIR/temp_commit.marker")
+    if [[ "$MARKER_TIME" == "$TIMESTAMP" ]]; then
+        echo "↩️ Undoing temporary commit..."
+        git reset --soft HEAD~1
+        rm "$STATE_DIR/temp_commit.marker"
+    fi
+fi
+
+# Apply uncommitted changes
+if [[ -s "$STATE_DIR/uncommitted_${TIMESTAMP}.diff" ]]; then
+    echo "📝 Applying uncommitted changes..."
+    git apply "$STATE_DIR/uncommitted_${TIMESTAMP}.diff" 2>/dev/null || echo "⚠️  Some changes couldn't be applied"
+fi
+
+# Apply staged changes
+if [[ -s "$STATE_DIR/staged_${TIMESTAMP}.diff" ]]; then
+    echo "📝 Applying staged changes..."
+    git apply --cached "$STATE_DIR/staged_${TIMESTAMP}.diff" 2>/dev/null || echo "⚠️  Some staged changes couldn't be applied"
+fi
+
+# Restore TODO list
+if [[ -f "$STATE_DIR/todos_${TIMESTAMP}.json" ]]; then
+    echo "✅ Restoring TODO list..."
+    cp "$STATE_DIR/todos_${TIMESTAMP}.json" "$PROJECT_ROOT/.claude/todos.json"
+fi
+
+echo "✅ State restoration complete!"
+echo "Branch: $(git rev-parse --abbrev-ref HEAD)"
+echo "Changes: $(git status --porcelain | wc -l) files"
+RESTORE_SCRIPT
+
+    # Replace placeholders
+    sed -i.bak "s|__TIMESTAMP__|${TIMESTAMP}|g" "$STATE_DIR/restore_${TIMESTAMP}.sh"
+    sed -i.bak "s|__STATE_DIR__|${STATE_DIR}|g" "$STATE_DIR/restore_${TIMESTAMP}.sh"
+    sed -i.bak "s|__PROJECT_ROOT__|${PROJECT_ROOT}|g" "$STATE_DIR/restore_${TIMESTAMP}.sh"
+    rm "$STATE_DIR/restore_${TIMESTAMP}.sh.bak"
+    
+    chmod +x "$STATE_DIR/restore_${TIMESTAMP}.sh"
+    echo "$STATE_DIR/restore_${TIMESTAMP}.sh" > "$STATE_DIR/latest_restore.path"
+}
+
+# === Main Execution (Fast Path) ===
+main() {
+    START_TIME=$(date +%s)
+    
+    # Essential operations only
+    save_git_state
+    save_work_state
+    
+    # Optional operations (off by default)
+    save_terminal_history
+    check_running_processes
+    
+    # Create restoration script
+    create_restore_script
+    
+    END_TIME=$(date +%s)
+    DURATION=$((END_TIME - START_TIME))
+    
+    echo ""
+    echo "✅ Essential state preserved in ${DURATION}s"
+    echo "📁 State saved to: $STATE_DIR"
+    echo "🔧 Restore with: bash $STATE_DIR/restore_${TIMESTAMP}.sh"
+    
+    # Show what optional features were used
+    if [[ "${COMPACT_CREATE_COMMIT}" == "true" || "${COMPACT_SAVE_HISTORY}" == "true" || "${COMPACT_CHECK_PROCESSES}" == "true" ]]; then
+        echo ""
+        echo "Optional features enabled:"
+        [[ "${COMPACT_CREATE_COMMIT}" == "true" ]] && echo "  • Temporary commit created"
+        [[ "${COMPACT_SAVE_HISTORY}" == "true" ]] && echo "  • Terminal history saved"
+        [[ "${COMPACT_CHECK_PROCESSES}" == "true" ]] && echo "  • Process state captured"
+    fi
+    
+    # Mark completion
+    echo "${TIMESTAMP}" > "$STATE_DIR/.last_compact"
+}
+
+# Run main function
+main
+
+exit 0

@@ -1,6 +1,10 @@
 import { smokeTest, expect } from '../utils/tagged-test';
 
-smokeTest.describe('Portal - Smoke Tests @portal @critical @smoke', () => {
+smokeTest.describe('Portal - Smoke Tests @portal @critical @smoke @post-deploy @critical', () => {
+
+/**
+ * @e2e @smoke @critical @ui @portal @post-deploy
+ */
   smokeTest('should load portal homepage', async ({ page, baseURL }) => {
     console.log('Portal test baseURL:', baseURL);
     await page.goto(baseURL || '/');

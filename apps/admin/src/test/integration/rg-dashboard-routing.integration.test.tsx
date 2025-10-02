@@ -7,6 +7,10 @@ import { RGNamespacesPage } from '@/components/dashboard/rg/RGNamespacesPage';
 import { RGTeamPage } from '@/components/dashboard/rg/RGTeamPage';
 import { RGActivityPage } from '@/components/dashboard/rg/RGActivityPage';
 
+/**
+ * @integration @ui @high-priority @dashboard @admin
+ */
+
 describe('Review Group Dashboard Routing @integration @dashboard @admin @high-priority', () => {
   let queryClient: QueryClient;
 

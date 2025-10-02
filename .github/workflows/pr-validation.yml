@@ -18,15 +18,22 @@ permissions:
   checks: write
 
 concurrency:
-  group: "pr-validation-${{ github.head_ref }}"
+  group: 'pr-validation-${{ github.head_ref }}'
   cancel-in-progress: true
 
 env:
   CI: true
   HUSKY: 0
   NX_DAEMON: true
-  NX_PARALLEL: 3
-  NODE_OPTIONS: "--max-old-space-size=4096"
+  NX_PARALLEL: 4
+  NODE_OPTIONS: '--max-old-space-size=4096'
+  NX_CLOUD_ACCESS_TOKEN: ${{ secrets.NX_CLOUD_ACCESS_TOKEN }}
+  NX_CLOUD_FLAKY_TASKS_ENABLED: true
+  NX_CLOUD_FLAKY_TASKS_MAX_RETRIES: 2
+  # Phase 2: Environment variables for distributed execution agents
+  NODE_PATH: ${{ github.workspace }}/node_modules
+  NX_WORKSPACE_ROOT: ${{ github.workspace }}
+  DOCS_ENV: preview
 
 jobs:
   changes-detection:
@@ -34,20 +41,34 @@ jobs:
     runs-on: ubuntu-latest
     outputs:
       docs_changed: ${{ steps.filter.outputs.docs }}
+      docs_only: ${{ steps.filter.outputs.docs == 'true' && steps.filter.outputs.code == 'false' && steps.filter.outputs.config == 'false' }}
       theme_changed: ${{ steps.filter.outputs.theme }}
+      code_changed: ${{ steps.filter.outputs.code }}
       config_changed: ${{ steps.filter.outputs.config }}
     steps:
       - uses: actions/checkout@v4
         with:
           fetch-depth: 0
-          
+
       - uses: dorny/paths-filter@v3
         id: filter
         with:
           filters: |
             docs:
-              - 'standards/**'
-              - 'portal/**'
+              - 'standards/**/docs/**'
+              - 'standards/**/*.md'
+              - 'standards/**/*.mdx'
+              - 'portal/docs/**'
+              - 'portal/**/*.md'
+              - 'portal/**/*.mdx'
+            code:
+              - '**/*.ts'
+              - '**/*.tsx'
+              - '**/*.js'
+              - '**/*.jsx'
+              - '!**/*.test.*'
+              - '!**/*.spec.*'
+              - '!**/docs/**'
             theme:
               - 'packages/theme/**'
             config:
@@ -56,116 +77,77 @@ jobs:
               - 'nx.json'
               - 'project.json'
 
-  validate-code-quality:
-    name: Code Quality Checks
+  validate-all:
+    name: Validate PR (Lint, Typecheck, Test)
     needs: changes-detection
-    if: needs.changes-detection.outputs.docs_changed == 'true' || needs.changes-detection.outputs.theme_changed == 'true'
+    if: needs.changes-detection.outputs.docs_only != 'true'
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
         with:
           fetch-depth: 0
-          
-      - name: Cache pnpm store
-        uses: actions/cache@v4
-        with:
-          path: ~/.pnpm-store
-          key: ${{ runner.os }}-pnpm-${{ hashFiles('pnpm-lock.yaml') }}
-          restore-keys: |
-            ${{ runner.os }}-pnpm-
 
       - uses: pnpm/action-setup@v4
-      
+
       - uses: actions/setup-node@v4
         with:
           node-version: 22
           cache: 'pnpm'
-          
+
       - name: Cache Nx
         uses: actions/cache@v4
         with:
           path: |
             .nx/cache
             node_modules/.cache/nx
-          key: nx-pr-${{ runner.os }}-${{ github.sha }}
+          key: nx-pr-${{ runner.os }}-${{ hashFiles('pnpm-lock.yaml') }}-${{ hashFiles('nx.json') }}
           restore-keys: |
+            nx-pr-${{ runner.os }}-${{ hashFiles('pnpm-lock.yaml') }}-
             nx-pr-${{ runner.os }}-
-            
+
       - name: Install dependencies
         run: pnpm install --frozen-lockfile --prefer-offline
-        
+
       - uses: nrwl/nx-set-shas@v4
         id: nx-set-shas
-        
+        with:
+          main-branch-name: 'preview'
+          last-successful-event: 'push'
+
       - name: Format check
         run: |
           echo "🎨 Checking code formatting..."
-          npx nx format:check --base=${{ steps.nx-set-shas.outputs.base }}
-          
-      - name: Lint affected
+          NX_CLOUD_DISTRIBUTED_EXECUTION=false npx nx format:check --base=${{ steps.nx-set-shas.outputs.base }}
+
+      - name: Run All Validation with Distributed Execution (Phase 3 - Fixed)
         run: |
-          echo "🔍 Linting affected projects..."
+          echo "🚀 Phase 3: Running all validation (lint, typecheck, test) with distributed execution..."
+          echo "⚙️ Starting Nx Cloud agents (3 agents minimum)..."
+
+          # Start ONE agent pool for ALL targets
+          npx nx-cloud start-ci-run \
+            --distribute-on="3 linux-medium-js" \
+            --stop-agents-after="test" \
+            --with-env-vars="NODE_OPTIONS,NODE_PATH,NX_WORKSPACE_ROOT,CI,DOCS_ENV,HUSKY"
+
+          echo "🔍 Running lint..."
           npx nx affected --target=lint \
             --base=${{ steps.nx-set-shas.outputs.base }} \
             --exclude=admin \
             --parallel=3
-            
-      - name: Type check affected
-        run: |
-          echo "📝 Type checking affected projects..."
+
+          echo "📝 Running typecheck..."
           npx nx affected --target=typecheck \
             --base=${{ steps.nx-set-shas.outputs.base }} \
             --exclude=admin \
             --parallel=3
 
-  test-affected:
-    name: Test Affected Projects
-    needs: changes-detection
-    if: needs.changes-detection.outputs.docs_changed == 'true' || needs.changes-detection.outputs.theme_changed == 'true'
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-        with:
-          fetch-depth: 0
-          
-      - name: Cache pnpm store
-        uses: actions/cache@v4
-        with:
-          path: ~/.pnpm-store
-          key: ${{ runner.os }}-pnpm-${{ hashFiles('pnpm-lock.yaml') }}
-          restore-keys: |
-            ${{ runner.os }}-pnpm-
-
-      - uses: pnpm/action-setup@v4
-      
-      - uses: actions/setup-node@v4
-        with:
-          node-version: 22
-          cache: 'pnpm'
-          
-      - name: Restore Nx cache
-        uses: actions/cache@v4
-        with:
-          path: |
-            .nx/cache
-            node_modules/.cache/nx
-          key: nx-pr-${{ runner.os }}-${{ github.sha }}
-          
-      - name: Install dependencies
-        run: pnpm install --frozen-lockfile --prefer-offline
-        
-      - uses: nrwl/nx-set-shas@v4
-        id: nx-set-shas
-        
-      - name: Run affected tests
-        run: |
-          echo "🧪 Testing affected projects..."
+          echo "🧪 Running tests..."
           npx nx affected --target=test \
             --base=${{ steps.nx-set-shas.outputs.base }} \
             --exclude=admin \
-            --parallel=3 \
-            --code-coverage
-            
+            --parallel=3
+
       - name: Upload coverage
         uses: codecov/codecov-action@v4
         with:
@@ -176,55 +158,82 @@ jobs:
 
   build-preview:
     name: Build Preview
-    needs: [validate-code-quality, test-affected]
+    needs: [changes-detection, validate-all]
+    if: |
+      always() &&
+      needs.changes-detection.result == 'success' &&
+      (needs.validate-all.result == 'success' || needs.validate-all.result == 'skipped')
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
         with:
           fetch-depth: 0
-          
-      - name: Cache pnpm store
-        uses: actions/cache@v4
-        with:
-          path: ~/.pnpm-store
-          key: ${{ runner.os }}-pnpm-${{ hashFiles('pnpm-lock.yaml') }}
-          restore-keys: |
-            ${{ runner.os }}-pnpm-
 
       - uses: pnpm/action-setup@v4
-      
+
       - uses: actions/setup-node@v4
         with:
           node-version: 22
           cache: 'pnpm'
-          
+
       - name: Restore Nx cache
         uses: actions/cache@v4
         with:
           path: |
             .nx/cache
             node_modules/.cache/nx
-          key: nx-pr-${{ runner.os }}-${{ github.sha }}
-          
+          key: nx-pr-${{ runner.os }}-${{ hashFiles('pnpm-lock.yaml') }}-${{ hashFiles('nx.json') }}
+          restore-keys: |
+            nx-pr-${{ runner.os }}-${{ hashFiles('pnpm-lock.yaml') }}-
+            nx-pr-${{ runner.os }}-
+
       - name: Install dependencies
         run: pnpm install --frozen-lockfile --prefer-offline
-        
+
       - uses: nrwl/nx-set-shas@v4
         id: nx-set-shas
-        
-      - name: Build theme
+        with:
+          main-branch-name: 'preview' # Use preview as the main branch for base comparison
+          # Use the last successful run for better cache hits
+          last-successful-event: 'push'
+
+      - name: Build affected projects with Distributed Execution (Phase 3)
+        id: build
         run: |
-          echo "🎨 Building theme package..."
-          npx nx run @ifla/theme:build
-          
-      - name: Build affected sites
-        run: |
-          echo "🏗️ Building affected documentation sites..."
+          echo "🏗️ Phase 3: Building affected projects with distributed execution (3 agents)..."
+          echo "⚙️ Starting Nx Cloud agents with environment variables..."
+
+          # Create directory for warnings
+          mkdir -p output/_reports
+
+          # Start distributed execution for builds
+          npx nx-cloud start-ci-run \
+            --distribute-on="3 linux-medium-js" \
+            --stop-agents-after="build" \
+            --with-env-vars="NODE_OPTIONS,NODE_PATH,NX_WORKSPACE_ROOT,CI,DOCS_ENV,HUSKY"
+
+          # Build and capture output (both stdout and stderr)
           npx nx affected --target=build \
             --base=${{ steps.nx-set-shas.outputs.base }} \
             --exclude=admin \
-            --parallel=2
-            
+            --parallel=3 2>&1 | tee output/_reports/build-output.log
+
+          # Extract warnings from build output
+          echo "📊 Extracting build warnings..."
+          node scripts/extract-build-warnings.js output/_reports/build-output.log > output/_reports/build-warnings.json || true
+
+          # Count warnings
+          if [ -f "output/_reports/build-warnings.json" ]; then
+            WARNING_COUNT=$(jq '[.[] | .warnings | length] | add' output/_reports/build-warnings.json || echo "0")
+            echo "warning_count=${WARNING_COUNT:-0}" >> $GITHUB_OUTPUT
+            echo "Found ${WARNING_COUNT:-0} warnings"
+          else
+            echo "warning_count=0" >> $GITHUB_OUTPUT
+            echo "No warnings file generated"
+          fi
+        env:
+          DOCS_ENV: preview
+
       - name: Upload build artifacts
         uses: actions/upload-artifact@v4
         with:
@@ -232,49 +241,134 @@ jobs:
           path: |
             portal/build
             standards/*/build
+            output/_reports/build-warnings.json
+            output/_reports/build-output.log
           retention-days: 7
 
-  lighthouse-audit:
-    name: Lighthouse Audit
-    needs: build-preview
+  check-build-warnings:
+    name: Process Build Warnings
+    needs: [build-preview]
+    # Always run but don't block - using success() || failure() in pr-summary
+    if: |
+      always() &&
+      needs.build-preview.result == 'success'
     runs-on: ubuntu-latest
-    continue-on-error: true
+    permissions:
+      contents: read
+      issues: write
+      pull-requests: write
     steps:
       - uses: actions/checkout@v4
-      
-      - uses: actions/download-artifact@v4
+        with:
+          sparse-checkout: |
+            scripts/
+          sparse-checkout-cone-mode: false
+
+      - name: Download build artifacts
+        uses: actions/download-artifact@v4
         with:
           name: pr-build-${{ github.event.pull_request.number }}
-          
-      - name: Setup local server
+          path: artifacts
+
+      - name: Process warnings report
+        id: warnings
         run: |
-          npm install -g http-server
-          http-server ./portal/build -p 8080 &
-          sleep 5
-          
-      - name: Run Lighthouse
-        uses: treosh/lighthouse-ci-action@v11
+          if [ -f "artifacts/output/_reports/build-warnings.json" ]; then
+            WARNING_COUNT=$(jq '[.[] | .warnings | length] | add' artifacts/output/_reports/build-warnings.json || echo "0")
+            echo "warning_count=${WARNING_COUNT:-0}" >> $GITHUB_OUTPUT
+            echo "Found ${WARNING_COUNT:-0} warnings"
+
+            # Create summary
+            jq -r '.[] | "\(.site): \(.warningCount) warnings"' artifacts/output/_reports/build-warnings.json
+          else
+            echo "warning_count=0" >> $GITHUB_OUTPUT
+            echo "No warnings found"
+          fi
+
+      - name: Comment PR with warnings summary
+        if: github.event_name == 'pull_request' && steps.warnings.outputs.warning_count != '0'
+        uses: actions/github-script@v7
         with:
-          urls: |
-            http://localhost:8080
-            http://localhost:8080/developer
-          uploadArtifacts: true
-          temporaryPublicStorage: true
-          
-      - name: Format Lighthouse results
-        if: always()
-        run: |
-          echo "## 🔦 Lighthouse Results" >> $GITHUB_STEP_SUMMARY
-          echo "" >> $GITHUB_STEP_SUMMARY
-          echo "Performance, Accessibility, Best Practices, and SEO scores" >> $GITHUB_STEP_SUMMARY
-          echo "Check artifacts for detailed reports" >> $GITHUB_STEP_SUMMARY
+          script: |
+            const warningCount = ${{ steps.warnings.outputs.warning_count }};
+            const fs = require('fs');
+
+            let comment = '## ⚠️ Build Warnings Detected\n\n';
+            comment += `Found ${warningCount} warning${warningCount === 1 ? '' : 's'} during the build.\n\n`;
+
+            // Read warnings details if available
+            try {
+              const warningsPath = 'artifacts/output/_reports/build-warnings.json';
+              if (fs.existsSync(warningsPath)) {
+                const warnings = JSON.parse(fs.readFileSync(warningsPath, 'utf8'));
+                comment += '### Summary by Site\n';
+                warnings.forEach(site => {
+                  if (site.warningCount > 0) {
+                    comment += `- **${site.site}**: ${site.warningCount} warning${site.warningCount === 1 ? '' : 's'}\n`;
+                  }
+                });
+              }
+            } catch (e) {
+              console.error('Could not read warnings:', e);
+            }
+
+            comment += '\n_Note: Build warnings are non-blocking but should be addressed._';
+
+            // Find or create comment
+            const { data: comments } = await github.rest.issues.listComments({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              issue_number: context.issue.number,
+            });
+
+            const botComment = comments.find(comment =>
+              comment.user.type === 'Bot' &&
+              comment.body.includes('## ⚠️ Build Warnings Detected')
+            );
+
+            if (botComment) {
+              await github.rest.issues.updateComment({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                comment_id: botComment.id,
+                body: comment,
+              });
+            } else {
+              await github.rest.issues.createComment({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                issue_number: context.issue.number,
+                body: comment,
+              });
+            }
 
   pr-summary:
     name: PR Summary Report
-    needs: [validate-code-quality, test-affected, build-preview, lighthouse-audit]
-    if: always()
+    needs:
+      [changes-detection, validate-all, build-preview, check-build-warnings]
+    # Run even if warnings check fails - it's non-blocking
+    if: |
+      always() &&
+      needs.changes-detection.result == 'success' &&
+      (needs.check-build-warnings.result == 'success' || needs.check-build-warnings.result == 'failure')
     runs-on: ubuntu-latest
     steps:
+      - uses: actions/checkout@v4
+        with:
+          sparse-checkout: |
+            nx.json
+            package.json
+            pnpm-lock.yaml
+            .npmrc
+          sparse-checkout-cone-mode: false
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
+
+      - name: AI Analysis on Failure
+        run: npx nx-cloud fix-ci
+        if: failure()
+
       - name: Generate PR comment
         uses: actions/github-script@v7
         with:
@@ -285,35 +379,33 @@ jobs:
               repo: context.repo.repo,
               issue_number: context.issue.number,
             });
-            
+
             const botComment = comments.find(comment => 
               comment.user.type === 'Bot' && 
               comment.body.includes('## PR Validation Report')
             );
-            
+
             const body = `## PR Validation Report
-            
+
             ### ✅ Checks Completed
-            - Code Quality: ${{ needs.validate-code-quality.result }}
-            - Tests: ${{ needs.test-affected.result }}
+            - Validation (Lint/Typecheck/Test): ${{ needs.validate-all.result }}
             - Build: ${{ needs.build-preview.result }}
-            - Lighthouse: ${{ needs.lighthouse-audit.result }}
-            
+
             ### 📊 Summary
             - **Affected Projects**: Check Nx affected output
             - **Test Coverage**: Available in artifacts
             - **Build Artifacts**: Available for preview
             - **Lighthouse Scores**: Check workflow summary
-            
+
             ### 🚀 Optimizations Applied
             - Nx affected detection for incremental validation
             - Parallel execution of checks
             - Build caching enabled
             - Admin tests excluded (documentation focus)
-            
+
             ---
             *This comment is automatically updated on each push*`;
-            
+
             if (botComment) {
               await github.rest.issues.updateComment({
                 owner: context.repo.owner,

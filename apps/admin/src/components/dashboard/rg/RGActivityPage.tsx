@@ -3,5 +3,5 @@
 import { SharedActivityPage } from '../shared/ActivityPage';
 
 export function RGActivityPage() {
-  return <SharedActivityPage role="rg-admin" reviewGroupName="ISBD" />;
+  return <SharedActivityPage userRole="rg-admin" reviewGroupName="ISBD" />;
 }

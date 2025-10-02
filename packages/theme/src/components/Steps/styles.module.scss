@@ -1,0 +1,62 @@
+.steps {
+  ol {
+    list-style-type: var(--steps-level1, decimal);
+  }
+
+  ol ol {
+    list-style-type: var(--steps-level2, lower-alpha);
+  }
+
+  ol ol ol {
+    list-style-type: var(--steps-level3, lower-roman);
+  }
+
+  // Map data attributes to CSS custom properties so authors can configure per block
+  &[data-list-level1='decimal'] {
+    --steps-level1: decimal;
+  }
+  &[data-list-level1='lower-alpha'] {
+    --steps-level1: lower-alpha;
+  }
+  &[data-list-level1='upper-alpha'] {
+    --steps-level1: upper-alpha;
+  }
+  &[data-list-level1='lower-roman'] {
+    --steps-level1: lower-roman;
+  }
+  &[data-list-level1='upper-roman'] {
+    --steps-level1: upper-roman;
+  }
+
+  &[data-list-level2='decimal'] {
+    --steps-level2: decimal;
+  }
+  &[data-list-level2='lower-alpha'] {
+    --steps-level2: lower-alpha;
+  }
+  &[data-list-level2='upper-alpha'] {
+    --steps-level2: upper-alpha;
+  }
+  &[data-list-level2='lower-roman'] {
+    --steps-level2: lower-roman;
+  }
+  &[data-list-level2='upper-roman'] {
+    --steps-level2: upper-roman;
+  }
+
+  &[data-list-level3='decimal'] {
+    --steps-level3: decimal;
+  }
+  &[data-list-level3='lower-alpha'] {
+    --steps-level3: lower-alpha;
+  }
+  &[data-list-level3='upper-alpha'] {
+    --steps-level3: upper-alpha;
+  }
+  &[data-list-level3='lower-roman'] {
+    --steps-level3: lower-roman;
+  }
+  &[data-list-level3='upper-roman'] {
+    --steps-level3: upper-roman;
+  }
+}

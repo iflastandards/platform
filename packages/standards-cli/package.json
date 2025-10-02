@@ -12,7 +12,7 @@
   "scripts": {
     "build": "./build.sh",
     "dev": "ts-node src/index.ts",
-    "test": "echo \"No tests implemented yet for standards-cli\" && exit 0"
+    "test": "sh -c 'echo \"No tests implemented yet for standards-cli\"; exit 0'"
   },
   "type": "module"
 }

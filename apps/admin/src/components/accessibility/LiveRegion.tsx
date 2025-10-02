@@ -1,32 +1,30 @@
 'use client';
 
-interface LiveRegionProps {
+interface LiveRegionProps extends React.HTMLAttributes<HTMLOutputElement> {
   message: string;
   priority?: 'polite' | 'assertive';
   atomic?: boolean;
 }
 
-export default function LiveRegion({ 
-  message, 
+export default function LiveRegion({
+  message,
   priority = 'polite',
-  atomic = true 
+  atomic = true,
+  className,
+  ...props
 }: LiveRegionProps) {
-  if (!message) {return null;}
+  if (!message) {
+    return null;
+  }
 
   return (
-    <div
-      role="status"
+    <output
       aria-live={priority}
       aria-atomic={atomic}
-      style={{
-        position: 'absolute',
-        left: '-10000px',
-        width: '1px',
-        height: '1px',
-        overflow: 'hidden',
-      }}
+      className={className}
+      {...props}
     >
       {message}
-    </div>
+    </output>
   );
 }

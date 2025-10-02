@@ -24,6 +24,13 @@ Present examples in a structured, searchable format:
 - Metadata support
 - Easy comparison between examples
 
+### [Examples & Example](/docs/guides/components/examples)
+Create structured, accessible example sections:
+- Collapsible example containers
+- Property-value table generation
+- Support for complex content
+- Full example page linking
+
 ### [Figure](/docs/guides/components/figure)
 Add images and diagrams with proper formatting:
 - Automatic captions
@@ -57,13 +64,20 @@ Cross-references and related content:
 - Multiple reference types
 - Consistent formatting
 
-## 📋 Constraint Components
+## 📋 Constraint & Structure Components
 
 ### [MandatoryUnique](/docs/guides/components/mandatory-unique)
 Document field constraints clearly:
 - Visual indicators for mandatory fields
 - Uniqueness constraint notation
 - Accessibility support
+
+### [Steps](/docs/guides/components/steps)
+Create structured procedural content:
+- Configurable multi-level numbering
+- Semantic list markup
+- Support for complex nested content
+- Accessibility-compliant navigation
 
 ## 🎯 Best Practices
 
@@ -95,7 +109,7 @@ To use any component in your MDX file:
 title: My Document
 ---
 
-import { VocabularyTable, Figure, OutLink } from '@ifla/theme';
+import { VocabularyTable, Figure, OutLink, Examples, Example, Steps } from '@ifla/theme';
 
 # My Document
 
@@ -106,6 +120,24 @@ import { VocabularyTable, Figure, OutLink } from '@ifla/theme';
     { value: "term2", definition: "Definition 2" }
   ]}
 />
+
+<Examples summary="Property Examples">
+  <Example
+    properties={[
+      { property: "has category of carrier", value: '"volume"' },
+      { property: "has extent", value: '"1 volume (306 pages)"' }
+    ]}
+    fullExampleHref="/docs/examples/manifestation"
+  />
+</Examples>
+
+<Steps>
+  <ol>
+    <li>Initial assessment</li>
+    <li>Record mandatory elements</li>
+    <li>Add optional information</li>
+  </ol>
+</Steps>
 
 <Figure 
   src="/img/diagram.png" 

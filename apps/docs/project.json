@@ -22,7 +22,7 @@
       "executor": "nx:run-commands",
       "outputs": ["{workspaceRoot}/dist/apps/docs"],
       "options": {
-        "command": "pnpm docs:gen-api-spec && pnpm docs:gen-supabase-types && docusaurus build --out-dir ../../dist/apps/docs",
+        "command": "pnpm --dir ../.. docs:gen-api-spec && pnpm --dir ../.. gen:supabase-types && docusaurus build --out-dir ../../dist/apps/docs",
         "cwd": "apps/docs"
       }
     },

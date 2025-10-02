@@ -1,4 +1,6 @@
 /**
+ * @e2e @example @server-dependent @local-only
+ * 
  * E2E TEST EXAMPLE - IFLA Standards Platform
  * ==========================================
  * 
@@ -25,9 +27,13 @@
  * - Helps verify changes from a user perspective in various environments
  */
 
-import { e2eTest, expect } from '../e2e/utils/tagged-test';
+import { e2eTest, expect } from '../../e2e/utils/tagged-test';
 
 e2eTest.describe('User Journey - Complete Workflow @login-flow', () => {
+
+/**
+ * @e2e @server-dependent @critical @authentication @navigation @ui
+ */
   e2eTest('User can navigate from login to dashboard @critical @authentication @navigation', async ({ page }) => {
     // Load login page
     await page.goto('/login');

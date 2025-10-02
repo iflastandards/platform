@@ -12,7 +12,7 @@ The IFLA Standards project uses a centralized configuration architecture that en
 **Single source of truth for all site paths and environments**
 
 ```typescript
-export const SITE_CONFIG: Record<SiteKey, Record<Environment, SiteConfigEntry>> = {
+export const SITE_CONFIG: Record\<SiteKey, Record<Environment, SiteConfigEntry\>> = {
   portal: {
     local: { url: 'http://localhost:3000', baseUrl: '/', port: 3000 },
     preview: { url: 'https://iflastandards.github.io', baseUrl: '/standards-dev/' },
@@ -139,12 +139,12 @@ const lrmUrl = getSiteUrl('LRM', '/docs/intro', currentEnv);
 ### Admin Portal Configuration Usage
 ```typescript
 // Get specific admin portal configuration
-import { getAdminPortalConfig } from '@ifla/theme/config/siteConfig';
+import \{ getAdminPortalConfig \} from '@ifla/theme/config/siteConfig';
 const adminConfig = getAdminPortalConfig('production');
 console.log(adminConfig.url); // 'https://admin.iflastandards.info'
 
 // Auto-detect environment and get admin portal configuration
-import { getAdminPortalConfigAuto } from '@ifla/theme/config/siteConfig';
+import \{ getAdminPortalConfigAuto \} from '@ifla/theme/config/siteConfig';
 const adminConfig = getAdminPortalConfigAuto();
 // Returns configuration based on current hostname
 ```
@@ -152,13 +152,13 @@ const adminConfig = getAdminPortalConfigAuto();
 ### Admin Docs Configuration Usage
 ```typescript
 // Get specific admin docs configuration 
-import { getAdminDocsConfig } from '@ifla/theme/config/siteConfig';
+import \{ getAdminDocsConfig \} from '@ifla/theme/config/siteConfig';
 const docsConfig = getAdminDocsConfig('local');
 console.log(docsConfig.url); // 'http://localhost:3030'
 console.log(docsConfig.port); // 3030
 
 // Auto-detect environment and get admin docs configuration
-import { getAdminDocsConfigAuto } from '@ifla/theme/config/siteConfig';
+import \{ getAdminDocsConfigAuto \} from '@ifla/theme/config/siteConfig';
 const docsConfig = getAdminDocsConfigAuto();
 // Returns configuration based on current hostname:
 // - docs.iflastandards.info → production config
@@ -172,9 +172,9 @@ const docsConfig = getAdminDocsConfigAuto();
 ```tsx
 import SiteLink from '@ifla/theme/components/SiteLink';
 
-<SiteLink siteKey="LRM" path="/docs/introduction">
+\\<SiteLink siteKey="LRM" path="/docs/introduction"\\>
   View LRM Documentation
-</SiteLink>
+\</SiteLink\>
 ```
 
 The component automatically:

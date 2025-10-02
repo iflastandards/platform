@@ -12,6 +12,10 @@ import {
   type Environment,
 } from '@ifla/contracts';
 
+/**
+ * @unit @critical @admin @docs @config @high-priority
+ */
+
 describe('getAdminDocsConfig', () => {
   it('should return the correct config for local environment', () => {
     const config = getAdminDocsConfig('local');

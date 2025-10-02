@@ -11,6 +11,9 @@ expect.extend(toHaveNoViolations);
 vi.mock('@docusaurus/useBaseUrl', () => ({
   default: (url: string) => url,
 }));
+/**
+ * @unit @ui @high-priority @accessibility
+ */
 
 describe('Mandatory component', () => {
   it('renders with default props', () => {

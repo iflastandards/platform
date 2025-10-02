@@ -36,14 +36,14 @@ For more advanced integration, you can swizzle navbar components and use the Rea
 
 ```typescript
 // In a swizzled navbar component
-import { SiteManagementNavbarLink } from '@ifla/theme/components/SiteManagementLink';
+import \{ SiteManagementNavbarLink \} from '@ifla/theme/components/SiteManagementLink';
 
 export default function CustomNavbar() {
   return (
-    <div className="navbar">
-      {/* ... other navbar content */}
-      <SiteManagementNavbarLink />
-    </div>
+    \<div className="navbar"\>
+      \{/* ... other navbar content */\}
+      \\<SiteManagementNavbarLink /\\>
+    \</div\>
   );
 }
 ```
@@ -53,14 +53,14 @@ export default function CustomNavbar() {
 Add the link to specific pages or components:
 
 ```tsx
-import { SiteManagementButton } from '@ifla/theme/components/SiteManagementLink';
+import \{ SiteManagementButton \} from '@ifla/theme/components/SiteManagementLink';
 
 export default function MyComponent() {
   return (
-    <div>
-      <h1>My Page</h1>
-      <SiteManagementButton size="sm" />
-    </div>
+    \<div\>
+      \<h1\>My Page\</h1\>
+      \\<SiteManagementButton size="sm" /\\>
+    \</div\>
   );
 }
 ```
@@ -71,9 +71,9 @@ The SiteManagementLink component comes in several pre-configured variants:
 
 ### 1. SiteManagementNavbarLink
 ```tsx
-import { SiteManagementNavbarLink } from '@ifla/theme/components/SiteManagementLink';
+import \{ SiteManagementNavbarLink \} from '@ifla/theme/components/SiteManagementLink';
 
-<SiteManagementNavbarLink />
+\\<SiteManagementNavbarLink /\\>
 ```
 - Styled for navbar integration
 - Appears as a primary-colored button
@@ -81,18 +81,18 @@ import { SiteManagementNavbarLink } from '@ifla/theme/components/SiteManagementL
 
 ### 2. SiteManagementButton  
 ```tsx
-import { SiteManagementButton } from '@ifla/theme/components/SiteManagementLink';
+import \{ SiteManagementButton \} from '@ifla/theme/components/SiteManagementLink';
 
-<SiteManagementButton size="lg" />
+\\<SiteManagementButton size="lg" /\\>
 ```
 - Styled as a prominent button
 - Available sizes: 'sm', 'md', 'lg'
 
 ### 3. SiteManagementTextLink
 ```tsx
-import { SiteManagementTextLink } from '@ifla/theme/components/SiteManagementLink';
+import \{ SiteManagementTextLink \} from '@ifla/theme/components/SiteManagementLink';
 
-<SiteManagementTextLink>Custom Link Text</SiteManagementTextLink>
+\\<SiteManagementTextLink\\>Custom Link Text\</SiteManagementTextLink\>
 ```
 - Styled as a regular text link
 - Customizable text content
@@ -141,7 +141,7 @@ The component includes built-in CSS modules for consistent styling. You can over
 
 1. **Custom CSS classes:**
 ```tsx
-<SiteManagementNavbarLink className="my-custom-class" />
+\\<SiteManagementNavbarLink className="my-custom-class" /\\>
 ```
 
 2. **CSS variables:**

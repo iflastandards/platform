@@ -16,7 +16,9 @@ global.fetch = vi.fn(() =>
     text: () => Promise.resolve(mockCSVContent)
   })
 ) as any;
-
+/**
+ * @integration @ui @vocabulary @high-priority
+ */
 describe('Sensory Test Vocabulary Page', () => {
   beforeEach(() => {
     vi.clearAllMocks();

@@ -43,6 +43,7 @@ const REQUIRED_TAGS = {
     '@sites',
     '@validation',
     '@accessibility',
+    '@security'
   ],
 };
 
@@ -51,6 +52,7 @@ const OPTIONAL_TAGS = [
   '@local-only',
   '@ci-only',
   '@preview-only',
+  '@post-deploy',
   '@production-only',
   '@slow',
   '@fast',
@@ -68,6 +70,25 @@ const OPTIONAL_TAGS = [
   '@clerk',
   '@example',
   '@madcreek',
+  '@testing',
+  '@ai',
+  '@ai-reviewed',
+  '@testing-library',
+  '@test',
+  '@cache',
+  '@playwright',
+  '@workflow',
+  '@tanstack',
+  '@deployment',
+  '@utility',
+  '@namespace',
+  '@login-flow',
+  '@memberjunction',
+  '@stress',
+  '@tracking',
+  '@see',
+  '@jest',
+  '@rules',
 ];
 
 // All known tags (for validation)

@@ -1,0 +1,105 @@
+name: Lighthouse Post-Deployment Audit
+
+on:
+  workflow_run:
+    workflows: ["Nx Optimized Documentation Deploy"]
+    types:
+      - completed
+    branches:
+      - preview
+      - main
+  workflow_dispatch:
+    inputs:
+      url:
+        description: 'URL to audit (defaults to production site)'
+        required: false
+        default: 'https://docs.iflastandards.info'
+        type: string
+  schedule:
+    # Run daily at 2 AM UTC
+    - cron: '0 2 * * *'
+
+jobs:
+  lighthouse:
+    name: Lighthouse Audit
+    runs-on: ubuntu-latest
+    if: github.event.workflow_run.conclusion == 'success' || github.event_name == 'workflow_dispatch' || github.event_name == 'schedule'
+
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          sparse-checkout: |
+            .github
+
+      - name: Determine target URL
+        id: target
+        run: |
+          if [ "${{ github.event_name }}" = "workflow_dispatch" ]; then
+            echo "url=${{ github.event.inputs.url }}" >> $GITHUB_OUTPUT
+          elif [ "${{ github.ref }}" = "refs/heads/main" ] || [ "${{ github.event.workflow_run.head_branch }}" = "main" ]; then
+            echo "url=https://docs.iflastandards.info" >> $GITHUB_OUTPUT
+          else
+            echo "url=https://docs-iflastandards-preview.onrender.com" >> $GITHUB_OUTPUT
+          fi
+
+      - name: Wait for deployment to be ready
+        if: github.event_name == 'workflow_run'
+        run: |
+          echo "Waiting for deployment to be ready..."
+          sleep 60  # Wait 1 minute for deployment to propagate
+
+      - name: Run Lighthouse CI
+        uses: treosh/lighthouse-ci-action@v11
+        with:
+          urls: |
+            ${{ steps.target.outputs.url }}
+            ${{ steps.target.outputs.url }}/developer
+            ${{ steps.target.outputs.url }}/guides
+          uploadArtifacts: true
+          temporaryPublicStorage: true
+          configPath: .github/lighthouserc.json
+        continue-on-error: true
+
+      - name: Create results summary
+        if: always()
+        run: |
+          echo "## 🔦 Lighthouse Audit Results" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "**Target URL:** ${{ steps.target.outputs.url }}" >> $GITHUB_STEP_SUMMARY
+          echo "**Branch:** ${{ github.ref_name }}" >> $GITHUB_STEP_SUMMARY
+          echo "**Trigger:** ${{ github.event_name }}" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "Performance, Accessibility, Best Practices, and SEO scores available in artifacts." >> $GITHUB_STEP_SUMMARY
+
+      - name: Upload results
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: lighthouse-results-${{ github.run_number }}
+          path: .lighthouseci
+          retention-days: 30
+
+      - name: Comment on PR (if triggered by PR deployment)
+        if: github.event.workflow_run.event == 'pull_request'
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const fs = require('fs');
+
+            // Try to find Lighthouse results
+            let comment = `## 🔦 Lighthouse Audit Results (Post-Deployment)\n\n`;
+            comment += `Lighthouse audit completed for the deployed preview.\n`;
+            comment += `Check the [workflow run](${context.serverUrl}/${context.repo.owner}/${context.repo.repo}/actions/runs/${context.runId}) for detailed results.\n`;
+
+            // Find the PR number from the workflow run
+            const workflowRun = context.payload.workflow_run;
+            if (workflowRun && workflowRun.pull_requests && workflowRun.pull_requests.length > 0) {
+              const prNumber = workflowRun.pull_requests[0].number;
+
+              await github.rest.issues.createComment({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                issue_number: prNumber,
+                body: comment
+              });
+            }

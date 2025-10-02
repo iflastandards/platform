@@ -1,3 +1,9 @@
+/**
+ * @e2e @visual @server-dependent @local-only @low-priority @ui
+ * 
+ * Visual regression tests for all sites
+ */
+
 import { test, expect } from '@playwright/test';
 
 // All sites currently running on serve:all
@@ -12,6 +18,10 @@ const sites = [
 ];
 
 test.describe('Visual Regression Tests @e2e @visual', () => {
+
+/**
+ * @e2e @visual @server-dependent @local-only @low-priority @ui
+ */
   for (const site of sites) {
     test(`${site.name} homepage visual regression`, async ({ page }) => {
       await page.goto(`${site.url}${site.path}`);
@@ -25,4 +35,17 @@ test.describe('Visual Regression Tests @e2e @visual', () => {
       await expect(page).toHaveScreenshot(`${site.name}-docs.png`);
     });
   }
+
+  // UNIMARC has additional shared config tests
+  test('unimarc homepage shared config visual regression', async ({ page }) => {
+    await page.goto('http://localhost:3006/unimarc/');
+    await page.waitForLoadState('networkidle');
+    await expect(page).toHaveScreenshot('unimarc-homepage-shared-config.png');
+  });
+
+  test('unimarc docs shared config visual regression', async ({ page }) => {
+    await page.goto('http://localhost:3006/unimarc/docs/intro');
+    await page.waitForLoadState('networkidle');
+    await expect(page).toHaveScreenshot('unimarc-docs-shared-config.png');
+  });
 });

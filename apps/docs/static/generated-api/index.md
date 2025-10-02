@@ -43,4 +43,4 @@ type Profile = Database['public']['Tables']['profiles']['Row'];
 
 ---
 
-*Generated at: 2025-08-20T04:04:08.666Z*
+*Generated at: 2025-09-04T11:31:46.804Z*

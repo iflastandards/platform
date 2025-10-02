@@ -8,6 +8,8 @@
 
 > **VocabularyCreate** = `object`
 
+Schema for creating new vocabularies
+
 ## Type declaration
 
 ### description?

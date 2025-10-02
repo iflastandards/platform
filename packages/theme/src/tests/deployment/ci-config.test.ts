@@ -7,7 +7,11 @@ import { describe, it, expect } from 'vitest';
  * They do NOT test application functionality
  */
 
-describe('CI Configuration Validation @unit @high-priority @validation', () => {
+/**
+ * @unit @high-priority @validation @deployment @ci
+ */
+
+describe('CI Configuration Validation @unit @high-priority @validation @deployment', () => {
   it('should skip in non-CI environments', () => {
     if (!process.env.CI) {
       expect(true).toBe(true);
