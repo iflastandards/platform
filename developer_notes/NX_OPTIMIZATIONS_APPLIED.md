@@ -223,13 +223,102 @@ Your Nx Cloud is already configured (`nxCloudId: "6857fccbb755d4191ce6fbe4"`):
 - Speeds up builds through remote cache hits
 - Reduces CI compute costs
 
+## 🤖 **Nx Cloud AI-Powered Diagnostics**
+
+### **Self-Healing CI with `fix-ci`**
+
+Nx Cloud AI diagnostics are enabled in the deployment workflow to automatically analyze and provide recommendations for build failures.
+
+#### **Two-Tier AI Analysis**
+
+**1. Immediate Build Failure Analysis**
+- Runs immediately when build step fails
+- Provides fast feedback on specific failures
+- Location: `.github/workflows/nx-optimized-docs-deploy.yml` (line 210-215)
+
+```yaml
+- name: Attempt AI-powered fix for build failures
+  if: failure() && env.NX_CLOUD_ACCESS_TOKEN
+  run: |
+    echo "🤖 Running Nx Cloud AI diagnostics on build failure..."
+    npx nx-cloud fix-ci || echo "⚠️ AI diagnostics completed, check output above"
+  continue-on-error: true
+```
+
+**2. Final Pipeline Analysis**
+- Runs at end of complete pipeline (success or failure)
+- Analyzes entire workflow for patterns and optimizations
+- Location: `.github/workflows/nx-optimized-docs-deploy.yml` (line 433-443)
+
+```yaml
+- name: Final AI diagnostics and recommendations
+  run: |
+    # Final attempt to analyze any pipeline failures
+    if [ -n "$NX_CLOUD_ACCESS_TOKEN" ]; then
+      echo "🤖 Running final Nx Cloud AI analysis for complete pipeline..."
+      npx nx-cloud fix-ci || echo "⚠️ AI analysis completed - check Nx Cloud dashboard for details"
+    else
+      echo "ℹ️ Skipping final AI analysis (Nx Cloud token not available)"
+    fi
+  if: always()
+  continue-on-error: true
+```
+
+#### **What AI Fix Analyzes**
+
+- **Cache Issues**: Stale cache, cache corruption, invalidation recommendations
+- **Dependency Problems**: Missing dependencies, version conflicts, build order issues
+- **Environment Mismatches**: CI vs local differences, missing environment variables
+- **Parallel Execution**: Race conditions, resource contention, memory pressure
+- **Transient Failures**: Network timeouts, temporary service disruptions
+
+#### **Example AI Diagnostics**
+
+```bash
+# Cache-related failure
+🤖 Build failed due to stale cache
+📋 Recommendation: Run 'nx reset' to clear cache
+🔍 Pattern: Multiple projects failing with module resolution errors
+
+# Transient failure
+🤖 Transient failure detected - likely network timeout
+📋 Recommendation: Retry recommended (already handled by workflow)
+🔍 Pattern: Compilation succeeded but exit code non-zero
+
+# Resource pressure
+🤖 Memory pressure detected during parallel builds
+📋 Recommendation: Reduce --parallel from 4 to 2
+🔍 Pattern: Builds failing inconsistently with OOM indicators
+```
+
+#### **Accessing AI Insights**
+
+1. **GitHub Actions Logs**: Check workflow run output for AI diagnostics
+2. **Nx Cloud Dashboard**: Visit `https://cloud.nx.app` for detailed analysis
+3. **CI Pipeline Execution Details**: View at `https://cloud.nx.app/cipes/{execution-id}`
+
+#### **Benefits**
+
+- **Faster Resolution**: Immediate actionable insights for failures
+- **Pattern Detection**: Identifies recurring issues across builds
+- **Intelligent Recommendations**: Context-aware fixes based on Nx knowledge
+- **Non-Invasive**: Doesn't change builds, just provides analysis
+- **Continuous Learning**: AI improves recommendations over time
+
+#### **Configuration**
+
+Nx Cloud AI requires:
+- **Access Token**: `NX_CLOUD_ACCESS_TOKEN` secret in GitHub
+- **Cloud Connection**: `nxCloudId: "6857fccbb755d4191ce6fbe4"` in `nx.json`
+- **Remote Cache Enabled**: Already configured in `nx.json`
+
 ## ✅ **Verification**
 
 The optimizations are working correctly as demonstrated by:
 
 ```bash
 pnpm typecheck
-# Result: 
+# Result:
 # 1. @ifla/theme:build runs first
 # 2. portal:typecheck, isbdm:typecheck run in parallel after theme builds
 # 3. Proper dependency orchestration achieved

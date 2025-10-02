@@ -47,15 +47,13 @@ function extractProjectIdFromUrl(url) {
  * Compare content without timestamp/header to check if types actually changed
  */
 function hasContentChanged(oldContent, newContent) {
-  if (!oldContent) return true;
+  if (!oldContent) {return true;}
 
   // Remove timestamp and header lines for comparison
-  const stripHeader = (content) => {
-    return content
+  const stripHeader = (content) => content
       .split('\n')
       .filter((line) => !line.startsWith('// Generated at:'))
       .join('\n');
-  };
 
   return stripHeader(oldContent) !== stripHeader(newContent);
 }

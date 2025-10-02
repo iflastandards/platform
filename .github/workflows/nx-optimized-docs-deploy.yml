@@ -207,6 +207,16 @@ jobs:
 
           echo "✅ All affected projects built successfully!"
 
+      - name: Attempt AI-powered fix for build failures
+        if: failure() && env.NX_CLOUD_ACCESS_TOKEN
+        run: |
+          echo "🤖 Running Nx Cloud AI diagnostics on build failure..."
+          npx nx-cloud fix-ci || echo "⚠️ AI diagnostics completed, check output above"
+        continue-on-error: true
+
+      - name: Collect build warnings and validate outputs
+        if: success()
+        run: |
           # Collect warnings from build outputs (optional, non-blocking)
           echo "📊 Collecting build warnings..."
           if [ -f "scripts/collect-warnings-from-outputs.js" ]; then
@@ -423,14 +433,14 @@ jobs:
           npx nx-cloud stop-all-agents
         continue-on-error: true
 
-      - name: Fix CI Configuration with AI
+      - name: Final AI diagnostics and recommendations
         run: |
-          # Only run fix-ci if there were failures and NX_CLOUD_ACCESS_TOKEN is available
+          # Final attempt to analyze any pipeline failures
           if [ -n "$NX_CLOUD_ACCESS_TOKEN" ]; then
-            echo "🤖 Running Nx Cloud AI-powered CI diagnostics..."
-            npx nx-cloud fix-ci || echo "⚠️ Fix-CI analysis completed with warnings"
+            echo "🤖 Running final Nx Cloud AI analysis for complete pipeline..."
+            npx nx-cloud fix-ci || echo "⚠️ AI analysis completed - check Nx Cloud dashboard for details"
           else
-            echo "ℹ️ Skipping fix-ci (Nx Cloud token not available)"
+            echo "ℹ️ Skipping final AI analysis (Nx Cloud token not available)"
           fi
         if: always()
         continue-on-error: true
