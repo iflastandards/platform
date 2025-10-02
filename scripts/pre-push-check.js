@@ -18,7 +18,11 @@ process.on('beforeExit', () => {
 // Capture and suppress specific EventEmitter warnings if needed
 const originalEmit = process.emit;
 process.emit = function (name, data, ...args) {
-  if (name === 'warning' && data && data.name === 'MaxListenersExceededWarning') {
+  if (
+    name === 'warning' &&
+    data &&
+    data.name === 'MaxListenersExceededWarning'
+  ) {
     // Suppress the warning - we've already handled it
     return false;
   }
@@ -35,16 +39,16 @@ function safeExecSync(command, options = {}) {
   const defaultOptions = {
     env: {
       ...process.env,
-      NODE_OPTIONS: '--max-old-space-size=4096'
+      NODE_OPTIONS: '--max-old-space-size=4096',
     },
-    ...options
+    ...options,
   };
-  
+
   // Set EventEmitter limits in the current process
   if (typeof process.setMaxListeners === 'function') {
     process.setMaxListeners(0);
   }
-  
+
   return execSync(command, defaultOptions);
 }
 
@@ -57,7 +61,7 @@ let config = {
   runE2E: false, // E2E tests (can be slow/flaky in local)
   runSmokeTests: true, // Smoke tests for affected sites
   runAdminTests: true, // Admin-specific tests when admin is affected
-  parallelJobs: 3
+  parallelJobs: 3,
 };
 
 if (fs.existsSync(configPath)) {
@@ -69,9 +73,13 @@ if (fs.existsSync(configPath)) {
   }
 }
 
-console.log('\n🚀 Running pre-push checks with nx affected (only testing what changed)...\n');
+console.log(
+  '\n🚀 Running pre-push checks with nx affected (only testing what changed)...\n',
+);
 console.log('ℹ️  Pre-commit ensures: typecheck ✓, lint ✓, unit tests ✓');
-console.log('ℹ️  Pre-push adds: integration tests, builds, smoke tests, e2e validation\n');
+console.log(
+  'ℹ️  Pre-push adds: integration tests, builds, smoke tests, e2e validation\n',
+);
 
 // Ensure nx daemon is running for better performance
 ensureDaemon();
@@ -79,11 +87,17 @@ ensureDaemon();
 // Get affected projects
 function getAffectedProjects() {
   try {
-    const output = safeExecSync('pnpm nx show projects --affected --type=app --skip-nx-cache', {
-      encoding: 'utf8',
-      stdio: 'pipe'
-    });
-    return output.trim().split('\n').filter(p => p.trim());
+    const output = safeExecSync(
+      'pnpm nx show projects --affected --type=app --skip-nx-cache',
+      {
+        encoding: 'utf8',
+        stdio: 'pipe',
+      },
+    );
+    return output
+      .trim()
+      .split('\n')
+      .filter((p) => p.trim());
   } catch (error) {
     console.log('⚠️  Could not detect affected projects, will run all tests');
     return [];
@@ -98,14 +112,27 @@ if (affectedProjects.length > 0) {
 
 // Smart test detection functions
 function shouldRunSmokeTests() {
-  if (!config.runSmokeTests) {return false;}
-  
+  if (!config.runSmokeTests) {
+    return false;
+  }
+
   // Run smoke tests if any documentation site or portal is affected
-  const smokeTestProjects = ['portal', 'isbd', 'isbdm', 'lrm', 'frbr', 'unimarc', 'mri', 'muldicat', 'pressoo', 'mia'];
-  const hasAffectedSites = affectedProjects.some(project => 
-    smokeTestProjects.includes(project.toLowerCase())
+  const smokeTestProjects = [
+    'portal',
+    'isbd',
+    'isbdm',
+    'lrm',
+    'frbr',
+    'unimarc',
+    'mri',
+    'muldicat',
+    'pressoo',
+    'mia',
+  ];
+  const hasAffectedSites = affectedProjects.some((project) =>
+    smokeTestProjects.includes(project.toLowerCase()),
   );
-  
+
   if (hasAffectedSites) {
     console.log(`🔍 Smoke tests needed: Affected sites detected`);
     return true;
@@ -114,11 +141,13 @@ function shouldRunSmokeTests() {
 }
 
 function shouldRunAdminTests() {
-  if (!config.runAdminTests) {return false;}
-  
+  if (!config.runAdminTests) {
+    return false;
+  }
+
   // Run admin tests if admin project is affected
   const isAdminAffected = affectedProjects.includes('admin');
-  
+
   if (isAdminAffected) {
     console.log(`🔍 Admin tests needed: Admin project is affected`);
     return true;
@@ -128,16 +157,18 @@ function shouldRunAdminTests() {
 
 function shouldAutoTriggerE2E() {
   const criticalE2EProjects = ['portal', 'admin'];
-  
-  const hasCriticalChanges = affectedProjects.some(project => 
-    criticalE2EProjects.includes(project)
+
+  const hasCriticalChanges = affectedProjects.some((project) =>
+    criticalE2EProjects.includes(project),
   );
-  
+
   if (hasCriticalChanges) {
-    console.log(`🔍 E2E tests needed: Critical projects affected (${affectedProjects.filter(p => criticalE2EProjects.includes(p)).join(', ')})`);
+    console.log(
+      `🔍 E2E tests needed: Critical projects affected (${affectedProjects.filter((p) => criticalE2EProjects.includes(p)).join(', ')})`,
+    );
     return true;
   }
-  
+
   return false;
 }
 
@@ -149,15 +180,20 @@ if (config.runTests) {
   try {
     // Run integration tests specifically (pre-commit already ran unit tests)
     // Use Nx cache - if code hasn't changed since pre-commit, tests won't re-run
-    safeExecSync(`pnpm nx affected --target=test:integration --parallel=${config.parallelJobs}`, {
-      stdio: 'inherit',
-      encoding: 'utf8',
-      timeout: 600000 // 10 minutes timeout
-    });
+    safeExecSync(
+      `pnpm nx affected --target=test:integration --parallel=${config.parallelJobs}`,
+      {
+        stdio: 'inherit',
+        encoding: 'utf8',
+        timeout: 600000, // 10 minutes timeout
+      },
+    );
     console.log('✅ Integration tests passed\n');
   } catch (error) {
     // Not all projects have integration tests, this is OK for some projects
-    console.log('ℹ️  Integration tests completed (some projects may not have integration tests)\n');
+    console.log(
+      'ℹ️  Integration tests completed (some projects may not have integration tests)\n',
+    );
   }
 }
 
@@ -166,11 +202,14 @@ if (config.runBuilds) {
   console.log('📋 Running affected builds (production readiness)...');
   try {
     // Use Nx cache - builds will only re-run if source files changed
-    safeExecSync(`pnpm nx affected --target=build --parallel=${config.parallelJobs}`, {
-      stdio: 'inherit',
-      encoding: 'utf8',
-      timeout: 600000 // 10 minutes timeout
-    });
+    safeExecSync(
+      `pnpm nx affected --target=build --parallel=${config.parallelJobs}`,
+      {
+        stdio: 'inherit',
+        encoding: 'utf8',
+        timeout: 600000, // 10 minutes timeout
+      },
+    );
     console.log('✅ All affected builds passed\n');
   } catch (error) {
     console.log('❌ Some builds failed\n');
@@ -181,13 +220,26 @@ if (config.runBuilds) {
 // Run smoke tests for affected sites
 if (shouldRunSmokeTests()) {
   console.log('📋 Running smoke tests for affected sites...');
-  
-  const affectedSitesList = affectedProjects.filter(p => 
-    ['portal', 'isbd', 'isbdm', 'lrm', 'frbr', 'unimarc', 'mri', 'muldicat', 'pressoo', 'mia'].includes(p.toLowerCase())
+
+  const affectedSitesList = affectedProjects.filter((p) =>
+    [
+      'portal',
+      'isbd',
+      'isbdm',
+      'lrm',
+      'frbr',
+      'unimarc',
+      'mri',
+      'muldicat',
+      'pressoo',
+      'mia',
+    ].includes(p.toLowerCase()),
   );
-  
-  console.log(`🚀 Will run smoke tests sequentially for: ${affectedSitesList.join(', ')}\n`);
-  
+
+  console.log(
+    `🚀 Will run smoke tests sequentially for: ${affectedSitesList.join(', ')}\n`,
+  );
+
   // Run tests for each site individually
   let smokeTestsFailed = false;
   for (const site of affectedSitesList) {
@@ -200,11 +252,11 @@ if (shouldRunSmokeTests()) {
       } catch (portError) {
         // Ignore port cleanup errors
       }
-      
+
       // Run smoke test for this specific site with its own server
       safeExecSync(`node scripts/run-site-tests.js ${site} smoke`, {
         stdio: 'inherit',
-        encoding: 'utf8'
+        encoding: 'utf8',
       });
       console.log(`✅ ${site} smoke tests passed`);
     } catch (error) {
@@ -213,7 +265,7 @@ if (shouldRunSmokeTests()) {
       // Continue testing other sites even if one fails
     }
   }
-  
+
   if (smokeTestsFailed) {
     console.log('\n❌ Some smoke tests failed\n');
     hasErrors = true;
@@ -232,7 +284,7 @@ if (shouldRunAdminTests()) {
     safeExecSync('pnpm nx run admin:test:integration', {
       stdio: 'inherit',
       encoding: 'utf8',
-      timeout: 600000 // 10 minutes timeout
+      timeout: 600000, // 10 minutes timeout
     });
     console.log('✅ Admin integration tests passed\n');
   } catch (error) {
@@ -248,11 +300,13 @@ if (shouldRunAdminTests()) {
       safeExecSync('pnpm nx run admin:test:server-dependent', {
         stdio: 'inherit',
         encoding: 'utf8',
-        timeout: 600000 // 10 minutes timeout
+        timeout: 600000, // 10 minutes timeout
       });
       console.log('✅ Admin server-dependent tests passed\n');
     } catch (error) {
-      console.log('⚠️  Admin server-dependent tests completed (may require running server)\n');
+      console.log(
+        '⚠️  Admin server-dependent tests completed (may require running server)\n',
+      );
     }
   }
 }
@@ -262,10 +316,14 @@ const shouldRunE2E = config.runE2E || shouldAutoTriggerE2E();
 
 if (shouldRunE2E) {
   console.log('📋 Running E2E tests (Chrome headless only)...');
-  
-  const affectedApps = affectedProjects.filter(p => ['portal', 'admin'].includes(p));
-  console.log(`🚀 Will run E2E tests sequentially for: ${affectedApps.join(', ')}\n`);
-  
+
+  const affectedApps = affectedProjects.filter((p) =>
+    ['portal', 'admin'].includes(p),
+  );
+  console.log(
+    `🚀 Will run E2E tests sequentially for: ${affectedApps.join(', ')}\n`,
+  );
+
   // Run E2E tests for each app individually
   let e2eTestsFailed = false;
   for (const app of affectedApps) {
@@ -278,11 +336,11 @@ if (shouldRunE2E) {
       } catch (portError) {
         // Ignore port cleanup errors
       }
-      
+
       // Run E2E test for this specific app with its own server
       safeExecSync(`node scripts/run-site-tests.js ${app} e2e`, {
         stdio: 'inherit',
-        encoding: 'utf8'
+        encoding: 'utf8',
       });
       console.log(`✅ ${app} E2E tests passed`);
     } catch (error) {
@@ -291,7 +349,7 @@ if (shouldRunE2E) {
       // Continue testing other apps even if one fails
     }
   }
-  
+
   if (e2eTestsFailed) {
     console.log('\n❌ Some E2E tests failed\n');
     hasErrors = true;
@@ -299,21 +357,29 @@ if (shouldRunE2E) {
     console.log('\n✅ All E2E tests passed\n');
   }
 } else {
-  console.log('ℹ️  E2E tests skipped (no critical projects affected, enable with runE2E: true)\n');
+  console.log(
+    'ℹ️  E2E tests skipped (no critical projects affected, enable with runE2E: true)\n',
+  );
 }
 
 // Summary
 if (hasErrors) {
   console.log('❌ Pre-push checks failed. Please fix errors before pushing.\n');
-  console.log('💡 Tip: You can configure pre-push behavior in .prepushrc.json\n');
+  console.log(
+    '💡 Tip: You can configure pre-push behavior in .prepushrc.json\n',
+  );
   process.exit(1);
 } else {
   console.log('✅ Pre-push checks passed! (Only affected projects tested)\n');
   console.log('📊 Summary:');
-  console.log(`   - Affected Projects: ${affectedProjects.length > 0 ? affectedProjects.join(', ') : 'None'}`);
+  console.log(
+    `   - Affected Projects: ${affectedProjects.length > 0 ? affectedProjects.join(', ') : 'None'}`,
+  );
   console.log('   - Unit/Integration Tests: ✅ All affected tests passed');
   if (config.runBuilds) {
-    console.log('   - Production Builds: ✅ All affected projects build successfully');
+    console.log(
+      '   - Production Builds: ✅ All affected projects build successfully',
+    );
   }
   if (shouldRunSmokeTests()) {
     console.log('   - Smoke Tests: ✅ Affected sites smoke tested');

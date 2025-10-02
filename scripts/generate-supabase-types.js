@@ -36,7 +36,9 @@ const outputPath =
  * Extract project ID from Supabase URL
  */
 function extractProjectIdFromUrl(url) {
-  if (!url) {return null;}
+  if (!url) {
+    return null;
+  }
   const match = url.match(/https:\/\/([^.]+)\.supabase\.co/);
   return match ? match[1] : null;
 }
@@ -51,7 +53,7 @@ function hasContentChanged(oldContent, newContent) {
   const stripHeader = (content) => {
     return content
       .split('\n')
-      .filter(line => !line.startsWith('// Generated at:'))
+      .filter((line) => !line.startsWith('// Generated at:'))
       .join('\n');
   };
 
@@ -67,7 +69,9 @@ async function generateTypes() {
   // Check existing content
   let existingContent = '';
   try {
-    existingContent = fs.existsSync(outputPath) ? fs.readFileSync(outputPath, 'utf-8') : '';
+    existingContent = fs.existsSync(outputPath)
+      ? fs.readFileSync(outputPath, 'utf-8')
+      : '';
   } catch {
     existingContent = '';
   }
@@ -149,7 +153,10 @@ export type TablesUpdate<T extends keyof Database['public']['Tables']> = Databas
           ? fs.readFileSync(placeholderPath, 'utf-8')
           : '';
 
-        if (!fs.existsSync(placeholderPath) || hasContentChanged(existingPlaceholder, placeholderContent)) {
+        if (
+          !fs.existsSync(placeholderPath) ||
+          hasContentChanged(existingPlaceholder, placeholderContent)
+        ) {
           fs.mkdirSync(path.dirname(placeholderPath), { recursive: true });
           fs.writeFileSync(placeholderPath, placeholderContent);
           console.log('✅ Created placeholder types at:', placeholderPath);
