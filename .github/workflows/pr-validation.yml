@@ -224,12 +224,18 @@ jobs:
 
           # Count warnings
           if [ -f "output/_reports/build-warnings.json" ]; then
-            WARNING_COUNT=$(jq '[.[] | .warnings | length] | add' output/_reports/build-warnings.json || echo "0")
-            echo "warning_count=${WARNING_COUNT:-0}" >> $GITHUB_OUTPUT
-            echo "Found ${WARNING_COUNT:-0} warnings"
+            # Use 'add // 0' to handle null case when array is empty
+            WARNING_COUNT=$(jq '[.[] | .warnings | length] | add // 0' output/_reports/build-warnings.json)
+            echo "warning_count=${WARNING_COUNT}" >> $GITHUB_OUTPUT
+
+            if [ "${WARNING_COUNT}" -eq 0 ]; then
+              echo "✅ No warnings found"
+            else
+              echo "⚠️ Found ${WARNING_COUNT} warning(s)"
+            fi
           else
             echo "warning_count=0" >> $GITHUB_OUTPUT
-            echo "No warnings file generated"
+            echo "⚠️ No warnings file generated"
           fi
         env:
           DOCS_ENV: preview
@@ -274,15 +280,20 @@ jobs:
         id: warnings
         run: |
           if [ -f "artifacts/output/_reports/build-warnings.json" ]; then
-            WARNING_COUNT=$(jq '[.[] | .warnings | length] | add' artifacts/output/_reports/build-warnings.json || echo "0")
-            echo "warning_count=${WARNING_COUNT:-0}" >> $GITHUB_OUTPUT
-            echo "Found ${WARNING_COUNT:-0} warnings"
+            # Use 'add // 0' to handle null case when array is empty
+            WARNING_COUNT=$(jq '[.[] | .warnings | length] | add // 0' artifacts/output/_reports/build-warnings.json)
+            echo "warning_count=${WARNING_COUNT}" >> $GITHUB_OUTPUT
 
-            # Create summary
-            jq -r '.[] | "\(.site): \(.warningCount) warnings"' artifacts/output/_reports/build-warnings.json
+            if [ "${WARNING_COUNT}" -eq 0 ]; then
+              echo "✅ No warnings found"
+            else
+              echo "⚠️ Found ${WARNING_COUNT} warning(s)"
+              # Create summary
+              jq -r '.[] | "\(.site): \(.warningCount) warning(s)"' artifacts/output/_reports/build-warnings.json
+            fi
           else
             echo "warning_count=0" >> $GITHUB_OUTPUT
-            echo "No warnings found"
+            echo "✅ No warnings found (no report file)"
           fi
 
       - name: Comment PR with warnings summary
