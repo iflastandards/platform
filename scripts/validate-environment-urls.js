@@ -120,40 +120,107 @@ function extractPagesFromBuild(siteKey, baseUrl) {
 }
 
 // Get all URLs from sitemap
-function getSitemapUrls(siteKey, baseUrl) {
-  const path = require('path');
-  const fs = require('fs');
+async function getSitemapUrls(siteKey, baseUrl) {
   const xml2js = require('xml2js');
-  
-  const siteDir = siteKey.toLowerCase() === 'portal' ? 'portal' : `standards/${siteKey}`;
-  const buildPath = path.join(process.cwd(), siteDir, 'build');
-  const sitemapPath = path.join(buildPath, 'sitemap.xml');
-  
-  if (!fs.existsSync(sitemapPath)) {
-    console.error(`❌ Sitemap not found: ${sitemapPath}`);
-    return [];
-  }
-  
+  const https = require('https');
+  const http = require('http');
+
+  // Construct sitemap URL from baseUrl
+  const sitemapUrl = `${baseUrl}/sitemap.xml`;
+
+  console.log(`📍 Fetching sitemap from: ${sitemapUrl}`);
+
   try {
-    const sitemapContent = fs.readFileSync(sitemapPath, 'utf8');
+    // Fetch sitemap from the deployed site
+    const sitemapContent = await new Promise((resolve, reject) => {
+      const client = sitemapUrl.startsWith('https') ? https : http;
+
+      client.get(sitemapUrl, (res) => {
+        if (res.statusCode !== 200) {
+          reject(new Error(`Failed to fetch sitemap: HTTP ${res.statusCode}`));
+          return;
+        }
+
+        let data = '';
+        res.on('data', chunk => data += chunk);
+        res.on('end', () => resolve(data));
+      }).on('error', reject);
+    });
+
     const parser = new xml2js.Parser();
-    
+
     return new Promise((resolve, reject) => {
       parser.parseString(sitemapContent, (err, result) => {
         if (err) {
           reject(err);
           return;
         }
-        
+
         const urls = result?.urlset?.url || [];
         const sitemapUrls = urls.map(url => url.loc[0]);
+        console.log(`✅ Found ${sitemapUrls.length} URLs in sitemap`);
         resolve(sitemapUrls);
       });
     });
   } catch (error) {
-    console.error(`❌ Error reading sitemap: ${error.message}`);
+    console.error(`❌ Error fetching sitemap from ${sitemapUrl}: ${error.message}`);
     return [];
   }
+}
+
+// Extract links from header, footer, and navigation (checked once per site)
+async function extractGlobalNavigationLinks(page, baseUrl) {
+  return await page.evaluate((baseUrl) => {
+    const links = [];
+
+    // Select header, footer, and navigation elements
+    const globalSelectors = [
+      'header',
+      'nav',
+      '.navbar',
+      'footer',
+      '.footer',
+      '[role="navigation"]',
+      '[class*="sidebar"]'
+    ];
+
+    globalSelectors.forEach(selector => {
+      const elements = document.querySelectorAll(selector);
+      elements.forEach(container => {
+        const anchors = container.querySelectorAll('a[href]');
+
+        anchors.forEach(el => {
+          const href = el.getAttribute('href');
+          if (href && href !== '#' && href.trim() !== '') {
+            try {
+              const fullUrl = href.startsWith('http') ? href :
+                             href.startsWith('/') ? new URL(href, baseUrl).href :
+                             new URL(href, window.location.href).href;
+
+              const url = new URL(fullUrl);
+              const anchorId = url.hash ? url.hash.substring(1) : null;
+              const urlWithoutAnchor = `${url.origin}${url.pathname}${url.search}`;
+
+              links.push({
+                href,
+                fullUrl,
+                urlWithoutAnchor,
+                anchorId,
+                text: el.textContent?.trim() || '',
+                hasAnchor: !!anchorId,
+                isInternal: fullUrl.startsWith(baseUrl),
+                source: 'global-navigation'
+              });
+            } catch (error) {
+              // Skip malformed URLs
+            }
+          }
+        });
+      });
+    });
+
+    return links;
+  }, baseUrl);
 }
 
 // Extract links from main content area of a page
@@ -165,7 +232,7 @@ async function extractMainContentLinks(page, baseUrl) {
       mainFound: false,
       selectors: []
     };
-    
+
     // Try multiple selectors for main content
     const contentSelectors = [
       'main',
@@ -178,7 +245,7 @@ async function extractMainContentLinks(page, baseUrl) {
       '.container.mainContainer',
       '.docsContainer'
     ];
-    
+
     let mainElement = null;
     for (const selector of contentSelectors) {
       mainElement = document.querySelector(selector);
@@ -188,20 +255,20 @@ async function extractMainContentLinks(page, baseUrl) {
         break;
       }
     }
-    
+
     // If no main element found, search the entire document but exclude navigation
     const elementsToSearch = mainElement ? [mainElement] : [document];
-    
+
     elementsToSearch.forEach(container => {
       const anchors = container.querySelectorAll('a[href]');
       debug.totalAnchors = anchors.length;
-      
+
       anchors.forEach(el => {
         // Skip navigation links if searching entire document
         if (!mainElement && el.closest('nav, header, .navbar, .footer, [class*="sidebar"]')) {
           return;
         }
-        
+
         const href = el.getAttribute('href');
         // Skip placeholder links and empty hrefs
         if (href && href !== '#' && href.trim() !== '') {
@@ -209,12 +276,12 @@ async function extractMainContentLinks(page, baseUrl) {
             const fullUrl = href.startsWith('http') ? href :
                            href.startsWith('/') ? new URL(href, baseUrl).href :
                            new URL(href, window.location.href).href;
-            
+
             // Parse anchor from URL
             const url = new URL(fullUrl);
             const anchorId = url.hash ? url.hash.substring(1) : null;
             const urlWithoutAnchor = `${url.origin}${url.pathname}${url.search}`;
-            
+
             links.push({
               href,
               fullUrl,
@@ -222,7 +289,8 @@ async function extractMainContentLinks(page, baseUrl) {
               anchorId,
               text: el.textContent?.trim() || '',
               hasAnchor: !!anchorId,
-              isInternal: fullUrl.startsWith(baseUrl)
+              isInternal: fullUrl.startsWith(baseUrl),
+              source: 'main-content'
             });
           } catch (error) {
             // Skip malformed URLs
@@ -230,12 +298,12 @@ async function extractMainContentLinks(page, baseUrl) {
         }
       });
     });
-    
+
     // Log debug info if no links found
     if (links.length === 0 && debug.totalAnchors > 0) {
       console.warn('Debug: Found anchors but no valid links', debug);
     }
-    
+
     return links;
   }, baseUrl);
 }
@@ -294,72 +362,42 @@ function savePageContentCache(siteKey, cache) {
   fs.writeFileSync(cacheFile, JSON.stringify(cache, null, 2));
 }
 
-// Cache sitemap data with checksum
-async function getCachedSitemapData(siteKey) {
+// Cache sitemap data (now fetches from HTTP)
+async function getCachedSitemapData(siteKey, baseUrl) {
   const path = require('path');
   const fs = require('fs');
   const crypto = require('crypto');
-  
-  const siteDir = siteKey.toLowerCase() === 'portal' ? 'portal' : `standards/${siteKey}`;
-  const sitemapPath = path.join(process.cwd(), siteDir, 'build', 'sitemap.xml');
+
   const cacheDir = path.join(process.cwd(), 'output', 'link-validation', siteKey.toLowerCase());
   const cacheFile = path.join(cacheDir, 'sitemap-cache.json');
-  
-  if (!fs.existsSync(sitemapPath)) {
+
+  // Fetch sitemap from HTTP
+  const sitemapUrls = await getSitemapUrls(siteKey, baseUrl);
+
+  if (!sitemapUrls || sitemapUrls.length === 0) {
     return null;
   }
-  
-  // Calculate current sitemap checksum
-  const sitemapContent = fs.readFileSync(sitemapPath, 'utf8');
-  const currentChecksum = crypto.createHash('md5').update(sitemapContent).digest('hex');
-  
-  // Check if cache exists and is valid
-  if (fs.existsSync(cacheFile)) {
-    try {
-      const cached = JSON.parse(fs.readFileSync(cacheFile, 'utf8'));
-      if (cached.checksum === currentChecksum) {
-        console.log(`📦 Using cached sitemap data (${cached.urls.length} URLs)`);
-        return cached.urls;
-      } 
-        console.log(`🔄 Sitemap changed, invalidating cache`);
-      
-    } catch (error) {
-      console.log(`⚠️  Cache corrupted, rebuilding`);
-    }
+
+  // Calculate checksum from sitemap URLs for cache validation
+  const urlString = sitemapUrls.join('\n');
+  const currentChecksum = crypto.createHash('md5').update(urlString).digest('hex');
+
+  // Ensure output directory exists
+  if (!fs.existsSync(cacheDir)) {
+    fs.mkdirSync(cacheDir, { recursive: true });
   }
-  
-  // Parse sitemap and cache it
-  const xml2js = require('xml2js');
-  const parser = new xml2js.Parser();
-  
-  return new Promise((resolve, reject) => {
-    parser.parseString(sitemapContent, (err, result) => {
-      if (err) {
-        reject(err);
-        return;
-      }
-      
-      const urls = result?.urlset?.url || [];
-      const sitemapUrls = urls.map(url => url.loc[0]);
-      
-      // Ensure output directory exists
-      if (!fs.existsSync(cacheDir)) {
-        fs.mkdirSync(cacheDir, { recursive: true });
-      }
-      
-      // Cache the data
-      const cacheData = {
-        checksum: currentChecksum,
-        timestamp: new Date().toISOString(),
-        urls: sitemapUrls
-      };
-      
-      fs.writeFileSync(cacheFile, JSON.stringify(cacheData, null, 2));
-      console.log(`💾 Cached sitemap data (${sitemapUrls.length} URLs)`);
-      
-      resolve(sitemapUrls);
-    });
-  });
+
+  // Cache the data
+  const cacheData = {
+    checksum: currentChecksum,
+    timestamp: new Date().toISOString(),
+    urls: sitemapUrls
+  };
+
+  fs.writeFileSync(cacheFile, JSON.stringify(cacheData, null, 2));
+  console.log(`💾 Cached sitemap data (${sitemapUrls.length} URLs)`);
+
+  return sitemapUrls;
 }
 
 // Generate HTML report
@@ -923,9 +961,9 @@ async function getMainContentChecksum(page) {
 async function validateLinksFromSitemap(siteKey, baseUrl, environment = 'unknown') {
   const startTime = Date.now();
   console.log(`\n🗺️  Starting sitemap-based link validation for ${siteKey}...`);
-  
+
   // Step 1: Get all URLs from sitemap (with caching)
-  const sitemapUrls = await getCachedSitemapData(siteKey);
+  const sitemapUrls = await getCachedSitemapData(siteKey, baseUrl);
   if (!sitemapUrls || sitemapUrls.length === 0) {
     return { tested: 0, passed: 0, failed: 1, issues: [{ type: 'NO_SITEMAP', message: 'Could not load sitemap' }] };
   }
@@ -982,11 +1020,25 @@ async function validateLinksFromSitemap(siteKey, baseUrl, environment = 'unknown
   const allAnchors = new Map(); // URL -> Set of anchors
   const pageDetails = []; // Detailed page information for reporting
   const linksByPage = new Map(); // Page URL -> links found on that page
-  
+
   const pageTimes = [];
-  
+
   try {
-    // Step 2: Visit each page and extract links
+    // Step 2: Extract global navigation links (header/footer) once from first page
+    console.log(`🔍 Extracting global navigation links (header/footer/nav) - checked once...`);
+    await page.goto(sitemapUrls[0], { waitUntil: 'domcontentloaded', timeout: 30000 });
+    const globalNavLinks = await extractGlobalNavigationLinks(page, baseUrl);
+    const globalInternalLinks = globalNavLinks.filter(l => l.isInternal);
+
+    console.log(`   ✓ Found ${globalInternalLinks.length} global navigation links to validate`);
+
+    // Add global links to the set
+    globalInternalLinks.forEach(link => {
+      allLinks.add(link.hasAnchor ? link.fullUrl : link.urlWithoutAnchor);
+    });
+
+    // Step 3: Visit each page and extract content links
+    console.log(`\n📄 Processing ${sitemapUrls.length} pages from sitemap...`);
     for (let i = 0; i < sitemapUrls.length; i++) {
       const pageUrl = sitemapUrls[i];
       const pageStartTime = Date.now();
@@ -1246,33 +1298,60 @@ async function validateLinksFromSitemap(siteKey, baseUrl, environment = 'unknown
   }
 }
 
-// Validate sitemap generation (simplified)
-function validateSitemap(siteKey, baseUrl) {
-  const path = require('path');
-  const fs = require('fs');
-  
-  const siteDir = siteKey.toLowerCase() === 'portal' ? 'portal' : `standards/${siteKey}`;
-  const buildPath = path.join(process.cwd(), siteDir, 'build');
-  const sitemapPath = path.join(buildPath, 'sitemap.xml');
-  
+// Validate sitemap generation (now checks HTTP endpoint)
+async function validateSitemap(siteKey, baseUrl) {
+  const https = require('https');
+  const http = require('http');
+
+  const sitemapUrl = `${baseUrl}/sitemap.xml`;
+
   const results = {
     tested: 1,
     passed: 0,
     failed: 0,
     issues: []
   };
-  
-  if (!fs.existsSync(sitemapPath)) {
+
+  try {
+    // Check if sitemap is accessible via HTTP
+    await new Promise((resolve, reject) => {
+      const client = sitemapUrl.startsWith('https') ? https : http;
+
+      client.get(sitemapUrl, (res) => {
+        if (res.statusCode === 200) {
+          results.passed++;
+          console.log(`✅ Sitemap accessible: ${sitemapUrl}`);
+          resolve();
+        } else {
+          results.failed++;
+          results.issues.push({
+            type: 'SITEMAP_MISSING',
+            priority: 'HIGH',
+            message: `Sitemap not accessible: ${sitemapUrl} (HTTP ${res.statusCode})`,
+            category: 'sitemap'
+          });
+          resolve();
+        }
+        res.resume(); // Consume response to free up memory
+      }).on('error', (err) => {
+        results.failed++;
+        results.issues.push({
+          type: 'SITEMAP_MISSING',
+          priority: 'HIGH',
+          message: `Sitemap not found: ${sitemapUrl} (${err.message})`,
+          category: 'sitemap'
+        });
+        resolve();
+      });
+    });
+  } catch (error) {
     results.failed++;
     results.issues.push({
       type: 'SITEMAP_MISSING',
       priority: 'HIGH',
-      message: `Sitemap not found: ${sitemapPath}`,
+      message: `Error checking sitemap: ${sitemapUrl} (${error.message})`,
       category: 'sitemap'
     });
-  } else {
-    results.passed++;
-    console.log(`✅ Sitemap found: ${sitemapPath}`);
   }
   
   return results;
@@ -1427,52 +1506,25 @@ async function validateEnvironmentUrls(siteKey, environment, options = {}) {
   console.log(`📋 Testing: ${type}`);
   console.log(`🕳️  Crawl depth: ${depth === undefined ? 'all links from sitemap' : depth === 0 ? 'homepage only' : `${depth} level${depth > 1 ? 's' : ''} deep`})`);
   
-  // Handle sitemap-only validation
+  // Handle sitemap-based validation (comprehensive link checking)
   if (type === 'sitemap') {
-    const sitemapResults = validateSitemap(siteKey, baseUrl);
-    
-    // Report sitemap results
-    console.log(`\n📊 Sitemap Validation Results for ${siteKey.toUpperCase()} (${environment}):`);
-    console.log(`   ✅ Passed: ${sitemapResults.passed}`);
-    console.log(`   ❌ Failed: ${sitemapResults.failed}`);
-    console.log(`   📈 Total: ${sitemapResults.tested}`);
-    
-    if (sitemapResults.issues.length > 0) {
-      const critical = sitemapResults.issues.filter(i => i.priority === 'CRITICAL');
-      const high = sitemapResults.issues.filter(i => i.priority === 'HIGH');
-      const medium = sitemapResults.issues.filter(i => i.priority === 'MEDIUM');
-      const low = sitemapResults.issues.filter(i => i.priority === 'LOW');
-      
-      if (high.length > 0) {
-        console.error(`\n❌ HIGH PRIORITY SITEMAP ISSUES (${high.length}):`);
-        high.forEach((issue, i) => {
-          console.error(`  ${i + 1}. ${issue.type}: ${issue.message}`);
-          if (issue.suggestion) {console.error(`     💡 ${issue.suggestion}`);}
-          if (issue.details) {console.error(`     📝 Examples: ${issue.details.slice(0, 3).join(', ')}`);}
-        });
-      }
-      
-      if (medium.length > 0) {
-        console.warn(`\n⚠️  MEDIUM PRIORITY SITEMAP ISSUES (${medium.length}):`);
-        medium.forEach((issue, i) => {
-          console.warn(`  ${i + 1}. ${issue.type}: ${issue.message}`);
-          if (issue.details) {console.warn(`     📝 Examples: ${issue.details.slice(0, 3).join(', ')}`);}
-        });
-      }
-      
-      if (low.length > 0) {
-        console.log(`\n💡 LOW PRIORITY SITEMAP ISSUES (${low.length}):`);
-        low.forEach((issue, i) => {
-          console.log(`  ${i + 1}. ${issue.type}: ${issue.message}`);
-          if (issue.details) {console.log(`     📝 Examples: ${issue.details.slice(0, 3).join(', ')}`);}
-        });
-      }
-      
-      return critical.length === 0 && high.length === 0; // Return false if critical or high issues found
-    } 
-      console.log('\n✅ All sitemap validations passed!');
-      return true;
-    
+    // First verify sitemap is accessible
+    const sitemapCheck = await validateSitemap(siteKey, baseUrl);
+    if (sitemapCheck.failed > 0) {
+      console.error(`\n❌ Cannot proceed - sitemap not accessible`);
+      return false;
+    }
+
+    // Now do comprehensive link validation using sitemap as page list
+    console.log(`\n🔍 Performing comprehensive link validation using sitemap as page list...`);
+    const linkResults = await validateLinksFromSitemap(siteKey, baseUrl, environment);
+
+    console.log(`\n📊 Link Validation Results for ${siteKey.toUpperCase()} (${environment}):`);
+    console.log(`   ✅ Valid links: ${linkResults.passed}`);
+    console.log(`   ❌ Invalid links: ${linkResults.failed}`);
+    console.log(`   📈 Total tested: ${linkResults.tested}`);
+
+    return linkResults.failed === 0;
   }
   
   // Handle comprehensive sitemap-based validation
