@@ -2,7 +2,7 @@
 
 /**
  * IFLA Standards Link Validation Tool
- * 
+ *
  * Full documentation: developer_notes/link-validation.md
  * Run with --man to see documentation location
  */
@@ -15,15 +15,27 @@ const fs = require('fs');
 const { createSiteConfigFromEnv } = require('./utils/site-config-utils.js');
 const { sites, DocsEnv } = createSiteConfigFromEnv();
 
-const validSites = Object.keys(sites).filter(site => site !== 'github');
+const validSites = Object.keys(sites).filter((site) => site !== 'github');
 const validEnvironments = Object.values(DocsEnv);
 
 program
   .option('--env <env>', 'Environment to validate (local, preview, production)')
   .option('--site <site>', 'Site to validate (specific site or "all")')
-  .option('--type <type>', 'Type of validation: "static" (nav/footer), "generated" (all links), "sitemap", "comprehensive", or "both"', 'both')
-  .option('--depth <number>', 'Crawl depth: 0=homepage only, 1=homepage+direct links, 2=2 levels deep, etc. (default: all links from sitemap)', undefined)
-  .option('--sample-size <number>', 'Number of generated links to test (for non-local)', '10')
+  .option(
+    '--type <type>',
+    'Type of validation: "static" (nav/footer), "generated" (all links), "sitemap", "comprehensive", or "both"',
+    'both',
+  )
+  .option(
+    '--depth <number>',
+    'Crawl depth: 0=homepage only, 1=homepage+direct links, 2=2 levels deep, etc. (default: all links from sitemap)',
+    undefined,
+  )
+  .option(
+    '--sample-size <number>',
+    'Number of generated links to test (for non-local)',
+    '10',
+  )
   .option('--timeout <ms>', 'Timeout per link in milliseconds', '15000')
   .option('--man', 'Show documentation location and exit')
   .parse();
@@ -52,7 +64,9 @@ let normalizedType = rawType;
 
 // Handle common typos
 if (rawType === 'comprehensivet') {
-  console.log(`⚠️  Detected typo in type 'comprehensivet', treating as 'comprehensive'`);
+  console.log(
+    `⚠️  Detected typo in type 'comprehensivet', treating as 'comprehensive'`,
+  );
   normalizedType = 'comprehensive';
 }
 
@@ -69,16 +83,18 @@ program.opts().type = normalizedType;
 const LOCALHOST_PATTERNS = [
   /http:\/\/localhost:\d+/,
   /http:\/\/127\.0\.0\.1:\d+/,
-  /\/\/localhost:\d+/
+  /\/\/localhost:\d+/,
 ];
 
 // Check if a URL is valid for the given environment by matching against all site configs
 function isValidEnvironmentUrl(url, environment) {
   // Get all site configs for this environment
-  const allSiteConfigs = Object.values(sites).map(siteConfig => siteConfig[environment]).filter(Boolean);
-  
+  const allSiteConfigs = Object.values(sites)
+    .map((siteConfig) => siteConfig[environment])
+    .filter(Boolean);
+
   // Check if URL matches any of the expected base URLs for this environment
-  return allSiteConfigs.some(config => {
+  return allSiteConfigs.some((config) => {
     const expectedBaseUrl = `${config.url}${config.baseUrl}`;
     return url.startsWith(expectedBaseUrl) || url.startsWith(config.url);
   });
@@ -89,32 +105,34 @@ function extractPagesFromBuild(siteKey, baseUrl) {
   const path = require('path');
   const fs = require('fs');
   const glob = require('glob');
-  
-  const siteDir = siteKey.toLowerCase() === 'portal' ? 'portal' : `standards/${siteKey}`;
+
+  const siteDir =
+    siteKey.toLowerCase() === 'portal' ? 'portal' : `standards/${siteKey}`;
   const buildPath = path.join(process.cwd(), siteDir, 'build');
-  
+
   if (!fs.existsSync(buildPath)) {
     console.warn(`⚠️  Build directory not found: ${buildPath}`);
     return [];
   }
-  
+
   // Find all index.html files in the build directory
   const htmlFiles = glob.sync('**/index.html', { cwd: buildPath });
-  
+
   // Convert file paths to URLs
-  const validPages = htmlFiles.map(file => {
+  const validPages = htmlFiles.map((file) => {
     // Remove /index.html and convert to URL
     const urlPath = file.replace('/index.html', '/').replace('index.html', '');
     return `${baseUrl}${urlPath}`;
   });
-  
+
   // Add root pages that might not follow the index.html pattern
-  const rootFiles = glob.sync('*.html', { cwd: buildPath })
-    .filter(file => file !== 'index.html' && file !== '404.html')
-    .map(file => `${baseUrl}${file.replace('.html', '/')}`);
-  
+  const rootFiles = glob
+    .sync('*.html', { cwd: buildPath })
+    .filter((file) => file !== 'index.html' && file !== '404.html')
+    .map((file) => `${baseUrl}${file.replace('.html', '/')}`);
+
   const allPages = [...validPages, ...rootFiles];
-  
+
   console.log(`📁 Found ${allPages.length} pages in build directory`);
   return allPages;
 }
@@ -135,16 +153,20 @@ async function getSitemapUrls(siteKey, baseUrl) {
     const sitemapContent = await new Promise((resolve, reject) => {
       const client = sitemapUrl.startsWith('https') ? https : http;
 
-      client.get(sitemapUrl, (res) => {
-        if (res.statusCode !== 200) {
-          reject(new Error(`Failed to fetch sitemap: HTTP ${res.statusCode}`));
-          return;
-        }
+      client
+        .get(sitemapUrl, (res) => {
+          if (res.statusCode !== 200) {
+            reject(
+              new Error(`Failed to fetch sitemap: HTTP ${res.statusCode}`),
+            );
+            return;
+          }
 
-        let data = '';
-        res.on('data', chunk => data += chunk);
-        res.on('end', () => resolve(data));
-      }).on('error', reject);
+          let data = '';
+          res.on('data', (chunk) => (data += chunk));
+          res.on('end', () => resolve(data));
+        })
+        .on('error', reject);
     });
 
     const parser = new xml2js.Parser();
@@ -157,13 +179,15 @@ async function getSitemapUrls(siteKey, baseUrl) {
         }
 
         const urls = result?.urlset?.url || [];
-        const sitemapUrls = urls.map(url => url.loc[0]);
+        const sitemapUrls = urls.map((url) => url.loc[0]);
         console.log(`✅ Found ${sitemapUrls.length} URLs in sitemap`);
         resolve(sitemapUrls);
       });
     });
   } catch (error) {
-    console.error(`❌ Error fetching sitemap from ${sitemapUrl}: ${error.message}`);
+    console.error(
+      `❌ Error fetching sitemap from ${sitemapUrl}: ${error.message}`,
+    );
     return [];
   }
 }
@@ -181,21 +205,23 @@ async function extractGlobalNavigationLinks(page, baseUrl) {
       'footer',
       '.footer',
       '[role="navigation"]',
-      '[class*="sidebar"]'
+      '[class*="sidebar"]',
     ];
 
-    globalSelectors.forEach(selector => {
+    globalSelectors.forEach((selector) => {
       const elements = document.querySelectorAll(selector);
-      elements.forEach(container => {
+      elements.forEach((container) => {
         const anchors = container.querySelectorAll('a[href]');
 
-        anchors.forEach(el => {
+        anchors.forEach((el) => {
           const href = el.getAttribute('href');
           if (href && href !== '#' && href.trim() !== '') {
             try {
-              const fullUrl = href.startsWith('http') ? href :
-                             href.startsWith('/') ? new URL(href, baseUrl).href :
-                             new URL(href, window.location.href).href;
+              const fullUrl = href.startsWith('http')
+                ? href
+                : href.startsWith('/')
+                  ? new URL(href, baseUrl).href
+                  : new URL(href, window.location.href).href;
 
               const url = new URL(fullUrl);
               const anchorId = url.hash ? url.hash.substring(1) : null;
@@ -209,7 +235,7 @@ async function extractGlobalNavigationLinks(page, baseUrl) {
                 text: el.textContent?.trim() || '',
                 hasAnchor: !!anchorId,
                 isInternal: fullUrl.startsWith(baseUrl),
-                source: 'global-navigation'
+                source: 'global-navigation',
               });
             } catch (error) {
               // Skip malformed URLs
@@ -230,7 +256,7 @@ async function extractMainContentLinks(page, baseUrl) {
     const debug = {
       totalAnchors: 0,
       mainFound: false,
-      selectors: []
+      selectors: [],
     };
 
     // Try multiple selectors for main content
@@ -243,7 +269,7 @@ async function extractMainContentLinks(page, baseUrl) {
       'article',
       '.docMainContainer',
       '.container.mainContainer',
-      '.docsContainer'
+      '.docsContainer',
     ];
 
     let mainElement = null;
@@ -259,13 +285,16 @@ async function extractMainContentLinks(page, baseUrl) {
     // If no main element found, search the entire document but exclude navigation
     const elementsToSearch = mainElement ? [mainElement] : [document];
 
-    elementsToSearch.forEach(container => {
+    elementsToSearch.forEach((container) => {
       const anchors = container.querySelectorAll('a[href]');
       debug.totalAnchors = anchors.length;
 
-      anchors.forEach(el => {
+      anchors.forEach((el) => {
         // Skip navigation links if searching entire document
-        if (!mainElement && el.closest('nav, header, .navbar, .footer, [class*="sidebar"]')) {
+        if (
+          !mainElement &&
+          el.closest('nav, header, .navbar, .footer, [class*="sidebar"]')
+        ) {
           return;
         }
 
@@ -273,9 +302,11 @@ async function extractMainContentLinks(page, baseUrl) {
         // Skip placeholder links and empty hrefs
         if (href && href !== '#' && href.trim() !== '') {
           try {
-            const fullUrl = href.startsWith('http') ? href :
-                           href.startsWith('/') ? new URL(href, baseUrl).href :
-                           new URL(href, window.location.href).href;
+            const fullUrl = href.startsWith('http')
+              ? href
+              : href.startsWith('/')
+                ? new URL(href, baseUrl).href
+                : new URL(href, window.location.href).href;
 
             // Parse anchor from URL
             const url = new URL(fullUrl);
@@ -290,7 +321,7 @@ async function extractMainContentLinks(page, baseUrl) {
               text: el.textContent?.trim() || '',
               hasAnchor: !!anchorId,
               isInternal: fullUrl.startsWith(baseUrl),
-              source: 'main-content'
+              source: 'main-content',
             });
           } catch (error) {
             // Skip malformed URLs
@@ -312,18 +343,20 @@ async function extractMainContentLinks(page, baseUrl) {
 async function extractPageAnchors(page) {
   return await page.evaluate(() => {
     const anchors = new Set();
-    
+
     // Get all elements with IDs
-    document.querySelectorAll('[id]').forEach(el => {
+    document.querySelectorAll('[id]').forEach((el) => {
       anchors.add(el.id);
     });
-    
+
     // Get all elements with name attributes
-    document.querySelectorAll('[name]').forEach(el => {
+    document.querySelectorAll('[name]').forEach((el) => {
       const name = el.getAttribute('name');
-      if (name) {anchors.add(name);}
+      if (name) {
+        anchors.add(name);
+      }
     });
-    
+
     return Array.from(anchors);
   });
 }
@@ -332,10 +365,15 @@ async function extractPageAnchors(page) {
 function loadPageContentCache(siteKey) {
   const path = require('path');
   const fs = require('fs');
-  
-  const cacheDir = path.join(process.cwd(), 'output', 'link-validation', siteKey.toLowerCase());
+
+  const cacheDir = path.join(
+    process.cwd(),
+    'output',
+    'link-validation',
+    siteKey.toLowerCase(),
+  );
   const cacheFile = path.join(cacheDir, 'content-cache.json');
-  
+
   if (fs.existsSync(cacheFile)) {
     try {
       return JSON.parse(fs.readFileSync(cacheFile, 'utf8'));
@@ -344,21 +382,26 @@ function loadPageContentCache(siteKey) {
       return {};
     }
   }
-  
+
   return {};
 }
 
 function savePageContentCache(siteKey, cache) {
   const path = require('path');
   const fs = require('fs');
-  
-  const cacheDir = path.join(process.cwd(), 'output', 'link-validation', siteKey.toLowerCase());
+
+  const cacheDir = path.join(
+    process.cwd(),
+    'output',
+    'link-validation',
+    siteKey.toLowerCase(),
+  );
   const cacheFile = path.join(cacheDir, 'content-cache.json');
-  
+
   if (!fs.existsSync(cacheDir)) {
     fs.mkdirSync(cacheDir, { recursive: true });
   }
-  
+
   fs.writeFileSync(cacheFile, JSON.stringify(cache, null, 2));
 }
 
@@ -368,7 +411,12 @@ async function getCachedSitemapData(siteKey, baseUrl) {
   const fs = require('fs');
   const crypto = require('crypto');
 
-  const cacheDir = path.join(process.cwd(), 'output', 'link-validation', siteKey.toLowerCase());
+  const cacheDir = path.join(
+    process.cwd(),
+    'output',
+    'link-validation',
+    siteKey.toLowerCase(),
+  );
   const cacheFile = path.join(cacheDir, 'sitemap-cache.json');
 
   // Fetch sitemap from HTTP
@@ -380,7 +428,10 @@ async function getCachedSitemapData(siteKey, baseUrl) {
 
   // Calculate checksum from sitemap URLs for cache validation
   const urlString = sitemapUrls.join('\n');
-  const currentChecksum = crypto.createHash('md5').update(urlString).digest('hex');
+  const currentChecksum = crypto
+    .createHash('md5')
+    .update(urlString)
+    .digest('hex');
 
   // Ensure output directory exists
   if (!fs.existsSync(cacheDir)) {
@@ -391,7 +442,7 @@ async function getCachedSitemapData(siteKey, baseUrl) {
   const cacheData = {
     checksum: currentChecksum,
     timestamp: new Date().toISOString(),
-    urls: sitemapUrls
+    urls: sitemapUrls,
   };
 
   fs.writeFileSync(cacheFile, JSON.stringify(cacheData, null, 2));
@@ -401,40 +452,51 @@ async function getCachedSitemapData(siteKey, baseUrl) {
 }
 
 // Generate HTML report
-function generateHtmlReport(siteKey, baseUrl, results, pageDetails, environment = 'unknown') {
+function generateHtmlReport(
+  siteKey,
+  baseUrl,
+  results,
+  pageDetails,
+  environment = 'unknown',
+) {
   const path = require('path');
   const fs = require('fs');
-  
+
   // Create timestamped filename
   const now = new Date();
   const timestamp = now.toISOString();
   const filename = `report-${now.getFullYear()}${String(now.getMonth() + 1).padStart(2, '0')}${String(now.getDate()).padStart(2, '0')}-${String(now.getHours()).padStart(2, '0')}${String(now.getMinutes()).padStart(2, '0')}${String(now.getSeconds()).padStart(2, '0')}.html`;
-  
+
   // Create site-specific directory
-  const siteDir = path.join(process.cwd(), 'output', 'link-validation', siteKey.toLowerCase());
+  const siteDir = path.join(
+    process.cwd(),
+    'output',
+    'link-validation',
+    siteKey.toLowerCase(),
+  );
   if (!fs.existsSync(siteDir)) {
     fs.mkdirSync(siteDir, { recursive: true });
   }
-  
+
   const reportFile = path.join(siteDir, filename);
-  
+
   // Group broken links by page
   const brokenLinksByPage = new Map();
-  
-  pageDetails.forEach(page => {
+
+  pageDetails.forEach((page) => {
     if (page.brokenLinks && page.brokenLinks.length > 0) {
       brokenLinksByPage.set(page.url, {
         title: page.title,
         url: page.url,
-        brokenLinks: page.brokenLinks
+        brokenLinks: page.brokenLinks,
       });
     }
   });
-  
+
   // Determine status for color coding
   const hasErrors = results.failed > 0;
   const hasWarnings = results.skippedPages > 0; // If pages were skipped, it's a warning
-  
+
   const html = `<!DOCTYPE html>
 <html lang="en">
 <head>
@@ -567,7 +629,9 @@ function generateHtmlReport(siteKey, baseUrl, results, pageDetails, environment 
             <div class="stat-value">${pageDetails.length}</div>
             <div class="stat-label">Pages Checked</div>
         </div>
-        ${results.skippedPages !== undefined ? `
+        ${
+          results.skippedPages !== undefined
+            ? `
         <div class="stat-card">
             <div class="stat-value warning">${results.skippedPages}</div>
             <div class="stat-label">Cached Pages</div>
@@ -580,18 +644,25 @@ function generateHtmlReport(siteKey, baseUrl, results, pageDetails, environment 
             <div class="stat-value">${results.newPages || 0}</div>
             <div class="stat-label">New Pages</div>
         </div>
-        ` : ''}
+        `
+            : ''
+        }
     </div>
 
-    ${brokenLinksByPage.size === 0 ? `
+    ${
+      brokenLinksByPage.size === 0
+        ? `
     <div class="no-issues">
         <h2>🎉 No Broken Links Found!</h2>
         <p>All internal links are working correctly.</p>
     </div>
-    ` : `
+    `
+        : `
     <h2>Pages with Broken Links (${brokenLinksByPage.size})</h2>
     
-    ${Array.from(brokenLinksByPage.values()).map(page => `
+    ${Array.from(brokenLinksByPage.values())
+      .map(
+        (page) => `
     <div class="page-section">
         <div class="page-header">
             <h3 class="page-title">${page.title}</h3>
@@ -606,18 +677,25 @@ function generateHtmlReport(siteKey, baseUrl, results, pageDetails, environment 
                 </tr>
             </thead>
             <tbody>
-                ${page.brokenLinks.map(link => `
+                ${page.brokenLinks
+                  .map(
+                    (link) => `
                 <tr>
                     <td class="broken-link">${link.url}</td>
                     <td class="link-text">${link.text || '<em>No text</em>'}</td>
                     <td><span class="danger">${link.type}</span></td>
                 </tr>
-                `).join('')}
+                `,
+                  )
+                  .join('')}
             </tbody>
         </table>
     </div>
-    `).join('')}
-    `}
+    `,
+      )
+      .join('')}
+    `
+    }
 
     <div class="footer" style="margin-top: 40px; padding-top: 20px; border-top: 1px solid #e1e5e9;">
         <p class="timestamp">Report generated by IFLA Standards Link Validator on ${timestamp}</p>
@@ -627,7 +705,7 @@ function generateHtmlReport(siteKey, baseUrl, results, pageDetails, environment 
 
   fs.writeFileSync(reportFile, html);
   console.log(`📄 HTML report saved: ${reportFile}`);
-  
+
   // Create a simple server script to view the report
   const serverScript = path.join(reportDir, 'view-report.js');
   const serverContent = `#!/usr/bin/env node
@@ -663,35 +741,41 @@ server.listen(PORT, () => {
   console.log(\`Press Ctrl+C to stop the server\\n\`);
 });
 `;
-  
+
   if (!fs.existsSync(serverScript)) {
     fs.writeFileSync(serverScript, serverContent);
     fs.chmodSync(serverScript, '755');
   }
-  
+
   // Update the index
   updateValidationIndex(siteKey, filename, results, environment, timestamp);
-  
+
   return reportFile;
 }
 
 // Update the validation index file
-function updateValidationIndex(siteKey, reportFilename, results, environment, timestamp) {
+function updateValidationIndex(
+  siteKey,
+  reportFilename,
+  results,
+  environment,
+  timestamp,
+) {
   const path = require('path');
   const fs = require('fs');
-  
+
   const validationDir = path.join(process.cwd(), 'output', 'link-validation');
   const indexFile = path.join(validationDir, 'index.html');
-  
+
   // Ensure the validation directory exists
   if (!fs.existsSync(validationDir)) {
     fs.mkdirSync(validationDir, { recursive: true });
   }
-  
+
   // Load existing index data or create new
   let indexData = {};
   const indexDataFile = path.join(validationDir, 'index-data.json');
-  
+
   if (fs.existsSync(indexDataFile)) {
     try {
       indexData = JSON.parse(fs.readFileSync(indexDataFile, 'utf8'));
@@ -700,12 +784,12 @@ function updateValidationIndex(siteKey, reportFilename, results, environment, ti
       indexData = {};
     }
   }
-  
+
   // Add this run to the index data
   if (!indexData[siteKey]) {
     indexData[siteKey] = [];
   }
-  
+
   // Determine status for color coding
   let status = 'success';
   if (results.failed > 0) {
@@ -713,7 +797,7 @@ function updateValidationIndex(siteKey, reportFilename, results, environment, ti
   } else if (results.skippedPages > 0) {
     status = 'warning';
   }
-  
+
   const runData = {
     filename: reportFilename,
     timestamp,
@@ -724,24 +808,24 @@ function updateValidationIndex(siteKey, reportFilename, results, environment, ti
     status,
     skippedPages: results.skippedPages || 0,
     changedPages: results.changedPages || 0,
-    newPages: results.newPages || 0
+    newPages: results.newPages || 0,
   };
-  
+
   // Add to front of array (newest first)
   indexData[siteKey].unshift(runData);
-  
+
   // Keep only last 20 runs per site
   indexData[siteKey] = indexData[siteKey].slice(0, 20);
-  
+
   // Save updated index data
   fs.writeFileSync(indexDataFile, JSON.stringify(indexData, null, 2));
-  
+
   // Also generate JavaScript version for direct HTML inclusion
   const indexJsFile = path.join(validationDir, 'index-data.js');
   const jsContent = `// Auto-generated validation report data
 window.validationReports = ${JSON.stringify(indexData, null, 2)};`;
   fs.writeFileSync(indexJsFile, jsContent);
-  
+
   console.log(`📋 Updated validation index data: ${indexDataFile}`);
 }
 
@@ -749,9 +833,17 @@ window.validationReports = ${JSON.stringify(indexData, null, 2)};`;
 function generateValidationIndexHtml(indexData, validationDir) {
   const path = require('path');
   const fs = require('fs');
-  
-  const allSites = ['portal', 'isbdm', 'lrm', 'FRBR', 'isbd', 'muldicat', 'unimarc'];
-  
+
+  const allSites = [
+    'portal',
+    'isbdm',
+    'lrm',
+    'FRBR',
+    'isbd',
+    'muldicat',
+    'unimarc',
+  ];
+
   const html = `<!DOCTYPE html>
 <html lang="en">
 <head>
@@ -874,20 +966,24 @@ function generateValidationIndexHtml(indexData, validationDir) {
         <p>Comprehensive link validation reports for all IFLA Standards sites. Latest runs are shown first.</p>
     </div>
 
-    ${allSites.map(site => {
-      const siteData = indexData[site] || [];
-      const displayName = site === 'portal' ? 'Portal' : site.toUpperCase();
-      
-      return `
+    ${allSites
+      .map((site) => {
+        const siteData = indexData[site] || [];
+        const displayName = site === 'portal' ? 'Portal' : site.toUpperCase();
+
+        return `
     <div class="site-section">
         <div class="site-header">
             <h2 class="site-title">${displayName}</h2>
         </div>
-        ${siteData.length === 0 ? `
+        ${
+          siteData.length === 0
+            ? `
         <div class="no-reports">
             No validation reports available yet. Run a validation to see reports here.
         </div>
-        ` : `
+        `
+            : `
         <table class="reports-table">
             <thead>
                 <tr>
@@ -900,7 +996,9 @@ function generateValidationIndexHtml(indexData, validationDir) {
                 </tr>
             </thead>
             <tbody>
-                ${siteData.map(run => `
+                ${siteData
+                  .map(
+                    (run) => `
                 <tr>
                     <td>
                         <a href="${site}/${run.filename}" class="report-link" target="_blank">
@@ -927,12 +1025,16 @@ function generateValidationIndexHtml(indexData, validationDir) {
                         ${new Date(run.timestamp).toLocaleString()}
                     </td>
                 </tr>
-                `).join('')}
+                `,
+                  )
+                  .join('')}
             </tbody>
         </table>
-        `}
+        `
+        }
     </div>`;
-    }).join('')}
+      })
+      .join('')}
 
     <div class="updated">
         Last updated: ${new Date().toLocaleString()}
@@ -948,36 +1050,47 @@ function generateValidationIndexHtml(indexData, validationDir) {
 // Get main content checksum
 async function getMainContentChecksum(page) {
   const crypto = require('crypto');
-  
+
   const mainContent = await page.evaluate(() => {
-    const mainElement = document.querySelector('main, [role="main"], .main-wrapper, .theme-doc-markdown');
+    const mainElement = document.querySelector(
+      'main, [role="main"], .main-wrapper, .theme-doc-markdown',
+    );
     return mainElement ? mainElement.innerHTML : '';
   });
-  
+
   return crypto.createHash('md5').update(mainContent).digest('hex');
 }
 
 // Comprehensive sitemap-based link validation with caching and reporting
-async function validateLinksFromSitemap(siteKey, baseUrl, environment = 'unknown') {
+async function validateLinksFromSitemap(
+  siteKey,
+  baseUrl,
+  environment = 'unknown',
+) {
   const startTime = Date.now();
   console.log(`\n🗺️  Starting sitemap-based link validation for ${siteKey}...`);
 
   // Step 1: Get all URLs from sitemap (with caching)
   const sitemapUrls = await getCachedSitemapData(siteKey, baseUrl);
   if (!sitemapUrls || sitemapUrls.length === 0) {
-    return { tested: 0, passed: 0, failed: 1, issues: [{ type: 'NO_SITEMAP', message: 'Could not load sitemap' }] };
+    return {
+      tested: 0,
+      passed: 0,
+      failed: 1,
+      issues: [{ type: 'NO_SITEMAP', message: 'Could not load sitemap' }],
+    };
   }
-  
+
   console.log(`📋 Found ${sitemapUrls.length} URLs in sitemap`);
-  
+
   // Load content cache
   const contentCache = loadPageContentCache(siteKey);
   let skippedPages = 0;
   let changedPages = 0;
   let newPages = 0;
-  
+
   // Performance-optimized Puppeteer launch
-  const browser = await puppeteer.launch({ 
+  const browser = await puppeteer.launch({
     headless: true,
     args: [
       '--no-sandbox',
@@ -988,34 +1101,36 @@ async function validateLinksFromSitemap(siteKey, baseUrl, environment = 'unknown
       '--disable-plugins',
       '--disable-background-timer-throttling',
       '--disable-backgrounding-occluded-windows',
-      '--disable-renderer-backgrounding'
-    ]
+      '--disable-renderer-backgrounding',
+    ],
   });
-  
+
   const page = await browser.newPage();
-  
+
   // Block unnecessary resources for faster loading (but keep CSS for proper rendering)
   await page.setRequestInterception(true);
-  page.on('request', request => {
+  page.on('request', (request) => {
     const resourceType = request.resourceType();
-    if (resourceType === 'image' || 
-        resourceType === 'font' ||
-        resourceType === 'media') {
+    if (
+      resourceType === 'image' ||
+      resourceType === 'font' ||
+      resourceType === 'media'
+    ) {
       request.abort();
     } else {
       request.continue();
     }
   });
-  
+
   // Listen for page errors
-  page.on('error', error => {
+  page.on('error', (error) => {
     console.error(`   ❌ Page crashed: ${error.message}`);
   });
-  
-  page.on('pageerror', error => {
+
+  page.on('pageerror', (error) => {
     console.error(`   ❌ Page error: ${error.message}`);
   });
-  
+
   const allLinks = new Set();
   const allAnchors = new Map(); // URL -> Set of anchors
   const pageDetails = []; // Detailed page information for reporting
@@ -1025,15 +1140,22 @@ async function validateLinksFromSitemap(siteKey, baseUrl, environment = 'unknown
 
   try {
     // Step 2: Extract global navigation links (header/footer) once from first page
-    console.log(`🔍 Extracting global navigation links (header/footer/nav) - checked once...`);
-    await page.goto(sitemapUrls[0], { waitUntil: 'domcontentloaded', timeout: 30000 });
+    console.log(
+      `🔍 Extracting global navigation links (header/footer/nav) - checked once...`,
+    );
+    await page.goto(sitemapUrls[0], {
+      waitUntil: 'domcontentloaded',
+      timeout: 30000,
+    });
     const globalNavLinks = await extractGlobalNavigationLinks(page, baseUrl);
-    const globalInternalLinks = globalNavLinks.filter(l => l.isInternal);
+    const globalInternalLinks = globalNavLinks.filter((l) => l.isInternal);
 
-    console.log(`   ✓ Found ${globalInternalLinks.length} global navigation links to validate`);
+    console.log(
+      `   ✓ Found ${globalInternalLinks.length} global navigation links to validate`,
+    );
 
     // Add global links to the set
-    globalInternalLinks.forEach(link => {
+    globalInternalLinks.forEach((link) => {
       allLinks.add(link.hasAnchor ? link.fullUrl : link.urlWithoutAnchor);
     });
 
@@ -1042,108 +1164,133 @@ async function validateLinksFromSitemap(siteKey, baseUrl, environment = 'unknown
     for (let i = 0; i < sitemapUrls.length; i++) {
       const pageUrl = sitemapUrls[i];
       const pageStartTime = Date.now();
-      
+
       try {
         // Optimized page loading - wait for DOM instead of network idle
-        await page.goto(pageUrl, { waitUntil: 'domcontentloaded', timeout: 30000 });
-        
+        await page.goto(pageUrl, {
+          waitUntil: 'domcontentloaded',
+          timeout: 30000,
+        });
+
         // Wait specifically for main content, but with shorter timeout
-        await page.waitForSelector('main, [role="main"], .main-wrapper', { timeout: 5000 }).catch(() => {});
-        
+        await page
+          .waitForSelector('main, [role="main"], .main-wrapper', {
+            timeout: 5000,
+          })
+          .catch(() => {});
+
         // Check for page errors
         const pageErrors = await page.evaluate(() => {
           const errors = [];
           // Check for React error boundaries
-          const errorBoundary = document.querySelector('.error-boundary, [data-error], .error-message');
+          const errorBoundary = document.querySelector(
+            '.error-boundary, [data-error], .error-message',
+          );
           if (errorBoundary) {
             errors.push(`React Error: ${errorBoundary.textContent}`);
           }
           // Check for 404 pages
           const title = document.title.toLowerCase();
-          if (title.includes('404') || title.includes('not found') || title.includes('page not found')) {
+          if (
+            title.includes('404') ||
+            title.includes('not found') ||
+            title.includes('page not found')
+          ) {
             errors.push(`404 Page: ${document.title}`);
           }
           // Check for Docusaurus error pages
-          const docusaurusError = document.querySelector('.theme-doc-version-banner--error, .theme-doc-version-badge--error');
+          const docusaurusError = document.querySelector(
+            '.theme-doc-version-banner--error, .theme-doc-version-badge--error',
+          );
           if (docusaurusError) {
             errors.push(`Docusaurus Error: ${docusaurusError.textContent}`);
           }
           // Check if main content is empty
-          const mainContent = document.querySelector('main, [role="main"], .main-wrapper, .theme-doc-markdown');
+          const mainContent = document.querySelector(
+            'main, [role="main"], .main-wrapper, .theme-doc-markdown',
+          );
           if (!mainContent || mainContent.textContent.trim().length < 50) {
             errors.push('Page appears to have no main content');
           }
           return errors;
         });
-        
+
         if (pageErrors.length > 0) {
           console.warn(`   ⚠️  Page load errors on ${pageUrl}:`);
-          pageErrors.forEach(err => console.warn(`      - ${err}`));
+          pageErrors.forEach((err) => console.warn(`      - ${err}`));
         }
-        
+
         // Get content checksum immediately
         const currentChecksum = await getMainContentChecksum(page);
         const cachedPageData = contentCache[pageUrl];
-        
+
         const pageTime = Date.now() - pageStartTime;
-        
+
         // Check if page content has changed
         if (cachedPageData && cachedPageData.checksum === currentChecksum) {
           // Page hasn't changed - use cached data
-          console.log(`📄 Processing ${i + 1}/${sitemapUrls.length}: ${pageUrl} [⏭️  SKIPPED - no changes] (${pageTime}ms)`);
+          console.log(
+            `📄 Processing ${i + 1}/${sitemapUrls.length}: ${pageUrl} [⏭️  SKIPPED - no changes] (${pageTime}ms)`,
+          );
           skippedPages++;
           pageTimes.push(pageTime);
-          
+
           // Restore cached data
           if (cachedPageData.links) {
-            cachedPageData.links.forEach(link => {
-              allLinks.add(link.hasAnchor ? link.fullUrl : link.urlWithoutAnchor);
+            cachedPageData.links.forEach((link) => {
+              allLinks.add(
+                link.hasAnchor ? link.fullUrl : link.urlWithoutAnchor,
+              );
             });
           }
           if (cachedPageData.anchors) {
             allAnchors.set(pageUrl, new Set(cachedPageData.anchors));
           }
-          
+
           pageDetails.push({
             url: pageUrl,
             title: cachedPageData.title,
             linkCount: cachedPageData.linkCount,
             anchorCount: cachedPageData.anchorCount,
             links: cachedPageData.links,
-            skipped: true
+            skipped: true,
           });
-          
         } else {
           // Page is new or changed - process it
           const status = cachedPageData ? '🔄 CHANGED' : '🆕 NEW';
-          
+
           pageTimes.push(pageTime);
-          
+
           // Show timing for changed/new pages
-          console.log(`📄 Processing ${i + 1}/${sitemapUrls.length}: ${pageUrl} [${status}] (${pageTime}ms)`);
-          
-          if (cachedPageData) {changedPages++;}
-          else {newPages++;}
-          
+          console.log(
+            `📄 Processing ${i + 1}/${sitemapUrls.length}: ${pageUrl} [${status}] (${pageTime}ms)`,
+          );
+
+          if (cachedPageData) {
+            changedPages++;
+          } else {
+            newPages++;
+          }
+
           // Get page title
           const pageTitle = await page.title();
-          
+
           // Extract links from main content
           const pageLinks = await extractMainContentLinks(page, baseUrl);
-          const internalLinks = pageLinks.filter(l => l.isInternal);
-          
+          const internalLinks = pageLinks.filter((l) => l.isInternal);
+
           // Store links by page for detailed reporting
           linksByPage.set(pageUrl, internalLinks);
-          
+
           // Add to global set
-          internalLinks.forEach(link => {
+          internalLinks.forEach((link) => {
             allLinks.add(link.hasAnchor ? link.fullUrl : link.urlWithoutAnchor);
           });
-          
+
           // Extract all anchors on this page
           const pageAnchors = await extractPageAnchors(page);
           allAnchors.set(pageUrl, new Set(pageAnchors));
-          
+
           // Update cache
           contentCache[pageUrl] = {
             checksum: currentChecksum,
@@ -1152,39 +1299,44 @@ async function validateLinksFromSitemap(siteKey, baseUrl, environment = 'unknown
             anchorCount: pageAnchors.length,
             links: internalLinks,
             anchors: Array.from(pageAnchors),
-            lastChecked: new Date().toISOString()
+            lastChecked: new Date().toISOString(),
           };
-          
+
           // Store page details
           pageDetails.push({
             url: pageUrl,
             title: pageTitle,
             linkCount: internalLinks.length,
             anchorCount: pageAnchors.length,
-            links: internalLinks
+            links: internalLinks,
           });
-          
-          console.log(`   📎 Found ${internalLinks.length} internal links, ${pageAnchors.length} anchors`);
-          
+
+          console.log(
+            `   📎 Found ${internalLinks.length} internal links, ${pageAnchors.length} anchors`,
+          );
+
           // If no links found, log warning
           if (internalLinks.length === 0) {
-            console.warn(`   ⚠️  WARNING: No internal links found on ${pageUrl}`);
+            console.warn(
+              `   ⚠️  WARNING: No internal links found on ${pageUrl}`,
+            );
             console.warn(`      - Total links on page: ${pageLinks.length}`);
-            console.warn(`      - Page errors: ${pageErrors.length > 0 ? pageErrors.join(', ') : 'None detected'}`);
+            console.warn(
+              `      - Page errors: ${pageErrors.length > 0 ? pageErrors.join(', ') : 'None detected'}`,
+            );
           }
         }
-        
       } catch (error) {
         console.error(`   ❌ Failed to process ${pageUrl}: ${error.message}`);
         const pageTime = Date.now() - pageStartTime;
         pageTimes.push(pageTime);
-        
+
         // Try to get more details about the error
         let errorDetails = error.message;
         if (error.name === 'TimeoutError') {
           errorDetails = `Page load timeout after ${pageTime}ms`;
         }
-        
+
         pageDetails.push({
           url: pageUrl,
           title: 'Failed to Load',
@@ -1192,36 +1344,38 @@ async function validateLinksFromSitemap(siteKey, baseUrl, environment = 'unknown
           anchorCount: 0,
           links: [],
           error: errorDetails,
-          loadTime: pageTime
+          loadTime: pageTime,
         });
       }
     }
-    
+
     // Step 3: Check which links are missing and assign to pages
-    console.log(`\n🔍 Checking ${allLinks.size} unique internal links against sitemap...`);
-    
+    console.log(
+      `\n🔍 Checking ${allLinks.size} unique internal links against sitemap...`,
+    );
+
     const missingPages = new Set();
     const missingAnchors = new Set();
-    
+
     // Add broken link details to page information
-    pageDetails.forEach(pageDetail => {
+    pageDetails.forEach((pageDetail) => {
       if (pageDetail.links) {
         pageDetail.brokenLinks = [];
-        
-        pageDetail.links.forEach(link => {
+
+        pageDetail.links.forEach((link) => {
           const url = new URL(link.fullUrl);
           const urlWithoutAnchor = `${url.origin}${url.pathname}${url.search}`;
           const anchorId = url.hash ? url.hash.substring(1) : null;
-          
+
           let brokenLink = null;
-          
+
           // Check if page exists in sitemap
           if (!sitemapUrls.includes(urlWithoutAnchor)) {
             missingPages.add(urlWithoutAnchor);
             brokenLink = {
               url: link.fullUrl,
               text: link.text,
-              type: 'Missing Page'
+              type: 'Missing Page',
             };
           } else if (anchorId) {
             // Check if anchor exists on the page
@@ -1231,18 +1385,18 @@ async function validateLinksFromSitemap(siteKey, baseUrl, environment = 'unknown
               brokenLink = {
                 url: link.fullUrl,
                 text: link.text,
-                type: 'Missing Anchor'
+                type: 'Missing Anchor',
               };
             }
           }
-          
+
           if (brokenLink) {
             pageDetail.brokenLinks.push(brokenLink);
           }
         });
       }
     });
-    
+
     // Step 4: Generate report and show results
     const results = {
       tested: allLinks.size,
@@ -1252,19 +1406,22 @@ async function validateLinksFromSitemap(siteKey, baseUrl, environment = 'unknown
       missingAnchors: Array.from(missingAnchors),
       skippedPages,
       changedPages,
-      newPages
+      newPages,
     };
-    
+
     // Save content cache
     savePageContentCache(siteKey, contentCache);
     console.log(`💾 Saved content cache for future runs`);
-    
+
     // Calculate timing statistics
     const totalTime = Date.now() - startTime;
-    const avgPageTime = pageTimes.length > 0 ? Math.round(pageTimes.reduce((a, b) => a + b, 0) / pageTimes.length) : 0;
+    const avgPageTime =
+      pageTimes.length > 0
+        ? Math.round(pageTimes.reduce((a, b) => a + b, 0) / pageTimes.length)
+        : 0;
     const minPageTime = pageTimes.length > 0 ? Math.min(...pageTimes) : 0;
     const maxPageTime = pageTimes.length > 0 ? Math.max(...pageTimes) : 0;
-    
+
     console.log(`\n📊 Validation Results:`);
     console.log(`   📋 Sitemap pages: ${sitemapUrls.length}`);
     console.log(`   ⏭️  Skipped pages (unchanged): ${skippedPages}`);
@@ -1273,26 +1430,35 @@ async function validateLinksFromSitemap(siteKey, baseUrl, environment = 'unknown
     console.log(`   🔗 Internal links found: ${allLinks.size}`);
     console.log(`   ❌ Missing pages: ${missingPages.size}`);
     console.log(`   ⚓ Missing anchors: ${missingAnchors.size}`);
-    
+
     console.log(`\n⏱️  Performance Metrics:`);
-    console.log(`   🕒 Total time: ${Math.round(totalTime / 1000)}s (${totalTime}ms)`);
+    console.log(
+      `   🕒 Total time: ${Math.round(totalTime / 1000)}s (${totalTime}ms)`,
+    );
     console.log(`   📄 Average page time: ${avgPageTime}ms`);
     console.log(`   ⚡ Fastest page: ${minPageTime}ms`);
     console.log(`   🐌 Slowest page: ${maxPageTime}ms`);
-    console.log(`   📈 Pages per second: ${Math.round((sitemapUrls.length / totalTime) * 1000 * 10) / 10}`);
-    
+    console.log(
+      `   📈 Pages per second: ${Math.round((sitemapUrls.length / totalTime) * 1000 * 10) / 10}`,
+    );
+
     // Generate HTML report
-    const reportFile = generateHtmlReport(siteKey, baseUrl, results, pageDetails, environment);
+    const reportFile = generateHtmlReport(
+      siteKey,
+      baseUrl,
+      results,
+      pageDetails,
+      environment,
+    );
     console.log(`\n📄 Detailed report available at: ${reportFile}`);
     console.log(`\n✨ To view the reports in your browser, run:`);
     console.log(`   node output/link-validation/view-report.js`);
-    
+
     if (missingPages.size === 0 && missingAnchors.size === 0) {
       console.log(`\n✅ All internal links are valid!`);
     }
-    
+
     return results;
-    
   } finally {
     await browser.close();
   }
@@ -1309,7 +1475,7 @@ async function validateSitemap(siteKey, baseUrl) {
     tested: 1,
     passed: 0,
     failed: 0,
-    issues: []
+    issues: [],
   };
 
   try {
@@ -1317,32 +1483,34 @@ async function validateSitemap(siteKey, baseUrl) {
     await new Promise((resolve, reject) => {
       const client = sitemapUrl.startsWith('https') ? https : http;
 
-      client.get(sitemapUrl, (res) => {
-        if (res.statusCode === 200) {
-          results.passed++;
-          console.log(`✅ Sitemap accessible: ${sitemapUrl}`);
-          resolve();
-        } else {
+      client
+        .get(sitemapUrl, (res) => {
+          if (res.statusCode === 200) {
+            results.passed++;
+            console.log(`✅ Sitemap accessible: ${sitemapUrl}`);
+            resolve();
+          } else {
+            results.failed++;
+            results.issues.push({
+              type: 'SITEMAP_MISSING',
+              priority: 'HIGH',
+              message: `Sitemap not accessible: ${sitemapUrl} (HTTP ${res.statusCode})`,
+              category: 'sitemap',
+            });
+            resolve();
+          }
+          res.resume(); // Consume response to free up memory
+        })
+        .on('error', (err) => {
           results.failed++;
           results.issues.push({
             type: 'SITEMAP_MISSING',
             priority: 'HIGH',
-            message: `Sitemap not accessible: ${sitemapUrl} (HTTP ${res.statusCode})`,
-            category: 'sitemap'
+            message: `Sitemap not found: ${sitemapUrl} (${err.message})`,
+            category: 'sitemap',
           });
           resolve();
-        }
-        res.resume(); // Consume response to free up memory
-      }).on('error', (err) => {
-        results.failed++;
-        results.issues.push({
-          type: 'SITEMAP_MISSING',
-          priority: 'HIGH',
-          message: `Sitemap not found: ${sitemapUrl} (${err.message})`,
-          category: 'sitemap'
         });
-        resolve();
-      });
     });
   } catch (error) {
     results.failed++;
@@ -1350,10 +1518,10 @@ async function validateSitemap(siteKey, baseUrl) {
       type: 'SITEMAP_MISSING',
       priority: 'HIGH',
       message: `Error checking sitemap: ${sitemapUrl} (${error.message})`,
-      category: 'sitemap'
+      category: 'sitemap',
     });
   }
-  
+
   return results;
 }
 
@@ -1362,31 +1530,50 @@ async function checkAnchorExists(page, pageUrl, anchorId) {
   try {
     // Navigate to the page with proper waiting for SPA content
     await page.goto(pageUrl, { waitUntil: 'domcontentloaded', timeout: 15000 });
-    
+
     // Wait for Docusaurus content to render
-    await page.waitForFunction(() => 
-      // Wait for main content to be present
-       document.querySelector('main, article, .markdown, [role="main"]') !== null
-    , { timeout: 5000 }).catch(() => {
-      console.log(`⚠️  Content not fully loaded for anchor check: ${pageUrl}`);
-    });
-    
+    await page
+      .waitForFunction(
+        () =>
+          // Wait for main content to be present
+          document.querySelector('main, article, .markdown, [role="main"]') !==
+          null,
+        { timeout: 5000 },
+      )
+      .catch(() => {
+        console.log(
+          `⚠️  Content not fully loaded for anchor check: ${pageUrl}`,
+        );
+      });
+
     // Additional wait for React hydration and anchor generation
-    await new Promise(resolve => setTimeout(resolve, 1000));
-    
+    await new Promise((resolve) => setTimeout(resolve, 1000));
+
     const anchorExists = await page.evaluate((id) => {
       // Decode the anchor ID in case it's URL-encoded
       const decodedId = decodeURIComponent(id);
-      
+
       // Check for element with matching id (most common)
-      if (document.getElementById(id) || document.getElementById(decodedId)) {return true;}
-      
+      if (document.getElementById(id) || document.getElementById(decodedId)) {
+        return true;
+      }
+
       // Check for element with matching name attribute
-      if (document.querySelector(`[name="${id}"]`) || document.querySelector(`[name="${decodedId}"]`)) {return true;}
-      
+      if (
+        document.querySelector(`[name="${id}"]`) ||
+        document.querySelector(`[name="${decodedId}"]`)
+      ) {
+        return true;
+      }
+
       // Check for any element with the id as an attribute value
-      if (document.querySelector(`[id="${id}"]`) || document.querySelector(`[id="${decodedId}"]`)) {return true;}
-      
+      if (
+        document.querySelector(`[id="${id}"]`) ||
+        document.querySelector(`[id="${decodedId}"]`)
+      ) {
+        return true;
+      }
+
       // Check for Docusaurus-generated heading anchors (they often have special prefixes)
       // Docusaurus sometimes adds 'user-content-' or other prefixes
       const possibleIds = [
@@ -1397,33 +1584,42 @@ async function checkAnchorExists(page, pageUrl, anchorId) {
         id.toLowerCase(),
         decodedId.toLowerCase(),
         id.replace(/[^\w-]/g, '-'), // Replace special chars with hyphens
-        decodedId.replace(/[^\w-]/g, '-')
+        decodedId.replace(/[^\w-]/g, '-'),
       ];
-      
+
       for (const possibleId of possibleIds) {
-        if (document.getElementById(possibleId)) {return true;}
-        if (document.querySelector(`[id="${possibleId}"]`)) {return true;}
+        if (document.getElementById(possibleId)) {
+          return true;
+        }
+        if (document.querySelector(`[id="${possibleId}"]`)) {
+          return true;
+        }
       }
-      
+
       // Check if there's a heading with text that would generate this anchor
       // Docusaurus converts heading text to anchors by lowercasing and replacing spaces with hyphens
       const headings = document.querySelectorAll('h1, h2, h3, h4, h5, h6');
       for (const heading of headings) {
         const headingId = heading.id;
-        if (headingId && (headingId === id || headingId === decodedId)) {return true;}
-        
+        if (headingId && (headingId === id || headingId === decodedId)) {
+          return true;
+        }
+
         // Check if the heading text would generate this anchor
         const headingText = heading.textContent || '';
-        const generatedId = headingText.toLowerCase()
+        const generatedId = headingText
+          .toLowerCase()
           .trim()
           .replace(/[^\w\s-]/g, '') // Remove special characters
-          .replace(/\s+/g, '-')      // Replace spaces with hyphens
-          .replace(/-+/g, '-')       // Replace multiple hyphens with single
-          .replace(/^-|-$/g, '');    // Remove leading/trailing hyphens
-        
-        if (generatedId === id || generatedId === decodedId) {return true;}
+          .replace(/\s+/g, '-') // Replace spaces with hyphens
+          .replace(/-+/g, '-') // Replace multiple hyphens with single
+          .replace(/^-|-$/g, ''); // Remove leading/trailing hyphens
+
+        if (generatedId === id || generatedId === decodedId) {
+          return true;
+        }
       }
-      
+
       // Final check: see if clicking on a link with this hash would scroll somewhere
       const testLink = document.createElement('a');
       testLink.href = `#${id}`;
@@ -1435,77 +1631,96 @@ async function checkAnchorExists(page, pageUrl, anchorId) {
         window.scrollTo(0, 0); // Reset scroll
         return true;
       }
-      
+
       return false;
     }, anchorId);
-    
+
     return anchorExists;
   } catch (error) {
-    console.warn(`⚠️  Error checking anchor #${anchorId} on ${pageUrl}: ${error.message}`);
+    console.warn(
+      `⚠️  Error checking anchor #${anchorId} on ${pageUrl}: ${error.message}`,
+    );
     return false;
   }
 }
 
 // Extract all links from a page
 async function extractLinksFromPage(page, baseUrl) {
-  const linkCount = await page.evaluate(() => document.querySelectorAll('a[href]').length);
+  const linkCount = await page.evaluate(
+    () => document.querySelectorAll('a[href]').length,
+  );
   console.log(`📄 Found ${linkCount} total anchor elements`);
-  
+
   return await page.evaluate((baseUrl) => {
     const links = [];
-    
-    document.querySelectorAll('a[href]').forEach(el => {
+
+    document.querySelectorAll('a[href]').forEach((el) => {
       const href = el.getAttribute('href');
       // Skip placeholder links and empty hrefs
       if (href && href !== '#' && href.trim() !== '') {
         try {
-          const fullUrl = href.startsWith('http') ? href :
-                         href.startsWith('/') ? new URL(href, baseUrl).href :
-                         new URL(href, window.location.href).href;
-          
+          const fullUrl = href.startsWith('http')
+            ? href
+            : href.startsWith('/')
+              ? new URL(href, baseUrl).href
+              : new URL(href, window.location.href).href;
+
           // Parse anchor from URL
           const url = new URL(fullUrl);
           const anchorId = url.hash ? url.hash.substring(1) : null;
           const urlWithoutAnchor = `${url.origin}${url.pathname}${url.search}`;
-          
+
           links.push({
             href,
             fullUrl,
             urlWithoutAnchor,
             anchorId,
             text: el.textContent?.trim() || '',
-            isNavigation: el.closest('nav, footer, [class*="dropdown"]') !== null,
-            isExternal: href.startsWith('http') && !href.includes(window.location.hostname),
+            isNavigation:
+              el.closest('nav, footer, [class*="dropdown"]') !== null,
+            isExternal:
+              href.startsWith('http') &&
+              !href.includes(window.location.hostname),
             isSameSite: fullUrl.startsWith(baseUrl),
-            hasAnchor: !!anchorId
+            hasAnchor: !!anchorId,
           });
         } catch (error) {
           // Skip malformed URLs
         }
       }
     });
-    
+
     return links;
   }, baseUrl);
 }
 
-
 async function validateEnvironmentUrls(siteKey, environment, options = {}) {
-  const { type = 'both', depth = undefined, sampleSize = 10, timeout = 15000 } = options;
-  
-  console.log(`\n🔍 Validating URLs for ${siteKey.toUpperCase()} in ${environment.toUpperCase()} environment`);
-  
+  const {
+    type = 'both',
+    depth = undefined,
+    sampleSize = 10,
+    timeout = 15000,
+  } = options;
+
+  console.log(
+    `\n🔍 Validating URLs for ${siteKey.toUpperCase()} in ${environment.toUpperCase()} environment`,
+  );
+
   const siteConfig = sites[siteKey]?.[environment];
   if (!siteConfig) {
-    console.error(`❌ No configuration found for ${siteKey} in ${environment} environment`);
+    console.error(
+      `❌ No configuration found for ${siteKey} in ${environment} environment`,
+    );
     return false;
   }
-  
+
   const baseUrl = `${siteConfig.url}${siteConfig.baseUrl}`;
   console.log(`🌐 Expected base URL: ${baseUrl}`);
   console.log(`📋 Testing: ${type}`);
-  console.log(`🕳️  Crawl depth: ${depth === undefined ? 'all links from sitemap' : depth === 0 ? 'homepage only' : `${depth} level${depth > 1 ? 's' : ''} deep`})`);
-  
+  console.log(
+    `🕳️  Crawl depth: ${depth === undefined ? 'all links from sitemap' : depth === 0 ? 'homepage only' : `${depth} level${depth > 1 ? 's' : ''} deep`})`,
+  );
+
   // Handle sitemap-based validation (comprehensive link checking)
   if (type === 'sitemap') {
     // First verify sitemap is accessible
@@ -1516,82 +1731,102 @@ async function validateEnvironmentUrls(siteKey, environment, options = {}) {
     }
 
     // Now do comprehensive link validation using sitemap as page list
-    console.log(`\n🔍 Performing comprehensive link validation using sitemap as page list...`);
-    const linkResults = await validateLinksFromSitemap(siteKey, baseUrl, environment);
+    console.log(
+      `\n🔍 Performing comprehensive link validation using sitemap as page list...`,
+    );
+    const linkResults = await validateLinksFromSitemap(
+      siteKey,
+      baseUrl,
+      environment,
+    );
 
-    console.log(`\n📊 Link Validation Results for ${siteKey.toUpperCase()} (${environment}):`);
+    console.log(
+      `\n📊 Link Validation Results for ${siteKey.toUpperCase()} (${environment}):`,
+    );
     console.log(`   ✅ Valid links: ${linkResults.passed}`);
     console.log(`   ❌ Invalid links: ${linkResults.failed}`);
     console.log(`   📈 Total tested: ${linkResults.tested}`);
 
     return linkResults.failed === 0;
   }
-  
+
   // Handle comprehensive sitemap-based validation
   if (type === 'comprehensive') {
-    const linkResults = await validateLinksFromSitemap(siteKey, baseUrl, environment);
-    
-    console.log(`\n📊 Comprehensive Link Validation Results for ${siteKey.toUpperCase()} (${environment}):`);
+    const linkResults = await validateLinksFromSitemap(
+      siteKey,
+      baseUrl,
+      environment,
+    );
+
+    console.log(
+      `\n📊 Comprehensive Link Validation Results for ${siteKey.toUpperCase()} (${environment}):`,
+    );
     console.log(`   ✅ Valid links: ${linkResults.passed}`);
     console.log(`   ❌ Invalid links: ${linkResults.failed}`);
     console.log(`   📈 Total tested: ${linkResults.tested}`);
-    
+
     return linkResults.failed === 0;
   }
-  
+
   // For non-local environments, we need to check if the site is accessible
   const isLocalhost = environment === 'local';
   let testUrl = baseUrl;
-  
+
   if (!isLocalhost) {
     console.log(`📡 Testing remote environment: ${baseUrl}`);
   } else {
     // For local, check if build directory exists
-    const siteDir = siteKey.toLowerCase() === 'portal' ? 'portal' : `standards/${siteKey}`;
+    const siteDir =
+      siteKey.toLowerCase() === 'portal' ? 'portal' : `standards/${siteKey}`;
     const buildPath = path.join(process.cwd(), siteDir, 'build');
-    
+
     if (!fs.existsSync(buildPath)) {
       console.error(`❌ Build directory not found: ${buildPath}`);
-      console.error(`💡 Run: pnpm build-env --env local --site ${siteKey.toLowerCase()}`);
+      console.error(
+        `💡 Run: pnpm build-env --env local --site ${siteKey.toLowerCase()}`,
+      );
       return false;
     }
-    
+
     // For local testing, use the full baseUrl
     testUrl = baseUrl;
     console.log(`🏠 Testing local build served at: ${testUrl}`);
   }
-  
-  const browser = await puppeteer.launch({ 
+
+  const browser = await puppeteer.launch({
     headless: true,
-    args: ['--no-sandbox', '--disable-setuid-sandbox']
+    args: ['--no-sandbox', '--disable-setuid-sandbox'],
   });
-  
+
   try {
     const page = await browser.newPage();
-    
+
     // Track requests to detect hardcoded localhost URLs
     const hardcodedLocalhostUrls = new Set();
-    
+
     await page.setRequestInterception(true);
-    page.on('request', request => {
+    page.on('request', (request) => {
       const url = request.url();
-      
+
       // Check for hardcoded localhost URLs in non-local environments
-      if (!isLocalhost && LOCALHOST_PATTERNS.some(pattern => pattern.test(url))) {
+      if (
+        !isLocalhost &&
+        LOCALHOST_PATTERNS.some((pattern) => pattern.test(url))
+      ) {
         hardcodedLocalhostUrls.add(url);
       }
-      
+
       request.continue();
     });
-    
+
     console.log('📄 Extracting all valid pages from build directory...');
-    
+
     let allValidPages, allLinks;
     try {
       // Extract all valid pages from build directory (our reference)
       allValidPages = extractPagesFromBuild(siteKey, baseUrl);
       allLinks = [];
-      
+
       // Determine which pages to check based on depth
       let pagesToCheck = [];
       if (depth !== undefined && parseInt(depth) === 0) {
@@ -1599,61 +1834,85 @@ async function validateEnvironmentUrls(siteKey, environment, options = {}) {
         pagesToCheck = [testUrl];
       } else if (depth !== undefined) {
         // Specific depth: Check multiple pages from the valid pages list
-        const maxPages = Math.min(parseInt(depth) * 10, allValidPages.length, 50); // Reasonable limit
+        const maxPages = Math.min(
+          parseInt(depth) * 10,
+          allValidPages.length,
+          50,
+        ); // Reasonable limit
         pagesToCheck = [testUrl, ...allValidPages.slice(0, maxPages)];
       } else {
         // Default behavior (depth undefined): Check all pages from sitemap
         pagesToCheck = allValidPages.length > 0 ? allValidPages : [testUrl];
       }
-      
+
       console.log(`📄 Checking links on ${pagesToCheck.length} page(s)...`);
-      
+
       // Load each page and extract its links for validation
       for (const pageUrl of pagesToCheck) {
         try {
           console.log(`📄 Loading: ${pageUrl}`);
           // Use domcontentloaded for faster page loads, networkidle0 can hang indefinitely
-          await page.goto(pageUrl, { waitUntil: 'domcontentloaded', timeout: 20000 }).catch(async (error) => {
-            console.log(`⚠️  Page load timeout, trying with networkidle2...`);
-            await page.goto(pageUrl, { waitUntil: 'networkidle2', timeout: 10000 });
-          });
-          
+          await page
+            .goto(pageUrl, { waitUntil: 'domcontentloaded', timeout: 20000 })
+            .catch(async (error) => {
+              console.log(`⚠️  Page load timeout, trying with networkidle2...`);
+              await page.goto(pageUrl, {
+                waitUntil: 'networkidle2',
+                timeout: 10000,
+              });
+            });
+
           // Wait for Docusaurus to finish rendering (SPA content)
-          await page.waitForFunction(() => 
-            // Wait for either navigation or main content to be present
-             document.querySelector('nav a, .navbar a, [class*="navbar"] a, main a, .main a, [role="main"] a, .markdown a') !== null
-          , { timeout: 5000 }).catch(() => {
-            console.log('📄 No navigation or content links found yet, checking anyway...');
-          });
-          
+          await page
+            .waitForFunction(
+              () =>
+                // Wait for either navigation or main content to be present
+                document.querySelector(
+                  'nav a, .navbar a, [class*="navbar"] a, main a, .main a, [role="main"] a, .markdown a',
+                ) !== null,
+              { timeout: 5000 },
+            )
+            .catch(() => {
+              console.log(
+                '📄 No navigation or content links found yet, checking anyway...',
+              );
+            });
+
           // Shorter wait for React/Docusaurus to fully hydrate
-          await new Promise(resolve => setTimeout(resolve, 1000));
-          
+          await new Promise((resolve) => setTimeout(resolve, 1000));
+
           // Debug: Check if page loaded correctly
           const title = await page.title();
           console.log(`📄 Page title: "${title}"`);
-          
+
           // Debug: Check what selectors are available
           const selectorCounts = await page.evaluate(() => ({
-              totalAnchors: document.querySelectorAll('a').length,
-              anchorsWithHref: document.querySelectorAll('a[href]').length,
-              navLinks: document.querySelectorAll('nav a, .navbar a').length,
-              mainLinks: document.querySelectorAll('main a, .main a, [role="main"] a').length,
-              markdownLinks: document.querySelectorAll('.markdown a, .theme-doc-markdown a').length
-            }));
+            totalAnchors: document.querySelectorAll('a').length,
+            anchorsWithHref: document.querySelectorAll('a[href]').length,
+            navLinks: document.querySelectorAll('nav a, .navbar a').length,
+            mainLinks: document.querySelectorAll(
+              'main a, .main a, [role="main"] a',
+            ).length,
+            markdownLinks: document.querySelectorAll(
+              '.markdown a, .theme-doc-markdown a',
+            ).length,
+          }));
           console.log(`📄 Link counts:`, selectorCounts);
-          
+
           // Add timeout wrapper for link extraction to prevent hanging
           const pageLinks = await Promise.race([
             extractLinksFromPage(page, baseUrl),
-            new Promise((_, reject) => 
-              setTimeout(() => reject(new Error('Link extraction timeout')), 10000)
-            )
-          ]).catch(error => {
+            new Promise((_, reject) =>
+              setTimeout(
+                () => reject(new Error('Link extraction timeout')),
+                10000,
+              ),
+            ),
+          ]).catch((error) => {
             console.warn(`⚠️  Failed to extract links: ${error.message}`);
             return [];
           });
-          
+
           if (pageLinks.length > 0) {
             console.log(`📄 Found ${pageLinks.length} links on this page`);
             allLinks.push(...pageLinks);
@@ -1662,53 +1921,60 @@ async function validateEnvironmentUrls(siteKey, environment, options = {}) {
           console.warn(`⚠️  Skipped ${pageUrl}: ${error.message}`);
         }
       }
-      
     } catch (error) {
       if (isLocalhost) {
         console.error(`❌ Failed to load ${testUrl}`);
-        console.error(`💡 Make sure the built site is being served on port ${siteConfig.port}`);
-        console.error(`   cd ${siteKey.toLowerCase() === 'portal' ? 'portal' : `standards/${siteKey}`} && pnpm run serve --port ${siteConfig.port}`);
+        console.error(
+          `💡 Make sure the built site is being served on port ${siteConfig.port}`,
+        );
+        console.error(
+          `   cd ${siteKey.toLowerCase() === 'portal' ? 'portal' : `standards/${siteKey}`} && pnpm run serve --port ${siteConfig.port}`,
+        );
       } else {
         console.error(`❌ Failed to load remote site: ${testUrl}`);
         console.error(`💡 Site may not be deployed or accessible`);
       }
       return false;
     }
-    
+
     // Deduplicate links by fullUrl to avoid testing the same URL multiple times
     const uniqueLinks = Array.from(
-      new Map(allLinks.map(link => [link.fullUrl, link])).values()
+      new Map(allLinks.map((link) => [link.fullUrl, link])).values(),
     );
-    
+
     console.log(`🔄 Deduplicated to ${uniqueLinks.length} unique links`);
-    
+
     const results = {
       tested: 0,
       passed: 0,
       failed: 0,
-      issues: []
+      issues: [],
     };
-    
+
     // Categorize links
-    const navigationLinks = uniqueLinks.filter(link => link.isNavigation && !link.isExternal);
-    const contentLinks = uniqueLinks.filter(link => !link.isNavigation && !link.isExternal);
-    
+    const navigationLinks = uniqueLinks.filter(
+      (link) => link.isNavigation && !link.isExternal,
+    );
+    const contentLinks = uniqueLinks.filter(
+      (link) => !link.isNavigation && !link.isExternal,
+    );
+
     console.log(`   📋 Navigation/Static links: ${navigationLinks.length}`);
     console.log(`   📄 Content/Generated links: ${contentLinks.length}`);
-    
+
     // Test static navigation links (always test these)
     if (type === 'static' || type === 'both') {
       console.log('\n🧭 Testing static navigation links...');
-      
+
       for (const link of navigationLinks) {
         results.tested++;
-        
+
         // For links with anchors, check the page without anchor first
         const pageUrl = link.hasAnchor ? link.urlWithoutAnchor : link.fullUrl;
         const isInBuild = allValidPages.includes(pageUrl);
         const isCrossSiteValid = isValidEnvironmentUrl(pageUrl, environment);
         const isPageValid = isInBuild || isCrossSiteValid;
-        
+
         if (!isPageValid) {
           results.failed++;
           results.issues.push({
@@ -1716,35 +1982,51 @@ async function validateEnvironmentUrls(siteKey, environment, options = {}) {
             priority: 'HIGH',
             link: link.href,
             text: link.text,
-            expected: link.isSameSite ? 'Should be a valid page in site build' : `Should be a valid URL for ${environment} environment`,
+            expected: link.isSameSite
+              ? 'Should be a valid page in site build'
+              : `Should be a valid URL for ${environment} environment`,
             actual: pageUrl,
-            category: 'navigation'
+            category: 'navigation',
           });
           continue;
         }
-        
+
         // If link has an anchor and is same-site, verify the anchor exists
         if (link.hasAnchor && link.isSameSite && isLocalhost) {
           try {
-            const anchorExists = await checkAnchorExists(page, pageUrl, link.anchorId);
+            const anchorExists = await checkAnchorExists(
+              page,
+              pageUrl,
+              link.anchorId,
+            );
             if (!anchorExists) {
               // Get available anchors for debugging
               const availableAnchors = await page.evaluate(() => {
                 const anchors = new Set();
                 // Get all elements with an id
-                document.querySelectorAll('[id]').forEach(el => {
-                  if (el.id) {anchors.add(el.id);}
+                document.querySelectorAll('[id]').forEach((el) => {
+                  if (el.id) {
+                    anchors.add(el.id);
+                  }
                 });
                 // Get all headings that might have generated anchors
-                document.querySelectorAll('h1, h2, h3, h4, h5, h6').forEach(el => {
-                  if (el.id) {anchors.add(el.id);}
-                });
+                document
+                  .querySelectorAll('h1, h2, h3, h4, h5, h6')
+                  .forEach((el) => {
+                    if (el.id) {
+                      anchors.add(el.id);
+                    }
+                  });
                 return Array.from(anchors).slice(0, 10); // Return first 10 for debugging
               });
-              
-              console.log(`   ❌ Anchor not found: #${link.anchorId} on ${pageUrl}`);
-              console.log(`      Available anchors: ${availableAnchors.join(', ')}${availableAnchors.length >= 10 ? '...' : ''}`);
-              
+
+              console.log(
+                `   ❌ Anchor not found: #${link.anchorId} on ${pageUrl}`,
+              );
+              console.log(
+                `      Available anchors: ${availableAnchors.join(', ')}${availableAnchors.length >= 10 ? '...' : ''}`,
+              );
+
               results.failed++;
               results.issues.push({
                 type: 'BROKEN_ANCHOR',
@@ -1754,7 +2036,7 @@ async function validateEnvironmentUrls(siteKey, environment, options = {}) {
                 anchor: link.anchorId,
                 page: pageUrl,
                 category: 'navigation',
-                availableAnchors: availableAnchors.slice(0, 5) // Include first 5 in report
+                availableAnchors: availableAnchors.slice(0, 5), // Include first 5 in report
               });
             } else {
               results.passed++;
@@ -1767,7 +2049,7 @@ async function validateEnvironmentUrls(siteKey, environment, options = {}) {
               link: link.href,
               text: link.text,
               error: error.message,
-              category: 'navigation'
+              category: 'navigation',
             });
           }
         } else {
@@ -1775,24 +2057,27 @@ async function validateEnvironmentUrls(siteKey, environment, options = {}) {
         }
       }
     }
-    
+
     // Test generated content links (sample for non-local, all for local)
     if (type === 'generated' || type === 'both') {
       console.log('\n📄 Testing generated content links...');
-      
+
       let linksToTest = contentLinks;
-      
+
       // For non-local, just sample a few links to spot-check URL patterns
       if (!isLocalhost && contentLinks.length > sampleSize) {
         linksToTest = contentLinks.slice(0, sampleSize);
         console.log(`   📊 Sampling ${sampleSize} links for spot check`);
       }
-      
+
       for (const link of linksToTest) {
         results.tested++;
-        
+
         // Check for hardcoded localhost URLs (but exclude hash anchors)
-        if (!link.href.startsWith('#') && LOCALHOST_PATTERNS.some(pattern => pattern.test(link.fullUrl))) {
+        if (
+          !link.href.startsWith('#') &&
+          LOCALHOST_PATTERNS.some((pattern) => pattern.test(link.fullUrl))
+        ) {
           results.failed++;
           results.issues.push({
             type: 'HARDCODED_LOCALHOST',
@@ -1800,17 +2085,17 @@ async function validateEnvironmentUrls(siteKey, environment, options = {}) {
             link: link.href,
             text: link.text,
             actual: link.fullUrl,
-            category: 'generated'
+            category: 'generated',
           });
           continue;
         }
-        
+
         // For links with anchors, check the page without anchor first
         const pageUrl = link.hasAnchor ? link.urlWithoutAnchor : link.fullUrl;
         const isInBuild = allValidPages.includes(pageUrl);
         const isCrossSiteValid = isValidEnvironmentUrl(pageUrl, environment);
         const isPageValid = isInBuild || isCrossSiteValid;
-        
+
         if (!isPageValid) {
           results.failed++;
           results.issues.push({
@@ -1818,35 +2103,51 @@ async function validateEnvironmentUrls(siteKey, environment, options = {}) {
             priority: 'MEDIUM',
             link: link.href,
             text: link.text,
-            expected: link.isSameSite ? 'Should be a valid page in site build' : `Should be a valid URL for ${environment} environment`,
+            expected: link.isSameSite
+              ? 'Should be a valid page in site build'
+              : `Should be a valid URL for ${environment} environment`,
             actual: pageUrl,
-            category: 'generated'
+            category: 'generated',
           });
           continue;
         }
-        
+
         // If link has an anchor and is same-site, verify the anchor exists
         if (link.hasAnchor && link.isSameSite && isLocalhost) {
           try {
-            const anchorExists = await checkAnchorExists(page, pageUrl, link.anchorId);
+            const anchorExists = await checkAnchorExists(
+              page,
+              pageUrl,
+              link.anchorId,
+            );
             if (!anchorExists) {
               // Get available anchors for debugging
               const availableAnchors = await page.evaluate(() => {
                 const anchors = new Set();
                 // Get all elements with an id
-                document.querySelectorAll('[id]').forEach(el => {
-                  if (el.id) {anchors.add(el.id);}
+                document.querySelectorAll('[id]').forEach((el) => {
+                  if (el.id) {
+                    anchors.add(el.id);
+                  }
                 });
                 // Get all headings that might have generated anchors
-                document.querySelectorAll('h1, h2, h3, h4, h5, h6').forEach(el => {
-                  if (el.id) {anchors.add(el.id);}
-                });
+                document
+                  .querySelectorAll('h1, h2, h3, h4, h5, h6')
+                  .forEach((el) => {
+                    if (el.id) {
+                      anchors.add(el.id);
+                    }
+                  });
                 return Array.from(anchors).slice(0, 10); // Return first 10 for debugging
               });
-              
-              console.log(`   ❌ Anchor not found: #${link.anchorId} on ${pageUrl}`);
-              console.log(`      Available anchors: ${availableAnchors.join(', ')}${availableAnchors.length >= 10 ? '...' : ''}`);
-              
+
+              console.log(
+                `   ❌ Anchor not found: #${link.anchorId} on ${pageUrl}`,
+              );
+              console.log(
+                `      Available anchors: ${availableAnchors.join(', ')}${availableAnchors.length >= 10 ? '...' : ''}`,
+              );
+
               results.failed++;
               results.issues.push({
                 type: 'BROKEN_ANCHOR',
@@ -1856,7 +2157,7 @@ async function validateEnvironmentUrls(siteKey, environment, options = {}) {
                 anchor: link.anchorId,
                 page: pageUrl,
                 category: 'generated',
-                availableAnchors: availableAnchors.slice(0, 5) // Include first 5 in report
+                availableAnchors: availableAnchors.slice(0, 5), // Include first 5 in report
               });
             } else {
               results.passed++;
@@ -1869,7 +2170,7 @@ async function validateEnvironmentUrls(siteKey, environment, options = {}) {
               link: link.href,
               text: link.text,
               error: error.message,
-              category: 'generated'
+              category: 'generated',
             });
           }
         } else {
@@ -1877,76 +2178,106 @@ async function validateEnvironmentUrls(siteKey, environment, options = {}) {
         }
       }
     }
-    
+
     // Check for hardcoded localhost URLs in requests
     if (hardcodedLocalhostUrls.size > 0) {
-      console.warn(`\n⚠️  Detected ${hardcodedLocalhostUrls.size} hardcoded localhost URLs in requests:`);
-      Array.from(hardcodedLocalhostUrls).forEach(url => {
+      console.warn(
+        `\n⚠️  Detected ${hardcodedLocalhostUrls.size} hardcoded localhost URLs in requests:`,
+      );
+      Array.from(hardcodedLocalhostUrls).forEach((url) => {
         console.warn(`   ${url}`);
         results.issues.push({
           type: 'HARDCODED_LOCALHOST_REQUEST',
           priority: 'CRITICAL',
           actual: url,
-          category: 'requests'
+          category: 'requests',
         });
       });
     }
-    
+
     // Report results
-    console.log(`\n📊 URL Validation Results for ${siteKey.toUpperCase()} (${environment}):`);
+    console.log(
+      `\n📊 URL Validation Results for ${siteKey.toUpperCase()} (${environment}):`,
+    );
     console.log(`   ✅ Passed: ${results.passed}`);
     console.log(`   ❌ Failed: ${results.failed}`);
     console.log(`   📈 Total: ${results.tested}`);
-    
+
     if (results.issues.length > 0) {
-      const critical = results.issues.filter(i => i.priority === 'CRITICAL');
-      const high = results.issues.filter(i => i.priority === 'HIGH');
-      const medium = results.issues.filter(i => i.priority === 'MEDIUM');
-      const low = results.issues.filter(i => i.priority === 'LOW');
-      
+      const critical = results.issues.filter((i) => i.priority === 'CRITICAL');
+      const high = results.issues.filter((i) => i.priority === 'HIGH');
+      const medium = results.issues.filter((i) => i.priority === 'MEDIUM');
+      const low = results.issues.filter((i) => i.priority === 'LOW');
+
       if (critical.length > 0) {
         console.error(`\n🚨 CRITICAL ISSUES (${critical.length}):`);
         critical.forEach((issue, i) => {
-          console.error(`  ${i + 1}. ${issue.type}: ${issue.link || issue.actual}`);
-          if (issue.expected) {console.error(`     Expected: ${issue.expected}`);}
-          if (issue.error) {console.error(`     Error: ${issue.error}`);}
+          console.error(
+            `  ${i + 1}. ${issue.type}: ${issue.link || issue.actual}`,
+          );
+          if (issue.expected) {
+            console.error(`     Expected: ${issue.expected}`);
+          }
+          if (issue.error) {
+            console.error(`     Error: ${issue.error}`);
+          }
         });
       }
-      
+
       if (high.length > 0) {
         console.error(`\n❌ HIGH PRIORITY (${high.length}):`);
         high.forEach((issue, i) => {
-          console.error(`  ${i + 1}. ${issue.type}: "${issue.text}" -> ${issue.link}`);
-          if (issue.status) {console.error(`     Status: ${issue.status}`);}
-          if (issue.error) {console.error(`     Error: ${issue.error}`);}
+          console.error(
+            `  ${i + 1}. ${issue.type}: "${issue.text}" -> ${issue.link}`,
+          );
+          if (issue.status) {
+            console.error(`     Status: ${issue.status}`);
+          }
+          if (issue.error) {
+            console.error(`     Error: ${issue.error}`);
+          }
         });
       }
-      
+
       if (medium.length > 0) {
         console.warn(`\n⚠️  MEDIUM PRIORITY (${medium.length}):`);
         medium.forEach((issue, i) => {
-          console.warn(`  ${i + 1}. ${issue.type}: "${issue.text}" -> ${issue.link}`);
-          if (issue.status) {console.warn(`     Status: ${issue.status}`);}
-          if (issue.error) {console.warn(`     Error: ${issue.error}`);}
-          if (issue.anchor) {console.warn(`     Missing anchor: #${issue.anchor} on ${issue.page}`);}
+          console.warn(
+            `  ${i + 1}. ${issue.type}: "${issue.text}" -> ${issue.link}`,
+          );
+          if (issue.status) {
+            console.warn(`     Status: ${issue.status}`);
+          }
+          if (issue.error) {
+            console.warn(`     Error: ${issue.error}`);
+          }
+          if (issue.anchor) {
+            console.warn(
+              `     Missing anchor: #${issue.anchor} on ${issue.page}`,
+            );
+          }
         });
       }
-      
+
       if (low.length > 0) {
         console.log(`\n💡 LOW PRIORITY (${low.length}):`);
         low.forEach((issue, i) => {
-          console.log(`  ${i + 1}. ${issue.type}: "${issue.text}" -> ${issue.link}`);
-          if (issue.status) {console.log(`     Status: ${issue.status}`);}
-          if (issue.error) {console.log(`     Error: ${issue.error}`);}
+          console.log(
+            `  ${i + 1}. ${issue.type}: "${issue.text}" -> ${issue.link}`,
+          );
+          if (issue.status) {
+            console.log(`     Status: ${issue.status}`);
+          }
+          if (issue.error) {
+            console.log(`     Error: ${issue.error}`);
+          }
         });
       }
-      
+
       return critical.length === 0; // Return false only if critical issues found
-    } 
-      console.log('\n✅ All URL validations passed!');
-      return true;
-    
-    
+    }
+    console.log('\n✅ All URL validations passed!');
+    return true;
   } finally {
     await browser.close();
   }
@@ -1967,10 +2298,10 @@ async function main() {
         choices: [
           { name: 'local - Test local builds (comprehensive)', value: 'local' },
           { name: 'preview - GitHub Pages staging', value: 'preview' },
-          { name: 'production - Live site', value: 'production' }
+          { name: 'production - Live site', value: 'production' },
         ],
-        default: 'local'
-      }
+        default: 'local',
+      },
     ]);
     env = envAnswer.environment;
   }
@@ -1978,62 +2309,73 @@ async function main() {
   if (!site) {
     const siteChoices = [
       { name: 'All sites', value: 'all' },
-      ...validSites.map(s => ({ name: s, value: s }))
+      ...validSites.map((s) => ({ name: s, value: s })),
     ];
-    
+
     const siteAnswer = await inquirer.prompt([
       {
         type: 'list',
         name: 'site',
         message: 'Select site(s) to test:',
         choices: siteChoices,
-        default: 'all'
-      }
+        default: 'all',
+      },
     ]);
     site = siteAnswer.site;
   }
 
   if (!type) {
     const typeChoices = [
-      { name: 'comprehensive - Full sitemap-based validation (RECOMMENDED)', value: 'comprehensive' },
+      {
+        name: 'comprehensive - Full sitemap-based validation (RECOMMENDED)',
+        value: 'comprehensive',
+      },
       { name: 'both - Test navigation + generated content', value: 'both' },
       { name: 'static - Test navigation/footer links only', value: 'static' },
-      { name: 'generated - Test generated content links only', value: 'generated' },
-      { name: 'sitemap - Validate sitemap generation only', value: 'sitemap' }
+      {
+        name: 'generated - Test generated content links only',
+        value: 'generated',
+      },
+      { name: 'sitemap - Validate sitemap generation only', value: 'sitemap' },
     ];
-    
+
     const typeAnswer = await inquirer.prompt([
       {
         type: 'list',
         name: 'type',
         message: 'Select test type:',
         choices: typeChoices,
-        default: env === 'local' ? 'comprehensive' : 'static'
-      }
+        default: env === 'local' ? 'comprehensive' : 'static',
+      },
     ]);
     type = typeAnswer.type;
   }
 
   // For non-local environments with generated testing, ask about sample size
-  if (!sampleSize && env !== 'local' && (type === 'generated' || type === 'both')) {
+  if (
+    !sampleSize &&
+    env !== 'local' &&
+    (type === 'generated' || type === 'both')
+  ) {
     const sampleAnswer = await inquirer.prompt([
       {
         type: 'number',
         name: 'sampleSize',
-        message: 'How many generated links to sample test? (non-local environments)',
+        message:
+          'How many generated links to sample test? (non-local environments)',
         default: 10,
-        validate: (input) => input > 0 || 'Must be greater than 0'
-      }
+        validate: (input) => input > 0 || 'Must be greater than 0',
+      },
     ]);
     sampleSize = sampleAnswer.sampleSize;
   }
 
   // Update options with prompted values
-  const finalOptions = { 
-    ...options, 
+  const finalOptions = {
+    ...options,
     depth: depth !== undefined ? depth : options.depth,
     sampleSize: sampleSize || options.sampleSize,
-    timeout: timeout || options.timeout 
+    timeout: timeout || options.timeout,
   };
 
   // Validate inputs
@@ -2047,28 +2389,39 @@ async function main() {
   if (site.toLowerCase() === 'all') {
     sitesToTest = validSites;
   } else if (site.includes(',')) {
-    sitesToTest = site.split(',').map(s => s.trim());
+    sitesToTest = site.split(',').map((s) => s.trim());
   } else {
     sitesToTest = [site];
   }
 
   // Validate sites
-  const invalidSites = sitesToTest.filter(s => !validSites.map(v => v.toLowerCase()).includes(s.toLowerCase()));
+  const invalidSites = sitesToTest.filter(
+    (s) => !validSites.map((v) => v.toLowerCase()).includes(s.toLowerCase()),
+  );
   if (invalidSites.length > 0) {
     console.error(`❌ Invalid sites: ${invalidSites.join(', ')}`);
     console.error(`Available sites: ${validSites.join(', ')}`);
     process.exit(1);
   }
 
-  console.log(`\n🎯 Validating ${sitesToTest.length} site(s) for ${env} environment`);
+  console.log(
+    `\n🎯 Validating ${sitesToTest.length} site(s) for ${env} environment`,
+  );
   if (env === 'local') {
-    console.log('💡 For local testing, make sure sites are built and served first:');
-    console.log(`   pnpm build-env --env local --site ${site === 'all' ? 'all' : site}`);
+    console.log(
+      '💡 For local testing, make sure sites are built and served first:',
+    );
+    console.log(
+      `   pnpm build-env --env local --site ${site === 'all' ? 'all' : site}`,
+    );
     sitesToTest.forEach((s, i) => {
       const siteConfig = sites[s]?.[env];
       if (siteConfig?.port) {
-        const siteDir = s.toLowerCase() === 'portal' ? 'portal' : `standards/${s}`;
-        console.log(`   cd ${siteDir} && pnpm run serve --port ${siteConfig.port}`);
+        const siteDir =
+          s.toLowerCase() === 'portal' ? 'portal' : `standards/${s}`;
+        console.log(
+          `   cd ${siteDir} && pnpm run serve --port ${siteConfig.port}`,
+        );
       }
     });
     console.log('');
@@ -2111,7 +2464,7 @@ async function main() {
 }
 
 if (require.main === module) {
-  main().catch(error => {
+  main().catch((error) => {
     console.error('❌ Environment URL validation failed:', error);
     process.exit(1);
   });
