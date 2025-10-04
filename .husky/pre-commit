@@ -32,4 +32,7 @@ echo "✅ All checks passed!"
 echo "✨ Formatting staged files..."
 npx nx format:write --uncommitted
 
+# Re-stage formatted files so they're included in the commit
+git add .
+
 echo "✅ Group 3 pre-commit tests passed!"
