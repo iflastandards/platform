@@ -153,7 +153,7 @@ async function getSitemapUrls(siteKey, baseUrl) {
     const sitemapContent = await new Promise((resolve, reject) => {
       const client = sitemapUrl.startsWith('https') ? https : http;
 
-      client
+      const request = client
         .get(sitemapUrl, (res) => {
           if (res.statusCode !== 200) {
             reject(
@@ -167,6 +167,12 @@ async function getSitemapUrls(siteKey, baseUrl) {
           res.on('end', () => resolve(data));
         })
         .on('error', reject);
+
+      // Add 10 second timeout to prevent hanging
+      request.setTimeout(10000, () => {
+        request.destroy();
+        reject(new Error(`Sitemap fetch timeout after 10 seconds`));
+      });
     });
 
     const parser = new xml2js.Parser();
@@ -1089,56 +1095,60 @@ async function validateLinksFromSitemap(
   let changedPages = 0;
   let newPages = 0;
 
-  // Performance-optimized Puppeteer launch
-  const browser = await puppeteer.launch({
-    headless: true,
-    args: [
-      '--no-sandbox',
-      '--disable-setuid-sandbox',
-      '--disable-dev-shm-usage',
-      '--disable-web-security',
-      '--disable-extensions',
-      '--disable-plugins',
-      '--disable-background-timer-throttling',
-      '--disable-backgrounding-occluded-windows',
-      '--disable-renderer-backgrounding',
-    ],
-  });
-
-  const page = await browser.newPage();
-
-  // Block unnecessary resources for faster loading (but keep CSS for proper rendering)
-  await page.setRequestInterception(true);
-  page.on('request', (request) => {
-    const resourceType = request.resourceType();
-    if (
-      resourceType === 'image' ||
-      resourceType === 'font' ||
-      resourceType === 'media'
-    ) {
-      request.abort();
-    } else {
-      request.continue();
-    }
-  });
-
-  // Listen for page errors
-  page.on('error', (error) => {
-    console.error(`   ❌ Page crashed: ${error.message}`);
-  });
-
-  page.on('pageerror', (error) => {
-    console.error(`   ❌ Page error: ${error.message}`);
-  });
-
-  const allLinks = new Set();
-  const allAnchors = new Map(); // URL -> Set of anchors
-  const pageDetails = []; // Detailed page information for reporting
-  const linksByPage = new Map(); // Page URL -> links found on that page
-
-  const pageTimes = [];
+  let browser = null;
+  let page = null;
 
   try {
+    // Performance-optimized Puppeteer launch - moved after sitemap validation
+    browser = await puppeteer.launch({
+      headless: true,
+      args: [
+        '--no-sandbox',
+        '--disable-setuid-sandbox',
+        '--disable-dev-shm-usage',
+        '--disable-web-security',
+        '--disable-extensions',
+        '--disable-plugins',
+        '--disable-background-timer-throttling',
+        '--disable-backgrounding-occluded-windows',
+        '--disable-renderer-backgrounding',
+      ],
+    });
+
+    page = await browser.newPage();
+
+    // Block unnecessary resources for faster loading (but keep CSS for proper rendering)
+    await page.setRequestInterception(true);
+    const requestHandler = (request) => {
+      const resourceType = request.resourceType();
+      if (
+        resourceType === 'image' ||
+        resourceType === 'font' ||
+        resourceType === 'media'
+      ) {
+        request.abort();
+      } else {
+        request.continue();
+      }
+    };
+    page.on('request', requestHandler);
+
+    // Listen for page errors
+    page.on('error', (error) => {
+      console.error(`   ❌ Page crashed: ${error.message}`);
+    });
+
+    page.on('pageerror', (error) => {
+      console.error(`   ❌ Page error: ${error.message}`);
+    });
+
+    const allLinks = new Set();
+    const allAnchors = new Map(); // URL -> Set of anchors
+    const pageDetails = []; // Detailed page information for reporting
+    const linksByPage = new Map(); // Page URL -> links found on that page
+
+    const pageTimes = [];
+
     // Step 2: Extract global navigation links (header/footer) once from first page
     console.log(
       `🔍 Extracting global navigation links (header/footer/nav) - checked once...`,
@@ -1160,6 +1170,23 @@ async function validateLinksFromSitemap(
     });
 
     // Step 3: Visit each page and extract content links
+    // TODO: Future optimization - migrate to Playwright and implement parallel batch processing
+    //
+    // Why Playwright over Puppeteer for pooling:
+    // - BrowserContext is lighter than Puppeteer pages (~10-20MB vs ~50-100MB per instance)
+    // - Already used for E2E tests (see e2e/), reducing tool fragmentation and CI complexity
+    // - Better documentation and built-in patterns for concurrent operations
+    // - Cross-browser support (Chromium, Firefox, WebKit) for future needs
+    //
+    // Implementation approach:
+    // 1. Create browser instance: await playwright.chromium.launch()
+    // 2. Create context pool: 5 concurrent BrowserContext instances
+    // 3. Batch process URLs: distribute sitemapUrls across contexts
+    // 4. Reuse contexts: each context navigates through batch of URLs sequentially
+    //
+    // Expected improvement: 5× speed (20min → 4min) with 5 concurrent contexts
+    //
+    // Current: Sequential processing with single Puppeteer page instance
     console.log(`\n📄 Processing ${sitemapUrls.length} pages from sitemap...`);
     for (let i = 0; i < sitemapUrls.length; i++) {
       const pageUrl = sitemapUrls[i];
@@ -1459,8 +1486,28 @@ async function validateLinksFromSitemap(
     }
 
     return results;
+  } catch (error) {
+    console.error(`❌ Error during validation: ${error.message}`);
+    throw error;
   } finally {
-    await browser.close();
+    // Clean up request interception to prevent memory leaks
+    if (page) {
+      try {
+        await page.setRequestInterception(false);
+        page.removeAllListeners('request');
+        page.removeAllListeners('error');
+        page.removeAllListeners('pageerror');
+      } catch (err) {
+        console.error(`⚠️  Error cleaning up page listeners: ${err.message}`);
+      }
+    }
+
+    // Ensure browser is always closed, even if never launched
+    if (browser) {
+      await browser.close().catch((err) => {
+        console.error(`⚠️  Error closing browser: ${err.message}`);
+      });
+    }
   }
 }
 
