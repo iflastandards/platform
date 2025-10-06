@@ -60,8 +60,8 @@ jobs:
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
 
-      - name: Install Playwright browsers
-        run: pnpm exec playwright install --with-deps chromium
+      - name: Install Puppeteer browsers
+        run: pnpm exec puppeteer browsers install chrome
 
       - name: Build required packages
         run: |
