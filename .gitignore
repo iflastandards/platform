@@ -83,6 +83,9 @@ playwright-state-*.json
 # Build warning reports
 output/_reports/
 
+# Link validation reports (generated in CI, not tracked)
+output/link-validation/
+
 # Performance optimization
 .env.performance
 _site

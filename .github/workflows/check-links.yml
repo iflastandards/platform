@@ -69,6 +69,12 @@ jobs:
           pnpm nx run @ifla/contracts:build
           pnpm nx run @ifla/theme:build
 
+      - name: Clean previous reports
+        run: |
+          echo "🧹 Cleaning previous link validation reports..."
+          rm -rf output/link-validation/
+          mkdir -p output/link-validation/
+
       - name: Check links (workflow dispatch)
         if: github.event_name == 'workflow_dispatch'
         run: |
