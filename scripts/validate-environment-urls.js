@@ -712,8 +712,12 @@ function generateHtmlReport(
   fs.writeFileSync(reportFile, html);
   console.log(`📄 HTML report saved: ${reportFile}`);
 
-  // Create a simple server script to view the report
-  const serverScript = path.join(siteDir, 'view-report.js');
+  // Create a simple server script to view the report (in main validation directory)
+  const validationDir = path.join(process.cwd(), 'output', 'link-validation');
+  if (!fs.existsSync(validationDir)) {
+    fs.mkdirSync(validationDir, { recursive: true });
+  }
+  const serverScript = path.join(validationDir, 'view-report.js');
   const serverContent = `#!/usr/bin/env node
 const http = require('http');
 const fs = require('fs');
