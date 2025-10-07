@@ -219,6 +219,17 @@ jobs:
         run: |
           # Collect warnings from build outputs (optional, non-blocking)
           echo "📊 Collecting build warnings..."
+
+          # Re-define PROJECTS_TO_BUILD from the previous job output
+          PROJECTS_TO_BUILD="${{ needs.setup-and-analyze.outputs.projects_list }}"
+
+          # If workflow_dispatch or no specific projects, build all docs sites
+          if [ -z "$PROJECTS_TO_BUILD" ] || [ "${{ github.event_name }}" == "workflow_dispatch" ]; then
+            PROJECTS_TO_BUILD="portal,isbdm,lrm,frbr,isbd,muldicat,unimarc"
+          fi
+
+          echo "📦 Collecting warnings for projects: $PROJECTS_TO_BUILD"
+
           if [ -f "scripts/collect-warnings-from-outputs.js" ]; then
             node scripts/collect-warnings-from-outputs.js "$PROJECTS_TO_BUILD" || true
           else
