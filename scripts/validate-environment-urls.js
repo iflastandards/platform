@@ -713,7 +713,7 @@ function generateHtmlReport(
   console.log(`📄 HTML report saved: ${reportFile}`);
 
   // Create a simple server script to view the report
-  const serverScript = path.join(reportDir, 'view-report.js');
+  const serverScript = path.join(siteDir, 'view-report.js');
   const serverContent = `#!/usr/bin/env node
 const http = require('http');
 const fs = require('fs');
