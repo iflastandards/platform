@@ -91,3 +91,5 @@ output/link-validation/
 _site
 .serena/
 .feature-state.json
+/archives/orbstack-standards-dev-supabase-20251008.tar.gz
+*.docx
