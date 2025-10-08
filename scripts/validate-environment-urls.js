@@ -1101,6 +1101,8 @@ async function validateLinksFromSitemap(
 
   let browser = null;
   let page = null;
+  let requestHandler = null;
+  let interceptionActive = false;
 
   try {
     // Performance-optimized Puppeteer launch - moved after sitemap validation
@@ -1123,16 +1125,33 @@ async function validateLinksFromSitemap(
 
     // Block unnecessary resources for faster loading (but keep CSS for proper rendering)
     await page.setRequestInterception(true);
-    const requestHandler = (request) => {
+    interceptionActive = true;
+    requestHandler = (request) => {
+      if (!interceptionActive) {
+        return;
+      }
+
       const resourceType = request.resourceType();
-      if (
-        resourceType === 'image' ||
-        resourceType === 'font' ||
-        resourceType === 'media'
-      ) {
-        request.abort();
-      } else {
-        request.continue();
+
+      try {
+        if (
+          resourceType === 'image' ||
+          resourceType === 'font' ||
+          resourceType === 'media'
+        ) {
+          request.abort();
+        } else {
+          request.continue();
+        }
+      } catch (error) {
+        if (
+          error &&
+          typeof error.message === 'string' &&
+          error.message.includes('Request Interception is not enabled')
+        ) {
+          return;
+        }
+        throw error;
       }
     };
     page.on('request', requestHandler);
@@ -1497,8 +1516,15 @@ async function validateLinksFromSitemap(
     // Clean up request interception to prevent memory leaks
     if (page) {
       try {
-        await page.setRequestInterception(false);
-        page.removeAllListeners('request');
+        interceptionActive = false;
+        if (requestHandler) {
+          page.off('request', requestHandler);
+        } else {
+          page.removeAllListeners('request');
+        }
+        if (!page.isClosed()) {
+          await page.setRequestInterception(false);
+        }
         page.removeAllListeners('error');
         page.removeAllListeners('pageerror');
       } catch (err) {
