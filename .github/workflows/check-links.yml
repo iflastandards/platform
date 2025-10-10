@@ -1,13 +1,6 @@
 name: Check Docusaurus Links
 
 on:
-  workflow_run:
-    workflows: ['Nx Optimized Documentation Deploy']
-    types:
-      - completed
-    branches:
-      - preview
-      - main
   workflow_dispatch:
     inputs:
       sites:
@@ -15,21 +8,14 @@ on:
         required: false
         default: 'all'
         type: string
-      verbose:
-        description: 'Enable verbose output'
-        required: false
-        default: false
-        type: boolean
   schedule:
-    # Run daily at 2 AM UTC (same as Lighthouse)
+    # Run daily at 2 AM UTC
     - cron: '0 2 * * *'
 
 jobs:
   check-links:
     runs-on: ubuntu-latest
     timeout-minutes: 30
-    # Only run if deployment succeeded, or manually triggered, or on schedule
-    if: github.event.workflow_run.conclusion == 'success' || github.event_name == 'workflow_dispatch' || github.event_name == 'schedule'
 
     steps:
       - name: Checkout code
@@ -75,50 +61,16 @@ jobs:
           rm -rf output/link-validation/
           mkdir -p output/link-validation/
 
-      - name: Check links (workflow dispatch)
-        if: github.event_name == 'workflow_dispatch'
+      - name: Check links
         run: |
-          SITES="${{ github.event.inputs.sites }}"
-          VERBOSE="${{ github.event.inputs.verbose }}"
-
-          if [ "$SITES" = "all" ]; then
-            if [ "$VERBOSE" = "true" ]; then
-              pnpm check:links:all --verbose
-            else
-              pnpm check:links:all
-            fi
+          if [ "${{ github.event_name }}" = "workflow_dispatch" ]; then
+            SITES="${{ github.event.inputs.sites }}"
+            echo "🔧 Manual run: checking $SITES sites on preview"
+            pnpm check:links "$SITES" preview sitemap
           else
-            if [ "$VERBOSE" = "true" ]; then
-              pnpm check:links:site "$SITES" --verbose
-            else
-              pnpm check:links:site "$SITES"
-            fi
-          fi
-
-      - name: Check links (automatic)
-        if: github.event_name != 'workflow_dispatch'
-        run: |
-          if [ "${{ github.event_name }}" = "schedule" ]; then
-            # Daily schedule: check all sites on preview
-            echo "📅 Daily check: validating all sites on preview environment"
+            # Scheduled run: check all sites on preview
+            echo "📅 Scheduled check: validating all sites on preview environment"
             pnpm check:links all preview sitemap
-          elif [ "${{ github.event_name }}" = "workflow_run" ] && [ "${{ github.event.workflow_run.head_branch }}" = "main" ]; then
-            # Main branch deployment: check all sites on production
-            echo "🚀 Main deployment: validating all sites on production"
-            pnpm check:links all production sitemap
-          else
-            # Preview deployment: check only affected sites
-            echo "🔍 Preview deployment: checking affected sites only"
-            AFFECTED=$(pnpm nx show projects --affected --type app 2>/dev/null | \
-              grep -E '^(portal|ISBDM|LRM|FRBR|isbd|muldicat|unimarc)$' | \
-              tr '\n' ',' | sed 's/,$//')
-
-            if [ -n "$AFFECTED" ]; then
-              echo "📊 Affected sites: $AFFECTED"
-              pnpm check:links "$AFFECTED" preview sitemap
-            else
-              echo "ℹ️  No affected documentation sites to check"
-            fi
           fi
 
       - name: Upload link check report
@@ -133,8 +85,8 @@ jobs:
             output/link-validation/index-data.json
           retention-days: 30
 
-      - name: Comment PR with results
-        if: github.event.workflow_run.event == 'pull_request' && always()
+      - name: Create issue if broken links found
+        if: always()
         uses: actions/github-script@v7
         with:
           script: |
@@ -145,65 +97,80 @@ jobs:
             const validationDir = path.join(process.cwd(), 'output', 'link-validation');
             const indexDataFile = path.join(validationDir, 'index-data.json');
 
+            if (!fs.existsSync(indexDataFile)) {
+              console.log('No index data file found, skipping issue creation');
+              return;
+            }
+
             let indexData = {};
+            try {
+              indexData = JSON.parse(fs.readFileSync(indexDataFile, 'utf8'));
+            } catch (e) {
+              console.error('Error parsing index data:', e);
+              return;
+            }
+
+            // Collect results from all sites
             let totalBrokenLinks = 0;
             let siteResults = [];
 
-            if (fs.existsSync(indexDataFile)) {
-              try {
-                indexData = JSON.parse(fs.readFileSync(indexDataFile, 'utf8'));
+            Object.entries(indexData).forEach(([site, siteDataArray]) => {
+              if (Array.isArray(siteDataArray) && siteDataArray.length > 0) {
+                // Get the most recent run (first item)
+                const latestRun = siteDataArray[0];
+                const failed = latestRun.failed || 0;
 
-                // Process each site's results
-                Object.entries(indexData).forEach(([site, data]) => {
-                  if (data.results) {
-                    const failed = data.results.failedLinks || 0;
-                    totalBrokenLinks += failed;
-                    siteResults.push({
-                      site: site.toUpperCase(),
-                      passed: data.results.passedLinks || 0,
-                      failed: failed,
-                      total: data.results.totalLinks || 0,
-                      status: failed === 0 ? '✅' : '❌',
-                      reportFile: data.reportFile
-                    });
-                  }
-                });
-              } catch (e) {
-                console.error('Error parsing index data:', e);
-              }
-            }
-
-            if (siteResults.length > 0) {
-              // Build summary table
-              let summary = '### Link Validation Summary\n\n';
-              summary += '| Site | Status | Links Tested | Passed | Failed |\n';
-              summary += '|------|--------|--------------|--------|--------|\n';
-
-              siteResults.forEach(site => {
-                summary += `| ${site.site} | ${site.status} | ${site.total} | ${site.passed} | ${site.failed} |\n`;
-              });
-
-              // Create comment
-              const comment = `## 🔗 Link Check Results
-
-              ${summary}
-
-              ${totalBrokenLinks > 0
-                ? `⚠️ **Action Required**: ${totalBrokenLinks} broken link${totalBrokenLinks === 1 ? '' : 's'} found. Please fix before merging.`
-                : '✅ All links are valid!'}
-
-              📊 [View detailed reports in artifacts](https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}#artifacts)`;
-
-              // Find the PR number from the workflow run
-              const workflowRun = context.payload.workflow_run;
-              if (workflowRun && workflowRun.pull_requests && workflowRun.pull_requests.length > 0) {
-                const prNumber = workflowRun.pull_requests[0].number;
-
-                await github.rest.issues.createComment({
-                  owner: context.repo.owner,
-                  repo: context.repo.repo,
-                  issue_number: prNumber,
-                  body: comment
+                totalBrokenLinks += failed;
+                siteResults.push({
+                  site: site.toUpperCase(),
+                  passed: latestRun.passed || 0,
+                  failed: failed,
+                  tested: latestRun.tested || 0,
+                  status: failed === 0 ? '✅' : '❌',
+                  reportFile: `${site}/${latestRun.filename}`
                 });
               }
+            });
+
+            // Only create issue if there are broken links
+            if (totalBrokenLinks === 0) {
+              console.log('✅ No broken links found - skipping issue creation');
+              return;
             }
+
+            // Build summary table
+            let summary = '### Link Validation Summary\n\n';
+            summary += '| Site | Status | Links Tested | Passed | Failed |\n';
+            summary += '|------|--------|--------------|--------|--------|\n';
+
+            siteResults.forEach(site => {
+              summary += `| ${site.site} | ${site.status} | ${site.tested} | ${site.passed} | ${site.failed} |\n`;
+            });
+
+            // Build broken links details
+            let brokenLinksDetail = '';
+            siteResults.filter(s => s.failed > 0).forEach(site => {
+              brokenLinksDetail += `\n### ${site.site}\n`;
+              brokenLinksDetail += `- **${site.failed}** broken link${site.failed === 1 ? '' : 's'} found\n`;
+              brokenLinksDetail += `- See detailed report in artifacts: \`${site.reportFile}\`\n`;
+            });
+
+            // Create issue body
+            const artifactUrl = `https://github.com/${context.repo.owner}/${context.repo.repo}/actions/runs/${context.runId}#artifacts`;
+            const issueBody =
+              `## 🔗 Broken Links Detected\n\n` +
+              `${summary}\n\n` +
+              `**Total broken links**: ${totalBrokenLinks}\n\n` +
+              `${brokenLinksDetail}\n\n` +
+              `## 📊 Detailed Reports\n\n` +
+              `View the full reports in the [workflow artifacts](${artifactUrl}).\n\n` +
+              `---\n` +
+              `*Scheduled check run: ${new Date().toISOString()}*`;
+
+            await github.rest.issues.create({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              title: `🔗 Broken Links Found - ${totalBrokenLinks} link${totalBrokenLinks === 1 ? '' : 's'}`,
+              body: issueBody,
+              labels: ['documentation', 'broken-links', 'automated']
+            });

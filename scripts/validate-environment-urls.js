@@ -1771,6 +1771,30 @@ async function extractLinksFromPage(page, baseUrl) {
   }, baseUrl);
 }
 
+// Check if a port is in use (for local dev server detection)
+async function isPortInUse(port) {
+  const net = require('net');
+
+  return new Promise((resolve) => {
+    const server = net.createServer();
+
+    server.once('error', (err) => {
+      if (err.code === 'EADDRINUSE') {
+        resolve(true); // Port is in use
+      } else {
+        resolve(false);
+      }
+    });
+
+    server.once('listening', () => {
+      server.close();
+      resolve(false); // Port is available
+    });
+
+    server.listen(port);
+  });
+}
+
 async function validateEnvironmentUrls(siteKey, environment, options = {}) {
   const {
     type = 'both',
@@ -1797,6 +1821,24 @@ async function validateEnvironmentUrls(siteKey, environment, options = {}) {
   console.log(
     `🕳️  Crawl depth: ${depth === undefined ? 'all links from sitemap' : depth === 0 ? 'homepage only' : `${depth} level${depth > 1 ? 's' : ''} deep`})`,
   );
+
+  // For local environment, check if dev server is running
+  if (environment === 'local' && siteConfig.port) {
+    console.log(
+      `🔍 Checking if dev server is running on port ${siteConfig.port}...`,
+    );
+    const portInUse = await isPortInUse(siteConfig.port);
+
+    if (!portInUse) {
+      console.error(`\n❌ Dev server not running on port ${siteConfig.port}`);
+      console.error(`\n💡 Start it first:`);
+      console.error(`   pnpm nx start ${siteKey}`);
+      console.error(`\nThen run the link checker again.`);
+      return false;
+    }
+
+    console.log(`✅ Found server at http://localhost:${siteConfig.port}`);
+  }
 
   // Handle sitemap-based validation (comprehensive link checking)
   if (type === 'sitemap') {
