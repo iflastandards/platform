@@ -2,7 +2,7 @@ name: Lighthouse Post-Deployment Audit
 
 on:
   workflow_run:
-    workflows: ["Nx Optimized Documentation Deploy"]
+    workflows: ['Nx Optimized Documentation Deploy']
     types:
       - completed
     branches:
