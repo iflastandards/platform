@@ -82,7 +82,7 @@ jobs:
           fi
 
       - name: Upload warnings report
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v5
         with:
           name: docusaurus-build-warnings
           path: |
