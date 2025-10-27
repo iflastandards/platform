@@ -316,7 +316,7 @@ jobs:
 
       - name: Upload build warnings report
         if: always()
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v5
         with:
           name: build-warnings-report-${{ github.run_number }}
           path: |
@@ -332,7 +332,7 @@ jobs:
 
       - name: Upload build artifacts for alternative deployments
         if: github.event.inputs.deploy_target == 'netlify' || github.event.inputs.deploy_target == 'vercel'
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v5
         with:
           name: documentation-build-${{ github.sha }}
           path: _site/
@@ -412,7 +412,7 @@ jobs:
 
       - name: Upload test results
         if: failure()
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v5
         with:
           name: smoke-test-results-${{ github.run_number }}
           path: |
