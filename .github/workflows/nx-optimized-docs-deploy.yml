@@ -59,7 +59,7 @@ jobs:
       base: ${{ steps.nx-set-shas.outputs.base }}
       head: ${{ steps.nx-set-shas.outputs.head }}
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
         with:
           fetch-depth: 0
 
@@ -138,7 +138,7 @@ jobs:
       warning_count: ${{ steps.build-warnings.outputs.warning_count }}
       site_summary: ${{ steps.build-warnings.outputs.site_summary }}
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
         with:
           fetch-depth: 0
 
@@ -379,7 +379,7 @@ jobs:
     runs-on: ubuntu-latest
     continue-on-error: true # Don't fail deployment on smoke test issues
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
 
       - uses: pnpm/action-setup@v4
 
@@ -426,7 +426,7 @@ jobs:
     if: always()
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
         with:
           sparse-checkout: |
             nx.json
