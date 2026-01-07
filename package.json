@@ -587,7 +587,7 @@
     "@nx/rollup": "21.6.2",
     "@nx/vite": "21.6.2",
     "@nx/web": "21.6.2",
-    "@playwright/mcp": "^0.0.32",
+    "@playwright/mcp": "^0.0.40",
     "@playwright/test": "^1.54.2",
     "@secretlint/secretlint-rule-no-homedir": "^10.2.2",
     "@secretlint/secretlint-rule-preset-recommend": "^10.2.2",
