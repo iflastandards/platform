@@ -4,13 +4,29 @@
  * that ensure Admin Docs configuration returns correct URLs and auto-detects
  * environment based on hostname
  */
-import { describe, it, expect, beforeEach, vi } from 'vitest';
+import { describe, it, expect, afterEach, beforeEach, vi } from 'vitest';
 import {
   getAdminDocsConfig,
   getAdminDocsConfigAuto,
   ADMIN_DOCS_CONFIG,
   type Environment,
 } from '@ifla/contracts';
+
+// jsdom installs `window` on the worker global, and vitest.config.nx.ts runs every
+// theme test file in one thread, so the hostname stubs below have to be rolled back
+// or the following files inherit a `window` that has no `navigator`.
+const originalWindowDescriptor = Object.getOwnPropertyDescriptor(
+  globalThis,
+  'window',
+);
+
+function restoreWindow(): void {
+  if (originalWindowDescriptor) {
+    Object.defineProperty(globalThis, 'window', originalWindowDescriptor);
+  } else {
+    delete (globalThis as Record<string, unknown>).window;
+  }
+}
 
 /**
  * @unit @critical @admin @docs @config @high-priority
@@ -102,6 +118,10 @@ describe('getAdminDocsConfigAuto', () => {
     if (typeof window !== 'undefined') {
       delete (global as any).window;
     }
+  });
+
+  afterEach(() => {
+    restoreWindow();
   });
 
   it('should return local config when window is undefined (server-side)', () => {
@@ -277,5 +297,17 @@ describe('ADMIN_DOCS_CONFIG constant', () => {
 
   it('should use HTTP for local environment', () => {
     expect(ADMIN_DOCS_CONFIG.local.url).toMatch(/^http:/);
+  });
+});
+
+/**
+ * @unit @critical @admin @docs @config
+ */
+
+describe('getAdminDocsConfigAuto test isolation', () => {
+  it('should leave the jsdom window in place for the rest of the suite', () => {
+    expect(typeof window).toBe('object');
+    expect(window.document).toBe(document);
+    expect(window.navigator).toBeDefined();
   });
 });
